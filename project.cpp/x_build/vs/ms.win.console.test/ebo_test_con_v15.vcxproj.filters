@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000060020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000062020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\icons">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000063020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000061020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\test.case">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000064020}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)ms.con.app.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ms.con.app.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)ms.con.cmd.ln.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ms.con.cmd.ln.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)ms.con.out.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ms.con.out.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_4)test_$1$_std_except.h"><Filter>src\test.case</Filter></ClInclude>
+    <ClCompile Include="$(_4)test_$1$_std_except.cpp"><Filter>src\test.case</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="$(_0)ms.con.app.manifest">
+      <Filter>interface</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2)ms.con.res.h">
+      <Filter>src\resources</Filter>
+    </ClInclude>
+    <ResourceCompile Include="$(_2)ms.con.res.rc">
+      <Filter>src\resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="$(_3)wanderer_rootless.ico">
+      <Filter>src\resources\icons</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

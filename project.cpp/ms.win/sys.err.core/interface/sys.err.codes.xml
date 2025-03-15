@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 30-Oct-2018 at 11:36:28p, UTC+7, Novosibirsk, Tuesday;
+	This is Ebo Pack operating system error code declaration file.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/18d8fbe8-a967-4f1c-ae50-99ca8e491d2d ;
+  -->
+<codes>
+	<desc>
+	This is Win API error enumeration, which can be used inside of Ebo Pack libraries;
+	</desc>
+	<error code="0000" define="NO_ERROR"                     description="No error.;)"/>
+	<error code="0001" define="ERROR_INVALID_FUNCTION"       description="Incorrect function."/>
+	<error code="0002" define="ERROR_FILE_NOT_FOUND"         description="The system cannot find the file specified."/>
+	<error code="0003" define="ERROR_PATH_NOT_FOUND"         description="The system cannot find the path specified."/>
+	<error code="0005" define="ERROR_ACCESS_DENIED"          description="Access is denied."/>
+	<error code="0006" define="ERROR_INVALID_HANDLE"         description="The handle is invalid."/>
+	<error code="0008" define="ERROR_NOT_ENOUGH_MEMORY"      description="Not enough storage is available to process this command."/>
+	<error code="0009" define="ERROR_INVALID_BLOCK"          description="The storage control block address is invalid."/>
+	<error code="0010" define="ERROR_BAD_ENVIRONMENT"        description="The environment is incorrect."/>
+	<error code="0011" define="ERROR_BAD_FORMAT"             description="An attempt was made to load a program with an incorrect format."/>
+	<error code="0012" define="ERROR_INVALID_ACCESS"         description="The access code is invalid."/>
+	<error code="0013" define="ERROR_INVALID_DATA"           description="The data is invalid."/>
+	<error code="0014" define="ERROR_OUTOFMEMORY"            description="Not enough storage is available to complete this operation."/>
+	<error code="0015" define="ERROR_INVALID_DRIVE"          description="The system cannot find the drive specified."/>
+	<error code="0023" define="ERROR_CRC"                    description="Data error (cyclic redundancy check)."/>
+	<error code="0024" define="ERROR_BAD_LENGTH"             description="The program issued a command but the command length is incorrect."/>
+	<error code="0087" define="ERROR_INVALID_PARAMETER"      description="The parameter is incorrect."/>
+	<error code="0122" define="ERROR_INSUFFICIENT_BUFFER"    description="The data area passed to a system call is too small."/>
+	<error code="0123" define="ERROR_INVALID_NAME"           description="The file name, directory name, or volume label syntax is incorrect."/>
+	<error code="0160" define="ERROR_BAD_ARGUMENTS"          description="One or more arguments are not correct."/>
+	<error code="0161" define="ERROR_BAD_PATHNAME"           description="The specified path is invalid."/>
+	<error code="0170" define="ERROR_BUSY"                   description="The requested resource is in use."/>
+	<error code="0183" define="ERROR_ALREADY_EXISTS"         description="Cannot create a file when that file already exists."/>
+	<error code="0229" define="ERROR_PIPE_LOCAL"             description="The pipe is local."/>
+	<error code="0230" define="ERROR_BAD_PIPE"               description="The pipe state is invalid."/>
+	<error code="0231" define="ERROR_PIPE_BUSY"              description="All pipe instances are busy."/>
+	<error code="0232" define="ERROR_NO_DATA"                description="The pipe is being closed."/>
+	<error code="0233" define="ERROR_PIPE_NOT_CONNECTED"     description="No process is on the other end of the pipe."/>
+	<error code="0234" define="ERROR_MORE_DATA"              description="More data is available."/>
+	<error code="0267" define="ERROR_DIRECTORY"              description="The directory name is invalid."/>
+	<error code="0315" define="ERROR_INVALID_TOKEN"          description="The token representing the data is invalid."/>
+	<error code="0487" define="ERROR_INVALID_ADDRESS"        description="Attempt to access invalid address."/>
+	<error code="0604" define="ERROR_INVALID_VARIANT"        description="The supplied variant structure contains invalid data."/>
+	<error code="1002" define="ERROR_INVALID_MESSAGE"        description="The window cannot act on the sent message."/>
+	<error code="1003" define="ERROR_CAN_NOT_COMPLETE"       description="Cannot complete this function."/>
+	<error code="1004" define="ERROR_INVALID_FLAGS"          description="Invalid flags."/>
+	<error code="1006" define="ERROR_FILE_INVALID"           description="The volume for a file has been externally altered so that the opened file is no longer valid."/>
+	<error code="1051" define="ERROR_DEPENDENT_SERVICES_RUNNING" description="A stop control has been sent to a service that other running services are dependent on."/>
+	<error code="1052" define="ERROR_INVALID_SERVICE_CONTROL"    description="The requested control is not valid for this service."/>
+	<error code="1053" define="ERROR_SERVICE_REQUEST_TIMEOUT"    description="The service did not respond to the start or control request in a timely fashion."/>
+	<error code="1054" define="ERROR_SERVICE_NO_THREAD"          description="A thread could not be created for the service."/>
+	<error code="1055" define="ERROR_SERVICE_DATABASE_LOCKED"    description="The service database is locked."/>
+	<error code="1056" define="ERROR_SERVICE_ALREADY_RUNNING"    description="An instance of the service is already running."/>
+	<error code="1057" define="ERROR_INVALID_SERVICE_ACCOUNT"    description="The account name is invalid or does not exist, or the password is invalid for the account name specified."/>
+	<error code="1058" define="ERROR_SERVICE_DISABLED"           description="The service cannot be started, either because it is disabled or because it has no enabled devices associated with it."/>
+	<error code="1059" define="ERROR_CIRCULAR_DEPENDENCY"        description="Circular service dependency was specified."/>
+	<error code="1060" define="ERROR_SERVICE_DOES_NOT_EXIST"     description="The specified service does not exist as an installed service."/>
+	<error code="1061" define="ERROR_SERVICE_CANNOT_ACCEPT_CTRL" description="The service cannot accept control messages at this time."/>
+	<error code="1062" define="ERROR_SERVICE_NOT_ACTIVE"         description="The service has not been started."/>
+	<error code="1063" define="ERROR_FAILED_SERVICE_CONTROLLER_CONNECT" description="The service process could not connect to the service controller."/>
+	<error code="1064" define="ERROR_EXCEPTION_IN_SERVICE"       description="An exception occurred in the service when handling the control request."/>
+	<error code="1065" define="ERROR_DATABASE_DOES_NOT_EXIST"    description="The database specified does not exist."/>
+	<error code="1066" define="ERROR_SERVICE_SPECIFIC_ERROR"     description="The service has returned a service-specific error code."/>
+	<error code="1067" define="ERROR_PROCESS_ABORTED"            description="The process terminated unexpectedly."/>
+	<error code="1068" define="ERROR_SERVICE_DEPENDENCY_FAIL"    description="The dependency service or group failed to start."/>
+	<error code="1069" define="ERROR_SERVICE_LOGON_FAILED"       description="The service did not start due to a logon failure."/>
+	<error code="1070" define="ERROR_SERVICE_START_HANG"         description="After starting, the service stopped responding in a start-pending state."/>
+	<error code="1071" define="ERROR_INVALID_SERVICE_LOCK"       description="The specified service database lock is invalid."/>
+	<error code="1072" define="ERROR_SERVICE_MARKED_FOR_DELETE"  description="The specified service has been marked for deletion."/>
+	<error code="1073" define="ERROR_SERVICE_EXISTS"             description="The specified service already exists."/>
+	<error code="1075" define="ERROR_SERVICE_DEPENDENCY_DELETED" description="The dependency service does not exist or has been marked for deletion."/>
+	<error code="1077" define="ERROR_SERVICE_NEVER_STARTED"      description="No attempts to start the service have been made since the last boot."/>
+	<error code="1078" define="ERROR_DUPLICATE_SERVICE_NAME"     description="The name is already in use as either a service name or a service display name."/>
+	<error code="1079" define="ERROR_DIFFERENT_SERVICE_ACCOUNT"  description="The account specified for this service is different from the account specified for other services running in the same process."/>
+	<error code="1168" define="ERROR_NOT_FOUND"              description="Element not found."/>
+	<error code="1213" define="ERROR_INVALID_SERVICENAME"    description="The format of the specified service name is invalid."/>
+	<error code="1247" define="ERROR_ALREADY_INITIALIZED"    description="An attempt was made to perform an initialization operation when initialization has already been completed."/>
+	<error code="1315" define="ERROR_INVALID_ACCOUNT_NAME"   description="The name provided is not a properly formed account name."/>
+	<error code="1615" define="ERROR_BAD_QUERY_SYNTAX"       description="SQL query syntax invalid or unsupported."/>
+	<error code="1616" define="ERROR_INVALID_FIELD"          description="Record field does not exist."/>
+	<error code="1626" define="ERROR_FUNCTION_NOT_CALLED"    description="Function could not be executed."/>
+	<error code="1627" define="ERROR_FUNCTION_FAILED"        description="Function failed during execution."/>
+	<error code="1628" define="ERROR_INVALID_TABLE"          description="Invalid or unknown table specified."/>
+	<error code="1629" define="ERROR_DATATYPE_MISMATCH"      description="Data supplied is of wrong type."/>
+	<error code="1630" define="ERROR_UNSUPPORTED_TYPE"       description="Data of this type is not supported."/>
+	<error code="1801" define="ERROR_INVALID_PRINTER_NAME"   description="The printer name is invalid."/>
+	<error code="1804" define="ERROR_INVALID_DATATYPE"       description="The specified datatype is invalid."/>
+	<error code="1805" define="ERROR_INVALID_ENVIRONMENT"    description="The environment specified is invalid."/>
+	<error code="1812" define="ERROR_RESOURCE_DATA_NOT_FOUND"   description="The specified image file did not contain a resource section."/>
+	<error code="1813" define="ERROR_RESOURCE_TYPE_NOT_FOUND"   description="The specified resource type cannot be found in the image file."/>
+	<error code="1814" define="ERROR_RESOURCE_NAME_NOT_FOUND"   description="The specified resource name cannot be found in the image file."/>
+	<error code="1901" define="ERROR_INVALID_TIME"           description="The specified time is invalid."/>
+	<error code="1904" define="ERROR_ALREADY_WAITING"        description="The specified printer handle is already being waited on."/>
+	<error code="1905" define="ERROR_PRINTER_DELETED"        description="The specified printer has been deleted."/>
+	<error code="2012" define="ERROR_TAG_NOT_FOUND"          description="The specified tag was not found."/>
+	<error code="2013" define="ERROR_TAG_NOT_PRESENT"        description="A required tag is not present."/>
+	<error code="2014" define="ERROR_DUPLICATE_TAG"          description="The specified tag is already present."/>
+	<error code="4316" define="ERROR_RESOURCE_NOT_PRESENT"   description="The resource required for this operation does not exist."/>
+	<error code="4317" define="ERROR_INVALID_OPERATION"      description="The operation identifier is not valid."/>
+	<error code="5010" define="ERROR_OBJECT_ALREADY_EXISTS"  description="The object already exists."/>
+	<error code="5023" define="ERROR_INVALID_STATE"          description="The group or resource is not in the correct state to perform the requested operation."/>
+	<error code="6700" define="ERROR_INVALID_TRANSACTION"    description="The transaction handle associated with this operation is not valid."/>
+	<error code="" define="" description=""/>
+	<error code="" define="" description=""/>
+	<error code="" define="" description=""/>
+	<error code="" define="" description=""/>
+</codes>

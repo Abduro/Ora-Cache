@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A10000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\seh">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A10002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A10001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\seh">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A10003}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>  <!--system error handling related files-->
+    <ClInclude Include="$(_0)sys.err.codes.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)sys.error.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.error.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)sys.err.format.h"><Filter>src</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.err.format.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)sys.seh.code.h"><Filter>interface\seh</Filter></ClInclude>
+    <ClCompile Include="$(_3)sys.seh.code.cpp"><Filter>src\seh</Filter></ClCompile>
+    <ClInclude Include="$(_2)sys.seh.common.h"><Filter>interface\seh</Filter></ClInclude>
+    <ClCompile Include="$(_3)sys.seh.common.cpp"><Filter>src\seh</Filter></ClCompile>
+    <ClInclude Include="$(_2)sys.seh.except.h"><Filter>interface\seh</Filter></ClInclude>
+    <ClCompile Include="$(_3)sys.seh.except.cpp"><Filter>src\seh</Filter></ClCompile>
+    <ClInclude Include="$(_2)sys.seh.flag.h"><Filter>interface\seh</Filter></ClInclude>
+    <ClCompile Include="$(_3)sys.seh.flag.cpp"><Filter>src\seh</Filter></ClCompile>
+    <ClInclude Include="$(_2)sys.seh.number.h"><Filter>interface\seh</Filter></ClInclude>
+    <ClCompile Include="$(_3)sys.seh.number.cpp"><Filter>src\seh</Filter></ClCompile>
+    <ClInclude Include="$(_2)sys.seh.record.h"><Filter>interface\seh</Filter></ClInclude>
+    <ClCompile Include="$(_3)sys.seh.record.cpp"><Filter>src\seh</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="$(_0)sys.err.codes.xml">
+      <Filter>interface</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

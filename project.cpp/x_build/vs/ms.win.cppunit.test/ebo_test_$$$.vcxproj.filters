@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000060000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000060010}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <!--files reside in root of interface folder!-->
+    <ClInclude Include="$(_0)_defs.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)_log.h"><Filter>interface</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(_1)_defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_1)_log.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>
