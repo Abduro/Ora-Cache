@@ -9,7 +9,8 @@
 #include <CppUnitTest.h>
 
 #include "shared.preproc.h"
-
+#include "shared.string.h"
+#include "shared.types.h"
 /*
 	the runtime of libraries being tested and this test project must be the same:
 	   - Multi-threaded Debug (/MTd) ;

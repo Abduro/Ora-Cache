@@ -5,8 +5,6 @@
 	This is Ebo Pak UIX libs unit test logger interface declaration file.
 */
 #include "_defs.h"
-#include "shared.string.h"
-#include "shared.types.h"
 
 namespace ebo { namespace boo { namespace test {
 

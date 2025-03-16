@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 3-Apr-2024 at 09:28:46.1834066, UTC+7, Novosibirsk, Wednesday;
-	This is Ebo pack shared base interface(s) library unit test implementation file; 
+	This is Ebo Pack shared base interface(s) library unit test implementation file; 
 */
 #include "ebo_test_$0$.base.h"
 

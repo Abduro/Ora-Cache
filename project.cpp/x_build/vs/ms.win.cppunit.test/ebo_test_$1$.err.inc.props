@@ -9,7 +9,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
-    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error><!--This is the target!-->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
@@ -19,8 +19,8 @@
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
-    <_3>$(Error)interface\</_3>
-    <_4>$(_3)seh\</_4>
+    <_3>$(Error)interface\</_3><!--This library interface is being tested!-->
+    <_4>$(_3)seh\</_4><!--This library interface is being tested!-->
     <_5></_5>
     <_6></_6>
     <_7></_7>

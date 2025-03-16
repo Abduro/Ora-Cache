@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 1-Apr-2024 at 08:24:31.4391778, UTC+7, Novosibirsk, Monday;
-	This is Ebo Pak UIX libs unit test logger interface implementation file.
+	This is Ebo Pack UIX libs unit test logger interface implementation file.
 */
 #include "_log.h"
 

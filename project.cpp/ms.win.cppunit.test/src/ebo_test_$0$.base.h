@@ -10,12 +10,6 @@
 #include "sys.gen.time.h"
 #pragma endregion
 
-#pragma region __common
-#include "shared.preproc.h"
-#include "shared.string.h"
-#pragma endregion
-
-#pragma comment(lib, "sys.shared_v15.lib")
-#pragma comment(lib, "ebo_test_$$$.lib")
+#pragma comment(lib, "ebo_test_$$$.lib")   // shared unit test library;
 
 #endif/*_EBO_TEST_$0$_BASE_H_INCLUDED*/

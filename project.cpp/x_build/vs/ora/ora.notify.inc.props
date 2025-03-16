@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 03-Dec-2024 at 22:03:40.571, UTC+4, Batumi, Tuesday;
-	This is Ebo Pack runnable thread library unit test project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 15-Mar-2025 at 22:44:07.8703321, UTC+4, Batumi, Sunday;
+	This is Ebo pack Oracle database notification lib include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" /><!-- https://learn.microsoft.com/en-us/biztalk/core/which-node-name-characters-get-encoded -->
+  <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <Runnable Condition="'$(Runnable)'==''">..\..\..\ms.win\runnable\</Runnable><!--This is the target!-->
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
+    <Ora-Base Condition="'$(Ora-Base)'==''">..\..\..\ora.base\</Ora-Base>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ora.notify\</ThisLib><!-- This library is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
@@ -21,7 +21,7 @@
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <_4>$(Runnable)interface\</_4><!--This library interface is being tested!-->
+    <_4>$(Ora-Base)interface\</_4>
     <_5></_5>
     <_6></_6>
     <_7></_7>

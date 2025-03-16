@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Aug-2024 at 01:35:22.1013935, UTC+4, Batumi, Friday;
-	This is Ebo pack system error (WinApi) wrapper library unit test implementation file; 
+	This is Ebo Pack system error (WinApi) wrapper library unit test implementation file; 
 */
 #include "ebo_test_$1$.err.h"
 
