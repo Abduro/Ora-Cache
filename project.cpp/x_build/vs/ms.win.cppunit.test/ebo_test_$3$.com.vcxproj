@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-00A000060000}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-00000006A301}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
     <ProjectSubType>NativeUnitTestProject</ProjectSubType>
@@ -70,19 +70,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$o$.ora.base.inc.props" />
+    <Import Project="ebo_test_$3$.com.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$o$.ora.base.inc.props" />
+    <Import Project="ebo_test_$3$.com.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$o$.ora.base.inc.props" />
+    <Import Project="ebo_test_$3$.com.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$o$.ora.base.inc.props" />
+    <Import Project="ebo_test_$3$.com.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -202,8 +202,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_1)ebo_test_$o$.ora.base.h" />
-    <ClCompile Include="$(_1)ebo_test_$o$.ora.base.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$3$.com.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(_1)ebo_test_$3$.com.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
@@ -217,9 +219,6 @@
     </ProjectReference>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ora\ora.base_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-00A000000000}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

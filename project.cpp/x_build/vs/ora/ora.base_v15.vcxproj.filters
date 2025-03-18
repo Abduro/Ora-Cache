@@ -10,8 +10,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)ora.base.h" ><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)ora.oledb.h" ><Filter>interface</Filter></ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(_1)ora.base.cpp" ><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_1)ora.oledb.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

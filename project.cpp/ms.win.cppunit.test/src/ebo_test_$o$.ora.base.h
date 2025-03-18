@@ -5,7 +5,7 @@
 	This is Ebo Pack Oracle database wrapper base lib unit test interface declaration file; 
 */
 #include "_log.h"
-#include "ora.base.h"
+#include "ora.oledb.h"
 
 #pragma comment(lib, "sys.err.core_v15.lib") // for using error object;
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);

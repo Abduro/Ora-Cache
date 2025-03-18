@@ -175,9 +175,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)ora.base.h" />
+    <ClInclude Include="$(_0)ora.oledb.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(_1)ora.base.cpp" />
+    <ClCompile Include="$(_1)ora.oledb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
@@ -185,6 +187,9 @@
     </ProjectReference>
     <ProjectReference Include="..\ms.win\sys.err.core_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ms.win\sys.com.core_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000A301}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -10,6 +10,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ora.base\</ThisLib><!-- This library is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -20,7 +21,7 @@
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <_4></_4>
+    <_4>$(ComCore)interface\</_4>
     <_5></_5>
     <_6></_6>
     <_7></_7>
@@ -29,7 +30,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

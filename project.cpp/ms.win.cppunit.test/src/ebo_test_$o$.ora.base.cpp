@@ -11,4 +11,56 @@ namespace ebo { namespace boo { namespace test {
 	using TError  = const CError;
 	using TString = TStringEx   ;
 
+	namespace data { namespace ole {
+
+		using TProvider = ora::base::oledb::CProvider;
+		using TProv_enum = ora::base::oledb::CProvider_enum;
+
+		__class(CProvider) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("Default: %s"), (_pc_sz)TProvider().Print(TProvider::e_all));
+				_out()();
+			}
+		};
+
+		using TOraProv = ora::base::oledb::COraProvider;
+
+		__class(COreProvider) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TOraProv().Print(TProvider::e_all);
+				_out()();
+			}
+			__method(Is_installed) {
+
+				TProv_enum prov_enum; prov_enum.Set();
+				TOraProv ora_prov;
+
+				const bool b_registered = (prov_enum.Registered(ora_prov.ClsId().Raw()));
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("Installed: %s>>%s"), (_pc_sz)ora_prov.Print(TProvider::e_no_ns), TStringEx().Bool(b_registered));
+				_out()();
+			}
+		};
+
+		__class(CProv_enum) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TProv_enum().Print(_T("\t\t")); // expected #empty collection of the data providers;
+				_out()();
+			}
+			__method(Set) {
+				TProv_enum prov_enum;
+
+				prov_enum.Set();
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += prov_enum.Print(_T("\t\t")); // expected #empty collection of the data providers;
+				_out()();
+			}
+		};
+	}}
+
 }}}

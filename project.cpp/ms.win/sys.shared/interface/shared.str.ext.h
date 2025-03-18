@@ -79,7 +79,7 @@ namespace shared { namespace common {
 		bool    Bool (void) const ;      // gets this string value as a boolean data type;
 		_pc_sz  Bool (const bool) ;      // sets this string value to text: false or true;
 
-		dword   Dword(void) const;       // gets this string as unsigned long data type;
+		dword   Dword(void) const ;      // gets this string as unsigned long data type;
 		_pc_sz  Dword(dword) ;           // sets this string to unsigned long value;
 
 		float   Float(void) const ;      // gets this string value as a float data type;

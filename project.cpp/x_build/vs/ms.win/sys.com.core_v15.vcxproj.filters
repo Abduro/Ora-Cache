@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A30000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A30001}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)com.def.base.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)com.def.base.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)com.guid.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)com.guid.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)com.svc.base.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)com.svc.base.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)com.sec.base.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)com.sec.base.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

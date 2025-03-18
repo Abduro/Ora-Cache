@@ -5,10 +5,13 @@
 	This is Ebo Pack Oracle database base wrappers' interface declaration file;
 */
 #include <atlbase.h>
+#include <atldbcli.h>
+
 #include "sys.err.codes.h"
 #include "sys.error.h"
 
 #include "shared.types.h"
+#include "com.def.base.h"
 
 namespace ora { namespace base {
 
