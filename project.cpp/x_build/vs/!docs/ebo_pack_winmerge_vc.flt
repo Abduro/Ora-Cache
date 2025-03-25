@@ -1,0 +1,88 @@
+##
+## Created by Tech_dog (ebontrop@gmail.com) on 23-Jan-2019 at 7:26:00a, UTC+7, Novosibirsk, Wednesday;
+## This is Ebo Pack shared libraries C++ filter definition file.
+##
+name: Visual C++ filter for Ebo Pack
+desc: Suppresses various binaries found in Visual C++ source trees, other do not relative to development files;
+
+## This is an inclusive (loose) filter
+## (it lets through everything not specified)
+def: include
+
+## Filters for filenames begin with f:
+## Filters for directories begin with d:
+## (Inline comments begin with " ##" and extend to the end of the line)
+
+f: \.aps$ ## VC Binary version of resource file, for quick loading
+f: \.bsc$ ## VC Browser database
+f: \.clw$ ## VC class-wizard status file
+f: \.dll$ ## Windows DLL
+f: \.exe$ ## Windows/DOS executable
+f: \.exp$ ## VC library export file
+f: ^vc[4-9]0\.idb$ ## VC Minimal rebuild dependency file
+f: \.ilk$ ## VC incremental linker memory file
+f: \.lib$ ## compiled libraries
+f: \.ncb$ ## VC parser information file (class view & component gallery stuff)
+f: \.obj$ ## VC object module file
+f: \.pch$ ## VC precompiled header file
+f: \.pdb$ ## VC program database file (debugging symbolic information)
+f: \.sbr$ ## VC source browser file (used to create bsc file)
+f: \.res$ ## VC compiled resources file (output of RC [resource compiler])
+f: \.suo$ ## VC options file (binary)
+f: \.ncb$ ## VC Intellisense file
+f: \.opt$ ## VC project options file
+f: \.bak$ ## backup
+
+d: \\cvs$ ## CVS control directory
+d: \\.svn$ ## Subversion control directory
+
+## From: Exclude Source Control (WinMerge Original Filters)
+
+f: \.(vs[sp])?scc$  ## Visual SourceSafe files
+
+d: \\\.svn$ ## Subversion working copy
+d: \\_svn$  ## Subversion working copy ASP.NET Hack
+d: \\cvs$   ## CVS control directory
+d: \\\.git$ ## Git directory
+d: \\\.bzr$ ## Bazaar branch
+d: \\\.hg$ ## Mercurial repository
+
+## User-specific files
+f: \.suo$
+f: \.user$
+f: \.userosscache$
+f: \.sln.docstates$
+
+## Build results
+d: \\[Dd]ebug$
+d: \\[Dd]ebugPublic$
+d: \\[Rr]elease$
+d: \\[Rr]eleases$
+d: \\x64$
+d: \\x86$
+d: \\build$
+d: \\bld$
+d: \\[Bb]in$
+d: \\[Oo]bj$
+
+d: \\.vs$  ## vs folder
+d: \\!bin__$ ## ebo pack output
+d: \\!can_be_safely_removed__$ ## ebo pack intermmediate;
+
+## Backup & report files from converting an old project file
+## to a newer Visual Studio version. Backup files are not needed,
+## because we have git ;-)
+d: \\_UpgradeReport_Files$
+d: \\Backup
+f: UpgradeLog.?\.XML$
+f: UpgradeLog.?\.htm$
+
+## Visual Studio 6 workspace options file
+f: \.opt$
+
+
+
+
+
+
+

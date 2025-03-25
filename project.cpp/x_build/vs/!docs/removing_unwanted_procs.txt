@@ -1,0 +1,9 @@
+
+https://superuser.com/questions/1613932/how-to-disable-compattelrunner-exe-microsoft-compatibility-telemetry
+
+solution: (cmd.exe aka 'command prompt')
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+reg add "HKLM\Software\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
+
+not required:
+https://learn.microsoft.com/en-us/visualstudio/test/how-to-use-google-test-for-cpp ;

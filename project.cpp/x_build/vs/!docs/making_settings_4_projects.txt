@@ -1,0 +1,40 @@
+these URLs may help to configure project file(s):
+
+https://learn.microsoft.com/en-us/cpp/build/reference/property-page-xml-files ;
+https://learn.microsoft.com/en-us/cpp/build/reference/vcxproj-files-and-wildcards ;
+https://learn.microsoft.com/en-us/cpp/build/reference/vcxproj-file-structure ;
+
+*important*
+taking into account that all project related files are created manually (files of all projects, filters and properties in this solution),
+there is some trick preventing to start a work with new project files in VS code explorer properly:
+	!!! do not forget !!!! to specify required property page file name in project file, otherwise there is a lot of time will be spent for nothing;
+
+*VS*
+https://stackoverflow.com/questions/5809245/completely-remove-error-list-from-visual-studio ;
+https://stackoverflow.com/questions/2466286/vs2010-how-to-remove-hide-the-external-dependencies-folder-in-solution-explor ;
+https://stackoverflow.com/questions/7883966/disabling-highlighting-of-current-line-in-visual-studio  ;
+
+*VS*BUGS*
+
+#1 Steps:
+1) After manually adding a file to the project, the file is displayed in the Solution Explorer;
+2) Clicking on the file to open it in the code editor of the VS;
+3) VS displayes the error box 'FileStream will not open Win32 devices such as disk partitions and tape drivers. Avoid use of "\\.\" in the path';
+4) Close the error box and right click on the file node for displaying the context menu;
+5) Choose 'Properties' menu command;
+!) Crash of the VS in couple of seconds; (VS2017 Community Edition)
+*) The reason is the code file name contains 'con' as part of the file name, like this: 'con.font.h' ; after renaming to 'console.font.h' VS works as expected;
+
+*important*
+in case when a reference path to external project is changed, reloading the project, for which the reference is changed, does not help to use that path in the code;
+because VS does not read new path or does not take it into account;
+
+unloading a solution and VS itself does not help too;
+the only step to fix it is:
+	deleting the folder .vs;
+
+SLN file manual edition:
+(1) it is impossible to separate GlobalSection(ProjectConfigurationPlatforms) = postSolution section to separate sections,
+    due to the last one is only taken into account by MS Build; postSolution & preSolution section value does not affect this behaviour;
+(2) Removing reference highlight:
+    Tools >> Options >> Text Editor >> C/C++ >> Advanced >> References >> Disable Reference Highlighting = True ;

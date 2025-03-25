@@ -18,16 +18,30 @@ namespace ora { namespace base { namespace oledb {
 	using CProgId = shared::sys_core::com::CProgId;
 
 	// https://github.com/MicrosoftDocs/cpp-docs/blob/main/docs/data/oledb/cenumeratoraccessor-class.md ;
-	// ToDo: it is necessary take into account the m_nType|m_bIsParent field value,  because the particular data provider may be an enumeration too;
 
 	class CProv_Types {
 	public:
-		enum _e_value : ushort {
-			e_undef   = 0x0,
-			e_regular = 0x1,
-			e_enum    = 0x2,
+	// ToDo: this enum element values require a clarification, .Net documentation shows different meanings of the values;
+	// https://learn.microsoft.com/en-us/dotnet/api/system.data.oledb.oledbenumerator.getrootenumerator ; 
+		enum _e_value : ushort {  // the element values are set from real dataset of the providers' enumeration;
+			e_undef   = 0x0,  // a type of the provider is not defined; (default)
+			e_regular = 0x1,  // regular data provider type;
+			e_enum    = 0x2,  // this is a provider enumerator;
 		};
+#if (0)
+	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms711200(v=vs.85) ;
+		enum _e_value : ushort {
+			e_binder  = 0x0,  // indicates a provider binder that supports direct URL binder ;
+			e_olap    = 0x1,  // this is a multidimensional (OLAP) provider (MDP) ;
+			e_table   = 0x2,  // tabular data provider (TDP) ;
+			e_enum    = 0x3,  // this is a provider enumerator ;
+		};
+#endif
 	};
+
+	// (1) https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-iparsedisplayname ;
+	// (2) https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-iparsedisplayname-parsedisplayname ; 
+	// (3) https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-imoniker ;
 
 	class CProvider {
 	public:

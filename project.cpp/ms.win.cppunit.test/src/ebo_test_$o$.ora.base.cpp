@@ -57,7 +57,7 @@ namespace ebo { namespace boo { namespace test {
 				prov_enum.Set();
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += prov_enum.Print(_T("\t\t")); // expected #empty collection of the data providers;
+				_out() += prov_enum.Print(_T("\t\t")); // a list of data providers which are registered is expected;
 				_out()();
 			}
 		};

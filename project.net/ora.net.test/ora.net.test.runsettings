@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!--
+      https://learn.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2017/test/configure-unit-tests-by-using-a-dot-runsettings-file ;
+      $(SolutionDir) does not work here: it is applied as directory name;
+  -->
+  <RunConfiguration>
+    <ResultsDirectory>..\..\!can_be_safely_removed__\TestResults</ResultsDirectory>
+    <TargetPlatform>x64</TargetPlatform>    
+  </RunConfiguration>
+
+  <!--MSTest>
+    <MapInconclusiveToFailed>True</MapInconclusiveToFailed>
+    <CaptureTraceOutput>True</CaptureTraceOutput>
+    <DeleteDeploymentDirectoryAfterTestRunIsComplete>False</DeleteDeploymentDirectoryAfterTestRunIsComplete>
+    <DeploymentEnabled>False</DeploymentEnabled>
+  </MSTest-->
+
+</RunSettings>

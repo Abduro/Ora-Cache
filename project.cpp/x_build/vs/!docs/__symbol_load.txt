@@ -1,0 +1,37 @@
+https://stackoverflow.com/questions/13050395/where-are-the-symbols-for-asp-net-mvc-4-0-rtm :
+
+    Go to Tools -> Options -> Debugger -> General.
+
+(a)    Uncheck “Enable Just My Code (Managed only)”.
+(b)    Uncheck “Enable .NET Framework source stepping”.
+       Yes, it is misleading, but if you don't, then Visual Studio will ignore your custom server order (see further on).
+(c)    Check “Enable source server support”.
+(d)    Uncheck “Require source files to exactly match the original version”
+
+    Go to Tools -> Options -> Debugger -> Symbols.
+
+(a)    Select a folder for the local symbol/source cache.
+(b)    Add symbol servers under “Symbol file (.pdb) locations”.
+       Pay attention to the correct order, because some servers may contain symbols for the same binaries: with or without sources.
+       It is recommended the following setup:
+        http://referencesource.microsoft.com/symbols
+        http://srv.symbolsource.org/pdb/Public or the authenticated variant (see above)
+        http://srv.symbolsource.org/pdb/MyGet or the authenticated variant (see above) (other symbol servers with sources)
+        http://msdl.microsoft.com/download/symbols (other symbol servers without sources)
+
+*Useful Links*
+https://learn.microsoft.com/en-us/visualstudio/debugger/specify-symbol-dot-pdb-and-source-files-in-the-visual-studio-debugger ;
+https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/microsoft-public-symbols ;
+https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/symbol-stores-and-symbol-servers ;
+https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/symbol-path ;
+https://learn.microsoft.com/en-us/windows/win32/dxtecharts/debugging-with-symbols ;
+
+https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/http-symbol-stores :: HTTP Symbol Stores;
+
+https://www.sqlskills.com/blogs/paul/how-to-download-a-sqlservr-pdb-symbol-file/ ;
+
+https://docs.myget.org/docs/reference/symbols ;
+
+https://www.bleepingcomputer.com/news/microsoft/microsoft-is-no-longer-providing-offline-msi-symbol-packages/ ;  looks very interesting;
+
+https://github.com/FranciscoNabas/PowerShellPublic/blob/main/Get-PdbSymbol.ps1 ; power shell implementation of the symbol downloader;
