@@ -1,0 +1,21 @@
+<Project>
+	<!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory -->
+	<PropertyGroup>
+		<!-- For non-SDK projects that import this file and then import Microsoft.Common.props,
+		     tell Microsoft.Common.props not to import Directory.Build.props again.
+		     https://github.com/dotnet/samples/blob/main/Directory.Build.props ;
+		-->
+		<ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
+		<!-- Enable .NET code analysis (this is necessary for projects that target 3.1 or earlier). -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+		<SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
+		<BaseOutputPath>$(SolutionDir)!bin__</BaseOutputPath>
+		<OutputPath>$(BaseOutputPath)\$(Platform)\$(Configuration)</OutputPath>
+
+		<BaseIntermediateOutputPath>$(SolutionDir)!can_be_safely_removed__</BaseIntermediateOutputPath>
+		<IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Platform)\$(Configuration)\$(ProjectName)</IntermediateOutputPath>  
+	</PropertyGroup>
+</Project>

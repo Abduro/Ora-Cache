@@ -1,0 +1,48 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.35826.109
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cpp", "cpp", "{00000C13-EEEE-BBBB-6667-200000000001}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net", "net", "{00000C13-EEEE-BBBB-6667-200000000002}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp_template.con", "cpp\cpp_template.con.vcxproj", "{00000C13-EEEE-BBBB-6667-000000000020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csh_template.con", "net\csh_template.con.csproj", "{00000C13-EEEE-BBBB-6667-CAA000000000}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00000C13-EEEE-BBBB-6667-000000000020}.Debug|x64.ActiveCfg = Debug|x64
+		{00000C13-EEEE-BBBB-6667-000000000020}.Debug|x64.Build.0 = Debug|x64
+		{00000C13-EEEE-BBBB-6667-000000000020}.Debug|x86.ActiveCfg = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-000000000020}.Debug|x86.Build.0 = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-000000000020}.Release|x64.ActiveCfg = Release|x64
+		{00000C13-EEEE-BBBB-6667-000000000020}.Release|x64.Build.0 = Release|x64
+		{00000C13-EEEE-BBBB-6667-000000000020}.Release|x86.ActiveCfg = Release|Win32
+		{00000C13-EEEE-BBBB-6667-000000000020}.Release|x86.Build.0 = Release|Win32
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Debug|x64.ActiveCfg = Debug|x64
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Debug|x64.Build.0 = Debug|x64
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Debug|x86.ActiveCfg = Debug|x86
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Debug|x86.Build.0 = Debug|x86
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Release|x64.ActiveCfg = Release|x64
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Release|x64.Build.0 = Release|x64
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Release|x86.ActiveCfg = Release|x86
+		{00000C13-EEEE-BBBB-6667-CAA000000000}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00000C13-EEEE-BBBB-6667-000000000020} = {00000C13-EEEE-BBBB-6667-200000000001}
+		{00000C13-EEEE-BBBB-6667-CAA000000000} = {00000C13-EEEE-BBBB-6667-200000000002}
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00000C13-EEEE-BBBB-6667-0AA000000555}
+	EndGlobalSection
+EndGlobal
