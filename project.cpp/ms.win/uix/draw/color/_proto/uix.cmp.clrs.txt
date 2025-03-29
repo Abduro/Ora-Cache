@@ -1,0 +1,18 @@
+https://planetcalc.com/7661/
+
+Timur
+
+Well, this one calculates complementary color by definition.
+If you want to play with the brightness, IMHO, the easiest way is to convert to HSV (hue-saturation-value) model,
+also called HSB (hue-saturation-brightness), like here (https://planetcalc.com/5788/) and play with the B parameter.
+
+Petes
+
+Hold your horses, I believe it's not so easy,
+if you check for example a color like FF7F6B you'll notice that as the color gets brighter then the complementary starts getting darker,
+which in theory is fine but if you check many online converters you'll notice that the complementary actually doesn't get darker because
+what I believe that they do is to also flip the brightness.
+
+So also notice how the sum of both colors will always be FFFFFF (never grays as stated in the description),
+with the other method I believe you can get more balanced colors and their sums can be for example 7F7F7F, 000000 and all the possible combinations of grays.
+

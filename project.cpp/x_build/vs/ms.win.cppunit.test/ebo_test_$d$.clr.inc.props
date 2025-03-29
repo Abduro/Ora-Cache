@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 3-Feb-2025 at 16:13:41.228, UTC+4, Batumi, Sunday;
-	This is Ebo pack MS Windows console extension lib include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 29-Aug-2024 at 15:38:49.6886328, UTC+4, Batumi, Thursday;
+	This is Ebo pack shared draw color library unit test project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -9,8 +9,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
-    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix.con\ext\</ThisLib><!-- This library is being compiled; -->
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color><!--This library is for testing!-->
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
@@ -19,8 +19,8 @@
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
-    <_3>$(Error)interface\</_3>
-    <_4></_4>
+    <_3>$(Color)interface\</_3><!--This library interface is being tested!-->
+    <_4>$(_3)named\</_4>
     <_5></_5>
     <_6></_6>
     <_7></_7>
@@ -29,7 +29,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -1,0 +1,48 @@
+@cpp  : {00000C13-EEEE-BBBB-6667-100000000000}
+	ora : {00000C13-EEEE-BBBB-6667-10A000000000}
+		ora.base   : {00000C13-EEEE-BBBB-6667-10A000000008}
+			ora.base_v15   : {00000C13-EEEE-BBBB-6667-00A000000000}   << ora base component wrappers;
+			
+		ora.cache  : {00000C13-EEEE-BBBB-6667-10A000000009}
+			ora.cache_v15  : {00000C13-EEEE-BBBB-6667-00A000000001}   << ora data cache base wrapper;
+
+		ora.notify : {00000C13-EEEE-BBBB-6667-10A00000000A}
+			ora.notify_v15 : {00000C13-EEEE-BBBB-6667-00A000000002}   << ora data change notification handler base wrapper;
+
+		ora.tests  : {00000C13-EEEE-BBBB-6667-10A00000000B}
+			ebo_test_$o$.ora.base   : {00000C13-EEEE-BBBB-6667-00A000060000}  << test cases for ora base components;
+			ebo_test_$o$.ora.cache  : {00000C13-EEEE-BBBB-6667-00A000060001}  << test cases for ora data cache;
+			ebo_test_$o$.ora.notify : {00000C13-EEEE-BBBB-6667-00A000060002}  << test cases for ora notification handler;
+
+	shared  : {00000C13-EEEE-BBBB-6667-100000001000}
+		core : {00000C13-EEEE-BBBB-6667-100000001100} << core wrapper projects' node;
+			sys.com.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A301} << comp-obj-model core wrapper;
+			sys.err.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A101} << system error core wrapper;
+			sys.shared_v15   : {00000C13-EEEE-BBBB-6667-000000000001} << generic shared classes;
+
+		uix  : {00000C13-EEEE-BBBB-6667-100000001200} << drawing and GUI related projects' node;
+			draw : {00000C13-EEEE-BBBB-6667-100000001200} << the node of draw projects;
+				color_v15 : {00000C13-EEEE-BBBB-6667-000000000022} << color define project;
+
+		runnable_v15 : {00000C13-EEEE-BBBB-6667-000000000007} << system thread pool wrapper;
+		
+	test.cases : {00000C13-EEEE-BBBB-6667-100000002000} << the root of test cases' projects;
+		core : {00000C13-EEEE-BBBB-6667-100000002100} << core wrapper projects' node;
+			ebo_test_$$$     : {00000C13-EEEE-BBBB-6667-C00000060000} << shared/common unit test lib project;
+			ebo_test_$0$.base: {00000C13-EEEE-BBBB-6667-000000060001} << test cases for generic shared project;
+			ebo_test_$1$.err : {00000C13-EEEE-BBBB-6667-00000006A101} << test cases for system error wrapper lib;
+			ebo_test_$3$.com : {00000C13-EEEE-BBBB-6667-00000006A301} << test cases for COM-wrapper lib;
+
+		uix  : {00000C13-EEEE-BBBB-6667-100000002200} << draing and GUI related projects' node;
+			draw : {00000C13-EEEE-BBBB-6667-100000002210} << the node of draw libs' test cases;
+			exe  : {00000C13-EEEE-BBBB-6667-100000002220} << the node of executable test cases eather console or window app;
+				ebo_test_con_v15 : {00000C13-EEEE-BBBB-6667-000000060020} << console based test cases project;
+
+			ebo_test_$c$.con.ext : {00000C13-EEEE-BBBB-6667-E00000060020} << test cases for console extension; 
+
+		ebo_test_$7$.run : {00000C13-EEEE-BBBB-6667-000000060007} << test cases for system thread pool project;
+
+@net  : {00000C13-EEEE-BBBB-6667-200000000000}
+	ora.net.base : {00000C13-EEEE-BBBB-6667-200000001000} << the node for ora base .Net wrapper project and test cases;
+		ora.net.base.csproj : {00000C13-EEEE-BBBB-6667-0AA000000000}  << ora base .Net wrapper project;
+		ora.net.test.csproj : {00000C13-EEEE-BBBB-6667-CAA000000000}  << ora base .Net wrapper test cases;

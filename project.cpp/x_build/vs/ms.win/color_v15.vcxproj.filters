@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000020000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\compl">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000020001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\named">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000020002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000020003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compl">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000002000f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\named">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000020005}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <!--files reside in root of interface folder!-->
+    <ClInclude Include="$(_0)color._defs.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)color.alpha.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)color.rgb.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_2)color.named.h"><Filter>interface\named</Filter></ClInclude>
+    <ClInclude Include="$(_2)color.shade.h"><Filter>interface\named</Filter></ClInclude>
+    <ClInclude Include="$(_2)color.x11.h"><Filter>interface\named</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <!--this is the root folder of source!-->
+    <ClCompile Include="$(_3)color._defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_3)color.alpha.cpp"><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_3)color.rgb.cpp"><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_5)color.named.cpp"><Filter>src\named</Filter></ClCompile>
+    <ClCompile Include="$(_5)color.shade.cpp"><Filter>src\named</Filter></ClCompile>
+    <ClCompile Include="$(_5)color.x11.cpp"><Filter>src\named</Filter></ClCompile>
+  </ItemGroup>
+  <!--ItemGroup>
+    <Image Include="$(_1)black-orange.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)black-red.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)black-white-red.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)black-yellow.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)blue-green.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)blue-pink.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)blue-turquoise.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)blue-white.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)charcoal-burnt-orange.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)grey-yellow.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)neutral-grey-red.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)orange-blue.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)orange-purple.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)peach-black.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)pink-blue.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)purple-pink.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)purple-yellow.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)red-navy-yellow.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)turquoise-marigold.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)yellow-green.png"><Filter>interface\compl</Filter></Image>
+    <Image Include="$(_1)yellow-red.png"><Filter>interface\compl</Filter></Image>
+  </ItemGroup-->
+</Project>

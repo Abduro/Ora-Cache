@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 3-Feb-2025 at 16:13:41.228, UTC+4, Batumi, Sunday;
-	This is Ebo pack MS Windows console extension lib include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 14-Mar-2024 at 16:52:03.4491490, UTC+7, Novosibirsk, Thursday;
+	This is Ebo pack color library project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -9,27 +9,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
-    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix.con\ext\</ThisLib><!-- This library is being compiled; -->
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\color\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
-    <_1>$(Root)src\</_1>
-    <_2>$(Shared)interface\</_2>
-    <_3>$(Error)interface\</_3>
-    <_4></_4>
-    <_5></_5>
-    <_6></_6>
+    <_1>$(_0)compl\</_1>
+    <_2>$(_0)named\</_2>
+    <_3>$(Root)src\</_3>
+    <_4>$(_3)compl\</_4>
+    <_5>$(_3)named\</_5>
+    <_6>$(Shared)interface\</_6>
     <_7></_7>
     <_8></_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />
