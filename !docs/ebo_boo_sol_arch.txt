@@ -21,8 +21,15 @@
 			sys.shared_v15   : {00000C13-EEEE-BBBB-6667-000000000001} << generic shared classes;
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000001200} << drawing and GUI related projects' node;
-			draw : {00000C13-EEEE-BBBB-6667-100000001200} << the node of draw projects;
+			draw : {00000C13-EEEE-BBBB-6667-100000001210} << the node of draw projects;
 				color_v15 : {00000C13-EEEE-BBBB-6667-000000000022} << color define project;
+			geometry : {00000C13-EEEE-BBBB-6667-100000001220} << this is draw shape geometry node;
+				2D : {00000C13-EEEE-BBBB-6667-100000001221} << 2D geometry node;
+					geometry.2d_v15 : {00000C13-EEEE-BBBB-6667-000000000033} << 2D space geometry project;
+				3D : {00000C13-EEEE-BBBB-6667-100000001222} << 3D geometry node;
+
+		uix.con : {00000C13-EEEE-BBBB-6667-100000001300} << console related projects' node;
+			console.ext_v15 : {00000C13-EEEE-BBBB-6667-E00000000020} << console extension project;
 
 		runnable_v15 : {00000C13-EEEE-BBBB-6667-000000000007} << system thread pool wrapper;
 		
@@ -37,6 +44,9 @@
 			draw : {00000C13-EEEE-BBBB-6667-100000002210} << the node of draw libs' test cases;
 			exe  : {00000C13-EEEE-BBBB-6667-100000002220} << the node of executable test cases eather console or window app;
 				ebo_test_con_v15 : {00000C13-EEEE-BBBB-6667-000000060020} << console based test cases project;
+			geometry : {00000C13-EEEE-BBBB-6667-100000002230} << the node of geometry test cases;
+				2D : {00000C13-EEEE-BBBB-6667-100000002231} << the node of 2D geometry test cases;
+					ebo_test_$g$.2d : {00000C13-EEEE-BBBB-6667-000000060033}
 
 			ebo_test_$c$.con.ext : {00000C13-EEEE-BBBB-6667-E00000060020} << test cases for console extension; 
 
