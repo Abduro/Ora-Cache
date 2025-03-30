@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\msg_handlers">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\msg_handlers">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\msg_handlers\mouse">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\msg_handlers\mouse">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000255}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_8)handler.base.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.base.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.client.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.client.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.draw.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.draw.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.frame.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.frame.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.life.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.life.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.menu.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.menu.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.sys.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.sys.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+    <ClInclude Include="$(_8)handlers.h" ><Filter>interface\msg_handlers</Filter></ClInclude>
+    <ClCompile Include="$(_9)handlers.cpp" ><Filter>src\msg_handlers</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_8)handler.mouse.h" ><Filter>interface\msg_handlers\mouse</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.mouse.cpp" ><Filter>src\msg_handlers\mouse</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.mouse.button.h" ><Filter>interface\msg_handlers\mouse</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.mouse.button.cpp" ><Filter>src\msg_handlers\mouse</Filter></ClCompile>
+    <ClInclude Include="$(_8)handler.mouse.track.h" ><Filter>interface\msg_handlers\mouse</Filter></ClInclude>
+    <ClCompile Include="$(_9)handler.mouse.track.cpp" ><Filter>src\msg_handlers\mouse</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)wnd.base.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)wnd.base.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)wnd.layout.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)wnd.layout.cpp" ><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

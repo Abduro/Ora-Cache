@@ -27,6 +27,8 @@
 				2D : {00000C13-EEEE-BBBB-6667-100000001221} << 2D geometry node;
 					geometry.2d_v15 : {00000C13-EEEE-BBBB-6667-000000000033} << 2D space geometry project;
 				3D : {00000C13-EEEE-BBBB-6667-100000001222} << 3D geometry node;
+			popup : {00000C13-EEEE-BBBB-6667-100000001230} << window popup project node;
+				win.popup_v15 : {00000C13-EEEE-BBBB-6667-000000000025} << window popup project;
 
 		uix.con : {00000C13-EEEE-BBBB-6667-100000001300} << console related projects' node;
 			console.ext_v15 : {00000C13-EEEE-BBBB-6667-E00000000020} << console extension project;
@@ -47,6 +49,8 @@
 			geometry : {00000C13-EEEE-BBBB-6667-100000002230} << the node of geometry test cases;
 				2D : {00000C13-EEEE-BBBB-6667-100000002231} << the node of 2D geometry test cases;
 					ebo_test_$g$.2d : {00000C13-EEEE-BBBB-6667-000000060033}
+			popup : {00000C13-EEEE-BBBB-6667-100000002240} << window popup project test cases' node;
+				ebo_test_$w$.pop : {00000C13-EEEE-BBBB-6667-000000060025}
 
 			ebo_test_$c$.con.ext : {00000C13-EEEE-BBBB-6667-E00000060020} << test cases for console extension; 
 
