@@ -77,7 +77,7 @@ namespace geometry { namespace base { namespace _2D {
 		~CPoint (void);
 
 	public:
-
+		void Clear   (void);        // just calling this->Set(0,0);
 		bool Is_zero (void) const;  // returns true in case when all point structure attributes have zero value;
 
 		const

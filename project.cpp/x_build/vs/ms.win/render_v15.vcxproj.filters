@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\direct_x">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\direct_x">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000443}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)render.base.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)render.base.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x._iface.h" ><Filter>interface\direct_x</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x._iface.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.h" ><Filter>interface\direct_x</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+  </ItemGroup>
+</Project>

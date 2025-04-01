@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 15-Mar-2025 at 19:38:24.9790417, UTC+4, Batumi, Saturday;
-	This is Ebo Pack console extension library unit test project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 21-Oct-2024 at 21:06:49.338, UTC+4, Batumi, Monday;
+	This is Ebo Pack UIX 3D geometry project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" /><!-- https://learn.microsoft.com/en-us/biztalk/core/which-node-name-characters-get-encoded -->
+  <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <Con-ext Condition="'$(Con-ext)'==''">..\..\..\ms.win\uix.con\ext\</Con-ext><!--This is the target being tested!-->
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
+    <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\geometry\3D\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>$(Root)interface\</_0>
+    <_0>$(Root)interface\</_0><!--*important*::like a VS does, an every path must end up with backslash!-->
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <_4>$(Con-ext)interface\</_4><!--This library interface is being tested!-->
-    <_5></_5>
+    <_4>$(_3)seh\</_4>
+    <_5>$(Geo-2d)interface\</_5>
     <_6></_6>
     <_7></_7>
+    <_8></_8>
     <_8></_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

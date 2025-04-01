@@ -100,7 +100,7 @@ CPoint:: CPoint (CPoint&& _victim) : CPoint() { *this = _victim; }
 CPoint::~CPoint (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
-
+void CPoint::Clear (void) { this->Set(0,0); }
 bool CPoint::Is_zero (void) const { return (!this->X() && !this->Y()); }
 
 const
@@ -274,6 +274,7 @@ CString    CPoint_2::Print (const e_print e_opt) const {
 /////////////////////////////////////////////////////////////////////////////
 
 CPoint_2& CPoint_2::operator = (const CPoint_2& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Marker(); return *this; }
+CPoint_2& CPoint_2::operator = (CPoint_2&& _victim) { *this = _victim; return *this; }
 CPoint_2& CPoint_2::operator <<(const CMarker& _marker) { this->Marker() = _marker; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////

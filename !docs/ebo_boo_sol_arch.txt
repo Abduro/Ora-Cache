@@ -23,10 +23,12 @@
 		uix  : {00000C13-EEEE-BBBB-6667-100000001200} << drawing and GUI related projects' node;
 			draw : {00000C13-EEEE-BBBB-6667-100000001210} << the node of draw projects;
 				color_v15 : {00000C13-EEEE-BBBB-6667-000000000022} << color define project;
+				render_v15 : {00000C13-EEEE-BBBB-6667-000000000044} << 2d/3d renderer project;
 			geometry : {00000C13-EEEE-BBBB-6667-100000001220} << this is draw shape geometry node;
 				2D : {00000C13-EEEE-BBBB-6667-100000001221} << 2D geometry node;
 					geometry.2d_v15 : {00000C13-EEEE-BBBB-6667-000000000033} << 2D space geometry project;
 				3D : {00000C13-EEEE-BBBB-6667-100000001222} << 3D geometry node;
+					geometry.3d_v15 : {00000C13-EEEE-BBBB-6667-000000000034} << 3D space geometry project;
 			popup : {00000C13-EEEE-BBBB-6667-100000001230} << window popup project node;
 				win.popup_v15 : {00000C13-EEEE-BBBB-6667-000000000025} << window popup project;
 
@@ -44,8 +46,11 @@
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000002200} << draing and GUI related projects' node;
 			draw : {00000C13-EEEE-BBBB-6667-100000002210} << the node of draw libs' test cases;
+				ebo_test_$d$.clr    : {00000C13-EEEE-BBBB-6667-000000060022} << test cases for color project;
+				ebo_test_$d$.render : {00000C13-EEEE-BBBB-6667-000000060044} << test cases for rendering project;
 			exe  : {00000C13-EEEE-BBBB-6667-100000002220} << the node of executable test cases eather console or window app;
 				ebo_test_con_v15 : {00000C13-EEEE-BBBB-6667-000000060020} << console based test cases project;
+				ebo_test_gui_v15 : {00000C13-EEEE-BBBB-6667-00000006A025} << window popup GUI test app project;
 			geometry : {00000C13-EEEE-BBBB-6667-100000002230} << the node of geometry test cases;
 				2D : {00000C13-EEEE-BBBB-6667-100000002231} << the node of 2D geometry test cases;
 					ebo_test_$g$.2d : {00000C13-EEEE-BBBB-6667-000000060033}

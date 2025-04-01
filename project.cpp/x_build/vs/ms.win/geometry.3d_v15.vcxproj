@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000025}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000034}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="win.popup.inc.props" />
+    <Import Project="geometry.3d.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="win.popup.inc.props" />
+    <Import Project="geometry.3d.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="win.popup.inc.props" />
+    <Import Project="geometry.3d.inc.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Co	nfiguration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="win.popup.inc.props" />
+    <Import Project="geometry.3d.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -178,38 +178,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)wnd.base.h" />
-    <ClCompile Include="$(_1)wnd.base.cpp" />
-    <ClInclude Include="$(_0)wnd.layout.h" />
-    <ClCompile Include="$(_1)wnd.layout.cpp" />
-    <ClInclude Include="$(_0)wnd.res.h" />
-    <ClCompile Include="$(_1)wnd.res.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_8)handler.base.h" />
-    <ClCompile Include="$(_9)handler.base.cpp" />
-    <ClInclude Include="$(_8)handler.client.h" />
-    <ClCompile Include="$(_9)handler.client.cpp" />
-    <ClInclude Include="$(_8)handler.draw.h" />
-    <ClCompile Include="$(_9)handler.draw.cpp" />
-    <ClInclude Include="$(_8)handler.frame.h" />
-    <ClCompile Include="$(_9)handler.frame.cpp" />
-    <ClInclude Include="$(_8)handler.life.h" />
-    <ClCompile Include="$(_9)handler.life.cpp" />
-    <ClInclude Include="$(_8)handler.menu.h" />
-    <ClCompile Include="$(_9)handler.menu.cpp" />
-    <ClInclude Include="$(_8)handler.sys.h" />
-    <ClCompile Include="$(_9)handler.sys.cpp" />
-    <ClInclude Include="$(_8)handlers.h" />
-    <ClCompile Include="$(_9)handlers.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_8)handler.mouse.h" />
-    <ClCompile Include="$(_9)handler.mouse.cpp" />
-    <ClInclude Include="$(_8)handler.mouse.button.h" />
-    <ClCompile Include="$(_9)handler.mouse.button.cpp" />
-    <ClInclude Include="$(_8)handler.mouse.track.h" />
-    <ClCompile Include="$(_9)handler.mouse.track.cpp" />
+    <ClInclude Include="$(_0)3d.shape.h" />
+    <ClCompile Include="$(_1)3d.shape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">
