@@ -9,6 +9,7 @@
 #include "sys.error.h"
 #include "direct_x._iface.h"
 #include "direct_x.adapter.h"
+#include "direct_x.device.h"
 #include "render.base.h"
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);

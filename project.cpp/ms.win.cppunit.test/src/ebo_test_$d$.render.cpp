@@ -53,6 +53,33 @@ namespace ebo { namespace boo { namespace test {
 				}
 			}
 		};
+
+		using TAda_Warp = ex_ui::draw::direct_x::CAda_Warp;
+		using TWarp_enum = ex_ui::draw::direct_x::CEnum_Warp;
+
+		__class(CWarp_enum) {
+
+			__method(Get) {
+				TWarp_enum warp_enum;
+				warp_enum.Set();
+				warp_enum.Get();
+			}
+		};
+
+		using TWarpDev = ex_ui::draw::direct_x::CDevice_Warp;
+
+		__class(CDev_warp) {
+
+			__method(Get) {
+
+				TWarp_enum warp_enum;
+				TWarpDev   wrap_dev ;
+				if (warp_enum.Set()) {
+					wrap_dev.Create(warp_enum.Get());
+				}
+			}
+
+		};
 	}
 
 }}}

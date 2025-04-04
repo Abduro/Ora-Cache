@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A30000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000A30001}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)sys.mem.global.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.mem.global.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.mem.handle.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.mem.handle.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.mem.heap.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.mem.heap.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

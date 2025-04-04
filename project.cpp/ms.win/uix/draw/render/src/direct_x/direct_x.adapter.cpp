@@ -111,6 +111,23 @@ using namespace ex_ui::draw::direct_x::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CAda_Warp:: CAda_Warp (void) : m_info{0} {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+TAdaInfoWarp& CAda_Warp::Info (void) const { return this->m_info; }
+TAdaInfoWarp& CAda_Warp::Info (void)       { return this->m_info; }
+
+bool CAda_Warp::Is (void) const { return (!!::_tcslen(this->Info().Description) && !!this->Info().AdapterLuid.LowPart); }
+
+const
+TWarpAdaPtr&  CAda_Warp::Ptr (void) const { return this->m_object; }
+TWarpAdaPtr&  CAda_Warp::Ptr (void)       { return this->m_object; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+
 CAdapter:: CAdapter (void) : m_info{0}, m_performance(false), m_support_12(false) {}
 CAdapter:: CAdapter (const CAdapter& _ref) : CAdapter() { *this = _ref; }
 CAdapter:: CAdapter (const TAdapterInfo& _info) : CAdapter() { *this << _info; }
@@ -195,8 +212,7 @@ err_code    CAdapter_Enum::Set   (void)
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1 ;
 	this->m_error << ::CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&factory);
 	if (true == this->Error()) {
-
-		return this->Error();
+	    return  this->Error();
 	}
 
 	UINT n_index = 0;
@@ -238,10 +254,10 @@ err_code    CAdapter_Enum::Set   (void)
 	// the second step for getting high performance adapter(s)
 	if (false == this->Error())
 	{
-#if (0) // it requires Windows SDK 10.0.17763.0 and above;
+#if (1) // it requires Windows SDK 10.0.17763.0 and above; https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/ ;
 		::ATL::CComPtr<IDXGIFactory6> factory6; // is required for getting adapter info by using GPU preference;
 
-		if (S_OK == (factory->QueryInterface(IID_PPV_ARGS(&factory6))))
+		if (__s_ok == (factory->QueryInterface(IID_PPV_ARGS(&factory6))))
 		{
 			if (adapter) adapter = nullptr;
 			n_index = 0;
@@ -250,10 +266,10 @@ err_code    CAdapter_Enum::Set   (void)
 			// according to official documents, an adapter that has the highest performance comes first;
 			// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/nf-dxgi1_6-idxgifactory6-enumadapterbygpupreference ;
 			for (
-				n_index = 0; 
-				S_OK == factory6->EnumAdapterByGpuPreference(n_index, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&adapter)) &&
-				S_OK == adapter ->GetDesc1(&info_);
-				n_index++
+					n_index = 0;
+					__s_ok == factory6->EnumAdapterByGpuPreference(n_index, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&adapter)) &&
+					__s_ok == adapter ->GetDesc1(&info_);
+					n_index++
 			    )
 			{
 				CAdapter fast_run(info_);
@@ -275,6 +291,71 @@ err_code    CAdapter_Enum::Set   (void)
 	return this->Error();
 }
 
+const CAdapter& CAdapter_Enum::Get(const TFlag _e_flag) const {
+	_e_flag;
+	static const CAdapter ada_undef;
+	if (this->Get().empty())
+		return ada_undef;
+	for (size_t i_ = 0; i_ < this->Get().size(); i_++) {
+		switch (_e_flag) {
+		case TFlag::DXGI_ADAPTER_FLAG_SOFTWARE: {
+			const CAdapter& adapter = this->Get().at(i_);
+			if (adapter.Info().Flags == (uint32_t)_e_flag) {
+			}
+		} break;
+		}
+	}
+	return ada_undef;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CAdapter_Enum&  CAdapter_Enum::operator = (const CAdapter_Enum& _ref) { this->m_error = _ref.Error(); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CEnum_Warp:: CEnum_Warp (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CEnum_Warp:: CEnum_Warp (const CEnum_Warp& _src) : CEnum_Warp() { *this = _src; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+TErrorRef    CEnum_Warp::Error (void) const { return this->m_error; }
+const
+CAda_Warp&   CEnum_Warp::Get (void) const { return this->m_ada_warp; }
+
+err_code     CEnum_Warp::Set (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	// https://stackoverflow.com/questions/42354369/idxgifactory-versions ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nf-dxgi1_3-createdxgifactory2 ;
+
+	::ATL::CComPtr<IDXGIFactory4> factory_4;
+	this->m_error << ::CreateDXGIFactory2(0, __uuidof(IDXGIFactory4), (void**)&factory_4);
+	if (true == this->Error()) {
+		return  this->Error();
+	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiadapter ;
+	TWarpAdaPtr warp_ada;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_4/nf-dxgi1_4-idxgifactory4-enumwarpadapter ;
+	this->m_error << factory_4->EnumWarpAdapter(__uuidof(IDXGIAdapter), (void**)&warp_ada);
+	if (true == this->Error()) {
+		return  this->Error();
+	}
+	else
+		this->m_ada_warp.Ptr() = warp_ada;
+
+	TAdaInfoWarp warp_info = { 0 };
+
+	this->m_error << warp_ada->GetDesc(&warp_info);
+	if (true == this->Error()) {
+	    return  this->Error();
+	}
+
+	this->m_ada_warp.Info() = warp_info;
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CEnum_Warp&  CEnum_Warp::operator = (const CEnum_Warp& _src) { _src; return *this; }

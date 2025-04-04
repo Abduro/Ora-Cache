@@ -21,5 +21,7 @@
     <ClCompile Include="$(_3)direct_x._iface.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.adapter.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.adapter.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.device.h" ><Filter>interface\direct_x</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.device.cpp" ><Filter>src\direct_x</Filter></ClCompile>
   </ItemGroup>
 </Project>

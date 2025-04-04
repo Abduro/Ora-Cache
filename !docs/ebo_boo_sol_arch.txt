@@ -18,6 +18,7 @@
 		core : {00000C13-EEEE-BBBB-6667-100000001100} << core wrapper projects' node;
 			sys.com.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A301} << comp-obj-model core wrapper;
 			sys.err.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A101} << system error core wrapper;
+			sys.mem.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A201} << system memory core wrapper;
 			sys.shared_v15   : {00000C13-EEEE-BBBB-6667-000000000001} << generic shared classes;
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000001200} << drawing and GUI related projects' node;
@@ -43,6 +44,7 @@
 			ebo_test_$0$.base: {00000C13-EEEE-BBBB-6667-000000060001} << test cases for generic shared project;
 			ebo_test_$1$.err : {00000C13-EEEE-BBBB-6667-00000006A101} << test cases for system error wrapper lib;
 			ebo_test_$3$.com : {00000C13-EEEE-BBBB-6667-00000006A301} << test cases for COM-wrapper lib;
+			ebo_test_$2$.mem : {00000C13-EEEE-BBBB-6667-00000006A201} << test cases for system memory wrapper lib;
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000002200} << draing and GUI related projects' node;
 			draw : {00000C13-EEEE-BBBB-6667-100000002210} << the node of draw libs' test cases;

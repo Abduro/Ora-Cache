@@ -21,12 +21,12 @@
   <PropertyGroup>
     <EboProjectVersion Condition="'$(EboProjectVersion)'==''">15.0</EboProjectVersion>
     <EboRootNamespace Condition="'$(EboRootNamespace)'==''">$(ProjectName)</EboRootNamespace>
-    <EboWindowsTargetPlatformVersion Condition="'$(EboWindowsTargetPlatformVersion)'==''">10.0.18362.0</EboWindowsTargetPlatformVersion>
+    <EboWindowsTargetPlatformVersion Condition="'$(EboWindowsTargetPlatformVersion)'==''">10.0.16299.0</EboWindowsTargetPlatformVersion>
     <EboPlatformTools Condition="'$(EboPlatformTools)'==''">v141</EboPlatformTools>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000044}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-00000000A201}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -36,6 +36,8 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -43,12 +45,16 @@
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -56,6 +62,8 @@
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -64,19 +72,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="sys.mem.core.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="sys.mem.core.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="sys.mem.core.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="sys.mem.core.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -116,6 +124,7 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -130,6 +139,7 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -146,6 +156,7 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -166,6 +177,7 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -178,14 +190,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)render.base.h" />
-    <ClCompile Include="$(_1)render.base.cpp" />
-    <ClInclude Include="$(_2)direct_x._iface.h" />
-    <ClCompile Include="$(_3)direct_x._iface.cpp" />
-    <ClInclude Include="$(_2)direct_x.adapter.h" />
-    <ClCompile Include="$(_3)direct_x.adapter.cpp" />
-    <ClInclude Include="$(_2)direct_x.device.h" />
-    <ClCompile Include="$(_3)direct_x.device.cpp" />
+    <ClInclude Include="$(_0)sys.mem.global.h"/>
+    <ClCompile Include="$(_1)sys.mem.global.cpp"/>
+    <ClInclude Include="$(_0)sys.mem.handle.h"/>
+    <ClCompile Include="$(_1)sys.mem.handle.cpp"/>
+    <ClInclude Include="$(_0)sys.mem.heap.h"/>
+    <ClCompile Include="$(_1)sys.mem.heap.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">
@@ -193,12 +203,6 @@
     </ProjectReference>
     <ProjectReference Include="sys.err.core_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
-    </ProjectReference>
-    <ProjectReference Include="color_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000022}</Project>
-    </ProjectReference>
-    <ProjectReference Include="geometry.2d_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000033}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

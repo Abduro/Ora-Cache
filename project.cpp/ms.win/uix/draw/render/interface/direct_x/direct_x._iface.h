@@ -14,8 +14,9 @@
 */
 // https://learn.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-environment-set-up ;
 #include <d3d12.h>
-#include <dxgi.h>    // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory ;
-#include <dxgi1_6.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6 ; 
+#include <dxgi.h>    // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory ; (deprecated on Windows 8/8.1/10);
+#include <dxgi1_4.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_4/nn-dxgi1_4-idxgifactory4 ; << for getting WARP;
+#include <dxgi1_6.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6 ; << for getting GPU adapter best;
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib" )
