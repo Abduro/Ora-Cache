@@ -30,9 +30,9 @@ _pc_sz CErr_Details::args (_pc_sz _lp_sz_pat, const va_list& _err_args) {
 		do
 		{
 			t_size += 2048;
-			TCHAR* t_buf = new TCHAR[t_size];
+			t_char* t_buf = new t_char[t_size];
 
-			::memset(t_buf, 0, t_size * sizeof(TCHAR));
+			::memset(t_buf, 0, t_size * sizeof(t_char));
 
 			hr_ = ::StringCchVPrintfEx(
 				t_buf     ,
@@ -83,10 +83,10 @@ CErr_Details& CErr_Details::operator << (const CLang&   _err_lang) {
 
 CErr_Details& CErr_Details::operator << (const dword    _err_code) {
 	this->clear();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessage ;
+	t_char t_buf[_MAX_PATH] = {0};
 
-	TCHAR t_buf[_MAX_PATH] = {0};
-
-	::FormatMessage(
+	const bool b_result = !!::FormatMessage(
 		FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL         ,
 		_err_code    ,
@@ -99,9 +99,12 @@ CErr_Details& CErr_Details::operator << (const dword    _err_code) {
 	if (ERROR_RESOURCE_LANG_NOT_FOUND == ::GetLastError()) {
 		m_desc = CErr_Msg().NotFound();
 	}
-	else {
+	else if (b_result) {
 		m_desc = t_buf;
 		this->normalize();
+	}
+	else {
+		m_desc = _T("#undef;");
 	}
 
 	return *this;
@@ -109,8 +112,9 @@ CErr_Details& CErr_Details::operator << (const dword    _err_code) {
 CErr_Details& CErr_Details::operator << (const err_code  _err_code) {
 	this->clear();
 
-	WCHAR t_buf[_MAX_PATH] = {0};
-	::FormatMessageW(
+	t_char t_buf[_MAX_PATH] = {0};
+
+	const bool b_result = ::FormatMessage(
 		FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL         ,
 		_err_code    ,
@@ -119,9 +123,14 @@ CErr_Details& CErr_Details::operator << (const err_code  _err_code) {
 		_MAX_PATH - 1,
 		NULL
 	);
-	m_desc = t_buf;
-	this->normalize();
 
+	if (b_result) {
+		m_desc = t_buf;
+		this->normalize();
+	}
+	else {
+		m_desc = _T("#undef;");
+	}
 	return *this;
 }
 CErr_Details& CErr_Details::operator << (const va_list& _err_args) {

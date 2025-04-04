@@ -13,8 +13,9 @@
 	Using the latest features of DirectX12 requires Windows Target Platform Version 10.0.17763.0 and above; this can be applied via VC project settings;
 */
 // https://learn.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-environment-set-up ;
-#include <d3d12.h>
+#include <d3d12.h>   // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ ; << for command queue;
 #include <dxgi.h>    // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory ; (deprecated on Windows 8/8.1/10);
+#include <dxgi1_2.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgiswapchain1 << for swap chain definition;
 #include <dxgi1_4.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_4/nn-dxgi1_4-idxgifactory4 ; << for getting WARP;
 #include <dxgi1_6.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6 ; << for getting GPU adapter best;
 
@@ -24,8 +25,9 @@
 #include "render.base.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
-
+	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-error ; << FormatMessage() can be used, i.e. CError{} works;
 	using shared::sys_core::CError;
+	using TError = const CError;
 
 }}}
 

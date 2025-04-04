@@ -6,6 +6,7 @@
 */
 #include "direct_x._iface.h"
 #include "direct_x.adapter.h"
+#include "direct_x.queue.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
 
@@ -19,7 +20,10 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		~CDevice (void);
 
 	public:
+		err_code  Get (CCmdQueue&);    // creates command queue object;
+
 		TError&   Error (void) const;
+		bool   Is_valid (void) const;
 		const
 		TDevicePtr& Ptr (void) const;
 		TDevicePtr& Ptr (void) ;
@@ -39,7 +43,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		~CDevice_Warp (void) = default;
 
 	public:
-		err_code Create (const CAda_Warp&);
+		err_code Create (const CAda_Warp&); // creates this device object by using input wrap-adapter;
 
 	private:
 		CDevice_Warp& operator = (const CDevice_Warp&) = delete;

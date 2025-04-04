@@ -312,7 +312,7 @@ bool      CError::Is    (void) const { return ((bool)m_state == true); }
 err_code  CError::Last  (void)       { m_state.Set(::GetLastError()) ;  return *this; }
 TLangRef& CError::Lang  (void) const { return m_state;   }
 _pc_sz    CError::Method(void) const { SAFE_LOCK(m_state); return m_method.GetString(); }
-void      CError::Method(_pc_sz _v) { SAFE_LOCK(m_state); m_method = _v;}
+void      CError::Method(_pc_sz _v)  { SAFE_LOCK(m_state); m_method = _v;}
 void      CError::Reset (void)       { m_state = true;   }
 err_code  CError::Result(void) const { return  m_state;  }
 err_code  CError::Result(const err_code _new)
