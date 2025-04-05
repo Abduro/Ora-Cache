@@ -151,8 +151,8 @@ const
 TAdapterInfo& CAdapter::Info (void) const { return this->m_info; }
 TAdapterInfo& CAdapter::Info (void)       { return this->m_info; }
 // https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-luid ;
-// actually, checking description attribute is enough;
-bool    CAdapter::Is (void) const { return (!!::_tcslen(this->Info().Description) && !!this->Info().AdapterLuid.LowPart); }
+// checking description attribute is *not* enough, the pointer to object must be checked too, otherwise, the desc must be moved to its own class;
+bool    CAdapter::Is (void) const { return (nullptr != this->Ptr() && !!::_tcslen(this->Info().Description) && !!this->Info().AdapterLuid.LowPart); }
 
 bool    CAdapter::Is_12_Supported (void) const  { return this->m_support_12; }
 void    CAdapter::Is_12_Supported (bool _value) { this->m_support_12 = _value; }
@@ -168,11 +168,16 @@ CString CAdapter::Print(_pc_sz _lp_sz_sep, bool _aligned) const
 	return  cs_out;
 }
 #endif
+
+const
+TAdapterPtr& CAdapter::Ptr (void) const { return this->m_p_adapter; }
+TAdapterPtr& CAdapter::Ptr (void)       { return this->m_p_adapter; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 CAdapter&  CAdapter::operator = (const CAdapter& _ref)
 {
-	*this << _ref.Info();
+	*this << _ref.Info() << _ref.Ptr();
 
 	this->Is_12_Supported(_ref.Is_12_Supported());
 	this->Is_Hi_Performed(_ref.Is_Hi_Performed());
@@ -185,12 +190,13 @@ CAdapter&  CAdapter::operator = (CAdapter&& _victim) {
 }
 
 CAdapter&  CAdapter::operator <<(const TAdapterInfo& _info) { this->Info(_info); return *this; }
+CAdapter&  CAdapter::operator <<(const TAdapterPtr& _p_adapter) { this->Ptr() = _p_adapter; return *this; }
 
 bool CAdapter::operator == (const CAdapter& _ref) const { return *this == _ref.Info(); }
 bool CAdapter::operator == (const TAdapterInfo& _ref) const { return (this->Info().AdapterLuid.LowPart == _ref.AdapterLuid.LowPart); }
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if (1)
 CAdapter_Enum:: CAdapter_Enum (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CAdapter_Enum:: CAdapter_Enum (const CAdapter_Enum& _ref) : CAdapter_Enum() { *this = _ref; }
 CAdapter_Enum::~CAdapter_Enum (void) {}
@@ -359,3 +365,5 @@ err_code     CEnum_Warp::Set (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 CEnum_Warp&  CEnum_Warp::operator = (const CEnum_Warp& _src) { _src; return *this; }
+
+#endif

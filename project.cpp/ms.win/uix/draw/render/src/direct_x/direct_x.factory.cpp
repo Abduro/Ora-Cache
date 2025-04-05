@@ -29,6 +29,40 @@ err_code CFac_4::Create(void) {
 TError&  CFac_4::Error (void) const { return this->m_error; }
 bool     CFac_4::Is_valid (void) const { return nullptr != this->Ptr(); }
 
+err_code  CFac_4::Get  (CAdapter& _adapter) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (_adapter.Is())
+		return (this->m_error << (err_code)TErrCodes::eObject::eExists);
+
+	if (false == this->Is_valid())
+		return (this->m_error << __e_not_inited);
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice ;
+	TAdapterPtr p_adapter;
+	uint32_t n_index = 0;
+	err_code n_error = __s_ok;
+	do {
+		n_error = this->Ptr()->EnumAdapters1(n_index, &p_adapter);
+		if (__failed(n_error))
+			break;
+		// checks the adapter pointer for capability of creating a device; no device is actually created: the last arg is nullptr;
+		n_error = ::D3D12CreateDevice(p_adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(TAdapterPtr), nullptr);
+		if (__succeeded(n_error)) {
+
+			TAdapterInfo info_ = { 0 };
+			this->m_error << p_adapter->GetDesc1(&info_);
+			if (false == this->m_error) {
+				_adapter.Ptr() = p_adapter;
+				_adapter.Info() = info_;
+				break;
+			}
+		}
+		n_index += 1; // goes ahead;
+	} while (__succeeded(n_error));
+
+	return this->Error();
+}
+
 err_code  CFac_4::Get  (CAda_Warp& _adapter) {
 	this->m_error << __METHOD__ << __s_ok;
 

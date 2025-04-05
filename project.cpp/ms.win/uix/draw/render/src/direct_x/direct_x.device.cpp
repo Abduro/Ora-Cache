@@ -53,8 +53,24 @@ err_code CDevice_Warp::Create (const CAda_Warp& _ada_warp) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_feature_level ;
 	TBase::m_error << ::D3D12CreateDevice(_ada_warp.Ptr(), D3D_FEATURE_LEVEL_11_0, __uuidof(TWarpAdaPtr), (void**)&TBase::Ptr());
-	if (true == TBase::m_error)
-	     return TBase::m_error;
+	
+	return TBase::Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDevice_HW:: CDevice_HW (void) : TBase() {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code  CDevice_HW::Create (const CAdapter& _adapter) {
+	_adapter;
+	TBase::m_error << __METHOD__ << __s_ok;
+
+	if (false == _adapter.Is())
+		return (TBase::m_error << __e_invalid_arg) = _T("Input adapter is not valid;");
+
+	TBase::m_error << ::D3D12CreateDevice(_adapter.Ptr(), D3D_FEATURE_LEVEL_11_0, _uuidof(TAdapterPtr), (void**)&TBase::Ptr());
 
 	return TBase::Error();
 }

@@ -32,7 +32,76 @@ CBuffer&  CBuffer::operator >>(const uint32_t _n_usage) { this->Usage(_n_usage);
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSwapDesc:: CSwapDesc (void) : m_desc{0}, m_buffer(m_desc) {}
+using CSample = CSwapDesc::CSample;
+
+CSample::CSample (TSwapDesc& _desc) : m_desc(_desc) { this->m_desc.SampleDesc.Count = 1; this->m_desc.SampleDesc.Quality = 0; }
+CSample::CSample (const CSample& _src) : CSample(_src.m_desc) { *this = _src; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+uint32_t  CSample::Count (void) const { return this->m_desc.SampleDesc.Count; }
+bool      CSample::Count (const uint32_t _n_value) {
+	const bool b_changed = (this->Count() != _n_value); if (b_changed) this->m_desc.SampleDesc.Count = _n_value; return b_changed;
+}
+uint32_t  CSample::Quality (void) const { return this->m_desc.SampleDesc.Quality; }
+bool      CSample::Quality (const uint32_t _n_value) {
+	const bool b_changed = (this->Quality() != _n_value); if (b_changed) this->m_desc.SampleDesc.Quality = _n_value; return b_changed;
+}
+
+bool CSample::Set (const uint32_t _n_count, const uint32_t _n_quality) {
+	bool b_changed = false;
+
+	if (this->Count(_n_count)) b_changed = true;
+	if (this->Quality(_n_quality)) b_changed = true;
+
+	return b_changed;
+}
+
+const
+TSampleDesc& CSample::Raw (void) const { return this->m_desc.SampleDesc; }
+TSampleDesc& CSample::Raw (void) { return this->m_desc.SampleDesc; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+using CSize = CSwapDesc::CSize;
+
+CSize:: CSize (TSwapDesc& _desc) : m_desc(_desc) { this->m_desc.Height = this->m_desc.Width = 0; }
+CSize:: CSize (const CSize& _src) : CSize(_src.m_desc) { *this = _src; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+uint32_t CSize::Height (void) const { return this->H(); }
+bool     CSize::Height (const uint32_t _n_value) { return this->H(_n_value); }
+
+uint32_t CSize::H (void) const { return this->m_desc.Height; }
+bool     CSize::H (const uint32_t _n_value) {
+	const bool b_changed = (this->H() != _n_value); if (b_changed) this->m_desc.Height = _n_value; return b_changed;
+}
+
+uint32_t CSize::Width (void) const { return this->W(); }
+bool     CSize::Width (const uint32_t _n_value) { return this->W(_n_value); }
+
+uint32_t CSize::W (void) const { return this->m_desc.Width; }
+bool     CSize::W (const uint32_t _n_value) {
+	const bool b_changed = (this->W() != _n_value); if (b_changed) this->m_desc.Width = _n_value; return b_changed;
+}
+
+bool     CSize::Set (const uint32_t _n_width, const uint32_t _n_height) {
+	bool b_changed = false;
+	if (this->H(_n_height)) b_changed = true;
+	if (this->W(_n_width)) b_changed = true;
+	return b_changed;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSize&  CSize::operator = (const CSize& _src) { *this << _src.W() >> _src.H(); return *this; }
+CSize&  CSize::operator <<(const uint32_t _n_width) { this->W(_n_width); return *this; }
+CSize&  CSize::operator >>(const uint32_t _n_height) { this->H(_n_height); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSwapDesc:: CSwapDesc (void) : m_desc{0}, m_buffer(m_desc), m_size(m_desc), m_sample(m_desc) {}
 CSwapDesc:: CSwapDesc (const CSwapDesc& _src) : CSwapDesc() { *this = _src; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -42,6 +111,12 @@ CBuffer&    CSwapDesc::Buffer (void)       { return this->m_buffer; }
 const
 TSwapDesc&  CSwapDesc::Raw (void) const { return this->m_desc; }
 TSwapDesc&  CSwapDesc::Raw (void)       { return this->m_desc; }
+const
+CSample&    CSwapDesc::Sample (void) const { return this->m_sample; }
+CSample&    CSwapDesc::Sample (void)       { return this->m_sample; }
+const
+CSize&  CSwapDesc::Size (void) const { return this->m_size; }
+CSize&  CSwapDesc::Size (void)       { return this->m_size; }
 
 /////////////////////////////////////////////////////////////////////////////
 

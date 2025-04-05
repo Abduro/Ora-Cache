@@ -19,6 +19,9 @@
 #include <dxgi1_4.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_4/nn-dxgi1_4-idxgifactory4 ; << for getting WARP;
 #include <dxgi1_6.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6 ; << for getting GPU adapter best;
 
+#include <dcommon.h> // https://learn.microsoft.com/en-us/windows/win32/api/dcommon/ns-dcommon-d2d1_pixel_format ; << pixel format ;
+#include <d2d1.h>    // https://learn.microsoft.com/en-us/windows/win32/direct2d/d2d1-size-u ; << for base datatypes ;
+
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib" )
 

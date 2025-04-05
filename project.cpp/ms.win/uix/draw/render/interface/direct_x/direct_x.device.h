@@ -11,7 +11,7 @@
 namespace ex_ui { namespace draw { namespace direct_x {
 
 	using TError = const shared::sys_core::CError;
-
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice ;
 	typedef ::ATL::CComPtr<ID3D12Device> TDevicePtr;
 
 	class CDevice {
@@ -48,6 +48,20 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	private:
 		CDevice_Warp& operator = (const CDevice_Warp&) = delete;
 		CDevice_Warp& operator = (CDevice_Warp&&) = delete;
+	};
+	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
+
+	class CDevice_HW : public CDevice { typedef CDevice TBase;
+	public:
+		 CDevice_HW (void); CDevice_HW (const CDevice_HW&) = delete; CDevice_HW (CDevice_HW&&) = delete;
+		~CDevice_HW (void) = default;
+
+	public:
+		err_code  Create (const CAdapter&); // creates a device for input hardware adapter;
+
+	public:
+		CDevice_HW& operator = (const CDevice_HW&) = delete;
+		CDevice_HW& operator = (CDevice_HW&&) = delete;
 	};
 }}}
 

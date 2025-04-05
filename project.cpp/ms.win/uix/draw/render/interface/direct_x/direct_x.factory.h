@@ -10,6 +10,16 @@
 
 namespace ex_ui { namespace draw { namespace direct_x {
 	// https://www.abbreviations.com/abbreviation/factory ;
+#pragma region __refs
+// this class for enumerating *all* adapters uses method IDXGIFactory1::EnumAdapters1();
+// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#new-info-about-enumerating-adapters-for-windows-8 ;
+// actually, DXGIFactories have their own interface hirachy, like this:
+// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory1 (enumerates both adapters (video cards) with or without outputs);
+// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgifactory2 (introduces a lot of methods for controlling swap chain creation);
+// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nn-dxgi1_3-idxgifactory3 (introduces the method for getting flags of graphic object creation);
+// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgifactory5 (introduces checking feature support);
+#pragma endregion
+
 //	typedef IDXGIFactory   IDXGIFactory0;
 //	typedef ::ATL::CComPtr<IDXGIFactory0> TFac0Ptr;
 //	typedef ::ATL::CComPtr<IDXGIFactory1> TFac1Ptr;
@@ -18,6 +28,9 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	typedef ::ATL::CComPtr<IDXGIFactory4> TFac4Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory5> TFac5Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory6> TFac6Ptr;
+
+	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp ;
+	// it looks like the only one warp adapter may exist in the system;
 
 	class CFac_4 {
 	public:
@@ -31,6 +44,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TError&  Error (void) const;
 		bool  Is_valid (void) const;
 
+		err_code  Get  (CAdapter&);     // retrieves the hardware adapter;
 		err_code  Get  (CAda_Warp&);    // retrieves the warp adapter from this factory;
 		err_code  Get  (CSwapChain&);   // creates the swap chain for an output window;
 

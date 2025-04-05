@@ -59,6 +59,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TWarpAdaPtr  m_object;
 	};
 	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi << about adapter types;
+	typedef ::ATL::CComPtr<IDXGIAdapter1> TAdapterPtr;
+
 	class CAdapter
 	{
 	public:
@@ -74,10 +76,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TAdapterInfo& Info (void) const;
 		TAdapterInfo& Info (void)      ;
 
-		bool Is (void) const;                // returns true if adapter information is initialized;
-#if defined(_DEBUG)
-		CString  Print(_pc_sz _lp_sz_sep = _T("\n\t\t"), bool _aligned = true) const; // creates a string from adapter information for output;
-#endif
+		bool Is (void) const;                // returns true if adapter information is initialized and the pointer to object is set;
+
 	public: // TODO: maybe creating adapter attribute class would be better, but not for this version;
 		bool Is_12_Supported (void) const;   // returns true in case if this adapter supports Direct3D 12;
 		void Is_12_Supported (bool)      ;
@@ -85,9 +85,17 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		bool Is_Hi_Performed (void) const;   // returns true in case this adapter is highest performing GPU;
 		void Is_Hi_Performed (bool)      ;
 
+#if defined(_DEBUG)
+		CString  Print(_pc_sz _lp_sz_sep = _T("\n\t\t"), bool _aligned = true) const; // creates a string from adapter information for output;
+#endif
+		const 
+		TAdapterPtr&  Ptr (void) const;
+		TAdapterPtr&  Ptr (void) ;
+
 	public:
 		CAdapter& operator = (const CAdapter&);
 		CAdapter& operator <<(const TAdapterInfo&); // sets adapter information by copying input structure;
+		CAdapter& operator <<(const TAdapterPtr&);
 
 		CAdapter& operator = (CAdapter&&);
 
@@ -95,6 +103,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		bool operator == (const TAdapterInfo&) const;
 
 	private:
+		TAdapterPtr  m_p_adapter;
 		TAdapterInfo m_info;
 		bool   m_performance; // this flag indicates a preference to high performance GPU;
 		bool   m_support_12;  // this flag indicates supporting Direct3D 12;
@@ -102,15 +111,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	typedef ::std::vector<CAdapter> TAdapters;
 
-#pragma region __refs
-	// this class for enumerating *all* adapters uses method IDXGIFactory1::EnumAdapters1();
-	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#new-info-about-enumerating-adapters-for-windows-8 ;
-	// actually, DXGIFactories have their own interface hirachy, like this:
-	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory1 (enumerates both adapters (video cards) with or without outputs);
-	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgifactory2 (introduces a lot of methods for controlling swap chain creation);
-	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nn-dxgi1_3-idxgifactory3 (introduces the method for getting flags of graphic object creation);
-	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgifactory5 (introduces checking feature support);
-#pragma endregion
+#if (1) // the adapter enumerators are saved for this time yet;
 	class CAdapter_Enum
 	{
 	public:
@@ -158,6 +159,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		CAda_Warp m_ada_warp;
 		CError    m_error;
 	};
+
+#endif
 }}}
 
 #endif/*_DIRECT_X_ADAPTER_H_INCLUDED*/
