@@ -2,7 +2,9 @@
 #define _EBO_TEST_$D$_RENDER_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 02-Apr-2025 at 04:40:50.58, UTC+4, Batumi, Wednesday;
-	This is Ebo Pack 2D/3D draw renderer lib unit test interface declaration file; 
+	This is Ebo Pack 2D/3D draw renderer lib unit test interface declaration file;
+	-----------------------------------------------------------------------------
+	*Important* : this project must refer the same Windows SDK version as render project does (10.0.18362.0);
 */
 #include "_log.h"
 
@@ -10,6 +12,9 @@
 #include "direct_x._iface.h"
 #include "direct_x.adapter.h"
 #include "direct_x.device.h"
+#include "direct_x.factory.h"
+#include "direct_x.queue.h"
+#include "direct_x.swap.h"
 #include "render.base.h"
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);

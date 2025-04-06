@@ -32,6 +32,16 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	using shared::sys_core::CError;
 	using TError = const CError;
 
+	using namespace shared::types;
+
+#if defined(_DEBUG)
+	enum e_print : uint32_t {
+	     e_all   = 0x0,  // prints out the class name and namespace path, class attribute value(s);
+	     e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
+	     e_req   = 0x2,  // prints out the class object attribute value(s) only;
+	};
+#endif
+
 }}}
 
 #endif/*_DIRECT_X_IFACE_H_INCLUDED*/

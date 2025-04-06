@@ -14,6 +14,35 @@ namespace ebo { namespace boo { namespace test {
 	using TString = TStringEx   ;
 
 	namespace draw {
+
+		using e_print = ex_ui::draw::direct_x::e_print;
+		using TAlphaMode = ex_ui::draw::direct_x::CAlphaMode;
+
+		__class(CAlhaMode) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TAlphaMode().Print(e_print::e_all);
+				_out()();
+			}
+		};
+
+		using TBuffer = ex_ui::draw::direct_x::CBuffer;
+		__class(CBuffer) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TBuffer().Print(e_print::e_all);
+				_out()();
+			}
+		};
+
+		using TEffect = ex_ui::draw::direct_x::CEffect;
+		__class(CEffect) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TEffect().Print(e_print::e_all);
+				_out()();
+			}
+		};
 	
 		using TAdapter  = ex_ui::draw::direct_x::CAdapter;
 		using TAda_enum = ex_ui::draw::direct_x::CAdapter_Enum;
@@ -56,6 +85,36 @@ namespace ebo { namespace boo { namespace test {
 
 		using TAda_Warp = ex_ui::draw::direct_x::CAda_Warp;
 		using TWarp_enum = ex_ui::draw::direct_x::CEnum_Warp;
+
+		using TPxFormat = ex_ui::draw::direct_x::CPxFormat;
+
+		__class(CPxFormat) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TPxFormat().Print(e_print::e_all);
+				_out()();
+			}
+		};
+
+		using TSample = ex_ui::draw::direct_x::CSample;
+
+		__class(CSample) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TSample().Print(e_print::e_all);
+				_out()();
+			}
+		};
+
+		using TSize = ex_ui::draw::direct_x::CSize;
+
+		__class(CSize) {
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TSize().Print(e_print::e_all);
+				_out()();
+			}
+		};
 
 		__class(CWarp_enum) {
 

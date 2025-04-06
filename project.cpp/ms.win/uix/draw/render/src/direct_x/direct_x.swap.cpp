@@ -8,7 +8,67 @@ using namespace ex_ui::draw::direct_x;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAlphaMode:: CAlphaMode (void) : m_mode(e_mode::e_unspec) {}
+namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
+#if defined(_DEBUG)
+	CString _alpha_mode_to_str (const CAlphaMode::e_mode _e_value) {
+		CString cs_out;
+		switch (_e_value) {
+		case CAlphaMode::e_mode::e_ignore  : cs_out = _T("e_ignore"); break;
+		case CAlphaMode::e_mode::e_premulti: cs_out = _T("premultiplied"); break;
+		case CAlphaMode::e_mode::e_straith : cs_out = _T("straith"); break;
+		case CAlphaMode::e_mode::e_unspec  : cs_out = _T("unspecified"); break;
+		default:
+			cs_out.Format(_T("#inv_arg=%u"), _e_value);
+		}
+		return  cs_out;
+	}
+
+	CString _buffer_usage_to_str (const CBuff_Usage::e_usage _e_value) {
+		CString cs_out;
+		switch (_e_value) {
+		case CBuff_Usage::e_usage::e_back    : cs_out = _T("back_buffer"); break;
+		case CBuff_Usage::e_usage::e_discard : cs_out = _T("discard_int"); break;
+		case CBuff_Usage::e_usage::e_read    : cs_out = _T("read_only"); break;
+		case CBuff_Usage::e_usage::e_shader  : cs_out = _T("shader_input"); break;
+		case CBuff_Usage::e_usage::e_shared  : cs_out = _T("shared_res"); break;
+		case CBuff_Usage::e_usage::e_target  : cs_out = _T("render_out"); break;
+		case CBuff_Usage::e_usage::e_unorder : cs_out = _T("unorder_access"); break;
+		case CBuff_Usage::e_usage::e__unspec : cs_out = _T("#not_accept"); break;
+		default:
+			cs_out.Format(_T("#inv_arg=%u"), _e_value);
+		}
+		return  cs_out;
+	}
+
+	CString _effect_to_str (const CEffect::e_value _e_value) {
+		CString cs_out;
+		switch (_e_value) {
+		case CEffect::e_value::e_discard : cs_out = _T("eff_discard"); break;
+		case CEffect::e_value::e_sequent : cs_out = _T("eff_sequent"); break;
+		case CEffect::e_value::e_flp_disc: cs_out = _T("flp_discard"); break;
+		case CEffect::e_value::e_flp_seq : cs_out = _T("flp_sequent"); break;
+		default:
+			cs_out.Format(_T("#inv_arg=%u"), _e_value);
+		}
+		return  cs_out;
+	}
+
+	CString _clr_bits_to_str (const CPxFormat::e_clr_bits _e_value) {
+		CString cs_out;
+		switch (_e_value) {
+		case CPxFormat::e_clr_bits::e__unknown : cs_out = _T("bits_unknown"); break;
+		case CPxFormat::e_clr_bits::e_rgba_norm: cs_out = _T("b8g8r8a8_unorm"); break;
+		default:
+			cs_out.Format(_T("#no_desc=%u"), _e_value);
+		}
+		return  cs_out;
+	}
+#endif
+}}}}
+using namespace ex_ui::draw::direct_x::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
+CAlphaMode:: CAlphaMode (void) : m_mode(e_mode::e_straith) {}
 CAlphaMode:: CAlphaMode (const TSwapDescPtr& _p_desc) : m_desc(_p_desc), m_mode(e_mode::e_unspec) {}
 CAlphaMode:: CAlphaMode (const CAlphaMode& _src) : CAlphaMode() { *this = _src; }
 
@@ -28,12 +88,34 @@ bool      CAlphaMode::Set (const uint32_t _n_value) {
 const
 TSwapDescPtr& CAlphaMode::Sync (void) const { return this->m_desc; }
 TSwapDescPtr& CAlphaMode::Sync (void)       { return this->m_desc; }
+#if defined(_DEBUG)
+CString   CAlphaMode::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{mode=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{mode=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{mode=%s}");
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) _alpha_mode_to_str(this->Raw())); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)_alpha_mode_to_str(this->Raw())); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)_alpha_mode_to_str(this->Raw())); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
+using e_mode = CAlphaMode::e_mode;
+
+e_mode CAlphaMode::Raw (void) const { return static_cast<e_mode>(this->Get()); }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CAlphaMode&  CAlphaMode::operator = (const CAlphaMode& _src) { *this << _src.Sync(); return *this; }
 CAlphaMode&  CAlphaMode::operator <<(uint32_t _n_mode) { this->Set(_n_mode); return *this; }
 CAlphaMode&  CAlphaMode::operator <<(const TSwapDescPtr& _p_sync) { this->Sync() = _p_sync; return *this; }
+
+CAlphaMode::operator TAlphaMode (void) const { return static_cast<TAlphaMode>(this->Get()); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -75,7 +157,26 @@ bool CBuffer::Set (const uint32_t _n_count, const uint32_t _n_usage) {
 
 	return b_changed;
 }
+#if defined(_DEBUG)
+CString   CBuffer::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{count=%u;usage=%d(%s);valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{count=%u;usage=%d(%s);valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{count=%u;usage=%d(%s);valid=%s}");
 
+	CString cs_usage = _buffer_usage_to_str(static_cast<CBuff_Usage::e_usage>(this->Usage()));
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Count(), this->Usage(), (_pc_sz)cs_usage, (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Count(), this->Usage(), (_pc_sz)cs_usage, (_pc_sz)cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, this->Count(), this->Usage(), (_pc_sz)cs_usage, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 const
 TSwapDescPtr& CBuffer::Sync (void) const { return this->m_desc; }
 TSwapDescPtr& CBuffer::Sync (void)       { return this->m_desc; }
@@ -90,7 +191,7 @@ CBuffer&  CBuffer::operator <<(const TSwapDescPtr& _p_desc) { this->Sync() = _p_
 
 /////////////////////////////////////////////////////////////////////////////
 
-CEffect:: CEffect (void) : m_value(e_value::e_flp_seq) {}
+CEffect:: CEffect (void) : m_value(e_value::e_flp_disc) {}
 CEffect:: CEffect (const CEffect& _src) : CEffect() { *this = _src; }
 CEffect:: CEffect (const TSwapDescPtr& _p_desc) : CEffect() { *this << _p_desc; }
 
@@ -106,6 +207,26 @@ bool     CEffect::Set (const uint32_t _n_value) {
 	}
 	return b_changed;
 }
+#if defined(_DEBUG)
+CString  CEffect::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{value=%u(%s)}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{value=%u(%s)}");
+	static _pc_sz pc_sz_pat_r = _T("{value=%u(%s)}");
+
+	CString cs_value = _effect_to_str(static_cast<CEffect::e_value>(this->Get()));
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Get(), (_pc_sz)cs_value); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Get(), (_pc_sz)cs_value); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, this->Get(), (_pc_sz)cs_value); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
+TEffect CEffect::Raw (void) const { return static_cast<TEffect>(this->Get()); }
 const
 TSwapDescPtr& CEffect::Sync (void) const { return this->m_desc; }
 TSwapDescPtr& CEffect::Sync (void)       { return this->m_desc; }
@@ -119,7 +240,7 @@ CEffect&  CEffect::operator <<(const uint32_t _n_effect) { this->Set(_n_effect);
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPxFormat:: CPxFormat (void) {}
+CPxFormat:: CPxFormat (const uint32_t _n_format) : m_clr_bits(static_cast<TClrBits>(_n_format)){}
 CPxFormat:: CPxFormat (const CPxFormat& _src) : CPxFormat() { *this = _src; }
 CPxFormat:: CPxFormat (const TSwapDescPtr& _p_desc) : CPxFormat() { *this << _p_desc; }
 
@@ -128,20 +249,41 @@ const
 CAlphaMode& CPxFormat::Alpha (void) const { return this->m_alpha; }
 CAlphaMode& CPxFormat::Alpha (void)       { return this->m_alpha; }
 
-uint32_t    CPxFormat::Format (void) const { return this->m_format; }
-bool        CPxFormat::Format (const TResFormat _n_value) {
-	const bool b_changed = (this->Format() != static_cast<uint32_t>(_n_value));
+uint32_t    CPxFormat::Bits  (void) const { return this->m_clr_bits; }
+bool        CPxFormat::Bits  (const TClrBits _n_value) {
+	const bool b_changed = (this->Bits() != static_cast<uint32_t>(_n_value));
 	if (b_changed) {
-		this->m_format = _n_value;
+		this->m_clr_bits = _n_value;
 		if (this->Sync())
 			this->Sync()->Format = _n_value;
 	}
 	return b_changed;
 }
 
-TPxFormat   CPxFormat::Raw (void) const {
+bool        CPxFormat::Is_valid (void) const { return (!!this->Bits() && !!this->Alpha()); }
+#if defined(_DEBUG)
+CString     CPxFormat::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{px_bits=%d(%s);alpha=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{px_bits=%d(%s);alpha=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{px_bits=%d(%s);alpha=%d(%s);valid=%s}");
 
-	TPxFormat raw_ = { (TResFormat) this->Format(), (TAlphaMode_2) this->Alpha().Get() };
+	CString cs_alpha = this->Alpha().Print(e_print::e_req);
+	CString cs_bits  = _clr_bits_to_str(static_cast<CPxFormat::e_clr_bits>(this->Bits()));
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Bits(), (_pc_sz)cs_bits, (_pc_sz)cs_alpha, (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Bits(), (_pc_sz)cs_bits, (_pc_sz)cs_alpha, (_pc_sz)cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, this->Bits(), (_pc_sz)cs_bits, (_pc_sz)cs_alpha, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
+TPxFormat   CPxFormat::Raw (void) const {
+	TPxFormat raw_ = { (TClrBits) this->Bits(), (TAlphaMode_2) this->Alpha().Get() };
 	return raw_;
 }
 
@@ -151,14 +293,16 @@ TSwapDescPtr& CPxFormat::Sync (void)       { return this->m_desc; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPxFormat&  CPxFormat::operator = (const CPxFormat& _src) { *this << _src.Alpha() << (TResFormat)_src.Format() << _src.Sync(); return *this; }
+CPxFormat&  CPxFormat::operator = (const CPxFormat& _src) { *this << _src.Alpha() << (TClrBits)_src.Bits() << _src.Sync(); return *this; }
 CPxFormat&  CPxFormat::operator <<(const CAlphaMode& _alpha) { this->Alpha() = _alpha; return *this; }
-CPxFormat&  CPxFormat::operator <<(const TResFormat _value) { this->Format(_value); return *this; }
+CPxFormat&  CPxFormat::operator <<(const TClrBits _value) { this->Bits(_value); return *this; }
 CPxFormat&  CPxFormat::operator <<(const TSwapDescPtr& _p_desc) { this->Sync() = _p_desc; this->Alpha().Sync() = _p_desc; return *this; }
+
+CPxFormat::operator TPxFormat (void) const { return this->Raw(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSample:: CSample (void) : m_desc{0} {}
+CSample:: CSample (const uint32_t _n_count, const uint32_t _n_quality) : m_desc{0} { *this << _n_count >>_n_quality; }
 CSample:: CSample (const CSample& _src) : CSample() { *this = _src; }
 CSample:: CSample (const TSwapDescPtr& _p_desc) : CSample() { *this << _p_desc; }
 
@@ -185,6 +329,28 @@ bool      CSample::Quality (const uint32_t _n_value) {
 	return b_changed;
 }
 
+bool      CSample::Is_valid (void) const {
+	return !!this->Count()/* && !!this->Quality()*/;
+}
+#if defined(_DEBUG)
+CString   CSample::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{count=%d;quality=%d;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{count=%d;quality=%d;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{count=%d;quality=%d;valid=%s}");
+
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Count(), this->Quality(), (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Count(), this->Quality(), (_pc_sz)cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, this->Count(), this->Quality(), (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 bool CSample::Set (const uint32_t _n_count, const uint32_t _n_quality) {
 	bool b_changed = false;
 
@@ -209,7 +375,15 @@ CSample&  CSample::operator <<(const uint32_t _n_count) { this->Count(_n_count);
 CSample&  CSample::operator >>(const uint32_t _n_quality) { this->Quality(_n_quality); return *this; }
 
 CSample&  CSample::operator <<(const TSwapDescPtr& _p_sync) { this->Sync() = _p_sync; return *this; }
+CSample::operator const TSampleDesc& (void) const { return this->Raw(); }
 
+/////////////////////////////////////////////////////////////////////////////
+#if (0)
+err_code  CSample::Get_quality (const TResFormat _n_fmt, const uint32_t _n_smp_count, uint32_t& _levels) {
+	_levels = 0;
+	return __e_fail;
+}
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 CSize:: CSize (void) : m_size{0} {}
@@ -231,6 +405,24 @@ bool     CSize::H (const uint32_t _n_value) {
 	}
 	return b_changed;
 }
+
+#if defined(_DEBUG)
+CString  CSize::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{height=%d;width=%d}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{height=%d;width=%d}");
+	static _pc_sz pc_sz_pat_r = _T("{height=%d;width=%d}");
+
+	CString cs_out;
+	if (e_print::e_all == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->H(), this->W()); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->H(), this->W()); }
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, this->H(), this->W()); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 
 uint32_t CSize::Width (void) const { return this->W(); }
 bool     CSize::Width (const uint32_t _n_value) { return this->W(_n_value); }

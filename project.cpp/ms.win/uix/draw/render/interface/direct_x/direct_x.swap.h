@@ -21,16 +21,16 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	typedef DXGI_ALPHA_MODE TAlphaMode;
 	typedef D2D1_ALPHA_MODE TAlphaMode_2; // playing the same game;
 
-	class CAlphaMode {
+	class CAlphaMode { // this class does not have Is_valid() property due to any alpha mode is applicable; (this must be checked);
 	public:
 		enum e_mode : uint32_t {
-		     e_unspec   = TAlphaMode::DXGI_ALPHA_MODE_UNSPECIFIED  ,
-		     e_premulti = TAlphaMode::DXGI_ALPHA_MODE_PREMULTIPLIED,
-		     e_straith  = TAlphaMode::DXGI_ALPHA_MODE_STRAIGHT     ,
-		     e_ignore   = TAlphaMode::DXGI_ALPHA_MODE_IGNORE       ,
+		     e_unspec   = TAlphaMode::DXGI_ALPHA_MODE_UNSPECIFIED  , // an alpha value might not be meaningful or is not taken into account;
+		     e_premulti = TAlphaMode::DXGI_ALPHA_MODE_PREMULTIPLIED, // each color is first scaled by the alpha value; alpha remains the same;
+		     e_straith  = TAlphaMode::DXGI_ALPHA_MODE_STRAIGHT     , // not-premultiplied; alpha channel indicates the transparency of the color;
+		     e_ignore   = TAlphaMode::DXGI_ALPHA_MODE_IGNORE       , // alpha value is ignored; it likes GDI does;
 		};
 	public:
-		 CAlphaMode (void);
+		 CAlphaMode (void); // e_mode::e_straith is applied by default; because alpha value is intended to be applied always;
 		 CAlphaMode (const TSwapDescPtr&);
 		 CAlphaMode (const CAlphaMode&);
 		 CAlphaMode (CAlphaMode&&) = delete; // not required yet;
@@ -39,17 +39,23 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	public:
 		uint32_t   Get (void) const;      // gets alpha mode value;
 		bool       Set (const uint32_t);  // sets alpha mode value; in case of value change 'true' is returned;
+
+		e_mode     Raw (void) const;
 		// https://en.wikipedia.org/wiki/Sync ;
 		const
 		TSwapDescPtr& Sync (void) const;
 		TSwapDescPtr& Sync (void) ;
-
+#if defined(_DEBUG)
+		CString    Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CAlphaMode&  operator = (const CAlphaMode&);
 		CAlphaMode&  operator = (CAlphaMode&&) = delete; // not required yet;
 
 		CAlphaMode&  operator <<(uint32_t _n_mode);
 		CAlphaMode&  operator <<(const TSwapDescPtr& _p_sync);
+
+		operator TAlphaMode (void) const;
 
 	private:
 		TSwapDescPtr m_desc; // this is the pointer to the structure that requires a value synchronization; by default is not set;
@@ -62,7 +68,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		enum e_usage : uint32_t { // https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-usage ;
 		     e__unspec = 0,                               // this is not acceptable value for the back buffer usage;
 		     e_back    = DXGI_USAGE_BACK_BUFFER         , // the surface or resource is used as a back buffer;
-		     e_descard = DXGI_USAGE_DISCARD_ON_PRESENT  , // this flag is for internal use only;
+		     e_discard = DXGI_USAGE_DISCARD_ON_PRESENT  , // this flag is for internal use only;
 		     e_read    = DXGI_USAGE_READ_ONLY           , // read only access to a surface or resource;
 		     e_shader  = DXGI_USAGE_SHADER_INPUT        , // a surface or resource as an input to a shader;
 		     e_shared  = DXGI_USAGE_SHARED              , // a surface or resource is shared;
@@ -77,7 +83,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	};
 	class CBuffer {
 	public:
-		 CBuffer (const uint32_t _n_count = 1, const uint32_t _n_usage = CBuff_Usage::e_target);
+		 CBuffer (const uint32_t _n_count = 1, const uint32_t _n_usage = CBuff_Usage::e_target); // it would be better to use double buffering;
 		 CBuffer (const CBuffer&);
 		 CBuffer (const TSwapDescPtr&);
 		 CBuffer (CBuffer&&) = delete;
@@ -91,7 +97,9 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 		bool Is_valid   (void) const;      // returns true in case when buffer count and usage values are not equal to zero both;
 		bool Set (const uint32_t _n_count, const uint32_t _n_usage);
-
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
 		const
 		TSwapDescPtr& Sync (void) const;
 		TSwapDescPtr& Sync (void) ;
@@ -117,8 +125,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		enum e_value : uint32_t {
 		     e_discard  = TEffect::DXGI_SWAP_EFFECT_DISCARD        , // not supported in dx12;
 		     e_sequent  = TEffect::DXGI_SWAP_EFFECT_SEQUENTIAL     , // not supported in dx12;
+		     e_flp_disc = TEffect::DXGI_SWAP_EFFECT_FLIP_DISCARD   , // supported in dx12; is set by default in this class;
 		     e_flp_seq  = TEffect::DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL, // supported in dx12;
-		     e_flp_disc = TEffect::DXGI_SWAP_EFFECT_FLIP_DISCARD   , // supported in dx12;
 		};
 	public:
 		 CEffect (void) ;
@@ -128,8 +136,12 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		~CEffect (void) = default;
 
 	public:
-		uint32_t Get (void) const;
+		uint32_t Get (void) const;      // ToDo: perhaps TEffect type value must be returned for better case;
 		bool     Set (const uint32_t);
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
+		TEffect  Raw (void) const;
 		const
 		TSwapDescPtr& Sync (void) const;
 		TSwapDescPtr& Sync (void) ;
@@ -147,14 +159,19 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format ;
-	// https://learn.microsoft.com/en-us/windows/win32/api/dcommon/ns-dcommon-d2d1_pixel_format ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dcommon/ns-dcommon-d2d1_pixel_format ; << D2D1_PIXEL_FORMAT struct;
 
-	typedef DXGI_FORMAT TResFormat;
-	typedef D2D1_PIXEL_FORMAT TPxFormat;
+	typedef DXGI_FORMAT TClrBits;        // how to format color channels;
+	typedef D2D1_PIXEL_FORMAT TPxFormat; // includes color channel layout and alpha value acceptance;
 
 	class CPxFormat {
 	public:
-		 CPxFormat (void);
+		enum e_clr_bits : uint32_t { // just for those that used often;
+		     e__unknown  = TClrBits::DXGI_FORMAT_UNKNOWN       , // is not acceptable actually;
+		     e_rgba_norm = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM, // the commonly used format; very often;
+		};
+	public:
+		 CPxFormat (const uint32_t _n_format = e_clr_bits::e_rgba_norm);
 		 CPxFormat (const CPxFormat&);
 		 CPxFormat (const TSwapDescPtr&);
 		 CPxFormat (CPxFormat&&) = delete; // not required yet;
@@ -164,25 +181,30 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		const
 		CAlphaMode& Alpha (void) const;
 		CAlphaMode& Alpha (void) ;
-		uint32_t   Format (void) const;       // gets value of the pixel format that is set from TResFormat enumeration;
-		bool       Format (const TResFormat); // sets value of the pixel format; returns 'true' in case of value change;
+		uint32_t    Bits  (void) const;       // gets value of the pixel bits composition that is set from TClrBits enumeration;
+		bool        Bits  (const TClrBits);   // sets value of the pixel bits composition; returns 'true' in case of value change;
+		bool     Is_valid (void) const;       // returns 'true' in case when pixel format is set and alpha channel is applied;
 		const
 		TSwapDescPtr& Sync(void) const;
 		TSwapDescPtr& Sync(void) ;      // the alpha mode does not get the update of sync; the better way is to use assign operator;
-
+#if defined(_DEBUG)
+		CString     Print (const e_print = e_print::e_all) const;
+#endif
 		TPxFormat   Raw (void) const;   // gets raw data structure object by value;
 
 	public:
 		CPxFormat&  operator = (const CPxFormat&);
 		CPxFormat&  operator = (CPxFormat&&) = delete;  // not required yet;
 		CPxFormat&  operator <<(const CAlphaMode&);     // sync object is not changed in alpha mode;
-		CPxFormat&  operator <<(const TResFormat);
+		CPxFormat&  operator <<(const TClrBits);
 		CPxFormat&  operator <<(const TSwapDescPtr&);   // alpha mode object is also updated;
+
+		operator TPxFormat (void) const;
 
 	private:
 		CAlphaMode   m_alpha ;
 		TSwapDescPtr m_desc  ;
-		TResFormat   m_format;
+		TClrBits     m_clr_bits;    // how color channel is composed; what kind of bits layout is applied;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_sample_desc ;
@@ -191,7 +213,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	class CSample {
 	public:
-		 CSample (void);
+		 CSample (const uint32_t _n_count = 1, const uint32_t _n_quality = 0); // at least 1(one) sample must be set;
 		 CSample (const CSample&);
 		 CSample (const TSwapDescPtr&);
 		 CSample (CSample&&) = delete;
@@ -203,6 +225,10 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		uint32_t Quality (void) const;
 		bool     Quality (const uint32_t);
 
+		bool  Is_valid (void) const; // returns 'true' in case when sample count does not equal to zero;
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 		bool Set (const uint32_t _n_count, const uint32_t _n_quality);
 
 		const
@@ -218,9 +244,17 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		CSample&  operator = (CSample&&) = delete;
 		CSample&  operator <<(const uint32_t _n_count);
 		CSample&  operator >>(const uint32_t _n_quality);
-
 		CSample&  operator <<(const TSwapDescPtr&);
 
+		operator const TSampleDesc& (void) const;
+
+	public:
+#if (0)
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-checkmultisamplequalitylevels ;
+		static err_code Get_quality(const TResFormat, const uint32_t _n_smp_count, uint32_t& _levels);
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_feature_data_multisample_quality_levels ; for DX12;
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-checkfeaturesupport ;
+#endif
 	private:
 		TSampleDesc  m_desc;
 		TSwapDescPtr m_p_sync;
@@ -228,7 +262,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct2d/d2d1-size-u ;
 	typedef D2D_SIZE_U TSize_U;
-
+	// there is no Is_valid property for this class yet, because 0 value is acceptable in case of creating swap chain for a window;
 	class CSize {
 	public:
 		 CSize (void);
@@ -253,7 +287,9 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TSize_U& Raw (void) ;
 
 		bool   Set (const uint32_t _n_width, const uint32_t _n_height);
-
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 		const
 		TSwapDescPtr& Sync (void) const;
 		TSwapDescPtr& Sync (void) ;
