@@ -18,28 +18,112 @@ namespace ebo { namespace boo { namespace test {
 		using e_print = ex_ui::draw::direct_x::e_print;
 		using TAlphaMode = ex_ui::draw::direct_x::CAlphaMode;
 
+	//	using TSwapDesc = ex_ui::draw::direct_x::TSwapDesc;
+	//	using TSwapDescPtr = ex_ui::draw::direct_x::TSwapDescPtr;
+#if (0)
+		class CDesc_Wrap {
+		public:
+			 CDesc_Wrap (void) : m_desc{ 0 } {} CDesc_Wrap (const CDesc_Wrap&) = delete; CDesc_Wrap (CDesc_Wrap&&) = delete;
+			~CDesc_Wrap (void) {}
+
+		public:
+			const
+			TSwapDesc&  ref (void) const { return this->m_desc; }
+			TSwapDesc&  ref (void)       { return this->m_desc; }
+
+		private:
+			TSwapDesc m_desc;
+		private:
+			CDesc_Wrap& operator = (const CDesc_Wrap&) = delete;
+			CDesc_Wrap& operator = (CDesc_Wrap&&) = delete;
+		};
+#endif
 		__class(CAlhaMode) {
+
+			uint32_t n_sync = 0;
+
 			__ctor(_ctor) {
 				_out() += TLog_Acc::e_new_line;
 				_out() += TAlphaMode().Print(e_print::e_all);
 				_out()();
 			}
+
+			__method(Set) {
+
+				TAlphaMode a_mode;
+				a_mode.Sync(&n_sync);
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("alpha value sync before: %d"), n_sync);
+
+				a_mode.Set(TAlphaMode::e_mode::e_premulti);
+
+				_out() += a_mode.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("alpha value sync after: %d"), n_sync);
+				_out()();
+
+			}
 		};
 
-		using TBuffer = ex_ui::draw::direct_x::CBuffer;
+		using TBuffer  = ex_ui::draw::direct_x::CBuffer;
+		using TUsage   = ex_ui::draw::direct_x::CBuff_Usage::e_usage;
+		using TWrapper = ex_ui::draw::direct_x::CDesc_Wrap;
+		using TWrapPtr = ex_ui::draw::direct_x::TDescWrapPtr;
+
 		__class(CBuffer) {
+
 			__ctor(_ctor) {
 				_out() += TLog_Acc::e_new_line;
 				_out() += TBuffer().Print(e_print::e_all);
 				_out()();
 			}
+
+			__method(Set) {
+				TBuffer buffer;
+
+				TWrapPtr p_sync(new TWrapper());
+
+				buffer.Sync() = p_sync;
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("swap desc value sync before: count=%d;usage=%d"),
+					buffer.Sync()->ref().BufferCount, buffer.Sync()->ref().BufferUsage
+				);
+
+				buffer.Set(3, TUsage::e_read);
+
+				_out() += buffer.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("swap desc value sync after: count=%d;usage=%d"),
+					buffer.Sync()->ref().BufferCount, buffer.Sync()->ref().BufferUsage
+				);
+				_out()();
+
+			//	m_sync.reset();
+			}
 		};
 
 		using TEffect = ex_ui::draw::direct_x::CEffect;
 		__class(CEffect) {
+
+			uint32_t n_sync = 0;
+
 			__ctor(_ctor) {
 				_out() += TLog_Acc::e_new_line;
 				_out() += TEffect().Print(e_print::e_all);
+				_out()();
+			}
+
+			__method(Set) {
+
+				TEffect effect(&n_sync);
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("effect value sync before: %d"), n_sync);
+
+				effect.Set(TEffect::e_value::e_flp_seq);
+
+				_out() += effect.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("effect value sync after: %d"), n_sync);
 				_out()();
 			}
 		};
@@ -63,7 +147,7 @@ namespace ebo { namespace boo { namespace test {
 				_out()();
 			}
 
-			__method(Get) {
+			__method(ref) {
 				TAda_enum ada_enum;
 
 				if (__succeeded(ada_enum.Set())) {
@@ -83,15 +167,37 @@ namespace ebo { namespace boo { namespace test {
 			}
 		};
 
-		using TAda_Warp = ex_ui::draw::direct_x::CAda_Warp;
-		using TWarp_enum = ex_ui::draw::direct_x::CEnum_Warp;
-
+		using TClrBits  = ex_ui::draw::direct_x::TClrBits ;
 		using TPxFormat = ex_ui::draw::direct_x::CPxFormat;
 
 		__class(CPxFormat) {
+
 			__ctor(_ctor) {
 				_out() += TLog_Acc::e_new_line;
 				_out() += TPxFormat().Print(e_print::e_all);
+				_out()();
+			}
+
+			__method(Set) {
+				TPxFormat px_fmt;
+
+				TWrapPtr p_sync(new TWrapper());
+
+			//	px_fmt.Sync() = p_sync;
+				px_fmt << p_sync;
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("swap desc value sync before: alpha=%d;format=%d"),
+					px_fmt.Sync()->ref().AlphaMode, px_fmt.Sync()->ref().Format
+				);
+
+				px_fmt.Alpha() << TAlphaMode::e_mode::e_straith;
+				px_fmt << TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM ;
+
+				_out() += px_fmt.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("swap desc value sync after: alpha=%d;format=%d"),
+					px_fmt.Sync()->ref().AlphaMode, px_fmt.Sync()->ref().Format
+				);
 				_out()();
 			}
 		};
@@ -104,6 +210,27 @@ namespace ebo { namespace boo { namespace test {
 				_out() += TSample().Print(e_print::e_all);
 				_out()();
 			}
+
+			__method(Set) {
+				TSample sample;
+
+				TWrapPtr p_sync(new TWrapper());
+
+				sample << p_sync;
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("swap desc value sync before: sample_count=%d;sample_quality=%d"),
+					sample.Sync()->ref().SampleDesc.Count, sample.Sync()->ref().SampleDesc.Quality
+				);
+
+				sample.Set(1, 2);
+
+				_out() += sample.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("swap desc value sync after: sample_count=%d;sample_quality=%d"),
+					sample.Sync()->ref().SampleDesc.Count, sample.Sync()->ref().SampleDesc.Quality
+				);
+				_out()();
+			}
 		};
 
 		using TSize = ex_ui::draw::direct_x::CSize;
@@ -114,11 +241,100 @@ namespace ebo { namespace boo { namespace test {
 				_out() += TSize().Print(e_print::e_all);
 				_out()();
 			}
+
+			__method(Set) {
+				TSize size;
+
+				TWrapPtr p_sync(new TWrapper());
+
+				size << p_sync;
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("swap desc value sync before: height=%d;width=%d"),
+					size.Sync()->ref().Height, size.Sync()->ref().Width
+				);
+
+				size.Set(800, 600);
+
+				_out() += size.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("swap desc value sync after: height=%d;width=%d"),
+					size.Sync()->ref().Height, size.Sync()->ref().Width
+				);
+				_out()();
+			}
 		};
+
+		using TSwapDesc = ex_ui::draw::direct_x::CSwapDesc;
+		using TScale = ex_ui::draw::direct_x::TScale;
+		using TSwapFlag = ex_ui::draw::direct_x::TSwapFlag;
+
+		__class(CSwapDesc) {
+
+			__ctor(_ctor) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TSwapDesc().Print(e_print::e_all);
+				_out()();
+			}
+
+			__method(Set) {
+				TSwapDesc sw_desc; // alpha mode must receive pointer to sync value;
+
+				static
+				_pc_sz pc_sz_pat = _T("swap desc value sync %s: "
+					"\n\t\talpha=%d;"
+					"\n\t\tbuffer=%s;"
+					"\n\t\teffect=%s;"
+					"\n\t\tflags=%s;"
+					"\n\t\tpixels=%s;"
+					"\n\t\tsample=%s;"
+					"\n\t\tsize=%s;"
+					"\n\t\tscale=%d;stereo=%s");
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(pc_sz_pat, _T("before"),
+					sw_desc.Alpha().Get(),
+					(_pc_sz) sw_desc.Buffer().Print(e_print::e_req),
+					(_pc_sz) sw_desc.Effect().Print(e_print::e_req), TStringEx().Dword(sw_desc.Flags()), 
+					(_pc_sz) sw_desc.Pixels().Print(e_print::e_req),
+					(_pc_sz) sw_desc.Sample().Print(e_print::e_req),
+					(_pc_sz) sw_desc.Size().Print(e_print::e_req)  , sw_desc.Scale(),
+					(_pc_sz) TStringEx().Bool(sw_desc.Stereo())
+				);
+
+				sw_desc.Alpha() << TAlphaMode::e_mode::e_ignore;
+				sw_desc.Buffer().Set(3, TUsage::e_shader);
+
+				sw_desc.Effect().Set(TEffect::e_value::e_discard);
+				sw_desc.Flags(TSwapFlag::DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE|TSwapFlag::DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY);
+
+				sw_desc.Pixels().Alpha() << TAlphaMode::e_unspec;
+				sw_desc.Pixels() << TClrBits::DXGI_FORMAT_UNKNOWN;
+
+				sw_desc.Sample().Set(1, 1);
+				sw_desc.Size().Set(555, 333);
+				sw_desc.Stereo(true);
+				sw_desc.Scale(TScale::DXGI_SCALING_ASPECT_RATIO_STRETCH);
+
+				_out() += sw_desc.Print(e_print::e_all);
+				_out() += TStringEx().Format(pc_sz_pat, _T("after"),
+					sw_desc.Alpha().Get(),
+					(_pc_sz) sw_desc.Buffer().Print(e_print::e_req),
+					(_pc_sz) sw_desc.Effect().Print(e_print::e_req), TStringEx().Dword(sw_desc.Flags()),
+					(_pc_sz) sw_desc.Pixels().Print(e_print::e_req),
+					(_pc_sz) sw_desc.Sample().Print(e_print::e_req),
+					(_pc_sz) sw_desc.Size().Print(e_print::e_req)  , sw_desc.Scale(),
+					(_pc_sz)TStringEx().Bool(sw_desc.Stereo())
+				);
+				_out()();
+			}
+		};
+		
+		using TAda_Warp = ex_ui::draw::direct_x::CAda_Warp;
+		using TWarp_enum = ex_ui::draw::direct_x::CEnum_Warp;
 
 		__class(CWarp_enum) {
 
-			__method(Get) {
+			__method(ref) {
 				TWarp_enum warp_enum;
 				warp_enum.Set();
 				warp_enum.Get();
@@ -129,7 +345,7 @@ namespace ebo { namespace boo { namespace test {
 
 		__class(CDev_warp) {
 
-			__method(Get) {
+			__method(ref) {
 
 				TWarp_enum warp_enum;
 				TWarpDev   wrap_dev ;

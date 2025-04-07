@@ -50,8 +50,8 @@ namespace ex_ui { namespace message { namespace handlers {// regarding namespace
 		err_code  Unlock (void) ;
 
 	private:
-		CBase& operator = (const CBase&);
-		CBase& operator = (CBase&&);
+		CBase& operator = (const CBase&) = delete;
+		CBase& operator = (CBase&&) = delete;
 	};
 
 }}}

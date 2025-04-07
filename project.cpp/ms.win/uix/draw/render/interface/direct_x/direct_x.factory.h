@@ -46,7 +46,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 		err_code  Get  (CAdapter&);     // retrieves the hardware adapter;
 		err_code  Get  (CAda_Warp&);    // retrieves the warp adapter from this factory;
-		err_code  Get  (CSwapChain&);   // creates the swap chain for an output window;
+	//	err_code  Get  (CSwapChain&);   // creates the swap chain for an output window;
 
 		const
 		TFac4Ptr& Ptr  (void) const;

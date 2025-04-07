@@ -16,7 +16,7 @@
 #include "shared.string.h"
 #endif
 #include "shared.types.h"
-
+#include "sys.sync_obj.h"
 #include "sys.error.h"
 
 #pragma comment(lib, "vfw32") // https://github.com/ojdkbuild/tools_toolchain_sdk10_1607/tree/master/Lib/10.0.14393.0/um ;
@@ -24,7 +24,7 @@
 namespace ex_ui { namespace draw { namespace render {
 	// https://discussions.unity.com/t/a-question-about-renderer/900817 ;
 	using namespace shared::types;
-
+	using shared::sys_core::CSyncObject;
 }}}
 
 #endif/*_RENDER_BASE_H_INCLUDED*/

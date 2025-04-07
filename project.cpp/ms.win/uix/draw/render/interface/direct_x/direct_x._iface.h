@@ -33,6 +33,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	using TError = const CError;
 
 	using namespace shared::types;
+	using shared::sys_core::CSyncObject;
 
 #if defined(_DEBUG)
 	enum e_print : uint32_t {

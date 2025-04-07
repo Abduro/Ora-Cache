@@ -93,7 +93,7 @@ err_code  CFac_4::Get  (CAda_Warp& _adapter) {
 
 	return this->Error();
 }
-
+#if (0)
 err_code  CFac_4::Get  (CSwapChain& _swap) {
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -107,7 +107,7 @@ err_code  CFac_4::Get  (CSwapChain& _swap) {
 
 	return this->Error();
 }
-
+#endif
 const
 TFac4Ptr& CFac_4::Ptr  (void) const { return this->m_p_fac; }
 TFac4Ptr& CFac_4::Ptr  (void)       { return this->m_p_fac; }
