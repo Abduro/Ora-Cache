@@ -171,10 +171,12 @@ TParentPtr& CParent::Ptr (void)       { return this->m_p_parent; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAda_Warp:: CAda_Warp (void) : m_info{0} {}
+CAda_Warp:: CAda_Warp (void) : m_info{0} { this->m_error >> __CLASS__ << __METHOD__  <<  __e_not_inited; }
 CAda_Warp:: CAda_Warp (const CAda_Warp& _src) : CAda_Warp() { *this = _src; }
 
 /////////////////////////////////////////////////////////////////////////////
+
+TError&     CAda_Warp::Error (void) const { return this->m_error; }
 
 err_code    CAda_Warp::Get (CParent& _factory) {
 	_factory;
@@ -195,12 +197,57 @@ err_code    CAda_Warp::Get (CParent& _factory) {
 const
 TAdaInfoWarp& CAda_Warp::Info (void) const { return this->m_info; }
 TAdaInfoWarp& CAda_Warp::Info (void) { return this->m_info; }
-
+#if (0)
 bool CAda_Warp::Is (void) const { return (!!::_tcslen(this->Info().Description) && !!this->Info().AdapterLuid.LowPart); }
+#else
+bool CAda_Warp::Is (void) const { return (nullptr != this->Ptr()); }
+#endif
+
+#if defined(_DEBUG)
+CString  CAda_Warp::Print(const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{desc=%s;luid=%d;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{desc=%s;luid=%d;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{desc=%s;luid=%d;valid=%s}");
+
+	CString cs_desc(this->Info().Description);
+	if (cs_desc.IsEmpty())
+		cs_desc = _T("#not_set");
+
+	CString cs_valid = TStringEx().Bool(this->Is());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) {
+		cs_out.Format(pc_sz_pat_a,
+			(_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_desc, this->Info().AdapterLuid.LowPart, (_pc_sz)cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_desc, this->Info().AdapterLuid.LowPart, (_pc_sz)cs_valid);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_desc, this->Info().AdapterLuid.LowPart, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 
 const
 TWarpAdaPtr&  CAda_Warp::Ptr (void) const { return this->m_object; }
 TWarpAdaPtr&  CAda_Warp::Ptr (void) { return this->m_object; }
+
+err_code    CAda_Warp::UpdateInfo (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (false == this->Is())
+		return this->m_error << __e_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc ;
+
+	this->m_error << this->Ptr()->GetDesc(&this->Info());
+	
+	return this->Error();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

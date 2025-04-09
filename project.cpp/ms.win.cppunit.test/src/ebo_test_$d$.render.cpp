@@ -15,10 +15,241 @@ namespace ebo { namespace boo { namespace test {
 
 	namespace draw {
 
+		using e_print = ex_ui::draw::direct_x::e_print;
+
+		using IBufferSink = ex_ui::draw::direct_x::IBuffer_Sync;
+		using TBuffer = ex_ui::draw::direct_x::CBuffer;
+		using TUsage = ex_ui::draw::direct_x::CBuff_Usage::e_usage;
+
+		class CBuff_Sync : public IBufferSink {
+		public:
+			 CBuff_Sync (void) {} CBuff_Sync (const CBuff_Sync&) = delete; CBuff_Sync (CBuff_Sync&&) = delete;
+			~CBuff_Sync (void) = default;
+
+		private:
+			virtual bool IBuffer_OnCount (const uint32_t _n_value) override final {
+				_n_value;
+				_out() += TStringEx().Format(
+					_T("cls::[%s::%s].%s(count=%d)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _n_value
+				);
+				return true;
+			}
+			virtual bool IBuffer_OnUsage (const uint32_t _n_value) override final {
+				_n_value;
+				_out() += TStringEx().Format(
+					_T("cls::[%s::%s].%s(usage=%d)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _n_value
+				);
+				return true;
+			}
+
+		private:
+			CBuff_Sync& operator = (const CBuff_Sync&) = delete;
+			CBuff_Sync& operator = (CBuff_Sync&&) = delete;
+		};
+
+		__class(CBuffer) {
+		private:
+			CBuff_Sync m_sync;
+			TBuffer    m_buffer;
+
+		public:
+			 CBuffer(void) {
+				this->m_buffer << (IBufferSink* const)&this->m_sync;
+			}
+			~CBuffer(void) {
+			}
+
+			__method(Set) {
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("swap desc value sync before: count=%d;usage=%d"),
+					this->m_buffer.Count(), this->m_buffer.Usage()
+				);
+
+				this->m_buffer.Set(3, TUsage::e_read);
+
+				_out() += this->m_buffer.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("swap desc value sync after: count=%d;usage=%d"),
+					this->m_buffer.Count(), this->m_buffer.Usage()
+				);
+				_out()();
+			}
+		};
+
+		using TEffect = ex_ui::draw::direct_x::CEffect;
+
+		__class(CEffect) {
+		private:
+			uint32_t m_sync = 0;
+			TEffect  m_effect;
+
+		public:
+			 CEffect (void) {
+				this->m_effect << (uint32_t* const)&this->m_sync;
+			}
+			~CEffect (void) {
+			}
+
+			__method(Set) {
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("effect value sync before: %d"), this->m_sync);
+
+				this->m_effect.Set(TEffect::e_value::e_flp_seq);
+
+				_out() += this->m_effect.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("effect value sync after: %d"), this->m_sync);
+				_out()();
+			}
+		};
+
+		using ISample_Sync = ex_ui::draw::direct_x::ISample_Sync;
+		using TSample = ex_ui::draw::direct_x::CSample;
+
+		class CSample_Sync : public ISample_Sync {
+		public:
+			 CSample_Sync (void) {} CSample_Sync (const CSample_Sync&) = delete; CSample_Sync (CSample_Sync&&) = delete;
+			~CSample_Sync (void) = default;
+
+		private:
+			virtual bool ISample_OnCount (const uint32_t _n_value) override final {
+				_n_value;
+				_out() += TStringEx().Format(
+					_T("cls::[%s::%s].%s(count=%d)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _n_value
+				);
+				return true;
+			}
+			virtual bool ISample_OnQuality (const uint32_t _n_value) override final {
+				_n_value;
+				_out() += TStringEx().Format(
+					_T("cls::[%s::%s].%s(quality=%d)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _n_value
+				);
+				return true;
+			}
+
+		private:
+			CSample_Sync& operator = (const CSample_Sync&) = delete;
+			CSample_Sync& operator = (CSample_Sync&&) = delete;
+		};
+
+		using TSwapFlag = ex_ui::draw::direct_x::TSwapFlag;
+
+		__class(CSample) {
+		private:
+			CSample_Sync m_sync;
+			TSample m_sample;
+
+		public:
+			 CSample (void) {
+				this->m_sample << (ISample_Sync* const)&this->m_sync;
+			}
+			~CSample (void) {
+			}
+
+			__method(Set) {
+
+				_out() += TLog_Acc::e_new_line;
+				_out() += TStringEx().Format(_T("sample sync values before: count=%d;quality=%d"),
+					this->m_sample.Count(), this->m_sample.Quality()
+				);
+
+				this->m_sample.Set(1, 2);
+
+				_out() += this->m_sample.Print(e_print::e_all);
+				_out() += TStringEx().Format(_T("sample sync values after: count=%d;quality=%d"),
+					this->m_sample.Count(), this->m_sample.Quality()
+				);
+				_out()();
+			}
+		};
+
 		namespace _11 {
 			using TAda_Warp = ex_ui::draw::direct_x::_11::CAda_Warp;
 			using TWarp_enum = ex_ui::draw::direct_x::_11::CEnum_Warp;
 			using TParent_Fac = ex_ui::draw::direct_x::_11::CAda_Warp::CParent;
+
+			__class(CAda_Warp) {
+			};
+
+			using TDevice = ex_ui::draw::direct_x::_11::CDevice;
+			using TDevice_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
+
+			using TFeature = ex_ui::draw::direct_x::_11::CFeature;
+			using TFeature_Thread = ex_ui::draw::direct_x::_11::CFeature_Thread;
+			using TFeature_Format = ex_ui::draw::direct_x::_11::CFeature_Format;
+
+			__class(CDevice) {
+			private:
+				TDevice_HW  m_device;
+
+			public:
+				// *attention*: the constructor may be called twice;
+				 CDevice (void) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					if (false == this->m_device.Is_valid()) {
+						this->m_device.Create();
+						if (false == this->m_device.Is_valid()) {
+							_out() += this->m_device.Error().Print(TError::e_print::e_req);
+						}
+						else
+							_out() += _T("The device has been created successfully;");
+					}
+					_out()();
+				}
+
+				~CDevice (void) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+					_out()();
+				}
+
+				__method (GetAdapter) {
+					if (false == this->m_device.Is_valid()) {
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+					TAda_Warp adapter;
+					this->m_device.Get(adapter);
+					if (this->m_device.Error()) {
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+					}
+					else if (__failed(adapter.UpdateInfo())) {
+						_out() += adapter.Error().Print(TError::e_print::e_req);
+					}
+					else {
+						_out() += adapter.Print(e_print::e_all);
+					}
+					_out()();
+				}
+
+				__method (Features) {
+					if (false == this->m_device.Is_valid()) {
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+
+					TFeature_Thread feature_0;
+					this->m_device.Get(feature_0);
+
+					if (this->m_device.Error())
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+					else
+						_out() += feature_0.Print();
+
+					TFeature_Format feature_1;
+					this->m_device.Get(feature_1);
+
+					if (this->m_device.Error())
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+					else
+						_out() += feature_1.Print();
+
+					_out()();
+				}
+			};
 		}
 
 		namespace _12 {
@@ -67,12 +298,181 @@ namespace ebo { namespace boo { namespace test {
 					_out()();
 				}
 			};
+		
+			using TAlphaMode = ex_ui::draw::direct_x::_12::CAlphaMode;
+
+			__class(CAlphaMode) {
+			private:
+				uint32_t   m_sync = 0;
+				TAlphaMode m_mode;
+
+			public:
+				CAlphaMode (void) {
+					this->m_mode << (uint32_t* const)&this->m_sync;
+				}
+				~CAlphaMode (void) {
+				}
+
+				__method(Set) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("alpha value sync before: %d"), this->m_sync);
+
+					this->m_mode.Set(TAlphaMode::e_mode::e_premulti);
+
+					_out() += this->m_mode.Print(e_print::e_all);
+					_out() += TStringEx().Format(_T("alpha value sync after: %d"), this->m_sync);
+					_out()();
+
+				}
+			};
+
+			using TWrapper = ex_ui::draw::direct_x::_12::CDesc_Wrap;
+			using TWrapPtr = ex_ui::draw::direct_x::_12::TDescWrapPtr;
+
+			using TClrBits = ex_ui::draw::direct_x::TClrBits;
+			using TPxFormat = ex_ui::draw::direct_x::_12::CPxFormat;
+
+			__class(CPxFormat) {
+			private:
+				TPxFormat m_px_fmt;
+				TWrapper  m_wrapper;
+
+			public:
+				 CPxFormat (void) {
+					TWrapPtr wrp_ptr(new TWrapper);
+					this->m_px_fmt << wrp_ptr;
+				}
+				~CPxFormat (void) {
+				}
+
+				__method(Set) {
+					_out() += TLog_Acc::e_new_line;
+					if (nullptr == this->m_px_fmt.Sync()) {
+						_out() += _T("Px-format sync wrapper is not set;");
+						_out()();
+						return;
+					}
+
+					_out() += TStringEx().Format(_T("px-format sync values before: alpha=%d;format=%d"),
+						this->m_px_fmt.Sync()->ref().AlphaMode, this->m_px_fmt.Sync()->ref().Format
+					);
+
+					this->m_px_fmt.Alpha() << TAlphaMode::e_mode::e_straith;
+					this->m_px_fmt << TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM;
+
+					_out() += this->m_px_fmt.Print(e_print::e_all);
+					_out() += TStringEx().Format(_T("px-format sync values after: alpha=%d;format=%d"),
+						this->m_px_fmt.Sync()->ref().AlphaMode, this->m_px_fmt.Sync()->ref().Format
+					);
+					_out()();
+				}
+			};
+
+			using TSize = ex_ui::draw::direct_x::_12::CSize;
+
+			__class(CSize) {
+			private:
+				TSize    m_size;
+				TWrapper m_wrapper;
+
+			public:
+				 CSize (void) {
+					TWrapPtr wrp_ptr(new TWrapper);
+					this->m_size << wrp_ptr;
+				}
+				~CSize (void) {
+				}
+
+				__method(Set) {
+					_out() += TLog_Acc::e_new_line;
+					if (nullptr == this->m_size.Sync()) {
+						_out() += _T("surface size sync wrapper is not set;");
+						_out()();
+						return;
+					}
+
+					_out() += TStringEx().Format(_T("surface size sync values before: height=%d;width=%d"),
+						this->m_size.Sync()->ref().Height, this->m_size.Sync()->ref().Width
+					);
+
+					this->m_size.Set(800, 600);
+
+					_out() += this->m_size.Print(e_print::e_all);
+					_out() += TStringEx().Format(_T("surface size sync values after: height=%d;width=%d"),
+						this->m_size.Sync()->ref().Height, this->m_size.Sync()->ref().Width
+					);
+					_out()();
+				}
+			};
+
+			using TSwapDesc = ex_ui::draw::direct_x::_12::CSwapDesc;
+			using TScale    = ex_ui::draw::direct_x::_12::TScale;
+
+			__class(CSwapDesc) {
+			private:
+				TSwapDesc m_desc; // alpha mode must receive pointer to sync value;
+
+			public:
+				 CSwapDesc (void) {}
+				~CSwapDesc (void) {}
+				
+				__method(Set) {
+					static
+					_pc_sz pc_sz_pat = _T("swap desc value sync %s: "
+						"\n\t\talpha=%d;"
+						"\n\t\tbuffer=%s;"
+						"\n\t\teffect=%s;"
+						"\n\t\tflags=%s;"
+						"\n\t\tpixels=%s;"
+						"\n\t\tsample=%s;"
+						"\n\t\tsize=%s;"
+						"\n\t\tscale=%d;stereo=%s");
+
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(pc_sz_pat, _T("before"),
+						this->m_desc.Alpha().Get(),
+						(_pc_sz)this->m_desc.Buffer().Print(e_print::e_req),
+						(_pc_sz)this->m_desc.Effect().Print(e_print::e_req), TStringEx().Dword(this->m_desc.Flags()),
+						(_pc_sz)this->m_desc.Pixels().Print(e_print::e_req),
+						(_pc_sz)this->m_desc.Sample().Print(e_print::e_req),
+						(_pc_sz)this->m_desc.Size().Print(e_print::e_req)  , this->m_desc.Scale(),
+						(_pc_sz)TStringEx().Bool(this->m_desc.Stereo())
+					);
+
+					this->m_desc.Alpha() << TAlphaMode::e_mode::e_ignore;
+					this->m_desc.Buffer().Set(3, TUsage::e_shader);
+
+					this->m_desc.Effect().Set(TEffect::e_value::e_discard);
+					this->m_desc.Flags(TSwapFlag::DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE | TSwapFlag::DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY);
+
+					this->m_desc.Pixels().Alpha() << TAlphaMode::e_unspec;
+					this->m_desc.Pixels() << TClrBits::DXGI_FORMAT_UNKNOWN;
+
+					this->m_desc.Sample().Set(1, 1);
+					this->m_desc.Size().Set(555, 333);
+					this->m_desc.Stereo(true);
+					this->m_desc.Scale(TScale::DXGI_SCALING_ASPECT_RATIO_STRETCH);
+
+					_out() += this->m_desc.Print(e_print::e_all);
+					_out() += TStringEx().Format(pc_sz_pat, _T("after"),
+						this->m_desc.Alpha().Get(),
+						(_pc_sz)this->m_desc.Buffer().Print(e_print::e_req),
+						(_pc_sz)this->m_desc.Effect().Print(e_print::e_req), TStringEx().Dword(this->m_desc.Flags()),
+						(_pc_sz)this->m_desc.Pixels().Print(e_print::e_req),
+						(_pc_sz)this->m_desc.Sample().Print(e_print::e_req),
+						(_pc_sz)this->m_desc.Size().Print(e_print::e_req)  , this->m_desc.Scale(),
+						(_pc_sz)TStringEx().Bool(this->m_desc.Stereo())
+					);
+					_out()();
+				}
+			};
+
+
 		}
 	}
 
 #if (0)
 			using TCmdQueue = ex_ui::draw::direct_x::_12::CCmdQueue;
-			using TDevice_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
 			using TFactory = ex_ui::draw::direct_x::_12::CFac_4;
 
 			__class(CFactory) {
@@ -193,151 +593,10 @@ namespace ebo { namespace boo { namespace test {
 
 #if (0)
 	namespace draw {
-
-		using e_print = ex_ui::draw::direct_x::e_print;
-		using TAlphaMode = ex_ui::draw::direct_x::CAlphaMode;
-
-
-		class CDesc_Wrap {
-		public:
-			 CDesc_Wrap (void) : m_desc{ 0 } {} CDesc_Wrap (const CDesc_Wrap&) = delete; CDesc_Wrap (CDesc_Wrap&&) = delete;
-			~CDesc_Wrap (void) {}
-
-		public:
-			const
-			TSwapDesc&  ref (void) const { return this->m_desc; }
-			TSwapDesc&  ref (void)       { return this->m_desc; }
-
-		private:
-			TSwapDesc m_desc;
-		private:
-			CDesc_Wrap& operator = (const CDesc_Wrap&) = delete;
-			CDesc_Wrap& operator = (CDesc_Wrap&&) = delete;
-		};
-
-		__class(CAlhaMode) {
-
-			uint32_t n_sync = 0;
-
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TAlphaMode().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-
-				TAlphaMode a_mode;
-				a_mode.Sync(&n_sync);
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("alpha value sync before: %d"), n_sync);
-
-				a_mode.Set(TAlphaMode::e_mode::e_premulti);
-
-				_out() += a_mode.Print(e_print::e_all);
-				_out() += TStringEx().Format(_T("alpha value sync after: %d"), n_sync);
-				_out()();
-
-			}
-		};
-
-		using TBuffer  = ex_ui::draw::direct_x::CBuffer;
-		using TUsage   = ex_ui::draw::direct_x::CBuff_Usage::e_usage;
-		using TWrapper = ex_ui::draw::direct_x::_12::CDesc_Wrap;
-		using TWrapPtr = ex_ui::draw::direct_x::_12::TDescWrapPtr;
-
-		__class(CBuffer) {
-
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TBuffer().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-				TBuffer buffer;
-
-				TWrapPtr p_sync(new TWrapper());
-
-				buffer.Sync() = p_sync;
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("swap desc value sync before: count=%d;usage=%d"),
-					buffer.Sync()->ref().BufferCount, buffer.Sync()->ref().BufferUsage
-				);
-
-				buffer.Set(3, TUsage::e_read);
-
-				_out() += buffer.Print(e_print::e_all);
-				_out() += TStringEx().Format(_T("swap desc value sync after: count=%d;usage=%d"),
-					buffer.Sync()->ref().BufferCount, buffer.Sync()->ref().BufferUsage
-				);
-				_out()();
-
-			//	m_sync.reset();
-			}
-		};
-
-		using TEffect = ex_ui::draw::direct_x::CEffect;
-		__class(CEffect) {
-
-			uint32_t n_sync = 0;
-
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TEffect().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-
-				TEffect effect(&n_sync);
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("effect value sync before: %d"), n_sync);
-
-				effect.Set(TEffect::e_value::e_flp_seq);
-
-				_out() += effect.Print(e_print::e_all);
-				_out() += TStringEx().Format(_T("effect value sync after: %d"), n_sync);
-				_out()();
-			}
-		};
-
-		using TDevice = ex_ui::draw::direct_x::_11::CDevice;
+		
 		using TDev_Warp = ex_ui::draw::direct_x::_12::CDevice_Warp;
 
-		using TFeature = ex_ui::draw::direct_x::_11::CFeature;
-		using TFeature_Thread = ex_ui::draw::direct_x::_11::CFeature_Thread;
-		using TFeature_Format = ex_ui::draw::direct_x::_11::CFeature_Format;
-
-		__class(CDevice) {
-		private:
-			TDevice_HW m_device;
-
-		public:
-			// *attention*: the constructor may be called twice;
-			CDevice (void) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-				if (false == this->m_device.Is_valid()) {
-					m_device.Create();
-					if (false == this->m_device.Is_valid()) {
-						_out() += this->m_device.Error().Print(TError::e_print::e_req);
-					}
-					else
-						_out() += _T("The device has been created successfully;");
-				}
-				_out()();
-			}
-
-			~CDevice (void) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-				_out()();
-			}
+		
 			// at least one test method must be defined, otherwise this test class does not appeat in the test explorer;
 			// test class constuctor and destructor do not lead to show this class;
 
@@ -369,196 +628,10 @@ namespace ebo { namespace boo { namespace test {
 
 				_out()();
 			}
-			__method (Features) {
-				if (false == this->m_device.Is_valid()) {
-					_out() += this->m_device.Error().Print(TError::e_print::e_req);
-					_out()();
-					return;
-				}
-
-				TFeature_Thread feature_0;
-				this->m_device.Get(feature_0);
-
-				if (this->m_device.Error())
-					_out() += this->m_device.Error().Print(TError::e_print::e_req);
-				else
-					_out() += feature_0.Print();
-
-				TFeature_Format feature_1;
-				this->m_device.Get(feature_1);
-
-				if (this->m_device.Error())
-					_out() += this->m_device.Error().Print(TError::e_print::e_req);
-				else
-					_out() += feature_1.Print();
-
-				_out()();
-			}
+			
 		};
 		
 		using TSwapChain = ex_ui::draw::direct_x::CSwapChain;
-
-		using TClrBits  = ex_ui::draw::direct_x::TClrBits ;
-		using TPxFormat = ex_ui::draw::direct_x::CPxFormat;
-
-		__class(CPxFormat) {
-
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TPxFormat().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-				TPxFormat px_fmt;
-
-				TWrapPtr p_sync(new TWrapper());
-
-			//	px_fmt.Sync() = p_sync;
-				px_fmt << p_sync;
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("swap desc value sync before: alpha=%d;format=%d"),
-					px_fmt.Sync()->ref().AlphaMode, px_fmt.Sync()->ref().Format
-				);
-
-				px_fmt.Alpha() << TAlphaMode::e_mode::e_straith;
-				px_fmt << TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM ;
-
-				_out() += px_fmt.Print(e_print::e_all);
-				_out() += TStringEx().Format(_T("swap desc value sync after: alpha=%d;format=%d"),
-					px_fmt.Sync()->ref().AlphaMode, px_fmt.Sync()->ref().Format
-				);
-				_out()();
-			}
-		};
-
-		using TSample = ex_ui::draw::direct_x::CSample;
-
-		__class(CSample) {
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TSample().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-				TSample sample;
-
-				TWrapPtr p_sync(new TWrapper());
-
-				sample << p_sync;
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("swap desc value sync before: sample_count=%d;sample_quality=%d"),
-					sample.Sync()->ref().SampleDesc.Count, sample.Sync()->ref().SampleDesc.Quality
-				);
-
-				sample.Set(1, 2);
-
-				_out() += sample.Print(e_print::e_all);
-				_out() += TStringEx().Format(_T("swap desc value sync after: sample_count=%d;sample_quality=%d"),
-					sample.Sync()->ref().SampleDesc.Count, sample.Sync()->ref().SampleDesc.Quality
-				);
-				_out()();
-			}
-		};
-
-		using TSize = ex_ui::draw::direct_x::CSize;
-
-		__class(CSize) {
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TSize().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-				TSize size;
-
-				TWrapPtr p_sync(new TWrapper());
-
-				size << p_sync;
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("swap desc value sync before: height=%d;width=%d"),
-					size.Sync()->ref().Height, size.Sync()->ref().Width
-				);
-
-				size.Set(800, 600);
-
-				_out() += size.Print(e_print::e_all);
-				_out() += TStringEx().Format(_T("swap desc value sync after: height=%d;width=%d"),
-					size.Sync()->ref().Height, size.Sync()->ref().Width
-				);
-				_out()();
-			}
-		};
-
-		using TSwapDesc = ex_ui::draw::direct_x::CSwapDesc;
-		using TScale = ex_ui::draw::direct_x::TScale;
-		using TSwapFlag = ex_ui::draw::direct_x::TSwapFlag;
-
-		__class(CSwapDesc) {
-
-			__ctor(_ctor) {
-				_out() += TLog_Acc::e_new_line;
-				_out() += TSwapDesc().Print(e_print::e_all);
-				_out()();
-			}
-
-			__method(Set) {
-				TSwapDesc sw_desc; // alpha mode must receive pointer to sync value;
-
-				static
-				_pc_sz pc_sz_pat = _T("swap desc value sync %s: "
-					"\n\t\talpha=%d;"
-					"\n\t\tbuffer=%s;"
-					"\n\t\teffect=%s;"
-					"\n\t\tflags=%s;"
-					"\n\t\tpixels=%s;"
-					"\n\t\tsample=%s;"
-					"\n\t\tsize=%s;"
-					"\n\t\tscale=%d;stereo=%s");
-
-				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(pc_sz_pat, _T("before"),
-					sw_desc.Alpha().Get(),
-					(_pc_sz) sw_desc.Buffer().Print(e_print::e_req),
-					(_pc_sz) sw_desc.Effect().Print(e_print::e_req), TStringEx().Dword(sw_desc.Flags()), 
-					(_pc_sz) sw_desc.Pixels().Print(e_print::e_req),
-					(_pc_sz) sw_desc.Sample().Print(e_print::e_req),
-					(_pc_sz) sw_desc.Size().Print(e_print::e_req)  , sw_desc.Scale(),
-					(_pc_sz) TStringEx().Bool(sw_desc.Stereo())
-				);
-
-				sw_desc.Alpha() << TAlphaMode::e_mode::e_ignore;
-				sw_desc.Buffer().Set(3, TUsage::e_shader);
-
-				sw_desc.Effect().Set(TEffect::e_value::e_discard);
-				sw_desc.Flags(TSwapFlag::DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE|TSwapFlag::DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY);
-
-				sw_desc.Pixels().Alpha() << TAlphaMode::e_unspec;
-				sw_desc.Pixels() << TClrBits::DXGI_FORMAT_UNKNOWN;
-
-				sw_desc.Sample().Set(1, 1);
-				sw_desc.Size().Set(555, 333);
-				sw_desc.Stereo(true);
-				sw_desc.Scale(TScale::DXGI_SCALING_ASPECT_RATIO_STRETCH);
-
-				_out() += sw_desc.Print(e_print::e_all);
-				_out() += TStringEx().Format(pc_sz_pat, _T("after"),
-					sw_desc.Alpha().Get(),
-					(_pc_sz) sw_desc.Buffer().Print(e_print::e_req),
-					(_pc_sz) sw_desc.Effect().Print(e_print::e_req), TStringEx().Dword(sw_desc.Flags()),
-					(_pc_sz) sw_desc.Pixels().Print(e_print::e_req),
-					(_pc_sz) sw_desc.Sample().Print(e_print::e_req),
-					(_pc_sz) sw_desc.Size().Print(e_print::e_req)  , sw_desc.Scale(),
-					(_pc_sz)TStringEx().Bool(sw_desc.Stereo())
-				);
-				_out()();
-			}
-		};
 
 		__class(CWarp_enum) {
 

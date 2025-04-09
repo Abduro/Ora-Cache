@@ -193,13 +193,14 @@ err_code  CDevice_HW::Create (void) {
 		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists);
 
 	const D3D_FEATURE_LEVEL a_levels[] = {
-	//	D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+	//	D3D_FEATURE_LEVEL_11_0, 
+		D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
 		D3D_FEATURE_LEVEL_9_3 , D3D_FEATURE_LEVEL_9_2 , D3D_FEATURE_LEVEL_9_1 ,
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ;
 	TBase::m_error << ::D3D11CreateDevice(
-		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_ref, nullptr, CDev_Flag::e_single, &a_levels[0], 3, D3D11_SDK_VERSION, &TBase::Ptr(), nullptr, nullptr
+		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_ref, nullptr, CDev_Flag::e_single, &a_levels[0], 5, D3D11_SDK_VERSION, &TBase::Ptr(), nullptr, nullptr
 	);
 	// D3D11_SDK_VERSION      - must be applied;
 	// D3D_FEATURE_LEVEL_11_0 - must be not applied;

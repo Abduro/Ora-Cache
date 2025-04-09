@@ -95,7 +95,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TEffect  Raw (void) const;
 		void     Sync (uint32_t* const);
 
-	private:
+	public:
 		CEffect&  operator = (const CEffect&);
 		CEffect&  operator = (CEffect&&) = delete;
 

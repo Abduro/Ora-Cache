@@ -12,6 +12,9 @@
 namespace ex_ui { namespace draw { namespace direct_x {
 
 namespace _11 {
+
+	using namespace ex_ui::draw::direct_x;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc  ;
 	typedef DXGI_ADAPTER_DESC   TAdapterInfo;
 	typedef TAdapterInfo        TAdaInfoWarp;
@@ -23,7 +26,7 @@ namespace _11 {
 	typedef ::ATL::CComPtr<IDXGIAdapter> TWarpAdaPtr; // it represents a display subsystem (including one or more GPUs, DACs and video memory);
 	typedef ::ATL::CComPtr<IDXGIFactory> TParentPtr ; // this is the parent object, i.e. a factory, of the warp adapter in DX11;
 
-	class CAda_Warp {
+	class CAda_Warp { // ToDo: the name of this class must be reviewed; possibly 'CAdapter' withing this namespace would be better;
 	public:
 		class CParent {
 		public:
@@ -48,16 +51,21 @@ namespace _11 {
 		~CAda_Warp (void) = default;
 
 	public:
+		TError&  Error (void) const;
 		err_code Get (CParent&);         // gets parent object, i.e. the factory that holds and/or creates this adapter;
 		const
 		TAdaInfoWarp& Info (void) const;
 		TAdaInfoWarp& Info (void)      ; // sets info of this adapter by direct assignment; intended for enumerator class only;
 
 		bool Is (void) const;            // returns true if adapter information is initialized;
-
+#if defined(_DEBUG)
+		CString  Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
 		const
 		TWarpAdaPtr& Ptr (void) const;
 		TWarpAdaPtr& Ptr (void) ;
+
+		err_code  UpdateInfo (void);
 
 	private:
 		CAda_Warp& operator = (const CAda_Warp&);
@@ -67,7 +75,8 @@ namespace _11 {
 		CAda_Warp& operator <<(const TAdaInfoWarp&);
 
 	private:
-		TAdaInfoWarp m_info;
+		CError       m_error;
+		TAdaInfoWarp m_info ;
 		TWarpAdaPtr  m_object;
 	};
 
