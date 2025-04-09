@@ -76,9 +76,9 @@ namespace shared { namespace sys_core {
 typedef shared::sys_core::CSyncObject& TSyncRef;
 
 typedef const shared::sys_core::CGenericAutoLocker<const shared::sys_core::CSyncObject> TAutoLocker;
-#define SAFE_LOCK(cs)    TAutoLocker   tAutoLocker(cs);
+#define Safe_Lock(cs)    TAutoLocker   tAutoLocker(cs);
 
 typedef const shared::sys_core::CGenericAutoLockerEx<const shared::sys_core::CSyncObject> TAutoLockerEx;
-#define SAFE_LOCK_EX(cs) TAutoLockerEx tAutoLockerEx(cs); if (!tAutoLockerEx.IsLocked()) return S_OK;
+#define Safe_Lock_Ex(cs) TAutoLockerEx tAutoLockerEx(cs); if (!tAutoLockerEx.IsLocked()) return S_OK;
 
 #endif/*_SHARED_SYS_SYNC_H_INCLUDED*/

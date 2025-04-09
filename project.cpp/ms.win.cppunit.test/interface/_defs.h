@@ -27,6 +27,7 @@ namespace ebo { namespace boo { namespace test {
 	uint32_t __address_of (const void* const _p_fun_ptr) ;
 #endif
 	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
+
 #define __class(name) TEST_CLASS(name)
 #define __method(name) TEST_METHOD(name)
 #define __property(name) TEST_METHOD(name)

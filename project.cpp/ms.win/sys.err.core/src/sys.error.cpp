@@ -39,28 +39,28 @@ CString CErr_Base::Print (void) const {
 /////////////////////////////////////////////////////////////////////////////
 
 CErr_Base& CErr_Base::operator = (const dword _code) {
-	SAFE_LOCK(m_lock);
+	Safe_Lock(m_lock);
 	m_code = _code;
 	m_result = __DwordToHresult(_code);
 	return *this;
 }
 CErr_Base& CErr_Base::operator= (const err_code _hres) {
-	SAFE_LOCK(m_lock);
+	Safe_Lock(m_lock);
 	m_code   = __HresultToDword(_hres);
 	m_result = _hres;
 	return *this;
 }
 CErr_Base& CErr_Base::operator= (TLangRef _lang) {
-	SAFE_LOCK(m_lock);
+	Safe_Lock(m_lock);
 	m_lang = _lang;
 	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CErr_Base::operator dword    (void) const { SAFE_LOCK(m_lock); return (m_code)  ; }
-CErr_Base::operator err_code (void) const { SAFE_LOCK(m_lock); return (m_result); }
-CErr_Base::operator TLangRef (void) const { SAFE_LOCK(m_lock); return (m_lang)  ; }
+CErr_Base::operator dword    (void) const { Safe_Lock(m_lock); return (m_code)  ; }
+CErr_Base::operator err_code (void) const { Safe_Lock(m_lock); return (m_result); }
+CErr_Base::operator TLangRef (void) const { Safe_Lock(m_lock); return (m_lang)  ; }
 CErr_Base::operator TSyncRef (void)       { return   (m_lock); }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,10 +121,10 @@ CErr_State::~CErr_State(void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-_pc_sz   CErr_State::Get (void) const { SAFE_LOCK(TBase::m_lock); return m_buffer.GetString(); }
+_pc_sz   CErr_State::Get (void) const { Safe_Lock(TBase::m_lock); return m_buffer.GetString(); }
 void     CErr_State::Set (const bool _reset) {
 	_reset;
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 
 	if (_reset) {
 		this->m_code    = __HresultToDword(OLE_E_BLANK);
@@ -141,7 +141,7 @@ void     CErr_State::Set (const bool _reset) {
 void     CErr_State::Set (const dword _err_code) {
 	_err_code;
 
-	SAFE_LOCK(TBase::m_lock) ;
+	Safe_Lock(TBase::m_lock) ;
 
 	TBase::m_code   =  _err_code;
 	TBase::m_result = __DwordToHresult(_err_code);
@@ -152,7 +152,7 @@ void     CErr_State::Set (const dword _err_code) {
 void     CErr_State::Set (const dword _err_code, _pc_sz _lp_sz_desc, ...) {
 	_err_code; _lp_sz_desc;
 
-	SAFE_LOCK(TBase::m_lock) ;
+	Safe_Lock(TBase::m_lock) ;
 
 	TBase::m_code   =  _err_code;
 	TBase::m_result = __DwordToHresult(_err_code);
@@ -177,7 +177,7 @@ void     CErr_State::Set (const dword _err_code, const UINT resId) {
 void     CErr_State::Set (const err_code _err_code) {
 	_err_code;
 
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 
 	TBase::m_code   = __HresultToDword(_err_code);
 	TBase::m_result =  _err_code;
@@ -191,7 +191,7 @@ void     CErr_State::Set (const err_code _err_code) {
 void     CErr_State::Set (const err_code _err_code, _pc_sz _lp_sz_desc, ...) {
 	_err_code; _lp_sz_desc;
 
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 
 	TBase::m_code   = __HresultToDword(_err_code);
 	TBase::m_result =  _err_code;
@@ -214,13 +214,13 @@ void     CErr_State::Set (const err_code _err_code, const UINT resId) {
 
 void     CErr_State::Set (_pc_sz  _sz_desc) {
 	_sz_desc;
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 	m_buffer = _sz_desc;
 }
 
 void     CErr_State::Set (_pc_sz  _sz_desc, ...) {
 	_sz_desc;
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 	va_list  args_;
 	va_start(args_, _sz_desc);
 
@@ -241,14 +241,14 @@ CString CErr_State::Print (void) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CErr_State::operator bool    (void) const { SAFE_LOCK(TBase::m_lock); return __failed(TBase::m_result); }
+CErr_State::operator bool    (void) const { Safe_Lock(TBase::m_lock); return __failed(TBase::m_result); }
 CErr_State::operator _pc_sz  (void) const { return this->Get(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CErr_State&   CErr_State::operator= (const bool _reset) { this->Set(_reset); return *this; }
 CErr_State&   CErr_State::operator= (const CErr_State& _state) {
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 	this->m_buffer  = _state.m_buffer;
 	this->m_code    = _state.m_code  ;
 	this->m_result  = _state.m_result;
@@ -256,7 +256,7 @@ CErr_State&   CErr_State::operator= (const CErr_State& _state) {
 	return *this;
 }
 CErr_State&   CErr_State::operator= (_pc_sz  _sz_desc) {
-	SAFE_LOCK(TBase::m_lock);
+	Safe_Lock(TBase::m_lock);
 	this->m_buffer = _sz_desc;
 	return *this;
 }
@@ -287,11 +287,11 @@ CError::~CError(void) { }
 
 /////////////////////////////////////////////////////////////////////////////
 
-_pc_sz  CError::Class (void) const      { SAFE_LOCK(m_state); return m_class.GetString(); }
-void     CError::Class (_pc_sz _pClass) { SAFE_LOCK(m_state); m_class = _pClass;  }
+_pc_sz  CError::Class (void) const      { Safe_Lock(m_state); return m_class.GetString(); }
+void     CError::Class (_pc_sz _pClass) { Safe_Lock(m_state); m_class = _pClass;  }
 void     CError::Class (_pc_sz _lp_sz_val, const bool bFormatted) {
 	_lp_sz_val;
-	SAFE_LOCK(m_state);
+	Safe_Lock(m_state);
 	m_class = _lp_sz_val;
 	if (bFormatted) {
 		const INT n_pos = m_class.ReverseFind(_T(':'));
@@ -311,8 +311,8 @@ _pc_sz    CError::Desc  (void) const     { return m_state; }
 bool      CError::Is    (void) const { return ((bool)m_state == true); }
 err_code  CError::Last  (void)       { m_state.Set(::GetLastError()) ;  return *this; }
 TLangRef& CError::Lang  (void) const { return m_state;   }
-_pc_sz    CError::Method(void) const { SAFE_LOCK(m_state); return m_method.GetString(); }
-void      CError::Method(_pc_sz _v)  { SAFE_LOCK(m_state); m_method = _v;}
+_pc_sz    CError::Method(void) const { Safe_Lock(m_state); return m_method.GetString(); }
+void      CError::Method(_pc_sz _v)  { Safe_Lock(m_state); m_method = _v;}
 void      CError::Reset (void)       { m_state = true;   }
 err_code  CError::Result(void) const { return  m_state;  }
 err_code  CError::Result(const err_code _new)
@@ -323,7 +323,7 @@ err_code  CError::Result(const err_code _new)
 	if (SUCCEEDED(_new)) {
 		m_state = false; return m_state;
 	}
-	SAFE_LOCK(m_state);
+	Safe_Lock(m_state);
 
 	::ATL::CString    cs_module = m_method; // saves an original;
 	::ATL::CString    cs_source;
@@ -396,7 +396,7 @@ CError& CError::operator= (const _com_error& err_ref) {
 	this->State().Set( // TODO: what is about this one: this->State() << _com_error()?
 		err_ref.Error(), (_pc_sz) err_ref.Description()
 	);
-	SAFE_LOCK(m_state);
+	Safe_Lock(m_state);
 	this->m_class = (_pc_sz)err_ref.Source();
 	return *this;
 }
@@ -405,7 +405,7 @@ CError& CError::operator= (const CError& _err) {
 	_err;
 	this->State()   = _err.State();
 
-	SAFE_LOCK(m_state);
+	Safe_Lock(m_state);
 
 	this->m_method  = _err.m_method;
 

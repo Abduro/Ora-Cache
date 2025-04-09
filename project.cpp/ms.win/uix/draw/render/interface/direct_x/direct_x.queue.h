@@ -8,6 +8,11 @@
 
 namespace ex_ui { namespace draw { namespace direct_x {
 
+namespace _12 {
+
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nn-d3d12-id3d12commandqueue ;
 	typedef ::ATL::CComPtr<ID3D12CommandQueue> TCmdQuePtr;
 	typedef D3D12_COMMAND_LIST_TYPE   TCmdLstType ;
@@ -45,7 +50,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TCmdQuePtr  m_p_queue;
 		TCmdQueDesc m_desc;
 	};
-
+}
 }}}
 
 #endif/*_DIRECT_X_QUEUE_H_INCLUDED*/

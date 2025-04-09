@@ -14,7 +14,11 @@
 #include "direct_x.device.h"
 #include "direct_x.factory.h"
 #include "direct_x.queue.h"
+
 #include "direct_x.swap.h"
+#include "direct_x.swap.1.h"
+#include "direct_x.swap.2.h"
+
 #include "render.base.h"
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);

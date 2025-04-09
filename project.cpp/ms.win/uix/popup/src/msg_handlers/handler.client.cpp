@@ -20,7 +20,7 @@ l_result CHandler::OnCtxMenu (uint32_t, w_param _w_param, l_param _l_param, int3
 	_b_handled = false;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMsgListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IEventSink* const pSink = *it_;
@@ -45,7 +45,7 @@ l_result CHandler::OnHScroll (uint32_t, w_param _w_param, l_param _l_param, int3
 	_b_handled = FALSE;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMsgListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IEventSink* const pSink = *it_;
@@ -70,7 +70,7 @@ l_result CHandler::OnVScroll (uint32_t, w_param _w_param, l_param _l_param, int3
 	_b_handled = FALSE;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMsgListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IEventSink* const pSink = *it_;
@@ -124,7 +124,7 @@ err_code CHandler::Subscribe (IEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	TMsgListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ != this->m_sinks.end())
@@ -141,7 +141,7 @@ err_code CHandler::Unsubscribe (IEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << E_POINTER);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 	
 	TMsgListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ == this->m_sinks.end())

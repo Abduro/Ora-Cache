@@ -19,7 +19,7 @@ l_result CMsgSystem::OnSetting(uint32_t, w_param _w_param, l_param _l_param, int
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMsgSysListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IMsgSysEventSink* const pSink = *it_;
@@ -44,7 +44,7 @@ l_result CMsgSystem::OnSysCmd (uint32_t, w_param _w_param, l_param _l_param, int
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMsgSysListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IMsgSysEventSink* const pSink = *it_;
@@ -69,7 +69,7 @@ l_result CMsgSystem::OnThemed (uint32_t, w_param _w_param, l_param _l_param, int
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMsgSysListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IMsgSysEventSink* const pSink = *it_;
@@ -123,7 +123,7 @@ err_code CMsgSystem::Subscribe (IMsgSysEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	TMsgSysListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ != this->m_sinks.end())
@@ -140,7 +140,7 @@ err_code CMsgSystem::Unsubscribe (IMsgSysEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 	
 	TMsgSysListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ == this->m_sinks.end())

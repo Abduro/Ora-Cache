@@ -188,10 +188,16 @@
     <ClCompile Include="$(_3)direct_x.device.cpp" />
     <ClInclude Include="$(_2)direct_x.factory.h" />
     <ClCompile Include="$(_3)direct_x.factory.cpp" />
+    <ClInclude Include="$(_2)direct_x.format.h" />
+    <ClCompile Include="$(_3)direct_x.format.cpp" />
     <ClInclude Include="$(_2)direct_x.queue.h" />
     <ClCompile Include="$(_3)direct_x.queue.cpp" />
     <ClInclude Include="$(_2)direct_x.swap.h" />
     <ClCompile Include="$(_3)direct_x.swap.cpp" />
+    <ClInclude Include="$(_2)direct_x.swap.1.h" />
+    <ClCompile Include="$(_3)direct_x.swap.1.cpp" />
+    <ClInclude Include="$(_2)direct_x.swap.2.h" />
+    <ClCompile Include="$(_3)direct_x.swap.2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

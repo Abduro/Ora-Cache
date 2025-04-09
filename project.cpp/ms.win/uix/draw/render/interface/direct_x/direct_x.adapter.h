@@ -10,36 +10,45 @@
 #include "direct_x._iface.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
+
+namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc  ;
-	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc1 ;
-	typedef DXGI_ADAPTER_DESC1  TAdapterInfo;
-	typedef DXGI_ADAPTER_DESC   TAdapterInfo_Base; // the difference between these descriptions is flags field only; good! :(
+	typedef DXGI_ADAPTER_DESC   TAdapterInfo;
+	typedef TAdapterInfo        TAdaInfoWarp;
 
-	typedef TAdapterInfo_Base   TAdaInfoWarp;
-
-	using namespace shared::types;
-	using TFlag = DXGI_ADAPTER_FLAG; // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag ;
-
-	class CAdapter_Flag {
-	public:
-		enum e_type : uint32_t {
-			 e_undef = TFlag::DXGI_ADAPTER_FLAG_NONE     , // not set a flag;
-			 e_soft  = TFlag::DXGI_ADAPTER_FLAG_SOFTWARE ,
-		};
-
-	};
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-warp << about WARP;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp << that is;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiadapter ;
 
-	typedef ::ATL::CComPtr<IDXGIAdapter> TWarpAdaPtr; // otherwise a class without a pointer to real object is not useful;
+	typedef ::ATL::CComPtr<IDXGIAdapter> TWarpAdaPtr; // it represents a display subsystem (including one or more GPUs, DACs and video memory);
+	typedef ::ATL::CComPtr<IDXGIFactory> TParentPtr ; // this is the parent object, i.e. a factory, of the warp adapter in DX11;
 
 	class CAda_Warp {
 	public:
+		class CParent {
+		public:
+			 CParent (void); CParent (const CParent&) = delete; CParent (CParent&&) = delete;
+			~CParent (void) = default;
+		public:
+			bool   Is_valid (void) const;
+			const
+			TParentPtr& Ptr (void) const;
+			TParentPtr& Ptr (void);
+
+		private:
+			CParent&  operator = (const CParent&) = delete;
+			CParent&  operator = (CParent&&) = delete;
+
+		private:
+			TParentPtr m_p_parent;
+		};
+	public:
 		 CAda_Warp (void);
-		 CAda_Warp (const CAda_Warp&) = delete; CAda_Warp (CAda_Warp&&) = delete;
+		 CAda_Warp (const CAda_Warp&); CAda_Warp (CAda_Warp&&) = delete;
 		~CAda_Warp (void) = default;
 
 	public:
+		err_code Get (CParent&);         // gets parent object, i.e. the factory that holds and/or creates this adapter;
 		const
 		TAdaInfoWarp& Info (void) const;
 		TAdaInfoWarp& Info (void)      ; // sets info of this adapter by direct assignment; intended for enumerator class only;
@@ -51,13 +60,56 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TWarpAdaPtr& Ptr (void) ;
 
 	private:
-		CAda_Warp& operator = (const CAda_Warp&) = delete;
+		CAda_Warp& operator = (const CAda_Warp&);
 		CAda_Warp& operator = (CAda_Warp&&) = delete;
+
+		CAda_Warp& operator <<(const TWarpAdaPtr&);
+		CAda_Warp& operator <<(const TAdaInfoWarp&);
 
 	private:
 		TAdaInfoWarp m_info;
 		TWarpAdaPtr  m_object;
 	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp ;
+	// it looks like the only one warp adapter may exist in the system;
+	class CEnum_Warp {
+	public:
+		 CEnum_Warp (void);
+		 CEnum_Warp (const CEnum_Warp&);
+		 CEnum_Warp (CEnum_Warp&&) = delete;
+		~CEnum_Warp (void) = default;
+
+	public:
+		TErrorRef    Error (void) const;
+		const
+		CAda_Warp&   Get (void) const;
+		err_code     Set (void);
+
+	public:
+		CEnum_Warp&  operator = (const CEnum_Warp&);
+		CEnum_Warp&  operator = (CEnum_Warp&&) = delete;
+
+	private:
+		CAda_Warp m_ada_warp;
+		CError    m_error;
+	};
+}
+
+namespace _12 {
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag ;
+	using TFlag = DXGI_ADAPTER_FLAG;
+
+	class CAdapter_Flag {
+	public:
+		enum e_type : uint32_t {
+			 e_undef = TFlag::DXGI_ADAPTER_FLAG_NONE     , // not set a flag;
+			 e_soft  = TFlag::DXGI_ADAPTER_FLAG_SOFTWARE ,
+		};
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc1 ;
+	typedef DXGI_ADAPTER_DESC1  TAdapterInfo;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi << about adapter types;
 	typedef ::ATL::CComPtr<IDXGIAdapter1> TAdapterPtr;
 
@@ -111,7 +163,6 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	typedef ::std::vector<CAdapter> TAdapters;
 
-#if (1) // the adapter enumerators are saved for this time yet;
 	class CAdapter_Enum
 	{
 	public:
@@ -126,7 +177,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TAdapters& Get (void) const; // gets a reference to collection;
 		err_code   Set (void)      ; // enumerates *all* available hardware/video adapters that are installed on OS;
 
-		const CAdapter& Get(const TFlag) const;
+		const
+		CAdapter&  Get(const TFlag) const;
 
 	public:
 		CAdapter_Enum& operator = (const CAdapter_Enum&);
@@ -136,31 +188,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		TAdapters m_adapters;
 		CError    m_error;
 	};
-	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp ;
-	// it looks like the only one warp adapter may exist in the system;
-	class CEnum_Warp {
-	public:
-		 CEnum_Warp (void);
-		 CEnum_Warp (const CEnum_Warp&);
-		 CEnum_Warp (CEnum_Warp&&) = delete;
-		~CEnum_Warp (void) = default;
+}
 
-	public:
-		TErrorRef    Error (void) const;
-		const
-		CAda_Warp&   Get (void) const;
-		err_code     Set (void);
-
-	public:
-		CEnum_Warp&  operator = (const CEnum_Warp&);
-		CEnum_Warp&  operator = (CEnum_Warp&&) = delete;
-
-	private:
-		CAda_Warp m_ada_warp;
-		CError    m_error;
-	};
-
-#endif
 }}}
 
 #endif/*_DIRECT_X_ADAPTER_H_INCLUDED*/

@@ -117,7 +117,7 @@ const bool  CThreadBase::IsRunning(void) const
 {
 	bool bRunning = false;
 	{
-		SAFE_LOCK(m_lock);
+		Safe_Lock(m_lock);
 		bRunning = !!(CThreadState::eWorking & m_state);
 	}
 	return bRunning;
@@ -132,7 +132,7 @@ const DWORD CThreadBase::State(void) const
 {
 	DWORD state_ = 0;
 	{
-		SAFE_LOCK(m_lock);
+		Safe_Lock(m_lock);
 		state_ =  m_state;
 	}
 	return state_;

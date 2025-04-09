@@ -273,7 +273,7 @@ handle&    CAutoHandleArray::operator[] (const INT nIndex)
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #if (0)
-#define SAFE_LOCK_HANDLE() SAFE_LOCK(this->m_sync_obj)
+#define SAFE_LOCK_HANDLE() Safe_Lock(this->m_sync_obj)
 /////////////////////////////////////////////////////////////////////////////
 
 CHandleSafe:: CHandleSafe(const handle _handle) : m_value(_handle) { }

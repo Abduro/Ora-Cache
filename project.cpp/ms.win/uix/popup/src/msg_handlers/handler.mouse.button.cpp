@@ -388,7 +388,7 @@ err_code   CHandler::Subscribe (const CPlace::e_where _button, const CAction::e_
 		return (TBase::m_error << data.Error().Result()) = data.Error().Desc();
 	}
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	TTargets::iterator it_target = this->m_targets.find(_button);
 	if (it_target == this->m_targets.end()) {
@@ -430,7 +430,7 @@ err_code   CHandler::Unsubscribe (const CPlace::e_where _button, const CAction::
 		return (TBase::m_error << data.Error().Result()) = data.Error().Desc();
 	}
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	bool b_found = false;
 
@@ -476,7 +476,7 @@ err_code   CHandler::Notify (const CEvent& _evt) const {
 	if (false == _evt.Is_valid())
 		return (TBase::m_error << __e_inv_arg) = _T("event object is not valid;");
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	CData data;
 	const TListeners& listeners = data.Find(_evt, this->m_targets);

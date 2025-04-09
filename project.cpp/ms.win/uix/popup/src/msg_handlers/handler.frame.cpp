@@ -20,7 +20,7 @@ l_result   CHandler::OnActivate (uint32_t, w_param _w_param, l_param _l_param, i
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -45,7 +45,7 @@ l_result   CHandler::OnChanged (uint32_t, w_param _w_param, l_param _l_param, in
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -70,7 +70,7 @@ l_result   CHandler::OnChanging (uint32_t, w_param _w_param, l_param _l_param, i
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -95,7 +95,7 @@ l_result   CHandler::OnEnable (uint32_t, w_param _w_param, l_param _l_param, int
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -120,7 +120,7 @@ l_result   CHandler::OnMove (uint32_t, w_param _w_param, l_param _l_param, int32
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -145,7 +145,7 @@ l_result   CHandler::OnMoving (uint32_t, w_param _w_param, l_param _l_param, int
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -170,7 +170,7 @@ l_result   CHandler::OnSize (uint32_t, w_param _w_param, l_param _l_param, int32
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -195,7 +195,7 @@ l_result   CHandler::OnSizing (uint32_t,  w_param _w_param, l_param _l_param, in
 	_w_param; _l_param; _b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IFrameEventSink* const pSink = *it_;
@@ -249,7 +249,7 @@ err_code   CHandler::Subscribe (IFrameEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << E_POINTER);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	TFrameEvtListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ != this->m_sinks.end())
@@ -266,7 +266,7 @@ err_code   CHandler::Unsubscribe (IFrameEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << E_POINTER);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 	
 	TFrameEvtListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ == this->m_sinks.end())

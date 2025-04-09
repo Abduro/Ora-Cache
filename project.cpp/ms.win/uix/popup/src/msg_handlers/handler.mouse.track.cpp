@@ -20,7 +20,7 @@ l_result CTrackHandler::OnMouseHover(uint32_t, w_param _w_param, l_param _l_para
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TTrackEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		ITrackEventSink* const pSink = *it_;
@@ -47,7 +47,7 @@ l_result CTrackHandler::OnMouseMove (uint32_t, w_param _w_param, l_param _l_para
 
 	const bool b_mouse_enter = !this->IsTurned();
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TTrackEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		ITrackEventSink* const pSink = *it_;
@@ -75,7 +75,7 @@ l_result CTrackHandler::OnMouseOut  (uint32_t, w_param _w_param, l_param _l_para
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	const bool b_mouse_leave = m_bTracked;
 	if (b_mouse_leave) {
@@ -106,7 +106,7 @@ l_result CTrackHandler::OnMouseWheel(uint32_t, w_param _w_param, l_param _l_para
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TTrackEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		ITrackEventSink* const pSink = *it_;
@@ -160,7 +160,7 @@ err_code CTrackHandler::Subscribe (ITrackEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	TTrackEvtListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ != this->m_sinks.end())
@@ -177,7 +177,7 @@ err_code CTrackHandler::Unsubscribe (ITrackEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 	
 	TTrackEvtListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ == this->m_sinks.end())

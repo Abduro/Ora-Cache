@@ -4,7 +4,7 @@
 */
 #include "direct_x.queue.h"
 
-using namespace ex_ui::draw::direct_x;
+using namespace ex_ui::draw::direct_x::_12;
 
 /////////////////////////////////////////////////////////////////////////////
 

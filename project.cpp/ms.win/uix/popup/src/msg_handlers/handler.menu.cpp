@@ -20,7 +20,7 @@ l_result   CHandler::OnInit (uint32_t, w_param _w_param, l_param _l_param, int32
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMenuEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IMenuEventSink* const pSink = *it_;
@@ -45,7 +45,7 @@ l_result   CHandler::OnPopup (uint32_t, w_param _w_param, l_param _l_param, int3
 	_b_handled = __s_ok;
 	l_result l_result = 0;
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	for (TMenuEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
 		IMenuEventSink* const pSink = *it_;
@@ -99,7 +99,7 @@ err_code   CHandler::Subscribe (IMenuEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 
 	TMenuEvtListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ != this->m_sinks.end())
@@ -116,7 +116,7 @@ err_code   CHandler::Unsubscribe (IMenuEventSink* _p_sink) {
 	if (0 == _p_sink)
 		return (TBase::m_error << __e_pointer);
 
-	SAFE_LOCK(TBase::m_guard);
+	Safe_Lock(TBase::m_guard);
 	
 	TMenuEvtListeners::iterator found_ = this->m_sinks.find(_p_sink);
 	if (found_ == this->m_sinks.end())
