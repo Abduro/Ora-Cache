@@ -1,5 +1,5 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 04-Apr_2025 at 21:19:33.068, UTC+4, Batumi, Friday;
+	Created by Tech_dog (ebontrop@gmail.com) on 04-Apr-2025 at 21:19:33.068, UTC+4, Batumi, Friday;
 	This is Ebo Pack DirectX swap chain component wrapper interface implementation file;
 */
 #include "direct_x.swap.h"

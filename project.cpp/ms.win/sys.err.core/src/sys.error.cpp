@@ -74,11 +74,11 @@ CErr_Source::~CErr_Source (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-_pc_sz  CErr_Source::Class (void) const { return this->m_class.GetString() ; }
+_pc_sz   CErr_Source::Class (void) const { return this->m_class.GetString() ; }
 CString& CErr_Source::Class (void)       { return this->m_class ; }
-_pc_sz  CErr_Source::Method(void) const { return this->m_method.GetString(); }
+_pc_sz   CErr_Source::Method(void) const { return this->m_method.GetString(); }
 CString& CErr_Source::Method(void)       { return this->m_method; }
-_pc_sz  CErr_Source::NameSp(void) const { return this->m_space.GetString() ; }
+_pc_sz   CErr_Source::NameSp(void) const { return this->m_space.GetString() ; }
 CString& CErr_Source::NameSp(void)       { return this->m_space ; }
 
 /////////////////////////////////////////////////////////////////////////////

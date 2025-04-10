@@ -83,11 +83,11 @@ namespace shared { namespace sys_core {
 		~CErr_Source (void);
 
 	public: // properties;
-		_pc_sz  Class (void) const;
+		_pc_sz   Class (void) const;
 		CString& Class (void)      ;
-		_pc_sz  Method(void) const;
+		_pc_sz   Method(void) const;
 		CString& Method(void)      ;
-		_pc_sz  NameSp(void) const;
+		_pc_sz   NameSp(void) const;
 		CString& NameSp(void)      ;
 
 	public:

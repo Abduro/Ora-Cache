@@ -17,6 +17,8 @@ namespace ebo { namespace boo { namespace test {
 
 		using e_print = ex_ui::draw::direct_x::e_print;
 
+		using TClrBits = ex_ui::draw::direct_x::TClrBits;
+
 		using IBufferSink = ex_ui::draw::direct_x::IBuffer_Sync;
 		using TBuffer = ex_ui::draw::direct_x::CBuffer;
 		using TUsage = ex_ui::draw::direct_x::CBuff_Usage::e_usage;
@@ -170,12 +172,16 @@ namespace ebo { namespace boo { namespace test {
 			__class(CAda_Warp) {
 			};
 
+			using TContext = ex_ui::draw::direct_x::_11::CContext;
 			using TDevice = ex_ui::draw::direct_x::_11::CDevice;
 			using TDevice_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
 
 			using TFeature = ex_ui::draw::direct_x::_11::CFeature;
 			using TFeature_Thread = ex_ui::draw::direct_x::_11::CFeature_Thread;
 			using TFeature_Format = ex_ui::draw::direct_x::_11::CFeature_Format;
+
+			// step #1: creating a device and its context:
+			// https://learn.microsoft.com/en-us/windows/win32/direct3dgetstarted/work-with-dxgi ;
 
 			__class(CDevice) {
 			private:
@@ -193,7 +199,7 @@ namespace ebo { namespace boo { namespace test {
 							_out() += this->m_device.Error().Print(TError::e_print::e_req);
 						}
 						else
-							_out() += _T("The device has been created successfully;");
+							_out() += this->m_device.Print(e_print::e_all);
 					}
 					_out()();
 				}
@@ -224,6 +230,24 @@ namespace ebo { namespace boo { namespace test {
 					_out()();
 				}
 
+				__method (Context) {
+					if (false == this->m_device.Is_valid()) {
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+
+					TContext ctx;
+					this->m_device.Get(ctx);
+					if (this->m_device.Error())
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+					else if (false == ctx.Is_valid())
+						_out() += ctx.Error().Print(TError::e_print::e_req);
+					else
+						_out() += ctx.Print();
+					_out()();
+				}
+
 				__method (Features) {
 					if (false == this->m_device.Is_valid()) {
 						_out() += this->m_device.Error().Print(TError::e_print::e_req);
@@ -239,7 +263,7 @@ namespace ebo { namespace boo { namespace test {
 					else
 						_out() += feature_0.Print();
 
-					TFeature_Format feature_1;
+					TFeature_Format feature_1; feature_1.Ref().InFormat = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM;
 					this->m_device.Get(feature_1);
 
 					if (this->m_device.Error())

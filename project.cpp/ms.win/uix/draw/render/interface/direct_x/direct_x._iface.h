@@ -14,6 +14,7 @@
 */
 // https://learn.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-environment-set-up ;
 #include <d3d11.h>
+#include <d3d11_3.h> // https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11devicecontext4 ;
 #include <d3d12.h>   // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ ; << for command queue;
 #include <dxgi.h>    // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory ; (deprecated on Windows 8/8.1/10);
 #include <dxgi1_2.h> // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgiswapchain1 << for swap chain definition;

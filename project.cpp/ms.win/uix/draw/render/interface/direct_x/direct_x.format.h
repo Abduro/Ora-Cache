@@ -1,7 +1,7 @@
 #ifndef _DIRECT_X_FORMAT_H_INCLUDED
 #define _DIRECT_X_FORMAT_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 08-Apt-2025 at 15:59:06.100, UTC+4, Batumi, Tuesday;
+	Created by Tech_dog (ebontrop@gmail.com) on 08-Apr-2025 at 15:59:06.100, UTC+4, Batumi, Tuesday;
 	This is Ebo pack DirectX data format base interface declaration file;
 */
 #include "direct_x._iface.h"
@@ -31,7 +31,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		CClrBits&  operator = (const CClrBits&) = delete;
 		CClrBits&  operator = (CClrBits&&) = delete;
 	};
-
+namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_format_support ;
 
 	typedef D3D11_FORMAT_SUPPORT TResFormat;
@@ -39,19 +39,31 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	class CResFormat {
 	public:
 		enum e_buffer : uint32_t {
-		e_normal     = TResFormat::D3D11_FORMAT_SUPPORT_BUFFER          , // buffer resources supported;
+		e_back_cast  = TResFormat::D3D11_FORMAT_SUPPORT_BACK_BUFFER_CAST, //
+		e_buffer_nm  = TResFormat::D3D11_FORMAT_SUPPORT_BUFFER          , // buffer resources supported;
 		e_buffer_so  = TResFormat::D3D11_FORMAT_SUPPORT_SO_BUFFER       , // streaming output buffers supported;
 		e_ia_index   = TResFormat::D3D11_FORMAT_SUPPORT_IA_INDEX_BUFFER , // index buffers supported;
 		e_ia_vertex  = TResFormat::D3D11_FORMAT_SUPPORT_IA_VERTEX_BUFFER, // vertex buffers supported;
 		};
 
+		enum e_mip : uint32_t {
+		e_auto = D3D11_FORMAT_SUPPORT_MIP_AUTOGEN, //
+		e_maps = D3D11_FORMAT_SUPPORT_MIP,         //
+		};
+
+		enum e_multismp : uint32_t {
+		e_loaded  = TResFormat::D3D11_FORMAT_SUPPORT_MULTISAMPLE_LOAD        , //
+		e_render  = TResFormat::D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET, //
+		e_resolve = TResFormat::D3D11_FORMAT_SUPPORT_MULTISAMPLE_RESOLVE     , //
+		};
+
 		enum e_shader : uint32_t {
 		e_gather     = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_GATHER           , // format can be used with the HLSL gather function;
 		e_gather_cmp = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_GATHER_COMPARISON, // format can be used with the HLSL gather function and comparison;
-		e_load       = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_LOAD     , //
-		e_sample     = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE   , //
+		e_load       = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_LOAD             , //
+		e_sample     = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE           , //
 		e_sample_cmp = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_COMPARISON, //
-		e_mono_rext  = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_MONO_TEXT      , //
+		e_mono_rext  = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_MONO_TEXT , //
 		};
 
 		enum e_texture : uint32_t {
@@ -72,13 +84,18 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	public:
 #if defined(_DEBUG)
-		CString   Print (const uint32_t _n_flags) const;
+		CString   Print (const uint32_t _n_flags, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 	private:
 		CResFormat& operator = (const CResFormat&) = delete;
 		CResFormat& operator = (CResFormat&&) = delete;
 	};
-
+}
+namespace _12 {
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d12/direct3d-12-enumerations ;
+	typedef D3D12_FORMAT_SUPPORT1 TResFormat1; // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_format_support1 ;
+	typedef D3D12_FORMAT_SUPPORT2 TResFormat2; // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_format_support2 ;
+}
 }}}
 
 #endif/*_DIRECT_X_FORMAT_H_INCLUDED*/

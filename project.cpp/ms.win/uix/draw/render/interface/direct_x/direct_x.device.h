@@ -6,11 +6,12 @@
 */
 #include "direct_x._iface.h"
 #include "direct_x.adapter.h"
+#include "direct_x.feature.h"
+#include "direct_x.format.h"
 #include "direct_x.queue.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
 
-	using TError = const shared::sys_core::CError;
 namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_create_device_flag ;
 	typedef D3D11_CREATE_DEVICE_FLAG TDevFlag_11;
@@ -59,82 +60,47 @@ namespace _11 {
 	};
 
 namespace _11 {
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_feature ;
-	typedef D3D11_FEATURE EFeature;
-
-	class CFeature {
-	public:
-		 CFeature (void);                     // by default feature type is set to D3D11_FEATURE_THREADING (0);
-		 CFeature (const CFeature&) = delete; // not is required yet;
-		 CFeature (CFeature&&) = delete;      // not required yet;
-		~CFeature (void) = default;
-
-	public:
-		err_code  Clear(void) ;          // just sets the data block bytes to zero;
-		const
-		void* const Data (void) const;   // no management of data lyfe cycle is provided by this class;
-		void* const Data (void) ;
-
-		bool Is_valid (void) const;      // no memory address validation is made; it is supposed the pointer is of actual data structire;
-
-		uint32_t Size (void) const;      // returns the size of the memory block;
-		bool     Size (const uint32_t);  // no check is made for input value; any value is accepted; returs 'true' in case of size value change;
-
-		EFeature Type (void) const;
-		bool     Type (const EFeature);
-
-	public:
-		CFeature& operator = (const CFeature&) = delete; // is not required yet;
-		CFeature& operator = (CFeature&&) = delete;      // is not required yet;
-
-		CFeature& operator <<(const EFeature _e_type);
-		CFeature& operator <<(const uint32_t _n_size);
-
-	protected:
-		void*     m_p_data;  // points to data structure that is defined by child class;
-		uint32_t  m_size;    // the size of data structure being retrieved from the device;
-		EFeature  m_type;    // feature type that is requested from the device;
-	};
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_feature_data_threading ;
-	typedef D3D11_FEATURE_DATA_THREADING TDataThread;
-
-	class CFeature_Thread : public CFeature { typedef CFeature TBase;
-	public:
-		 CFeature_Thread (void); CFeature_Thread (const CFeature_Thread&) = delete; CFeature_Thread (CFeature_Thread&&) = delete;
-		~CFeature_Thread (void) = default;
-
-	public:
-		const
-		TDataThread& Ref (void) const;
-		TDataThread& Ref (void) ;
-#if defined(_DEBUG)
-		CString  Print (const e_print = e_print::e_all) const;
-#endif
-	private:
-		TDataThread m_data;
-	};
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_feature_data_format_support ;
-	typedef D3D11_FEATURE_DATA_FORMAT_SUPPORT TDataFromat;
-
-	class CFeature_Format : public CFeature { typedef CFeature TBase;
-	public:
-		 CFeature_Format (void); CFeature_Format (const CFeature_Format&) = delete; CFeature_Format(CFeature_Format&&) = delete;
-		~CFeature_Format (void) = default;
-
-	public:
-		const
-		TDataFromat& Ref (void) const;
-		TDataFromat& Ref (void) ;
-#if defined(_DEBUG)
-		CString  Print (const e_print = e_print::e_all) const;
-#endif
-	private:
-		TDataFromat m_data;
-	};
+	
 }
 	
 namespace _11 {
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11device ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11devicecontext      ; << draw and views;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11devicecontext1 ; << shader buffers;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11devicecontext2 ; << context;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11devicecontext3 ; << HW protect;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11devicecontext4 ; << fence;
+
+	typedef ::ATL::CComPtr<ID3D11DeviceContext > TCtx0Ptr;
+	typedef ::ATL::CComPtr<ID3D11DeviceContext4> TCtx4Ptr; // << d3d11_3.h is required;
+
+	class CContext {
+	public:
+		 CContext (void); CContext (const CContext&) = delete; CContext (CContext&&) = delete;
+		~CContext (void) = default;
+
+	public:
+		TError&   Error (void) const;
+		bool   Is_valid (void) const;
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
+		const
+		TCtx4Ptr& Ptr (void) const;
+		TCtx4Ptr& Ptr (void) ;
+
+		err_code  Set (const TCtx0Ptr&);  // tries to retrieve this context pointer from the pointer to base object;
+
+	private:
+		CContext& operator = (const CContext&) = delete;
+		CContext& operator = (CContext&&) = delete;
+
+	private:
+		TCtx4Ptr  m_p_ctx;
+		CError    m_error;
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11device ; this is the base device;
+	
 	typedef ::ATL::CComPtr<ID3D11Device> TDevicePtr;
 
 	class CDevice {
@@ -143,8 +109,9 @@ namespace _11 {
 		~CDevice (void);
 
 	public:
-		err_code  Get (CFeature& );    // gets input feature data;
 		err_code  Get (CAda_Warp&);    // gets warp adapter, i.e. the object that implements IDXGIAdapter interface;
+		err_code  Get (CContext& );    // gets device context interface; useful for draw operations;
+		err_code  Get (CFeature& );    // gets input feature data;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
@@ -164,18 +131,34 @@ namespace _11 {
 
 	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11device1 ; shared res; blend; cmd list; dx11.1;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11device2 ; deferred context; dx11.2;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11device3 ; view and texture;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device4 ; removed event;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device5 ; to manage fence;
+
 	class CDevice_HW : public CDevice { typedef CDevice TBase;
 	public:
 		 CDevice_HW (void); CDevice_HW (const CDevice_HW&) = delete; CDevice_HW (CDevice_HW&&) = delete;
 		~CDevice_HW (void) = default;
 
 	public:
+		const
+		CContext& Ctx (void) const;   // gets a reference to immediate context of this device; (ra);
+		CContext& Ctx (void) ;        // gets a reference to immediate context of this device; (rw);
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ; 
-		err_code  Create (void); // if no adapter pointer is used, the first adapter is applied from IDXGIFactory1::EnumAdapters();
-
+		err_code  Create (void);      // if no adapter pointer is used, the first adapter is applied from IDXGIFactory1::EnumAdapters();
+		uint32_t  Level (void) const; // gets level of functionality that is supported by this device;
+#if defined (_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CDevice_HW& operator = (const CDevice_HW&) = delete;
 		CDevice_HW& operator = (CDevice_HW&&) = delete;
+
+	private:
+		EFeatureLvl m_level;  // the feature level that is supported by this device;
+		CContext  m_imm_ctx;  // the immediate context which retrieved by create device function;
 	};
 }
 

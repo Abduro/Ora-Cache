@@ -190,7 +190,7 @@ CErr_Pattern& CErr_Pattern::operator << (const _tp _e_type) {
 /////////////////////////////////////////////////////////////////////////////
 
 CErr_Pattern::operator const   _tp (void) const { return this->m_active; }
-CErr_Pattern::operator CAtlStringW (void) const { return this->Get(this->m_active); }
+CErr_Pattern::operator CString     (void) const { return this->Get(this->m_active); }
 
 /////////////////////////////////////////////////////////////////////////////
 

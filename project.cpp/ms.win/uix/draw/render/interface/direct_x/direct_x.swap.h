@@ -1,7 +1,7 @@
 #ifndef _DIRECT_X_SWAP_H_INCLUDED
 #define _DIRECT_X_SWAP_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 04-Apr_2025 at 21:17:32.647, UTC+4, Batumi, Friday;
+	Created by Tech_dog (ebontrop@gmail.com) on 04-Apr-2025 at 21:17:32.647, UTC+4, Batumi, Friday;
 	This is Ebo Pack DirectX swap chain component wrapper interface declaration file;
 */
 #include "direct_x._iface.h"
