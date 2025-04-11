@@ -15,8 +15,24 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	class CFeature_Lvl {
 	public:
+		class CDefault { // this class is a defalt set of feature levels for creating a device;
+		public:
+			 CDefault (void) = default; CDefault (const CDefault&) = delete; CDefault (CDefault&&) = delete;
+			~CDefault (void) = default;
+		public:
+			uint32_t  Count (void) const;           // gets count of elements in the levels array; 
+			EFeatureLvl* const Levels (void) const; // the pointer to feature levels array;
+
+		private:
+			CDefault& operator = (const CDefault&) = delete;
+			CDefault& operator = (CDefault&&) = delete;
+		};
+	public:
 		 CFeature_Lvl (void) = default; CFeature_Lvl (const CFeature_Lvl&) = delete; CFeature_Lvl (CFeature_Lvl&&) = delete;
 		~CFeature_Lvl (void) = default;
+	public:
+		const
+		CDefault&  Default (void) const;  // gets a default set of the levels that may be used in a device creation;
 #if defined(_DEBUG)
 	public:
 		CString Print (const uint32_t _n_level) const;
@@ -24,6 +40,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	private:
 		CFeature_Lvl& operator = (const CFeature_Lvl&) = delete;
 		CFeature_Lvl& operator = (CFeature_Lvl&&) = delete;
+	private:
+		CDefault m_def_set;
 	};
 
 namespace _11 {

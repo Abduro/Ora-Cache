@@ -68,13 +68,9 @@ err_code  CFac_4::Get  (CAdapter& _adapter) {
 		n_error = ::D3D12CreateDevice(p_adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(TAdapterPtr), nullptr);
 		if (__succeeded(n_error)) {
 
-			TAdapterInfo info_ = { 0 };
-			this->m_error << p_adapter->GetDesc1(&info_);
 			if (false == this->m_error) {
-				_adapter.Ptr() = p_adapter.Detach();
-				_adapter.Info() = info_;
+				_adapter.Ptr(p_adapter.Detach());
 				found.push_back(_adapter);
-			//	continue;
 			}
 		}
 		n_index += 1; // goes ahead;
@@ -100,8 +96,8 @@ err_code  CFac_4::Get  (CAda_Warp& _adapter) {
 		return  this->Error();
 	}
 	else
-		_adapter.Ptr() = warp_ada;
-
+		_adapter.Ptr(warp_ada);
+#if (0)
 	TAdaInfoWarp warp_info = { 0 };
 
 	this->m_error << warp_ada->GetDesc(&warp_info);
@@ -110,7 +106,7 @@ err_code  CFac_4::Get  (CAda_Warp& _adapter) {
 	}
 	else
 		_adapter.Info() = warp_info;
-
+#endif
 	return this->Error();
 }
 #if (1)
@@ -193,5 +189,160 @@ CFac_4&  CFac_4::operator <<(const TFac4Ptr& _p_fac) { this->Ptr() = _p_fac; ret
 CFac_4&  CFac_4::operator <<(const CDevice& _device) { this->Set(_device); return *this; }
 
 CFac_4&  CFac_4::operator >>(CAda_Warp& _adapter) { this->Get(_adapter); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CFac_6:: CFac_6 (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+
+/////////////////////////////////////////////////////////////////////////////
+const
+TAdapters&  CFac_6::Cached (void) const { return this->m_cached; }
+
+err_code CFac_6::Create (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return m_error << (err_code)TErrCodes::eObject::eExists;
+
+	TFac1Ptr p_fac;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1 ;
+	this->m_error << ::CreateDXGIFactory1(__uuidof(TFac1Ptr), (void**)&p_fac);
+	if (this->Error())
+		return this->Error();
+
+	this->m_error << (p_fac->QueryInterface(IID_PPV_ARGS(&this->m_p_fac)));
+
+	return this->Error();
+}
+
+TError&  CFac_6::Error (void) const { return this->m_error; }
+
+bool     CFac_6::Is_Hi_Perf (const uint32_t _luid_low) {
+	if (0 == _luid_low)
+		return false;
+
+	if (__failed(this->Get_Hi_Perf()))
+		return false;
+
+	for (size_t i_ = 0; i_ < this->m_cached.size(); i_++) {
+		if (this->m_cached.at(i_).Info().AdapterLuid.LowPart == _luid_low)
+			return (0 == i_);
+	}
+	return false;
+}
+bool     CFac_6::Is_Lo_Power(const uint32_t _luid_low) {
+	if (0 == _luid_low)
+		return false;
+
+	if (__failed(this->Get_Lo_Power()))
+		return false;
+
+	for (size_t i_ = 0; i_ < this->m_cached.size(); i_++) {
+		if (this->m_cached.at(i_).Info().AdapterLuid.LowPart == _luid_low)
+			return (0 == i_);
+	}
+	return false;
+}
+
+bool     CFac_6::Is_valid (void) const { return nullptr != this->Ptr(); }
+
+err_code CFac_6::Get_Hi_Perf (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (false == this->Is_valid())
+		return this->m_error << __e_not_inited;
+
+	if (this->m_cached.empty() == false)
+		this->m_cached.clear();
+
+	uint32_t n_index = 0;
+	TAdapterPtr p_adapter;
+
+	for (
+		n_index = 0;
+		__s_ok == this->Ptr()->EnumAdapterByGpuPreference(n_index, (TGpuPrefs) CGpu_Prefs::e_hi_perf, __uuidof(TAdapterPtr), (void**)&p_adapter);
+		n_index++
+		)
+	{
+		CAdapter fast_run;
+		fast_run.Ptr(p_adapter.Detach());
+		fast_run.Props().Hi_Perf(0 == n_index);
+		try {
+			this->m_cached.push_back(fast_run);
+		}
+		catch (const ::std::bad_alloc&) {
+			this->m_error << __e_no_memory; break;
+		}
+	}
+
+	return this->Error();
+}
+
+err_code CFac_6::Get_Lo_Power (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (false == this->Is_valid())
+		return this->m_error << __e_not_inited;
+
+	if (this->m_cached.empty() == false)
+		this->m_cached.clear();
+
+	uint32_t n_index = 0;
+	TAdapterPtr p_adapter;
+
+	for (
+		n_index = 0;
+		__s_ok == this->Ptr()->EnumAdapterByGpuPreference(n_index, (TGpuPrefs) CGpu_Prefs::e_lo_power, __uuidof(TAdapterPtr), (void**)&p_adapter);
+		n_index++
+		)
+	{
+		CAdapter fast_run;
+		fast_run.Ptr(p_adapter);
+		fast_run.Props().Lo_Power(0 == n_index);
+		try {
+			this->m_cached.push_back(fast_run);
+		}
+		catch (const ::std::bad_alloc&) {
+			this->m_error << __e_no_memory; break;
+		}
+	}
+
+	return this->Error();
+}
+
+const
+TFac6Ptr&  CFac_6::Ptr (void) const { return this->m_p_fac; }
+err_code   CFac_6::Ptr (const TFac6Ptr& _p_fac) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
+	if (nullptr == _p_fac)
+		return m_error << __e_pointer;
+
+	this->m_p_fac = _p_fac;
+
+	return this->Error();
+}
+
+#if defined(_DEBUG)
+CString    CFac_6::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{valid=%s}");
+
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_out;
+	if (e_print::e_all == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_valid); }
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 
 }}}}

@@ -166,7 +166,7 @@ namespace ebo { namespace boo { namespace test {
 
 		namespace _11 {
 			using TAda_Warp = ex_ui::draw::direct_x::_11::CAda_Warp;
-			using TWarp_enum = ex_ui::draw::direct_x::_11::CEnum_Warp;
+			using TWarp_enum = ex_ui::draw::direct_x::_11::CWarp_Enum;
 			using TParent_Fac = ex_ui::draw::direct_x::_11::CAda_Warp::CParent;
 
 			__class(CAda_Warp) {
@@ -189,7 +189,7 @@ namespace ebo { namespace boo { namespace test {
 
 			public:
 				// *attention*: the constructor may be called twice;
-				 CDevice (void) {
+				CDevice (void) {
 					_out() += TLog_Acc::e_new_line;
 					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -274,6 +274,49 @@ namespace ebo { namespace boo { namespace test {
 					_out()();
 				}
 			};
+
+			using TSwap = ex_ui::draw::direct_x::_11::CSwapChain;
+
+			__class(CDevice_2) {
+			private:
+				TDevice_HW  m_device;
+
+				__method (Swap) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					this->m_device.Create_Swap();
+					if (this->m_device.Is_valid()) {
+						_out() += this->m_device.Print();
+					}
+					else
+						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+
+					_out()();
+				}
+			};
+
+			__class(CWarp_enum) {
+			private:
+				TWarp_enum m_enum;
+
+			public:
+				__method(Do) {
+					_out() += TLog_Acc::e_new_line;
+					this->m_enum.Set();
+					if (this->m_enum.Error()) {
+						_out() += this->m_enum.Error().Print(TError::e_print::e_req);
+					}
+					else if (this->m_enum.Get().Error()) {
+						_out() += this->m_enum.Get().Error().Print(TError::e_print::e_req);
+					}
+					else {
+						const TAda_Warp& adapter = this->m_enum.Get();
+						_out() += adapter.Print(e_print::e_all);
+					}
+					_out()();
+				}
+			};
 		}
 
 		namespace _12 {
@@ -350,6 +393,94 @@ namespace ebo { namespace boo { namespace test {
 				}
 			};
 
+			using TFac_6 = ex_ui::draw::direct_x::_12::CFac_6;
+
+			__class(CFac_6) {
+			private:
+				TFac_6 m_fac_6;
+
+			public:
+				__method(Create) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					this->m_fac_6.Create();
+					if (this->m_fac_6.Is_valid())
+						_out() += this->m_fac_6.Print(e_print::e_all);
+					else
+						_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
+					_out()();
+				}
+				__method(Enum_Hi_perf) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					this->m_fac_6.Create();
+					if (this->m_fac_6.Is_valid()) {
+						if (__succeeded(this->m_fac_6.Get_Hi_Perf())) {
+							const TAdapters& a_set = this->m_fac_6.Cached();
+							if (a_set.size()) { // expected to be not 0;
+								const TAdapter& a_hi_perf = a_set.at(0); // the best is the first one;
+								_out() += a_hi_perf.Print();
+							}
+						}
+					}
+					if (this->m_fac_6.Error())
+						_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
+					_out()();
+				}
+				__method(Enum_Lo_power) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					this->m_fac_6.Create();
+					if (this->m_fac_6.Is_valid()) {
+						if (__succeeded(this->m_fac_6.Get_Lo_Power())) {
+							const TAdapters& a_set = this->m_fac_6.Cached();
+							if (a_set.size()) { // expected to be not 0;
+								const TAdapter& a_hi_perf = a_set.at(0); // the best is the first one;
+								_out() += a_hi_perf.Print();
+							}
+						}
+					}
+					if (this->m_fac_6.Error())
+						_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
+					_out()();
+				}
+			};
+
+			using TDev_Warp = ex_ui::draw::direct_x::_12::CDevice_Warp;
+			using TWarp_ada = ex_ui::draw::direct_x::_11::CAda_Warp;
+			using TWarp_Enum = ex_ui::draw::direct_x::_11::CWarp_Enum;
+
+			__class(CDev_warp) {
+			private:
+				TDev_Warp m_device;
+
+			public:
+				__method(Create) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+					// it is expected to receive the error: 'No such interface supported';
+					// in case when this project is tested on virtual remote machine;
+					TWarp_Enum warp_enum;
+					warp_enum.Set();
+					if (warp_enum.Error()) {
+						_out() += warp_enum.Error().Print(TError::e_print::e_req);
+					}
+					else {
+						const TWarp_ada& warp_ada = warp_enum.Get();
+						this->m_device.Create(warp_ada);
+
+						if (this->m_device.Error())
+							_out() += this->m_device.Error().Print(TError::e_print::e_req);
+						else
+							_out() += _T("The device is created successfully;");
+					}
+					_out()();
+				}
+			};
+			
 			using TWrapper = ex_ui::draw::direct_x::_12::CDesc_Wrap;
 			using TWrapPtr = ex_ui::draw::direct_x::_12::TDescWrapPtr;
 
@@ -490,8 +621,6 @@ namespace ebo { namespace boo { namespace test {
 					_out()();
 				}
 			};
-
-
 		}
 	}
 
@@ -612,74 +741,6 @@ namespace ebo { namespace boo { namespace test {
 	}
 			};
 		}
-	}
-#endif
-
-#if (0)
-	namespace draw {
-		
-		using TDev_Warp = ex_ui::draw::direct_x::_12::CDevice_Warp;
-
-		
-			// at least one test method must be defined, otherwise this test class does not appeat in the test explorer;
-			// test class constuctor and destructor do not lead to show this class;
-
-			// this is from ::_12::CDevice class
-			__method (WarpAdapter) {
-				if (false == this->m_device.Is_valid()) {
-					_out() += this->m_device.Error().Print(TError::e_print::e_req);
-					_out()();
-					return;
-				}
-				TAda_Warp ada_warp;
-				this->m_device.Get(ada_warp);
-				if (this->m_device.Error()) {
-					_out() += this->m_device.Error().Print(TError::e_print::e_req);
-					_out()();
-				}
-				_out() += _T("The retrieving adapter is succeeded;");
-
-				TParent_Fac fac_parent;
-				err_code n_result = ada_warp.Get(fac_parent);
-
-				if (__succeeded(n_result))
-					_out() += _T("Parent factory is received;");
-				else {
-					CError error; error << n_result;
-					_out() += error.Print(TError::e_print::e_req);
-					_out()();
-				}
-
-				_out()();
-			}
-			
-		};
-		
-		using TSwapChain = ex_ui::draw::direct_x::CSwapChain;
-
-		__class(CWarp_enum) {
-
-			__method(Do) {
-				TWarp_enum warp_enum;
-				warp_enum.Set();
-				warp_enum.Get();
-			}
-		};
-
-		using TWarpDev = ex_ui::draw::direct_x::_12::CDevice_Warp;
-
-		__class(CDev_warp) {
-
-			__method(ref) {
-
-				TWarp_enum warp_enum;
-				TWarpDev   wrap_dev ;
-				if (warp_enum.Set()) {
-					wrap_dev.Create(warp_enum.Get());
-				}
-			}
-
-		};
 	}
 #endif
 }}}

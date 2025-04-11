@@ -26,6 +26,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	typedef IDXGIFactory   IDXGIFactory0;
 	typedef ::ATL::CComPtr<IDXGIFactory0> TFac0Ptr;
+	typedef ::ATL::CComPtr<IDXGIFactory1> TFac1Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory4> TFac4Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory5> TFac5Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory6> TFac6Ptr;
@@ -100,6 +101,63 @@ namespace _12 {
 		CError     m_error;
 		TDevicePtr m_p_device;  // just cached for swap chain creation;
 		TCmdQuePtr m_p_queue;   // just cached for swap chain creation;
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/ne-dxgi1_6-dxgi_gpu_preference ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/nf-dxgi1_6-idxgifactory6-enumadapterbygpupreference;
+	// the retrieved adapters are sorted in descending order: the first one is the most appropriate to requested preference;
+	typedef DXGI_GPU_PREFERENCE TGpuPrefs;
+	class CGpu_Prefs {
+	public:
+		enum e_prefs : uint32_t {
+			e__unspec  = TGpuPrefs::DXGI_GPU_PREFERENCE_UNSPECIFIED     ,
+			e_hi_perf  = TGpuPrefs::DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+			e_lo_power = TGpuPrefs::DXGI_GPU_PREFERENCE_MINIMUM_POWER   ,
+		};
+	public:
+		 CGpu_Prefs (void) = default; CGpu_Prefs (const CGpu_Prefs&) = delete; CGpu_Prefs (CGpu_Prefs&&) = delete;
+		~CGpu_Prefs (void) = default;
+
+	private:
+		CGpu_Prefs& operator = (const CGpu_Prefs&) = delete;
+		CGpu_Prefs& operator = (CGpu_Prefs&&) = delete;
+	};
+
+	class CFac_6 {
+	public:
+		 CFac_6 (void);
+		 CFac_6 (const CFac_6&) = delete; CFac_6 (CFac_6&&) = delete;
+		~CFac_6 (void) = default;
+	public:
+		const
+		TAdapters& Cached (void) const;
+
+		err_code   Create (void);           // creates this factory object;
+		TError&    Error  (void) const;
+
+		bool    Is_valid  (void) const;
+
+		bool    Is_Hi_Perf (const uint32_t _luid_low); // not optimized yet;
+		bool    Is_Lo_Power(const uint32_t _luid_low); // not optimized yet;
+
+		err_code   Get_Hi_Perf (void);
+		err_code   Get_Lo_Power (void);
+		
+		const
+		TFac6Ptr&  Ptr (void) const;
+		err_code   Ptr (const TFac6Ptr&);
+#if defined(_DEBUG)
+		CString    Print (const e_print = e_print::e_all) const;
+#endif
+
+	private:
+		CFac_6& operator = (const CFac_6&) = delete;
+		CFac_6& operator = (CFac_6&&) = delete;
+
+	private:
+		TFac6Ptr  m_p_fac ;
+		CError    m_error ;
+		TAdapters m_cached;
 	};
 }
 }}}

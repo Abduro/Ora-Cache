@@ -10,6 +10,33 @@
 #include "direct_x._iface.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
+	// generic properties of an adapter of either direct_x 11 or 12;
+	class CProps {
+	public:
+		 CProps (void);
+		 CProps (const CProps&);
+		 CProps (CProps&&) = delete;
+		~CProps (void) = default;
+
+	public:
+		bool  Dx_12   (void) const;
+		bool  Dx_12   (const bool);
+		bool  Hi_Perf (void) const;
+		bool  Hi_Perf (const bool);
+		bool  Lo_Power(void) const;
+		bool  Lo_Power(const bool);
+#if defined(_DEBUG)
+		CString  Print(const e_print = e_print::e_all) const;
+#endif
+	public:
+		CProps&  operator = (const CProps&);
+		CProps&  operator = (CProps&&) = delete;
+
+	private:
+		bool  m_hi_perf ;  // high performance;
+		bool  m_lo_power;  // low power consumption;
+		bool  m_12_vers ;  // support direct_x 12;
+	};
 
 namespace _11 {
 
@@ -17,7 +44,7 @@ namespace _11 {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc  ;
 	typedef DXGI_ADAPTER_DESC   TAdapterInfo;
-	typedef TAdapterInfo        TAdaInfoWarp;
+	typedef TAdapterInfo        TAdaInfoWarp; typedef TAdaInfoWarp TInfo; // just playing with names;
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-warp << about WARP;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp << that is;
@@ -25,6 +52,8 @@ namespace _11 {
 
 	typedef ::ATL::CComPtr<IDXGIAdapter> TWarpAdaPtr; // it represents a display subsystem (including one or more GPUs, DACs and video memory);
 	typedef ::ATL::CComPtr<IDXGIFactory> TParentPtr ; // this is the parent object, i.e. a factory, of the warp adapter in DX11;
+
+	typedef TWarpAdaPtr TWarpPtr; // just playing with names;
 
 	class CAda_Warp { // ToDo: the name of this class must be reviewed; possibly 'CAdapter' withing this namespace would be better;
 	public:
@@ -53,41 +82,46 @@ namespace _11 {
 	public:
 		TError&  Error (void) const;
 		err_code Get (CParent&);         // gets parent object, i.e. the factory that holds and/or creates this adapter;
+
 		const
-		TAdaInfoWarp& Info (void) const;
-		TAdaInfoWarp& Info (void)      ; // sets info of this adapter by direct assignment; intended for enumerator class only;
+		TInfo&   Info (void) const;
+		TInfo&   Info (void);
 
 		bool Is (void) const;            // returns true if adapter information is initialized;
 #if defined(_DEBUG)
 		CString  Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 		const
-		TWarpAdaPtr& Ptr (void) const;
-		TWarpAdaPtr& Ptr (void) ;
+		CProps&  Props(void) const;
+		CProps&  Props(void);
+		const
+		TWarpPtr&  Ptr (void) const;
+		err_code   Ptr (const TWarpPtr&);
 
-		err_code  UpdateInfo (void);
+		err_code   UpdateInfo (void);
 
 	private:
 		CAda_Warp& operator = (const CAda_Warp&);
 		CAda_Warp& operator = (CAda_Warp&&) = delete;
 
-		CAda_Warp& operator <<(const TWarpAdaPtr&);
+		CAda_Warp& operator <<(const TWarpPtr&);
 		CAda_Warp& operator <<(const TAdaInfoWarp&);
 
 	private:
 		CError       m_error;
 		TAdaInfoWarp m_info ;
 		TWarpAdaPtr  m_object;
+		CProps       m_props;  
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp ;
 	// it looks like the only one warp adapter may exist in the system;
-	class CEnum_Warp {
+	class CWarp_Enum {
 	public:
-		 CEnum_Warp (void);
-		 CEnum_Warp (const CEnum_Warp&);
-		 CEnum_Warp (CEnum_Warp&&) = delete;
-		~CEnum_Warp (void) = default;
+		 CWarp_Enum (void);
+		 CWarp_Enum (const CWarp_Enum&);
+		 CWarp_Enum (CWarp_Enum&&) = delete;
+		~CWarp_Enum (void) = default;
 
 	public:
 		TErrorRef    Error (void) const;
@@ -96,8 +130,8 @@ namespace _11 {
 		err_code     Set (void);
 
 	public:
-		CEnum_Warp&  operator = (const CEnum_Warp&);
-		CEnum_Warp&  operator = (CEnum_Warp&&) = delete;
+		CWarp_Enum&  operator = (const CWarp_Enum&);
+		CWarp_Enum&  operator = (CWarp_Enum&&) = delete;
 
 	private:
 		CAda_Warp m_ada_warp;
@@ -107,7 +141,7 @@ namespace _11 {
 
 namespace _12 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag ;
-	using TFlag = DXGI_ADAPTER_FLAG;
+	using TFlag = DXGI_ADAPTER_FLAG; // this enumeration needs to be extended due to it does not reflect the nature of the adapter;
 
 	class CAdapter_Flag {
 	public:
@@ -119,42 +153,40 @@ namespace _12 {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc1 ;
 	typedef DXGI_ADAPTER_DESC1  TAdapterInfo;
+	typedef TAdapterInfo TInfo; // just playing with names;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi << about adapter types;
 	typedef ::ATL::CComPtr<IDXGIAdapter1> TAdapterPtr;
 
-	class CAdapter
-	{
+	class CAdapter {
 	public:
 		 CAdapter (void);
 		 CAdapter (const CAdapter&);
-		 CAdapter (const TAdapterInfo&);
 		 CAdapter (CAdapter&&);
 		~CAdapter (void);
 
 	public:
-		err_code Info(const TAdapterInfo&);  // sets adapter information from external adapter description; it is used in assign operator mainly;
+		TError&  Error(void) const;
+		err_code Info (const TInfo&);        // sets adapter information from external adapter description;
 		const
-		TAdapterInfo& Info (void) const;
-		TAdapterInfo& Info (void)      ;
+		TInfo&   Info (void) const;
+		TInfo&   Info (void)      ;
 
 		bool Is (void) const;                // returns true if adapter information is initialized and the pointer to object is set;
-
-	public: // TODO: maybe creating adapter attribute class would be better, but not for this version;
-		bool Is_12_Supported (void) const;   // returns true in case if this adapter supports Direct3D 12;
-		void Is_12_Supported (bool)      ;
-		// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/ne-dxgi1_6-dxgi_gpu_preference ;
-		bool Is_Hi_Performed (void) const;   // returns true in case this adapter is highest performing GPU;
-		void Is_Hi_Performed (bool)      ;
 
 #if defined(_DEBUG)
 		CString  Print(_pc_sz _lp_sz_sep = _T("\n\t\t"), bool _aligned = true) const; // creates a string from adapter information for output;
 #endif
+		const
+		CProps&  Props(void) const;
+		CProps&  Props(void);
+
 		const 
 		TAdapterPtr&  Ptr (void) const;
-		TAdapterPtr&  Ptr (void) ;
+		err_code      Ptr (const TAdapterPtr&) ;    // sets adapter pointer, updates its description and properties;
 
 	public:
 		CAdapter& operator = (const CAdapter&);
+		CAdapter& operator <<(const CProps&);
 		CAdapter& operator <<(const TAdapterInfo&); // sets adapter information by copying input structure;
 		CAdapter& operator <<(const TAdapterPtr&);
 
@@ -165,9 +197,9 @@ namespace _12 {
 
 	private:
 		TAdapterPtr  m_p_adapter;
-		TAdapterInfo m_info;
-		bool   m_performance; // this flag indicates a preference to high performance GPU;
-		bool   m_support_12;  // this flag indicates supporting Direct3D 12;
+		TAdapterInfo m_info ;
+		CError       m_error;
+		CProps       m_props;
 	};
 
 	typedef ::std::vector<CAdapter> TAdapters;

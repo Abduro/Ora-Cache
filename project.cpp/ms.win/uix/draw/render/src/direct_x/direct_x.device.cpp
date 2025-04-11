@@ -61,6 +61,47 @@ err_code   CContext::Set (const TCtx0Ptr& _p_base) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
+
+	class CDev_Cfg {
+	public:
+		typedef CFeature_Lvl::CDefault TLevels;
+		typedef EFeatureLvl* TArrayPtr;
+	public:
+		class CLevels {
+		public:
+			 CLevels (void) = default; CLevels (const CLevels&) = delete; CLevels (CLevels&&) = delete;
+			~CLevels (void) = default;
+
+		public:
+			uint32_t  Count (void) const { return CFeature_Lvl().Default().Count(); }
+			TArrayPtr const Ptr (void) const { return CFeature_Lvl().Default().Levels(); }
+
+		private:
+			CLevels& operator = (const CLevels&) = delete;
+			CLevels& operator = (CLevels&&) = delete;
+		};
+	public:
+		 CDev_Cfg (void) = default; CDev_Cfg (const CDev_Cfg&) = delete;  CDev_Cfg (CDev_Cfg&&) = delete;
+		~CDev_Cfg (void) = default;
+
+	public:
+		const
+		CLevels&  Levels (void) const { return this->m_def_set; }
+		uint32_t  Version (void) const { return D3D11_SDK_VERSION; }
+
+	private:
+		CLevels m_def_set;
+
+	private:
+		CDev_Cfg&  operator = (const CDev_Cfg&) = delete;
+		CDev_Cfg&  operator = (CDev_Cfg&&) = delete;
+	};
+
+}}}}
+using namespace ex_ui::draw::direct_x::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
 CDevice:: CDevice (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CDevice::~CDevice (void) {}
 
@@ -116,7 +157,11 @@ err_code  CDevice::Get (CAda_Warp& _adapter) {
 	if (this->Error())
 		return this->Error();
 
-	this->m_error << p_device_3->GetAdapter(&_adapter.Ptr());
+	TWarpPtr p_warp;
+
+	this->m_error << p_device_3->GetAdapter(&p_warp);
+	if (false == this->Error())
+		_adapter.Ptr(p_warp);
 
 	return this->Error();
 }
@@ -144,26 +189,58 @@ err_code  CDevice_HW::Create (void) {
 	if (TBase::Is_valid())
 		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists);
 
-	const D3D_FEATURE_LEVEL a_levels[] = {
-		D3D_FEATURE_LEVEL_11_1,
-		D3D_FEATURE_LEVEL_11_0, 
-		D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
-		D3D_FEATURE_LEVEL_9_3 , D3D_FEATURE_LEVEL_9_2 , D3D_FEATURE_LEVEL_9_1 ,
-	};
-#define sdk_ver D3D11_SDK_VERSION
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ;
+	if (this->Ctx().Is_valid())
+		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists) = _T("Context object is already created;");
+
+	CDev_Cfg cfg;
 	TCtx0Ptr p_base_ctx;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ;
 
 	TBase::m_error << ::D3D11CreateDevice(
 		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_ref,
-		nullptr, CDev_Flag::e_single, &a_levels[0], 7, sdk_ver, &TBase::Ptr(), &this->m_level, &p_base_ctx
+		nullptr, CDev_Flag::e_single, cfg.Levels().Ptr(), cfg.Levels().Count(), cfg.Version(), &TBase::Ptr(), &this->m_level, &p_base_ctx
 	);
 	// D3D11_SDK_VERSION      - must be applied;
 	// D3D_FEATURE_LEVEL_11_0 - may be applied for reference driver type;
 	// D3D_FEATURE_LEVEL_11_1 - may be applied for reference driver type;
+	if (false == TBase::Error()) {
+		this->Ctx().Set(p_base_ctx);
+		if (false == this->Ctx().Is_valid())
+			TBase::m_error = this->Ctx().Error();
+	}
 	return TBase::Error();
 }
+err_code  CDevice_HW::Create_Swap (void) {
+	TBase::m_error << __METHOD__ << __s_ok;
 
+	if (TBase::Is_valid())
+		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists) = _T("The device is already created;");
+
+	if (this->Ctx().Is_valid())
+		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists) = _T("Context object is already created;");
+
+	if (this->Swap().Is_valid())
+		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists) = _T("Swap chain object is already created;");
+
+	if (false == this->Swap().Desc().Is_valid())
+		return (TBase::m_error = this->Swap().Desc().Error());
+
+	CDev_Cfg   cfg;
+	TCtx0Ptr   p_base_ctx;
+	TChainPtr  p_swap;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdeviceandswapchain ;
+
+	TBase::m_error << ::D3D11CreateDeviceAndSwapChain(
+		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_hard,
+		nullptr, CDev_Flag::e_single, cfg.Levels().Ptr(), cfg.Levels().Count(), cfg.Version(),
+		nullptr, &p_swap, &TBase::Ptr(), &this->m_level, &p_base_ctx
+	);
+	if (false == TBase::Error()) {
+	}
+	return TBase::Error();
+}
 uint32_t  CDevice_HW::Level (void) const { return this->m_level; }
 #if defined (_DEBUG)
 CString   CDevice_HW::Print (const e_print _e_opt) const {
@@ -190,6 +267,10 @@ CString   CDevice_HW::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 #endif
+
+const
+CSwapChain& CDevice_HW::Swap (void) const { return this->m_chain; }
+CSwapChain& CDevice_HW::Swap (void)       { return this->m_chain; }
 
 }}}}
 

@@ -6,8 +6,28 @@
 
 using namespace ex_ui::draw::direct_x;
 
+using CDefault = CFeature_Lvl::CDefault;
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
+	static D3D_FEATURE_LEVEL levels[] = {
+	       D3D_FEATURE_LEVEL_11_1,
+	       D3D_FEATURE_LEVEL_11_0,
+	       D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+	       D3D_FEATURE_LEVEL_9_3 , D3D_FEATURE_LEVEL_9_2 , D3D_FEATURE_LEVEL_9_1,
+	};
+}}}}
+using namespace ex_ui::draw::direct_x::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
+uint32_t CDefault::Count (void) const { return _countof(levels); }
+EFeatureLvl* const CDefault::Levels (void) const {
+	return levels;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+CDefault& CFeature_Lvl::Default (void) const { return this->m_def_set; }
 CString   CFeature_Lvl::Print (const uint32_t _n_level) const {
 	_n_level;
 	static _pc_sz pc_sz_pat = _T("%d(%s)");

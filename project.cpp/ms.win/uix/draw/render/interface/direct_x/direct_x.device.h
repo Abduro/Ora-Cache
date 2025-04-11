@@ -9,6 +9,7 @@
 #include "direct_x.feature.h"
 #include "direct_x.format.h"
 #include "direct_x.queue.h"
+#include "direct_x.swap.1.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
 
@@ -59,10 +60,6 @@ namespace _11 {
 		CDrv_Type& operator = (CDrv_Type&&) = delete;
 	};
 
-namespace _11 {
-	
-}
-	
 namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11devicecontext      ; << draw and views;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11devicecontext1 ; << shader buffers;
@@ -146,19 +143,28 @@ namespace _11 {
 		const
 		CContext& Ctx (void) const;   // gets a reference to immediate context of this device; (ra);
 		CContext& Ctx (void) ;        // gets a reference to immediate context of this device; (rw);
+
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ; 
-		err_code  Create (void);      // if no adapter pointer is used, the first adapter is applied from IDXGIFactory1::EnumAdapters();
+		err_code  Create(void);       // if no adapter pointer is used, the first adapter is applied from IDXGIFactory1::EnumAdapters();
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdeviceandswapchain ;
+		err_code  Create_Swap (void);
+
 		uint32_t  Level (void) const; // gets level of functionality that is supported by this device;
 #if defined (_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
+		const
+		CSwapChain& Swap (void) const;
+		CSwapChain& Swap (void);
+
 	public:
 		CDevice_HW& operator = (const CDevice_HW&) = delete;
 		CDevice_HW& operator = (CDevice_HW&&) = delete;
 
 	private:
-		EFeatureLvl m_level;  // the feature level that is supported by this device;
-		CContext  m_imm_ctx;  // the immediate context which retrieved by create device function;
+		EFeatureLvl m_level  ;  // the feature level that is supported by this device;
+		CContext    m_imm_ctx;  // the immediate context which retrieved by create device function;
+		CSwapChain  m_chain  ;
 	};
 }
 

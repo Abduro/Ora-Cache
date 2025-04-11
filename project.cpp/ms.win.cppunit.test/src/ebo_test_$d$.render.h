@@ -20,6 +20,13 @@
 #include "direct_x.swap.2.h"
 
 #include "render.base.h"
+#include "run.event.h"
+
+namespace ebo { namespace boo { namespace test {
+
+	using CMarshaller = shared::runnable::CMarshaller;
+
+}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "sys.err.core_v15.lib") // for using error object;
