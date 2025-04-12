@@ -6,6 +6,7 @@
 */
 #include <atlbase.h>  // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/csimplestringt ;
 #include <atlstr.h>   // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class ;
+#include <atlwin.h>
 #include <CppUnitTest.h>
 
 #include "shared.preproc.h"

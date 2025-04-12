@@ -285,12 +285,102 @@ namespace ebo { namespace boo { namespace test {
 					_out() += TLog_Acc::e_new_line;
 					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
+					// (1) target window must be created first;
+					CFake_Wnd fake_wnd;
+					this->m_device.Swap().Desc().Fake();
+					this->m_device.Swap().Desc().Target(fake_wnd);
+
 					this->m_device.Create_Swap();
 					if (this->m_device.Is_valid()) {
 						_out() += this->m_device.Print();
+						_out() += this->m_device.Swap().Print(e_print::e_all);
 					}
 					else
 						_out() += this->m_device.Error().Print(TError::e_print::e_req);
+
+					_out()();
+				}
+			};
+
+			using TSwapDesc = ex_ui::draw::direct_x::_11::CDesc_Wrap;
+			using TFac_2 = ex_ui::draw::direct_x::_11::CFac_2;
+			using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
+
+			__class(CFac_2) {
+			private:
+				TFac_2 m_fac_2;
+
+			public:
+				CFac_2 (void) {
+#if (0)
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					this->m_fac_2.Create();
+					if (this->m_fac_2.Is_valid())
+						_out() += this->m_fac_2.Print(e_print::e_all);
+					else
+						_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+
+					_out()();
+#endif
+				}
+				~CFac_2 (void) {
+#if (0)
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+					_out()();
+#endif
+				}
+
+				__method(GetSwapChain) {
+					_out() += TLog_Acc::e_new_line;
+					_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+					this->m_fac_2.Create();
+					if (this->m_fac_2.Is_valid())
+						_out() += this->m_fac_2.Print(e_print::e_all);
+					else {
+						_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+
+					TDevice_HW device;
+					device.Create();
+					if (device.Error()) {
+						_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+
+					TSwapDesc desc;
+					CFake_Wnd fake_wnd;
+					if (fake_wnd.Error()) {
+						_out() += fake_wnd.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+					desc.Fake();
+					desc.Target(fake_wnd);
+					if (false == desc.Is_valid()) {
+						_out() += desc.Error().Print(TError::e_print::e_req);
+						_out()();
+						return;
+					}
+
+					TSwapChain chain;
+
+					if (false == this->m_fac_2.Is_valid()) {
+						_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+					}
+					else {
+						this->m_fac_2.Get(device, desc, chain);
+						if (this->m_fac_2.Error())
+							_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+						else
+							_out() += chain.Print(e_print::e_all);
+					}
 
 					_out()();
 				}

@@ -8,6 +8,7 @@ using namespace ex_ui::draw::direct_x;
 
 /////////////////////////////////////////////////////////////////////////////
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
+
 CFac_0:: CFac_0 (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -18,10 +19,75 @@ bool     CFac_0::Is_valid (void) const { return nullptr != this->Ptr(); }
 const
 TFac0Ptr& CFac_0::Ptr  (void) const { return this->m_p_fac; }
 TFac0Ptr& CFac_0::Ptr  (void)       { return this->m_p_fac; }
-}}}}
-/////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
+
+CFac_2:: CFac_2 (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code CFac_2::Create(void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return (this->m_error << (err_code)TErrCodes::eObject::eInited);
+
+	// https://stackoverflow.com/questions/42354369/idxgifactory-versions ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nf-dxgi1_3-createdxgifactory2 ;
+
+	this->m_error << ::CreateDXGIFactory2(0, __uuidof(TFac2Ptr), (void**)&this->m_p_fac);
+
+	return this->Error();
+}
+
+TError&  CFac_2::Error (void) const { return this->m_error; }
+bool     CFac_2::Is_valid (void) const { return nullptr != this->Ptr(); }
+
+err_code CFac_2::Get (const CDevice& _device, const CSwapDesc& _desc, CSwapChain& _chain) {
+	_device; _desc; _chain;
+	this->m_error << __METHOD__, __s_ok;
+
+	if (_chain.Is_valid())
+		return (this->m_error << (err_code)TErrCodes::eObject::eExists);
+
+	if (false == _device.Is_valid())
+		return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Input device is not valid;");
+	if (false == _desc.Is_valid())
+		return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Input desc is not valid;");
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createswapchain ;
+	this->m_error << this->Ptr()->CreateSwapChain(
+		_device.Ptr(), (DXGI_SWAP_CHAIN_DESC*)&_desc.ref(), &_chain.Ptr()
+	);
+
+	return this->Error();
+}
+
+#if defined (_DEBUG)
+CString  CFac_2::Print(const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{valid=%s}");
+
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_out;
+	if (e_print::e_all == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_valid); }
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
+
+const
+TFac2Ptr& CFac_2::Ptr  (void) const { return this->m_p_fac; }
+TFac2Ptr& CFac_2::Ptr  (void)       { return this->m_p_fac; }
+
+}}}}
+
 namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 
 CFac_4:: CFac_4 (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
@@ -38,7 +104,7 @@ err_code CFac_4::Create(void) {
 	// https://stackoverflow.com/questions/42354369/idxgifactory-versions ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nf-dxgi1_3-createdxgifactory2 ;
 
-	this->m_error << ::CreateDXGIFactory2(0, __uuidof(IDXGIFactory4), (void**)&this->m_p_fac);
+	this->m_error << ::CreateDXGIFactory2(0, __uuidof(TFac4Ptr), (void**)&this->m_p_fac);
 
 	return this->Error();
 }

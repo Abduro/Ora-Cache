@@ -19,6 +19,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDesc_Wrap (void) = default;
 
 	public:
+
+		void Fake (void);
+
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
 		const
@@ -67,7 +70,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		const
 		TChainPtr& Ptr (void) const;
 		TChainPtr& Ptr (void) ;
-
+#if defined (_DEBUG)
+		CString    Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CSwapChain& operator = (const CSwapChain&) = delete; // is not required yet;
 		CSwapChain& operator = (CSwapChain&&) = delete;      // is not required yet;

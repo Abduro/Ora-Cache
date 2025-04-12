@@ -20,11 +20,50 @@
 #include "direct_x.swap.2.h"
 
 #include "render.base.h"
-#include "run.event.h"
 
 namespace ebo { namespace boo { namespace test {
 
-	using CMarshaller = shared::runnable::CMarshaller;
+	using CWindow = ::ATL::CWindow;
+	using CError  = shared::sys_core::CError;
+	using TError  = const CError;
+
+	class CFake_Wnd : public ::ATL::CWindowImpl<CFake_Wnd> { typedef ::ATL::CWindowImpl<CFake_Wnd> TBase;
+	public:
+		CFake_Wnd (void) {
+			_out() += TLog_Acc::e_new_line;
+			_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+			this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
+			TBase::Create(HWND_MESSAGE);
+
+			if (false == TBase::IsWindow())
+				this->m_error.Last();
+			else
+				this->m_error << __s_ok;
+			if (this->Error())
+				_out() += this->Error().Print(TError::e_print::e_req);
+			_out()();
+		}
+		~CFake_Wnd (void) {
+			_out() += TLog_Acc::e_new_line;
+			_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+			if (TBase::IsWindow())
+			    TBase::DestroyWindow();
+			_out()();
+		}
+	public:
+		TError&  Error (void) const { return this->m_error; }
+		DECLARE_EMPTY_MSG_MAP();
+
+	private:
+		CFake_Wnd (const CFake_Wnd&) = delete;
+		CFake_Wnd (CFake_Wnd&&) = delete;
+		CFake_Wnd& operator = (const CFake_Wnd&) = delete;
+		CFake_Wnd& operator = (CFake_Wnd&&) = delete;
+
+	private:
+		CError  m_error;
+	};
 
 }}}
 

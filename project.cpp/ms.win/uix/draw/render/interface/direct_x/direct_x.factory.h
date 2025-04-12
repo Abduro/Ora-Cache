@@ -16,10 +16,9 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	// https://www.abbreviations.com/abbreviation/factory ;
 #pragma region __refs
 // this class for enumerating *all* adapters uses method IDXGIFactory1::EnumAdapters1();
-// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#new-info-about-enumerating-adapters-for-windows-8 ;
+// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi ;
 // actually, DXGIFactories have their own interface hirachy, like this:
 // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory1 (enumerates both adapters (video cards) with or without outputs);
-// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgifactory2 (introduces a lot of methods for controlling swap chain creation);
 // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nn-dxgi1_3-idxgifactory3 (introduces the method for getting flags of graphic object creation);
 // https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgifactory5 (introduces checking feature support);
 #pragma endregion
@@ -27,6 +26,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	typedef IDXGIFactory   IDXGIFactory0;
 	typedef ::ATL::CComPtr<IDXGIFactory0> TFac0Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory1> TFac1Ptr;
+	typedef ::ATL::CComPtr<IDXGIFactory2> TFac2Ptr; // intended especially for creating swap chain of target window;
 	typedef ::ATL::CComPtr<IDXGIFactory4> TFac4Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory5> TFac5Ptr;
 	typedef ::ATL::CComPtr<IDXGIFactory6> TFac6Ptr;
@@ -51,6 +51,39 @@ namespace _11 {
 
 	private:
 		TFac0Ptr m_p_fac;
+		CError   m_error;
+	};
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgifactory2 ; (for controlling swap chain creation);
+	class CFac_2 {
+	public:
+		 CFac_2 (void); CFac_2 (const CFac_2&) = delete; CFac_2 (CFac_2&&) = delete;
+		~CFac_2 (void) = default;
+
+	public:
+		err_code  Create(void);          // creates this factory object;
+
+		TError&   Error (void) const;
+		bool   Is_valid (void) const;
+
+		using CDevice = ex_ui::draw::direct_x::_11::CDevice;
+		using CSwapDesc = ex_ui::draw::direct_x::_11::CDesc_Wrap;
+		using CSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
+
+		err_code  Get (const CDevice&, const CSwapDesc&, CSwapChain&); // tries to create swap chain for input device and swap description;
+
+#if defined (_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
+		const
+		TFac2Ptr& Ptr  (void) const;
+		TFac2Ptr& Ptr  (void);
+
+	private:
+		CFac_2& operator = (const CFac_2&) = delete;
+		CFac_2& operator = (CFac_2&&) = delete;
+
+	private:
+		TFac2Ptr m_p_fac;
 		CError   m_error;
 	};
 }
