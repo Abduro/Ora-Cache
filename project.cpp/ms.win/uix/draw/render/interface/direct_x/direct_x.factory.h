@@ -6,7 +6,8 @@
 */
 #include "direct_x._iface.h"
 #include "direct_x.adapter.h"
-#include "direct_x.device.h"
+#include "direct_x.device.1.h"
+#include "direct_x.device.2.h"
 #include "direct_x.queue.h"
 #include "direct_x.swap.h"
 #include "direct_x.swap.1.h"
@@ -76,7 +77,7 @@ namespace _11 {
 #endif
 		const
 		TFac2Ptr& Ptr  (void) const;
-		TFac2Ptr& Ptr  (void);
+		err_code  Ptr  (const TFac2Ptr&);
 
 	private:
 		CFac_2& operator = (const CFac_2&) = delete;

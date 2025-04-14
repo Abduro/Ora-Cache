@@ -186,6 +186,10 @@
     <ClCompile Include="$(_3)direct_x.adapter.cpp" />
     <ClInclude Include="$(_2)direct_x.device.h" />
     <ClCompile Include="$(_3)direct_x.device.cpp" />
+    <ClInclude Include="$(_2)direct_x.device.1.h" />
+    <ClCompile Include="$(_3)direct_x.device.1.cpp" />
+    <ClInclude Include="$(_2)direct_x.device.2.h" />
+    <ClCompile Include="$(_3)direct_x.device.2.cpp" />
     <ClInclude Include="$(_2)direct_x.factory.h" />
     <ClCompile Include="$(_3)direct_x.factory.cpp" />
     <ClInclude Include="$(_2)direct_x.feature.h" />
@@ -200,6 +204,8 @@
     <ClCompile Include="$(_3)direct_x.swap.1.cpp" />
     <ClInclude Include="$(_2)direct_x.swap.2.h" />
     <ClCompile Include="$(_3)direct_x.swap.2.cpp" />
+    <ClInclude Include="$(_2)direct_x.target.h" />
+    <ClCompile Include="$(_3)direct_x.target.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

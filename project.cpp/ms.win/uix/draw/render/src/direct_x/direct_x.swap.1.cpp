@@ -3,6 +3,7 @@
 	This is Ebo Pack DirectX 11 swap chain wrapper interface implementation file;
 */
 #include "direct_x.swap.1.h"
+#include "direct_x.target.h"
 
 using namespace ex_ui::draw::direct_x::_11;
 
@@ -29,7 +30,8 @@ void CDesc_Wrap::Fake (void) {
 	this->ref().BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	this->ref().SampleDesc.Count = 1;    // required; otherwise 0 value leads to 'The parameter is incorrect.';
 	this->ref().SampleDesc.Quality = 0;
-	this->ref().Flags = DXGI_SWAP_CHAIN_FLAG::DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE;
+	this->ref().Flags = DXGI_SWAP_CHAIN_FLAG::DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE; // this flag or zero works when CFac_2 creates the chain;
+	this->ref().SwapEffect = TEffect::DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 }
 
 TError& CDesc_Wrap::Error (void) const { return this->m_error; }
@@ -57,8 +59,9 @@ err_code    CDesc_Wrap::Target (HWND const _h_target) {
 		return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Input target window handle is not valid;");
 
 	this->ref().OutputWindow = _h_target;
-	this->ref().Windowed = true; // sets this parameter to true; no fullscreen mode is necessary. especially in debug mode;
-
+	this->ref().Windowed = true; // sets this parameter to true; no fullscreen mode is necessary. especially in debug mode ;
+	// DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH ;
+	// https://stackoverflow.com/questions/45558600/d3d11createdeviceandswapchain-fails-with-s-false-on-different-computer ;
 	return this->Error();
 }
 
@@ -80,9 +83,38 @@ CDesc_Wrap&  CSwapChain::Desc (void)       { return this->m_desc; }
 
 TError&      CSwapChain::Error (void) const { return this->m_error; }
 bool         CSwapChain::Is_valid (void) const { return (nullptr != this->Ptr()); }
+
+bool CSwapChain::Is_full_screen (void) const {
+	this->m_error << __METHOD__ << __s_ok;
+	TOutputPtr p_out;
+
+	BOOL b_full_screen = false;
+
+	if (this->Is_valid()) {
+		this->m_error << this->m_p_chain->GetFullscreenState(&b_full_screen, &p_out);
+		if (this->Error() == false)
+			return !!b_full_screen;
+	}
+
+	return !!b_full_screen;
+}
+
 const
 TChainPtr&   CSwapChain::Ptr (void) const { return this->m_p_chain; }
-TChainPtr&   CSwapChain::Ptr (void)       { return this->m_p_chain; }
+err_code     CSwapChain::Ptr (const TChainPtr& _p_chain) {
+	_p_chain;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
+	if (nullptr == _p_chain)
+		return this->m_error << __e_pointer;
+	else
+		this->m_p_chain = _p_chain;
+
+	return this->Error();
+}
 
 #if defined (_DEBUG)
 CString      CSwapChain::Print (const e_print _e_opt) const {
@@ -110,4 +142,4 @@ CString      CSwapChain::Print (const e_print _e_opt) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSwapChain&  CSwapChain::operator <<(const TChainPtr& _p_chain) { this->Ptr() = _p_chain; return *this; }
+CSwapChain&  CSwapChain::operator <<(const TChainPtr& _p_chain) { this->Ptr(_p_chain); return *this; }

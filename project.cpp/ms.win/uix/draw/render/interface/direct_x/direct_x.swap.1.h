@@ -67,9 +67,11 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 		TError& Error (void) const;
 		bool  Is_valid(void) const;
+		bool  Is_full_screen (void) const;
+
 		const
 		TChainPtr& Ptr (void) const;
-		TChainPtr& Ptr (void) ;
+		err_code   Ptr (const TChainPtr&) ;
 #if defined (_DEBUG)
 		CString    Print (const e_print = e_print::e_all) const;
 #endif
@@ -79,6 +81,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		CSwapChain& operator <<(const TChainPtr&);
 
 	private:
+		mutable
 		CError     m_error  ;
 		TChainPtr  m_p_chain;
 		CDesc_Wrap m_desc   ;

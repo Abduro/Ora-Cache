@@ -12,6 +12,9 @@
 #include "shared.preproc.h"
 #include "shared.string.h"
 #include "shared.types.h"
+
+#include "sys.error.h"
+
 /*
 	the runtime of libraries being tested and this test project must be the same:
 	   - Multi-threaded Debug (/MTd) ;
@@ -38,6 +41,9 @@ namespace ebo { namespace boo { namespace test {
 
 #define __init(name) TEST_CLASS_INITIALIZE(name) // an event of loading a test class object ;
 #define __term(name) TEST_CLASS_CLEANUP(name)
+
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
 
 }}}
 

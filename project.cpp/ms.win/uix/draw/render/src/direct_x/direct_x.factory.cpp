@@ -55,10 +55,13 @@ err_code CFac_2::Get (const CDevice& _device, const CSwapDesc& _desc, CSwapChain
 	if (false == _desc.Is_valid())
 		return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Input desc is not valid;");
 
+	TChainPtr p_chain;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createswapchain ;
 	this->m_error << this->Ptr()->CreateSwapChain(
-		_device.Ptr(), (DXGI_SWAP_CHAIN_DESC*)&_desc.ref(), &_chain.Ptr()
+		_device.Ptr(), (DXGI_SWAP_CHAIN_DESC*)&_desc.ref(), &p_chain
 	);
+	if (this->Is_valid())
+		_chain.Ptr(p_chain.Detach());
 
 	return this->Error();
 }
@@ -84,7 +87,19 @@ CString  CFac_2::Print(const e_print _e_opt) const {
 
 const
 TFac2Ptr& CFac_2::Ptr  (void) const { return this->m_p_fac; }
-TFac2Ptr& CFac_2::Ptr  (void)       { return this->m_p_fac; }
+err_code  CFac_2::Ptr  (const TFac2Ptr& _p_fac) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
+	if (nullptr == _p_fac)
+		return this->m_error << __e_pointer;
+	else
+		this->m_p_fac = _p_fac;
+
+	return this->Error();
+}
 
 }}}}
 

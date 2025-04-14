@@ -7,7 +7,6 @@
 namespace ebo { namespace boo { namespace test {
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-	using TError  = shared::sys_core::CError;
 	using TString = shared::common::CString_Ex;
 
 	namespace com {

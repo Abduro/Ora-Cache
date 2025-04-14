@@ -9,6 +9,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared><!--This is the target!-->
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
@@ -18,7 +19,7 @@
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2><!--This library interface is being tested!-->
-    <_3></_3>
+    <_3>$(Error)interface\</_3>
     <_4></_4>
     <_5></_5>
     <_6></_6>
@@ -28,7 +29,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />
