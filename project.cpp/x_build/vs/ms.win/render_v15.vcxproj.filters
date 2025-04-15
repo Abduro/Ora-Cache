@@ -7,11 +7,14 @@
     <Filter Include="interface\direct_x">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000442}</UniqueIdentifier>
     </Filter>
-    <Filter Include="interface\direct_x\device">
+    <Filter Include="interface\direct_x\adapter">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000444}</UniqueIdentifier>
     </Filter>
-    <Filter Include="interface\direct_x\swap">
+    <Filter Include="interface\direct_x\device">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\direct_x\swap">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000448}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000441}</UniqueIdentifier>
@@ -19,11 +22,14 @@
     <Filter Include="src\direct_x">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000443}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\direct_x\device">
+    <Filter Include="src\direct_x\adapter">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000445}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\direct_x\swap">
+    <Filter Include="src\direct_x\device">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\direct_x\swap">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000449}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,8 +37,12 @@
     <ClCompile Include="$(_1)render.base.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x._iface.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x._iface.cpp" ><Filter>src\direct_x</Filter></ClCompile>
-    <ClInclude Include="$(_2)direct_x.adapter.h" ><Filter>interface\direct_x</Filter></ClInclude>
-    <ClCompile Include="$(_3)direct_x.adapter.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.h" ><Filter>interface\direct_x\adapter</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.cpp" ><Filter>src\direct_x\adapter</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.1.h" ><Filter>interface\direct_x\adapter</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.1.cpp" ><Filter>src\direct_x\adapter</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.2.h" ><Filter>interface\direct_x\adapter</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.2.cpp" ><Filter>src\direct_x\adapter</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.device.h" ><Filter>interface\direct_x\device</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.device.cpp" ><Filter>src\direct_x\device</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.device.1.h" ><Filter>interface\direct_x\device</Filter></ClInclude>

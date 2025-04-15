@@ -129,6 +129,8 @@ namespace _11 {
 		CFac_2 m_fac_2;
 	};
 }
+
+namespace _12 {}
 }}}}
 
 #endif/*_EBO_TEST_$D$_RENDER_IMPL_H_INCLUDED*/

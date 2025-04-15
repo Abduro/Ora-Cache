@@ -6,6 +6,8 @@
 */
 #include "direct_x._iface.h"
 #include "direct_x.adapter.h"
+#include "direct_x.adapter.1.h"
+#include "direct_x.adapter.2.h"
 #include "direct_x.feature.h"
 #include "direct_x.format.h"
 #include "direct_x.queue.h"

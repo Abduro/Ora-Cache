@@ -11,7 +11,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	using namespace ex_ui::draw::direct_x;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_create_device_flag ;
-	typedef D3D11_CREATE_DEVICE_FLAG TDevFlag_11;
+	typedef D3D11_CREATE_DEVICE_FLAG EDevFlag;
 
 	class CDev_Flag {
 #define D3D11_CREATE_DEVICE_NO_OPTIMIZE  D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS
@@ -20,15 +20,15 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	public:
 		enum e_flag : uint32_t {
 		     e__undef  = 0x0,
-		     e_bgra    = TDevFlag_11::D3D11_CREATE_DEVICE_BGRA_SUPPORT  , // creates a device that supports BGRA formats;
-		     e_debug   = TDevFlag_11::D3D11_CREATE_DEVICE_DEBUG         , // creates a device that supports the debug layer; D3D11*SDKLayers.dll is required;
-		     e_ref     = TDevFlag_11::D3D11_CREATE_DEVICE_SWITCH_TO_REF , // not supported in DX11;
-		     e_shader  = TDevFlag_11::D3D11_CREATE_DEVICE_DEBUGGABLE    , // for shader debugging; D3D11_1SDKLayers.dll is required;
-		     e_single  = TDevFlag_11::D3D11_CREATE_DEVICE_SINGLETHREADED, // for improving the performance, but if interfaces are called from multiple threads, undefined behavior might result;
-		     e_warp    = TDevFlag_11::D3D11_CREATE_DEVICE_NO_OPTIMIZE   , // creates warp-device;
-		     e_no_dbg  = TDevFlag_11::D3D11_CREATE_DEVICE_NO_REGISTRY   , // D3D runtime ignores registry settings that turn on the debug layer;
-		     e_no_time = TDevFlag_11::D3D11_CREATE_DEVICE_NO_TIMEOUT    , // for GPU workloads that take more than two seconds;
-		     e_wddm    = TDevFlag_11::D3D11_CREATE_DEVICE_VIDEO_SUPPORT , // leads to fail if the display driver is not implemented by WDDM driver;
+		     e_bgra    = EDevFlag::D3D11_CREATE_DEVICE_BGRA_SUPPORT  , // creates a device that supports BGRA formats;
+		     e_debug   = EDevFlag::D3D11_CREATE_DEVICE_DEBUG         , // creates a device that supports the debug layer; D3D11*SDKLayers.dll is required;
+		     e_ref     = EDevFlag::D3D11_CREATE_DEVICE_SWITCH_TO_REF , // not supported in DX11;
+		     e_shader  = EDevFlag::D3D11_CREATE_DEVICE_DEBUGGABLE    , // for shader debugging; D3D11_1SDKLayers.dll is required;
+		     e_single  = EDevFlag::D3D11_CREATE_DEVICE_SINGLETHREADED, // for improving the performance, but if interfaces are called from multiple threads, undefined behavior might result;
+		     e_warp    = EDevFlag::D3D11_CREATE_DEVICE_NO_OPTIMIZE   , // creates warp-device;
+		     e_no_dbg  = EDevFlag::D3D11_CREATE_DEVICE_NO_REGISTRY   , // D3D runtime ignores registry settings that turn on the debug layer;
+		     e_no_time = EDevFlag::D3D11_CREATE_DEVICE_NO_TIMEOUT    , // for GPU workloads that take more than two seconds;
+		     e_wddm    = EDevFlag::D3D11_CREATE_DEVICE_VIDEO_SUPPORT , // leads to fail if the display driver is not implemented by WDDM driver;
 		};
 	private:
 		CDev_Flag (void) = delete; CDev_Flag (const CDev_Flag&) = delete; CDev_Flag (CDev_Flag&&) = delete; ~CDev_Flag (void) = delete;

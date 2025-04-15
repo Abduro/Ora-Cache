@@ -205,6 +205,8 @@
     <ClInclude Include="$(_1)ebo_test_$d$.render.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.render.1.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.render.1.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.render.2.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.render.2.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.render.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.render.impl.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.render.impl.cpp" />

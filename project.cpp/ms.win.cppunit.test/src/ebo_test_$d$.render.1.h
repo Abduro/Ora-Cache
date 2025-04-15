@@ -46,4 +46,4 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 
 }}}}}
 
-#endif/*_EBO_TEST_$D$_RENDER_H_INCLUDED*/
+#endif/*_EBO_TEST_$D$_RENDER_1_H_INCLUDED*/
