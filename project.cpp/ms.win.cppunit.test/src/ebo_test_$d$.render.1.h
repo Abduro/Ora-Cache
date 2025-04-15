@@ -19,6 +19,8 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 
 	// step #1: creating a device and its context:
 	// https://learn.microsoft.com/en-us/windows/win32/direct3dgetstarted/work-with-dxgi ;
+
+	// it looks like any typedef element name is suffexed by '_t', for example, wchar_t; https://en.wikipedia.org/wiki/Typedef ;
 	using TAda_Warp  = ex_ui::draw::direct_x::_11::CAda_Warp;
 	using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
 	using TContext   = ex_ui::draw::direct_x::_11::CContext;
@@ -42,6 +44,37 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	private:
 		TDevice_HW  m_device;
 		bool m_b_verb;
+	};
+
+	using TFac_2 = ex_ui::draw::direct_x::_11::CFac_2;
+
+	__class(CFac_2) {
+	public:
+		 CFac_2 (const bool _b_verb = false);
+		~CFac_2 (void) = default;
+
+	public:
+		__method (Create);
+		__method (GetSwapChain);
+
+	private:
+		bool m_b_verb;
+		TFac_2 m_fac_2;
+	};
+
+	using TTarget = ex_ui::draw::direct_x::_11::CTarget;
+
+	__class(CTarget) {
+	public:
+		 CTarget (const bool _b_verb = false);
+		~CTarget (void) = default;
+
+	public:
+		__method (Create);
+
+	private:
+		bool m_b_verb;
+		TTarget m_target;
 	};
 
 }}}}}

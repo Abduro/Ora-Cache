@@ -28,6 +28,9 @@
 
 namespace ebo { namespace boo { namespace test { namespace draw {
 
+	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
+	// https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp ;
+
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 	using namespace shared::types;
 

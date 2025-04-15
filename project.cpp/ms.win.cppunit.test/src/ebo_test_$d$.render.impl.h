@@ -103,8 +103,8 @@ namespace _11 {
 	};
 
 	using CDev_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
-	using CFac_2  = ex_ui::draw::direct_x::_11::CFac_2;
-	using TSwap   = ex_ui::draw::direct_x::_11::CSwapChain; // just playing with names;
+	using TFac_2  = ex_ui::draw::direct_x::_11::CFac_2;
+	using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
 
 	class CFake_Swap {
 	public:
@@ -116,8 +116,8 @@ namespace _11 {
 		err_code Create(void) ;
 		TError&  Error (void) const;
 		const
-		TSwap&   Ref (void) const;
-		err_code Set (const CFac_2&);
+		TSwapChain& Ref (void) const;
+		err_code Set (const TFac_2&);
 
 	private:
 		CFake_Swap& operator = (const CFake_Swap&) = delete;
@@ -125,8 +125,8 @@ namespace _11 {
 
 	private:
 		CError m_error;
-		TSwap  m_chain;
-		CFac_2 m_fac_2;
+		TSwapChain m_chain;
+		TFac_2 m_fac_2;
 	};
 }
 

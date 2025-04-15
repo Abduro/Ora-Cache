@@ -127,3 +127,121 @@ void CDevice::GetSwapChain (void) {
 
 	_out()();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CFac_2:: CFac_2 (const bool _b_verb) : m_b_verb (_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CFac_2::Create (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+	this->m_fac_2.Create();
+	// checking the error state is preferable, because it more reliable, especially, in case when factory object is created before;
+	if (this->m_fac_2.Error())
+		_out() += this->m_fac_2.Print(e_print::e_all);
+	else
+		_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+
+	_out()();
+}
+
+void CFac_2::GetSwapChain (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	this->Create();
+	if (this->m_fac_2.Error())
+		return;
+
+	// the device may be not able to create the swap chain, due to the device is created from the first adapter,
+	// which possibly has no appropriate output, i.e. that is available for drawing operations;
+	TDevice_HW device;
+	device.Create();
+	if (device.Error()) {
+		_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	CFake_Desc desc;
+	if (desc.Error()) {
+		_out() += desc.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	TSwapChain chain;
+
+	this->m_fac_2.Get(device, desc.Ref(), chain);
+	if (this->m_fac_2.Error())
+		_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz)chain.Print(e_print::e_all));
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CTarget:: CTarget (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CTarget::Create (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	TDevice_HW device;
+	device.Create();
+
+	if (device.Error()) {
+		_out() += device.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+	this->m_target << device;
+
+	CFake_Desc desc;
+	CFake_Swap swap;  // would be better to set name likes 'fake_chain';
+	swap.Create();
+
+	if (swap.Error()) {
+		_out() += swap.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	TSwapChain chain_;
+	chain_.Desc().ref() = desc.Ref();
+	chain_.Ptr (swap.Ref().Ptr());
+
+	this->m_target.Set(chain_);
+
+	this->m_target.Create();
+	if (this->m_target.Error()) {
+		_out() += this->m_target.Error().Print(TError::e_print::e_req);
+	}
+	else
+		_out() += this->m_target.Print(e_print::e_all);
+
+	_out()();
+}

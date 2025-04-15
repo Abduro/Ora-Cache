@@ -148,7 +148,7 @@ err_code CFake_Swap::Create (void) {
 	if (this->m_chain.Is_valid())
 		return this->m_error << (err_code)TErrCodes::eObject::eExists;
 
-	CFac_2 fac_2;
+	TFac_2 fac_2;
 	fac_2.Ptr(this->m_fac_2.Ptr());
 	if (false == fac_2.Is_valid())
 		fac_2.Create();
@@ -173,9 +173,9 @@ err_code CFake_Swap::Create (void) {
 
 TError&  CFake_Swap::Error (void) const { return this->m_error; }
 const
-TSwap&   CFake_Swap::Ref (void) const { return this->m_chain; }
+TSwapChain& CFake_Swap::Ref (void) const { return this->m_chain; }
 
-err_code CFake_Swap::Set (const CFac_2& _fac_2) {
+err_code CFake_Swap::Set (const TFac_2& _fac_2) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == _fac_2.Is_valid())

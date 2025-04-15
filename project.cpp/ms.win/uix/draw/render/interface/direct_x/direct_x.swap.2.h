@@ -271,7 +271,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 		const
 		CCmdQueue& Queue (void) const;
 		CCmdQueue& Queue (void) ;
-
+#if defined(_DEBUG)
+		CString    Print (const e_print = e_print::e_all) const;
+#endif
 		HWND Target (void) const;
 		bool Target (const HWND);
 

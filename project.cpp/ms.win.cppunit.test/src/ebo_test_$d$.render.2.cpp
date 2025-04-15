@@ -88,6 +88,165 @@ void CAlphaMode::Set(void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+CDev_warp:: CDev_warp (const bool _b_verb) : m_b_verb(_b_verb){
+	if (this->m_b_verb){}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void  CDev_warp::Create (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+	// it is expected to receive the error: 'No such interface supported';
+	// in case when this project is tested on virtual remote machine;
+	TWarp_Enum warp_enum;
+	warp_enum.Set();
+	if (warp_enum.Error()) {
+		_out() += warp_enum.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		const TWarp_ada& warp_ada = warp_enum.Get();
+		this->m_device.Create(warp_ada);
+
+		if (this->m_device.Error())
+			_out() += this->m_device.Error().Print(TError::e_print::e_req);
+		else
+			_out() += _T("The device is created successfully;");
+	}
+	_out()();
+}
+/////////////////////////////////////////////////////////////////////////////
+
+CFac_4:: CFac_4 (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+	this->Create();
+	if (this->m_b_verb) {
+		_out()();
+	}
+}
+
+CFac_4::~CFac_4 (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CFac_4::Create (void) {
+	if (this->m_fac_4.Is_valid())
+		return;
+
+	this->m_fac_4.Create();
+	if (this->m_fac_4.Error())
+		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+	else
+		_out() += _T("The factory#4 is created successfully;");
+
+	_out()();
+}
+
+void CFac_4::GetAdapter (void) {
+	_out() += TLog_Acc::e_new_line;
+
+	if (false  == this->m_fac_4.Is_valid()) {
+		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	TAdapter adapter;
+	this->m_fac_4.Get(adapter);
+
+	if (this->m_fac_4.Error())
+		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+	else {
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) adapter.Print());
+	}
+	_out()();
+}
+
+void CFac_4::GetSwapChain (void) {
+	_out() += TLog_Acc::e_new_line;
+	// (1) checks the factory object first;
+	if (false == this->m_fac_4.Is_valid()) {
+		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+#if (0)
+	// doesn't work and leads to the error: 'E_NOINTERFACE No such interface supported.';
+	// (2) creates warp-adapter object;
+	TWarp_enum warp_enum;
+
+	warp_enum.Set(); // tries to enumerate all available warp adapters;
+	if (warp_enum.Error()) {
+		_out() += warp_enum.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+	TAda_Warp ada_warp = warp_enum.Get();
+	if (false == ada_warp.Is()) {
+		_out() += _T("#error: Cannot create warp-adapter;");
+		_out()();
+		return;
+	}
+
+	// (3) creates warp-device from warp-adapter;
+	TDev_Warp device;
+	device.Create(ada_warp);
+	if (device.Error()) {
+		_out() += device.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+#else
+
+	TAdapter adapter; // this adapter may be not suitable for the device creating, due to this adapter cannot be used for output of graphics;
+	this->m_fac_4.Get(adapter);
+	if (this->m_fac_4.Error()) {
+		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	// (2) creates a default device object;
+	TDevice_HW device;
+	device.Create(adapter);
+
+	if (device.Error()) {
+		_out() += device.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+#endif
+	// (3) creates a command queue;
+	TCmdQueue  cmd_que;
+	device.Get(cmd_que);
+	if (device.Error()) {
+		_out() += device.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	this->m_fac_4 << device;
+
+	this->m_fac_4.Get(this->m_swap_chain);
+	if (this->m_fac_4.Error()) {
+		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+	}
+	else
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz)this->m_swap_chain.Print(e_print::e_all));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CFac_6:: CFac_6 (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb){
 	}
@@ -156,38 +315,6 @@ void CFac_6::Enum_Lo_power (void) {
 //	}
 	if (this->m_fac_6.Error())
 		_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
-	_out()();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CDev_warp:: CDev_warp (const bool _b_verb) : m_b_verb(_b_verb){
-	if (this->m_b_verb){}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void  CDev_warp::Create (void) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
-		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	}
-	// it is expected to receive the error: 'No such interface supported';
-	// in case when this project is tested on virtual remote machine;
-	TWarp_Enum warp_enum;
-	warp_enum.Set();
-	if (warp_enum.Error()) {
-		_out() += warp_enum.Error().Print(TError::e_print::e_req);
-	}
-	else {
-		const TWarp_ada& warp_ada = warp_enum.Get();
-		this->m_device.Create(warp_ada);
-
-		if (this->m_device.Error())
-			_out() += this->m_device.Error().Print(TError::e_print::e_req);
-		else
-			_out() += _T("The device is created successfully;");
-	}
 	_out()();
 }
 

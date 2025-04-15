@@ -50,23 +50,6 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _12 
 		bool       m_b_verb;
 	};
 
-	using TFac_6 = ex_ui::draw::direct_x::_12::CFac_6;
-
-	__class(CFac_6) {
-	public:
-		 CFac_6 (const bool _b_verb = false);
-		~CFac_6 (void) = default;
-
-	public:
-		__method (Create);
-		__method (Enum_Hi_perf);
-		__method (Enum_Lo_power);
-
-	private:
-		bool   m_b_verb;
-		TFac_6 m_fac_6;
-	};
-
 	using TDev_Warp  = ex_ui::draw::direct_x::_12::CDevice_Warp;
 	using TWarp_ada  = ex_ui::draw::direct_x::_11::CAda_Warp;
 	using TWarp_Enum = ex_ui::draw::direct_x::_11::CWarp_Enum;
@@ -82,6 +65,46 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _12 
 	private:
 		bool m_b_verb;
 		TDev_Warp m_device;
+	};
+
+	using TCmdQueue  = ex_ui::draw::direct_x::_12::CCmdQueue;
+	using TSwapChain = ex_ui::draw::direct_x::_12::CSwapChain;
+	using TFac_4 = ex_ui::draw::direct_x::_12::CFac_4;
+	// using device that is created from default adapter is not good idea, because this adapter may not be accepted for
+	// creating a swap chain object, thus a device of dx-11 is not acceptable;
+	using TDevice_HW = ex_ui::draw::direct_x::_12::CDevice_HW; 
+
+	__class(CFac_4) {
+	public:
+		 CFac_4 (const bool _b_verb = false);
+		~CFac_4 (void);
+
+	public:
+		__method (Create);
+		__method (GetAdapter);
+		__method (GetSwapChain);
+
+	private:
+		bool   m_b_verb;
+		TFac_4     m_fac_4;
+		TSwapChain m_swap_chain;
+	};
+
+	using TFac_6 = ex_ui::draw::direct_x::_12::CFac_6;
+
+	__class(CFac_6) {
+	public:
+		 CFac_6 (const bool _b_verb = false);
+		~CFac_6 (void) = default;
+
+	public:
+		__method (Create);
+		__method (Enum_Hi_perf);
+		__method (Enum_Lo_power);
+
+	private:
+		bool   m_b_verb;
+		TFac_6 m_fac_6;
 	};
 
 	using TClrBits  = ex_ui::draw::direct_x::TClrBits;

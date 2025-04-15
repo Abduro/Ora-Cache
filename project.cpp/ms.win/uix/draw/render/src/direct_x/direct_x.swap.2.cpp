@@ -525,6 +525,26 @@ const
 CCmdQueue&   CSwapChain::Queue (void) const { return this->m_queue; }
 CCmdQueue&   CSwapChain::Queue (void)       { return this->m_queue; }
 
+#if defined(_DEBUG)
+CString      CSwapChain::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{valid=%s}");
+
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
+
 HWND CSwapChain::Target (void) const { return this->m_target; }
 bool CSwapChain::Target (const HWND _h_target) {
 	_h_target;
