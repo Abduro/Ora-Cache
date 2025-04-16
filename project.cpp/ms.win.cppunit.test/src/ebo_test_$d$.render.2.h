@@ -141,6 +141,21 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _12 
 		TWrapper m_wrapper;
 	};
 
+	using TSwapDesc = ex_ui::draw::direct_x::_12::CSwapDesc;
+	using TScale = ex_ui::draw::direct_x::_12::TScale;
+
+	__class(CSwapDesc) {
+	public:
+		 CSwapDesc (const bool _b_verb = false);
+		~CSwapDesc (void) = default;
+
+	public:
+		__method (Set);
+
+	private:
+		bool m_b_verb;
+		TSwapDesc m_desc; // alpha mode must receive pointer to sync value;
+	};
 }}}}}
 
 #endif/*_EBO_TEST_$D$_RENDER_2_H_INCLUDED*/

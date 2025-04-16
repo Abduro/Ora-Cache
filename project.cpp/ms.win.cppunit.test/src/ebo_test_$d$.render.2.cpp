@@ -28,7 +28,7 @@ CAdapter::~CAdapter(void) {
 void CAdapter::_ctor (void) {
 //	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
-		_out() += TAdapter().Print();
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz)TAdapter().Print());
 		_out()();
 //	}
 }
@@ -134,6 +134,7 @@ CFac_4::~CFac_4 (void) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
 	}
 }
 
@@ -248,7 +249,10 @@ void CFac_4::GetSwapChain (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 CFac_6:: CFac_6 (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb){
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
 	}
 }
 
@@ -324,6 +328,7 @@ CPxFormat:: CPxFormat (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
 	}
 	TWrapPtr wrp_ptr(new TWrapper);
 	this->m_px_fmt << wrp_ptr;
@@ -359,6 +364,7 @@ CSize::CSize (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb){
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
 	}
 	TWrapPtr wrp_ptr(new TWrapper);
 	this->m_size << wrp_ptr;
@@ -384,5 +390,83 @@ void CSize::Set (void) {
 	_out() += TStringEx().Format(_T("surface size sync values after: height=%d;width=%d"),
 		this->m_size.Sync()->ref().Height, this->m_size.Sync()->ref().Width
 	);
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+namespace ebo { namespace boo { namespace test { namespace _impl {
+
+	class CDesc_Fmt {
+	public:
+		 CDesc_Fmt (void) = default; CDesc_Fmt (const CDesc_Fmt&) = delete; CDesc_Fmt (CDesc_Fmt&&) = delete;
+		~CDesc_Fmt (void) =  default;
+	public:
+		CString Do (const TSwapDesc& _desc, const bool _b_after) {
+			_desc; _b_after;
+			_pc_sz pc_sz_pat = _T("swap desc value sync %s: "
+				"\n\t\talpha=%d;"
+				"\n\t\tbuffer=%s;"
+				"\n\t\teffect=%s;"
+				"\n\t\tflags=%s;"
+				"\n\t\tpixels=%s;"
+				"\n\t\tsample=%s;"
+				"\n\t\tsize=%s;"
+				"\n\t\tscale=%d;stereo=%s");
+
+			CString cs_out = TStringEx().Format(pc_sz_pat, _b_after ? _T("after") :_T("before"),
+				_desc.Alpha().Get(),
+				(_pc_sz)_desc.Buffer().Print(e_print::e_req),
+				(_pc_sz)_desc.Effect().Print(e_print::e_req), TStringEx().Dword(_desc.Flags()),
+				(_pc_sz)_desc.Pixels().Print(e_print::e_req),
+				(_pc_sz)_desc.Sample().Print(e_print::e_req),
+				(_pc_sz)_desc.Size().Print(e_print::e_req), _desc.Scale(),
+				(_pc_sz)TStringEx().Bool(_desc.Stereo())
+			);
+
+			return  cs_out;
+		}
+	private:
+		CDesc_Fmt&  operator = (const CDesc_Fmt&) = delete;
+		CDesc_Fmt&  operator = (CDesc_Fmt&&) = delete;
+	};
+
+}}}}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSwapDesc:: CSwapDesc (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CSwapDesc::Set (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+	_out() += CDesc_Fmt().Do(this->m_desc, false);
+
+	this->m_desc.Alpha() << TAlphaMode::e_mode::e_ignore;
+	this->m_desc.Buffer().Set(3, TUsage::e_shader);
+
+	this->m_desc.Effect().Set(TEffect::e_value::e_discard);
+	this->m_desc.Flags(TSwapFlag::DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE | TSwapFlag::DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY);
+
+	this->m_desc.Pixels().Alpha() << TAlphaMode::e_unspec;
+	this->m_desc.Pixels() << TClrBits::DXGI_FORMAT_UNKNOWN;
+
+	this->m_desc.Sample().Set(1, 1);
+	this->m_desc.Size().Set(555, 333);
+	this->m_desc.Stereo(true);
+	this->m_desc.Scale(TScale::DXGI_SCALING_ASPECT_RATIO_STRETCH);
+
+	_out() += this->m_desc.Print(e_print::e_all);
+	_out() += CDesc_Fmt().Do(this->m_desc, true);
 	_out()();
 }

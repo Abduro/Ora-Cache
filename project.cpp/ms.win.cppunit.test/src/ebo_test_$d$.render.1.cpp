@@ -245,3 +245,33 @@ void CTarget::Create (void) {
 
 	_out()();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CWarp_enum:: CWarp_enum (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CWarp_enum::Do (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+	this->m_enum.Set();
+	if (this->m_enum.Error()) {
+		_out() += this->m_enum.Error().Print(TError::e_print::e_req);
+	}
+	else if (this->m_enum.Get().Error()) {
+		_out() += this->m_enum.Get().Error().Print(TError::e_print::e_req);
+	}
+	else {
+		const TAda_Warp& adapter = this->m_enum.Get();
+		_out() += adapter.Print(e_print::e_all);
+	}
+	_out()();
+}

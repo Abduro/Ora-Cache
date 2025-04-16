@@ -77,6 +77,21 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 		TTarget m_target;
 	};
 
+	using TWarp_enum = ex_ui::draw::direct_x::_11::CWarp_Enum;
+
+	__class(CWarp_enum) {
+	public:
+		 CWarp_enum (const bool _b_verb = false);
+		~CWarp_enum (void) = default;
+
+	public:
+		__method (Do);
+
+	private:
+		bool m_b_verb;
+		TWarp_enum m_enum;
+	};
+
 }}}}}
 
 #endif/*_EBO_TEST_$D$_RENDER_1_H_INCLUDED*/
