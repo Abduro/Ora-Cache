@@ -12,55 +12,6 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 namespace _11 {
 
-COutput:: COutput (void) { this->m_error >>__CLASS__ << __METHOD__ << __e_not_inited; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-TError&   COutput::Error (void) const { return this->m_error; }
-
-bool   COutput::Is_valid (void) const { return nullptr != this->Ptr(); }
-
-#if defined(_DEBUG)
-CString   COutput::Print (const e_print _e_opt) const {
-	_e_opt;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{;valid=%s}");
-
-	CString cs_valid = TStringEx().Bool(this->Is_valid());
-
-	CString cs_out;
-	if (e_print::e_all == _e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_valid);
-	}
-	if (e_print::e_no_ns == _e_opt) {
-		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_valid);
-	}
-	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_valid); }
-
-	if (true == cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
-	return  cs_out;
-}
-#endif
-
-const
-TOutputPtr&  COutput::Ptr (void) const { return this->m_p_out; }
-err_code     COutput::Ptr (const TOutputPtr& _p_out) {
-	_p_out;
-	this->m_error << __METHOD__ << __s_ok;
-
-	if (this->Is_valid())
-		return this->m_error << (err_code)TErrCodes::eObject::eExists;
-
-	if (nullptr == _p_out)
-		return this->m_error << __e_pointer;
-	else
-		this->m_p_out = _p_out;
-
-	return this->Error();
-}
-	
 /////////////////////////////////////////////////////////////////////////////
 
 CTarget:: CTarget (void) { this->m_error >>__CLASS__ << __METHOD__ << __e_not_inited; }

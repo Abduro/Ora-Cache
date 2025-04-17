@@ -13,6 +13,9 @@
     <Filter Include="interface\direct_x\device">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000446}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\direct_x\factory">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="interface\direct_x\swap">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000448}</UniqueIdentifier>
     </Filter>
@@ -27,6 +30,9 @@
     </Filter>
     <Filter Include="src\direct_x\device">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\direct_x\factory">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\direct_x\swap">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000449}</UniqueIdentifier>
@@ -49,12 +55,18 @@
     <ClCompile Include="$(_3)direct_x.device.1.cpp" ><Filter>src\direct_x\device</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.device.2.h" ><Filter>interface\direct_x\device</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.device.2.cpp" ><Filter>src\direct_x\device</Filter></ClCompile>
-    <ClInclude Include="$(_2)direct_x.factory.h" ><Filter>interface\direct_x</Filter></ClInclude>
-    <ClCompile Include="$(_3)direct_x.factory.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.factory.h" ><Filter>interface\direct_x\factory</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.factory.cpp" ><Filter>src\direct_x\factory</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.factory.1.h" ><Filter>interface\direct_x\factory</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.factory.1.cpp" ><Filter>src\direct_x\factory</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.factory.2.h" ><Filter>interface\direct_x\factory</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.factory.2.cpp" ><Filter>src\direct_x\factory</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.feature.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.feature.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.format.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.format.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.output.h" ><Filter>interface\direct_x</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.output.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.queue.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.queue.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.swap.h" ><Filter>interface\direct_x\swap</Filter></ClInclude>

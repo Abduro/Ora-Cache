@@ -10,13 +10,19 @@
 
 #include "sys.error.h"
 #include "direct_x._iface.h"
+
 #include "direct_x.adapter.h"
 #include "direct_x.adapter.1.h"
 #include "direct_x.adapter.2.h"
+
 #include "direct_x.device.h"
 #include "direct_x.device.1.h"
 #include "direct_x.device.2.h"
+
 #include "direct_x.factory.h"
+#include "direct_x.factory.1.h"
+#include "direct_x.factory.2.h"
+
 #include "direct_x.queue.h"
 
 #include "direct_x.swap.h"

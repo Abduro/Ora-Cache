@@ -51,8 +51,8 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _12 
 	};
 
 	using TDev_Warp  = ex_ui::draw::direct_x::_12::CDevice_Warp;
-	using TWarp_ada  = ex_ui::draw::direct_x::_11::CAda_Warp;
-	using TWarp_Enum = ex_ui::draw::direct_x::_11::CWarp_Enum;
+	using TWarp_ada  = ex_ui::draw::direct_x::_11::CAdapter;
+	using TWarp_Enum = ex_ui::draw::direct_x::_11::CAdapter_Enum;
 
 	__class(CDev_warp) {
 	public:
@@ -82,12 +82,17 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _12 
 	public:
 		__method (Create);
 		__method (GetAdapter);
-		__method (GetSwapChain);
+		__method (GetSwapChain); // cls::[CError]>>{code=16386;result=0x80004002;desc='No such interface supported';context=CDevice::Create()};
+
+		TError&  Error (void) const;
+		const
+		TFac_4&  Ref (void) const;
 
 	private:
 		bool   m_b_verb;
 		TFac_4     m_fac_4;
 		TSwapChain m_swap_chain;
+		CError m_error;
 	};
 
 	using TFac_6 = ex_ui::draw::direct_x::_12::CFac_6;
@@ -102,9 +107,14 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _12 
 		__method (Enum_Hi_perf);
 		__method (Enum_Lo_power);
 
+		TError&  Error (void) const;
+		const
+		TFac_6&  Ref (void) const;
+
 	private:
 		bool   m_b_verb;
 		TFac_6 m_fac_6;
+		CError m_error;
 	};
 
 	using TClrBits  = ex_ui::draw::direct_x::TClrBits;

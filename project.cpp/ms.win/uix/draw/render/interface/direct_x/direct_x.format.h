@@ -18,7 +18,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	public:
 		enum e_clr_bits : uint32_t {
 		     e__unknown  = TClrBits::DXGI_FORMAT_UNKNOWN       , // is not acceptable actually;
-		     e_rgba_norm = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM, // the commonly used format; very often;
+		     e_rgba_norm = TClrBits::DXGI_FORMAT_R8G8B8A8_UNORM, // the commonly used format; very often;
+			 e_bgra_norm = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM,
 		};
 	public:
 		 CClrBits (void); CClrBits (const CClrBits&) = delete; CClrBits (CClrBits&&) = delete;

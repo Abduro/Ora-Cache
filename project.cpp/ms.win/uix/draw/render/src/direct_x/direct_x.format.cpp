@@ -21,6 +21,7 @@ CString    CClrBits::Print (const uint32_t _n_format) const {
 	switch (_n_format) {
 	case TClrBits::DXGI_FORMAT_UNKNOWN       : cs_out.Format(pc_sz_pat, _n_format, _T("unknown")); break;
 	case TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM: cs_out.Format(pc_sz_pat, _n_format, _T("b8g8r8a8_unorm")); break;
+	case TClrBits::DXGI_FORMAT_R8G8B8A8_UNORM: cs_out.Format(pc_sz_pat, _n_format, _T("r8g8b8a8_unorm")); break;
 //	case TClrBits::DXGI_FORMAT_XXXXXXX: cs_out.Format(pc_sz_pat, _n_format, _T("")); break;
 	default:
 		cs_out.Format(pc_sz_pat, _n_format, _T("#unspec"));

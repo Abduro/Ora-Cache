@@ -8,6 +8,7 @@
 	https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiadapter1 ;
 */
 #include "direct_x._iface.h"
+#include "direct_x.output.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
 	// generic properties of an adapter of either direct_x 11 or 12;

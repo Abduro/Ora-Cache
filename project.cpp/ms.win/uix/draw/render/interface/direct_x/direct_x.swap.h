@@ -24,6 +24,10 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		};
 	private:
 		CBuff_Usage (void) = delete; CBuff_Usage (const CBuff_Usage&) = delete; CBuff_Usage (CBuff_Usage&&) = delete; ~CBuff_Usage (void) = delete;
+#if defined(_DEBUG)
+	public:
+		static CString  Print (const uint32_t _n_usage);
+#endif
 	private:
 		CBuff_Usage& operator = (const CBuff_Usage&) = delete;
 		CBuff_Usage& operator = (CBuff_Usage&&) = delete;
@@ -90,6 +94,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		uint32_t Get (void) const;      // ToDo: perhaps TEffect type value must be returned;
 		bool     Set (const uint32_t);
 #if defined(_DEBUG)
+		static
+		CString  Print (const uint32_t _n_effect);
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 		TEffect  Raw (void) const;
@@ -131,6 +137,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 		bool  Is_valid (void) const; // returns 'true' in case when sample count does not equal to zero;
 #if defined(_DEBUG)
+		static
+		CString  Print (const TSampleDesc&);
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 		bool Set (const uint32_t _n_count, const uint32_t _n_quality);
@@ -160,7 +168,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-checkfeaturesupport ;
 #endif
 	private:
-		TSampleDesc  m_desc;
+		TSampleDesc   m_desc;
 		ISample_Sync* m_p_sync;
 	};
 	

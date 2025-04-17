@@ -6,6 +6,8 @@
 
 using namespace ebo::boo::test::draw::_12;
 
+using CSize = ebo::boo::test::draw::_12::CSize;
+
 /////////////////////////////////////////////////////////////////////////////
 
 CAdapter:: CAdapter (const bool _b_verb) : m_b_verb(_b_verb) {
@@ -102,6 +104,7 @@ void  CDev_warp::Create (void) {
 	// it is expected to receive the error: 'No such interface supported';
 	// in case when this project is tested on virtual remote machine;
 	TWarp_Enum warp_enum;
+#if (0)  // it is not necessary to get all adapters;
 	warp_enum.Set();
 	if (warp_enum.Error()) {
 		_out() += warp_enum.Error().Print(TError::e_print::e_req);
@@ -115,11 +118,24 @@ void  CDev_warp::Create (void) {
 		else
 			_out() += _T("The device is created successfully;");
 	}
+#else
+	TWarp_ada adapter;
+	warp_enum.GetWarp(adapter);
+	if (warp_enum.Error())
+		_out() += warp_enum.Error().Print(TError::e_print::e_req);
+	else if (__failed(this->m_device.Create(adapter))) {
+		if (this->m_device.Error())
+			_out() += this->m_device.Error().Print(TError::e_print::e_req);
+		else
+			_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_device.Print(e_print::e_all));
+	}
+#endif
 	_out()();
 }
 /////////////////////////////////////////////////////////////////////////////
 
 CFac_4:: CFac_4 (const bool _b_verb) : m_b_verb(_b_verb) {
+	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -141,22 +157,31 @@ CFac_4::~CFac_4 (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 void CFac_4::Create (void) {
-	if (this->m_fac_4.Is_valid())
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->m_fac_4.Is_valid()) {
+		this->m_error << (err_code)TErrCodes::eObject::eExists;
 		return;
+	}
 
 	this->m_fac_4.Create();
-	if (this->m_fac_4.Error())
+	if (this->m_fac_4.Error()) {
+		this->m_error = this->m_fac_4.Error();
 		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+	}
 	else
 		_out() += _T("The factory#4 is created successfully;");
 
 	_out()();
 }
 
+TError& CFac_4::Error (void) const { return this->m_error; }
+
 void CFac_4::GetAdapter (void) {
-	_out() += TLog_Acc::e_new_line;
+	this->m_error << __METHOD__ << __s_ok;
 
 	if (false  == this->m_fac_4.Is_valid()) {
+		this->m_error = this->m_fac_4.Error();
 		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
@@ -165,8 +190,10 @@ void CFac_4::GetAdapter (void) {
 	TAdapter adapter;
 	this->m_fac_4.Get(adapter);
 
-	if (this->m_fac_4.Error())
+	if (this->m_fac_4.Error()) {
+		this->m_error = this->m_fac_4.Error();
 		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
+	}
 	else {
 		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) adapter.Print());
 	}
@@ -174,9 +201,10 @@ void CFac_4::GetAdapter (void) {
 }
 
 void CFac_4::GetSwapChain (void) {
-	_out() += TLog_Acc::e_new_line;
+	this->m_error << __METHOD__ << __s_ok;
 	// (1) checks the factory object first;
 	if (false == this->m_fac_4.Is_valid()) {
+		this->m_error = this->m_fac_4.Error();
 		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
@@ -208,20 +236,44 @@ void CFac_4::GetSwapChain (void) {
 		return;
 	}
 #else
+	CFac_6 fac_6;
+	fac_6.Create();
+	if (fac_6.Error()) {
+		this->m_error = fac_6.Error();
+		_out() += fac_6.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+	// (2) creates a default device object;
+	TDevice_HW device;
+	// this adapter may be not suitable for the device creating, due to this adapter cannot be used for output of graphics;
+	TAdapter adapter;
 
-	TAdapter adapter; // this adapter may be not suitable for the device creating, due to this adapter cannot be used for output of graphics;
-	this->m_fac_4.Get(adapter);
-	if (this->m_fac_4.Error()) {
+	fac_6.Enum_Hi_perf();
+	const TAdapters& fast_runners = fac_6.Ref().Cached();
+	if (false == fast_runners.empty()) {
+		for (size_t i_ = 0; i_ < fast_runners.size(); i_++) {
+			adapter = fast_runners.at(i_);
+			if (__succeeded(device.Create(adapter)))
+				break;
+		}
+	}
+	// this adapter may be not suitable for the device creating, due to this adapter cannot be used for output of graphics;
+	else if (__failed(this->m_fac_4.Get(adapter))) {
+		this->m_error = this->m_fac_4.Error();
 		_out() += this->m_fac_4.Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
 	}
+	if (device.Is_valid() == false)
+		device.Create(adapter);
 
-	// (2) creates a default device object;
-	TDevice_HW device;
-	device.Create(adapter);
+	if (device.Is_valid() == false) {
+		using CAda_enum = ex_ui::draw::direct_x::_11::CAdapter_Enum;
+	}
 
 	if (device.Error()) {
+		this->m_error = device.Error();
 		_out() += device.Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
@@ -231,6 +283,7 @@ void CFac_4::GetSwapChain (void) {
 	TCmdQueue  cmd_que;
 	device.Get(cmd_que);
 	if (device.Error()) {
+		this->m_error = device.Error();
 		_out() += device.Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
@@ -246,9 +299,12 @@ void CFac_4::GetSwapChain (void) {
 		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz)this->m_swap_chain.Print(e_print::e_all));
 }
 
+const TFac_4& CFac_4::Ref (void) const { return this->m_fac_4; }
+
 /////////////////////////////////////////////////////////////////////////////
 
-CFac_6:: CFac_6 (const bool _b_verb) : m_b_verb(_b_verb) {
+CFac_6::CFac_6 (const bool _b_verb) : m_b_verb(_b_verb) {
+	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -258,27 +314,37 @@ CFac_6:: CFac_6 (const bool _b_verb) : m_b_verb(_b_verb) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+TError& CFac_6::Error (void) const { return this->m_error; }
+const
+TFac_6& CFac_6::Ref (void) const { return this->m_fac_6; }
+
 void CFac_6::Create (void) {
+	this->m_error << __METHOD__ << __s_ok;
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
 	this->m_fac_6.Create();
-	if (this->m_fac_6.Error())
+	if (this->m_fac_6.Error()) {
+		this->m_error = m_fac_6.Error();
 		_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
+	}
 	else
 		_out() += this->m_fac_6.Print(e_print::e_all);
 	_out()();
 }
 
 void CFac_6::Enum_Hi_perf (void) {
+	this->m_error << __METHOD__ << __s_ok;
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
 
-	this->m_fac_6.Create();
+	if (this->m_fac_6.Is_valid() == false)
+		this->m_fac_6.Create();
 	if (this->m_fac_6.Error()) {
+		this->m_error = m_fac_6.Error();
 		_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
 		_out()();
 		return ;
@@ -292,18 +358,24 @@ void CFac_6::Enum_Hi_perf (void) {
 			}
 		}
 //	}
-	if (this->m_fac_6.Error())
+	if (this->m_fac_6.Error()) {
+		this->m_error = m_fac_6.Error();
 		_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
+	}
 	_out()();
 }
 
 void CFac_6::Enum_Lo_power (void) {
+	this->m_error << __METHOD__ << __s_ok;
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
-	this->m_fac_6.Create();
+
+	if (this->m_fac_6.Is_valid() == false)
+		this->m_fac_6.Create();
 	if (this->m_fac_6.Error()) {
+		this->m_error = m_fac_6.Error();
 		_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
@@ -317,8 +389,10 @@ void CFac_6::Enum_Lo_power (void) {
 			}
 		}
 //	}
-	if (this->m_fac_6.Error())
+	if (this->m_fac_6.Error()) {
+		this->m_error = m_fac_6.Error();
 		_out() += this->m_fac_6.Error().Print(TError::e_print::e_req);
+	}
 	_out()();
 }
 

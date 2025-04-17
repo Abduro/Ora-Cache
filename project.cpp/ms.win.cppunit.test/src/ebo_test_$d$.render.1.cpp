@@ -8,6 +8,82 @@ using namespace ebo::boo::test::draw::_11;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CAdapter:: CAdapter (const bool _b_verb) : m_b_verb(_b_verb) {
+	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TError&  CAdapter::Error (void) const { return this->m_error; }
+err_code CAdapter::Set (const TAdapter& _p_adapter) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	this->m_adapter.Ptr(_p_adapter.Ptr());
+	if (this->m_adapter.Error()) {
+		this->m_error = this->m_adapter.Error();
+		_out() += this->m_adapter.Error().Print(TError::e_print::e_req);
+	}
+	else if (__failed(this->m_adapter.Outputs())) {
+		this->m_error = this->m_adapter.Error();
+		_out() += this->m_adapter.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		const TOutputs& outputs = ((const TAdapter&)this->m_adapter).Outputs();
+		for (size_t i_ = 0; i_ < outputs.size(); i_+= 1) {
+			const TOutput& output = outputs.at(i_);
+			_out() += output.Print(e_print::e_all);
+		}
+	}
+
+	_out()();
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAdapter_enum:: CAdapter_enum (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CAdapter_enum::Set (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	this->m_enum.Set();
+	if (this->m_enum.Error()) {
+		_out() += this->m_enum.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	const TAdapters& adapters = this->m_enum.Cached();
+	if (adapters.empty() == false) {
+		for (size_t i_ = 0; i_ < adapters.size(); i_++) {
+			const TAda_Warp& adapter = adapters.at(i_);  // this is not a reference to warp-adapter, but to generic adapter;
+			_out() += adapter.Print();
+		}
+	}
+	else
+		_out() += _T("*result*: #no_adapters");
+
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CDevice:: CDevice (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
@@ -125,6 +201,20 @@ void CDevice::GetSwapChain (void) {
 	else
 		_out() += this->m_device.Error().Print(TError::e_print::e_req);
 
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDevice_Ref::Create (void) {
+	CFake_Wnd fk_wnd;
+	this->m_dev_ref.Default(fk_wnd);
+	this->m_dev_ref.Create();
+	if (this->m_dev_ref.Error())
+		_out() += this->m_dev_ref.Error().Print(TError::e_print::e_req);
+	else {
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->m_dev_ref.SwapChain().Desc().Print(e_print::e_all));
+	}
 	_out()();
 }
 
@@ -262,16 +352,20 @@ void CWarp_enum::Do (void) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
+#if (0) // enumerating all adapters is not required;
 	this->m_enum.Set();
 	if (this->m_enum.Error()) {
 		_out() += this->m_enum.Error().Print(TError::e_print::e_req);
 	}
-	else if (this->m_enum.Get().Error()) {
-		_out() += this->m_enum.Get().Error().Print(TError::e_print::e_req);
+#endif
+	TAda_Warp adapter;
+	this->m_enum.GetWarp(adapter);
+
+	if (this->m_enum.Error()) {
+		_out() += this->m_enum.Error().Print(TError::e_print::e_req);
 	}
 	else {
-		const TAda_Warp& adapter = this->m_enum.Get();
-		_out() += adapter.Print(e_print::e_all);
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) adapter.Print(e_print::e_all));
 	}
 	_out()();
 }

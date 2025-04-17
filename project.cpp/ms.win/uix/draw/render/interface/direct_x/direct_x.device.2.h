@@ -10,8 +10,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 
 	using namespace ex_ui::draw::direct_x;
 
-	using CAda_Warp = ex_ui::draw::direct_x::_11::CAda_Warp;
-	using TWarpAdaPtr = ex_ui::draw::direct_x::_11::TWarpAdaPtr;
+	using CAda_Warp = ex_ui::draw::direct_x::_11::CAdapter;
+	using TWarpAdaPtr = ex_ui::draw::direct_x::_11::TAdapterPtr;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandqueue ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice ;
@@ -27,7 +27,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
-
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
 		const
 		TDevicePtr& Ptr (void) const;
 		err_code    Ptr (const TDevicePtr&);

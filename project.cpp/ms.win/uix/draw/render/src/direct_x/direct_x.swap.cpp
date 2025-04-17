@@ -12,7 +12,7 @@ static CSyncObject g_sync_obj;
 namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 #if defined(_DEBUG)
 
-	CString _buffer_usage_to_str (const CBuff_Usage::e_usage _e_value) {
+	CString _buffer_usage_to_str (const /*CBuff_Usage::e_usage*/uint32_t _e_value) {
 		CString cs_out;
 		switch (_e_value) {
 		case CBuff_Usage::e_usage::e_back    : cs_out = _T("back_buffer"); break;
@@ -29,7 +29,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 		return  cs_out;
 	}
 
-	CString _effect_to_str (const CEffect::e_value _e_value) {
+	CString _effect_to_str (const /*CEffect::e_value*/uint32_t _e_value) {
 		CString cs_out;
 		switch (_e_value) {
 		case CEffect::e_value::e_discard : cs_out = _T("eff_discard"); break;
@@ -164,6 +164,12 @@ using namespace ex_ui::draw::direct_x::_impl;
 
 #define Safe_Lock_This() Safe_Lock(g_sync_obj)
 /////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CString CBuff_Usage::Print(const uint32_t _n_usage) {
+	return _buffer_usage_to_str(_n_usage);
+}
+#endif
+/////////////////////////////////////////////////////////////////////////////
 
 CBuffer:: CBuffer (IBuffer_Sync* const _p_sync) : CBuffer() { *this << _p_sync; }
 CBuffer:: CBuffer (const uint32_t _n_count, const uint32_t _n_usage) : m_p_sync(0), m_count(_n_count), m_usage(_n_usage) {}
@@ -260,6 +266,9 @@ bool      CEffect::Set (const uint32_t _n_value) {
 	return b_changed;
 }
 #if defined(_DEBUG)
+CString   CEffect::Print (const uint32_t _n_effect) {
+	return _effect_to_str(_n_effect);
+}
 CString   CEffect::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{value=%u(%s)}");
@@ -328,6 +337,10 @@ bool      CSample::Is_valid (void) const {
 	return !!this->Count()/* && !!this->Quality()*/;
 }
 #if defined(_DEBUG)
+CString   CSample::Print (const TSampleDesc& _desc) {
+	CString cs_out; cs_out.Format(_T("{count=%d;quality=%d}"), _desc.Count, _desc.Quality);
+	return  cs_out;
+}
 CString   CSample::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{count=%d;quality=%d;valid=%s}");

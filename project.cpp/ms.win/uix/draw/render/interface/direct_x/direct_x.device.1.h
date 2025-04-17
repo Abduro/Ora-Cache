@@ -45,6 +45,32 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	typedef ::ATL::CComPtr<ID3D11DeviceContext > TCtx0Ptr;
 	typedef ::ATL::CComPtr<ID3D11DeviceContext4> TCtx4Ptr; // << d3d11_3.h is required;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_device_context_type ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11devicecontext ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
+
+	typedef D3D11_DEVICE_CONTEXT_TYPE TCtxType;
+	class CCtx_Type {
+	public:
+		enum e_value : uint32_t {
+		     e_deferred  = TCtxType::D3D11_DEVICE_CONTEXT_DEFERRED ,
+		     e_immediate = TCtxType::D3D11_DEVICE_CONTEXT_IMMEDIATE,
+		};
+	public:
+		 CCtx_Type (void) = default; CCtx_Type (const CCtx_Type&) = delete; CCtx_Type (CCtx_Type&&) = delete;
+		~CCtx_Type (void) = default;
+
+#if defined(_DEBUG)
+	public:
+		static
+		CString   Print (const uint32_t _n_type);
+#endif
+
+	private:
+		CCtx_Type& operator = (const CCtx_Type&) = delete;
+		CCtx_Type& operator = (CCtx_Type&&) = delete;
+	};
+
 	class CContext {
 	public:
 		 CContext (void); CContext (const CContext&) = delete; CContext (CContext&&) = delete;
@@ -58,9 +84,11 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 #endif
 		const
 		TCtx4Ptr& Ptr (void) const;
-		TCtx4Ptr& Ptr (void) ;
+		TCtx4Ptr& Ptr (void) ;            // ToDo: must be removed;
 
 		err_code  Set (const TCtx0Ptr&);  // tries to retrieve this context pointer from the pointer to base object;
+
+		TCtxType  Type(void) const;       // just for test the context pointer works;
 
 	private:
 		CContext& operator = (const CContext&) = delete;
@@ -69,10 +97,12 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	private:
 		TCtx4Ptr  m_p_ctx;
 		CError    m_error;
+		TCtxType  m_type ;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11device ; this is the base device;
 	
+	typedef ::ATL::CComPtr<IDXGIDevice>  TDevBasePtr;
 	typedef ::ATL::CComPtr<ID3D11Device> TDevicePtr;
 
 	class CDevice {
@@ -81,9 +111,13 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDevice (void);
 
 	public:
-		err_code  Get (CAda_Warp&);    // gets warp adapter, i.e. the object that implements IDXGIAdapter interface;
-		err_code  Get (CContext& );    // gets device context interface; useful for draw operations;
-		err_code  Get (CFeature& );    // gets input feature data;
+		const
+		CContext& Ctx (void) const;
+		CContext& Ctx (void) ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter ;
+		err_code  Get (CAdapter&);    // gets the adapter of this device, i.e. the object that implements IDXGIAdapter interface;
+		err_code  Get (CContext&);    // gets device context interface; useful for draw operations;
+		err_code  Get (CFeature&);    // gets input feature data;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
@@ -91,13 +125,18 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		const
 		TDevicePtr& Ptr (void) const;
 		err_code    Ptr (const TDevicePtr&) ;
+		const
+		CSwapChain& SwapChain (void) const;
+		CSwapChain& SwapChain (void) ;
 	
 	private:
 		CDevice& operator = (const CDevice&) = delete;
 		CDevice& operator = (CDevice&&) = delete;
 
 	protected:
+		CContext   m_ctx  ;
 		CError     m_error;
+		CSwapChain m_chain;
 		TDevicePtr m_p_dev;
 	};
 
@@ -141,6 +180,23 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		CContext    m_imm_ctx;  // the immediate context which retrieved by create device function;
 		CSwapChain  m_chain  ;
 	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-ref ;
+	class CDevice_Ref : public CDevice { typedef CDevice TBase;
+	public:
+		 CDevice_Ref (void); CDevice_Ref (const CDevice_Ref&) = delete; CDevice_Ref (CDevice_Ref&&) = delete;
+		~CDevice_Ref (void) = default;
+
+	public:
+		err_code  Create (void) ;
+		#if defined (_DEBUG)
+		void      Default(const HWND _output = HWND_DESKTOP) ; // sets default values for the swap chain desc structure;
+		#endif
+	private:
+		CDevice_Ref& operator = (const CDevice_Ref&) = delete;
+		CDevice_Ref& operator = (CDevice_Ref&&) = delete;
+	};
+
 }}}}
 
 #endif/*_DIRECT_X_DEVICE_1_H_INCLUDED*/

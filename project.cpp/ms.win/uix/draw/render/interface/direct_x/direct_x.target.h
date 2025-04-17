@@ -16,31 +16,6 @@ namespace _11 {
 	using ex_ui::draw::direct_x::_11::CDevice;
 	using ex_ui::draw::direct_x::_11::CSwapChain;
 
-	typedef ::ATL::CComPtr<IDXGIOutput> TOutputPtr;
-
-	class COutput {
-	public:
-		 COutput (void); COutput (const COutput&) = delete; COutput (COutput&&) = delete;
-		~COutput (void) = default;
-	public:
-		TError&   Error (void) const;
-		bool   Is_valid (void) const;
-#if defined(_DEBUG)
-		CString   Print (const e_print = e_print::e_all) const;
-#endif
-		const
-		TOutputPtr& Ptr (void) const;
-		err_code    Ptr (const TOutputPtr&);
-
-	private:
-		COutput&  operator = (const COutput&) = delete;
-		COutput&  operator = (COutput&&) = delete;
-
-	private:
-		CError  m_error;
-		TOutputPtr  m_p_out;
-	};
-
 	// this is a render target for drawing;
 	class CTarget {
 	public:

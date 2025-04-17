@@ -14,16 +14,19 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	typedef DXGI_ADAPTER_DESC   TAdapterInfo;
 	typedef TAdapterInfo        TAdaInfoWarp; typedef TAdaInfoWarp TInfo; // just playing with names;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiadapter ;
+	typedef ::ATL::CComPtr<IDXGIAdapter> TAdaptDxgPtr;
+
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-warp << about WARP;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp << that is;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiadapter ;
 
-	typedef ::ATL::CComPtr<IDXGIAdapter> TWarpAdaPtr; // it represents a display subsystem (including one or more GPUs, DACs and video memory);
+	typedef ::ATL::CComPtr<IDXGIAdapter> TAdapterPtr; // it represents a display subsystem (including one or more GPUs, DACs and video memory);
 	typedef ::ATL::CComPtr<IDXGIFactory> TParentPtr ; // this is the parent object, i.e. a factory, of the warp adapter in DX11;
 
-	typedef TWarpAdaPtr TWarpPtr; // just playing with names;
+	typedef TAdapterPtr TWarpPtr; // just playing with names;
 
-	class CAda_Warp { // ToDo: the name of this class must be reviewed; possibly 'CAdapter' withing this namespace would be better;
+	class CAdapter {
 	public:
 		class CParent {
 		public:
@@ -43,9 +46,10 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 			TParentPtr m_p_parent;
 		};
 	public:
-		 CAda_Warp (void);
-		 CAda_Warp (const CAda_Warp&); CAda_Warp (CAda_Warp&&) = delete;
-		~CAda_Warp (void) = default;
+		 CAdapter (void);
+		 CAdapter (const CAdapter&);
+		 CAdapter (CAdapter&&);
+		~CAdapter (void) = default;
 
 	public:
 		TError&  Error (void) const;
@@ -56,6 +60,11 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TInfo&   Info (void);
 
 		bool Is (void) const;            // returns true if adapter information is initialized;
+		// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-enumoutputs ;
+		const
+		TOutputs& Outputs (void) const;  // returns a reference to outputs of this adapter; 
+		err_code  Outputs (void);        // retrieves outputs of this adapter;
+
 #if defined(_DEBUG)
 		CString  Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
@@ -63,47 +72,60 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		CProps&  Props(void) const;
 		CProps&  Props(void);
 		const
-		TWarpPtr&  Ptr (void) const;
-		err_code   Ptr (const TWarpPtr&);
+		TAdapterPtr&  Ptr (void) const;
+		err_code      Ptr (const TAdapterPtr&);
 
-		err_code   UpdateInfo (void);
+		err_code  UpdateInfo (void);
 
 	private:
-		CAda_Warp& operator = (const CAda_Warp&);
-		CAda_Warp& operator = (CAda_Warp&&) = delete;
+		CAdapter& operator = (const CAdapter&);
+		CAdapter& operator = (CAdapter&&);      // no move assignment here, just copying;
 
-		CAda_Warp& operator <<(const TWarpPtr&);
-		CAda_Warp& operator <<(const TAdaInfoWarp&);
+		CAdapter& operator <<(const TAdapterPtr&);
+		CAdapter& operator <<(const TAdaInfoWarp&);
 
 	private:
 		CError       m_error;
 		TAdaInfoWarp m_info ;
-		TWarpAdaPtr  m_object;
-		CProps       m_props;  
+		TAdapterPtr  m_p_obj;
+		CProps       m_props;
+		TOutputs     m_outs ;
 	};
+
+	typedef ::std::vector<CAdapter> TAdapters;
+
+	/*
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1 :
+	*Important*
+	The enumeration order of adapters, which are retrieved by IDXGIFactory::EnumAdapters() or IDXGIFactory1::EnumAdapters1():
+	- an adapter with the output on which the desktop primary is displayed; this adapter corresponds with an index of zero;
+	- adapters with outputs;
+	- adapters without outputs;
+	*/
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp ;
 	// it looks like the only one warp adapter may exist in the system;
-	class CWarp_Enum {
+	class CAdapter_Enum {
 	public:
-		 CWarp_Enum (void);
-		 CWarp_Enum (const CWarp_Enum&);
-		 CWarp_Enum (CWarp_Enum&&) = delete;
-		~CWarp_Enum (void) = default;
+		 CAdapter_Enum (void);
+		 CAdapter_Enum (const CAdapter_Enum&);
+		 CAdapter_Enum (CAdapter_Enum&&) = delete;
+		~CAdapter_Enum (void) = default;
 
 	public:
-		TErrorRef    Error (void) const;
 		const
-		CAda_Warp&   Get (void) const;
-		err_code     Set (void);
+		TAdapters& Cached (void) const; // returns a reference to result of enumearion of adapters;
+		TErrorRef  Error  (void) const;
+		err_code   GetWarp(CAdapter&) ; // gets warp adapter by calling EnumWarpAdapter() for IDXGIAdapter;
+		err_code   Set (void);          // enumerates adapters by calling  EnumAdapters() for IDXGIAdapter; puts result to m_cached;
 
 	public:
-		CWarp_Enum&  operator = (const CWarp_Enum&);
-		CWarp_Enum&  operator = (CWarp_Enum&&) = delete;
+		CAdapter_Enum&  operator = (const CAdapter_Enum&); // not implemented yet;
+		CAdapter_Enum&  operator = (CAdapter_Enum&&) = delete;
 
 	private:
-		CAda_Warp m_ada_warp;
 		CError    m_error;
+		TAdapters m_cached; // the result set of enumerating adapters by calling EnumAdapters() for IDXGIAdapter;
 	};
 
 }}}}

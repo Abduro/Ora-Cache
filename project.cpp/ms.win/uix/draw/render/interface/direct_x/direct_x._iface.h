@@ -45,7 +45,25 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	     e_req   = 0x2,  // prints out the class object attribute value(s) only;
 	};
 #endif
+namespace _11 {
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/how-to-use-direct3d-11 ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist ;
+	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85)
+	typedef DXGI_MODE_DESC TModeDesc;
 
+	class CDisplay {
+	public:
+		 CDisplay (void) = default; CDisplay (const CDisplay&) = delete; CDisplay (CDisplay&&) = delete;
+		~CDisplay (void) = default;
+	public:
+#if defined(_DEBUG)
+		CString  Print(const TModeDesc&) const;
+#endif
+	private:
+		CDisplay& operator = (const CDisplay&) = delete;
+		CDisplay& operator = (CDisplay&&) = delete;
+	};
+}
 }}}
 
 #endif/*_DIRECT_X_IFACE_H_INCLUDED*/

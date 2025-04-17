@@ -3,7 +3,7 @@
 	This is Ebo Pack DirectX 12 adapter wrapper interface implementation file;
 */
 #include "direct_x.adapter.2.h"
-#include "direct_x.factory.h"
+#include "direct_x.factory.2.h"
 
 using namespace ex_ui::draw::direct_x::_12;
 
@@ -263,7 +263,7 @@ err_code    CAdapter_Enum::Set (void)
 	TAdapterPtr p_adapter ;
 	TFac1Ptr    p_fac_1 ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1 ;
-	this->m_error << ::CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&p_fac_1);
+	this->m_error << ::CreateDXGIFactory1(__uuidof(TFac1Ptr), (void**)&p_fac_1);
 	if (true == this->Error()) {
 	    return  this->Error();
 	}

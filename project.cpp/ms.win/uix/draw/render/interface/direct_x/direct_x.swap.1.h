@@ -19,14 +19,18 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDesc_Wrap (void) = default;
 
 	public:
-
+#if defined(_DEBUG)
 		void Fake (void);
-
+#endif
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
 		const
 		TSwapDesc&  ref (void) const;
-		TSwapDesc&  ref (void)      ;
+		TSwapDesc&  ref (void)      ;  // when changing data of this desc struct sets this way the error object is not updated;
+#if defined(_DEBUG)
+		CString     Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
+		err_code    Set (const TSwapDesc&); // preferable way to update desc data structure; target window handle is checked;
 
 		HWND const  Target (void) const;
 		err_code    Target (HWND const);
@@ -36,6 +40,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 		operator const TSwapDesc& (void) const;
 		operator       TSwapDesc& (void)      ;
+
+	public:
+		static err_code Is_valid (const TSwapDesc&);
 	
 	private:
 		mutable
@@ -50,6 +57,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	typedef ::std::shared_ptr<CDesc_Wrap> TDescWrapPtr;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiswapchain ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getdesc ;
 
 	typedef ::ATL::CComPtr<IDXGISwapChain> TChainPtr;
 
@@ -62,19 +70,20 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	public:
 		const
-		CDesc_Wrap&  Desc (void) const;
-		CDesc_Wrap&  Desc (void) ;
+		CDesc_Wrap& Desc (void) const;
+		CDesc_Wrap& Desc (void) ;
 
 		TError& Error (void) const;
 		bool  Is_valid(void) const;
 		bool  Is_full_screen (void) const;
 
 		const
-		TChainPtr& Ptr (void) const;
-		err_code   Ptr (const TChainPtr&) ;
+		TChainPtr&  Ptr (void) const;
+		err_code    Ptr (const TChainPtr&) ;
 #if defined (_DEBUG)
-		CString    Print (const e_print = e_print::e_all) const;
+		CString     Print (const e_print = e_print::e_all) const;
 #endif
+		err_code    UpdateDesc (void) ;
 	public:
 		CSwapChain& operator = (const CSwapChain&) = delete; // is not required yet;
 		CSwapChain& operator = (CSwapChain&&) = delete;      // is not required yet;

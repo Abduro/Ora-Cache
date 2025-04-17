@@ -39,8 +39,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 		TError&  Error(void) const;
 		err_code Info (const TInfo&);        // sets adapter information from external adapter description;
 		const
-		TInfo&   Info (void) const;
-		TInfo&   Info (void)      ;
+		TInfo&   Info (void) const;          // gets a reference to DXGI_ADAPTER_DESC1 structure; (ra);
+		TInfo&   Info (void)      ;          // gets a reference to DXGI_ADAPTER_DESC1 structure; (rw);
 
 		bool Is (void) const;                // returns true if adapter information is initialized and the pointer to object is set;
 
@@ -52,7 +52,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 		CProps&  Props(void);
 
 		const 
-		TAdapterPtr&  Ptr (void) const;
+		TAdapterPtr&  Ptr (void) const;             // the pointer to IDXGIAdapter1;
 		err_code      Ptr (const TAdapterPtr&) ;    // sets adapter pointer, updates its description and properties;
 
 	public:
@@ -67,13 +67,13 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 		bool operator == (const TAdapterInfo&) const;
 
 	private:
-		TAdapterPtr  m_p_adapter;
+		TAdapterPtr  m_p_adapter; // IDXGIAdapter1;
 		TAdapterInfo m_info ;
 		CError       m_error;
 		CProps       m_props;
 	};
 
-	typedef ::std::vector<CAdapter> TAdapters;
+	typedef ::std::vector<CAdapter> TAdapters; // the vector of IDXGIAdapter1 adapters;
 
 	class CAdapter_Enum
 	{
@@ -87,7 +87,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 		TErrorRef Error(void) const; // returns a reference to internal error object;
 		const
 		TAdapters& Get (void) const; // gets a reference to collection;
-		err_code   Set (void)      ; // enumerates *all* available hardware/video adapters that are installed on OS;
+		err_code   Set (void)      ; // calls ::EnumAdapters1() for IDXGIAdapter1;
 
 		const
 		CAdapter&  Get(const TFlag) const;

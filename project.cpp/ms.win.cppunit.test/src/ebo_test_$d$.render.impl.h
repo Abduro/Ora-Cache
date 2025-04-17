@@ -9,6 +9,8 @@
 #include "_log.h"
 #include "direct_x.device.h"
 #include "direct_x.factory.h"
+#include "direct_x.factory.1.h"
+#include "direct_x.factory.2.h"
 #include "direct_x.swap.h"
 #include "direct_x.swap.1.h"
 #include "direct_x.swap.2.h"

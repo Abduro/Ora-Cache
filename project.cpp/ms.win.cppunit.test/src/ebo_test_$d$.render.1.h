@@ -13,18 +13,50 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	using namespace ebo::boo::test::_impl::_11;
 
 	using TClrBits = ex_ui::draw::direct_x::TClrBits;
+	using TAdapter = ex_ui::draw::direct_x::_11::CAdapter;
+	using TOutput  = ex_ui::draw::direct_x::_11::COutput;
+	using TOutputs = ex_ui::draw::direct_x::_11::TOutputs;
 
-	__class(CAda_Warp) {
+	__class(CAdapter) {
+	public:
+		 CAdapter (const bool _b_verb = false);
+		~CAdapter (void) = default;
+
+	public:
+		TError&  Error (void) const;
+		err_code Set (const TAdapter&);
+
+	private:
+		bool m_b_verb;
+		TAdapter m_adapter;
+		CError   m_error;
 	};
 
+	using TAdapters = ex_ui::draw::direct_x::_11::TAdapters;
+	using TAdapter_enum = ex_ui::draw::direct_x::_11::CAdapter_Enum;
+
+	__class(CAdapter_enum) {
+	public:
+		 CAdapter_enum (const bool _b_verb = false);
+		~CAdapter_enum (void) = default;
+
+	public:
+		__method (Set);  // retrieves all adapters;
+
+	private:
+		bool m_b_verb;
+		TAdapter_enum m_enum;
+	};
 	// step #1: creating a device and its context:
 	// https://learn.microsoft.com/en-us/windows/win32/direct3dgetstarted/work-with-dxgi ;
 
 	// it looks like any typedef element name is suffexed by '_t', for example, wchar_t; https://en.wikipedia.org/wiki/Typedef ;
-	using TAda_Warp  = ex_ui::draw::direct_x::_11::CAda_Warp;
-	using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
+	using TAda_Warp  = ex_ui::draw::direct_x::_11::CAdapter;
 	using TContext   = ex_ui::draw::direct_x::_11::CContext;
+	using TDescWrap  = ex_ui::draw::direct_x::_11::CDesc_Wrap;
 	using TDevice_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
+	using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
+	using TSwapDesc  = ex_ui::draw::direct_x::_11::TSwapDesc;
 
 	using TFeature        = ex_ui::draw::direct_x::_11::CFeature;
 	using TFeature_Thread = ex_ui::draw::direct_x::_11::CFeature_Thread;
@@ -44,6 +76,15 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	private:
 		TDevice_HW  m_device;
 		bool m_b_verb;
+	};
+
+	using TDevice_ref = ex_ui::draw::direct_x::_11::CDevice_Ref;
+
+	__class(CDevice_Ref) {
+	public:
+		__method(Create);
+	private:
+		TDevice_ref m_dev_ref;
 	};
 
 	using TFac_2 = ex_ui::draw::direct_x::_11::CFac_2;
@@ -77,7 +118,7 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 		TTarget m_target;
 	};
 
-	using TWarp_enum = ex_ui::draw::direct_x::_11::CWarp_Enum;
+	using TWarp_enum = TAdapter_enum;
 
 	__class(CWarp_enum) {
 	public:

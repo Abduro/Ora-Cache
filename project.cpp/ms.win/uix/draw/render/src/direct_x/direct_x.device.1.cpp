@@ -49,8 +49,24 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 using namespace ex_ui::draw::direct_x::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CString    CCtx_Type::Print (const uint32_t _n_type) {
+	_n_type;
+	CString cs_out;
+	switch (_n_type) {
+	case CCtx_Type::e_deferred : cs_out = _T("deferred"); break;
+	case CCtx_Type::e_immediate: cs_out = _T("immediate"); break;
+	default:
+		cs_out.Format(_T("#inv_arg=%d"), _n_type);
+	}
+	return  cs_out;
+}
+#endif
+/////////////////////////////////////////////////////////////////////////////
 
-CContext:: CContext (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+/////////////////////////////////////////////////////////////////////////////
+
+CContext:: CContext (void) : m_type((TCtxType)0) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -93,9 +109,14 @@ err_code   CContext::Set (const TCtx0Ptr& _p_base) {
 		return (this->m_error << (err_code)TErrCodes::eObject::eInited);
 
 	this->m_error << _p_base->QueryInterface(&this->Ptr());
+	if (false == this->Error()){
+		this->m_type = _p_base->GetType(); // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
+	}
 
 	return this->Error();
 }
+
+TCtxType  CContext::Type(void) const { return this->m_type; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -103,6 +124,44 @@ CDevice:: CDevice (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_i
 CDevice::~CDevice (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+const
+CContext& CDevice::Ctx (void) const { return this->m_ctx; }
+CContext& CDevice::Ctx (void)       { return this->m_ctx; }
+
+err_code  CDevice::Get (CAdapter& _adapter) {
+	_adapter;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (false == this->Is_valid())
+		return (this->m_error << __e_not_inited);
+#if (0) // getting IDXGIDevice3 is not required;
+	::ATL::CComPtr<IDXGIDevice3> p_device_3;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nn-dxgi1_3-idxgidevice3 ;
+	this->m_error << this->Ptr()->QueryInterface(__uuidof(IDXGIDevice3), (void**)&p_device_3);
+	if (this->Error())
+		return this->Error();
+
+	TWarpPtr p_warp;
+
+	this->m_error << p_device_3->GetAdapter(&p_warp);
+	if (false == this->Error())
+		_adapter.Ptr(p_warp);
+#else
+	TDevBasePtr p_base;
+	this->m_error << this->Ptr()->QueryInterface(__uuidof(TDevBasePtr), (void**)&p_base);
+	if (this->Error())
+		return this->Error();
+	
+	TAdapterPtr p_adapter;
+	this->m_error << p_base->GetAdapter(&p_adapter);
+	if (false == this->Error()) {
+		_adapter.Ptr(p_adapter.Detach());
+	}
+
+#endif
+	return this->Error();
+}
 
 err_code  CDevice::Get (CContext& _ctx) {
 	this->m_error << __METHOD__ << __s_ok;
@@ -140,29 +199,6 @@ err_code  CDevice::Get (CFeature& _feature) {
 	return this->Error();
 }
 
-err_code  CDevice::Get (CAda_Warp& _adapter) {
-	_adapter;
-	this->m_error << __METHOD__ << __s_ok;
-
-	if (false == this->Is_valid())
-		return (this->m_error << __e_not_inited);
-
-	::ATL::CComPtr<IDXGIDevice3> p_device_3;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nn-dxgi1_3-idxgidevice3 ;
-	this->m_error << this->Ptr()->QueryInterface(__uuidof(IDXGIDevice3), (void**)&p_device_3);
-	if (this->Error())
-		return this->Error();
-
-	TWarpPtr p_warp;
-
-	this->m_error << p_device_3->GetAdapter(&p_warp);
-	if (false == this->Error())
-		_adapter.Ptr(p_warp);
-
-	return this->Error();
-}
-
 TError&   CDevice::Error (void) const { return this->m_error; }
 bool   CDevice::Is_valid (void) const { return (nullptr != this->Ptr()); }
 
@@ -180,6 +216,9 @@ err_code    CDevice::Ptr (const TDevicePtr& _p_dev) {
 
 	return this->Error();
 }
+const
+CSwapChain& CDevice::SwapChain (void) const { return this->m_chain; }
+CSwapChain& CDevice::SwapChain (void)       { return this->m_chain; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -293,5 +332,60 @@ err_code  CDevice_HW::SetSwapChain (void) {
 	}
 	return TBase::Error();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDevice_Ref:: CDevice_Ref (void) : TBase() { TBase::m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code  CDevice_Ref::Create (void) {
+	TBase::m_error << __METHOD__ << __s_ok;
+
+	if (TBase::Is_valid())
+		return TBase::m_error << (err_code) TErrCodes::eObject::eExists;
+
+	CDev_Cfg   cfg;
+	TCtx0Ptr   p_ctx;
+	TChainPtr  p_chain;
+	TDevicePtr p_base;
+
+	TSwapDesc& desc = TBase::SwapChain().Desc().ref();
+
+	D3D_FEATURE_LEVEL n_level = D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_1;
+
+	TBase::m_error << ::D3D11CreateDeviceAndSwapChain(
+		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_ref,
+		nullptr, 0, cfg.Levels().Ptr(), cfg.Levels().Count(), cfg.Version(), &desc, &p_chain, &p_base, &n_level, &p_ctx
+	);
+
+	if (false == TBase::Error()) {
+		if (nullptr != p_base)
+			TBase::Ptr(p_base.Detach());
+		if (nullptr != p_chain)
+			TBase::SwapChain().Ptr(p_chain.Detach());
+		if (nullptr != p_ctx)
+			TBase::Ctx().Set(p_ctx.Detach());
+	}
+
+	return TBase::Error();
+}
+#if defined(_DEBUG)
+void  CDevice_Ref::Default (const HWND _output) {
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-ref ;
+	TSwapDesc& desc = TBase::SwapChain().Desc().ref();
+	desc.BufferCount       =   1;
+	desc.BufferDesc.Width  = 640;
+	desc.BufferDesc.Height = 480;
+	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.BufferDesc.RefreshRate.Numerator = 60;
+	desc.BufferDesc.RefreshRate.Denominator = 1;
+	desc.BufferUsage  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	desc.OutputWindow = _output;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Windowed = TRUE;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
