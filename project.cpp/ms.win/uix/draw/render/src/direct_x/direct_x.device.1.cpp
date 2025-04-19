@@ -75,20 +75,21 @@ bool       CContext::Is_valid (void) const { return (nullptr != this->Ptr()); }
 #if defined(_DEBUG)
 CString    CContext::Print (const e_print _e_opt) const {
 	_e_opt;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{valid=%s}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{type=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{type=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{type=%s;valid=%s}");
 
+	CString cs_type  = CCtx_Type::Print(this->Type());
 	CString cs_valid = TStringEx().Bool(this->Is_valid());
 
 	CString cs_out;
 	if (e_print::e_all == _e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_valid);
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_type, (_pc_sz)cs_valid);
 	}
 	if (e_print::e_no_ns == _e_opt) {
-		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_valid);
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_type, (_pc_sz)cs_valid);
 	}
-	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_valid); }
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_type, (_pc_sz)cs_valid); }
 
 	if (true == cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
@@ -97,9 +98,7 @@ CString    CContext::Print (const e_print _e_opt) const {
 #endif
 const
 TCtx4Ptr&  CContext::Ptr (void) const { return this->m_p_ctx; }
-TCtx4Ptr&  CContext::Ptr (void)       { return this->m_p_ctx; }
-
-err_code   CContext::Set (const TCtx0Ptr& _p_base) {
+err_code   CContext::Ptr (const TCtx0Ptr& _p_base) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (nullptr == _p_base)
@@ -108,8 +107,11 @@ err_code   CContext::Set (const TCtx0Ptr& _p_base) {
 	if (this->Is_valid())
 		return (this->m_error << (err_code)TErrCodes::eObject::eInited);
 
-	this->m_error << _p_base->QueryInterface(&this->Ptr());
+	TCtx4Ptr p_ptr_4;
+
+	this->m_error << _p_base->QueryInterface(&p_ptr_4);
 	if (false == this->Error()){
+		this->m_p_ctx = p_ptr_4.Detach();
 		this->m_type = _p_base->GetType(); // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
 	}
 
@@ -177,7 +179,7 @@ err_code  CDevice::Get (CContext& _ctx) {
 
 	this->Ptr()->GetImmediateContext(&p_ctx);
 	if (p_ctx) {
-		_ctx.Set(p_ctx);
+		_ctx.Ptr(p_ctx.Detach());
 	}
 
 	return this->Error();
@@ -226,10 +228,6 @@ CDevice_HW::CDevice_HW (void) : TBase(), m_level(EFeatureLvl::D3D_FEATURE_LEVEL_
 
 /////////////////////////////////////////////////////////////////////////////
 
-const
-CContext& CDevice_HW::Ctx (void) const { return this->m_imm_ctx; }
-CContext& CDevice_HW::Ctx (void)       { return this->m_imm_ctx; }
-
 err_code  CDevice_HW::Create (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
 
@@ -246,7 +244,7 @@ err_code  CDevice_HW::Create (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ;
 
 	TBase::m_error << ::D3D11CreateDevice(
-		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_ref,
+		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_hard,
 		nullptr, CDev_Flag::e_single, cfg.Levels().Ptr(), cfg.Levels().Count(), cfg.Version(), &p_base, &this->m_level, &p_ctx
 	);
 	// D3D11_SDK_VERSION      - must be applied;
@@ -254,17 +252,13 @@ err_code  CDevice_HW::Create (void) {
 	// D3D_FEATURE_LEVEL_11_1 - may be applied for reference driver type;
 	if (false == TBase::Error()) {
 		if (__succeeded(TBase::Ptr(p_base.Detach()))) {
-			this->Ctx().Set(p_ctx);
+			this->Ctx().Ptr(p_ctx.Detach());
 			if (false == this->Ctx().Is_valid())
 				TBase::m_error = this->Ctx().Error();
 		}
 	}
 	return TBase::Error();
 }
-
-const
-CSwapChain& CDevice_HW::GetSwapChain (void) const { return this->m_chain; }
-CSwapChain& CDevice_HW::GetSwapChain (void)       { return this->m_chain; }
 
 uint32_t  CDevice_HW::Level (void) const { return this->m_level; }
 
@@ -303,11 +297,11 @@ err_code  CDevice_HW::SetSwapChain (void) {
 	if (this->Ctx().Is_valid())
 		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists) = _T("Context object is already created;");
 
-	if (this->GetSwapChain().Is_valid())
+	if (TBase::SwapChain().Is_valid())
 		return (TBase::m_error << (err_code)TErrCodes::eObject::eExists) = _T("Swap chain object is already created;");
 
-	if (false == this->GetSwapChain().Desc().Is_valid())
-		return (TBase::m_error = this->GetSwapChain().Desc().Error());
+	if (false == TBase::SwapChain().Desc().Is_valid())
+		return (TBase::m_error = TBase::SwapChain().Desc().Error());
 
 	CDev_Cfg   cfg;
 	TCtx0Ptr   p_base_ctx;
@@ -326,9 +320,9 @@ err_code  CDevice_HW::SetSwapChain (void) {
 		this->Ptr(p_base.Detach());
 
 		if (nullptr != p_chain)
-			this->GetSwapChain().Ptr(p_chain.Detach());
+			TBase::SwapChain().Ptr(p_chain.Detach());
 		if (nullptr != p_base_ctx)
-			this->Ctx().Set(p_base_ctx.Detach());
+			TBase::Ctx().Ptr(p_base_ctx.Detach());
 	}
 	return TBase::Error();
 }
@@ -356,7 +350,7 @@ err_code  CDevice_Ref::Create (void) {
 
 	TBase::m_error << ::D3D11CreateDeviceAndSwapChain(
 		nullptr, (D3D_DRIVER_TYPE)CDrv_Type::e_ref,
-		nullptr, 0, cfg.Levels().Ptr(), cfg.Levels().Count(), cfg.Version(), &desc, &p_chain, &p_base, &n_level, &p_ctx
+		nullptr, CDev_Flag::e_single, cfg.Levels().Ptr(), cfg.Levels().Count(), cfg.Version(), &desc, &p_chain, &p_base, &n_level, &p_ctx
 	);
 
 	if (false == TBase::Error()) {
@@ -365,7 +359,7 @@ err_code  CDevice_Ref::Create (void) {
 		if (nullptr != p_chain)
 			TBase::SwapChain().Ptr(p_chain.Detach());
 		if (nullptr != p_ctx)
-			TBase::Ctx().Set(p_ctx.Detach());
+			TBase::Ctx().Ptr(p_ctx.Detach());
 	}
 
 	return TBase::Error();

@@ -189,14 +189,14 @@ void CDevice::GetSwapChain (void) {
 	}
 	// (1) target window must be created first;
 	CFake_Wnd fake_wnd;
-	this->m_device.GetSwapChain().Desc().Fake();
-	this->m_device.GetSwapChain().Desc().ref().Flags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
-	this->m_device.GetSwapChain().Desc().Target(fake_wnd);
+	this->m_device.SwapChain().Desc().Fake();
+	this->m_device.SwapChain().Desc().ref().Flags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
+	this->m_device.SwapChain().Desc().Target(fake_wnd);
 	// (2) the swap chain is created finally;
 	this->m_device.SetSwapChain();
 	if (this->m_device.Is_valid()) {
 		_out() += this->m_device.Print();
-		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_device.GetSwapChain().Print(e_print::e_all));
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_device.SwapChain().Print(e_print::e_all));
 	}
 	else
 		_out() += this->m_device.Error().Print(TError::e_print::e_req);

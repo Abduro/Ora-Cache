@@ -171,7 +171,7 @@ CString      CResFormat::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _
 	CString cs_out ;
 	
 	if (0 == n_flags) {
-		cs_out = _T("0;#undef");
+		cs_out = _T("0;#unset");
 		return cs_out;
 	}
 	CString cs_temp;
@@ -182,7 +182,7 @@ CString      CResFormat::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _
 		cs_out += _p_pfx;
 		cs_out += cs_temp;
 	}
-	cs_temp = CRes_fmt().Mips (n_flags); if (cs_temp.IsEmpty() == false) {
+	cs_temp = CRes_fmt().Mips   (n_flags); if (cs_temp.IsEmpty() == false) {
 		if (cs_out.IsEmpty() == false) {
 			cs_out += _p_sfx;
 		}

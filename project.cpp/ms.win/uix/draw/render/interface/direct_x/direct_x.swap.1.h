@@ -5,6 +5,7 @@
 	This is Ebo Pack DirectX 11 swap chain wrapper interface declaration file;
 */
 #include "direct_x.swap.h"
+#include "direct_x.texture.h"
 
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 

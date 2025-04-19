@@ -84,9 +84,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 #endif
 		const
 		TCtx4Ptr& Ptr (void) const;
-		TCtx4Ptr& Ptr (void) ;            // ToDo: must be removed;
-
-		err_code  Set (const TCtx0Ptr&);  // tries to retrieve this context pointer from the pointer to base object;
+		err_code  Ptr (const TCtx0Ptr&);  // tries to retrieve this context pointer from the pointer to base object;
 
 		TCtxType  Type(void) const;       // just for test the context pointer works;
 
@@ -112,8 +110,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	public:
 		const
-		CContext& Ctx (void) const;
-		CContext& Ctx (void) ;
+		CContext& Ctx (void) const;   // gets a reference to immediate context of this device; (ra);
+		CContext& Ctx (void) ;        // gets a reference to immediate context of this device; (rw);
 		// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter ;
 		err_code  Get (CAdapter&);    // gets the adapter of this device, i.e. the object that implements IDXGIAdapter interface;
 		err_code  Get (CContext&);    // gets device context interface; useful for draw operations;
@@ -134,13 +132,14 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		CDevice& operator = (CDevice&&) = delete;
 
 	protected:
-		CContext   m_ctx  ;
+		CContext   m_ctx  ; // the immediate context which retrieved by create device function;
 		CError     m_error;
 		CSwapChain m_chain;
 		TDevicePtr m_p_dev;
 	};
 
 	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-limitations ;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11device1 ; shared res; blend; cmd list; dx11.1;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11device2 ; deferred context; dx11.2;
@@ -154,10 +153,6 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDevice_HW (void) = default;
 
 	public:
-		const
-		CContext& Ctx (void) const;   // gets a reference to immediate context of this device; (ra);
-		CContext& Ctx (void) ;        // gets a reference to immediate context of this device; (rw);
-		
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ; << some create rules are here;
 		err_code  Create(void);       // if no adapter pointer is used, the first adapter is applied from IDXGIFactory1::EnumAdapters();
 
@@ -165,9 +160,6 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 #if defined (_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
-		const
-		CSwapChain& GetSwapChain (void) const;
-		CSwapChain& GetSwapChain (void);
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdeviceandswapchain ;
 		err_code    SetSwapChain (void);
 
@@ -177,8 +169,6 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	private:
 		EFeatureLvl m_level  ;  // the feature level that is supported by this device;
-		CContext    m_imm_ctx;  // the immediate context which retrieved by create device function;
-		CSwapChain  m_chain  ;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-ref ;

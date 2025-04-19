@@ -77,5 +77,7 @@
     <ClCompile Include="$(_3)direct_x.swap.2.cpp" ><Filter>src\direct_x\swap</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.target.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.target.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.texture.h" ><Filter>interface\direct_x</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.texture.cpp" ><Filter>src\direct_x</Filter></ClCompile>
   </ItemGroup>
 </Project>
