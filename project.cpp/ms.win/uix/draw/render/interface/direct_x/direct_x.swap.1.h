@@ -61,6 +61,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getdesc ;
 
 	typedef ::ATL::CComPtr<IDXGISwapChain> TChainPtr;
+	// https://www.allacronyms.com/buffer/abbreviated ;
+	using TZBuffer  = ex_ui::draw::direct_x::_11::_2D::CTexture;
+	using TZBuffPtr = ex_ui::draw::direct_x::_11::_2D::TTexPtr ;
 
 	class CSwapChain {
 	public:
@@ -77,6 +80,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TError& Error (void) const;
 		bool  Is_valid(void) const;
 		bool  Is_full_screen (void) const;
+
+		err_code GetZBuffer(TZBuffer&); // https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getbuffer ;
 
 		const
 		TChainPtr&  Ptr (void) const;

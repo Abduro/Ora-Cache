@@ -89,6 +89,7 @@ CDevice:: CDevice (const bool _b_verb) : m_b_verb(_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
+#if (0) // no automatic creation because it does not allow to test different methods of creating this device;
 	if (false == this->m_device.Is_valid()) {
 		this->m_device.Create();
 		if (false == this->m_device.Is_valid()) {
@@ -97,6 +98,7 @@ CDevice:: CDevice (const bool _b_verb) : m_b_verb(_b_verb) {
 		else
 			_out() += this->m_device.Print(e_print::e_all);
 	}
+#endif
 	_out()();
 }
 CDevice::~CDevice (void) {
@@ -108,6 +110,54 @@ CDevice::~CDevice (void) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+void CDevice::Create (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	CFake_Wnd fk_wnd;
+	this->m_device.Cfg().Default(fk_wnd);
+
+	this->m_device.Create();
+	if (this->m_device.Error()) {
+		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		_out() += this->m_device.Print(e_print::e_all);
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->m_device.SwapChain().Desc().Print(e_print::e_all));
+	}
+	_out()();
+}
+
+void CDevice::CreateWithSwap(void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+#if (0) // it is not necessary, because device.CreateWithSwapChain() checks everything itself;
+	if (false == this->m_device.Is_valid()) {
+		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+#endif
+	// (1) target window must be created first;
+	CFake_Wnd fake_wnd;
+	this->m_device.SwapChain().Desc().Fake();
+	this->m_device.SwapChain().Desc().ref().Flags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
+	this->m_device.SwapChain().Desc().Target(fake_wnd);
+	// (2) the swap chain is created finally;
+	//this->m_device.CreateWithSwapChain();
+	if (this->m_device.Error())
+		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	else {
+		_out() += this->m_device.Print();
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_device.SwapChain().Print(e_print::e_all));
+	}
+	_out()();
+}
 
 void CDevice::GetAdapter (void) {
 	if (this->m_b_verb) {
@@ -133,7 +183,7 @@ void CDevice::GetAdapter (void) {
 	_out()();
 }
 
-void CDevice::GetContext() {
+void CDevice::GetContext (void) {
 	if (false == this->m_device.Is_valid()) {
 		_out() += this->m_device.Error().Print(TError::e_print::e_req);
 		_out()();
@@ -151,7 +201,7 @@ void CDevice::GetContext() {
 	_out()();
 }
 
-void CDevice::GetFeature(void) {
+void CDevice::GetFeature (void) {
 	if (false == this->m_device.Is_valid()) {
 		_out() += this->m_device.Error().Print(TError::e_print::e_req);
 		_out()();
@@ -177,7 +227,7 @@ void CDevice::GetFeature(void) {
 	_out()();
 }
 
-void CDevice::GetSwapChain (void) {
+void CDevice::GetTexture (void) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -187,32 +237,38 @@ void CDevice::GetSwapChain (void) {
 		_out()();
 		return;
 	}
-	// (1) target window must be created first;
-	CFake_Wnd fake_wnd;
-	this->m_device.SwapChain().Desc().Fake();
-	this->m_device.SwapChain().Desc().ref().Flags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
-	this->m_device.SwapChain().Desc().Target(fake_wnd);
-	// (2) the swap chain is created finally;
-	this->m_device.SetSwapChain();
-	if (this->m_device.Is_valid()) {
-		_out() += this->m_device.Print();
-		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_device.SwapChain().Print(e_print::e_all));
-	}
-	else
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
 
+	TTex_2D tex_2d; tex_2d.Desc().Fake();
+	this->m_device.Get(tex_2d);
+
+	if (this->m_device.Error())
+		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	else {
+		const TDescRaw& raw_ = tex_2d.Desc().Raw();
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) tex_2d.Print(e_print::e_all));
+		_out() += TStringEx().Format(_T("*result*:tex_desc>>{%s}"), (_pc_sz) TDesc_2D::Print(raw_));
+	}
 	_out()();
 }
+
+const
+TDevice_HW& CDevice::Ref (void) const { return this->m_device; }
+TDevice_HW& CDevice::Ref (void)       { return this->m_device; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CDevice_Ref::Create (void) {
 	CFake_Wnd fk_wnd;
+#if (0)
 	this->m_dev_ref.Default(fk_wnd);
+#else
+	this->m_dev_ref.Cfg().Default(fk_wnd);
+#endif
 	this->m_dev_ref.Create();
 	if (this->m_dev_ref.Error())
 		_out() += this->m_dev_ref.Error().Print(TError::e_print::e_req);
 	else {
+		_out() += this->m_dev_ref.Print(e_print::e_all);
 		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->m_dev_ref.SwapChain().Desc().Print(e_print::e_all));
 	}
 	_out()();
@@ -238,9 +294,9 @@ void CFac_2::Create (void) {
 	this->m_fac_2.Create();
 	// checking the error state is preferable, because it more reliable, especially, in case when factory object is created before;
 	if (this->m_fac_2.Error())
-		_out() += this->m_fac_2.Print(e_print::e_all);
-	else
 		_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s)"), (_pc_sz)this->m_fac_2.Print(e_print::e_all));
 
 	_out()();
 }
@@ -279,6 +335,51 @@ void CFac_2::GetSwapChain (void) {
 		_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
 	else
 		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz)chain.Print(e_print::e_all));
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSwapChain:: CSwapChain (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb){
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CSwapChain::Create(void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	CDevice device;
+	device.CreateWithSwap();
+	if (device.Ref().Error()) {
+		return;
+	}
+
+	this->m_swp_chain.Ptr(device.Ref().SwapChain().Ptr());
+	if (this->m_swp_chain.Error()) {
+		_out() += this->m_swp_chain.Print(e_print::e_all);
+	}
+	else {
+		TZBuffer z_buffer;
+		this->m_swp_chain.GetZBuffer(z_buffer);
+		if (this->m_swp_chain.Error()) {
+			_out() += this->m_swp_chain.Error().Print(TError::e_print::e_req);
+		}
+		else if (false == z_buffer.Is_valid()) {
+			_out() += z_buffer.Error().Print(TError::e_print::e_req);
+		}
+		else {
+			_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz)z_buffer.Print(e_print::e_all));
+		}
+	}
+
 	_out()();
 }
 

@@ -336,7 +336,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 using namespace ex_ui::draw::direct_x::_impl;
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString      CMiscFlags::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+CString CMiscFlags::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_n_flags, _p_pfx; _p_sfx;
 	uint32_t n_flags = _n_flags;
 	CString cs_out ;
@@ -402,7 +402,7 @@ CString      CMiscFlags::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString    CTexUsage::Print (const uint32_t _n_usage) {
+CString  CTexUsage::Print (const uint32_t _n_usage) {
 	_n_usage;
 	CString cs_out;
 	switch (_n_usage) {
@@ -417,8 +417,26 @@ CString    CTexUsage::Print (const uint32_t _n_usage) {
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
+
+CTexDesc:: CTexDesc (void) : m_desc{0} {}
+
+/////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString    CTexDesc::Print (const TTexDesc& _raw) {
+void CTexDesc::Fake (void) {
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-resources-textures-create ;
+	TTexDesc& desc = this->Raw();
+	desc.Width     = 256;
+	desc.Height    = 256;
+	desc.MipLevels = desc.ArraySize = 1;
+	desc.Format    = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage     = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = 0;
+}
+
+CString CTexDesc::Print (const TTexDesc& _raw) {
 	_raw;
 	/*
 	size = {u_width;u_height};    :: texture size in pixels;
@@ -430,15 +448,15 @@ CString    CTexDesc::Print (const TTexDesc& _raw) {
 	UINT CPUAccessFlags;          :: CCpu_Access();
 	UINT MiscFlags;               :: CMiscFlags() ;
 	*/
-	static _pc_sz pc_sz_pat = _T("size:{%s};array:{%s};fmt=%s;smp=%s;use=%s;bind=%s;acc=%s;misc=%s");
+	static _pc_sz pc_sz_pat = _T("size:{%s};array:{%s};fmt=%s;smp=%s;use=%s;bind=%s;acc=%s;misc={%s}");
 
 	CString cs_acc   = CCpu_Access::Print(_raw.CPUAccessFlags); 
 	CString cs_array = CTex_Array(_raw.MipLevels, _raw.ArraySize);
-	CString cs_bind  = CBind::Print(_raw.BindFlags);
+	CString cs_bind  = CBind::Print(_raw.BindFlags, _T(""), _T(""));
 	CString cs_clr   = CClrBits().Print(_raw.Format);
 	CString cs_misc  = CMiscFlags().Print(_raw.MiscFlags);
 	CString cs_smp   = CSample::Print(_raw.SampleDesc);
-	CString cs_size  = TStringEx().Format(_T("w=%d;h=%d"), pc_sz_pat, _raw.Width);
+	CString cs_size  = TStringEx().Format(_T("w=%dpx;h=%dpx"), _raw.Width, _raw.Height);
 	CString cs_use   = CTexUsage::Print(_raw.Usage);
 
 	CString cs_out;
@@ -447,7 +465,12 @@ CString    CTexDesc::Print (const TTexDesc& _raw) {
 	         (_pc_sz)cs_bind, (_pc_sz)cs_acc  , (_pc_sz)cs_misc);
 	return  cs_out;
 }
+
 #endif
+const
+TTexDesc& CTexDesc::Raw (void) const { return this->m_desc; }
+TTexDesc& CTexDesc::Raw (void)       { return this->m_desc; }
+
 /////////////////////////////////////////////////////////////////////////////
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 #if defined(_DEBUG)
@@ -516,17 +539,21 @@ CString CBind::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) {
 CTexture:: CTexture (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 /////////////////////////////////////////////////////////////////////////////
+const
+CTexDesc&  CTexture::Desc (void) const { return this->m_desc; }
+CTexDesc&  CTexture::Desc (void)       { return this->m_desc; }
 
 TError&    CTexture::Error (void) const { return this->m_error; }
 bool       CTexture::Is_valid (void) const { return nullptr != this->Ptr(); }
 
 #if defined(_DEBUG)
-CString    CTexture::Print (const e_print _e_opt) const {
-	_e_opt;
+CString    CTexture::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{valid=%s}");
 
+//	CString cs_desc  = this->Desc().Print();
 	CString cs_valid = TStringEx().Bool(this->Is_valid());
 
 	CString cs_out;
@@ -557,6 +584,7 @@ err_code   CTexture::Ptr (const TTexPtr& _p_tex) {
 		return this->m_error << __e_pointer;
 
 	this->m_p_tex = _p_tex;
+	this->Ptr()->GetDesc(&this->Desc().Raw());
 
 	return this->Error();
 }

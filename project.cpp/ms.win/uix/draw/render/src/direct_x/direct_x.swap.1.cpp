@@ -195,6 +195,28 @@ bool CSwapChain::Is_full_screen (void) const {
 	return !!b_full_screen;
 }
 
+err_code     CSwapChain::GetZBuffer(TZBuffer& _z_buf) {
+	_z_buf;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (_z_buf.Is_valid())
+		return (this->m_error << __e_inv_arg) = _T("Input buffer is valid;");
+
+	if (false == this->Is_valid())
+	return this->m_error << __e_not_inited;
+
+	TZBuffPtr p_buffer;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getbuffer ;
+	this->m_error << this->Ptr()->GetBuffer(0, __uuidof(TZBuffPtr), (void**)&p_buffer);
+	if (false == this->Error()) {
+		if (__failed(_z_buf.Ptr(p_buffer.Detach())))
+			this->m_error = _z_buf.Error();
+	}
+
+	return this->Error();
+}
+
 const
 TChainPtr&   CSwapChain::Ptr (void) const { return this->m_p_chain; }
 err_code     CSwapChain::Ptr (const TChainPtr& _p_chain) {

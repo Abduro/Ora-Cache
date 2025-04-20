@@ -12,10 +12,11 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	using namespace ebo::boo::test::draw;
 	using namespace ebo::boo::test::_impl::_11;
 
-	using TClrBits = ex_ui::draw::direct_x::TClrBits;
-	using TAdapter = ex_ui::draw::direct_x::_11::CAdapter;
-	using TOutput  = ex_ui::draw::direct_x::_11::COutput;
-	using TOutputs = ex_ui::draw::direct_x::_11::TOutputs;
+	using TClrBits  = ex_ui::draw::direct_x::TClrBits;
+	using TAdapter  = ex_ui::draw::direct_x::_11::CAdapter;
+	using TAda_Warp = TAdapter;
+	using TOutput   = ex_ui::draw::direct_x::_11::COutput;
+	using TOutputs  = ex_ui::draw::direct_x::_11::TOutputs;
 
 	__class(CAdapter) {
 	public:
@@ -51,12 +52,16 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3dgetstarted/work-with-dxgi ;
 
 	// it looks like any typedef element name is suffexed by '_t', for example, wchar_t; https://en.wikipedia.org/wiki/Typedef ;
-	using TAda_Warp  = ex_ui::draw::direct_x::_11::CAdapter;
+	
 	using TContext   = ex_ui::draw::direct_x::_11::CContext;
 	using TDescWrap  = ex_ui::draw::direct_x::_11::CDesc_Wrap;
 	using TDevice_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
 	using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
 	using TSwapDesc  = ex_ui::draw::direct_x::_11::TSwapDesc;
+
+	using TDescRaw   = ex_ui::draw::direct_x::_11::_2D::TTexDesc;
+	using TDesc_2D   = ex_ui::draw::direct_x::_11::_2D::CTexDesc;
+	using TTex_2D    = ex_ui::draw::direct_x::_11::_2D::CTexture;
 
 	using TFeature        = ex_ui::draw::direct_x::_11::CFeature;
 	using TFeature_Thread = ex_ui::draw::direct_x::_11::CFeature_Thread;
@@ -68,10 +73,17 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 		~CDevice (void);
 
 	public:
+		__method (Create);
+		__method (CreateWithSwap);
+
 		__method (GetAdapter);
 		__method (GetContext);
 		__method (GetFeature);
-		__method (GetSwapChain);
+		__method (GetTexture);
+
+		const
+		TDevice_HW& Ref (void) const;
+		TDevice_HW& Ref (void);
 
 	private:
 		TDevice_HW  m_device;
@@ -101,6 +113,22 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	private:
 		bool m_b_verb;
 		TFac_2 m_fac_2;
+	};
+
+	using TZBuffer  = ex_ui::draw::direct_x::_11::_2D::CTexture;
+	using TZBuffPtr = ex_ui::draw::direct_x::_11::_2D::TTexPtr ;
+
+	__class(CSwapChain) {
+	public:
+		 CSwapChain (const bool _b_verb = false);
+		~CSwapChain (void) = default;
+
+	public:
+		__method (Create); // it is created by the CDevice_HW; (1) the device is created itself; (2) it creates this swap chain;
+
+	private:
+		bool       m_b_verb;
+		TSwapChain m_swp_chain;
 	};
 
 	using TTarget = ex_ui::draw::direct_x::_11::CTarget;

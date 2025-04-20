@@ -126,14 +126,22 @@ namespace _11 { namespace _2D {
 
 	class CTexDesc {
 	public:
-		 CTexDesc (void) = default; CTexDesc (const CTexDesc&) = delete;  CTexDesc (CTexDesc&&) = delete;
+		 CTexDesc (void) ; CTexDesc (const CTexDesc&) = delete;  CTexDesc (CTexDesc&&) = delete;
 		~CTexDesc (void) = default;
 
 	public:
 #if defined (_DEBUG)
+		void  Fake (void) ;   // fills this structure with fake data for testing texture creation by a device;
 		static
 		CString   Print (const TTexDesc& _raw);
+	//	CString   Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _p_sz _p_sfx = _T("\n")) const;
 #endif
+		const
+		TTexDesc& Raw (void) const;
+		TTexDesc& Raw (void) ;
+	private:
+		TTexDesc  m_desc;
+
 	private:
 		CTexDesc& operator = (const CTexDesc&) = delete;
 		CTexDesc& operator = (CTexDesc&&) = delete;
@@ -149,10 +157,14 @@ namespace _11 { namespace _2D {
 		~CTexture (void) = default;
 
 	public:
+		const
+		CTexDesc& Desc (void) const;
+		CTexDesc& Desc (void) ;
+
 		TError&  Error (void) const;
 		bool  Is_valid (void) const;
 #if defined (_DEBUG)
-		CString  Print (const e_print = e_print::e_all) const;
+		CString  Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 		const
 		TTexPtr&  Ptr (void) const;
@@ -161,6 +173,7 @@ namespace _11 { namespace _2D {
 	private:
 		CError    m_error;
 		TTexPtr   m_p_tex;
+		CTexDesc  m_desc ;
 
 	private:
 		CTexture& operator = (const CTexture&) = delete;
