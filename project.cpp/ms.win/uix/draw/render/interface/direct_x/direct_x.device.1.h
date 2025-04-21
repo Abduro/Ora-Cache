@@ -11,31 +11,6 @@
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	using namespace ex_ui::draw::direct_x;
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_create_device_flag ;
-	typedef D3D11_CREATE_DEVICE_FLAG EDevFlag;
-
-	class CDev_Flag {
-#define D3D11_CREATE_DEVICE_NO_OPTIMIZE  D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS
-#define D3D11_CREATE_DEVICE_NO_REGISTRY  D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY
-#define D3D11_CREATE_DEVICE_NO_TIMEOUT   D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT
-	public:
-		enum e_flag : uint32_t {
-		     e__undef  = 0x0,
-		     e_bgra    = EDevFlag::D3D11_CREATE_DEVICE_BGRA_SUPPORT  , // creates a device that supports BGRA formats;
-		     e_debug   = EDevFlag::D3D11_CREATE_DEVICE_DEBUG         , // creates a device that supports the debug layer; D3D11*SDKLayers.dll is required;
-		     e_ref     = EDevFlag::D3D11_CREATE_DEVICE_SWITCH_TO_REF , // not supported in DX11;
-		     e_shader  = EDevFlag::D3D11_CREATE_DEVICE_DEBUGGABLE    , // for shader debugging; D3D11_1SDKLayers.dll is required;
-		     e_single  = EDevFlag::D3D11_CREATE_DEVICE_SINGLETHREADED, // for improving the performance, but if interfaces are called from multiple threads, undefined behavior might result;
-		     e_warp    = EDevFlag::D3D11_CREATE_DEVICE_NO_OPTIMIZE   , // creates warp-device;
-		     e_no_dbg  = EDevFlag::D3D11_CREATE_DEVICE_NO_REGISTRY   , // D3D runtime ignores registry settings that turn on the debug layer;
-		     e_no_time = EDevFlag::D3D11_CREATE_DEVICE_NO_TIMEOUT    , // for GPU workloads that take more than two seconds;
-		     e_wddm    = EDevFlag::D3D11_CREATE_DEVICE_VIDEO_SUPPORT , // leads to fail if the display driver is not implemented by WDDM driver;
-		};
-	private:
-		CDev_Flag (void) = delete; CDev_Flag (const CDev_Flag&) = delete; CDev_Flag (CDev_Flag&&) = delete; ~CDev_Flag (void) = delete;
-		CDev_Flag& operator = (const CDev_Flag&) = delete;
-		CDev_Flag& operator = (CDev_Flag&&) = delete;
-	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11devicecontext      ; << draw and views;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11devicecontext1 ; << shader buffers;
@@ -51,6 +26,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
 
 	typedef D3D11_DEVICE_CONTEXT_TYPE TCtxType;
+
 	class CCtx_Type {
 	public:
 		enum e_value : uint32_t {
@@ -139,14 +115,29 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		const
 		CLevels&  Levels (void) const;
 		uint32_t  Version(void) const;
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
+		TDrvType  Type (void) const;
+		bool      Type (const TDrvType);  // returns true in case of type value change;
 
 	private:
 		CLevels   m_def_set;
 		TSwapDesc m_desc;     // this data is required for creating a device by ::D3D11CreateDeviceAndSwapChain();
+		TDrvType  m_type;
 	private:
 		CDev_Cfg&  operator = (const CDev_Cfg&) = delete;
 		CDev_Cfg&  operator = (CDev_Cfg&&) = delete;
 	};
+
+	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-limitations ;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11device1 ; shared res; blend; cmd list; dx11.1;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11device2 ; deferred context; dx11.2;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11device3 ; view and texture;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device4 ; removed event;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device5 ; to manage fence;
 
 	class CDevice {
 	public:
@@ -157,6 +148,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		const
 		CDev_Cfg& Cfg (void) const;   // it is used for creating a device; in debug mode Cfg().Default() is enough in most cases;
 		CDev_Cfg& Cfg (void);         // provides a reference to the config object for setting required options of creating this device;
+
+		err_code  Create (const CDrv_Type::e_type, const bool _b_swap = true);
 
 		const
 		CContext& Ctx (void) const;   // gets a reference to immediate context of this device; (ra);
@@ -170,7 +163,12 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
-	
+
+		uint32_t  Level (void) const; // gets level of functionality that is supported by this device;
+
+#if defined (_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
 		const
 		TDevicePtr& Ptr (void) const;
 		err_code    Ptr (const TDevicePtr&) ;
@@ -183,21 +181,13 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		CDevice& operator = (CDevice&&) = delete;
 
 	protected:
-		CDev_Cfg   m_cfg  ;
-		CContext   m_ctx  ; // the immediate context which retrieved by create device function;
-		CError     m_error;
-		CSwapChain m_chain; // it is created by D3D11CreateDeviceAndSwapChain;
-		TDevicePtr m_p_dev;
+		CDev_Cfg    m_cfg  ;
+		CContext    m_ctx  ; // the immediate context which retrieved by create device function;
+		CError      m_error;
+		CSwapChain  m_chain; // it is created by D3D11CreateDeviceAndSwapChain;
+		TDevicePtr  m_p_dev;
+		EFeatureLvl m_level; // the feature level that is supported by this device;
 	};
-
-	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
-	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-limitations ;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11device1 ; shared res; blend; cmd list; dx11.1;
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11device2 ; deferred context; dx11.2;
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11device3 ; view and texture;
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device4 ; removed event;
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device5 ; to manage fence;
 
 	class CDevice_HW : public CDevice { typedef CDevice TBase;
 	public:
@@ -208,23 +198,12 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 		err_code Create (const bool _b_with_swap = false);
 
-		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice ; << some create rules are here;
-		//err_code  Create(void);       // if no adapter pointer is used, the first adapter is applied from IDXGIFactory1::EnumAdapters();
-		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdeviceandswapchain ;
-		// this is the method of creating a device by D3D11CreateDeviceAndSwapChain(); does not create swap chain;
-		//err_code  CreateWithSwapChain (void);
-#if defined (_DEBUG)
-#endif
-		uint32_t  Level (void) const; // gets level of functionality that is supported by this device;
 #if defined (_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
 	public:
 		CDevice_HW& operator = (const CDevice_HW&) = delete;
 		CDevice_HW& operator = (CDevice_HW&&) = delete;
-
-	private:
-		EFeatureLvl m_level  ;  // the feature level that is supported by this device;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-ref ;
@@ -234,9 +213,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDevice_Ref (void) = default;
 
 	public:
-		err_code  Create (void) ; // created by 
+		err_code  Create (const bool _b_with_swap = false);
 #if defined (_DEBUG)
-		void      Default(const HWND _output = HWND_DESKTOP) ; // sets default values for the swap chain desc structure;
 		CString   Print (const e_print =  e_print::e_all) const;
 #endif
 	private:

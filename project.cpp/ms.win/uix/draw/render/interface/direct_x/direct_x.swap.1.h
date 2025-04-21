@@ -29,6 +29,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TSwapDesc&  ref (void) const;
 		TSwapDesc&  ref (void)      ;  // when changing data of this desc struct sets this way the error object is not updated;
 #if defined(_DEBUG)
+		static
+		CString     Print (const TSwapDesc&, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n"));
 		CString     Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 		err_code    Set (const TSwapDesc&); // preferable way to update desc data structure; target window handle is checked;

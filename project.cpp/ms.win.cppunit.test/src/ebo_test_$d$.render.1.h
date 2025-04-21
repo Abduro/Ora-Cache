@@ -55,7 +55,9 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	
 	using TContext   = ex_ui::draw::direct_x::_11::CContext;
 	using TDescWrap  = ex_ui::draw::direct_x::_11::CDesc_Wrap;
-	using TDevice_HW = ex_ui::draw::direct_x::_11::CDevice_HW;
+	using TDevice    = ex_ui::draw::direct_x::_11::CDevice;
+	using TDevCfg    = ex_ui::draw::direct_x::_11::CDev_Cfg;
+
 	using TSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
 	using TSwapDesc  = ex_ui::draw::direct_x::_11::TSwapDesc;
 
@@ -67,34 +69,70 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	using TFeature_Thread = ex_ui::draw::direct_x::_11::CFeature_Thread;
 	using TFeature_Format = ex_ui::draw::direct_x::_11::CFeature_Format;
 
-	__class(CDevice) {
+	__class(CDevice) { // the bace device class unit tests;
 	public:
 		 CDevice (const bool _b_verb = false); // *attention*: the constructor may be called twice by MSTest framework;
 		~CDevice (void);
 
 	public:
-		__method (Create);
-		__method (CreateWithSwap);
-
-		__method (GetAdapter);
-		__method (GetContext);
-		__method (GetFeature);
-		__method (GetTexture);
+		__method (Create);      // by default it creates ref-device with swap&chain object; it is required for testing other methods of this class;
+#pragma region _gets-obj-by-ref-dev-&-swap&chain
+		__method (GetAdapter_ref);
+		__method (GetContext_ref);
+		__method (GetFeature_ref);  
+		__method (GetTexture_ref);
+#pragma endregion
+#pragma region _gets-obj-by-ref-dev-no-swap&chain
+		__method (GetAdapter_no_swap);
+		__method (GetContext_no_swap);
+		__method (GetFeature_no_swap);
+		__method (GetTexture_no_swap);
+#pragma endregion
+#pragma region _gets-obj-by-hard-dev-no-swap&chain
+		__method (GetAdapter_hw);
+		__method (GetContext_hw);
+		__method (GetFeature_hw);  
+		__method (GetTexture_hw);
+#pragma endregion
+		
+		const
+		TDevCfg& Cfg (void) const;
+		TDevCfg& Cfg (void);
 
 		const
-		TDevice_HW& Ref (void) const;
-		TDevice_HW& Ref (void);
+		TDevice& Ref (void) const;
+		TDevice& Ref (void);
+
+		err_code Create(const TDrv_type, const bool _b_swap); // this is the base device class create wrapper;
 
 	private:
-		TDevice_HW  m_device;
+		TDevice  m_device;
 		bool m_b_verb;
 	};
 
+	using TDevice_HW  = ex_ui::draw::direct_x::_11::CDevice_HW;
 	using TDevice_ref = ex_ui::draw::direct_x::_11::CDevice_Ref;
+
+	__class(CDevice_HW) {
+	public:
+		__method(Create); // creates a hardware device with swap&chain object;
+
+		const
+		TDevice_HW& Ref (void) const;
+		TDevice_HW& Ref (void) ;
+
+	private:
+		TDevice_HW m_dev_hw;
+	};
 
 	__class(CDevice_Ref) {
 	public:
-		__method(Create);
+		__method(Create); // creates a reference device with swap&chain object;
+
+		const
+		TDevice_ref& Ref (void) const;
+		TDevice_ref& Ref (void) ;
+
 	private:
 		TDevice_ref m_dev_ref;
 	};
@@ -124,8 +162,9 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 		~CSwapChain (void) = default;
 
 	public:
+	#if (0)
 		__method (Create); // it is created by the CDevice_HW; (1) the device is created itself; (2) it creates this swap chain;
-
+	#endif
 	private:
 		bool       m_b_verb;
 		TSwapChain m_swp_chain;

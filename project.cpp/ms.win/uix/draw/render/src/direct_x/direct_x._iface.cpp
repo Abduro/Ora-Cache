@@ -27,7 +27,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 			DXGI_MODE_SCANLINE_ORDER ScanlineOrdering; https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173067(v=vs.85) ;
 			DXGI_MODE_SCALING Scaling; https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173066(v=vs.85) ;
 		*/
-			static _pc_sz pc_sz_pat = _T("w=%d;h=%d;rate=%d;fmt=%s;scan=%s;scale=%s");
+			static _pc_sz pc_sz_pat = _T("w=%dpx;h=%dpx;rate=%d;fmt=%s;scan=%s;scale=%s");
 
 			CString cs_fmt   = CClrBits().Print(_mode.Format);
 			CString cs_order = this->_order_to_str(_mode.ScanlineOrdering);
@@ -45,7 +45,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 			switch (_n_order) {
 			case DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_LOWER_FIELD_FIRST: cs_out = _T("low_first"); break;
 			case DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE:       cs_out = _T("progress"); break;
-			case DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED:       cs_out = _T("unsepc"); break;
+			case DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED:       cs_out = _T("unspec"); break;
 			case DXGI_MODE_SCANLINE_ORDER::DXGI_MODE_SCANLINE_ORDER_UPPER_FIELD_FIRST: cs_out = _T("up_first"); break;
 			default:
 				cs_out = _T("#unknown");
@@ -57,7 +57,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 			switch (_n_scale) {
 			case DXGI_MODE_SCALING::DXGI_MODE_SCALING_CENTERED   : cs_out = _T("center"); break;
 			case DXGI_MODE_SCALING::DXGI_MODE_SCALING_STRETCHED  : cs_out = _T("stretch"); break;
-			case DXGI_MODE_SCALING::DXGI_MODE_SCALING_UNSPECIFIED: cs_out = _T("unsepc"); break;
+			case DXGI_MODE_SCALING::DXGI_MODE_SCALING_UNSPECIFIED: cs_out = _T("unspec"); break;
 			default:
 				cs_out = _T("#unknown");
 			}

@@ -84,6 +84,31 @@ void CAdapter_enum::Set (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ebo { namespace boo { namespace test { namespace draw { namespace _impl {
+
+	class CDevTest_Runner { // not is used yet;
+	public:
+		 CDevTest_Runner (void) { this->m_error >> __CLASS__ << __METHOD__ << __s_ok; }
+		 CDevTest_Runner (const CDevTest_Runner&) = delete; CDevTest_Runner(CDevTest_Runner&&) = delete;
+		~CDevTest_Runner (void) = default;
+
+	public:
+		TError& Error (void) const { return this->m_error; }
+
+		err_code GetAdapter (const TDevice& _dev) {
+			_dev;
+			this->m_error << __METHOD__ << __s_ok;
+			return this->Error();
+		}
+
+	private:
+		CError  m_error;
+	};
+
+}}}}}
+using namespace ebo::boo::test::draw::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
 CDevice:: CDevice (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
@@ -112,67 +137,28 @@ CDevice::~CDevice (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 void CDevice::Create (void) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
-		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	}
-
-	CFake_Wnd fk_wnd;
-	this->m_device.Cfg().Default(fk_wnd);
-
-	this->m_device.Create();
-	if (this->m_device.Error()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
-	}
-	else {
-		_out() += this->m_device.Print(e_print::e_all);
-		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->m_device.SwapChain().Desc().Print(e_print::e_all));
-	}
-	_out()();
+	this->Create(TDrv_type::e_ref, true);
 }
 
-void CDevice::CreateWithSwap(void) {
+void CDevice::GetAdapter_ref (void) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
-#if (0) // it is not necessary, because device.CreateWithSwapChain() checks everything itself;
-	if (false == this->m_device.Is_valid()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+#if (0)
+	if (false == this->Ref().Is_valid()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
 	}
+#else
+	this->Create();
 #endif
-	// (1) target window must be created first;
-	CFake_Wnd fake_wnd;
-	this->m_device.SwapChain().Desc().Fake();
-	this->m_device.SwapChain().Desc().ref().Flags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
-	this->m_device.SwapChain().Desc().Target(fake_wnd);
-	// (2) the swap chain is created finally;
-	//this->m_device.CreateWithSwapChain();
-	if (this->m_device.Error())
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
-	else {
-		_out() += this->m_device.Print();
-		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_device.SwapChain().Print(e_print::e_all));
-	}
-	_out()();
-}
-
-void CDevice::GetAdapter (void) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
-		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	}
-	if (false == this->m_device.Is_valid()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
-		_out()();
-		return;
-	}
 	TAda_Warp adapter;
-	this->m_device.Get(adapter);
-	if (this->m_device.Error()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	this->Ref().Get(adapter);
+
+	if (this->Ref().Error()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 	}
 	else if (__failed(adapter.UpdateInfo())) {
 		_out() += adapter.Error().Print(TError::e_print::e_req);
@@ -183,17 +169,21 @@ void CDevice::GetAdapter (void) {
 	_out()();
 }
 
-void CDevice::GetContext (void) {
-	if (false == this->m_device.Is_valid()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+void CDevice::GetContext_ref (void) {
+#if (0)
+	if (false == this->Ref().Is_valid()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
 	}
+#else
+	this->Create();
+#endif
 
 	TContext ctx;
-	this->m_device.Get(ctx);
-	if (this->m_device.Error())
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	this->Ref().Get(ctx);
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 	else if (false == ctx.Is_valid())
 		_out() += ctx.Error().Print(TError::e_print::e_req);
 	else
@@ -201,48 +191,56 @@ void CDevice::GetContext (void) {
 	_out()();
 }
 
-void CDevice::GetFeature (void) {
-	if (false == this->m_device.Is_valid()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+void CDevice::GetFeature_ref (void) {
+#if (0)
+	if (false == this->Ref().Is_valid()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
 	}
+#else
+	this->Create();
+#endif
 
 	TFeature_Thread feature_0;
-	this->m_device.Get(feature_0);
+	this->Ref().Get(feature_0);
 
-	if (this->m_device.Error())
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 	else
 		_out() += feature_0.Print();
 
 	TFeature_Format feature_1; feature_1.Ref().InFormat = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM;
-	this->m_device.Get(feature_1);
+	this->Ref().Get(feature_1);
 
 	if (this->m_device.Error())
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 	else
-		_out() += feature_1.Print();
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz) feature_1.Print());
 
 	_out()();
 }
 
-void CDevice::GetTexture (void) {
+void CDevice::GetTexture_ref (void) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
-	if (false == this->m_device.Is_valid()) {
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+#if (0)
+	if (false == this->Ref().Is_valid()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 		_out()();
 		return;
 	}
+#else
+	this->Create();
+#endif
 
 	TTex_2D tex_2d; tex_2d.Desc().Fake();
-	this->m_device.Get(tex_2d);
+	this->Ref().Get(tex_2d);
 
-	if (this->m_device.Error())
-		_out() += this->m_device.Error().Print(TError::e_print::e_req);
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 	else {
 		const TDescRaw& raw_ = tex_2d.Desc().Raw();
 		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) tex_2d.Print(e_print::e_all));
@@ -251,28 +249,232 @@ void CDevice::GetTexture (void) {
 	_out()();
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
+void CDevice::GetAdapter_no_swap (void) {
+
+	this->Create(TDrv_type::e_ref, false);
+
+	TAda_Warp adapter;
+
+	this->Ref().Get(adapter);
+
+	if (this->Ref().Error()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	}
+	else if (__failed(adapter.UpdateInfo())) {
+		_out() += adapter.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) adapter.Print(e_print::e_all));
+	}
+	_out()();
+
+}
+void CDevice::GetContext_no_swap (void) {
+
+	this->Create(TDrv_type::e_ref, false);
+
+	TContext ctx;
+	this->Ref().Get(ctx);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else if (false == ctx.Is_valid())
+		_out() += ctx.Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) ctx.Print());
+	_out()();
+}
+void CDevice::GetFeature_no_swap (void) {
+
+	this->Create(TDrv_type::e_ref, false);
+
+	TFeature_Thread feature_0;
+	this->Ref().Get(feature_0);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else
+		_out() += feature_0.Print();
+
+	TFeature_Format feature_1; feature_1.Ref().InFormat = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM;
+	this->Ref().Get(feature_1);
+
+	if (this->m_device.Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz) feature_1.Print());
+
+	_out()();
+}
+void CDevice::GetTexture_no_swap (void) {
+
+	this->Create(TDrv_type::e_ref, false);
+
+	TTex_2D tex_2d; tex_2d.Desc().Fake();
+	this->Ref().Get(tex_2d);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else {
+		const TDescRaw& raw_ = tex_2d.Desc().Raw();
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) tex_2d.Print(e_print::e_all));
+		_out() += TStringEx().Format(_T("*result*:tex_desc>>{%s}"), (_pc_sz) TDesc_2D::Print(raw_));
+	}
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDevice::GetAdapter_hw (void) {
+
+	this->Create(TDrv_type::e_hard, false);
+
+	TAda_Warp adapter;
+
+	this->Ref().Get(adapter);
+
+	if (this->Ref().Error()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	}
+	else if (__failed(adapter.UpdateInfo())) {
+		_out() += adapter.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) adapter.Print(e_print::e_all));
+	}
+	_out()();
+}
+
+void CDevice::GetContext_hw (void) {
+
+	this->Create(TDrv_type::e_hard, false);
+
+	TContext ctx;
+	this->Ref().Get(ctx);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else if (false == ctx.Is_valid())
+		_out() += ctx.Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) ctx.Print());
+	_out()();
+}
+
+void CDevice::GetFeature_hw (void) {
+
+	this->Create(TDrv_type::e_hard, false);
+
+	TFeature_Thread feature_0;
+	this->Ref().Get(feature_0);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else
+		_out() += feature_0.Print();
+
+	TFeature_Format feature_1; feature_1.Ref().InFormat = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM;
+	this->Ref().Get(feature_1);
+
+	if (this->m_device.Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz) feature_1.Print());
+
+	_out()();
+}
+
+void CDevice::GetTexture_hw (void) {
+
+	this->Create(TDrv_type::e_hard, false);
+
+	TTex_2D tex_2d; tex_2d.Desc().Fake();
+	this->Ref().Get(tex_2d);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else {
+		const TDescRaw& raw_ = tex_2d.Desc().Raw();
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) tex_2d.Print(e_print::e_all));
+		_out() += TStringEx().Format(_T("*result*:tex_desc>>{%s}"), (_pc_sz) TDesc_2D::Print(raw_));
+	}
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
 const
-TDevice_HW& CDevice::Ref (void) const { return this->m_device; }
-TDevice_HW& CDevice::Ref (void)       { return this->m_device; }
+TDevCfg& CDevice::Cfg (void) const { return this->Ref().Cfg(); }
+TDevCfg& CDevice::Cfg (void)       { return this->Ref().Cfg(); }
+
+err_code CDevice::Create (const TDrv_type _drv_type, const bool _b_swap) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	CFake_Wnd fk_wnd;
+	this->Ref().Cfg().Default(fk_wnd);
+
+	err_code n_result = this->Ref().Create(_drv_type, _b_swap);
+	if (this->Ref().Error()) {
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	}
+	else {
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->Ref().Print());
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->Ref().SwapChain().Desc().Print(e_print::e_all));
+	}
+
+	_out()();
+	return n_result;
+}
+
+const
+TDevice& CDevice::Ref (void) const { return this->m_device; }
+TDevice& CDevice::Ref (void)       { return this->m_device; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDevice_HW::Create (void) {
+
+	CFake_Wnd fk_wnd;
+	this->Ref().Cfg().Default(fk_wnd);
+	this->Ref().Create(true);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
+	else {
+		_out() += this->Ref().Print(e_print::e_all);
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->Ref().SwapChain().Desc().Print(e_print::e_all));
+	}
+	_out()();
+}
+
+const
+TDevice_HW& CDevice_HW::Ref (void) const { return this->m_dev_hw; }
+TDevice_HW& CDevice_HW::Ref (void)       { return this->m_dev_hw; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CDevice_Ref::Create (void) {
+	
 	CFake_Wnd fk_wnd;
-#if (0)
-	this->m_dev_ref.Default(fk_wnd);
-#else
-	this->m_dev_ref.Cfg().Default(fk_wnd);
-#endif
-	this->m_dev_ref.Create();
-	if (this->m_dev_ref.Error())
-		_out() += this->m_dev_ref.Error().Print(TError::e_print::e_req);
+	this->Ref().Cfg().Default(fk_wnd);
+	this->Ref().Create(true);
+
+	if (this->Ref().Error())
+		_out() += this->Ref().Error().Print(TError::e_print::e_req);
 	else {
-		_out() += this->m_dev_ref.Print(e_print::e_all);
-		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->m_dev_ref.SwapChain().Desc().Print(e_print::e_all));
+		_out() += this->Ref().Print(e_print::e_all);
+		_out() += TStringEx().Format(_T("*result*:%s;"), (_pc_sz)this->Ref().SwapChain().Desc().Print(e_print::e_all));
 	}
 	_out()();
 }
+
+const
+TDevice_ref& CDevice_Ref::Ref (void) const { return this->m_dev_ref; }
+TDevice_ref& CDevice_Ref::Ref (void)       { return this->m_dev_ref; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -349,7 +551,7 @@ CSwapChain:: CSwapChain (const bool _b_verb) : m_b_verb(_b_verb) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if (0)
 void CSwapChain::Create(void) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
@@ -382,7 +584,7 @@ void CSwapChain::Create(void) {
 
 	_out()();
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 CTarget:: CTarget (const bool _b_verb) : m_b_verb(_b_verb) {

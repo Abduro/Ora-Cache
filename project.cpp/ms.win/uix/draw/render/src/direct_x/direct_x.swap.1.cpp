@@ -38,7 +38,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 
 	private:
 		CString  _buf_to_str (const TSwapDesc& _desc) const {
-			static _pc_sz pc_sz_pat = _T("buffer={count=%d;mode=%s;usage=%s}");
+			static _pc_sz pc_sz_pat = _T("buffer={count=%d;mode={%s};usage=%s}");
 			CString cs_out;
 			        cs_out.Format(pc_sz_pat, _desc.BufferCount,
 			                    (_pc_sz)CDisplay().Print(_desc.BufferDesc),
@@ -100,6 +100,11 @@ TSwapDesc&  CDesc_Wrap::ref (void) const { return this->m_desc; }
 TSwapDesc&  CDesc_Wrap::ref (void) { return this->m_desc; }
 
 #if defined(_DEBUG)
+CString     CDesc_Wrap::Print (const TSwapDesc& _desc, _pc_sz _p_pfx, _pc_sz _p_sfx) {
+	_desc; _p_pfx; _p_sfx;
+	return  CDesc_Fmt().Format(_desc, _p_pfx, _p_sfx);
+}
+
 CString     CDesc_Wrap::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%s%s;valid=%s}");

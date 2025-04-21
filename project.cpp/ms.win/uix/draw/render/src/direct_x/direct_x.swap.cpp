@@ -32,10 +32,10 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 	CString _effect_to_str (const /*CEffect::e_value*/uint32_t _e_value) {
 		CString cs_out;
 		switch (_e_value) {
-		case CEffect::e_value::e_discard : cs_out = _T("eff_discard"); break;
-		case CEffect::e_value::e_sequent : cs_out = _T("eff_sequent"); break;
-		case CEffect::e_value::e_flp_disc: cs_out = _T("flp_discard"); break;
-		case CEffect::e_value::e_flp_seq : cs_out = _T("flp_sequent"); break;
+		case CEffect::e_value::e_discard : cs_out = _T("eff:discard"); break;
+		case CEffect::e_value::e_sequent : cs_out = _T("eff:sequent"); break;
+		case CEffect::e_value::e_flp_disc: cs_out = _T("flp:discard"); break;
+		case CEffect::e_value::e_flp_seq : cs_out = _T("flp:sequent"); break;
 		default:
 			cs_out.Format(_T("#inv_arg=%u"), _e_value);
 		}
