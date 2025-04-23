@@ -21,7 +21,7 @@
   <PropertyGroup>
     <EboProjectVersion Condition="'$(EboProjectVersion)'==''">15.0</EboProjectVersion>
     <EboRootNamespace Condition="'$(EboRootNamespace)'==''">$(ProjectName)</EboRootNamespace>
-    <EboWindowsTargetPlatformVersion Condition="'$(EboWindowsTargetPlatformVersion)'==''">10.0.18362.0</EboWindowsTargetPlatformVersion>
+    <EboWindowsTargetPlatformVersion Condition="'$(EboWindowsTargetPlatformVersion)'==''">10.0.16299.0</EboWindowsTargetPlatformVersion>
     <EboPlatformTools Condition="'$(EboPlatformTools)'==''">v141</EboPlatformTools>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
