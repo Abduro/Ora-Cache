@@ -3,18 +3,18 @@
 	This is window popup test app main window interface implementation file;
 */
 #include "win.gui_wnd.h"
+#include "direct_x.wrap.h" // ToDo:: if it is placed to header 'win.gui_wnd.h', the compilation is failed;
 
 using namespace ebo::boo::gui;
-using TWindow = ebo::boo::gui::CWindow;
 /////////////////////////////////////////////////////////////////////////////
 
-TWindow:: CWindow(void) : TBase() {
+CView:: CView(void) : TBase() {
 	TBase::Handlers().Draw().Subscribe(this);
 	TBase::Handlers().Live().Subscribe(this);
 	TBase::Handlers().System().Subscribe(this);
 	TBase::Handlers().Frame().Subscribe(this);
 }
-TWindow::~CWindow(void) {
+CView::~CView(void) {
 	TBase::Handlers().Draw().Unsubscribe(this);
 	TBase::Handlers().Live().Unsubscribe(this);
 	TBase::Handlers().System().Unsubscribe(this);
@@ -23,7 +23,7 @@ TWindow::~CWindow(void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  TWindow::IEvtDraw_OnErase   (const HDC _dev_ctx) {
+err_code  CView::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	_dev_ctx;
 	static bool  b_fst_time = false;
 	if (false == b_fst_time) {
@@ -38,27 +38,33 @@ err_code  TWindow::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  TWindow::IEvtLife_OnClose  (const w_param, const l_param) {
+err_code  CView::IEvtLife_OnClose  (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
 	return   n_result;
 }
 
-err_code TWindow::IEvtLife_OnCreate  (const w_param, const l_param) {
+err_code CView::IEvtLife_OnCreate  (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
+
+	_render().Init(this->m_hWnd); // this view window does not care about renderer init() result;
+
 	return   n_result;
 }
 
-err_code TWindow::IEvtLife_OnDestroy (const w_param, const l_param) {
+err_code CView::IEvtLife_OnDestroy (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
+
+	_render().Term();
+
 	return   n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code TWindow::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
+err_code CView::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
 	
 	err_code n_result = __s_false;
 	switch (_w_param)
@@ -75,7 +81,7 @@ err_code TWindow::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
 
-err_code TWindow::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
+err_code CView::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 
 	err_code n_result = __s_false;
 
@@ -87,7 +93,7 @@ err_code TWindow::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 	return   n_result;
 }
 
-err_code TWindow::IEvtFrame_OnSizing (const eEdges, LPRECT) {
+err_code CView::IEvtFrame_OnSizing (const eEdges, LPRECT) {
 
 	err_code n_result = __s_false;
 	return   n_result;

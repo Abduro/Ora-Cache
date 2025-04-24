@@ -129,17 +129,26 @@ err_code   CDev_Cfg::Default (const HWND hTarget) {
 
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-create-ref ;
 	TSwapDesc& desc = this->m_desc;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+	RECT rect = {0};
+	if (!::GetClientRect(hTarget, &rect))
+		return (n_result = __LastErrToHresult());
+
 	desc.BufferCount       =   1;
-	desc.BufferDesc.Width  = 640;
-	desc.BufferDesc.Height = 480;
+	desc.BufferDesc.Width  = rect.right - rect.left;
+	desc.BufferDesc.Height = rect.bottom - rect.top;
+
 	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.BufferDesc.RefreshRate.Numerator = 60;
 	desc.BufferDesc.RefreshRate.Denominator = 1;
+
 	desc.BufferUsage  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.OutputWindow = hTarget;
+	desc.Windowed = TRUE;
+
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
-	desc.Windowed = TRUE;
+
 	return n_result;
 }
 

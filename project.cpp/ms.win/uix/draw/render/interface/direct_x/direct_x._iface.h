@@ -10,7 +10,7 @@
 	2) using ::std::wstring is replaced by using ::ATL::CString due to DirectX is used under Windows OS and ATL is the best choice;
 	3) throwing ::std::exception is replaced by using COM error functions for showing error details, but do not stop running test/use cases;
 	***Attention***
-	Using the latest features of DirectX12 requires Windows Target Platform Version 10.0.17763.0 and above; this can be applied via VC project settings;
+	Using the latest features of DirectX12 requires Windows Target Platform Version 10.0.17763.0 and above; ver 10.0.18362.0 is used;
 */
 // https://learn.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-environment-set-up ;
 #include <d3d11.h>

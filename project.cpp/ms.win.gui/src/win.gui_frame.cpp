@@ -50,7 +50,7 @@ err_code CFrame::Create (void) {
 
 	this->m_error << __METHOD__ << __s_ok;
 
-	if (m_window.IsWindow())
+	if (m_view.IsWindow())
 		return (this->m_error << (err_code) TErrCodes::eObject::eExists);
 
 //	RECT rc_ = CWndLayout().Centered(CWndLayout().Default());
@@ -66,7 +66,7 @@ err_code CFrame::Create (void) {
 	if (::IsRectEmpty(&rc_))
 		return (m_error << __e_rect);
 
-	HWND hView = m_window.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS);
+	HWND hView = m_view.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS);
 	if (!hView)
 		return m_error.Last();
 
@@ -76,7 +76,7 @@ err_code CFrame::Create (void) {
 		if (__failed(n_result))
 			this->m_error = this->m_icon.Error(); // just for debug purpose;
 
-		m_window.ShowWindow(SW_SHOW);
+		m_view.ShowWindow(SW_SHOW);
 	}
 	
 	return this->Error();
@@ -85,8 +85,8 @@ err_code CFrame::Create (void) {
 err_code CFrame::Destroy(void) {
 	m_error << __METHOD__ << __s_ok;
 
-	if (m_window.IsWindow())
-		m_window.SendMessage(WM_CLOSE);
+	if (m_view.IsWindow())
+		m_view.SendMessage(WM_CLOSE);
 	else
 		m_error << (err_code) TErrCodes::eExecute::eState;
 
@@ -95,10 +95,8 @@ err_code CFrame::Destroy(void) {
 
 TError&  CFrame::Error (void) const { return this->m_error; }
 
-using CView = ebo::boo::gui::CWindow;
-
 const
-CView& CFrame::View (void) const { return this->m_window; }
-CView& CFrame::View (void)       { return this->m_window; }
+CView& CFrame::View (void) const { return this->m_view; }
+CView& CFrame::View (void)       { return this->m_view; }
 
 /////////////////////////////////////////////////////////////////////////////

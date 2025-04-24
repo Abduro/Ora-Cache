@@ -12,6 +12,7 @@
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
     <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
     <ThisExe Condition="'$(ThisExe)'==''">..\..\..\ms.win.gui\</ThisExe>
   </PropertyGroup>
@@ -28,14 +29,14 @@
     <_6>$(_5)seh\</_6>
     <_7>$(Geo-2d)interface\</_7>
     <_8>$(Color)interface\</_8>
-    <_9></_9>
+    <_9>$(Render)interface\</_9>
     <_a>$(Win-pop)interface\</_a>
     <_b>$(_a)msg_handlers\</_b>
-    <_c></_c>
-    <_d></_d>
+    <_c>$(_1)render\</_c>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
+    <_d>$(_9)direct_x\</_d>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_a);$(_b);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(_c);$(_d);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -66,6 +66,7 @@ END
 
 //IDR_WINGUI_ICO          ICON    "icons\\win.gui.ico"
   IDR_WINGUI_ICO          ICON    "icons\\wanderer_rootless.ico"
+//IDR_WINGUI_ICO          ICON    "icons\\directx-logo-512px.ico"
 /////////////////////////////////////////////////////////////////////////////
 //
 // auxiliary string(s)

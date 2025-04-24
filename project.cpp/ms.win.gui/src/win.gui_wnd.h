@@ -7,7 +7,11 @@
 #include "wnd.base.h"
 
 namespace ebo { namespace boo { namespace gui {
-
+#if (0)
+#ifndef _ATL_NO_AUTOMATIC_NAMESPACE
+#define _ATL_NO_AUTOMATIC_NAMESPACE // https://learn.microsoft.com/en-us/cpp/atl/reference/compiler-options-macros ;
+#endif
+#endif
 	using ex_ui::popup::CWndBase;
 
 	using namespace ex_ui::message::handlers;
@@ -17,12 +21,12 @@ namespace ebo { namespace boo { namespace gui {
 	using ILifeEvtSink = ex_ui::message::handlers::life::ILifeEvtSink;
 	using ISysEvtSink  = ex_ui::message::handlers::IMsgSysEventSink;
 
-	class CWindow : public CWndBase, IDrawEvtSink, ILifeEvtSink, ISysEvtSink, IFormEvtSink { typedef CWndBase TBase;
+	class CView : public CWndBase, IDrawEvtSink, ILifeEvtSink, ISysEvtSink, IFormEvtSink { typedef CWndBase TBase;
 	public:
-		 CWindow (void) ;
-		 CWindow (const CWindow&) = delete;
-		 CWindow (CWindow&&) = delete;
-		~CWindow (void) ;
+		 CView (void) ;
+		 CView (const CView&) = delete;
+		 CView (CView&&) = delete;
+		~CView (void) ;
 
 	private:  // IDrawEvtSink override(s);
 		err_code IEvtDraw_OnErase   (const HDC _dev_ctx) override final;
@@ -40,10 +44,12 @@ namespace ebo { namespace boo { namespace gui {
 		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
 
 	private:
-		CWindow& operator = (const CWindow&) = delete;
-		CWindow& operator = (CWindow&&) = delete;
+		CView& operator = (const CView&) = delete;
+		CView& operator = (CView&&) = delete;
 	};
 
 }}}
+
+typedef ebo::boo::gui::CView TView;
 
 #endif/*_WIN_GUI_WND_H_INCLUDED*/

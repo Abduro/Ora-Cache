@@ -15,8 +15,11 @@ namespace ebo { namespace boo { namespace gui {
 
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
+#if (0)
+#define _ATL_NO_AUTOMATIC_NAMESPACE // https://learn.microsoft.com/en-us/cpp/atl/reference/compiler-options-macros ;
+#endif
 
-	using CView  = ebo::boo::gui::CWindow;
+	using CView = ebo::boo::gui::CView;
 
 	class CFrame {
 	public:
@@ -63,7 +66,7 @@ namespace ebo { namespace boo { namespace gui {
 	private:
 		CError   m_error;
 		CIcon    m_icon ;
-		CWindow  m_window;
+		CView    m_view ;
 	};
 
 }}}

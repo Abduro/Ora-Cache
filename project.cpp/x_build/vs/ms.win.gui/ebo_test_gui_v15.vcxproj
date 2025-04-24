@@ -243,6 +243,8 @@
     <ClCompile Include="$(_1)win.gui_wnd.cpp" />
     <ClInclude Include="$(_1)win.gui_module.h" />
     <ClCompile Include="$(_1)win.gui_module.cpp" />
+    <ClInclude Include="$(_c)direct_x.wrap.h" />
+    <ClCompile Include="$(_c)direct_x.wrap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(_0)win.gui.app.manifest" />
@@ -269,6 +271,9 @@
     </ProjectReference>
     <ProjectReference Include="..\ms.win\win.popup_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-000000000025}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ms.win\render_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000044}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
