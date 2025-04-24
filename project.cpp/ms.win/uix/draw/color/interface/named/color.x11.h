@@ -10,6 +10,7 @@ namespace ex_ui { namespace color { namespace rgb {
 
 	// https://en.wikipedia.org/wiki/X11_color_names ;
 	// https://learn.microsoft.com/en-us/dotnet/api/system.drawing.color ; MS also uses this color enumeration;
+	// https://learn.microsoft.com/en-us/power-platform/power-fx/reference/function-colors ;
 	class CNamed_X11 : public CNamed_Enum {
 	                  typedef CNamed_Enum TBase;
 	public:

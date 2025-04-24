@@ -8,6 +8,8 @@
 #include <vfw.h>              // https://learn.microsoft.com/en-us/windows/win32/api/vfw/ ;
 #include <xmmintrin.h>        // https://learn.microsoft.com/en-us/cpp/cpp/m128 ;
 
+#include <algorithm>          // std::clamp since C++ 17 ;
+#include <cstdint>            // uint8_t ;
 #include <memory>             // https://en.cppreference.com/w/cpp/memory/shared_ptr ;
 
 #include "color._defs.h"

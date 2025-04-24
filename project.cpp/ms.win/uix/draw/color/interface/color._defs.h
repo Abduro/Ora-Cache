@@ -108,6 +108,20 @@ namespace ex_ui { namespace color { namespace rgb {
 	/*__inline*/ clr_value get_g_value (const clr_type); // extracts green color value;
 	/*__inline*/ clr_value get_r_value (const clr_type); // extracts red   color value;
 
+	class CConvert {
+	public:
+		 CConvert (void) = default; CConvert (const CConvert&) = delete; CConvert (CConvert&&) = delete;
+		~CConvert (void) = default;
+
+	public:
+		static constexpr float     ToFloat (const clr_value); // https://lomont.org/posts/2023/accuratecolorconversions/ ;
+		static constexpr clr_value ToValue (const float);
+
+	private:
+		CConvert& operator = (const CConvert&) = delete;
+		CConvert& operator = (CConvert&&) = delete;
+	};
+
 	// this is stupid(!), but otherwise: error C2803: 'operator ==' must have at least one formal parameter of class type ;
 	// thus, color type class is declared:
 	class CType {
@@ -163,7 +177,6 @@ typedef ex_ui::color::rgb::clr_type  rgb_color; // it looks like COLORREF that i
 bool Is_equal (const rgb_color _lhs, const rgb_color _rhs, const bool _b_compare_alpha = true) ;
 
 namespace ex_ui { namespace color { namespace hsl {
-
 }}}
 
 #endif/*_COLOR_DEFS_H_INCLUDED*/

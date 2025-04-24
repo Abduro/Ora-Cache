@@ -25,6 +25,14 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		 CClrBits (void); CClrBits (const CClrBits&) = delete; CClrBits (CClrBits&&) = delete;
 		~CClrBits (void) = default;
 
+	public:
+		// https://lomont.org/posts/2023/accuratecolorconversions/ ; thanks Chris Lomont for good and clear article ;
+		static constexpr float U8ToF32(const uint8_t _u_value);
+		static constexpr uint8_t F32ToU8(const float _f_value);
+
+		static ::std::vector<float> rgba_to_float (const dword _clr);
+		static dword float_to_rgba (const ::std::vector<float>& _clr);
+
 #if defined(_DEBUG)
 		CString    Print (const uint32_t _n_format) const;
 #endif

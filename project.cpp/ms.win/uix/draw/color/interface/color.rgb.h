@@ -129,6 +129,38 @@ namespace ex_ui { namespace color { namespace rgb {
 		CString Print (const e_print = e_print::e_req) const;
 #endif
 	};
+
+	typedef ::std::vector<float> clr_float;    // the vector needs to contain 4 elements as rgba color model;
+
+	class CClr_Float {
+	public:
+		 CClr_Float (void) ; CClr_Float (const CClr_Float&) = delete; CClr_Float (CClr_Float&&) = delete;
+		~CClr_Float (void) = default;
+
+	public:
+		float A (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float B (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float G (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float R (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+
+		clr_float  Get (void) const; // gets a float value of rgba color as a vector of 4 elements;
+
+		bool A (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool B (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool G (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool R (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+
+		bool Set (const clr_type);   // sets float color value from rgba color; returns 'true' in case of change float color value;
+
+
+	private:
+		CClr_Float&  operator = (const CClr_Float&) = delete;
+		CClr_Float&  operator = (CClr_Float&&) = delete;
+
+	private:
+		float  m_value[CQuad::channel::_count];
+	};
+
 	// https://stackoverflow.com/questions/14375156/how-to-convert-a-rgb-color-value-to-an-hexadecimal-value-in-c >> just as an example;
 	// just the converter for color data representation;
 	class CHex {

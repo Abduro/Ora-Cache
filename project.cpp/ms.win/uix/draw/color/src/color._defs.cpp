@@ -128,6 +128,18 @@ namespace ex_ui { namespace color { namespace rgb {
 
 /////////////////////////////////////////////////////////////////////////////
 
+constexpr float CConvert::ToFloat (const clr_value _value) {
+	constexpr float f_invert = 1.0f / 255.0f; 
+	return _value * f_invert; 
+}
+
+constexpr clr_value CConvert::ToValue (const float _value) {
+	int32_t n_value = static_cast<int32_t>(_value * 256.0f);
+	return static_cast<clr_value>(::std::clamp(n_value, 0, 255));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CType:: CType (const clr_type _type) : m_type(_type) {}
 CType:: CType (const CType& _src) : CType() { *this = _src; }
 CType:: CType (CType&& _victim) { *this = _victim; }
