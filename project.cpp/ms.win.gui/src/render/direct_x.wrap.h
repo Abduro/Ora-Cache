@@ -6,7 +6,10 @@
 */
 #include "win.gui_module.h"
 #include "handlers.h"
+#include "color.rgb.h"
 #include "direct_x.device.1.h"
+#include "direct_x.target.h"
+#include "direct_x.texture.h"
 
 namespace ebo { namespace boo { namespace gui { namespace render {
 
@@ -16,6 +19,8 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 
 //	using IDrawEvtSink = ex_ui::message::handlers::draw::IDrawEventSink;
 	using IFormEvtSink = ex_ui::message::handlers::frame::IFrameEventSink;
+	using CTarget  = ex_ui::draw::direct_x::_11::CTarget;
+	using CTexture = ex_ui::draw::direct_x::_11::_2D::CTexture;
 
 	class CRender_Wrap : public IFormEvtSink/*, IDrawEvtSink*/ {
 	public:
@@ -37,6 +42,8 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 	private:
 		CError   m_error ;
 		CDevice  m_device;
+		CTarget  m_target;
+
 	private:
 		CRender_Wrap&  operator = (const CRender_Wrap&) = delete;
 		CRender_Wrap&  operator = (CRender_Wrap&&) = delete;

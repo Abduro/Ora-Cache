@@ -571,6 +571,20 @@ CString    CTexture::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 }
 #endif
 
+err_code   CTexture::Parent(TResPtr& _p_parent) {
+	_p_parent;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (_p_parent)
+		return this->m_error << __e_inv_arg = _T("Input pointer is already created");
+	if (this->Is_valid() == false)
+		return this->m_error << __e_not_inited;
+
+	this->m_error << this->Ptr()->QueryInterface(__uuidof(TResPtr), (void**)&_p_parent);
+
+	return this->Error();
+}
+
 const
 TTexPtr&   CTexture::Ptr (void) const { return this->m_p_tex; }
 err_code   CTexture::Ptr (const TTexPtr& _p_tex) {

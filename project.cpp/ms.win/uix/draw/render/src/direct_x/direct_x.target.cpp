@@ -9,51 +9,249 @@ using namespace ex_ui::draw::direct_x;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace draw { namespace direct_x {
+namespace _impl {
+#if defined(_DEBUG)
+	// concerning a print of a union:
+	// https://stackoverflow.com/questions/14285238/can-you-explain-the-results-from-printing-members-of-a-union ;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_rtv ;
+	using TBuffer = D3D11_BUFFER_RTV; // it has two unions of UINT each of them;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex1d_rtv ;
+	using TTex_1D = D3D11_TEX1D_RTV ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex1d_array_rtv ;
+	using TTex_1D_arr = D3D11_TEX1D_ARRAY_RTV ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex2d_rtv ;
+	using TTex_2D = D3D11_TEX2D_RTV ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex2d_array_rtv ;
+	using TTex_2D_arr = D3D11_TEX2D_ARRAY_RTV ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex2dms_rtv ;
+	using TTex_2D_ms = D3D11_TEX2DMS_RTV ; // it is not used;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex2dms_array_rtv ;
+	using TTex_2D_ms_arr = D3D11_TEX2DMS_ARRAY_RTV;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_tex3d_rtv ;
+	using TTex_3D = D3D11_TEX3D_RTV ;
+
+	class CDesc_Fmt {
+	public:
+		 CDesc_Fmt (void){}; CDesc_Fmt (const CDesc_Fmt&) = delete; CDesc_Fmt (CDesc_Fmt&&) = delete;
+		~CDesc_Fmt (void){}
+	public:
+		CString Buffer (const TBuffer& _buffer) {
+			_buffer; // the input buffer can be concidered as structure that has two UINT fields;
+			CString cs_out;
+			        cs_out.Format(_T("buffer:{offset=%u;count|width=%u}"), _buffer.FirstElement, _buffer.NumElements);
+			return  cs_out;
+		}
+		CString Tex_1D (const TTex_1D& _tex_1d) {
+			_tex_1d;
+			CString cs_out; cs_out.Format(_T("tex_1d:{slice=%u}"), _tex_1d.MipSlice);
+			return  cs_out;
+		}
+		CString Tex_1D_arr (const TTex_1D_arr& _tex_arr) {
+			_tex_arr;
+			CString cs_out;
+			        cs_out.Format(_T("tex_1d_arr:{slice=%u;ndx=%u;size=%u}"), _tex_arr.MipSlice, _tex_arr.FirstArraySlice, _tex_arr.ArraySize);
+			return  cs_out;
+		}
+		CString Tex_2D (const TTex_2D& _tex_2d) {
+			_tex_2d;
+			CString cs_out; cs_out.Format(_T("tex_2d:{slice=%u}"), _tex_2d.MipSlice);
+			return  cs_out;
+		}
+		CString Tex_2D_arr (const TTex_2D_arr& _tex_arr) {
+			_tex_arr;
+			CString cs_out;
+			        cs_out.Format(_T("tex_2d_arr:{slice=%u;ndx=%u;size=%u}"), _tex_arr.MipSlice, _tex_arr.FirstArraySlice, _tex_arr.ArraySize);
+			return  cs_out;
+		}
+		CString Tex_2D_ms (const TTex_2D_ms_arr& _tex_arr) {
+			_tex_arr;
+			CString cs_out;
+			        cs_out.Format(_T("tex_2d_ms:{ndx=%u;size=%u}"), _tex_arr.FirstArraySlice, _tex_arr.ArraySize);
+			return  cs_out;
+		}
+		CString Tex_3D (const TTex_3D& _tex_3d) {
+			_tex_3d;
+			CString cs_out;
+			        cs_out.Format(_T("tex_3d:{slice=%u;depth=%u;levels=%u}"), _tex_3d.MipSlice, _tex_3d.FirstWSlice, _tex_3d.WSize);
+			return  cs_out;
+		}
+
+	private:
+		CDesc_Fmt& operator = (const CDesc_Fmt&) = delete;
+		CDesc_Fmt& operator = (CDesc_Fmt&&) = delete;
+	};
+#endif
+}
 
 namespace _11 {
+
+#if defined(_DEBUG)
+CString CViewDims::Print (const uint32_t  _e_to_access_as) {
+	_e_to_access_as;
+	CString cs_out;
+	switch (_e_to_access_as) {
+	case ToAccessAs::e_buffer        : cs_out = _T("dim:e_buffer");        break;
+	case ToAccessAs::e_not_use       : cs_out = _T("dim:e_not_use");       break;
+	case ToAccessAs::e_tex_1D		 : cs_out = _T("dim:e_tex_1D");        break;
+	case ToAccessAs::e_tex_1D_arr	 : cs_out = _T("dim:e_tex_1D_arr");    break;
+	case ToAccessAs::e_tex_2D		 : cs_out = _T("dim:e_tex_2D");        break;
+	case ToAccessAs::e_tex_2D_arr	 : cs_out = _T("dim:e_tex_2D_arr");    break;
+	case ToAccessAs::e_tex_2D_ms	 : cs_out = _T("dim:e_tex_2D_ms");     break;
+	case ToAccessAs::e_tex_2D_ms_arr : cs_out = _T("dim:e_tex_2D_ms_arr"); break;
+	case ToAccessAs::e_tex_3D		 : cs_out = _T("dim:e_tex_3D");        break;
+	default:
+			cs_out.Format(_T("dim:#unspec(%d)"), _e_to_access_as);
+	}
+	return  cs_out;
+}
+#endif
+/////////////////////////////////////////////////////////////////////////////
+CViewDesc:: CViewDesc (void) : m_desc{0} {}
+/////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CString   CViewDesc::Print (const TViewDesc& _desc, const e_print _e_opt) {
+	_e_opt;
+	using ToAccessAs = CViewDims::ToAccessAs;
+	using CDesc_Fmt  = _impl::CDesc_Fmt;
+	CString cs_desc;
+	        cs_desc.Format(_T("fmt=%s;%s;"), (_pc_sz)CClrBits().Print(_desc.Format), (_pc_sz)CViewDims::Print(_desc.ViewDimension));
+	switch (_desc.ViewDimension) {
+	case ToAccessAs::e_buffer        : cs_desc += CDesc_Fmt().Buffer(_desc.Buffer);  break;
+	case ToAccessAs::e_not_use       : cs_desc += _T("#not_used");  break;
+	case ToAccessAs::e_tex_1D		 : cs_desc += CDesc_Fmt().Tex_1D(_desc.Texture1D);  break;
+	case ToAccessAs::e_tex_1D_arr	 : cs_desc += CDesc_Fmt().Tex_1D_arr(_desc.Texture1DArray);  break;
+	case ToAccessAs::e_tex_2D		 : cs_desc += CDesc_Fmt().Tex_2D(_desc.Texture2D);  break;
+	case ToAccessAs::e_tex_2D_arr	 : cs_desc += CDesc_Fmt().Tex_2D_arr(_desc.Texture2DArray);  break;
+	case ToAccessAs::e_tex_2D_ms	 : cs_desc += _T("#not_used");  break;
+	case ToAccessAs::e_tex_2D_ms_arr : cs_desc += CDesc_Fmt().Tex_2D_ms(_desc.Texture2DMSArray);  break;
+	case ToAccessAs::e_tex_3D		 : cs_desc += CDesc_Fmt().Tex_3D(_desc.Texture3D);  break;
+	}
+
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s}");
+	static _pc_sz pc_sz_pat_r = _T("%s");
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt){ cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_desc); }
+	if (e_print::e_no_ns == _e_opt){ cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_desc); }
+	if (e_print::e_req   == _e_opt){ cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_desc); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+CString   CViewDesc::Print (const e_print _e_opt) const {
+   return CViewDesc::Print (this->Raw() , _e_opt);
+}
+#endif
+const
+TViewDesc& CViewDesc::Raw (void) const { return this->m_desc; }
+TViewDesc& CViewDesc::Raw (void)       { return this->m_desc; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CViewPort:: CViewPort (void) : m_port{0} {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+TViewPort& CViewPort::Raw (void) const { return this->m_port; }
+TViewPort& CViewPort::Raw (void)       { return this->m_port; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CTarget:: CTarget (void) { this->m_error >>__CLASS__ << __METHOD__ << __e_not_inited; }
 
+/////////////////////////////////////////////////////////////////////////////
+
 err_code  CTarget::Create(void) {
 	this->m_error << __METHOD__ << __s_ok;
 
+	if (this->Is_valid())
+		return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
 	if (false == this->m_device.Is_valid())
 		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The device is invalid");
+#if (1)
+	if (false == this->m_texture.Is_valid())
+		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The texture is invalid");
+#else
+	this->m_error << this->m_device.Get(this->m_texture);
+	if (this->Error())
+		return this->m_error = m_device.Error();
 
-	if (false == this->m_swap.Is_valid())
-		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The swap chain is invalid");
+	if (false == this->m_texture.Is_valid())
+		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The texture is invalid");
+#endif
+	TResPtr p_res;
+	this->m_error << this->m_texture.Parent(p_res);
+	if (this->Error())
+		return this->Error();
+#if (0)
+	this->Desc().Raw().Format = (TFormatAlias) CClrBits::e_rgba_norm;
+	this->Desc().Raw().ViewDimension = (TViewDimAlias) CViewDims::ToAccessAs::e_tex_2D;
+#endif
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createrendertargetview ;
+	this->m_error << this->m_device.Ptr()->CreateRenderTargetView(
+		p_res, /*&this->Desc().Raw()*/nullptr, &this->m_view
+	);
+	if (this->Error()) // it is required to return this object error, not from device one;
+		this->Error();
+	else
+		this->m_error << this->UpdateDesc();
 
 	return this->Error();
 }
 
+const
+CViewDesc& CTarget::Desc (void) const { return this->m_desc; }
+CViewDesc& CTarget::Desc (void)       { return this->m_desc; }
+
 TError&   CTarget::Error (void) const { return this->m_error; }
-bool      CTarget::Is_valid (void) const { return false; }
+bool      CTarget::Is_valid (void) const { return nullptr != this->Ptr(); }
 
 #if defined(_DEBUG)
 CString   CTarget::Print (const e_print _e_opt) const {
 	_e_opt;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{valid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{valid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{;valid=%s}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{desc={%s};valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{desc={%s};valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{desc={%s};valid=%s}");
 
+	CString cs_desc  = CViewDesc::Print(this->Desc().Raw(), e_print::e_req);
 	CString cs_valid = TStringEx().Bool(this->Is_valid());
 
 	CString cs_out;
 	if (e_print::e_all == _e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_valid);
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_desc, (_pc_sz)cs_valid);
 	}
 	if (e_print::e_no_ns == _e_opt) {
-		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_valid);
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_desc, (_pc_sz)cs_valid);
 	}
-	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_valid); }
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_desc, (_pc_sz)cs_valid); }
 
 	if (true == cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
 	return  cs_out;
 }
 #endif
+const
+TViewPtr& CTarget::Ptr (void) const { return this->m_view; }
+err_code  CTarget::Ptr (const TViewPtr& _p_view, const bool _b_upd_desc) {
+	_p_view; _b_upd_desc;
+	this->m_error << __METHOD__ << __s_ok;
+	if (this->Is_valid())
+		return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
+	if (nullptr == _p_view)
+		return this->m_error << __e_pointer;
+
+	this->m_view =_p_view;
+	if (_b_upd_desc)
+		this->UpdateDesc();
+
+	return this->Error();
+}
 
 err_code  CTarget::Set (const CDevice& _device) {
 	_device;
@@ -69,6 +267,7 @@ err_code  CTarget::Set (const CDevice& _device) {
 
 	return this->Error();
 }
+#if (0)
 err_code  CTarget::Set (const CSwapChain& _chain) {
 	_chain;
 	this->m_error << __METHOD__ << __s_ok;
@@ -83,11 +282,38 @@ err_code  CTarget::Set (const CSwapChain& _chain) {
 
 	return this->Error();
 }
+#else
+err_code  CTarget::Set (const CTexture& _tex) {
+	_tex;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (false == _tex.Is_valid())
+		return this->m_error << __e_invalid_arg;
+
+	if (this->m_texture.Is_valid())
+		return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
+	this->m_texture.Ptr(_tex.Ptr());
+
+	return this->Error();
+}
+#endif
+
+err_code  CTarget::UpdateDesc (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid() == false)
+		return this->m_error << __e_not_inited;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11rendertargetview-getdesc ;
+	this->Ptr()->GetDesc(&this->Desc().Raw());
+
+	return this->Error();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
-CTarget&  CTarget::operator <<(const CDevice& _device) { this->Set(_device); return *this; }
-CTarget&  CTarget::operator <<(const CSwapChain& _chain) { this->Set(_chain); return *this; }
+CTarget&  CTarget::operator <<(const CDevice& _device) { this->m_device = _device; return *this; }
+CTarget&  CTarget::operator <<(const CTexture& _texture) { this->Set(_texture); return *this; }
 
 }
 

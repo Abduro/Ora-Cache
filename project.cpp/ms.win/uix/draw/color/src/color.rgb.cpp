@@ -114,19 +114,26 @@ const bool  CQuad::Is(void) const {
 #ifdef _DEBUG
 CString CQuad::Print (const e_print e_opt) const {
 	e_opt;
-	static _pc_sz pc_sz_pat_a      = _T("cls::[%s]>>{color:[r=%u;g=%u;b=%u;a=%u];is_valid=%s}");
-	static _pc_sz pc_sz_pat_r      = _T("color:[r=%u;g=%u;b=%u;a=%u];is_valid=%s;");
-	static _pc_sz pc_sz_pat_no_pfx = _T("[%s]>>{value:[r=%u;g=%u;b=%u;a=%u];is_valid=%s}");
+	static _pc_sz pc_sz_pat_a  = _T("cls::[%s::%s]>>{value:[r=%u;g=%u;b=%u;a=%u];is_valid=%s}");
+	static _pc_sz pc_sz_pat_r  = _T("value:[r=%u;g=%u;b=%u;a=%u];is_valid=%s;");
+	static _pc_sz pc_sz_pat_n  = _T("[%s]>>{value:[r=%u;g=%u;b=%u;a=%u];is_valid=%s}");
 
+	CString cs_valid = TStringEx().Bool(this->Is());
 	CString cs_out;
-
+	if (e_print::e_all == e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		this->R(), this->G(), this->B(), this->A(), (_pc_sz)cs_valid);
+	}
+	if (e_print::e_no_ns == e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+			this->R(), this->G(), this->B(), this->A(), (_pc_sz)cs_valid);
+	}
 	if (e_print::e_req == e_opt) {
-		cs_out.Format(pc_sz_pat_r, this->R(), this->G(), this->B(), this->A(), TStringEx().Bool(this->Is()));
+		cs_out.Format(pc_sz_pat_r, this->R(), this->G(), this->B(), this->A(), (_pc_sz)cs_valid);
 	}
-	else {
-		CString cs_pat(e_print::e_no_pfx == e_opt ? pc_sz_pat_no_pfx : pc_sz_pat_a);
-		cs_out.Format((_pc_sz)cs_pat, (_pc_sz)__CLASS__, this->R(), this->G(), this->B(), this->A(), TStringEx().Bool(this->Is()));
-	}
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
+
 	return  cs_out;
 } 
 #endif
@@ -266,15 +273,24 @@ CString CColor::Print (const e_print e_opt) const {
 	if (e_print::e_req == e_opt)
 		return TBase::Print(e_opt);
 #endif
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s]::%s");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{rgba=%u:%u:%u:%u;(0x%x)}");
 	static _pc_sz pc_sz_pat_r = _T("rgba=%u:%u:%u:%u;(0x%x)");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{rgba=%u:%u:%u:%u;(0x%x)}");
 
 	CString cs_out;
-	if (e_print::e_all == e_opt) cs_out.Format(pc_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)TBase::Print(e_print::e_no_pfx));
-	if (e_print::e_req == e_opt) cs_out.Format(pc_sz_pat_r, TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA());
+	if (e_print::e_all == e_opt)
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+			TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA()
+		);
+	if (e_print::e_no_ns == e_opt)
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__CLASS__,
+			TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA()
+		);
+	if (e_print::e_req == e_opt)
+		cs_out.Format(pc_sz_pat_r, TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA());
 
 	if (cs_out.IsEmpty())
-		cs_out = _T("#undef");
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
 		
 	return cs_out;
 }
@@ -285,6 +301,90 @@ CString CColor::Print (const e_print e_opt) const {
 CClr_Float:: CClr_Float (void) : m_value{0.0f} {}
 
 /////////////////////////////////////////////////////////////////////////////
+
+using e_ndx = CQuad::channel;
+
+float CClr_Float::A (void) const { return this->m_value[e_ndx::a]; }
+float CClr_Float::B (void) const { return this->m_value[e_ndx::b]; }
+float CClr_Float::G (void) const { return this->m_value[e_ndx::g]; }
+float CClr_Float::R (void) const { return this->m_value[e_ndx::r]; }
+
+clr_float CClr_Float::Get (void) const {
+	const clr_float v_result = {this->R(), this->G(), this->B(), this->A()};
+	return v_result;
+}
+
+bool CClr_Float::A (const clr_value _u_value) {
+	_u_value;
+	const float f_value  = CConvert::ToFloat(_u_value);
+	const bool b_changed = !Is_equal(this->A(), f_value); if (b_changed) this->m_value[e_ndx::a] = f_value;  return b_changed;
+}
+
+bool CClr_Float::B (const clr_value _u_value) {
+	_u_value;
+	const float f_value  = CConvert::ToFloat(_u_value);
+	const bool b_changed = !Is_equal(this->B(), f_value); if (b_changed) this->m_value[e_ndx::b] = f_value;  return b_changed;
+}
+
+bool CClr_Float::G (const clr_value _u_value) {
+	_u_value;
+	const float f_value  = CConvert::ToFloat(_u_value);
+	const bool b_changed = !Is_equal(this->G(), f_value); if (b_changed) this->m_value[e_ndx::g] = f_value;  return b_changed;
+}
+
+bool CClr_Float::R (const clr_value _u_value) {
+	_u_value;
+	const float f_value  = CConvert::ToFloat(_u_value);
+	const bool b_changed = !Is_equal(this->R(), f_value); if (b_changed) this->m_value[e_ndx::r] = f_value;  return b_changed;
+}
+
+#if defined(_DEBUG)
+CString  CClr_Float::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{r:%s;g:%s;b:%s;a:%s};");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{r:%s;g:%s;b:%s;a:%s};");
+	static _pc_sz pc_sz_pat_r = _T("r:%s;g:%s;b:%s;a:%s");
+
+	CString cs_a = TStringEx().Float(this->A());
+	CString cs_b = TStringEx().Float(this->B());
+	CString cs_g = TStringEx().Float(this->G());
+	CString cs_r = TStringEx().Float(this->R());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt)
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+			(_pc_sz)cs_r, (_pc_sz)cs_g, (_pc_sz)cs_b, (_pc_sz)cs_a
+		);
+	if (e_print::e_no_ns == _e_opt)
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+			(_pc_sz)cs_r, (_pc_sz)cs_g, (_pc_sz)cs_b, (_pc_sz)cs_a
+		);
+	if (e_print::e_req   == _e_opt)
+		cs_out.Format(pc_sz_pat_r,
+			(_pc_sz)cs_r, (_pc_sz)cs_g, (_pc_sz)cs_b, (_pc_sz)cs_a
+		);
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+bool CClr_Float::Set (const clr_type _clr) {
+	_clr;
+	bool b_changed = false;
+	if (this->A(get_a_value(_clr))) b_changed = true;
+	if (this->B(get_b_value(_clr))) b_changed = true;
+	if (this->G(get_g_value(_clr))) b_changed = true;
+	if (this->R(get_r_value(_clr))) b_changed = true;
+	return b_changed;
+}
+
+CClr_Float&  CClr_Float::operator <<(const clr_type _clr) {
+	this->Set(_clr);
+	return *this;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -304,7 +404,7 @@ CHex& CHex::operator <<(const clr_type _type) { this->Color() = _type; return *t
 CHex& CHex::operator <<(const CQuad& _color) { this->Color() = _color; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if defined (_DEBUG)
 CString CHex::Print (const clr_type _clr) {
 	_clr;
 	static _pc_sz pc_sz_pat_v = _T("#%02x%02x%02x");
@@ -316,16 +416,26 @@ CString CHex::Print (const clr_type _clr) {
 CString CHex::Print (const CQuad& _quad, const e_print e_opt) {
 	_quad; e_opt;
 
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s].quad >> {value=#%02x%02x%02x; alpha=%03f}");
-	static _pc_sz pc_sz_pat_v = _T("#%02x%02x%02x");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{value=%s; alpha=%03f}");
+	static _pc_sz pc_sz_pat_r = _T("%s");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{value=%s; alpha=%03f}");
 
+	CString cs_value = CHex::Print(_quad.ToRgbA());
 	CString cs_out;
 
-	if (e_print::e_all == e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__CLASS__, _quad.R(), _quad.G(), _quad.B(), _quad.A()); }
-	if (e_print::e_val == e_opt) { cs_out.Format(pc_sz_pat_v, _quad.R(), _quad.G(), _quad.B()); }
+	if (e_print::e_all == e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_value, _quad.A());
+	}
+	if (e_print::e_no_ns == e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_value, _quad.A());
+	}
+	if (e_print::e_req == e_opt) {
+		cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_value);
+	}
 
 	if (cs_out.IsEmpty())
-		cs_out = TStringEx().Format(_T("cls::[%s].[%s](arg_0=%s,e_print=%u)"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, (_pc_sz) _quad.Print(CQuad::e_all), e_opt);
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
 
 	return  cs_out;
 }
+#endif

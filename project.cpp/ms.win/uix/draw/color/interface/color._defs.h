@@ -7,6 +7,7 @@
 #include <algorithm>  // https://en.cppreference.com/w/cpp/algorithm/swap ;
 #include <cstddef>    // https://en.cppreference.com/w/cpp/language/types ;
 #include <limits>
+#include <cmath>      // https://en.cppreference.com/w/cpp/numeric/math/fabs ;
 
 #if defined(_DEBUG)
 #include "shared.preproc.h"
@@ -16,6 +17,14 @@
 #include  "shared.types.h"
 
 namespace ex_ui { namespace color {
+
+#if defined(_DEBUG)
+	enum e_print : uint32_t {
+		e_all   = 0x0,  // prints out the class name and namespace path, class attribute value(s);
+		e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
+		e_req   = 0x2,  // prints out the class object attribute value(s) only;
+	};
+#endif
 
 	using namespace shared::types;
 
@@ -114,8 +123,11 @@ namespace ex_ui { namespace color { namespace rgb {
 		~CConvert (void) = default;
 
 	public:
-		static constexpr float     ToFloat (const clr_value); // https://lomont.org/posts/2023/accuratecolorconversions/ ;
-		static constexpr clr_value ToValue (const float);
+		static float     ToFloat (const clr_value); // https://lomont.org/posts/2023/accuratecolorconversions/ ;
+		static clr_value ToValue (const float);
+
+#if defined(_DEBUG)
+#endif
 
 	private:
 		CConvert& operator = (const CConvert&) = delete;
@@ -138,7 +150,7 @@ namespace ex_ui { namespace color { namespace rgb {
 		bool EqualTo (const clr_type) const;
 
 #if defined(_DEBUG)
-		CString  Print(void) const;
+		CString  Print(const e_print = e_print::e_all) const;
 #endif
 
 	public:
@@ -175,6 +187,7 @@ typedef ex_ui::color::rgb::clr_type  rgb_color; // it looks like COLORREF that i
 #define HexToRgb(_hex) (_r_g_b( (uint32_t(_hex)>>16), (uint16_t(_hex)>>8), uint8_t(_hex)))
 
 bool Is_equal (const rgb_color _lhs, const rgb_color _rhs, const bool _b_compare_alpha = true) ;
+bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold = 0.0000001);
 
 namespace ex_ui { namespace color { namespace hsl {
 }}}

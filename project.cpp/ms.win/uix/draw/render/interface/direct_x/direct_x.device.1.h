@@ -50,7 +50,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	class CContext {
 	public:
-		 CContext (void); CContext (const CContext&) = delete; CContext (CContext&&) = delete;
+		 CContext (void);
+		 CContext (const CContext&); CContext (CContext&&) = delete;
 		~CContext (void) = default;
 
 	public:
@@ -62,12 +63,14 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		const
 		TCtx4Ptr& Ptr (void) const;
 		err_code  Ptr (const TCtx0Ptr&);  // tries to retrieve this context pointer from the pointer to base object;
+		err_code  Ptr (const TCtx4Ptr&);
 
 		TCtxType  Type(void) const;       // just for test the context pointer works;
 
-	private:
-		CContext& operator = (const CContext&) = delete;
+	public:
+		CContext& operator = (const CContext&) ;
 		CContext& operator = (CContext&&) = delete;
+		CContext& operator <<(const TCtx4Ptr&);
 
 	private:
 		TCtx4Ptr  m_p_ctx;
@@ -103,7 +106,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	public:
 		 CDev_Cfg (void);
-		 CDev_Cfg (const CDev_Cfg&) = delete;  CDev_Cfg (CDev_Cfg&&) = delete;
+		 CDev_Cfg (const CDev_Cfg&);  CDev_Cfg (CDev_Cfg&&) = delete;
 		~CDev_Cfg (void) = default;
 
 	public:
@@ -121,13 +124,16 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TDrvType  Type (void) const;
 		bool      Type (const TDrvType);  // returns true in case of type value change;
 
+	public:
+		CDev_Cfg&  operator = (const CDev_Cfg&);
+		CDev_Cfg&  operator = (CDev_Cfg&&) = delete;
+		CDev_Cfg&  operator <<(const TDrvType);
+		CDev_Cfg&  operator <<(const TSwapDesc&);
+
 	private:
 		CLevels   m_def_set;
 		TSwapDesc m_desc;     // this data is required for creating a device by ::D3D11CreateDeviceAndSwapChain();
 		TDrvType  m_type;
-	private:
-		CDev_Cfg&  operator = (const CDev_Cfg&) = delete;
-		CDev_Cfg&  operator = (CDev_Cfg&&) = delete;
 	};
 
 	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
@@ -141,7 +147,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	class CDevice {
 	public:
-		 CDevice (void); CDevice(const CDevice&) = delete; CDevice (CDevice&&) = delete;
+		 CDevice (void);
+		 CDevice (const CDevice&); CDevice (CDevice&&) = delete;
 		~CDevice (void);
 
 	public:
@@ -159,7 +166,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		err_code  Get (CAdapter&);    // gets the adapter of this device, i.e. the object that implements IDXGIAdapter interface;
 		err_code  Get (CContext&);    // gets device context interface; useful for draw operations;
 		err_code  Get (CFeature&);    // gets input feature data;
-		err_code  Get (CTex_2D&);     // creates a 2D texture by using its description data;
+		err_code  Get (CTex_2D&);     // creates a 2D texture by using its description data; *important*::the desc must be set;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
@@ -171,14 +178,19 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 #endif
 		const
 		TDevicePtr& Ptr (void) const;
-		err_code    Ptr (const TDevicePtr&) ;
+		err_code    Ptr (const TDevicePtr&) ; // sets *just* a raw pointer to device interface, *no* context, *no* swap chain;
 		const
 		CSwapChain& SwapChain (void) const;
 		CSwapChain& SwapChain (void) ;
 	
-	private:
-		CDevice& operator = (const CDevice&) = delete;
+	public:
+		CDevice& operator = (const CDevice&);
 		CDevice& operator = (CDevice&&) = delete;
+		CDevice& operator <<(const CContext&);
+		CDevice& operator <<(const CDev_Cfg&);
+		CDevice& operator <<(const CSwapChain&);
+		CDevice& operator <<(const uint32_t _n_lvl);
+		CDevice& operator <<(const TDevicePtr&);
 
 	protected:
 		CDev_Cfg    m_cfg  ;
@@ -195,9 +207,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDevice_HW (void) = default;
 
 	public:
-
 		err_code Create (const bool _b_with_swap = false);
-
 #if defined (_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif

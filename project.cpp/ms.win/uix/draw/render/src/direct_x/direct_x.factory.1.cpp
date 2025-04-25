@@ -106,7 +106,7 @@ err_code CFac_2::Get (const CDevice& _device, const CSwapDesc& _desc, CSwapChain
 		_device.Ptr(), (DXGI_SWAP_CHAIN_DESC*)&_desc.ref(), &p_chain
 	);
 	if (this->Is_valid())
-		_chain.Ptr(p_chain.Detach());
+		_chain.Ptr(p_chain.Detach(), true);
 
 	return this->Error();
 }

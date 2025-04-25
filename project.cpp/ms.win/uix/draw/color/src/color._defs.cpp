@@ -128,12 +128,12 @@ namespace ex_ui { namespace color { namespace rgb {
 
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr float CConvert::ToFloat (const clr_value _value) {
-	constexpr float f_invert = 1.0f / 255.0f; 
+float CConvert::ToFloat (const clr_value _value) {
+	const float f_invert = 1.0f / 255.0f; 
 	return _value * f_invert; 
 }
 
-constexpr clr_value CConvert::ToValue (const float _value) {
+clr_value CConvert::ToValue (const float _value) {
 	int32_t n_value = static_cast<int32_t>(_value * 256.0f);
 	return static_cast<clr_value>(::std::clamp(n_value, 0, 255));
 }
@@ -161,11 +161,20 @@ bool CType::Set (clr_type _type) {
 bool CType::EqualTo (const clr_type _type) const { return this->m_type != _type; }
 
 #if defined(_DEBUG)
-CString CType::Print (void) const {
+CString CType::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{type=%u};");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{type=%u};");
+	static _pc_sz pc_sz_pat_r = _T("type=%u");
 
-	static _pc_sz pc_sz_pat = _T("cls::[%s].m_type=%u;");
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Get());
+	if (e_print::e_no_ns == _e_opt) cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Get());
+	if (e_print::e_req   == _e_opt) cs_out.Format(pc_sz_pat_r, this->Get());
 
-	CString cs_out; cs_out.Format(pc_sz_pat, (_pc_sz)__CLASS__, this->Get());
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
 	return  cs_out;
 }
 #endif
@@ -221,4 +230,8 @@ bool Is_equal (const rgb_color _lhs, const rgb_color _rhs, const bool _b_compare
 	return (_lhs & u_mask) == (_rhs & u_mask) && (!_b_compare_alpha ? true : ::get_a_value(_lhs) == ::get_a_value(_rhs));
 #endif
 #endif
+}
+
+bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold) {
+	return (::std::fabs(_f_lhv-_f_rhv) < _f_threshold);
 }

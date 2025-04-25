@@ -12,28 +12,6 @@ CClrBits:: CClrBits (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-constexpr float CClrBits::U8ToF32(const uint8_t _u_value) {
-	constexpr float f_invert = 1.0f / 255.0f; 
-	return _u_value * f_invert; 
-}
-
-constexpr uint8_t CClrBits::F32ToU8(const float _f_value) {
-	int32_t n_value = static_cast<int32_t>(_f_value * 256.0f);
-	return static_cast<uint8_t>(::std::clamp(n_value, 0, 255));
-}
-
-::std::vector<float> CClrBits::rgba_to_float (const dword _clr) {
-	_clr;
-	::std::vector<float> f_clr = {0.0f, 0.0f, 0.0f, 0.0f};
-	return f_clr;
-}
-
-dword CClrBits::float_to_rgba (const ::std::vector<float>& _clr) {
-	_clr;
-	dword u_clr = 0;
-	return u_clr;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined(_DEBUG)

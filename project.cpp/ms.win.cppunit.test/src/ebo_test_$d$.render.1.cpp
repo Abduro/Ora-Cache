@@ -603,16 +603,18 @@ void CTarget::Create (void) {
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
 
+	CFake_Wnd fk_wnd;
 	TDevice_HW device;
-	device.Create();
+	device.Cfg().Default(fk_wnd);
+	device.Create(true);
 
 	if (device.Error()) {
-		_out() += device.Error().Print(TError::e_print::e_req);
+		_out() += device.Error().Print(TError::e_print::e_all);
 		_out()();
 		return;
 	}
 	this->m_target << device;
-
+#if (0)
 	CFake_Desc desc;
 	CFake_Swap swap;  // would be better to set name likes 'fake_chain';
 	swap.Create();
@@ -626,12 +628,29 @@ void CTarget::Create (void) {
 	TSwapChain chain_;
 	chain_.Desc().ref() = desc.Ref();
 	chain_.Ptr (swap.Ref().Ptr());
+#endif
+	TTex_2D tex_2d;
+#if (0)
+	tex_2d.Desc().Fake();
+	device.Get(tex_2d);
+	if (device.Error()) {
+		_out() += device.Error().Print(TError::e_print::e_all);
+		_out()();
+		return;
+	}
+#endif
+	TSwapChain& swp_chain = device.SwapChain();
+	swp_chain.GetZBuffer(tex_2d);
+	if (swp_chain.Error()) {
+		_out() += swp_chain.Error().Print(TError::e_print::e_all);
+		_out()();
+		return;
+	}
 
-	this->m_target.Set(chain_);
-
+	this->m_target.Set(tex_2d);
 	this->m_target.Create();
 	if (this->m_target.Error()) {
-		_out() += this->m_target.Error().Print(TError::e_print::e_req);
+		_out() += this->m_target.Error().Print(TError::e_print::e_all);
 	}
 	else
 		_out() += this->m_target.Print(e_print::e_all);

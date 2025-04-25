@@ -150,6 +150,8 @@ namespace _11 { namespace _2D {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11texture2d ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11texture2d-getdesc ;
 	typedef ::ATL::CComPtr<ID3D11Texture2D> TTexPtr;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11resource ;
+	typedef ::ATL::CComPtr<ID3D11Resource>  TResPtr;
 
 	class CTexture {
 	public:
@@ -161,11 +163,12 @@ namespace _11 { namespace _2D {
 		CTexDesc& Desc (void) const;
 		CTexDesc& Desc (void) ;
 
-		TError&  Error (void) const;
-		bool  Is_valid (void) const;
+		TError&   Error (void) const;
+		bool   Is_valid (void) const;
 #if defined (_DEBUG)
-		CString  Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+		CString   Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
+		err_code  Parent(TResPtr&);
 		const
 		TTexPtr&  Ptr (void) const;
 		err_code  Ptr (const TTexPtr&);

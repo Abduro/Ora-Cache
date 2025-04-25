@@ -133,7 +133,7 @@ CString      CFeature_Thread::Print (const e_print _e_opt) const {
 	}
 	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_concurrent, (_pc_sz)cs_commands, (_pc_sz)cs_valid); }
 
-	if (true == cs_out.IsEmpty())
+	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
 	return  cs_out;
 }

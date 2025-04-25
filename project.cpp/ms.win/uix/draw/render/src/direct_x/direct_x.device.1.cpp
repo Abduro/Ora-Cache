@@ -54,6 +54,7 @@ CString    CCtx_Type::Print (const uint32_t _n_type) {
 /////////////////////////////////////////////////////////////////////////////
 
 CContext:: CContext (void) : m_type((TCtxType)0) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CContext:: CContext (const CContext& _src) : CContext() { *this = _src; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -101,11 +102,30 @@ err_code   CContext::Ptr (const TCtx0Ptr& _p_base) {
 		this->m_p_ctx = p_ptr_4.Detach();
 		this->m_type = _p_base->GetType(); // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
 	}
+	return this->Error();
+}
+
+err_code   CContext::Ptr (const TCtx4Ptr& _p_ctx) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_ctx)
+		return (this->m_error << __e_pointer);
+
+	if (this->Is_valid())
+		return (this->m_error << (err_code)TErrCodes::eObject::eInited);
+
+	this->m_p_ctx = _p_ctx;
+	this->m_type = _p_ctx->GetType(); // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
 
 	return this->Error();
 }
 
 TCtxType   CContext::Type(void) const { return this->m_type; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CContext&  CContext::operator = (const CContext& _src) {  *this << _src.Ptr(); return *this; }
+CContext&  CContext::operator <<(const TCtx4Ptr& _p_ctx) { this->Ptr(_p_ctx); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -120,6 +140,9 @@ uint32_t CLevels::Count (void) const { return CFeature_Lvl().Default().Count(); 
 /////////////////////////////////////////////////////////////////////////////
 
 CDev_Cfg:: CDev_Cfg (void) : m_desc{0} {}
+CDev_Cfg:: CDev_Cfg (const CDev_Cfg& _src) : CDev_Cfg() { *this = _src; }
+
+/////////////////////////////////////////////////////////////////////////////
 
 err_code   CDev_Cfg::Default (const HWND hTarget) {
 	hTarget;
@@ -133,6 +156,9 @@ err_code   CDev_Cfg::Default (const HWND hTarget) {
 	RECT rect = {0};
 	if (!::GetClientRect(hTarget, &rect))
 		return (n_result = __LastErrToHresult());
+	if (::IsRectEmpty(&rect)) {
+		::SetRect(&rect, 0, 0, 256, 256);
+	}
 
 	desc.BufferCount       =   1;
 	desc.BufferDesc.Width  = rect.right - rect.left;
@@ -197,10 +223,17 @@ bool      CDev_Cfg::Type (const TDrvType _n_type) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CDev_Cfg& CDev_Cfg::operator = (const CDev_Cfg& _src) { *this << _src.Desc() << _src.Type(); return *this; }
+CDev_Cfg& CDev_Cfg::operator <<(const TDrvType _type) { this->Type(_type); return *this; }
+CDev_Cfg& CDev_Cfg::operator <<(const TSwapDesc& _desc) { this->Desc() = _desc; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
 #define Level_Core EFeatureLvl::D3D_FEATURE_LEVEL_1_0_CORE
 #define Level_11_1 EFeatureLvl::D3D_FEATURE_LEVEL_11_1
 
 CDevice:: CDevice (void) : m_level(Level_Core) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CDevice:: CDevice (const CDevice& _src) : CDevice() { *this = _src; }
 CDevice::~CDevice (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -244,7 +277,7 @@ err_code  CDevice::Create (const CDrv_Type::e_type _drv_type, const bool _b_swap
 
 	if (false == this->Error()) {
 		if (nullptr != p_base)  this->Ptr(p_base.Detach());
-		if (nullptr != p_chain) this->SwapChain().Ptr(p_chain.Detach());
+		if (nullptr != p_chain) this->SwapChain().Ptr(p_chain.Detach(), true);
 		if (nullptr != p_ctx)   this->Ctx().Ptr(p_ctx.Detach());
 
 		this->m_level = n_level;
@@ -368,7 +401,7 @@ CString   CDevice::Print (const e_print _e_opt) const {
 	}
 	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_level, (_pc_sz)cs_ctx, (_pc_sz)cs_type, (_pc_sz)cs_valid); }
 
-	if (true == cs_out.IsEmpty())
+	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
 	return  cs_out;
 }
@@ -391,6 +424,18 @@ err_code    CDevice::Ptr (const TDevicePtr& _p_dev) {
 const
 CSwapChain& CDevice::SwapChain (void) const { return this->m_chain; }
 CSwapChain& CDevice::SwapChain (void)       { return this->m_chain; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDevice&  CDevice::operator = (const CDevice& _src) {
+	*this << _src.Cfg() << _src.Ctx() << _src.Level() << _src.Ptr() << _src.SwapChain();
+	 this->m_error = _src.Error(); return *this;
+}
+CDevice&  CDevice::operator <<(const CContext& _ctx) { this->Ctx() = _ctx; return *this; }
+CDevice&  CDevice::operator <<(const CDev_Cfg& _cfg) { this->Cfg() = _cfg; return *this; }
+CDevice&  CDevice::operator <<(const CSwapChain& _chain) { this->SwapChain() = _chain; return *this; }
+CDevice&  CDevice::operator <<(const uint32_t _n_lvl) { this->m_level = (EFeatureLvl)_n_lvl; return *this; }
+CDevice&  CDevice::operator <<(const TDevicePtr& _p_dev) { this->Ptr(_p_dev); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

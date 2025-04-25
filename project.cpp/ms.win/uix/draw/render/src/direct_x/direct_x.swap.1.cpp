@@ -62,6 +62,7 @@ using namespace ex_ui::draw::direct_x::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
 CDesc_Wrap:: CDesc_Wrap (void) : m_desc{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CDesc_Wrap:: CDesc_Wrap (const CDesc_Wrap& _src) : CDesc_Wrap() { *this = _src; }
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
@@ -156,7 +157,7 @@ err_code    CDesc_Wrap::Target (HWND const _h_target) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code   CDesc_Wrap::Is_valid (const TSwapDesc& _desc) {
+err_code    CDesc_Wrap::Is_valid (const TSwapDesc& _desc) {
 	_desc;
 	err_code n_result = __s_ok;
 	// the swap description structure must have the valid handle to target/output window;
@@ -168,7 +169,9 @@ err_code   CDesc_Wrap::Is_valid (const TSwapDesc& _desc) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDesc_Wrap& CDesc_Wrap::operator <<(HWND const _h_target) { this->Target(_h_target); return *this; }
+CDesc_Wrap& CDesc_Wrap::operator = (const CDesc_Wrap& _src) { *this << _src.ref() << _src.Target(); return *this; } // setting a target is not required;
+CDesc_Wrap& CDesc_Wrap::operator <<(const TSwapDesc& _desc) {  this->Set(_desc); return *this; }
+CDesc_Wrap& CDesc_Wrap::operator <<(HWND const _h_target)   {  this->Target(_h_target); return *this; }
 
 CDesc_Wrap::operator const TSwapDesc& (void) const { return this->ref(); }
 CDesc_Wrap::operator TSwapDesc& (void) { return this->ref(); }
@@ -176,6 +179,7 @@ CDesc_Wrap::operator TSwapDesc& (void) { return this->ref(); }
 /////////////////////////////////////////////////////////////////////////////
 
 CSwapChain:: CSwapChain (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CSwapChain:: CSwapChain (const CSwapChain& _src) : CSwapChain() { *this = _src; }
 
 /////////////////////////////////////////////////////////////////////////////
 const
@@ -224,7 +228,7 @@ err_code     CSwapChain::GetZBuffer(TZBuffer& _z_buf) {
 
 const
 TChainPtr&   CSwapChain::Ptr (void) const { return this->m_p_chain; }
-err_code     CSwapChain::Ptr (const TChainPtr& _p_chain) {
+err_code     CSwapChain::Ptr (const TChainPtr& _p_chain, const bool _upd_desc) {
 	_p_chain;
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -233,11 +237,11 @@ err_code     CSwapChain::Ptr (const TChainPtr& _p_chain) {
 
 	if (nullptr == _p_chain)
 		return this->m_error << __e_pointer;
-	else {
-		this->m_p_chain = _p_chain;
+	
+	this->m_p_chain = _p_chain;
+	if (_upd_desc)
 		this->UpdateDesc();
-	}
-
+	
 	return this->Error();
 }
 
@@ -281,4 +285,6 @@ err_code     CSwapChain::UpdateDesc (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSwapChain&  CSwapChain::operator <<(const TChainPtr& _p_chain) { this->Ptr(_p_chain); return *this; }
+CSwapChain&  CSwapChain::operator = (const CSwapChain& _src) { *this << _src.Desc() << _src.Ptr(); return *this; }
+CSwapChain&  CSwapChain::operator <<(const CDesc_Wrap& _wrap) { this->Desc() = _wrap; return *this; }
+CSwapChain&  CSwapChain::operator <<(const TChainPtr& _p_chain) { this->Ptr(_p_chain, true); return *this; }

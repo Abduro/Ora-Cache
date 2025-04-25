@@ -16,7 +16,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	class CDesc_Wrap {
 	public:
 		 CDesc_Wrap (void);
-		 CDesc_Wrap (const CDesc_Wrap&) = delete; CDesc_Wrap (CDesc_Wrap&&) = delete;
+		 CDesc_Wrap (const CDesc_Wrap&); CDesc_Wrap (CDesc_Wrap&&) = delete;
 		~CDesc_Wrap (void) = default;
 
 	public:
@@ -39,6 +39,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		err_code    Target (HWND const);
 
 	public:
+		CDesc_Wrap& operator = (const CDesc_Wrap& _src);
+		CDesc_Wrap& operator = (CDesc_Wrap&& _victim) = delete;
+		CDesc_Wrap& operator <<(const TSwapDesc&);
 		CDesc_Wrap& operator <<(HWND const _h_target);
 
 		operator const TSwapDesc& (void) const;
@@ -46,15 +49,11 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	public:
 		static err_code Is_valid (const TSwapDesc&);
-	
+
 	private:
 		mutable
 		CError     m_error;
 		TSwapDesc  m_desc;
-		
-	private:
-		CDesc_Wrap& operator = (const CDesc_Wrap& _src) = delete;
-		CDesc_Wrap& operator = (CDesc_Wrap&& _victim) = delete;
 	};
 
 	typedef ::std::shared_ptr<CDesc_Wrap> TDescWrapPtr;
@@ -70,7 +69,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	class CSwapChain {
 	public:
 		 CSwapChain (void);
-		 CSwapChain (const CSwapChain&) = delete; // is not required yet;
+		 CSwapChain (const CSwapChain&);
 		 CSwapChain (CSwapChain&&) = delete;      // is not required yet;
 		~CSwapChain (void) = default;
 
@@ -87,14 +86,15 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 		const
 		TChainPtr&  Ptr (void) const;
-		err_code    Ptr (const TChainPtr&) ;
+		err_code    Ptr (const TChainPtr&, const bool _upd_desc) ;
 #if defined (_DEBUG)
 		CString     Print (const e_print = e_print::e_all) const;
 #endif
 		err_code    UpdateDesc (void) ;
 	public:
-		CSwapChain& operator = (const CSwapChain&) = delete; // is not required yet;
-		CSwapChain& operator = (CSwapChain&&) = delete;      // is not required yet;
+		CSwapChain& operator = (const CSwapChain&);
+		CSwapChain& operator = (CSwapChain&&) = delete; // is not required yet;
+		CSwapChain& operator <<(const CDesc_Wrap&);
 		CSwapChain& operator <<(const TChainPtr&);
 
 	private:

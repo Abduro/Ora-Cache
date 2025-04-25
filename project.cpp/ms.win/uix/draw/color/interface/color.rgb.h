@@ -12,7 +12,9 @@
 namespace ex_ui { namespace color { namespace rgb {
 
 	using namespace shared::types; // is declared in 'shared.types.h';
-
+	#if defined(_DEBUG)
+	using e_print = ex_ui::color::e_print;
+	#endif
 	using TPercent = TPct_Flt;
 	// perhaps it would be better to consider RGBQUAD as the base for this class:
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad ;
@@ -68,12 +70,7 @@ namespace ex_ui { namespace color { namespace rgb {
 		void  Reset  (void);                   // zeros value of all color channels and sets to invalid state;
 
 #ifdef _DEBUG
-		enum e_print {
-			e_all    = 0, // prints class name, rgba values and valid flag value;
-			e_req    = 1, // pronts rgba values and valid flag  value;
-			e_no_pfx = 2, // removes 'cls' prefix from the out string;
-		};
-		CString Print (const e_print = e_print::e_req) const;
+		CString Print (const e_print = e_print::e_all) const;
 #endif
 
 	public:
@@ -125,13 +122,14 @@ namespace ex_ui { namespace color { namespace rgb {
 		bool  Lighten(const uint8_t _percent); // lightens a color by specified percent value in [0...100]; returns true if succeeds;
 
 #ifdef _DEBUG
-		using e_print = TBase::e_print;
-		CString Print (const e_print = e_print::e_req) const;
+		CString Print (const e_print = e_print::e_all) const;
 #endif
 	};
 
-	typedef ::std::vector<float> clr_float;    // the vector needs to contain 4 elements as rgba color model;
+	typedef ::std::vector<float> clr_float; // the vector needs to contain 4 elements as rgba color model; CQuad::channel is the index;
 
+	// this class is some sort of a replacement for D3DXCOLOR structure ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-d3dxcolor ;
 	class CClr_Float {
 	public:
 		 CClr_Float (void) ; CClr_Float (const CClr_Float&) = delete; CClr_Float (CClr_Float&&) = delete;
@@ -149,9 +147,13 @@ namespace ex_ui { namespace color { namespace rgb {
 		bool B (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
 		bool G (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
 		bool R (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 		bool Set (const clr_type);   // sets float color value from rgba color; returns 'true' in case of change float color value;
 
+	public:
+		CClr_Float&  operator <<(const clr_type);
 
 	private:
 		CClr_Float&  operator = (const CClr_Float&) = delete;
@@ -177,12 +179,8 @@ namespace ex_ui { namespace color { namespace rgb {
 
 	public:
 #if defined (_DEBUG)
-		enum e_print {
-			 e_all = 0,
-			 e_val = 1,
-		};
 		static CString Print (const clr_type);
-		static CString Print (const CQuad&, const e_print = e_print::e_val);
+		static CString Print (const CQuad&, const e_print = e_print::e_req);
 #endif
 	public:
 		CHex&  operator = (const CHex&);
