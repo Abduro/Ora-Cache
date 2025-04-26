@@ -263,14 +263,21 @@ CViewDesc& CTarget::Desc (void)       { return this->m_desc; }
 
 err_code   CTarget::Draw (void) {
 
+	err_code n_result = __s_ok;
 	if (this->Is_valid()) {
 		if (this->m_device.Ctx().Is_valid()) {
+
 			float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha;
 			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, ClearColor);
-		}
-	}
 
-	return __s_ok;
+			if (this->m_device.SwapChain().Is_valid()) {
+				// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present ;
+				this->m_device.SwapChain().Ptr()->Present(0, 0);
+			}
+			else n_result = this->m_device.SwapChain().Error();
+		} else n_result = this->m_device.Ctx().Error();
+	} else n_result = this->Error();
+	return n_result;
 }
 
 TError&   CTarget::Error (void) const { return this->m_error; }

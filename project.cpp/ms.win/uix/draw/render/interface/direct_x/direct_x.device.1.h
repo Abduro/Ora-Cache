@@ -139,6 +139,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-limitations ;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11device      ; the base interface;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11device1 ; shared res; blend; cmd list; dx11.1;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11device2 ; deferred context; dx11.2;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11device3 ; view and texture;
