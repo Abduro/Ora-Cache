@@ -58,6 +58,8 @@ err_code  CRender_Wrap::Term (void) {
 	return this->Error();
 }
 
+CTarget& CRender_Wrap::Target (void) { return this->m_target; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 using eState = IFormEvtSink::eState;

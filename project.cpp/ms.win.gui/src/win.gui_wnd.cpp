@@ -36,6 +36,14 @@ err_code  CView::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	return   n_result;
 }
 
+err_code CView::IEvtDraw_OnPaint (const w_param, const l_param) {
+
+	_render().Target().Draw();
+
+	err_code n_result = __s_false;  // this message is handled;
+	return   n_result;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 err_code  CView::IEvtLife_OnClose  (const w_param, const l_param) {

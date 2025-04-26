@@ -85,9 +85,16 @@ namespace _11 {
 		~CViewPort (void) {}
 
 	public:
+	#if defined(_DEBUG)
+		static
+		CString  Print (const TViewPort&, const e_print);
+		CString  Print (const e_print);
+	#endif
 		const
 		TViewPort& Raw (void) const;
 		TViewPort& Raw (void) ;
+
+		err_code   SetSize(HWND const _target);
 
 	private:
 		CViewPort& operator = (const CViewPort&) = delete;
@@ -119,12 +126,18 @@ namespace _11 {
 		CViewDesc& Desc (void) const;
 		CViewDesc& Desc (void) ;
 
+		err_code  Draw  (void) ;
+
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
 
 #if defined(_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
+		const
+		CViewPort& Port (void) const;
+		CViewPort& Port (void) ;
+
 		const
 		TViewPtr& Ptr (void) const;
 		err_code  Ptr (const TViewPtr&, const bool _b_upd_desc);
@@ -148,6 +161,7 @@ namespace _11 {
 		CTexture   m_texture; // cached texture object;
 		TViewPtr   m_view;
 		CViewDesc  m_desc;
+		CViewPort  m_port;
 	};
 
 }

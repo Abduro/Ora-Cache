@@ -30,6 +30,7 @@ namespace ebo { namespace boo { namespace gui {
 
 	private:  // IDrawEvtSink override(s);
 		err_code IEvtDraw_OnErase   (const HDC _dev_ctx) override final;
+		err_code IEvtDraw_OnPaint   (const w_param, const l_param) override final;
 
 	private:  // ILifeEvtSink override(s);
 		err_code IEvtLife_OnClose   (const w_param, const l_param) override final; // reminder: if result is __s_ok, this window is still open;

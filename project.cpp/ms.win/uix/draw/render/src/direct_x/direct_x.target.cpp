@@ -155,9 +155,49 @@ TViewDesc& CViewDesc::Raw (void)       { return this->m_desc; }
 CViewPort:: CViewPort (void) : m_port{0} {}
 
 /////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CString  CViewPort::Print (const TViewPort&, const e_print) {
+	CString cs_out;
+	return  cs_out;
+}
+CString  CViewPort::Print (const e_print _e_opt) {
+	return CViewPort::Print(this->Raw(), _e_opt);
+}
+#endif
 const
 TViewPort& CViewPort::Raw (void) const { return this->m_port; }
 TViewPort& CViewPort::Raw (void)       { return this->m_port; }
+
+err_code   CViewPort::SetSize(HWND const _target) {
+	_target;
+	err_code n_result = __s_ok;
+
+	if (!::IsWindow(_target))
+		return n_result = __e_hwnd;
+
+	this->m_port.TopLeftX = 0.0f;
+	this->m_port.TopLeftY = 0.0f;
+
+	this->m_port.MinDepth = 0.0f;
+	this->m_port.MaxDepth = 1.0f;
+
+	RECT rc_client = {0};
+	::GetClientRect(_target, &rc_client);
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_viewport ;
+	// *important*: no negative values neither for left nor top; the same is for a width and for a height;
+	if (::IsRectEmpty(&rc_client)) {
+		n_result = __e_rect;
+		// sets just default values, mainly for debug purposes, but in any case, this is not good approach;
+		this->m_port.Height = float(256);
+		this->m_port.Width  = float(256);
+	}
+	else {
+		this->m_port.Height = float(rc_client.bottom - rc_client.top);
+		this->m_port.Width  = float(rc_client.right - rc_client.left);
+	}
+
+	return n_result;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -200,6 +240,19 @@ err_code  CTarget::Create(void) {
 		this->Error();
 	else
 		this->m_error << this->UpdateDesc();
+	// checks the device context object, it is required for calling methods of this context;
+	if (this->m_device.Ctx().Is_valid() == false)
+		return this->m_error = this->m_device.Ctx().Error();
+
+	ID3D11RenderTargetView* pView = this->m_view;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-omsetrendertargets ;
+	if (this->Error() == false) {
+		this->m_device.Ctx().Ptr()->OMSetRenderTargets(1, &pView, nullptr);
+		this->m_port.SetSize(this->m_device.SwapChain().Desc().ref().OutputWindow); // does not care about an error for this time;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-rssetviewports ;
+		this->m_device.Ctx().Ptr()->RSSetViewports(1, &this->m_port.Raw());
+	}
 
 	return this->Error();
 }
@@ -207,6 +260,18 @@ err_code  CTarget::Create(void) {
 const
 CViewDesc& CTarget::Desc (void) const { return this->m_desc; }
 CViewDesc& CTarget::Desc (void)       { return this->m_desc; }
+
+err_code   CTarget::Draw (void) {
+
+	if (this->Is_valid()) {
+		if (this->m_device.Ctx().Is_valid()) {
+			float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha;
+			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, ClearColor);
+		}
+	}
+
+	return __s_ok;
+}
 
 TError&   CTarget::Error (void) const { return this->m_error; }
 bool      CTarget::Is_valid (void) const { return nullptr != this->Ptr(); }
@@ -235,6 +300,9 @@ CString   CTarget::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 #endif
+const
+CViewPort& CTarget::Port (void) const { return this->m_port; }
+CViewPort& CTarget::Port (void)       { return this->m_port; }
 const
 TViewPtr& CTarget::Ptr (void) const { return this->m_view; }
 err_code  CTarget::Ptr (const TViewPtr& _p_view, const bool _b_upd_desc) {

@@ -32,6 +32,8 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 		err_code Init  (const HWND _h_target); // sets the target window handle for creating target view object;
 		err_code Term  (void);                 // this method and above one are called by main window on 'create' and 'destroy' events;
 
+		CTarget& Target(void);
+
 //	private:  // IDrawEvtSink override(s);
 //		err_code IEvtDraw_OnErase (const HDC _dev_ctx) override final;
 

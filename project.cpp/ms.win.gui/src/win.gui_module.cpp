@@ -5,6 +5,7 @@
 	Adopted to vs15 on 1-Jul-2018 at 6:11:43p, UTC+7, Phuket, Rawai, Sunday;
 */
 #include "win.gui_module.h"
+#include "direct_x.wrap.h"
 
 using namespace shared::sys_core;
 using namespace ebo::boo::gui;
@@ -50,8 +51,20 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	n_result = frame.Create();
 	if (__succeeded(n_result)) {
-
+#if (0)
 		_Module.WinMain(nCmdShow);
+#else
+		MSG msg = {0};
+		while( WM_QUIT != msg.message ) {
+			if (::PeekMessage( &msg, NULL, 0, 0, PM_REMOVE )) {
+				::TranslateMessage( &msg );
+				::DispatchMessage ( &msg );
+			}
+			else {
+				_render().Target().Draw();
+			}
+		}
+#endif
 		frame.Destroy();       // a handling of possible error is not done yet; because it is not necessary for now;
 	}
 	else
