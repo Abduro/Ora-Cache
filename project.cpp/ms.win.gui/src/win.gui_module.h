@@ -6,6 +6,8 @@
 	Using the latest features of DirectX12 requires Windows Target Platform Version not less than 10.0.17763.0, 10.0.18362.0 is used;
 */
 #include <atlbase.h>
+#include <map>
+#include <cstdint>                             // for data type definitions, for example, uint32_t;
 
 #include "sys.error.h"
 #include "shared.preproc.h"

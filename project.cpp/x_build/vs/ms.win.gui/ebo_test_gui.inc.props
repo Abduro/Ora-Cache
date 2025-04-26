@@ -34,9 +34,10 @@
     <_b>$(_a)msg_handlers\</_b>
     <_c>$(_1)render\</_c>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
     <_d>$(_9)direct_x\</_d>
+    <_e>$(_1)themes\</_e>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(_c);$(_d);$(IncludePath)</IncludePath>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(_c);$(_d);$(_e);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />
