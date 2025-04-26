@@ -37,6 +37,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	using namespace shared::types;
 	using shared::sys_core::CSyncObject;
+	using ex_ui::color::rgb::CClr_Float;
 
 #if defined(_DEBUG)
 	enum e_print : uint32_t {

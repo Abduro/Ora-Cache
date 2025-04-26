@@ -61,9 +61,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 		uint32_t*  m_p_sync; // this is the pointer to the outer variable that requires a value synchronization; by default is not set;
 		uint32_t   m_n_mode;
 	};
-
+#if (0)
 	typedef CAlphaMode TAlpha;
-
+#endif
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/ns-dxgi1_2-dxgi_swap_chain_desc1 ;
 	typedef DXGI_SWAP_CHAIN_DESC1 TSwapDesc;
 
@@ -195,8 +195,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 
 	public:
 		const
-		TAlpha&     Alpha (void) const;
-		TAlpha&     Alpha (void) ;
+		CAlphaMode& Alpha (void) const;
+		CAlphaMode& Alpha (void) ;
+
 		const
 		CBuffer&    Buffer(void) const;
 		CBuffer&    Buffer(void) ;

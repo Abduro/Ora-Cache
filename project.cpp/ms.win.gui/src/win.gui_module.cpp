@@ -61,7 +61,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 				::DispatchMessage ( &msg );
 			}
 			else {
-				_render().Target().Draw();
+			//	_render().Target().Draw();
 			}
 		}
 #endif

@@ -1,2 +1,0 @@
-it would be better to rename 'console_v15' project name to something more appropriate, like this, for example, 'console.lib_v15';
-of course this project produces static library that has file extention 'lib', but anyway, the project name is not informative.

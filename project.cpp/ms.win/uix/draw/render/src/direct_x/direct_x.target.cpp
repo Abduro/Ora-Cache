@@ -93,15 +93,15 @@ CString CViewDims::Print (const uint32_t  _e_to_access_as) {
 	switch (_e_to_access_as) {
 	case ToAccessAs::e_buffer        : cs_out = _T("dim:e_buffer");        break;
 	case ToAccessAs::e_not_use       : cs_out = _T("dim:e_not_use");       break;
-	case ToAccessAs::e_tex_1D		 : cs_out = _T("dim:e_tex_1D");        break;
-	case ToAccessAs::e_tex_1D_arr	 : cs_out = _T("dim:e_tex_1D_arr");    break;
-	case ToAccessAs::e_tex_2D		 : cs_out = _T("dim:e_tex_2D");        break;
-	case ToAccessAs::e_tex_2D_arr	 : cs_out = _T("dim:e_tex_2D_arr");    break;
-	case ToAccessAs::e_tex_2D_ms	 : cs_out = _T("dim:e_tex_2D_ms");     break;
+	case ToAccessAs::e_tex_1D        : cs_out = _T("dim:e_tex_1D");        break;
+	case ToAccessAs::e_tex_1D_arr    : cs_out = _T("dim:e_tex_1D_arr");    break;
+	case ToAccessAs::e_tex_2D        : cs_out = _T("dim:e_tex_2D");        break;
+	case ToAccessAs::e_tex_2D_arr    : cs_out = _T("dim:e_tex_2D_arr");    break;
+	case ToAccessAs::e_tex_2D_ms     : cs_out = _T("dim:e_tex_2D_ms");     break;
 	case ToAccessAs::e_tex_2D_ms_arr : cs_out = _T("dim:e_tex_2D_ms_arr"); break;
-	case ToAccessAs::e_tex_3D		 : cs_out = _T("dim:e_tex_3D");        break;
+	case ToAccessAs::e_tex_3D        : cs_out = _T("dim:e_tex_3D");        break;
 	default:
-			cs_out.Format(_T("dim:#unspec(%d)"), _e_to_access_as);
+		cs_out.Format(_T("dim:#unspec(%d)"), _e_to_access_as);
 	}
 	return  cs_out;
 }
@@ -119,13 +119,13 @@ CString   CViewDesc::Print (const TViewDesc& _desc, const e_print _e_opt) {
 	switch (_desc.ViewDimension) {
 	case ToAccessAs::e_buffer        : cs_desc += CDesc_Fmt().Buffer(_desc.Buffer);  break;
 	case ToAccessAs::e_not_use       : cs_desc += _T("#not_used");  break;
-	case ToAccessAs::e_tex_1D		 : cs_desc += CDesc_Fmt().Tex_1D(_desc.Texture1D);  break;
-	case ToAccessAs::e_tex_1D_arr	 : cs_desc += CDesc_Fmt().Tex_1D_arr(_desc.Texture1DArray);  break;
-	case ToAccessAs::e_tex_2D		 : cs_desc += CDesc_Fmt().Tex_2D(_desc.Texture2D);  break;
-	case ToAccessAs::e_tex_2D_arr	 : cs_desc += CDesc_Fmt().Tex_2D_arr(_desc.Texture2DArray);  break;
-	case ToAccessAs::e_tex_2D_ms	 : cs_desc += _T("#not_used");  break;
+	case ToAccessAs::e_tex_1D        : cs_desc += CDesc_Fmt().Tex_1D(_desc.Texture1D);  break;
+	case ToAccessAs::e_tex_1D_arr    : cs_desc += CDesc_Fmt().Tex_1D_arr(_desc.Texture1DArray);  break;
+	case ToAccessAs::e_tex_2D        : cs_desc += CDesc_Fmt().Tex_2D(_desc.Texture2D);  break;
+	case ToAccessAs::e_tex_2D_arr    : cs_desc += CDesc_Fmt().Tex_2D_arr(_desc.Texture2DArray);  break;
+	case ToAccessAs::e_tex_2D_ms     : cs_desc += _T("#not_used");  break;
 	case ToAccessAs::e_tex_2D_ms_arr : cs_desc += CDesc_Fmt().Tex_2D_ms(_desc.Texture2DMSArray);  break;
-	case ToAccessAs::e_tex_3D		 : cs_desc += CDesc_Fmt().Tex_3D(_desc.Texture3D);  break;
+	case ToAccessAs::e_tex_3D        : cs_desc += CDesc_Fmt().Tex_3D(_desc.Texture3D);  break;
 	}
 
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s}");
@@ -261,14 +261,16 @@ const
 CViewDesc& CTarget::Desc (void) const { return this->m_desc; }
 CViewDesc& CTarget::Desc (void)       { return this->m_desc; }
 
-err_code   CTarget::Draw (void) {
+err_code   CTarget::Draw (const CClr_Float& _clr) {
 
 	err_code n_result = __s_ok;
 	if (this->Is_valid()) {
 		if (this->m_device.Ctx().Is_valid()) {
-
+#if (0)
 			float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha;
 			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, ClearColor);
+#endif
+			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, _clr.Get().data());
 
 			if (this->m_device.SwapChain().Is_valid()) {
 				// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present ;

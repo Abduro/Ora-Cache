@@ -17,8 +17,8 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 	class CAdapter_Flag {
 	public:
 		enum e_type : uint32_t {
-			e_undef = TFlag::DXGI_ADAPTER_FLAG_NONE, // not set a flag;
-			e_soft  = TFlag::DXGI_ADAPTER_FLAG_SOFTWARE,
+		     e_undef = TFlag::DXGI_ADAPTER_FLAG_NONE, // not set a flag;
+		     e_soft  = TFlag::DXGI_ADAPTER_FLAG_SOFTWARE,
 		};
 	};
 

@@ -17,9 +17,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _12 {
 	class CGpu_Prefs {
 	public:
 		enum e_prefs : uint32_t {
-			e__unspec  = TGpuPrefs::DXGI_GPU_PREFERENCE_UNSPECIFIED     ,
-			e_hi_perf  = TGpuPrefs::DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-			e_lo_power = TGpuPrefs::DXGI_GPU_PREFERENCE_MINIMUM_POWER   ,
+		     e__unspec  = TGpuPrefs::DXGI_GPU_PREFERENCE_UNSPECIFIED     ,
+		     e_hi_perf  = TGpuPrefs::DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+		     e_lo_power = TGpuPrefs::DXGI_GPU_PREFERENCE_MINIMUM_POWER   ,
 		};
 	public:
 		 CGpu_Prefs (void) = default; CGpu_Prefs (const CGpu_Prefs&) = delete; CGpu_Prefs (CGpu_Prefs&&) = delete;

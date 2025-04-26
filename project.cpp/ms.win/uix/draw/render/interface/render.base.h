@@ -13,6 +13,7 @@
 #include <memory>             // https://en.cppreference.com/w/cpp/memory/shared_ptr ;
 
 #include "color._defs.h"
+#include "color.rgb.h"
 #if defined(_DEBUG)
 #include "shared.preproc.h"
 #include "shared.string.h"

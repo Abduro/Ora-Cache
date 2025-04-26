@@ -20,9 +20,9 @@ namespace ex_ui { namespace color {
 
 #if defined(_DEBUG)
 	enum e_print : uint32_t {
-		e_all   = 0x0,  // prints out the class name and namespace path, class attribute value(s);
-		e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
-		e_req   = 0x2,  // prints out the class object attribute value(s) only;
+	     e_all   = 0x0,  // prints out the class name and namespace path, class attribute value(s);
+	     e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
+	     e_req   = 0x2,  // prints out the class object attribute value(s) only;
 	};
 #endif
 
@@ -42,8 +42,8 @@ namespace ex_ui { namespace color {
 	class CPercent_F {
 	public:
 		enum _std_range : uint8_t {
-			e_max = 100,
-			e_min = 0  ,
+		        e_max = 100,
+		        e_min = 0  ,
 		};
 		static const uint8_t n_max_digits = 6; // maximum number of digits in fractional part that is taking into account when comparison is made;
 	public:
@@ -67,8 +67,8 @@ namespace ex_ui { namespace color {
 
 #if defined(_DEBUG)
 		enum e_print {
-			e_as_is  = 0, // outputs out the percent value as float number, i.e. as is;
-			e_as_int = 1, // outputs the percentage value as an integer, which can be rounded up or down;
+		     e_as_is  = 0, // outputs out the percent value as float number, i.e. as is;
+		     e_as_int = 1, // outputs the percentage value as an integer, which can be rounded up or down;
 		};
 		CString  Print (const e_print = e_print::e_as_is) const;
 #endif

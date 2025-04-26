@@ -133,6 +133,7 @@ namespace ex_ui { namespace color { namespace rgb {
 	class CClr_Float {
 	public:
 		 CClr_Float (void) ; CClr_Float (const CClr_Float&) = delete; CClr_Float (CClr_Float&&) = delete;
+		 CClr_Float (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a = _Opaque);
 		~CClr_Float (void) = default;
 
 	public:

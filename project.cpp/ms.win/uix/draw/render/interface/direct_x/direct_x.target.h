@@ -126,7 +126,7 @@ namespace _11 {
 		CViewDesc& Desc (void) const;
 		CViewDesc& Desc (void) ;
 
-		err_code  Draw  (void) ;
+		err_code  Draw  (const CClr_Float&) ;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;

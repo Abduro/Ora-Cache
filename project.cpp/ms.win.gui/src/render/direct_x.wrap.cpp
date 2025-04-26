@@ -27,8 +27,16 @@ err_code  CRender_Wrap::Init  (const HWND _h_target) {
 	// (2) creates the device object with swap chain, that is essential;
 	this->m_device.Cfg().Type((TDrvType)CDrv_Type::e_type::e_ref);
 	this->m_error << this->m_device.Create(CDrv_Type::e_type::e_ref, true);
+
+	// the error may occur for example on MS Windows of home edition;
+	if (this->m_device.Error()) {
+	// (2.a) tries to create other device of different adapter type;
+	this->m_device.Cfg().Type((TDrvType)CDrv_Type::e_type::e_hard);
+	this->m_error << this->m_device.Create(CDrv_Type::e_type::e_hard, true);
+
 	if (this->m_device.Error())
 		return this->m_device.Error();
+	}
 	// (3) creates a texture as a draw surface by swap & chain object, not by the device itself!
 	CTexture tex_2d;
 

@@ -2,7 +2,7 @@
 #define _DIRECT_X_DEVICE_2_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 14-Apr-2025 at 15:51:04.635, UTC+4, Batumi, Thursday;
-	This is Ebo Pack Direct2 11 device base wrapper interface declaration file;
+	This is Ebo Pack DirectX 11 device base wrapper interface declaration file;
 */
 #include "direct_x.device.h"
 

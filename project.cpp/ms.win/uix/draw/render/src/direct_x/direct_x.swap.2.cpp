@@ -359,9 +359,12 @@ bool CSwapDesc::ISample_OnQuality (const uint32_t _n_value) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+using TMode = ex_ui::draw::direct_x::_12::CAlphaMode;
+
 const
-TAlpha&  CSwapDesc::Alpha (void) const { return this->m_alpha; }
-TAlpha&  CSwapDesc::Alpha (void)       { return this->m_alpha; }
+TMode&   CSwapDesc::Alpha (void) const { return this->m_alpha; }
+TMode&   CSwapDesc::Alpha (void)       { return this->m_alpha; }
 const
 CBuffer& CSwapDesc::Buffer(void) const { return this->m_buffer; }
 CBuffer& CSwapDesc::Buffer(void)       { return this->m_buffer; }

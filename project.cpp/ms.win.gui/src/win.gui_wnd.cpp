@@ -38,7 +38,9 @@ err_code  CView::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 
 err_code CView::IEvtDraw_OnPaint (const w_param, const l_param) {
 
-	_render().Target().Draw();
+	using ex_ui::color::rgb::CClr_Float;
+
+	_render().Target().Draw(CClr_Float(61,61,61));
 
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
