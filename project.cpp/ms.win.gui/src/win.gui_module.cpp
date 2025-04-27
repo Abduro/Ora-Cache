@@ -6,6 +6,7 @@
 */
 #include "win.gui_module.h"
 #include "direct_x.wrap.h"
+#include "ebo.sha.gui.theme.h"
 
 using namespace shared::sys_core;
 using namespace ebo::boo::gui;
@@ -61,7 +62,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 				::DispatchMessage ( &msg );
 			}
 			else {
-			//	_render().Target().Draw();
+			#if (0)
+				const bool b_is_dark = TTheme::IsDark();
+				if (b_is_dark) {}
+			#else
+				using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
+				_render().Target().Draw(CUI_Parts().Bkg());
+			#endif
 			}
 		}
 #endif

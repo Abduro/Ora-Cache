@@ -12,6 +12,7 @@
 #include "sys.error.h"
 #include "shared.preproc.h"
 #include "shared.string.h"
+#include "shared.types.h"
 
 #include "win.gui_frame.h"
 
@@ -26,6 +27,8 @@ namespace ebo { namespace boo { namespace gui {
 
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
+
+	using namespace shared::types;
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;
 

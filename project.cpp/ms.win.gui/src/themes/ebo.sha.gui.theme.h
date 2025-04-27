@@ -7,8 +7,10 @@
 	Adopted to Ebo Pack UM test project on 14-Jan-2021 at 12:03:27.717 pm, UTC+7, Novosibirsk, Thursday;
 	Adopted to Ebo Pack render project desktop GUI app on 26-Apr-2025 at 22:49:56.695, UTC+4, Batumi, Saturday; 
 */
-#include "win.gui_module.h"
+#include <atlbase.h>
+#include <map>
 #include "color.rgb.h"
+#include "ebo.sha.dwm.wrap.h"
 
 namespace ebo { namespace sha { namespace theme { namespace colors {
 
@@ -79,8 +81,10 @@ typedef ebo::sha::theme::colors::CColor_Matrix     TColorMatrix;
 
 namespace ebo { namespace sha { namespace theme {
 
-	// https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2012/b0z6b513
+	using namespace ex_ui::color::rgb;
 
+	// https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2012/b0z6b513 ;
+	// https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/ui/apply-windows-themes ;
 	class CTheme {
 	protected:
 		TThemePalette  m_current; // current theme palette;
@@ -96,7 +100,10 @@ namespace ebo { namespace sha { namespace theme {
 		const TThemePalette  Palette (void) const;
 
 	public:
-		COLORREF Get (const TThemePart, const TThemeElement, const TThemeState = TThemeState::e_default) const;
+		clr_type Get (const TThemePart, const TThemeElement, const TThemeState = TThemeState::e_default) const;
+
+	public:
+		static  bool IsDark (void);
 
 	public:
 		CTheme& operator = (const CTheme&);
@@ -107,8 +114,26 @@ namespace ebo { namespace sha { namespace theme {
 typedef ebo::sha::theme::CTheme  TTheme;
 
 namespace shared {
-
-	TTheme&   Get_Theme (void);
+	TTheme& Get_Theme (void);
 }
+
+namespace ebo { namespace sha { namespace theme { namespace direct_x {
+
+	using CClr_Float = ex_ui::color::rgb::CClr_Float;
+
+	class CUI_Parts {
+	public:
+		 CUI_Parts (void) {} CUI_Parts (const CUI_Parts&) = delete; CUI_Parts (CUI_Parts&&) = delete;
+		~CUI_Parts (void) {}
+
+	public:
+		CClr_Float Bkg (void) const; // gets the background color depending on the currently installed theme;
+
+	private:
+		CUI_Parts&  operator = (const CUI_Parts&) = delete;
+		CUI_Parts&  operator = (CUI_Parts&&) = delete;
+	};
+
+}}}}
 
 #endif/*_EBOSHAGUITHEME_H_INCLUDED*/

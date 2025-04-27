@@ -299,6 +299,7 @@ CString CColor::Print (const e_print e_opt) const {
 /////////////////////////////////////////////////////////////////////////////
 
 CClr_Float:: CClr_Float (void) : m_value{0.0f} {}
+CClr_Float:: CClr_Float (const clr_type _clr) : CClr_Float() { *this << _clr; }
 CClr_Float:: CClr_Float (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a) : CClr_Float() {
 	this->Set(_r_g_b_a(_r,_g,_b,_a));
 }
@@ -383,6 +384,8 @@ bool CClr_Float::Set (const clr_type _clr) {
 	if (this->R(get_r_value(_clr))) b_changed = true;
 	return b_changed;
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 CClr_Float&  CClr_Float::operator <<(const clr_type _clr) {
 	this->Set(_clr);

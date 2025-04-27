@@ -47,7 +47,8 @@ TColorMarker& TColorMarker::operator <<(const CTheme_State _state) { this->m_ui_
 /////////////////////////////////////////////////////////////////////////////
 
 TColorMatrix:: CColor_Matrix (void) {
-	
+	// ToDo: of course, this is not the best approach to defining theme colors in this way;
+	//       it would be better to use XML or JSON files as the source of theme colors;
 	m_palettes = {
 		{
 			TThemePalette::e_dark, {
@@ -61,7 +62,7 @@ TColorMatrix:: CColor_Matrix (void) {
 				{ TThemePart::e_edit   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }, { TThemeState::e_disable , RGB(  70,  70,  70) }} },
 				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 115, 115, 115) }, { TThemeState::e_disable , RGB( 115, 115, 115) }} },
 				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }, { TThemeState::e_disable , RGB( 230, 230, 230) }} }}},
-				{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  61,  61,  61) }} },
+				{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  39,  39,  39) }} },     // 61, 61, 61
 				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 229, 183,  66) }} },     // #e5b742
 				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
 				{ TThemePart::e_label  , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }} },
@@ -70,6 +71,12 @@ TColorMatrix:: CColor_Matrix (void) {
 				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 229, 183,  66) }, { TThemeState::e_disable , RGB( 115, 115, 115) }} }}}//,
 			//	{ TThemePart::, {{, {{ }} }} }
 			}
+		},
+		{
+			TThemePalette::e_light, {
+				{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB( 249, 249, 249) }} }
+				}}
+			}
 		}
 	};
 }
@@ -77,6 +84,10 @@ TColorMatrix:: CColor_Matrix (const TColorMatrix& _ref) : TColorMatrix() { *this
 TColorMatrix::~CColor_Matrix (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+
+#ifndef CLR_NONE
+#define CLR_NONE 0xFFFFFFFFL
+#endif
 
 TColorMatrix&  TColorMatrix::operator = (const TColorMatrix& _ref) { this->m_palettes = _ref.m_palettes; return *this; }
 const COLORREF TColorMatrix::operator <<(const CColor_Marker& _marker) const {
@@ -103,7 +114,12 @@ const COLORREF TColorMatrix::operator <<(const CColor_Marker& _marker) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-TTheme:: CTheme (void) : m_current(TThemePalette::e_dark) {}
+TTheme:: CTheme (void) {
+	if (CTheme::IsDark())
+		m_current = TThemePalette::e_dark;
+	else
+		m_current = TThemePalette::e_light;
+}
 TTheme:: CTheme (const TTheme& _ref) : TTheme() { *this = _ref; }
 TTheme::~CTheme (void) {}
 
@@ -114,8 +130,12 @@ const TThemePalette  TTheme::Palette (void) const { return m_current; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-COLORREF TTheme::Get (const TThemePart _part, const TThemeElement _el, const TThemeState _state) const {
-	return ((const COLORREF)(m_clr_mtx << TColorMarker(this->Palette(), _part, _el, _state)));
+clr_type TTheme::Get (const TThemePart _part, const TThemeElement _el, const TThemeState _state) const {
+	return ((const clr_type)(m_clr_mtx << TColorMarker(this->Palette(), _part, _el, _state)));
+}
+
+bool CTheme::IsDark (void) {
+	return !CDwmSettings().SystemUsesLightTheme();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -130,5 +150,15 @@ namespace shared {
 		static TTheme the_theme;
 		return the_theme;
 	}
+
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+using namespace ebo::sha::theme::direct_x;
+
+CClr_Float CUI_Parts::Bkg (void) const {
+
+	return CClr_Float(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
 
 }

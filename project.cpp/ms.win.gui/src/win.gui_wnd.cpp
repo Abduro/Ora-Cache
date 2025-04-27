@@ -3,7 +3,8 @@
 	This is window popup test app main window interface implementation file;
 */
 #include "win.gui_wnd.h"
-#include "direct_x.wrap.h" // ToDo:: if it is placed to header 'win.gui_wnd.h', the compilation is failed;
+#include "direct_x.wrap.h"      // ToDo:: if it is placed to header 'win.gui_wnd.h', the compilation is failed;
+#include "ebo.sha.gui.theme.h"
 
 using namespace ebo::boo::gui;
 /////////////////////////////////////////////////////////////////////////////
@@ -40,7 +41,8 @@ err_code CView::IEvtDraw_OnPaint (const w_param, const l_param) {
 
 	using ex_ui::color::rgb::CClr_Float;
 
-	_render().Target().Draw(CClr_Float(61,61,61));
+	using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
+	_render().Target().Draw(CUI_Parts().Bkg());
 
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;

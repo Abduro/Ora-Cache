@@ -29,6 +29,8 @@
     <ClCompile Include="$(_1)win.gui_wnd.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_c)direct_x.wrap.h"><Filter>src\render</Filter></ClInclude>
     <ClCompile Include="$(_c)direct_x.wrap.cpp"><Filter>src\render</Filter></ClCompile>
+    <ClInclude Include="$(_e)ebo.sha.dwm.wrap.h"><Filter>src\themes</Filter></ClInclude>
+    <ClCompile Include="$(_e)ebo.sha.dwm.wrap.cpp"><Filter>src\themes</Filter></ClCompile>
     <ClInclude Include="$(_e)ebo.sha.gui.theme.h"><Filter>src\themes</Filter></ClInclude>
     <ClCompile Include="$(_e)ebo.sha.gui.theme.cpp"><Filter>src\themes</Filter></ClCompile>
   </ItemGroup>

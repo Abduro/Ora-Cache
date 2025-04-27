@@ -245,6 +245,8 @@
     <ClCompile Include="$(_1)win.gui_module.cpp" />
     <ClInclude Include="$(_c)direct_x.wrap.h" />
     <ClCompile Include="$(_c)direct_x.wrap.cpp" />
+    <ClInclude Include="$(_e)ebo.sha.dwm.wrap.h" />
+    <ClCompile Include="$(_e)ebo.sha.dwm.wrap.cpp" />
     <ClInclude Include="$(_e)ebo.sha.gui.theme.h" />
     <ClCompile Include="$(_e)ebo.sha.gui.theme.cpp" />
   </ItemGroup>
