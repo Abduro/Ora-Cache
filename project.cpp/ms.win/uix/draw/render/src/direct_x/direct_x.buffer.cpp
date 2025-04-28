@@ -1,14 +1,16 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Apr-2025 at 23:18:09.022, UTC+4, Batumi, Saturday;
-	This is Ebo Pack DirectX shape vertex wrapper interface implementation file; 
+	This is Ebo Pack DirectX device context buffers' wrapper interface implementation file; 
 */
-#include "direct_x.vertex.h"
+#include "direct_x.buffer.h"
 #include "direct_x.swap.h"     // for printing buffer usage;
 #include "direct_x.texture.h"  // for printing texture binding;
 
-namespace ex_ui { namespace draw { namespace direct_x {
+namespace ex_ui { namespace draw { namespace direct_x { namespace buffers {
 /////////////////////////////////////////////////////////////////////////////
-namespace _11 { using namespace ex_ui::draw::direct_x;
+namespace _11 {
+	using namespace ex_ui::draw::direct_x;
+	using namespace ex_ui::draw::direct_x::_11;
 
 CVtxDesc::CVtxDesc (void) : m_desc{0}{}
 /////////////////////////////////////////////////////////////////////////////
@@ -108,4 +110,4 @@ err_code    CVertex::Ptr (const TBufferPtr& _p_buf) {
 namespace _12 { using namespace ex_ui::draw::direct_x;
 }
 
-}}}
+}}}}

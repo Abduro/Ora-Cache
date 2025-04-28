@@ -66,14 +66,33 @@ CDesc_Wrap:: CDesc_Wrap (const CDesc_Wrap& _src) : CDesc_Wrap() { *this = _src; 
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-void CDesc_Wrap::Fake (void) {
+void CDesc_Wrap::Fake (const HWND _h_target, const bool _b_sync_refresh) {
 
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85) ;
-	this->ref().BufferDesc.Format = (DXGI_FORMAT)CClrBits::e_clr_bits::e_rgba_norm;
+	this->ref().BufferDesc.Format = (TClrBits)CClrBits::e_clr_bits::e_rgba_norm;
+
+	// sets buffer size;
+	if (nullptr != _h_target && !!::IsWindow(_h_target)) {
+		RECT rc_ = {0};
+		if (::GetClientRect(_h_target, &rc_)) {
+			this->Size().H(rc_.bottom - rc_.top);
+			this->Size().W(rc_.right - rc_.left);
+		}
+	}
+
 	this->ref().BufferDesc.Height = 100;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_rational ;
-	this->ref().BufferDesc.RefreshRate.Denominator = 0;
-	this->ref().BufferDesc.RefreshRate.Numerator   = 0;
+	if (nullptr == _h_target || !::IsWindow(_h_target) || false == _b_sync_refresh) {
+		this->ref().BufferDesc.RefreshRate.Denominator = 1;
+		this->ref().BufferDesc.RefreshRate.Numerator   = 0;
+	}
+	else {
+		RECT rc_ = {0};
+		if (::GetClientRect(_h_target, &rc_)) {
+		}
+		else {
+		}
+	}
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173066(v=vs.85) ;
 	this->ref().BufferDesc.Scaling = DXGI_MODE_SCALING::DXGI_MODE_SCALING_STRETCHED;
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173067(v=vs.85) ;
@@ -140,6 +159,10 @@ err_code    CDesc_Wrap::Set (const TSwapDesc& _desc) {
 
 	return this->Error();
 }
+
+const
+CSize_U&    CDesc_Wrap::Size (void) const { return this->m_size; }
+CSize_U&    CDesc_Wrap::Size (void)       { return this->m_size; }    
 
 HWND const  CDesc_Wrap::Target (void) const { return this->ref().OutputWindow; }
 err_code    CDesc_Wrap::Target (HWND const _h_target) {

@@ -15,6 +15,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	typedef D2D1_PIXEL_FORMAT TPxFormat; // includes color channel layout and alpha value acceptance;
 
 #define TFormatAlias DXGI_FORMAT
+
 	// the color bits' enumeration represents only those bits' formats which are used in this project;
 	class CClrBits {
 	public:

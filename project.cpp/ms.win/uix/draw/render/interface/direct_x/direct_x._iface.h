@@ -49,7 +49,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/how-to-use-direct3d-11 ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist ;
-	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85)
+	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85) ;
 	typedef DXGI_MODE_DESC TModeDesc;
 
 	class CDisplay {

@@ -218,8 +218,8 @@
     <ClCompile Include="$(_3)direct_x.target.cpp" />
     <ClInclude Include="$(_2)direct_x.texture.h" />
     <ClCompile Include="$(_3)direct_x.texture.cpp" />
-    <ClInclude Include="$(_2)direct_x.vertex.h" />
-    <ClCompile Include="$(_3)direct_x.vertex.cpp" />
+    <ClInclude Include="$(_2)direct_x.buffer.h" />
+    <ClCompile Include="$(_3)direct_x.buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

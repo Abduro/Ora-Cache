@@ -54,16 +54,16 @@ namespace _11 {
 		~COutput (void) = default;
 	public:
 		const
-		TOutDesc& GetDesc (void) const;
-		err_code  SetDesc (void);
+		TOutDesc&  GetDesc (void) const;
+		err_code   SetDesc (void);
 		
-		TError&   Error (void) const;
-		bool   Is_valid (void) const;
+		TError&    Error (void) const;
+		bool    Is_valid (void) const;
 		const
 		TModeDesc& GetMode (void) const;
 		err_code   SetMode (const uint32_t _n_format = CClrBits::e_rgba_norm);
 #if defined(_DEBUG)
-		CString   Print (const e_print = e_print::e_all) const;
+		CString    Print (const e_print = e_print::e_all) const;
 #endif
 		const
 		TOutputPtr& Ptr (void) const;

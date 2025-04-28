@@ -14,6 +14,8 @@
 
 #include "color._defs.h"
 #include "color.rgb.h"
+#include "2d.base.h"
+
 #if defined(_DEBUG)
 #include "shared.preproc.h"
 #include "shared.string.h"

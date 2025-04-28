@@ -10,6 +10,8 @@
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	using namespace ex_ui::draw::direct_x;
+	using CSize_U = geometry::base::_2D::CSize_U;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_swap_chain_desc ;
 	typedef DXGI_SWAP_CHAIN_DESC TSwapDesc;
 
@@ -21,7 +23,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	public:
 #if defined(_DEBUG)
-		void Fake (void);
+		// if the target window handle is provided the render target view is updated;
+		// if the sync refresh is true ;
+		void Fake (const HWND _h_target = nullptr, const bool _b_sync_refresh = true);
 #endif
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
@@ -33,10 +37,13 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		CString     Print (const TSwapDesc&, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n"));
 		CString     Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
-		err_code    Set (const TSwapDesc&); // preferable way to update desc data structure; target window handle is checked;
+		err_code    Set  (const TSwapDesc&); // preferable way to update desc data structure; target window handle is checked;
 
-		HWND const  Target (void) const;
-		err_code    Target (HWND const);
+		const
+		CSize_U&    Size (void) const;       // gets a reference to a preferable size of the client area of the target view window; (ra)
+		CSize_U&    Size (void) ;            // gets a reference to a preferable size of the client area of the target view window; (rw)
+		HWND const  Target (void) const;     // gets render target view window handle;
+		err_code    Target (HWND const);     // sets render targer view window handle;
 
 	public:
 		CDesc_Wrap& operator = (const CDesc_Wrap& _src);
@@ -54,6 +61,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		mutable
 		CError     m_error;
 		TSwapDesc  m_desc;
+		CSize_U    m_size;  // target view size in pixels;
 	};
 
 	typedef ::std::shared_ptr<CDesc_Wrap> TDescWrapPtr;

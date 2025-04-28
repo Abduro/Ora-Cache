@@ -78,7 +78,13 @@ namespace _11 {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_viewport ;
 	typedef D3D11_VIEWPORT TViewPort;
-
+	/*
+		for example, resolution is set to 800x600px, that will be abstracted as shown below:
+		-1|-1__________+1|-1
+		  |              |
+		  |      0|0     |
+		-1|+1__________+1|+1
+	*/
 	class CViewPort {
 	public:
 		 CViewPort (void); CViewPort (const CViewPort&) = delete; CViewPort (CViewPort&&) = delete;
