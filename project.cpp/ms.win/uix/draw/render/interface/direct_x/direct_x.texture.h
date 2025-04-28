@@ -52,6 +52,23 @@ namespace _11 {
 		CBind& operator = (const CBind&) = delete;
 		CBind& operator = (CBind&&) = delete;
 	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_cpu_access_flag ; << ToDo: perhaps should not be here;
+	using ECpu_Access = D3D11_CPU_ACCESS_FLAG;
+	class CCpu_Access {
+	public:
+		 CCpu_Access (void) = default; CCpu_Access (const CCpu_Access&) = delete; CCpu_Access (CCpu_Access&&) = delete;
+		~CCpu_Access (void) = default;
+#if defined(_DEBUG)
+	public:
+		static
+		CString  Print (uint32_t _n_access);
+#endif
+	private:
+		CCpu_Access& operator = (const CCpu_Access&) = delete;
+		CCpu_Access& operator = (CCpu_Access&&) = delete;
+	};
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_resource_misc_flag ;
 	typedef D3D11_RESOURCE_MISC_FLAG TMiscFlag;  // mostly concerns texture related resources;
 	class CMiscFlags {
@@ -92,7 +109,8 @@ namespace _11 {
 		~CMiscFlags (void) = default;
 	public:
 #if defined(_DEBUG)
-		CString   Print (const uint32_t _n_flags, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+		static
+		CString   Print (const uint32_t _n_flags, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n"));
 #endif
 
 	private:
@@ -189,6 +207,5 @@ namespace _12 {
 }
 
 }}}
-
 
 #endif/*_DIRECT_X_TEXTURE_H_INCLUDED*/

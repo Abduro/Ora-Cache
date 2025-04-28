@@ -75,7 +75,9 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_effect ;
 	typedef DXGI_SWAP_EFFECT TEffect;
-	// this class enumeration is used in both structures: DXGI_SWAP_CHAIN_DESC and DXGI_SWAP_CHAIN_DESC1;
+
+	// https://walbourn.github.io/effects-for-direct3d-11-update/ ;
+	// https://github.com/microsoft/FX11/blob/main/inc/d3dx11effect.h >> D3DX11CompileEffectFromMemory();
 	class CEffect {
 	public:
 		enum e_value : uint32_t {

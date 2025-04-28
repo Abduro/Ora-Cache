@@ -119,7 +119,9 @@ namespace _11 {
 		// (3) the format must be set to DXGI_FORMAT_R8G8B8A8_UNORM or similar;
 		// (4) the buffer usage to DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-		// *very important*: the target is created by the swap & chain object, not by the device!
+		// *very important*:
+			the Z-buffer or 2D-texture that inirets a resource interface is created by swap and chain object;
+			the target is created by the device, the device uses the Z-buffer being created above!
 		*/
 		err_code  Create(void) ;
 		const

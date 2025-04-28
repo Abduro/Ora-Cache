@@ -41,6 +41,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 namespace _11 {
 
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices ;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_create_device_flag ;
 	typedef D3D11_CREATE_DEVICE_FLAG EDevFlag;
 

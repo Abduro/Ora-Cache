@@ -85,6 +85,20 @@ namespace ebo { namespace sha { namespace theme {
 
 	// https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2012/b0z6b513 ;
 	// https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/ui/apply-windows-themes ;
+
+	class CClr_Simple {
+	public:
+		 CClr_Simple (void) {} CClr_Simple (const CClr_Simple&) = delete; CClr_Simple (CClr_Simple&&) = delete;
+		~CClr_Simple (void) {}
+
+	public:
+		static bool Is_light (const clr_type); // simplistic calculation of the perceived brightness of a color ;
+
+	private:
+		CClr_Simple& operator = (const CClr_Simple&) = delete;
+		CClr_Simple& operator = (CClr_Simple&&) = delete;
+	};
+
 	class CTheme {
 	protected:
 		TThemePalette  m_current; // current theme palette;

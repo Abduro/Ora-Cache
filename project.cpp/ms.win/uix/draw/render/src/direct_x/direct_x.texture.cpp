@@ -103,31 +103,6 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 	private:
 		CString  m_cs_out;  // the format result cache;
 	};
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_cpu_access_flag ;
-	using ECpu_Access = D3D11_CPU_ACCESS_FLAG;
-	class CCpu_Access {
-	public:
-		 CCpu_Access (void) = default; CCpu_Access (const CCpu_Access&) = delete; CCpu_Access (CCpu_Access&&) = delete;
-		~CCpu_Access (void) = default;
-
-	public:
-		static
-		CString  Print (uint32_t _n_access) {
-			_n_access;
-			CString cs_out;
-			switch (_n_access) {
-			case ECpu_Access::D3D11_CPU_ACCESS_WRITE: cs_out = _T("write"); break;
-			case ECpu_Access::D3D11_CPU_ACCESS_READ : cs_out = _T("read"); break;
-			default:
-				cs_out.Format(_T("%d(#undef)"));
-			}
-			return  cs_out;
-		}
-
-	private:
-		CCpu_Access& operator = (const CCpu_Access&) = delete;
-		CCpu_Access& operator = (CCpu_Access&&) = delete;
-	};
 
 	using CMiscFlags = ex_ui::draw::direct_x::_11::CMiscFlags;
 	class CMisc_Fmt {
@@ -336,7 +311,25 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 using namespace ex_ui::draw::direct_x::_impl;
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString CMiscFlags::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_cpu_access_flag ;
+using ECpu_Access = D3D11_CPU_ACCESS_FLAG;
+using CCpu_Access = ex_ui::draw::direct_x::_11::CCpu_Access;
+
+CString CCpu_Access::Print (uint32_t _n_access) {
+	_n_access;
+	CString cs_out;
+	switch (_n_access) {
+	case ECpu_Access::D3D11_CPU_ACCESS_WRITE: cs_out = _T("write"); break;
+	case ECpu_Access::D3D11_CPU_ACCESS_READ : cs_out = _T("read"); break;
+	default:
+		cs_out.Format(_T("%d(#undef)"));
+	}
+	return  cs_out;
+}
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CString CMiscFlags::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) /*const*/ {
 	_n_flags, _p_pfx; _p_sfx;
 	uint32_t n_flags = _n_flags;
 	CString cs_out ;

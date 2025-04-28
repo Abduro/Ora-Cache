@@ -10,6 +10,7 @@
 using namespace ebo::sha::theme;
 using namespace ebo::sha::theme::colors;
 
+using CTheme = ebo::sha::theme::CTheme;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ebo { namespace sha { namespace gui { namespace format { namespace _impl {
@@ -110,6 +111,12 @@ const COLORREF TColorMatrix::operator <<(const CColor_Marker& _marker) const {
 	}
 
 	return clr_result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CClr_Simple::Is_light(const clr_type _clr) {
+	return (((5 * get_g_value(_clr)) + (2 * get_r_value(_clr)) + get_b_value(_clr)) > (8 * 128));
 }
 
 /////////////////////////////////////////////////////////////////////////////
