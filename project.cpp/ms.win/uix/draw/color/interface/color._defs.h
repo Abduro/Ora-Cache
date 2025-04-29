@@ -18,16 +18,7 @@
 
 namespace ex_ui { namespace color {
 
-#if defined(_DEBUG)
-	enum e_print : uint32_t {
-	     e_all   = 0x0,  // prints out the class name and namespace path, class attribute value(s);
-	     e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
-	     e_req   = 0x2,  // prints out the class object attribute value(s) only;
-	};
-#endif
-
 	using namespace shared::types;
-
 	// https://stackoverflow.com/questions/2745074/fast-ceiling-of-an-integer-division-in-c-c/2745086#2745086 ;
 	/*
 		https://en.wikipedia.org/wiki/Percentage ;
@@ -70,7 +61,7 @@ namespace ex_ui { namespace color {
 		     e_as_is  = 0, // outputs out the percent value as float number, i.e. as is;
 		     e_as_int = 1, // outputs the percentage value as an integer, which can be rounded up or down;
 		};
-		CString  Print (const e_print = e_print::e_as_is) const;
+		CString  Print (const CPercent_F::e_print = CPercent_F::e_print::e_as_is) const;
 #endif
 	public:
 		CPercent_F&  operator = (const CPercent_F&);
@@ -150,7 +141,7 @@ namespace ex_ui { namespace color { namespace rgb {
 		bool EqualTo (const clr_type) const;
 
 #if defined(_DEBUG)
-		CString  Print(const e_print = e_print::e_all) const;
+		CString  Print(const ::e_print = ::e_print::e_all) const;
 #endif
 
 	public:

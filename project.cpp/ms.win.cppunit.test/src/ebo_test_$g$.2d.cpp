@@ -17,7 +17,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TPoint().Print(TPoint::e_all);
+				_out() += TPoint().Print(e_print::e_all);
 				_out()();
 
 			}
@@ -28,7 +28,7 @@ namespace ebo { namespace boo { namespace test {
 				
 				_out() += TLog_Acc::e_new_line;
 				_out() += TString().Format(_T("Points: %s & %s are equal to each other >> %s"),
-					(_pc_sz)pt_0.Print(TPoint::e_req), (_pc_sz)pt_1.Print(TPoint::e_req), TStringEx().Bool(pt_0 == pt_1));
+					(_pc_sz)pt_0.Print(e_print::e_req), (_pc_sz)pt_1.Print(e_print::e_req), TStringEx().Bool(pt_0 == pt_1));
 
 				pt_0 << 2 >> -2;
 				pt_1 << 3 >> -3;
@@ -36,7 +36,7 @@ namespace ebo { namespace boo { namespace test {
 				TPoint pt_result = (pt_0 + pt_1);
 
 				_out() += TString().Format(_T("%s + %s = %s"),
-					(_pc_sz)pt_0.Print(TPoint::e_req), (_pc_sz)pt_1.Print(TPoint::e_req), (_pc_sz) pt_result.Print(TPoint::e_req));
+					(_pc_sz)pt_0.Print(e_print::e_req), (_pc_sz)pt_1.Print(e_print::e_req), (_pc_sz) pt_result.Print(e_print::e_req));
 
 				pt_0 << 4 >> -4;
 				pt_1 << 6 >> -6;
@@ -44,7 +44,7 @@ namespace ebo { namespace boo { namespace test {
 				pt_result = (pt_0 - pt_1);
 
 				_out() += TString().Format(_T("%s - %s = %s"),
-					(_pc_sz)pt_0.Print(TPoint::e_req), (_pc_sz)pt_1.Print(TPoint::e_req), (_pc_sz) pt_result.Print(TPoint::e_req));
+					(_pc_sz)pt_0.Print(e_print::e_req), (_pc_sz)pt_1.Print(e_print::e_req), (_pc_sz) pt_result.Print(e_print::e_req));
 
 				_out()();
 
@@ -75,7 +75,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TString().Format(_T("Default: %s"), (_pc_sz)TPoint_2().Print(TPoint_2::e_all));
+				_out() += TString().Format(_T("Default: %s"), (_pc_sz)TPoint_2().Print(e_print::e_all));
 				_out()();
 
 			}
@@ -85,7 +85,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TSize().Print(TSize::e_all);
+				_out() += TSize().Print(e_print::e_all);
 				_out()();
 
 			}
@@ -96,7 +96,7 @@ namespace ebo { namespace boo { namespace test {
 				
 				_out() += TLog_Acc::e_new_line;
 				_out() += TString().Format(_T("Sizes: %s & %s are equal to each other >> %s"),
-					(_pc_sz)sz_0.Print(TSize::e_req), (_pc_sz)sz_1.Print(TSize::e_req), TStringEx().Bool(sz_0 == sz_1));
+					(_pc_sz)sz_0.Print(e_print::e_req), (_pc_sz)sz_1.Print(e_print::e_req), TStringEx().Bool(sz_0 == sz_1));
 
 
 				sz_0 << 2 >> -2;
@@ -105,7 +105,7 @@ namespace ebo { namespace boo { namespace test {
 				TSize sz_result = (sz_0 + sz_1);
 
 				_out() += TString().Format(_T("%s + %s = %s"),
-					(_pc_sz)sz_0.Print(TSize::e_req), (_pc_sz)sz_1.Print(TSize::e_req), (_pc_sz) sz_result.Print(TSize::e_req));
+					(_pc_sz)sz_0.Print(e_print::e_req), (_pc_sz)sz_1.Print(e_print::e_req), (_pc_sz) sz_result.Print(e_print::e_req));
 
 				sz_0 << 4 >> -4;
 				sz_0 << 6 >> -6;
@@ -113,7 +113,7 @@ namespace ebo { namespace boo { namespace test {
 				sz_result = (sz_0 - sz_1);
 
 				_out() += TString().Format(_T("%s - %s = %s"),
-					(_pc_sz)sz_0.Print(TSize::e_req), (_pc_sz)sz_1.Print(TSize::e_req), (_pc_sz) sz_result.Print(TSize::e_req));
+					(_pc_sz)sz_0.Print(e_print::e_req), (_pc_sz)sz_1.Print(e_print::e_req), (_pc_sz) sz_result.Print(e_print::e_req));
 
 				_out()();
 
@@ -124,7 +124,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TSizeU().Print(TSizeU::e_all);
+				_out() += TSizeU().Print(e_print::e_all);
 				_out()();
 
 			}
@@ -135,7 +135,7 @@ namespace ebo { namespace boo { namespace test {
 				
 				_out() += TLog_Acc::e_new_line;
 				_out() += TString().Format(_T("Sizes: %s & %s are equal to each other >> %s"),
-					(_pc_sz)sz_0.Print(TSizeU::e_req), (_pc_sz)sz_1.Print(TSizeU::e_req), TStringEx().Bool(sz_0 == sz_1));
+					(_pc_sz)sz_0.Print(e_print::e_req), (_pc_sz)sz_1.Print(e_print::e_req), TStringEx().Bool(sz_0 == sz_1));
 
 				sz_0 << 2 >> 2;
 				sz_1 << 3 >> 3;
@@ -143,7 +143,7 @@ namespace ebo { namespace boo { namespace test {
 				TSizeU sz_result = (sz_0 + sz_1);
 
 				_out() += TString().Format(_T("%s + %s = %s"),
-					(_pc_sz)sz_0.Print(TSizeU::e_req), (_pc_sz)sz_1.Print(TSizeU::e_req), (_pc_sz) sz_result.Print(TSizeU::e_req));
+					(_pc_sz)sz_0.Print(e_print::e_req), (_pc_sz)sz_1.Print(e_print::e_req), (_pc_sz) sz_result.Print(e_print::e_req));
 
 				sz_0 << 4 >> 4;
 				sz_0 << 6 >> 6;
@@ -151,7 +151,7 @@ namespace ebo { namespace boo { namespace test {
 				sz_result = (sz_0 - sz_1);
 
 				_out() += TString().Format(_T("%s - %s = %s"),
-					(_pc_sz)sz_0.Print(TSizeU::e_req), (_pc_sz)sz_1.Print(TSizeU::e_req), (_pc_sz) sz_result.Print(TSizeU::e_req));
+					(_pc_sz)sz_0.Print(e_print::e_req), (_pc_sz)sz_1.Print(e_print::e_req), (_pc_sz) sz_result.Print(e_print::e_req));
 
 				_out()();
 			}
@@ -165,7 +165,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TMarker().Print(TMarker::e_all);
+				_out() += TMarker().Print(e_print::e_all);
 				_out()();
 			}
 
@@ -176,7 +176,7 @@ namespace ebo { namespace boo { namespace test {
 
 				_out() += TLog_Acc::e_new_line;
 				_out() += TStringEx().Format(
-					_T("Marker %s equals to %s one >> %s"), (_pc_sz) mark_0.Print(TMarker::e_req), (_pc_sz) mark_1.Print(TMarker::e_req), TStringEx().Bool(mark_0 == mark_1));
+					_T("Marker %s equals to %s one >> %s"), (_pc_sz) mark_0.Print(e_print::e_req), (_pc_sz) mark_1.Print(e_print::e_req), TStringEx().Bool(mark_0 == mark_1));
 				_out()();
 			}
 
@@ -194,8 +194,8 @@ namespace ebo { namespace boo { namespace test {
 				a_side.End() = TPoint(1,1);
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("Default: %s"), (_pc_sz) TSide().Print(TSide::e_all));
-				_out() += TStringEx().Format(_T("Inited : %s"), (_pc_sz) a_side.Print(TSide::e_all));
+				_out() += TStringEx().Format(_T("Default: %s"), (_pc_sz) TSide().Print(e_print::e_all));
+				_out() += TStringEx().Format(_T("Inited : %s"), (_pc_sz) a_side.Print(e_print::e_all));
 				_out()();
 			}
 
@@ -212,7 +212,7 @@ namespace ebo { namespace boo { namespace test {
 				side.Marker() << (uint32_t)2 << _T("The 2nd marker") << true; sides.Append(side);
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += sides.Print(TSides::e_all, _T("\n\t"), _T(""));
+				_out() += sides.Print(e_print::e_all, _T("\n\t"), _T(""));
 				_out()();
 			}
 		};
@@ -226,7 +226,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TString().Format(_T("Default: %s"), (_pc_sz)TRect().Print(TRect::e_req));
+				_out() += TString().Format(_T("Default: %s"), (_pc_sz)TRect().Print(e_print::e_req));
 				_out()();
 
 			}

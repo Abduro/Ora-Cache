@@ -35,11 +35,6 @@ namespace ex_ui { namespace popup {  namespace layout {
 		t_point    Center (void) const;  // calculates a center point of the position in absolute coordinates;
 
 #if defined(_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0x0,  // prints out all attributes' values, including this class name, namespace path;
-			e_no_ns = 0x1,  // prints out the same as above option, but no namespace path;
-			e_req   = 0x2,  // prints out the attributes' values only;
-		};
 		CString    Print (const e_print = e_print::e_all) const;
 #endif
 		const

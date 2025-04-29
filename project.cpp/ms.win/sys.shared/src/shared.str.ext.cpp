@@ -9,7 +9,7 @@
 using namespace shared::common;
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if (1)
 CString_Ex:: CString_Ex (const bool  _b_value) : TBase() { *this << _b_value; }
 CString_Ex:: CString_Ex (const dword _d_value) : TBase() { *this << _d_value; }
 CString_Ex:: CString_Ex (const float _f_value) : TBase() { *this << _f_value; }
@@ -17,9 +17,9 @@ CString_Ex:: CString_Ex (const long  _l_value) : TBase() { *this << _l_value; }
 
 CString_Ex:: CString_Ex (_pc_sz  _lp_sz_value) : TBase(_lp_sz_value) {}
 CString_Ex:: CString_Ex (const CString_Ex& _ref) : TBase() { *this = _ref; }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
-
+#if (1)
 USHORT  CString_Ex::Bytes (void) const { return static_cast<ushort>((TBase::IsEmpty() ? 0 : (TBase::GetLength() + 1) * sizeof(t_char))); }
 
 bool    CString_Ex::Bool  (void) const {
@@ -138,7 +138,7 @@ _pc_sz  CString_Ex::Long  (long _l_value) {
 }
 
 bool    CString_Ex::Is (void) const { return false == TBase::IsEmpty(); }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #if (0)
 _var    CString_Ex::Var  (void) const {
@@ -151,6 +151,7 @@ _pc_sz  CString_Ex::Var  (const _var&, _pc_sz _fmt/* = _T("type=%s;value=%s")*/)
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
+#if(1)
 #if defined WIN64
 _pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
 	_p_fun_or_obj_ptr;
@@ -192,8 +193,9 @@ _pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
 	return TBase::GetString();
 }
 #endif
+#endif
 /////////////////////////////////////////////////////////////////////////////
-
+#if (1)
 _pc_sz  CString_Ex::Before(t_char _lp_sz_sep, _pc_sz _lp_sz_pfx, const bool _b_exc_sep) {
 	_lp_sz_sep; _lp_sz_pfx;
 	const INT n_pos = TBase::ReverseFind(_lp_sz_sep);
@@ -267,7 +269,7 @@ TParts  CString_Ex::Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep) const 
 
 	return vec_;
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #if(0)
 CStdString&  CStdString::operator=(const _variant_t& _var) {
@@ -288,7 +290,7 @@ CStdString&  CStdString::operator=(const _variant_t& _var) {
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
-
+#if (1)
 CString_Ex& CString_Ex::operator = (const CString_Ex& _ref) { (TBase&)*this = (const TBase&)_ref; return *this; }
 CString_Ex& CString_Ex::operator <<(bool  _b_value) { _pc_sz lp_sz_result  = this->Bool (_b_value); lp_sz_result; return *this; }
 CString_Ex& CString_Ex::operator <<(dword _d_value) { _pc_sz lp_sz_result  = this->Dword(_d_value); lp_sz_result; return *this; }
@@ -307,9 +309,9 @@ CString_Ex::operator float   (void) const { return this->Float(); }
 CString_Ex::operator _guid   (void) const { return this->Guid (); }
 CString_Ex::operator long    (void) const { return this->Long (); }
 CString_Ex::operator _pc_sz  (void) const { return TBase::GetString(); }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
-
+#if (1)
 CString_2:: CString_2 (void) : TBase() {}
 CString_2::~CString_2 (void) {}
 
@@ -322,7 +324,7 @@ void CString_2::Format (_pc_sz _p_sz_format, ...) {
 	TBase::FormatV( _p_sz_format, argList );
 	va_end( argList );
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////

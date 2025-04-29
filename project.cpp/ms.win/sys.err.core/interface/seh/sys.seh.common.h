@@ -92,10 +92,6 @@ namespace shared { namespace sys_core { namespace seh {
 
 		bool Is (void) const;        // checks the code value only, returns true if the code does not equal to zero;
 #if defined(_DEBUG)
-		enum e_print {
-			e_all = 0, // prints this class name, alias, code value and description;
-			e_req = 1, // prints required info only: alias, code value and description of this element;
-		};
 		CString  Print(const e_print = e_print::e_req, _pc_sz _p_class = 0) const;
 #endif
 	public:

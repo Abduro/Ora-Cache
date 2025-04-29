@@ -35,7 +35,9 @@ namespace shared { namespace common {
 
 		CString Get (_pc_sz _p_sep = _T(";"), _pc_sz _p_pfx = nullptr, _pc_sz _p_psx = nullptr) const;
 		bool    Set (const _variant_t& _var);    // returns tue in case when analyzing input variant succeeds, otherwise false;
-
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all) const;
+#endif
 		_pc_sz  Type  (void) const;
 		_pc_sz  Value (void) const;
 

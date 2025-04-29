@@ -9,13 +9,13 @@ using namespace shared::memory;
 /////////////////////////////////////////////////////////////////////////////
 
 shared_data:: shared_data (void) : p_data(0), n_size(0) {}
-shared_data:: shared_data (DWORD _size, const void* _p_data) : p_data(_p_data), n_size(_size) {}
+shared_data:: shared_data (dword _size, const void* _p_data) : p_data(_p_data), n_size(_size) {}
 
 shared_data:: shared_data (const shared_data& _ref) : shared_data() { *this = _ref; }
 
 shared_data&  shared_data::operator = (const shared_data& _ref) { *this << _ref.p_data << _ref.n_size; return *this; }
 shared_data&  shared_data::operator <<(const void* _p_data) { this->p_data = _p_data; return *this; }
-shared_data&  shared_data::operator <<(const DWORD _n_size) { this->n_size = _n_size; return *this; }
+shared_data&  shared_data::operator <<(const dword _n_size) { this->n_size = _n_size; return *this; }
 
 bool shared_data::operator != (const shared_data& _data) const { return (this->n_size != _data.n_size) || (this->p_data != _data.p_data); }
 bool shared_data::operator == (const shared_data& _data) const { return !(*this != _data); }
@@ -92,7 +92,7 @@ err_code TPsuedoBuilder::Create (void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (this->m_psuedo.Is()) {
-		return (m_error << TErrCodes::eObject::eExists);
+		return (m_error << (err_code) TErrCodes::eObject::eExists);
 	}
 	//  https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc ;
 	this->m_psuedo.m_handle = ::GlobalAlloc(this->m_psuedo.Flags(), this->m_psuedo.Data().n_size);
@@ -114,7 +114,7 @@ err_code TPsuedoBuilder::Destroy (void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (false == this->m_psuedo.Is())
-		return m_error << TErrCodes::eExecute::eState;
+		return m_error << (err_code) TErrCodes::eExecute::eState;
 
 	global h_result = ::GlobalFree(m_psuedo.m_handle);
 	if (h_result)
@@ -216,7 +216,7 @@ CString  TPsuedoContent::Read (void) const {
 	CString cs_out;
 
 	if (m_psuedo.Is() == false) {
-		m_error << TErrCodes::eObject::eHandle;
+		m_error << (err_code) TErrCodes::eObject::eHandle;
 		return cs_out;
 	}
 
@@ -249,12 +249,12 @@ err_code TPsuedoContent::Write(const shared_data& _data) {
 	this->m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (!_data.p_data) return m_error << E_POINTER;
-	if (!_data.n_size) return m_error << TErrCodes::eData::eInvalid = _T("Target data size cannot be zero;");
+	if (!_data.n_size) return m_error << (err_code) TErrCodes::eData::eInvalid = _T("Target data size cannot be zero;");
 #if (0)
 	if ( _data.p_data == this->m_psuedo.Data().p_data) return m_error << E_INVALIDARG =_T("Unable to copy data from the pointer to itself;");
 #endif
 	if (!m_psuedo.Is())
-		return m_error << TErrCodes::eObject::eHandle;
+		return m_error << (err_code) TErrCodes::eObject::eHandle;
 
 	const bool b_data = this->m_psuedo.Data().p_data != _data.p_data;
 	const bool b_movable = this->m_psuedo.Flags().Has(shared_flags::e_movable);
@@ -277,7 +277,7 @@ err_code TPsuedoContent::Write(const shared_data& _data) {
 
 	const errno_t t_result = ::memcpy_s(p_data, this->m_psuedo.Data().n_size, _data.p_data, _data.n_size);
 	if (TErrCodes::no_error != t_result)
-		this->m_error << TErrCodes::eData::eBuffer;
+		this->m_error << (err_code) TErrCodes::eData::eBuffer;
 	// a possible error of unlock operation will overwrite the previous one, i.e. the error above;
 	if (b_movable) {
 		if (0 == ::GlobalUnlock(this->m_psuedo.Handle())) // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock ;
@@ -295,7 +295,7 @@ err_code TPsuedoContent::Write(_pc_sz _p_sz_str ) {
 		return m_error << E_INVALIDARG;
 
 	if (m_psuedo.Is() == false)
-		return m_error << TErrCodes::eObject::eHandle;
+		return m_error << (err_code) TErrCodes::eObject::eHandle;
 
 	DWORD n_req = TString(_p_sz_str).Bytes();
 
@@ -365,7 +365,7 @@ DWORD   CSharedPsuedo::Size  (void) const {
 	DWORD n_size = 0;
 
 	if (!this->Is()) {
-		m_error << TErrCodes::eObject::eHandle;
+		m_error << (err_code) TErrCodes::eObject::eHandle;
 		return n_size;
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize ;
@@ -429,7 +429,7 @@ err_code TPage::Create (void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (this->Is())
-		return m_error << TErrCodes::eObject::eExists;
+		return m_error << (err_code) TErrCodes::eObject::eExists;
 
 	if (this->m_named.Is() == false)
 		return this->m_error = this->m_named.Error();
@@ -439,7 +439,7 @@ err_code TPage::Create (void) {
 	this->m_error.Last();
 
 	if (TErrCodes::ePath::eExists == this->m_error.Result()) // ToDo: the returned handle can be checked with existing one by value;
-		return m_error << TErrCodes::eObject::eExists = _T("Object with the same name is already created;");
+		return m_error << (err_code) TErrCodes::eObject::eExists = _T("Object with the same name is already created;");
 
 	this->m_handle = h_new;
 	this->m_named.m_error << this->Error().Result();
@@ -451,7 +451,7 @@ err_code TPage::Destroy(void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (!this->Is())
-		return m_error << TErrCodes::eObject::eHandle = _T("The object is not created or already destroyed;");
+		return m_error << (err_code) TErrCodes::eObject::eHandle = _T("The object is not created or already destroyed;");
 
 	this->m_error << THandle::Close(this->m_handle);
 	this->m_named.m_error << OLE_E_BLANK;
@@ -500,7 +500,7 @@ err_code TView::Close(void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (this->m_p_data == 0)
-		return m_error << TErrCodes::eExecute::eState;
+		return m_error << (err_code) TErrCodes::eExecute::eState;
 
 	if (!this->m_named.Is()) {
 		return m_error << OLE_E_BLANK;
@@ -522,7 +522,7 @@ err_code TView::Open (void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (this->m_p_data != 0)
-		return m_error << TErrCodes::eObject::eInited;
+		return m_error << (err_code) TErrCodes::eObject::eInited;
 
 	if (!this->m_named.Is()) {
 		return m_error << OLE_E_BLANK;
@@ -556,7 +556,7 @@ CString  TView::Read (void)  {
 	CString cs_out;
 
 	if (this->m_named.Page().Is() == false) {
-		this->m_error << TErrCodes::eObject::eHandle;
+		this->m_error << (err_code) TErrCodes::eObject::eHandle;
 		return cs_out;
 	}
 	if (this->Is() == false) {
@@ -565,7 +565,7 @@ CString  TView::Read (void)  {
 	}
 	const UINT n_req = this->m_named.Data().n_size / sizeof(t_char); // it is supposed the buffer handles zero-terminate character;
 	if (n_req < 2) {
-		m_error << TErrCodes::eData::eInvalid = _T("The length of string must be at least one character;");
+		m_error << (err_code) TErrCodes::eData::eInvalid = _T("The length of string must be at least one character;");
 		return cs_out;
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/memory/reading-and-writing-from-a-file-view ; :( does not work;
@@ -598,7 +598,7 @@ err_code  TView::Write (const shared_data& _data) {
 	try {
 		const errno_t e_result = ::memcpy_s(const_cast<byte*>(this->m_p_data), this->m_named.Data().n_size, _data.p_data, _data.n_size);
 		if (TErrCodes::no_error != e_result)
-			this->m_error << TErrCodes::eData::eBuffer;
+			this->m_error << (err_code) TErrCodes::eData::eBuffer;
 	}
 	catch (const TSehExcept& _ex) {
 		this->m_error << __e_no_memory = (_pc_sz)_ex.ToString();
@@ -701,12 +701,12 @@ bool   CSharedNamed::Is (void) const {
 	bool b_is = false;
 
 	if (this->m_name.IsEmpty()) {
-		this->m_error << TErrCodes::eData::eInvalid = _T("Object name is not set;");
+		this->m_error << (err_code) TErrCodes::eData::eInvalid = _T("Object name is not set;");
 		return b_is;
 	}
 
 	if (this->Data().n_size == 0) {
-		this->m_error << TErrCodes::eData::eInvalid = _T("Memory block size cannot be zero;");
+		this->m_error << (err_code) TErrCodes::eData::eInvalid = _T("Memory block size cannot be zero;");
 		return b_is;
 	}
 

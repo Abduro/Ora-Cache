@@ -27,7 +27,7 @@ namespace shared { namespace sys_core { namespace seh {
 	public:
 		bool Is (void) const;  // returns true if number code is not zero and description is set;
 #if defined (_DEBUG)
-		CString  Print(const TBase::e_print = TBase::e_req) const;
+		CString  Print(const ::e_print = e_print::e_req) const;
 #endif
 	public:
 		CNumber& operator = (const CNumber&);

@@ -27,10 +27,6 @@ namespace ex_ui { namespace color { namespace rgb {
 	public:
 		const bool Is (void) const ; // returns true if name and color are defined;
 #if defined(_DEBUG)
-		enum e_print {
-			e_all = 0, // outputs complete information of this class object: its name, color value (hex), color's name;
-			e_req = 1, // outputs color value (hex), color's name;
-		};
 		CString  Print (const e_print = e_print::e_req) const;
 #endif
 	public:

@@ -73,10 +73,56 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 using namespace ex_ui::draw::direct_x::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
-void __dummy_2025_04_01 (void) {}
+CDisplay:: CDisplay (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+TError&  CDisplay::Error (void) const { return this->m_error; }
+
+err_code CDisplay::Get (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	const POINT ptZero = {0};
+	// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
+	const HMONITOR hMonitor = ::MonitorFromPoint(ptZero, MONITOR_DEFAULTTOPRIMARY);
+
+	MONITORINFO mInfo  = {0};
+	mInfo.cbSize = sizeof(MONITORINFO) ; // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfo ;
+	if (!
+	::GetMonitorInfo(hMonitor, &mInfo))  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfoa ;
+	return this->m_error << __e_fail;
+
+	this->m_rez.H(mInfo.rcWork.bottom - mInfo.rcWork.top);
+	this->m_rez.W(mInfo.rcWork.right - mInfo.rcWork.left);
+
+	return this->Error();
+}
+
+bool     CDisplay::Is_valid (void) const { return false == this->Rez().Is_zero(); }
 
 #if defined(_DEBUG)
-CString  CDisplay::Print(const TModeDesc& _mode) const {
-	return CMode_Fmt().Format(_mode);
+CString  CDisplay::Print(const TModeDesc& _mode) {
+	return  CMode_Fmt().Format(_mode);
+}
+CString  CDisplay::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{rez=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{rez=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{rez=%s}");
+
+	CString cs_size  = this->Rez().Print(::e_print::e_req);
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_size); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_size); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_size); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
 }
 #endif
+
+const
+CSize_U& CDisplay::Rez (void) const { return this->m_rez; }

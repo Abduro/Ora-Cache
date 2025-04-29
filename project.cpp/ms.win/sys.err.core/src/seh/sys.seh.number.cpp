@@ -142,7 +142,7 @@ CString CNumber_Fake::Print (_pc_sz _pfx, _pc_sz _sfx) const {
 	for (TNumbers::const_iterator it_ = this->Get().begin(); it_ != this->Get().end(); ++it_) {
 
 		cs_numbers += _pfx;
-		cs_numbers += it_->second.Print(CNode::e_req);
+		cs_numbers += it_->second.Print(e_print::e_req);
 		cs_numbers += _sfx;
 
 	}

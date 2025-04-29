@@ -197,6 +197,7 @@
     <ClCompile Include="$(_1)sys.gen.time.cpp"/>
     <ClInclude Include="$(_0)sys.sync_obj.h"/>
     <ClCompile Include="$(_1)sys.sync_obj.cpp"/>
+    <ClInclude Include="$(_0)shared.dbg.h"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

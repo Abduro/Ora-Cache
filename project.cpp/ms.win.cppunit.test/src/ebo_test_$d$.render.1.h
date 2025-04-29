@@ -137,6 +137,21 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 		TDevice_ref m_dev_ref;
 	};
 
+	using TDisplay = ex_ui::draw::direct_x::_11::CDisplay;
+
+	__class(CDisplay) {
+	public:
+		 CDisplay (const bool _b_verb = false);
+		~CDisplay (void) = default;
+
+	public:
+		__method (GetRez);
+
+	private:
+		bool     m_b_verb;
+		TDisplay m_display;
+	};
+	
 	using TFac_2 = ex_ui::draw::direct_x::_11::CFac_2;
 
 	__class(CFac_2) {

@@ -24,5 +24,6 @@
     <ClCompile Include="$(_1)sys.gen.time.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.sync_obj.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.sync_obj.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.dbg.h"><Filter>interface</Filter></ClInclude>
   </ItemGroup>
 </Project>

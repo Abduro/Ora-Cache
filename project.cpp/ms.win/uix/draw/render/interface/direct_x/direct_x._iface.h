@@ -39,30 +39,40 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	using shared::sys_core::CSyncObject;
 	using ex_ui::color::rgb::CClr_Float;
 
-#if defined(_DEBUG)
-	enum e_print : uint32_t {
-	     e_all   = 0x0,  // prints out the class name and namespace path, class attribute value(s);
-	     e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
-	     e_req   = 0x2,  // prints out the class object attribute value(s) only;
-	};
-#endif
+	using CSize_U = geometry::base::_2D::CSize_U;
+
 namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/how-to-use-direct3d-11 ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist ;
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85) ;
 	typedef DXGI_MODE_DESC TModeDesc;
 
+	// https://21stcenturyav.com/what-is-the-difference-between-monitor-and-display/ ;
+	
 	class CDisplay {
 	public:
-		 CDisplay (void) = default; CDisplay (const CDisplay&) = delete; CDisplay (CDisplay&&) = delete;
+		 CDisplay (void) ; CDisplay (const CDisplay&) = delete; CDisplay (CDisplay&&) = delete;
 		~CDisplay (void) = default;
 	public:
+		TError&   Error (void) const;
+		err_code  Get   (void) ;         // gets current resolution that is set to main/primary monitor of the PC;
+		bool   Is_valid (void) const;    // returns true in case when resolution is received and set to this::m_rez;
+
 #if defined(_DEBUG)
-		CString  Print(const TModeDesc&) const;
+		static
+		CString   Print (const TModeDesc&);
+		CString   Print (const e_print = e_print::e_all) const;
 #endif
+		const
+		CSize_U&  Rez (void) const;      // returns a reference to size of the resolution that is currently set to primary monitor;
+
 	private:
 		CDisplay& operator = (const CDisplay&) = delete;
 		CDisplay& operator = (CDisplay&&) = delete;
+
+	private:
+		CError   m_error;
+		CSize_U  m_rez;    // https://www.abbreviations.com/abbreviation/resolution ;
 	};
 }
 }}}

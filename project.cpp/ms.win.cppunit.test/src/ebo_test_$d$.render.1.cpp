@@ -478,6 +478,27 @@ TDevice_ref& CDevice_Ref::Ref (void)       { return this->m_dev_ref; }
 
 /////////////////////////////////////////////////////////////////////////////
 
+CDisplay:: CDisplay (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CDisplay::GetRez (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	_out() += this->m_display.Print(e_print::e_all);
+
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CFac_2:: CFac_2 (const bool _b_verb) : m_b_verb (_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;

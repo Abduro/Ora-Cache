@@ -12,9 +12,7 @@
 namespace ex_ui { namespace color { namespace rgb {
 
 	using namespace shared::types; // is declared in 'shared.types.h';
-	#if defined(_DEBUG)
-	using e_print = ex_ui::color::e_print;
-	#endif
+
 	using TPercent = TPct_Flt;
 	// perhaps it would be better to consider RGBQUAD as the base for this class:
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad ;

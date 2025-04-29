@@ -48,7 +48,7 @@ namespace shared { namespace sys_core { namespace seh {
 		bool Is_sys (void) const; // returns true if this flag is reserved for system use; returns false if the flag code is not assigned;
 		bool Is_sys (bool) ;      // returns true if value of system use flag is changed;
 #if defined (_DEBUG)
-		CString  Print(const TBase::e_print = TBase::e_req) const;
+		CString  Print(const e_print = e_print::e_req) const;
 #endif
 	public:
 		CFlag& operator = (const CFlag&);

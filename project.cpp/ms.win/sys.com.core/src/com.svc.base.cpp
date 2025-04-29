@@ -164,7 +164,7 @@ CString   CCoMode_enum::Print (_pc_sz _pfx, _pc_sz _sfx) const {
 	for (TRawModes::const_iterator it_ = this->Get().begin(); it_ != this->Get().end(); ++it_) {
 
 		cs_modes += _pfx;
-		cs_modes += it_->second.Print(CCoMode::e_req);
+		cs_modes += it_->second.Print(e_print::e_req);
 		cs_modes += _sfx;
 
 	}
@@ -258,7 +258,7 @@ CString    CCoModel::Print (void) const {
 
 	}
 	if (this->Accepted().empty()) { // this means no element is in the map of modes, i.e. default mode is applied (code = 0);
-		cs_out.Format(p_sz_pat_def, (_pc_sz)__CLASS__, (_pc_sz)CCoMode_enum::Ref().Find(TModeAccept::e_default).Print(TCoMode::e_print::e_all));
+		cs_out.Format(p_sz_pat_def, (_pc_sz)__CLASS__, (_pc_sz)CCoMode_enum::Ref().Find(TModeAccept::e_default).Print(::e_print::e_all));
 	}
 	else {
 		const dword co_init = this->CoInit();

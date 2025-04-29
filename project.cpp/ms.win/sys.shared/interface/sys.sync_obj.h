@@ -35,8 +35,8 @@ namespace shared { namespace sys_core {
 		void Unlock (void) const;
 
 	private:  // non-copyable;
-		CSyncObject(const CSyncObject&);
-		CSyncObject& operator= (const CSyncObject&);
+		CSyncObject(const CSyncObject&) = delete;
+		CSyncObject& operator= (const CSyncObject&) = delete;
 	};
 
 	template<typename TLocker>

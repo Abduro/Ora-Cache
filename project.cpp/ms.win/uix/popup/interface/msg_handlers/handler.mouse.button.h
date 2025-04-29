@@ -35,11 +35,6 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 		bool      Type (const e_type); // returns true in case of changing value;
 
 #if defined (_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0, // prints out complete info of this action object: namespace path, class name, action type value as string;
-			e_no_ns = 1, // prints out the same info as option above, but without namespace path;
-			e_req   = 2, // prints out the action type as string;
-		};
 		CString   Print(const e_print = e_print::e_all) const;
 #endif
 	public:
@@ -68,11 +63,6 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 		bool    Where (const e_where);  // returns true if placement is changed;
 
 #if defined (_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0, // prints out complete info of this place object: namespace path, class name, placement value as string;
-			e_no_ns = 1, // prints out the same info as option above, but without namespace path;
-			e_req   = 2, // prints out the place value as string;
-		};
 		CString   Print(const e_print = e_print::e_all) const;
 #endif
 	public:
@@ -98,11 +88,6 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 		CPlace&  Place (void) ;
 
 #if defined (_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0, // prints out complete info of this button object: namespace path, class name, place and validity;
-			e_no_ns = 1, // prints out the same info as option above, but without namespace path;
-			e_req   = 2, // prints out the place and validity;
-		};
 		CString   Print(const e_print = e_print::e_all) const;
 #endif
 
@@ -134,11 +119,6 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 
 		bool Has (const e_keys _key) const;
 #if defined (_DEBUG) // copy & paste works here :D
-		enum e_print : uint32_t {
-			e_all   = 0, // prints out complete info of this action object: namespace path, class name, action type value as string;
-			e_no_ns = 1, // prints out the same info as option above, but without namespace path;
-			e_req   = 2, // prints out the action type as string;
-		};
 		CString   Print(const e_print = e_print::e_all) const;
 #endif
 
@@ -175,11 +155,6 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 		bool  Is_valid  (void) const; // returns true in case when action and button attributes are valid both, otherwise there is no sense in this event;
 
 #if defined (_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0, // prints out complete info of this event object: namespace path, class name, class attributes;
-			e_no_ns = 1, // prints out the same info as option above, but without namespace path;
-			e_req   = 2, // prints out this class attributes' value and state;
-		};
 		CString   Print(const e_print = e_print::e_all) const;
 #endif
 		const

@@ -40,10 +40,6 @@ namespace shared { namespace sys_core { namespace com {
 		bool   Is_valid(void) const;   // returns true in case when the value of this guid is valid;
 
 #if defined(_DEBUG)
-		enum e_print {
-			e_all = 0, // prints out complete info about guid value of this class object;
-			e_req = 1, // prints out the guid value of this class object only;
-		};
 		CString Print (const e_print = e_print::e_req) const;
 #endif
 		CString To_string (void) const;

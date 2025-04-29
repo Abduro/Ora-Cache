@@ -37,7 +37,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				TCode empty_;
-				_out().Cached() += empty_.Print(TCode::e_all);
+				_out().Cached() += empty_.Print(::e_print::e_all);
 				_out()();
 			}
 		};
@@ -55,8 +55,8 @@ namespace ebo { namespace boo { namespace test {
 
 				TFake_code& fake = TFake_code::Ref();
 				_out().Cached() += _T("Using exception code for finding the object:");
-				const TCode found_0 = fake.Find((errno_l)TCode::e_acc_violate);  _out().Cached() += found_0.Print(TCode::e_all);
-				const TCode found_1 = fake.Find((uint32_t)CONTROL_C_EXIT);       _out().Cached() += found_1.Print(TCode::e_all);
+				const TCode found_0 = fake.Find((errno_l)TCode::e_acc_violate);  _out().Cached() += found_0.Print(::e_print::e_all);
+				const TCode found_1 = fake.Find((uint32_t)CONTROL_C_EXIT);       _out().Cached() += found_1.Print(::e_print::e_all);
 				_out()();
 			}
 		};
@@ -67,7 +67,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 			
 				TFlag none_;
-				_out().Cached() += none_.Print(TFlag::e_all);
+				_out().Cached() += none_.Print(::e_print::e_all);
 				_out()();
 			}
 		};
@@ -87,7 +87,7 @@ namespace ebo { namespace boo { namespace test {
 			__ctor(_ctor) {
 
 				TNumber empty_;
-				_out().Cached() += empty_.Print(TNumber::e_all);
+				_out().Cached() += empty_.Print(::e_print::e_all);
 				_out()();
 			}
 		};
@@ -100,8 +100,8 @@ namespace ebo { namespace boo { namespace test {
 				_out()();
 			}
 			__method(Get) {
-				_out().Cached() += TFake_num::Ref().Find(EINVAL).Print(TNumber::e_all);
-				_out().Cached() += TFake_num::Ref().Find(EILSEQ).Print(TNumber::e_all);
+				_out().Cached() += TFake_num::Ref().Find(EINVAL).Print(::e_print::e_all);
+				_out().Cached() += TFake_num::Ref().Find(EILSEQ).Print(::e_print::e_all);
 				_out()();
 			}
 		};

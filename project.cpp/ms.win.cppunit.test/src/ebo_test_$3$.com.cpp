@@ -90,7 +90,7 @@ namespace ebo { namespace boo { namespace test {
 					TClsId cls_id;
 
 					_out().Opts() += TLog_Acc::e_new_line;
-					_out() << cls_id.Print(TClsId::e_all);
+					_out() << cls_id.Print(::e_print::e_all);
 					_out()();
 				}
 			};
@@ -102,7 +102,7 @@ namespace ebo { namespace boo { namespace test {
 					TProgId prog_id(__guid_null); // #no_set value is expected due to no program id is registered for null guid;
 
 					_out().Opts() += TLog_Acc::e_new_line;
-					_out() << prog_id.Print(TProgId::e_all);
+					_out() << prog_id.Print(::e_print::e_all);
 					_out()();
 				}
 			};
@@ -115,7 +115,7 @@ namespace ebo { namespace boo { namespace test {
 			__class(CMode) {
 				__ctor(_ctor) {
 					_out().Opts() += TLog_Acc::e_new_line;
-					_out() << TMode().Print(TMode::e_print::e_all);
+					_out() << TMode().Print(::e_print::e_all);
 					_out()();
 				}
 			};
@@ -129,8 +129,8 @@ namespace ebo { namespace boo { namespace test {
 				__method(Get) {
 					_out() += TLog_Acc::e_new_line;
 					_out().Cached() += _T("Finding co-init modes:");
-					_out().Cached() += TModes::Ref().Find(TModeAccept::e_default).Print(TMode::e_print::e_all);
-					_out().Cached() += TModes::Ref().Find(TModeAccept::e_the_fake).Print(TMode::e_print::e_all);
+					_out().Cached() += TModes::Ref().Find(TModeAccept::e_default).Print(::e_print::e_all);
+					_out().Cached() += TModes::Ref().Find(TModeAccept::e_the_fake).Print(::e_print::e_all);
 					_out()();
 				}
 			};
@@ -182,13 +182,13 @@ namespace ebo { namespace boo { namespace test {
 						CString cs_out;
 						CCo_dbg co_dbg;
 						cs_out  = _T("Before co-init():");
-						cs_out += co_dbg.Print(CCo_dbg::e_print::e_req); _out().Cached() += cs_out;
+						cs_out += co_dbg.Print(::e_print::e_req); _out().Cached() += cs_out;
 						co_dbg.Create();
 						cs_out  = _T("After co-init():" );
-						cs_out += co_dbg.Print(CCo_dbg::e_print::e_all); _out().Cached() += cs_out;
+						cs_out += co_dbg.Print(::e_print::e_all); _out().Cached() += cs_out;
 						co_dbg.Destroy();
 						cs_out  = _T("After co-un-init():");
-						cs_out += co_dbg.Print(CCo_dbg::e_print::e_req); _out().Cached() += cs_out;
+						cs_out += co_dbg.Print(::e_print::e_req); _out().Cached() += cs_out;
 					}
 					_out()();
 				}

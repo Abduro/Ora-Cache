@@ -72,11 +72,6 @@ namespace ora { namespace base { namespace oledb {
 		bool    Type (const ushort);
 
 #if defined(_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0x0,             // prints out complete information of this class object: namespace, class name, attributes ;
-			e_no_ns = 0x1,             // the same as above option, but no namespace;
-			e_req   = 0x2,             // prints out this class object attribute values only;
-		};
 		CString Print (const e_print = e_print::e_all) const;
 #endif
 	public:

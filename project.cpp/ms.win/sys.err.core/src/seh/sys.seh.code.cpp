@@ -174,7 +174,7 @@ CString CCode_Fake::Print (_pc_sz _pfx, _pc_sz _sfx) const {
 	for (TCodes::const_iterator it_ = this->Get().begin(); it_ != this->Get().end(); ++it_) {
 
 		cs_codes += _pfx;
-		cs_codes += it_->second.Print(CNode::e_req);
+		cs_codes += it_->second.Print(e_print::e_req);
 		cs_codes += _sfx;
 
 	}

@@ -157,7 +157,7 @@ CString CProvider_enum::Print (_pc_sz _pfx, _pc_sz _sfx) const {
 	for (TProvs::const_iterator it_ = this->Get().begin(); it_ != this->Get().end(); ++it_) {
 
 		cs_provs += _pfx;
-		cs_provs += it_->Print(CProvider::e_req);
+		cs_provs += it_->Print(::e_print::e_req);
 		cs_provs += _sfx;
 
 	}

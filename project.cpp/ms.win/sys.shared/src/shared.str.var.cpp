@@ -34,6 +34,7 @@ using namespace shared::common::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
 CStr_Var:: CStr_Var (void) : TBase() {}
+CStr_Var:: CStr_Var (const _variant_t& _var) : CStr_Var() { *this << _var; }
 CStr_Var:: CStr_Var (const CStr_Var& _src) : CStr_Var() { *this = _src; }
 CStr_Var::~CStr_Var (void) {}
 
@@ -42,7 +43,32 @@ CStr_Var::~CStr_Var (void) {}
 _pc_sz  CStr_Var::Alias (void) const { return (_pc_sz)this->m_atts[_ndx::e_alias]; }
 _pc_sz  CStr_Var::Desc  (void) const { return (_pc_sz)this->m_atts[_ndx::e_desc ]; }
 
-bool CStr_Var::Set (const _variant_t& _var) {
+_pc_sz  CStr_Var::Att (const _ndx e_ndx) const {
+	e_ndx;
+	switch (e_ndx) {
+	case _ndx::e_alias: 
+	case _ndx::e_desc : 
+	case _ndx::e_type : 
+	case _ndx::e_value: return this->m_atts[e_ndx].GetString();
+	}
+	static
+	CString cs_inv; cs_inv.Format(_T("#out_of_range:%d;"), e_ndx);
+	return  cs_inv;
+}
+
+CString CStr_Var::Get (_pc_sz _p_sep, _pc_sz _p_pfx, _pc_sz _p_psx) const {
+	_p_sep; _p_pfx; _p_psx;
+	CString cs_out(_T("#not_impl;"));
+	return  cs_out;
+}
+#if defined(_DEBUG)
+CString CStr_Var::Print (const e_print _e_opt) const {
+	_e_opt;
+	CString cs_out(_T("#not_impl;"));
+	return  cs_out;
+}
+#endif
+bool    CStr_Var::Set (const _variant_t& _var) {
 	_var;
 	bool b_result = true;
 
@@ -76,4 +102,10 @@ _pc_sz  CStr_Var::Value (void) const { return (_pc_sz)this->m_atts[_ndx::e_value
 
 /////////////////////////////////////////////////////////////////////////////
 
+CString CStr_Var::Field(const _variant_t&) { return CString(_T("#not_impl;")); }
+CString CStr_Var::Type (const _variant_t&) { return CString(_T("#not_impl;")); }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CStr_Var&  CStr_Var::operator = (const CStr_Var& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+CStr_Var&  CStr_Var::operator <<(const _variant_t&) { return *this; }

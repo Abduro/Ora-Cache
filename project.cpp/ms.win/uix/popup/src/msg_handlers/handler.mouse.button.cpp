@@ -141,12 +141,12 @@ CString   CButton::Print(const e_print e_opt) const {
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) { cs_out.Format(pc_sz_pat_a, 
-		(_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)this->Place().Print(CPlace::e_no_ns), (_pc_sz)cs_valid);
+		(_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)this->Place().Print(::e_print::e_no_ns), (_pc_sz)cs_valid);
 	}
 	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n,
-		(_pc_sz)__CLASS__  , (_pc_sz) this->Place().Print(CPlace::e_no_ns), (_pc_sz)cs_valid);
+		(_pc_sz)__CLASS__  , (_pc_sz) this->Place().Print(::e_print::e_no_ns), (_pc_sz)cs_valid);
 	}
-	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)this->Place().Print(CPlace::e_req) , (_pc_sz)cs_valid); }
+	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)this->Place().Print(::e_print::e_req) , (_pc_sz)cs_valid); }
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
@@ -193,26 +193,26 @@ CString  CEvent::Print  (const e_print e_opt) const {
 
 	if (e_print::e_all   == e_opt) {
 		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
-			(_pc_sz) this->Action().Print(CAction::e_no_ns),
-			(_pc_sz) this->Button().Print(CButton::e_no_ns),
-			(_pc_sz) this->Point ().Print(CPoint ::e_no_ns),
-			(_pc_sz) this->VKeys ().Print(t_vkeys::e_no_ns)
+			(_pc_sz) this->Action().Print(::e_print::e_no_ns),
+			(_pc_sz) this->Button().Print(::e_print::e_no_ns),
+			(_pc_sz) this->Point ().Print(::e_print::e_no_ns),
+			(_pc_sz) this->VKeys ().Print(::e_print::e_no_ns)
 		);
 	}
 	if (e_print::e_no_ns == e_opt) {
 		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
-			(_pc_sz) this->Action().Print(CAction::e_no_ns),
-			(_pc_sz) this->Button().Print(CButton::e_no_ns),
-			(_pc_sz) this->Point ().Print(CPoint ::e_no_ns),
-			(_pc_sz) this->VKeys ().Print(t_vkeys::e_no_ns)
+			(_pc_sz) this->Action().Print(::e_print::e_no_ns),
+			(_pc_sz) this->Button().Print(::e_print::e_no_ns),
+			(_pc_sz) this->Point ().Print(::e_print::e_no_ns),
+			(_pc_sz) this->VKeys ().Print(::e_print::e_no_ns)
 		);
 	}
 	if (e_print::e_req   == e_opt) {
 		cs_out.Format(pc_sz_pat_r,
-			(_pc_sz) this->Action().Print(CAction::e_req),
-			(_pc_sz) this->Button().Print(CButton::e_req),
-			(_pc_sz) this->Point ().Print(CPoint ::e_req),
-			(_pc_sz) this->VKeys ().Print(t_vkeys::e_req)
+			(_pc_sz) this->Action().Print(::e_print::e_req),
+			(_pc_sz) this->Button().Print(::e_print::e_req),
+			(_pc_sz) this->Point ().Print(::e_print::e_req),
+			(_pc_sz) this->VKeys ().Print(::e_print::e_req)
 		);
 	}
 

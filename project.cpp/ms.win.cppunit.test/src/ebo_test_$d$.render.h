@@ -49,7 +49,6 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 
 	using TDrv_type = ex_ui::draw::direct_x::CDrv_Type::e_type;
 
-	using e_print = ex_ui::draw::direct_x::e_print;
 	using IBufferSink = ex_ui::draw::direct_x::IBuffer_Sync;
 	using TBuffer = ex_ui::draw::direct_x::CBuffer;
 	using TUsage = ex_ui::draw::direct_x::CBuff_Usage::e_usage;

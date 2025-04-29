@@ -20,7 +20,6 @@ namespace ebo { namespace boo { namespace test { namespace color { namespace rgb
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 	using TPercent = TPct_Flt;
-	using e_print  = ex_ui::color::e_print;
 
 	__class(CAlpha) {
 	public:

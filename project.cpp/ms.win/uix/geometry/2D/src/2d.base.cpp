@@ -195,7 +195,7 @@ CString CPoints::Print (void) const {
 
 	for (size_t i_ = 0; i_ < this->Raw().size(); i_++) {
 
-		cs_pts += this->Raw().at(i_).Print(TPoint::e_req);
+		cs_pts += this->Raw().at(i_).Print(e_print::e_req);
 		if (i_ < b_last)
 			cs_pts += _T(";");
 
@@ -258,11 +258,12 @@ CString    CPoint_2::Print (const e_print e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{x=%d;y=%d;marker=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{x=%d;y=%d;marker=%s}");
 
+	CString cs_marker = this->Marker().Print(e_print::e_req);
 	CString cs_out;
 
-	if (e_print::e_all == e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, this->X(), this->Y(), (_pc_sz) this->Marker().Print(CMarker::e_req)); }
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz) __CLASS__, this->X(), this->Y(), (_pc_sz) this->Marker().Print(CMarker::e_req)); }
-	if (e_print::e_req == e_opt) { cs_out.Format(pc_sz_pat_r, this->X(), this->Y(), (_pc_sz) this->Marker().Print(CMarker::e_req)); }
+	if (e_print::e_all   == e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, this->X(), this->Y(), (_pc_sz) cs_marker); }
+	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz) __CLASS__, this->X(), this->Y(), (_pc_sz) cs_marker); }
+	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, this->X(), this->Y(), (_pc_sz) cs_marker); }
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s].%s(#inv_arg==%d);"), (_pc_sz) __CLASS__, (_pc_sz) __METHOD__, e_opt);
@@ -282,7 +283,6 @@ CPoint_2& CPoint_2::operator <<(const CMarker& _marker) { this->Marker() = _mark
 namespace geometry { namespace base { namespace _2D { namespace _impl {
 
 #if defined(_DEBUG)
-	using e_print = TSize::e_print;
 
 	class CPattern {
 	public:
@@ -290,15 +290,15 @@ namespace geometry { namespace base { namespace _2D { namespace _impl {
 		~CPattern (void) {}
 
 	public:
-		static _pc_sz Get (const uint16_t _e_opt) {
+		static _pc_sz Get (const ::e_print _e_opt) {
 
 			static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{height=%d;width=%d;zero=%s}");
 			static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{height=%d;width=%d;zero=%s}");
 			static _pc_sz pc_sz_pat_r = _T("{height=%d;width=%d}");
 
-			if (e_print::e_all == _e_opt) return pc_sz_pat_a;
+			if (e_print::e_all   == _e_opt) return pc_sz_pat_a;
 			if (e_print::e_no_ns == _e_opt) return pc_sz_pat_n;
-			if (e_print::e_req == _e_opt) return pc_sz_pat_r;
+			if (e_print::e_req   == _e_opt) return pc_sz_pat_r;
 
 			static
 			_pc_sz  pc_sz_not_sup = _T("cls::[%s::%s].%s(#inv_arg==%d);");
@@ -342,14 +342,15 @@ CString CSize::Print (const e_print e_opt) const {
 #endif
 	using pat = CPattern;
 
+	CString cs_valid = TStringEx().Bool(this->Is_zero());
 	CString cs_out;
 
-	if (e_print::e_all == e_opt) { cs_out.Format(pat::Get(e_opt), (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, this->H(), this->W(), TStringEx().Bool(this->Is_zero())); }
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pat::Get(e_opt), (_pc_sz) __CLASS__, this->H(), this->W(), TStringEx().Bool(this->Is_zero())); }
-	if (e_print::e_req == e_opt) { cs_out.Format(pat::Get(e_opt), this->H(), this->W()); }
+	if (e_print::e_all   == e_opt) { cs_out.Format(pat::Get(e_opt), (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, this->H(), this->W(), (_pc_sz)cs_valid); }
+	if (e_print::e_no_ns == e_opt) { cs_out.Format(pat::Get(e_opt), (_pc_sz) __CLASS__, this->H(), this->W(), (_pc_sz)cs_valid); }
+	if (e_print::e_req   == e_opt) { cs_out.Format(pat::Get(e_opt), this->H(), this->W()); }
 
-	if (cs_out.IsEmpty())
-		cs_out.Format(pat::Get(0xf), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
 
 	return  cs_out;
 }
@@ -421,14 +422,19 @@ CString   CSize_U::Print (const e_print e_opt) const {
 
 	using pat = CPattern;
 
+	CString cs_valid = TStringEx().Bool(this->Is_zero());
 	CString cs_out;
 
-	if (e_print::e_all == e_opt) { cs_out.Format(pat::Get(e_opt), (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, this->H(), this->W(), TStringEx().Bool(this->Is_zero())); }
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pat::Get(e_opt), (_pc_sz) __CLASS__, this->H(), this->W(), TStringEx().Bool(this->Is_zero())); }
-	if (e_print::e_req == e_opt) { cs_out.Format(pat::Get(e_opt), this->H(), this->W()); }
+	if (e_print::e_all   == e_opt) {
+		cs_out.Format(pat::Get(e_opt), (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, this->H(), this->W(), (_pc_sz)cs_valid);
+	}
+	if (e_print::e_no_ns == e_opt) {
+		cs_out.Format(pat::Get(e_opt), (_pc_sz) __CLASS__, this->H(), this->W(), (_pc_sz)cs_valid);
+	}
+	if (e_print::e_req   == e_opt) { cs_out.Format(pat::Get(e_opt), this->H(), this->W()); }
 
-	if (cs_out.IsEmpty())
-		cs_out.Format(pat::Get(0xf), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
 
 	return  cs_out;
 }
@@ -461,7 +467,6 @@ CSize_U& CSize_U::operator = (const CSize_U& _src) { *this >> _src.H() << _src.W
 CSize_U& CSize_U::operator = (CSize_U&& _victim) {
 
 	*this = _victim; _victim.Set(0,0); return *this;
-
 }
 
 CSize_U& CSize_U::operator <<(const uint32_t _width) { this->W(_width); return *this; }

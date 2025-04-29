@@ -18,7 +18,7 @@
 
 #include "shared.types.h"
 
-#pragma comment(lib, "geometry.2D_v15.lib")
+//#pragma comment(lib, "geometry.2D_v15.lib")
 
 namespace ex_ui { namespace message { namespace handlers {// regarding namespace naming: 'window_message' or 'wm' shortcut look like more informative, but not for this case;
 

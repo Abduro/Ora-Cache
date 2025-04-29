@@ -57,16 +57,21 @@ CString   CSide::Print (const e_print e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{marker=%s;begin=%s;end=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{marker=%s;begin=%s;end=%s}");
 
-	CString cs_mkt = this->Marker().Print(CMarker::e_no_ns);
+	CString cs_begin  = this->Begin().Print(e_print::e_req);
+	CString cs_end    = this->End().Print(e_print::e_req);
+	CString cs_marker = this->Marker().Print(e_print::e_req);
+
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_mkt, (_pc_sz) this->Begin().Print(CPoint::e_req), (_pc_sz) this->End().Print(CPoint::e_req));
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_marker, (_pc_sz) cs_begin, (_pc_sz) cs_end);
 	}
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_mkt, (_pc_sz) this->Begin().Print(CPoint::e_req), (_pc_sz) this->End().Print(CPoint::e_req)); }
-	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r,
-		(_pc_sz) cs_mkt, (_pc_sz) this->Begin().Print(CPoint::e_req), (_pc_sz) this->End().Print(CPoint::e_req)); }
+	if (e_print::e_no_ns == e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_marker, (_pc_sz) cs_begin, (_pc_sz) cs_end);
+	}
+	if (e_print::e_req   == e_opt) {
+		cs_out.Format(pc_sz_pat_r,(_pc_sz) cs_marker, (_pc_sz) cs_begin, (_pc_sz) cs_end);
+	}
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
@@ -208,7 +213,7 @@ CString  CSides::Print (const e_print e_opt/*= e_print::e_all*/, _pc_sz _pfx/* =
 
 	for (size_t i_ = 0; i_ < this->Get().size(); i_++) {
 		cs_raw += _pfx;
-		cs_raw += this->Get().at(i_).Print(TSide::e_req);
+		cs_raw += this->Get().at(i_).Print(e_print::e_req);
 		if (i_ < b_last)
 			cs_raw += _sfx;
 
@@ -284,13 +289,14 @@ CString  CShape::Print (const e_print e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{sides=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{sides=%s}");
 
+	CString cs_sides = this->Sides().Print(e_print::e_req);
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) this->Sides().Print(CSides::e_req));
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_sides);
 	}
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) this->Sides().Print(CSides::e_req)); }
-	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) this->Sides().Print(CSides::e_req)); }
+	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_sides); }
+	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_sides); }
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
@@ -331,11 +337,9 @@ namespace geometry { namespace shape { namespace _2D { namespace _impl {
 			const CPoint_2& p_pt = _p_set[i_];
 			
 			cs_out += _pfx;
-			cs_out += p_pt.Print(CPoint_2::e_req);
+			cs_out += p_pt.Print(e_print::e_req);
 			cs_out += _sfx;
 		}
-
-
 		return  cs_out;
 	}
 
@@ -426,7 +430,8 @@ CString      CRectangle::Print  (const e_print e_opt, _pc_sz _pfx, _pc_sz _sfx) 
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{corners=%s%s%svalid=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{corners=%s%s%svalid=%s}");
 
-	CString cs_pts = _print_out_point_x_set(this->m_corners.m_points, CRectangle::u_corners, _pfx, _sfx); CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_pts = _print_out_point_x_set(this->m_corners.m_points, CRectangle::u_corners, _pfx, _sfx);
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) {

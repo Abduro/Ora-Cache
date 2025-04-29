@@ -53,10 +53,6 @@ namespace shared { namespace sys_core { namespace com {
 		void   Set  (dword _code, _pc_sz _p_alias, _pc_sz _p_desc); // sets all atts together or at once; no interest is in return result;
 
 #if defined(_DEBUG)
-		enum e_print {
-			e_all = 0, // prints this class name, alias, code value and description;
-			e_req = 1, // prints required info only: alias, code value and description of this element; no class name;
-		};
 		CString Print (const e_print = e_print::e_req) const;
 #endif
 	public:
@@ -182,10 +178,6 @@ namespace shared { namespace sys_core { namespace com {
 		const
 		TCoModel& Model (void) const; // just letting know what model is applied for the inits;
 #if defined(_DEBUG)
-		enum e_print {
-			e_all = 0, // prints this class name, model and error object, current state;
-			e_req = 1, // prints required info only: class name, cfg name and current state of the initialization;
-		};
 		CString   Print (const e_print = e_print::e_req) const;
 #endif
 	private:

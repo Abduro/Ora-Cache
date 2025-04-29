@@ -152,7 +152,7 @@ __class(CNamed) {
 	__ctor(_ctor){
 
 		_out() += TLog_Acc::e_new_line;
-		_out() += TNamedColor(TRgbColor(0), _T("#fake_named")).Print(TNamedColor::e_all);
+		_out() += TNamedColor(TRgbColor(0), _T("#fake_named")).Print(::e_print::e_all);
 		_out()();
 	}
 };
@@ -166,7 +166,7 @@ __class(CNamed_X11) {
 
 		for (TNamedClrRaw::const_iterator it_ = named_raw.begin(); it_ != named_raw.end(); ++it_) {
 			const TNamedColor& named_clr = it_->second;
-			_out() += named_clr.Print(TNamedColor::e_req);
+			_out() += named_clr.Print(::e_print::e_req);
 		}
 
 		_out().Cached()();

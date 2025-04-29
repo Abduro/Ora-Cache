@@ -37,8 +37,8 @@ CString  CPosition::Print (const e_print e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{anchor=%s;size=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{anchor=%s;size=%s}");
 
-	CString cs_anch = this->Anchor().Print(TPoint::e_req);
-	CString cs_size = this->Size().Print(TSize::e_req);
+	CString cs_anch = this->Anchor().Print(e_print::e_req);
+	CString cs_size = this->Size().Print(e_print::e_req);
 
 	CString cs_out;
 	

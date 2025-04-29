@@ -173,7 +173,7 @@ namespace shared { namespace memory {
 			e_comp = 2,   // prints info of components only: build and content, no error state;
 			e_err  = 3,   // prints error state and info of validity this object, i.e. the global memory block is creetaed and is okay;
 		};
-		CString Print (const e_print = e_print::e_all) const;
+		CString Print (const CSharedPsuedo::e_print = CSharedPsuedo::e_print::e_all) const;
 #endif
 	public:
 		CSharedPsuedo& operator = (const CSharedPsuedo&) = delete;

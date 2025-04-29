@@ -43,11 +43,6 @@ namespace shared { namespace sys_core { namespace com {
 		CString  ProgId (void) const;     // tries to get program identifier from this class guid that is currently set;
 
 #if defined(_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0x0,                // prints out complete information of this class object: namespace, class name, value ;
-			e_no_ns = 0x1,                // the same as above option, but no namespace;
-			e_req   = 0x2,                // prints out this class object attribute value only;
-		};
 		CString Print (const e_print = e_print::e_all) const;
 #endif
 		const
@@ -93,11 +88,6 @@ namespace shared { namespace sys_core { namespace com {
 		CString& Raw (void);          // returns a reference to the raw value of this class; (rw)
 
 #if defined(_DEBUG)
-		enum e_print : uint32_t {
-			e_all   = 0x0,            // prints out complete information of this class object: namespace, class name, value ;
-			e_no_ns = 0x1,            // the same as above option, but no namespace;
-			e_req   = 0x2,            // prints out this class object attribute value only;
-		};
 		CString Print (const e_print = e_print::e_all) const;
 #endif
 

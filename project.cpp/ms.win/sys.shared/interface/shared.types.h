@@ -7,9 +7,22 @@
 #include <atlbase.h>
 #include <atlstr.h>
 #include <tchar.h>
+#include <cstdint>
+
+#include "shared.dbg.h"
 
 namespace shared { namespace types {
 
+#if defined(_DEBUG_)    // leads to error C2011: 'shared::types::e_print': 'unsigned enum' type redefinition ;
+	// https://en.cppreference.com/w/cpp/language/enum ;
+	enum class e_print : uint32_t {
+		e_all   = 0x0,  // prints out the class name and namespace path, class field value(s);
+		e_no_ns = 0x1,  // prints out as the option above, but no namespace path;
+		e_req   = 0x2   // prints out the class object field value(s) only;
+	};
+	CString e_print_to_str (void);
+#endif
+#if (1)
 	// these data types and structures are based on WinAPI, because the current implementation of Ebo Pack is intended for running under Windows OS;
 
 	typedef LPCTSTR _pc_sz; // since Win32 there is neither 'long' nor 'near' pointer types;
@@ -21,10 +34,10 @@ namespace shared { namespace types {
 	typedef ULONG   ulong ;
 	typedef DWORD   dword ;
 
-	typedef BOOL _bool ;
-	typedef LONG _long ;
-	typedef UINT _uint ;
-	typedef WORD _word ;
+	typedef BOOL    _bool ;
+	typedef LONG    _long ;
+	typedef UINT    _uint ;
+	typedef WORD    _word ;
 
 	// https://en.wikipedia.org/wiki/err_code ;
 	typedef HRESULT err_code;
@@ -39,6 +52,8 @@ namespace shared { namespace types {
 	typedef POINT   t_point ; // it just is a base structure for holding point coordinate values;
 	typedef RECT    t_rect  ;
 	typedef SIZE    t_size  ; // it just is a base structure for holding shape size in two dimensional space;
+
+#endif
 }}
 
 

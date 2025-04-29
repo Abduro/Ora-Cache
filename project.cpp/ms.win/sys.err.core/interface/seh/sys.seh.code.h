@@ -51,7 +51,7 @@ namespace shared { namespace sys_core { namespace seh {
 	public:
 		bool Is (void) const;  // returns true if number code is not zero and description is set;
 #if defined (_DEBUG)
-		CString  Print(const TBase::e_print = TBase::e_req) const;
+		CString  Print(const e_print = e_print::e_req) const;
 #endif
 		uint32_t Origin (void) const; // returns original code value, as it is set in system API; issue: the parent code value will be not coincident;
 		bool     Origin (uint32_t)  ; // sets new origin code, the parent code value is updated appropriately; returns true if changed;

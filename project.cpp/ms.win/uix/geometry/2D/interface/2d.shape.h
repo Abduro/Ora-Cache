@@ -60,11 +60,6 @@ namespace geometry { namespace shape { namespace _2D {
 		CPoint&  Point (const e_points) ;       // returns a reference to the point object (read-write);
 
 #if defined (_DEBUG)
-		enum e_print : uint16_t {
-		     e_all   = 0,
-		     e_no_ns = 1,
-		     e_req   = 2,
-		};
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 
@@ -114,11 +109,6 @@ namespace geometry { namespace shape { namespace _2D {
 		bool    Remove (const uint32_t _marker_id);      // removes the object by marker identifier provided; returns true in case of success;
 
 #if defined (_DEBUG)
-		enum e_print {
-		     e_all   = 0,
-		     e_no_ns = 1,
-		     e_req   = 2,
-		};
 		CString Print (const e_print = e_print::e_all, _pc_sz _pfx = _T(""), _pc_sz _sfx = _T(";")) const;
 #endif
 
@@ -150,11 +140,6 @@ namespace geometry { namespace shape { namespace _2D {
 
 	public:
 #if defined (_DEBUG)
-		enum e_print {
-		     e_all   = 0,
-		     e_no_ns = 1,
-		     e_req   = 2,
-		};
 		CString Print (const e_print = e_print::e_all) const;
 #endif
 	const
@@ -242,11 +227,6 @@ namespace geometry { namespace shape { namespace _2D {
 		const bool Is_valid (void) const; // returns true in case if all corners have valid markers;
 
 #if defined (_DEBUG)
-		enum e_print : uint32_t {
-		     e_all   = 0,  // prints out complete information of this class object: namespace path, class name, data values and marker info;
-		     e_no_ns = 1,  // prints out the same info as above option, but without namespace path;
-		     e_req   = 2,  // prints out rectangle corners' data and marker info;
-		};
 		CString  Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
 #endif
 		CSize Size (void) const; // returns a size object of this rectangle;

@@ -6,12 +6,12 @@
 	-----------------------------------------------------------------------------
 	Adopted to Geometry Curve project on 17-Feb-2024 at 07:04:17.4393844, UTC+7, Novosibirsk, Saturday;
 */
-#include <strsafe.h> // ::StringCchVPrintfEx();
 #include <atlstr.h>
-#include <stdlib.h>  // ::_ltoa_s; _tstol;
+#include <strsafe.h>    // ::StringCchVPrintfEx();
+#include <stdlib.h>     // ::_ltoa_s; _tstol;
 
-#include <cstdio>    // std::printf; https://en.cppreference.com/w/cpp/io/c/fprintf
-#include <string>    // std::stoi, std::stol, std::stoll; https://en.cppreference.com/w/cpp/string/basic_string/stol ;
+#include <cstdio>       // std::printf; https://en.cppreference.com/w/cpp/io/c/fprintf
+#include <string>       // std::stoi, std::stol, std::stoll; https://en.cppreference.com/w/cpp/string/basic_string/stol ;
 #include <vector>
 
 #include <combaseapi.h> // CLSIDFromString(); https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring ;
@@ -48,7 +48,7 @@ namespace shared { namespace common {
 	};
 
 	typedef CFormat_Spec::_spec t_fmt_spec;
-
+#pragma region __urls
 	// a number to string:
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/strtof-strtof-l-wcstof-wcstof-l ; not used yet;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/itoa-s-itow-s ;
@@ -57,6 +57,7 @@ namespace shared { namespace common {
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/data-conversion ;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/itoa-s-itow-s ;
 	// https://stackoverflow.com/questions/4459987/convert-float-to-string-without-losing-precision ;
+#pragma endregion
 	/*
 		***note***
 		using _variant_t class looks like much better: it provides all necessary data type conversion functions 
@@ -92,10 +93,10 @@ namespace shared { namespace common {
 		_pc_sz  Long (long) ;            // sets this string to long value;
 
 		bool    Is   (void) const;       // returns true if this string is not empty;
-
-//		_var    Var  (void) const;       // converts string to _variant_t;
-//		_pc_sz  Var  (const _var&, _pc_sz _fmt = _T("type=%s;value=%s")); // converts _variant_t to string in accordance with format pattern provided;
-
+#if (0)
+		_var    Var  (void) const;       // converts string to _variant_t;
+		_pc_sz  Var  (const _var&, _pc_sz _fmt = _T("type=%s;value=%s")); // converts _variant_t to string in accordance with format pattern provided;
+#endif
 		// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
 #if defined WIN64
 		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr) ;
@@ -117,10 +118,7 @@ namespace shared { namespace common {
 		_pc_sz   Format(_pc_sz _lp_sz_fmt, ...);
 		_pc_sz   Format(_pc_sz _lp_sz_fmt, va_list);
 		TParts   Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep = false) const;   // splits string by separator specified;
-#if(0) // already exists in base clase;
-	public:
-		CString_Ex& operator=(const _variant_t&);
-#endif
+
 	public:
 		CString_Ex& operator = (const CString_Ex&);
 		CString_Ex& operator <<(bool  _b_value);  // sets this string value from boolean data;

@@ -51,7 +51,7 @@ namespace ebo { namespace boo { namespace test {
 		__class(CPosition) {
 			__ctor(_ctor) {
 				_out() +=  TLog_Acc::e_new_line;
-				_out() +=  TPosition().Print(TPosition::e_all);
+				_out() +=  TPosition().Print(::e_print::e_all);
 				_out()();
 			}
 		};

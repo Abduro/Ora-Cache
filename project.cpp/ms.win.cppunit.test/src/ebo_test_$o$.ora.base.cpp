@@ -19,7 +19,7 @@ namespace ebo { namespace boo { namespace test {
 		__class(CProvider) {
 			__ctor(_ctor) {
 				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("Default: %s"), (_pc_sz)TProvider().Print(TProvider::e_all));
+				_out() += TStringEx().Format(_T("Default: %s"), (_pc_sz)TProvider().Print(::e_print::e_all));
 				_out()();
 			}
 		};
@@ -29,7 +29,7 @@ namespace ebo { namespace boo { namespace test {
 		__class(COreProvider) {
 			__ctor(_ctor) {
 				_out() += TLog_Acc::e_new_line;
-				_out() += TOraProv().Print(TProvider::e_all);
+				_out() += TOraProv().Print(::e_print::e_all);
 				_out()();
 			}
 			__method(Is_installed) {
@@ -40,7 +40,7 @@ namespace ebo { namespace boo { namespace test {
 				const bool b_registered = (prov_enum.Registered(ora_prov.ClsId().Raw()));
 
 				_out() += TLog_Acc::e_new_line;
-				_out() += TStringEx().Format(_T("Installed: %s>>%s"), (_pc_sz)ora_prov.Print(TProvider::e_no_ns), TStringEx().Bool(b_registered));
+				_out() += TStringEx().Format(_T("Installed: %s>>%s"), (_pc_sz)ora_prov.Print(::e_print::e_no_ns), TStringEx().Bool(b_registered));
 				_out()();
 			}
 		};

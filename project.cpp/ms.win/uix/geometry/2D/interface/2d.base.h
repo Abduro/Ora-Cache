@@ -38,11 +38,6 @@ namespace geometry { namespace base { namespace _2D {
 		bool     Tag (_pc_sz) ;        // returns true if tag text is changed, case sensitive; nullptr is acceptable;
 
 #if defined(_DEBUG)
-		enum e_print : uint16_t {
-		     e_all   = 0,
-		     e_no_ns = 1,
-		     e_req   = 2,
-		};
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 
@@ -92,12 +87,6 @@ namespace geometry { namespace base { namespace _2D {
 		bool     Y (const int32_t); // returns true in case of change Y point structure attribute value;
 
 #if defined(_DEBUG)
-		enum e_print {
-		     e_all   = 0, // prints out complete info of this class: its namespace & name, point attribute values;
-		     e_no_ns = 2, // prints the same as above option, but without namespace path;
-		     e_req   = 1, // prints out point attribute values only;
-		};
-
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 	public:
@@ -134,12 +123,6 @@ namespace geometry { namespace base { namespace _2D {
 		CMarker&  Marker (void) ;
 
 #if defined(_DEBUG)
-		enum e_print {
-		     e_all   = 0, // prints out complete info of this class: its namespace & name, point attribute values;
-		     e_no_ns = 2, // prints the same as above option, but without namespace path;
-		     e_req   = 1, // prints out point attribute values only;
-		};
-
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 
@@ -228,12 +211,6 @@ namespace geometry { namespace base { namespace _2D {
 		bool Is_zero  (void) const;  // returns true in case when height and width equal to 0; this means an object has no size and may be considered as 0x0 point;
 
 #if defined(_DEBUG)
-		enum e_print : uint16_t {
-		     e_all   = 0, // prints out complete info about this class object: its namespace path and class name, height and width values;
-		     e_no_ns = 1, // prints the same info as above option, but without this class namespace path;
-		     e_req   = 2, // prints height and width values only; 
-		};
-
 		CString Print (const e_print = e_print::e_all) const;
 #endif
 		const
@@ -290,12 +267,6 @@ namespace geometry { namespace base { namespace _2D {
 
 		bool  Is_zero (void) const;
 #if defined(_DEBUG)
-		enum e_print : uint16_t {
-		     e_all   = 0, // prints out complete info about this class object: its namespace path and class name, height and width values;
-		     e_no_ns = 1, // prints the same info as above option, but without this class namespace path;
-		     e_req   = 2, // prints height and width values only; 
-		};
-
 		CString Print (const e_print = e_print::e_all) const;
 #endif
 		const

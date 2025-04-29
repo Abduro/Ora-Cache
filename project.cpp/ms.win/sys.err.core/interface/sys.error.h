@@ -184,7 +184,7 @@ namespace shared { namespace sys_core {
 		     e_ctx  = 2, // prints the context in which the error is working;
 		     e_req  = 3, // prints error code, result, description, class and method names;
 		};
-		CString Print (const e_print = e_print::e_all) const;
+		CString Print (const CError::e_print = CError::e_print::e_all) const;
 #endif
 
 	public:
