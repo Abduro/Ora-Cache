@@ -104,7 +104,7 @@ namespace shared { namespace sys_core {
 			eEnviron   = __DwordToHresult(ERROR_BAD_ENVIRONMENT)        , // The environment is incorrect.
 			eInternal  = __DwordToHresult(ERROR_INTERNAL_ERROR)         , // An internal error occurred.
 			eOverflow  = __DwordToHresult(ERROR_ARITHMETIC_OVERFLOW)    , // Arithmetic result exceeded 32 bits.
-			eParamerer = __DwordToHresult(ERROR_INVALID_PARAMETER)      , // The parameter is incorrect.
+			eParameter = __DwordToHresult(ERROR_INVALID_PARAMETER)      , // The parameter is incorrect.
 			eState     = __DwordToHresult(ERROR_INVALID_STATE)          , // The group or resource is not in the correct state to perform the requested operation.
 		};};
 		struct eFont   { enum _value : err_code {

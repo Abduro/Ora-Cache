@@ -15,7 +15,7 @@
 
 namespace ex_ui { namespace draw { namespace direct_x {
 	// https://www.abbreviations.com/abbreviation/factory ;
-#pragma region __refs
+#pragma region __refs_0
 // this class for enumerating *all* adapters uses method IDXGIFactory1::EnumAdapters1();
 // https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi ;
 // actually, DXGIFactories have their own interface hirachy, like this:

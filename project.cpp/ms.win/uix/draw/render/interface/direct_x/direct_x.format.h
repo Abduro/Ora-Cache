@@ -29,7 +29,8 @@ namespace ex_ui { namespace draw { namespace direct_x {
 		~CClrBits (void) = default;
 
 #if defined(_DEBUG)
-		CString    Print (const uint32_t _n_format) const;
+		static
+		CString    Print (const uint32_t _n_format);
 #endif
 	private:
 		CClrBits&  operator = (const CClrBits&) = delete;
@@ -42,32 +43,50 @@ namespace _11 {
 
 	class CResFormat {
 	public:
+#pragma region __defs_0
+#define BufferCast        D3D11_FORMAT_SUPPORT_BACK_BUFFER_CAST         //
+#define BufferNorm        D3D11_FORMAT_SUPPORT_BUFFER                   //
+#define BufferStream      D3D11_FORMAT_SUPPORT_SO_BUFFER                //
+#define BufferIndex       D3D11_FORMAT_SUPPORT_IA_INDEX_BUFFER          //
+#define BufferVertex      D3D11_FORMAT_SUPPORT_IA_VERTEX_BUFFER         //
+#pragma endregion
 		enum e_buffer : uint32_t {
-		     e_back_cast  = TResFormat::D3D11_FORMAT_SUPPORT_BACK_BUFFER_CAST, //
-		     e_buffer_nm  = TResFormat::D3D11_FORMAT_SUPPORT_BUFFER          , // buffer resources supported;
-		     e_buffer_so  = TResFormat::D3D11_FORMAT_SUPPORT_SO_BUFFER       , // streaming output buffers supported;
-		     e_ia_index   = TResFormat::D3D11_FORMAT_SUPPORT_IA_INDEX_BUFFER , // index buffers supported;
-		     e_ia_vertex  = TResFormat::D3D11_FORMAT_SUPPORT_IA_VERTEX_BUFFER, // vertex buffers supported;
+		     e_back_cast  = TResFormat::BufferCast  , // supports casting when the resource is a back buffer;
+		     e_buffer_nm  = TResFormat::BufferNorm  , // buffer resources supported;
+		     e_buffer_so  = TResFormat::BufferStream, // streaming output buffers supported;
+		     e_ia_index   = TResFormat::BufferIndex , // index buffers supported;
+		     e_ia_vertex  = TResFormat::BufferVertex, // vertex buffers supported;
 		};
 
 		enum e_mip : uint32_t {
 		     e_auto = D3D11_FORMAT_SUPPORT_MIP_AUTOGEN, //
 		     e_maps = D3D11_FORMAT_SUPPORT_MIP,         //
 		};
-
+#pragma region __defs_2
+#define MultiLoad         D3D11_FORMAT_SUPPORT_MULTISAMPLE_LOAD         //
+#define MultiRender       D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET //
+#define MultiResolve      D3D11_FORMAT_SUPPORT_MULTISAMPLE_RESOLVE      //
+#pragma endregion
 		enum e_multismp : uint32_t {
-		     e_loaded  = TResFormat::D3D11_FORMAT_SUPPORT_MULTISAMPLE_LOAD        , //
-		     e_render  = TResFormat::D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET, //
-		     e_resolve = TResFormat::D3D11_FORMAT_SUPPORT_MULTISAMPLE_RESOLVE     , //
+		     e_loaded   = TResFormat::MultiLoad    , //
+		     e_render   = TResFormat::MultiRender  , //
+		     e_resolve  = TResFormat::MultiResolve , //
 		};
-
+#pragma region __defs_3
+#define ShaderGather      D3D11_FORMAT_SUPPORT_SHADER_GATHER            //
+#define ShaderGatherCmp   D3D11_FORMAT_SUPPORT_SHADER_GATHER_COMPARISON //
+#define ShaderLoad        D3D11_FORMAT_SUPPORT_SHADER_LOAD              //
+#define ShaderSample      D3D11_FORMAT_SUPPORT_SHADER_SAMPLE            //
+#define ShaderSampleCmp   D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_COMPARISON //
+#define ShaderSampleMono  D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_MONO_TEXT  //
+#pragma endregion
 		enum e_shader : uint32_t {
-		     e_gather     = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_GATHER           , // format can be used with the HLSL gather function;
-		     e_gather_cmp = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_GATHER_COMPARISON, // format can be used with the HLSL gather function and comparison;
-		     e_load       = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_LOAD             , //
-		     e_sample     = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE           , //
-		     e_sample_cmp = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_COMPARISON, //
-		     e_mono_rext  = TResFormat::D3D11_FORMAT_SUPPORT_SHADER_SAMPLE_MONO_TEXT , //
+		     e_gather     = TResFormat::ShaderGather     , // format can be used with the HLSL gather function;
+		     e_gather_cmp = TResFormat::ShaderGatherCmp  , // format can be used with the HLSL gather function and comparison;
+		     e_load       = TResFormat::ShaderLoad       , //
+		     e_sample     = TResFormat::ShaderSample     , //
+		     e_sample_cmp = TResFormat::ShaderSampleCmp  , //
+		     e_mono_text  = TResFormat::ShaderSampleMono , //
 		};
 
 		enum e_texture : uint32_t {
@@ -76,11 +95,15 @@ namespace _11 {
 		     e_3d   = TResFormat::D3D11_FORMAT_SUPPORT_TEXTURE3D  , //
 		     e_cube = TResFormat::D3D11_FORMAT_SUPPORT_TEXTURECUBE, //
 		};
-
+#pragma region __defs_5
+#define VideoEncoder      D3D11_FORMAT_SUPPORT_VIDEO_ENCODER            //
+#define VideoProcOut      D3D11_FORMAT_SUPPORT_VIDEO_PROCESSOR_OUTPUT   //
+#define VideoProcIn       D3D11_FORMAT_SUPPORT_VIDEO_PROCESSOR_INPUT    //
+#pragma endregion
 		enum e_video : uint32_t {
-		     e_encoder   = TResFormat::D3D11_FORMAT_SUPPORT_VIDEO_ENCODER         , //
-		     e_proc_in   = TResFormat::D3D11_FORMAT_SUPPORT_VIDEO_PROCESSOR_OUTPUT, //
-		     e_proc_out  = TResFormat::D3D11_FORMAT_SUPPORT_VIDEO_PROCESSOR_INPUT , //
+		     e_encoder   = TResFormat::VideoEncoder , //
+		     e_proc_in   = TResFormat::VideoProcOut , //
+		     e_proc_out  = TResFormat::VideoProcIn  , //
 		};
 	public:
 		 CResFormat (void); CResFormat (const CResFormat&) = delete; CResFormat (CResFormat&&) = delete;
@@ -88,7 +111,8 @@ namespace _11 {
 
 	public:
 #if defined(_DEBUG)
-		CString   Print (const uint32_t _n_flags, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+		static
+		CString   Print (const uint32_t _n_flags, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n"));
 #endif
 	private:
 		CResFormat& operator = (const CResFormat&) = delete;

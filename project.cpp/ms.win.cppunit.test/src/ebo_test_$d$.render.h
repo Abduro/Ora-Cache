@@ -28,7 +28,7 @@
 #include "direct_x.swap.h"
 #include "direct_x.swap.1.h"
 #include "direct_x.swap.2.h"
-#include "direct_x.target.h"
+#include "direct_x.view.target.h"
 
 #include "render.base.h"
 #include "ebo_test_$d$.render.impl.h"

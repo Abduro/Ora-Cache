@@ -2,9 +2,11 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 12-Apr-2025 at 18:30:30.820, UTC+4, Batumi, Saturday;
 	This is Ebo Pack DirectX renderer target view wrapper interface implementation file; 
 */
-#include "direct_x.target.h"
+#include "direct_x.view.target.h"
 
 using namespace ex_ui::draw::direct_x;
+using namespace ex_ui::draw::direct_x::views;
+using namespace ex_ui::draw::direct_x::views::_11;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -84,10 +86,10 @@ namespace _impl {
 #endif
 }
 
-namespace _11 {
+/////////////////////////////////////////////////////////////////////////////
 
 #if defined(_DEBUG)
-CString CViewDims::Print (const uint32_t  _e_to_access_as) {
+CString CTgtDims::Print (const uint32_t  _e_to_access_as) {
 	_e_to_access_as;
 	CString cs_out;
 	switch (_e_to_access_as) {
@@ -107,15 +109,15 @@ CString CViewDims::Print (const uint32_t  _e_to_access_as) {
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
-CViewDesc:: CViewDesc (void) : m_desc{0} {}
+CTgtDesc:: CTgtDesc (void) : m_desc{0} {}
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString   CViewDesc::Print (const TViewDesc& _desc, const e_print _e_opt) {
+CString   CTgtDesc::Print (const TTgtDesc& _desc, const e_print _e_opt) {
 	_e_opt;
-	using ToAccessAs = CViewDims::ToAccessAs;
+	using ToAccessAs = CTgtDims::ToAccessAs;
 	using CDesc_Fmt  = _impl::CDesc_Fmt;
 	CString cs_desc;
-	        cs_desc.Format(_T("fmt=%s;%s;"), (_pc_sz)CClrBits().Print(_desc.Format), (_pc_sz)CViewDims::Print(_desc.ViewDimension));
+	        cs_desc.Format(_T("fmt=%s;%s;"), (_pc_sz)CClrBits().Print(_desc.Format), (_pc_sz)CTgtDims::Print(_desc.ViewDimension));
 	switch (_desc.ViewDimension) {
 	case ToAccessAs::e_buffer        : cs_desc += CDesc_Fmt().Buffer(_desc.Buffer);  break;
 	case ToAccessAs::e_not_use       : cs_desc += _T("#not_used");  break;
@@ -142,66 +144,17 @@ CString   CViewDesc::Print (const TViewDesc& _desc, const e_print _e_opt) {
 
 	return  cs_out;
 }
-CString   CViewDesc::Print (const e_print _e_opt) const {
-   return CViewDesc::Print (this->Raw() , _e_opt);
+CString   CTgtDesc::Print (const e_print _e_opt) const {
+   return CTgtDesc::Print (this->Raw() , _e_opt);
 }
 #endif
 const
-TViewDesc& CViewDesc::Raw (void) const { return this->m_desc; }
-TViewDesc& CViewDesc::Raw (void)       { return this->m_desc; }
+TTgtDesc& CTgtDesc::Raw (void) const { return this->m_desc; }
+TTgtDesc& CTgtDesc::Raw (void)       { return this->m_desc; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CViewPort:: CViewPort (void) : m_port{0} {}
-
-/////////////////////////////////////////////////////////////////////////////
-#if defined(_DEBUG)
-CString  CViewPort::Print (const TViewPort&, const e_print) {
-	CString cs_out;
-	return  cs_out;
-}
-CString  CViewPort::Print (const e_print _e_opt) {
-	return CViewPort::Print(this->Raw(), _e_opt);
-}
-#endif
-const
-TViewPort& CViewPort::Raw (void) const { return this->m_port; }
-TViewPort& CViewPort::Raw (void)       { return this->m_port; }
-
-err_code   CViewPort::SetSize(HWND const _target) {
-	_target;
-	err_code n_result = __s_ok;
-
-	if (!::IsWindow(_target))
-		return n_result = __e_hwnd;
-
-	this->m_port.TopLeftX = 0.0f;
-	this->m_port.TopLeftY = 0.0f;
-
-	this->m_port.MinDepth = 0.0f;
-	this->m_port.MaxDepth = 1.0f;
-
-	RECT rc_client = {0};
-	::GetClientRect(_target, &rc_client);
-	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_viewport ;
-	// *important*: no negative values neither for left nor top; the same is for a width and for a height;
-	if (::IsRectEmpty(&rc_client)) {
-		n_result = __e_rect;
-		// sets just default values, mainly for debug purposes, but in any case, this is not good approach;
-		this->m_port.Height = float(256);
-		this->m_port.Width  = float(256);
-	}
-	else {
-		this->m_port.Height = float(rc_client.bottom - rc_client.top);
-		this->m_port.Width  = float(rc_client.right - rc_client.left);
-	}
-
-	return n_result;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CTarget:: CTarget (void) { this->m_error >>__CLASS__ << __METHOD__ << __e_not_inited; }
+CTarget:: CTarget (void) : TBase() { TBase::m_error >>__CLASS__; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -212,17 +165,17 @@ err_code  CTarget::Create(void) {
 		return this->m_error << (err_code)TErrCodes::eObject::eExists;
 
 	if (false == this->m_device.Is_valid())
-		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The device is invalid");
+		return  (this->m_error << (err_code)TErrCodes::eExecute::eParameter) = _T("The device is invalid");
 #if (1)
 	if (false == this->m_texture.Is_valid())
-		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The texture is invalid");
+		return  (this->m_error << (err_code)TErrCodes::eExecute::eParameter) = _T("The texture is invalid");
 #else
 	this->m_error << this->m_device.Get(this->m_texture);
 	if (this->Error())
 		return this->m_error = m_device.Error();
 
 	if (false == this->m_texture.Is_valid())
-		return  (this->m_error << (err_code)TErrCodes::eExecute::eParamerer) = _T("The texture is invalid");
+		return  (this->m_error << (err_code)TErrCodes::eExecute::eParameter) = _T("The texture is invalid");
 #endif
 	TResPtr p_res;
 	this->m_error << this->m_texture.Parent(p_res);
@@ -258,10 +211,10 @@ err_code  CTarget::Create(void) {
 }
 
 const
-CViewDesc& CTarget::Desc (void) const { return this->m_desc; }
-CViewDesc& CTarget::Desc (void)       { return this->m_desc; }
+CTgtDesc& CTarget::Desc (void) const { return this->m_desc; }
+CTgtDesc& CTarget::Desc (void)       { return this->m_desc; }
 
-err_code   CTarget::Draw (const CClr_Float& _clr) {
+err_code  CTarget::Draw (const CClr_Float& _clr) {
 
 	err_code n_result = __s_ok;
 	if (this->Is_valid()) {
@@ -282,7 +235,6 @@ err_code   CTarget::Draw (const CClr_Float& _clr) {
 	return n_result;
 }
 
-TError&   CTarget::Error (void) const { return this->m_error; }
 bool      CTarget::Is_valid (void) const { return nullptr != this->Ptr(); }
 
 #if defined(_DEBUG)
@@ -292,7 +244,7 @@ CString   CTarget::Print (const e_print _e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{desc={%s};valid=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{desc={%s};valid=%s}");
 
-	CString cs_desc  = CViewDesc::Print(this->Desc().Raw(), e_print::e_req);
+	CString cs_desc  = CTgtDesc::Print(this->Desc().Raw(), e_print::e_req);
 	CString cs_valid = TStringEx().Bool(this->Is_valid());
 
 	CString cs_out;
@@ -313,8 +265,8 @@ const
 CViewPort& CTarget::Port (void) const { return this->m_port; }
 CViewPort& CTarget::Port (void)       { return this->m_port; }
 const
-TViewPtr& CTarget::Ptr (void) const { return this->m_view; }
-err_code  CTarget::Ptr (const TViewPtr& _p_view, const bool _b_upd_desc) {
+TTgtPtr&  CTarget::Ptr (void) const { return this->m_view; }
+err_code  CTarget::Ptr (const TTgtPtr& _p_view, const bool _b_upd_desc) {
 	_p_view; _b_upd_desc;
 	this->m_error << __METHOD__ << __s_ok;
 	if (this->Is_valid())
@@ -329,52 +281,6 @@ err_code  CTarget::Ptr (const TViewPtr& _p_view, const bool _b_upd_desc) {
 
 	return this->Error();
 }
-
-err_code  CTarget::Set (const CDevice& _device) {
-	_device;
-	this->m_error << __METHOD__ << __s_ok;
-
-	if (false == _device.Is_valid())
-		return this->m_error << __e_invalid_arg;
-
-	if (this->m_device.Is_valid())
-		return this->m_error << (err_code)TErrCodes::eObject::eExists;
-
-	this->m_device.Ptr(_device.Ptr());
-
-	return this->Error();
-}
-#if (0)
-err_code  CTarget::Set (const CSwapChain& _chain) {
-	_chain;
-	this->m_error << __METHOD__ << __s_ok;
-
-	if (false == _chain.Is_valid())
-		return this->m_error << __e_invalid_arg;
-
-	if (this->m_swap.Is_valid())
-		return this->m_error << (err_code)TErrCodes::eObject::eExists;
-
-	this->m_swap.Ptr(_chain.Ptr());
-
-	return this->Error();
-}
-#else
-err_code  CTarget::Set (const CTexture& _tex) {
-	_tex;
-	this->m_error << __METHOD__ << __s_ok;
-
-	if (false == _tex.Is_valid())
-		return this->m_error << __e_invalid_arg;
-
-	if (this->m_texture.Is_valid())
-		return this->m_error << (err_code)TErrCodes::eObject::eExists;
-
-	this->m_texture.Ptr(_tex.Ptr());
-
-	return this->Error();
-}
-#endif
 
 err_code  CTarget::UpdateDesc (void) {
 	this->m_error << __METHOD__ << __s_ok;
@@ -397,4 +303,4 @@ CTarget&  CTarget::operator <<(const CTexture& _texture) { this->Set(_texture); 
 namespace _12 {
 }
 
-}}}
+}}

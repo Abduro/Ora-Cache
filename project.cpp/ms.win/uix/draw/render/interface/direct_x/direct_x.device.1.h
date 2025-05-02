@@ -11,20 +11,20 @@
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	using namespace ex_ui::draw::direct_x;
-
+#pragma region __refs_1
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11devicecontext      ; << draw and views;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_1/nn-d3d11_1-id3d11devicecontext1 ; << shader buffers;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_2/nn-d3d11_2-id3d11devicecontext2 ; << context;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11devicecontext3 ; << HW protect;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11devicecontext4 ; << fence;
-
+#pragma endregion
 	typedef ::ATL::CComPtr<ID3D11DeviceContext > TCtx0Ptr;
 	typedef ::ATL::CComPtr<ID3D11DeviceContext4> TCtx4Ptr; // << d3d11_3.h is required;
-
+#pragma region __refs_2
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_device_context_type ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11devicecontext ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
-
+#pragma endregion
 	typedef D3D11_DEVICE_CONTEXT_TYPE TCtxType;
 
 	class CCtx_Type {
@@ -135,7 +135,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TSwapDesc m_desc;     // this data is required for creating a device by ::D3D11CreateDeviceAndSwapChain();
 		TDrvType  m_type;
 	};
-
+#pragma region __refs_3
 	// https://en.wikipedia.org/wiki/List_of_computing_and_IT_abbreviations ;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices-limitations ;
 
@@ -146,7 +146,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_3/nn-d3d11_3-id3d11device3 ; view and texture;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device4 ; removed event;
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11_4/nn-d3d11_4-id3d11device5 ; to manage fence;
-
+#pragma endregion
 	class CDevice {
 	public:
 		 CDevice (void);

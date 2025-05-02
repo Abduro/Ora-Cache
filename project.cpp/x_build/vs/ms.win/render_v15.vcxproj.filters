@@ -19,6 +19,9 @@
     <Filter Include="interface\direct_x\swap">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000448}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\direct_x\views">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000441}</UniqueIdentifier>
     </Filter>
@@ -36,6 +39,9 @@
     </Filter>
     <Filter Include="src\direct_x\swap">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\direct_x\views">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,11 +81,17 @@
     <ClCompile Include="$(_3)direct_x.swap.1.cpp" ><Filter>src\direct_x\swap</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.swap.2.h" ><Filter>interface\direct_x\swap</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.swap.2.cpp" ><Filter>src\direct_x\swap</Filter></ClCompile>
-    <ClInclude Include="$(_2)direct_x.target.h" ><Filter>interface\direct_x</Filter></ClInclude>
-    <ClCompile Include="$(_3)direct_x.target.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.texture.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.texture.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.buffer.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.buffer.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.res.flag.h" ><Filter>interface\direct_x</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.res.flag.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.view.h" ><Filter>interface\direct_x\views</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.view.cpp" ><Filter>src\direct_x\views</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.view.stencil.h" ><Filter>interface\direct_x\views</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.view.stencil.cpp" ><Filter>src\direct_x\views</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.view.target.h" ><Filter>interface\direct_x\views</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.view.target.cpp" ><Filter>src\direct_x\views</Filter></ClCompile>
   </ItemGroup>
 </Project>

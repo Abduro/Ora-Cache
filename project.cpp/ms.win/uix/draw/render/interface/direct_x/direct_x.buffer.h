@@ -5,6 +5,7 @@
 	This is Ebo Pack DirectX device context buffers' wrapper interface declaration file; 
 */
 #include "direct_x._iface.h"
+#include "direct_x.res.flag.h"
 
 namespace ex_ui { namespace draw { namespace direct_x { namespace buffers {
 	/*

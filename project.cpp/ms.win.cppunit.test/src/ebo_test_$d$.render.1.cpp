@@ -492,8 +492,13 @@ void CDisplay::GetRez (void) {
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
 
-	_out() += this->m_display.Print(e_print::e_all);
-
+	this->m_display.Get();
+	if (this->m_display.Error()) {
+		_out() += this->m_display.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_display.Print(e_print::e_all));
+	}
 	_out()();
 }
 

@@ -185,7 +185,7 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 		TSwapChain m_swp_chain;
 	};
 
-	using TTarget = ex_ui::draw::direct_x::_11::CTarget;
+	using TTarget = ex_ui::draw::direct_x::views::_11::CTarget;
 
 	__class(CTarget) {
 	public:

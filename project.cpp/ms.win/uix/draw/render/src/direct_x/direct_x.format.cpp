@@ -15,7 +15,7 @@ CClrBits:: CClrBits (void) {}
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined(_DEBUG)
-CString    CClrBits::Print (const uint32_t _n_format) const {
+CString    CClrBits::Print (const uint32_t _n_format) {
 
 	static _pc_sz pc_sz_pat = _T("%d(%s)");
 
@@ -111,7 +111,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 			if (_n_flags & enum_::e_load      ) { _n_flags &= ~enum_::e_load      ; if (_T("") != m_cs_out) { m_cs_out += _T("|");} m_cs_out += cs_fmt.Format(_T("0x%08x(%s)"),enum_::e_load      , _T("sh::e_load"))      ;}
 			if (_n_flags & enum_::e_sample    ) { _n_flags &= ~enum_::e_sample    ; if (_T("") != m_cs_out) { m_cs_out += _T("|");} m_cs_out += cs_fmt.Format(_T("0x%08x(%s)"),enum_::e_sample    , _T("sh::e_sample"))    ;}
 			if (_n_flags & enum_::e_sample_cmp) { _n_flags &= ~enum_::e_sample_cmp; if (_T("") != m_cs_out) { m_cs_out += _T("|");} m_cs_out += cs_fmt.Format(_T("0x%08x(%s)"),enum_::e_sample_cmp, _T("sh::e_sample_cmp"));}
-			if (_n_flags & enum_::e_mono_rext ) { _n_flags &= ~enum_::e_mono_rext ; if (_T("") != m_cs_out) { m_cs_out += _T("|");} m_cs_out += cs_fmt.Format(_T("0x%08x(%s)"),enum_::e_mono_rext , _T("sh::e_mono_rext")) ;}
+			if (_n_flags & enum_::e_mono_text ) { _n_flags &= ~enum_::e_mono_text ; if (_T("") != m_cs_out) { m_cs_out += _T("|");} m_cs_out += cs_fmt.Format(_T("0x%08x(%s)"),enum_::e_mono_text , _T("sh::e_mono_text")) ;}
 			return (_pc_sz)this->m_cs_out;
 		}
 
@@ -167,7 +167,7 @@ CResFormat:: CResFormat (void) {}
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined(_DEBUG)
-CString      CResFormat::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+CString   CResFormat::Print (const uint32_t _n_flags, _pc_sz _p_pfx, _pc_sz _p_sfx) {
 	_n_flags, _p_pfx; _p_sfx;
 	uint32_t n_flags = _n_flags;
 	CString cs_out ;

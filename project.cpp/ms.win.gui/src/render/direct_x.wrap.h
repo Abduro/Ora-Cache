@@ -8,7 +8,7 @@
 #include "handlers.h"
 #include "color.rgb.h"
 #include "direct_x.device.1.h"
-#include "direct_x.target.h"
+#include "direct_x.view.target.h"
 #include "direct_x.texture.h"
 
 namespace ebo { namespace boo { namespace gui { namespace render {
@@ -19,7 +19,7 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 
 //	using IDrawEvtSink = ex_ui::message::handlers::draw::IDrawEventSink;
 	using IFormEvtSink = ex_ui::message::handlers::frame::IFrameEventSink;
-	using CTarget  = ex_ui::draw::direct_x::_11::CTarget;
+	using CTarget  = ex_ui::draw::direct_x::views::_11::CTarget;
 	using CTexture = ex_ui::draw::direct_x::_11::_2D::CTexture;
 
 	class CRender_Wrap : public IFormEvtSink/*, IDrawEvtSink*/ {

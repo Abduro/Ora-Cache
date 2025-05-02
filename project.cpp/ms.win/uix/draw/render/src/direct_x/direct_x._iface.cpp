@@ -73,6 +73,26 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 using namespace ex_ui::draw::direct_x::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
+#if defined(_DEBUG)
+// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_cpu_access_flag ;
+using ECpu_Access = D3D11_CPU_ACCESS_FLAG;
+using CCpu_Access = ex_ui::draw::direct_x::_11::CCpu_Access;
+
+CString CCpu_Access::Print (uint32_t _n_access) {
+	_n_access;
+	CString cs_out;
+	switch (_n_access) {
+	case ECpu_Access::D3D11_CPU_ACCESS_WRITE: cs_out = _T("write"); break;
+	case ECpu_Access::D3D11_CPU_ACCESS_READ : cs_out = _T("read"); break;
+	default:
+		cs_out.Format(_T("%d(#undef)"));
+	}
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
 CDisplay:: CDisplay (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -100,8 +120,12 @@ err_code CDisplay::Get (void) {
 
 bool     CDisplay::Is_valid (void) const { return false == this->Rez().Is_zero(); }
 
+const
+TModeList& CDisplay::Modes (void) const { return this->m_modes; }
+TModeList& CDisplay::Modes (void)       { return this->m_modes; }
+
 #if defined(_DEBUG)
-CString  CDisplay::Print(const TModeDesc& _mode) {
+CString  CDisplay::Print (const TModeDesc& _mode) {
 	return  CMode_Fmt().Format(_mode);
 }
 CString  CDisplay::Print (const e_print _e_opt) const {

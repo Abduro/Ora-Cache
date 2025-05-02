@@ -140,7 +140,7 @@ err_code   COutput::SetMode (const uint32_t _n_format) {
 	if (0 == n_count)
 		return this->m_error << (err_code) TErrCodes::eData::eNotFound;
 
-	::std::vector<DXGI_MODE_DESC> v_modes(n_count);
+	TModeList v_modes(n_count);
 	this->m_error << this->m_p_out->GetDisplayModeList((DXGI_FORMAT)_n_format, n_flags, &n_count, v_modes.data());
 	if (this->Error())
 		return this->Error();

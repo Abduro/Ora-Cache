@@ -214,12 +214,18 @@
     <ClCompile Include="$(_3)direct_x.swap.1.cpp" />
     <ClInclude Include="$(_2)direct_x.swap.2.h" />
     <ClCompile Include="$(_3)direct_x.swap.2.cpp" />
-    <ClInclude Include="$(_2)direct_x.target.h" />
-    <ClCompile Include="$(_3)direct_x.target.cpp" />
     <ClInclude Include="$(_2)direct_x.texture.h" />
     <ClCompile Include="$(_3)direct_x.texture.cpp" />
     <ClInclude Include="$(_2)direct_x.buffer.h" />
     <ClCompile Include="$(_3)direct_x.buffer.cpp" />
+    <ClInclude Include="$(_2)direct_x.res.flag.h" />
+    <ClCompile Include="$(_3)direct_x.res.flag.cpp" />
+    <ClInclude Include="$(_2)direct_x.view.h" />
+    <ClCompile Include="$(_3)direct_x.view.cpp" />
+    <ClInclude Include="$(_2)direct_x.view.stencil.h" />
+    <ClCompile Include="$(_3)direct_x.view.stencil.cpp" />
+    <ClInclude Include="$(_2)direct_x.view.target.h" />
+    <ClCompile Include="$(_3)direct_x.view.target.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

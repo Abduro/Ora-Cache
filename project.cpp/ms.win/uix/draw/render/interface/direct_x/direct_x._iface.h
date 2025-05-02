@@ -42,10 +42,28 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	using CSize_U = geometry::base::_2D::CSize_U;
 
 namespace _11 {
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_cpu_access_flag ;
+	using ECpu_Access = D3D11_CPU_ACCESS_FLAG;
+	class CCpu_Access {
+	public:
+		 CCpu_Access (void) = default; CCpu_Access (const CCpu_Access&) = delete; CCpu_Access (CCpu_Access&&) = delete;
+		~CCpu_Access (void) = default;
+#if defined(_DEBUG)
+	public:
+		static
+		CString  Print (uint32_t _n_access);
+#endif
+	private:
+		CCpu_Access& operator = (const CCpu_Access&) = delete;
+		CCpu_Access& operator = (CCpu_Access&&) = delete;
+	};
+
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/how-to-use-direct3d-11 ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist ;
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85) ;
 	typedef DXGI_MODE_DESC TModeDesc;
+	typedef ::std::vector< TModeDesc > TModeList;
 
 	// https://21stcenturyav.com/what-is-the-difference-between-monitor-and-display/ ;
 	
@@ -57,6 +75,10 @@ namespace _11 {
 		TError&   Error (void) const;
 		err_code  Get   (void) ;         // gets current resolution that is set to main/primary monitor of the PC;
 		bool   Is_valid (void) const;    // returns true in case when resolution is received and set to this::m_rez;
+
+		const
+		TModeList& Modes (void) const;
+		TModeList& Modes (void) ;
 
 #if defined(_DEBUG)
 		static
@@ -71,8 +93,9 @@ namespace _11 {
 		CDisplay& operator = (CDisplay&&) = delete;
 
 	private:
-		CError   m_error;
-		CSize_U  m_rez;    // https://www.abbreviations.com/abbreviation/resolution ;
+		CError    m_error;
+		CSize_U   m_rez;    // https://www.abbreviations.com/abbreviation/resolution ;
+		TModeList m_modes;  // is not required, only one mode is interested this time: display adapter;
 	};
 }
 }}}

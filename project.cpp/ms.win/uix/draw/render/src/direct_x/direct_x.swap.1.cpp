@@ -3,7 +3,7 @@
 	This is Ebo Pack DirectX 11 swap chain wrapper interface implementation file;
 */
 #include "direct_x.swap.1.h"
-#include "direct_x.target.h"
+#include "direct_x.output.h"
 
 using namespace ex_ui::draw::direct_x::_11;
 
