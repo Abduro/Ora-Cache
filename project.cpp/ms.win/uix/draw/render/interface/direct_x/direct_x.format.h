@@ -15,14 +15,20 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	typedef D2D1_PIXEL_FORMAT TPxFormat; // includes color channel layout and alpha value acceptance;
 
 #define TFormatAlias DXGI_FORMAT
-
+#pragma region __defs_9
+#define FmtUnknown  DXGI_FORMAT_UNKNOWN           // is not acceptable actually;
+#define FmtRGBA_Nrm DXGI_FORMAT_R8G8B8A8_UNORM    // the commonly used format; very often;
+#define FmtBGRA_Nrm DXGI_FORMAT_B8G8R8A8_UNORM    //
+#define FmtZBuffer  DXGI_FORMAT_D24_UNORM_S8_UINT // 32-bit z-buffer format that supports 24 bits for depth and 8 bits for stencil;
+#pragma endregion
 	// the color bits' enumeration represents only those bits' formats which are used in this project;
 	class CClrBits {
 	public:
 		enum e_clr_bits : uint32_t {
-		     e__unknown  = TClrBits::DXGI_FORMAT_UNKNOWN       , // is not acceptable actually;
-		     e_rgba_norm = TClrBits::DXGI_FORMAT_R8G8B8A8_UNORM, // the commonly used format; very often;
-		     e_bgra_norm = TClrBits::DXGI_FORMAT_B8G8R8A8_UNORM,
+		     e__unknown  = TClrBits::FmtUnknown  ,//
+		     e_rgba_norm = TClrBits::FmtRGBA_Nrm ,//
+		     e_bgra_norm = TClrBits::FmtBGRA_Nrm ,//
+		     e_z_buffer  = TClrBits::FmtZBuffer  ,// 
 		};
 	public:
 		 CClrBits (void); CClrBits (const CClrBits&) = delete; CClrBits (CClrBits&&) = delete;

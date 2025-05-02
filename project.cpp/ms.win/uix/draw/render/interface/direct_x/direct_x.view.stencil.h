@@ -88,7 +88,7 @@ namespace _11 {
 
 	public:
 	#if defined(_DEBUG)
-		err_code  Create (const bool _b_create_tex); // creates a texture if it is not created yet;
+		err_code  Create (const bool _b_create_tex); // if input arg is 'true', creates a texture if it is not created yet;
 	#else
 		err_code  Create (void);     // creates depth stencil view by using TBase::device and TBase::texture cached objects;
 	#endif
@@ -96,7 +96,9 @@ namespace _11 {
 		CDsvDesc& Desc (void) const;
 		CDsvDesc& Desc (void) ;
 		bool  Is_valid (void) const; // overrides the method of the base class;
-
+	#if defined(_DEBUG)
+		CString   Print(const e_print = e_print::e_all) const;
+	#endif
 		const
 		TStenPtr& Ptr  (void) const;
 		err_code  Ptr  (const TStenPtr&, const bool _b_update_desc = false);

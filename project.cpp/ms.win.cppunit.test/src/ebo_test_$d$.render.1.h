@@ -171,6 +171,21 @@ namespace ebo { namespace boo { namespace test { namespace draw { namespace _11 
 	using TZBuffer  = ex_ui::draw::direct_x::_11::_2D::CTexture;
 	using TZBuffPtr = ex_ui::draw::direct_x::_11::_2D::TTexPtr ;
 
+	using TStencil  = ex_ui::draw::direct_x::views::_11::CStencil;
+
+	__class(CStencil) {
+	public:
+		 CStencil (const bool _b_verb = false);
+		~CStencil (void) = default;
+
+	public:
+		__method (Create);
+
+	private:
+		bool m_b_verb;
+		TStencil m_stencil;
+	};
+
 	__class(CSwapChain) {
 	public:
 		 CSwapChain (const bool _b_verb = false);

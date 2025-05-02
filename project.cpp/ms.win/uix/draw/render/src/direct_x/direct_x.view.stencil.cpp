@@ -36,6 +36,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
 			switch (_n_value) {
 			case TDsvFlag::D3D11_DSV_READ_ONLY_DEPTH  : cs_out = _T("rd:depth"); break;
 			case TDsvFlag::D3D11_DSV_READ_ONLY_STENCIL:	cs_out = _T("rd:stencil"); break;
+			case 0: cs_out = _T("rw-accept"); break;
 			default:
 				cs_out.Format(_T("#inv_arg=%u"), _n_value);
 			}
@@ -113,7 +114,7 @@ CString    CDsvDesc::Print (const TDsvDesc& _desc, const e_print _e_opt) {
 	CString cs_flg = CDesc_Fmt().Flags(_desc.Flags);
 
 	CString cs_desc;
-	        cs_desc.Format(_T("fmt=%s;%s;flag:%s"), (_pc_sz) cs_fmt, (_pc_sz) cs_dim, (_pc_sz) cs_flg);
+	        cs_desc.Format(_T("fmt=%s;%s;flag:%s;"), (_pc_sz) cs_fmt, (_pc_sz) cs_dim, (_pc_sz) cs_flg);
 
 	switch (_desc.ViewDimension) {
 	case ToAccessAs::e_unknown   : cs_desc += _T("#not_used");  break;
@@ -219,10 +220,15 @@ err_code   CStencil::Create (const bool _b_create_tex) {
 	TBase::m_error << TBase::m_texture.Parent(p_res);
 	if (TBase::Error())
 		return TBase::Error();
-
+	// no reference to the description must be provided, otherwise the error is thrown: invalid parameter;
 	TBase::m_error << TBase::m_device.Ptr()->CreateDepthStencilView(
-			p_res, &this->Desc().Raw(), &p_sten_raw
+			p_res, /*&this->Desc().Raw()*/nullptr, &p_sten_raw
 		);
+
+	if (TBase::Error())
+		return TBase::Error();
+
+	this->Ptr(p_sten_raw, true); // updates a stencil view description; ToDo: using Detouch() is not good approach;
 
 	return TBase::Error();
 }
@@ -244,7 +250,30 @@ err_code   CStencil::Create (void) {
 const
 CDsvDesc&  CStencil::Desc (void) const { return this->m_desc; }
 CDsvDesc&  CStencil::Desc (void)       { return this->m_desc; }
+#if defined(_DEBUG)
+CString    CStencil::Print(const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{desc={%s};valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{desc={%s};valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("desc=%s;valid={%s}");
 
+	CString cs_desc  = CDsvDesc::Print(this->Desc().Raw(), e_print::e_req);
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_out;
+	if (e_print::e_all == _e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)cs_desc, (_pc_sz)cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz)cs_desc, (_pc_sz)cs_valid);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)cs_desc, (_pc_sz)cs_valid); }
+
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 const
 TStenPtr&  CStencil::Ptr  (void) const { return this->m_p_sten; }
 err_code   CStencil::Ptr  (const TStenPtr& _p_sten, const bool _b_update_desc) {

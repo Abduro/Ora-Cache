@@ -28,6 +28,9 @@
 #include "direct_x.swap.h"
 #include "direct_x.swap.1.h"
 #include "direct_x.swap.2.h"
+
+#include "direct_x.view.h"
+#include "direct_x.view.stencil.h"
 #include "direct_x.view.target.h"
 
 #include "render.base.h"

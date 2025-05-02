@@ -14,16 +14,23 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173065(v=vs.85) ;
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/hmonitor-and-the-device-context ;
 
-	typedef DXGI_MODE_ROTATION TRotateMode;
+	typedef DXGI_MODE_ROTATION TRotate;
+#pragma region __defs_8
+#define RotUnspec DXGI_MODE_ROTATION_UNSPECIFIED //
+#define RotNone   DXGI_MODE_ROTATION_IDENTITY    //
+#define Rot_090   DXGI_MODE_ROTATION_ROTATE90    //
+#define Rot_180   DXGI_MODE_ROTATION_ROTATE180   //
+#define Rot_270nn DXGI_MODE_ROTATION_ROTATE270   //
+#pragma endregion
 
 	class CRotateMode {
 	public:
-		enum e_rotate : uint32_t {
-		     e__unspec = DXGI_MODE_ROTATION_UNSPECIFIED, // unspecified rotation;
-		     e_none    = DXGI_MODE_ROTATION_IDENTITY   , // specifies no rotation;
-		     e_090 = DXGI_MODE_ROTATION_ROTATE90  , // 
-		     e_180 = DXGI_MODE_ROTATION_ROTATE180 , // 
-		     e_270 = DXGI_MODE_ROTATION_ROTATE270 , // 
+		enum e_rotate  : uint32_t {
+		     e__unspec = TRotate::RotUnspec, // unspecified rotation;
+			 e_none    = TRotate::RotNone  , // specifies no rotation;
+			 e_090     = TRotate::Rot_090  , // 
+			 e_180     = TRotate::Rot_180  , // 
+			 e_270     = TRotate::Rot_270nn, // 
 		};
 	public:
 		CRotateMode (void) = default; CRotateMode (const CRotateMode&) = delete; CRotateMode (CRotateMode&&) = delete;

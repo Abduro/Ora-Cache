@@ -568,6 +568,49 @@ void CFac_2::GetSwapChain (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+CStencil:: CStencil (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CStencil::Create (void) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	}
+
+	CFake_Wnd fk_wnd;
+#if (0)
+	TDevice_HW device;
+#else
+	TDevice_ref device;
+#endif
+	device.Cfg().Default(fk_wnd);
+	device.Create(true);
+
+	if (device.Error()) {
+		_out() += device.Error().Print(TError::e_print::e_all);
+		_out()();
+		return;
+	}
+	this->m_stencil.Set(device);
+	this->m_stencil.Create(true);
+
+	if (this->m_stencil.Error())
+		_out() += this->m_stencil.Error().Print(TError::e_print::e_all);
+	else
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_stencil.Print(e_print::e_all));
+
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CSwapChain:: CSwapChain (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb){
 		_out() += TLog_Acc::e_new_line;
