@@ -54,7 +54,6 @@ namespace _11 {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_render_target_view_desc ;
 	typedef D3D11_RENDER_TARGET_VIEW_DESC TTgtDesc;
-	typedef ::ATL::CComPtr<ID3D11RenderTargetView> TTgtPtr;
 
 	class CTgtDesc {
 	public:
@@ -78,6 +77,9 @@ namespace _11 {
 		TTgtDesc m_desc;
 	};
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11rendertargetview ;
+	typedef ::ATL::CComPtr<ID3D11RenderTargetView> TTgtPtr;
+	
 	// this is a render target for drawing;
 	class CTarget : public CView { typedef CView TBase;
 	public:
@@ -102,8 +104,6 @@ namespace _11 {
 		CTgtDesc& Desc (void) const;
 		CTgtDesc& Desc (void) ;
 
-		err_code  Draw  (const CClr_Float&) ;
-
 		bool   Is_valid (void) const;
 
 #if defined(_DEBUG)
@@ -118,6 +118,10 @@ namespace _11 {
 		err_code  Ptr (const TTgtPtr&, const bool _b_upd_desc);
 
 		err_code  UpdateDesc (void);
+
+	public:
+		err_code  OnDraw (const CClr_Float&) ;
+		err_code  OnSize (const RECT& _rc_allowed);
 
 	public:
 		CTarget&  operator <<(const CDevice&);

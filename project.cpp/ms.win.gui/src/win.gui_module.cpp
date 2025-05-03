@@ -67,7 +67,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 				if (b_is_dark) {}
 			#else
 				using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
-				_render().Target().Draw(CUI_Parts().Bkg());
+				_render().Target().OnDraw(CUI_Parts().Bkg());
 			#endif
 			}
 		}

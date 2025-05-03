@@ -77,6 +77,7 @@ namespace _11 {
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nn-d3d11-id3d11depthstencilview ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-depth-stencil ;
 	typedef ::ATL::CComPtr<ID3D11DepthStencilView>  TStenPtr;
 
 	// https://en.wikipedia.org/wiki/Stencil ;

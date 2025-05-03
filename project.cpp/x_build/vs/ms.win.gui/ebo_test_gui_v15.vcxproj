@@ -239,6 +239,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)win.gui_frame.h" />
     <ClCompile Include="$(_1)win.gui_frame.cpp" />
+    <ClInclude Include="$(_1)win.gui_layout.h" />
+    <ClCompile Include="$(_1)win.gui_layout.cpp" />
     <ClInclude Include="$(_1)win.gui_wnd.h" />
     <ClCompile Include="$(_1)win.gui_wnd.cpp" />
     <ClInclude Include="$(_1)win.gui_module.h" />

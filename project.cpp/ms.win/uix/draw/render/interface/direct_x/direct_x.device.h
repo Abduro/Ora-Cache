@@ -16,16 +16,23 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_driver_type ;
 	typedef D3D_DRIVER_TYPE TDrvType;
-
+#pragma region __defs_a
+#define DrvTypeUnk  D3D_DRIVER_TYPE_UNKNOWN   //
+#define DrvTypeHW   D3D_DRIVER_TYPE_HARDWARE  //
+#define DrvTypeNull D3D_DRIVER_TYPE_NULL      //
+#define DrvTypeRef  D3D_DRIVER_TYPE_REFERENCE //
+#define DrvTypeSoft D3D_DRIVER_TYPE_SOFTWARE  //
+#define DrvTypeWarp D3D_DRIVER_TYPE_WARP      //
+#pragma endregion
 	class CDrv_Type {
 	public:
 	enum e_type : uint32_t {
-	     e__unk = TDrvType::D3D_DRIVER_TYPE_UNKNOWN  , // a driver type is unknown ;
-	     e_hard = TDrvType::D3D_DRIVER_TYPE_HARDWARE , // a hardware driver, which implements Direct3D features in hardware; the best performance;
-	     e_null = TDrvType::D3D_DRIVER_TYPE_NULL     , // a reference driver without render capability ;
-	     e_ref  = TDrvType::D3D_DRIVER_TYPE_REFERENCE, // a reference driver implemented by a software ; for accuracy, but not for speed;
-	     e_soft = TDrvType::D3D_DRIVER_TYPE_SOFTWARE , // a software implemented driver; it is slow;
-	     e_warp = TDrvType::D3D_DRIVER_TYPE_WARP     , // https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp; high speed;
+	     e__unk = TDrvType::DrvTypeUnk , // a driver type is unknown ;
+		 e_hard = TDrvType::DrvTypeHW  , // a hardware driver, which implements Direct3D features in hardware; the best performance;
+		 e_null = TDrvType::DrvTypeNull, // a reference driver without render capability ;
+		 e_ref  = TDrvType::DrvTypeRef , // a reference driver implemented by a software ; for accuracy, but not for speed;
+		 e_soft = TDrvType::DrvTypeSoft, // a software implemented driver; it is slow;
+		 e_warp = TDrvType::DrvTypeWarp, // https://learn.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp; high speed;
 	};
 	public:
 		 CDrv_Type (void) = default; CDrv_Type (const CDrv_Type&) = delete; CDrv_Type (CDrv_Type&&) = delete;
@@ -41,7 +48,11 @@ namespace ex_ui { namespace draw { namespace direct_x {
 
 namespace _11 {
 
-	// https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices ;
+	/* https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices ;
+		- Immediate Context ;
+		- Deferred  Context ;
+		- Thread-safe;
+	*/
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_create_device_flag ;
 	typedef D3D11_CREATE_DEVICE_FLAG EDevFlag;

@@ -165,7 +165,9 @@ namespace shared {
 using namespace ebo::sha::theme::direct_x;
 
 CClr_Float CUI_Parts::Bkg (void) const {
-
+#if (0)
 	return CClr_Float(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
-
+#else
+	return CClr_Float(_r_g_b_a(255, 140, 0, 255));
+#endif
 }

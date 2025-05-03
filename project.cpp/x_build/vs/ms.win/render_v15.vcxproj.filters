@@ -10,6 +10,9 @@
     <Filter Include="interface\direct_x\adapter">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000444}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\direct_x\buffers">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="interface\direct_x\device">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000446}</UniqueIdentifier>
     </Filter>
@@ -20,7 +23,7 @@
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000448}</UniqueIdentifier>
     </Filter>
     <Filter Include="interface\direct_x\views">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044a}</UniqueIdentifier>
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044c}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000441}</UniqueIdentifier>
@@ -30,6 +33,9 @@
     </Filter>
     <Filter Include="src\direct_x\adapter">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\direct_x\buffers">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044f}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\direct_x\device">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000447}</UniqueIdentifier>
@@ -41,7 +47,7 @@
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000449}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\direct_x\views">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044b}</UniqueIdentifier>
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000044d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,8 +89,10 @@
     <ClCompile Include="$(_3)direct_x.swap.2.cpp" ><Filter>src\direct_x\swap</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.texture.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.texture.cpp" ><Filter>src\direct_x</Filter></ClCompile>
-    <ClInclude Include="$(_2)direct_x.buffer.h" ><Filter>interface\direct_x</Filter></ClInclude>
-    <ClCompile Include="$(_3)direct_x.buffer.cpp" ><Filter>src\direct_x</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.buffer.h" ><Filter>interface\direct_x\buffers</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.buffer.cpp" ><Filter>src\direct_x\buffers</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.buf.vertex.h" ><Filter>interface\direct_x\buffers</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.buf.vertex.cpp" ><Filter>src\direct_x\buffers</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.res.flag.h" ><Filter>interface\direct_x</Filter></ClInclude>
     <ClCompile Include="$(_3)direct_x.res.flag.cpp" ><Filter>src\direct_x</Filter></ClCompile>
     <ClInclude Include="$(_2)direct_x.view.h" ><Filter>interface\direct_x\views</Filter></ClInclude>

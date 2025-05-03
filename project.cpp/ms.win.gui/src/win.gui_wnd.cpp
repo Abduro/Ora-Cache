@@ -5,8 +5,11 @@
 #include "win.gui_wnd.h"
 #include "direct_x.wrap.h"      // ToDo:: if it is placed to header 'win.gui_wnd.h', the compilation is failed;
 #include "ebo.sha.gui.theme.h"
+#include "win.gui_layout.h"
 
 using namespace ebo::boo::gui;
+
+CLayout m_layout;
 /////////////////////////////////////////////////////////////////////////////
 
 CView:: CView(void) : TBase() {
@@ -28,7 +31,7 @@ err_code  CView::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	_dev_ctx;
 	static bool  b_fst_time = false;
 	if (false == b_fst_time) {
-		HBRUSH brush = ::CreateSolidBrush(RGB(61, 61, 61));
+		HBRUSH brush = ::CreateSolidBrush(RGB(61, 61, 61)); // ToDo: it requires getting a color from the currently set theme;
 		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 		b_fst_time = true;
 	}
@@ -42,7 +45,7 @@ err_code CView::IEvtDraw_OnPaint (const w_param, const l_param) {
 	using ex_ui::color::rgb::CClr_Float;
 
 	using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
-	_render().Target().Draw(CUI_Parts().Bkg());
+	_render().Target().OnDraw(CUI_Parts().Bkg());
 
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
@@ -59,6 +62,8 @@ err_code  CView::IEvtLife_OnClose  (const w_param, const l_param) {
 err_code CView::IEvtLife_OnCreate  (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
+
+	m_layout.Window() = TBase::m_hWnd;
 
 	_render().Init(this->m_hWnd); // this view window does not care about renderer init() result;
 
@@ -106,6 +111,8 @@ err_code CView::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 }
 
 err_code CView::IEvtFrame_OnSizing (const eEdges, LPRECT) {
+
+	_render().Target().OnSize(m_layout.DrawArea());
 
 	err_code n_result = __s_false;
 	return   n_result;

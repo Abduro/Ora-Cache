@@ -12,6 +12,7 @@
 namespace ex_ui { namespace draw { namespace direct_x { namespace views {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_viewport ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing ;
 	typedef D3D11_VIEWPORT TViewPort;
 	/*
 		for example, resolution is set to 800x600px, that will be abstracted as shown below:

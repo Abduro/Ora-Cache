@@ -218,6 +218,8 @@
     <ClCompile Include="$(_3)direct_x.texture.cpp" />
     <ClInclude Include="$(_2)direct_x.buffer.h" />
     <ClCompile Include="$(_3)direct_x.buffer.cpp" />
+    <ClInclude Include="$(_2)direct_x.buf.vertex.h" />
+    <ClCompile Include="$(_3)direct_x.buf.vertex.cpp" />
     <ClInclude Include="$(_2)direct_x.res.flag.h" />
     <ClCompile Include="$(_3)direct_x.res.flag.cpp" />
     <ClInclude Include="$(_2)direct_x.view.h" />

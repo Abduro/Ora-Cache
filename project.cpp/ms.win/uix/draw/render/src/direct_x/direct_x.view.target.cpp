@@ -214,27 +214,6 @@ const
 CTgtDesc& CTarget::Desc (void) const { return this->m_desc; }
 CTgtDesc& CTarget::Desc (void)       { return this->m_desc; }
 
-err_code  CTarget::Draw (const CClr_Float& _clr) {
-
-	err_code n_result = __s_ok;
-	if (this->Is_valid()) {
-		if (this->m_device.Ctx().Is_valid()) {
-#if (0)
-			float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha;
-			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, ClearColor);
-#endif
-			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, _clr.Get().data());
-
-			if (this->m_device.SwapChain().Is_valid()) {
-				// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present ;
-				this->m_device.SwapChain().Ptr()->Present(0, 0);
-			}
-			else n_result = this->m_device.SwapChain().Error();
-		} else n_result = this->m_device.Ctx().Error();
-	} else n_result = this->Error();
-	return n_result;
-}
-
 bool      CTarget::Is_valid (void) const { return nullptr != this->Ptr(); }
 
 #if defined(_DEBUG)
@@ -291,6 +270,87 @@ err_code  CTarget::UpdateDesc (void) {
 	this->Ptr()->GetDesc(&this->Desc().Raw());
 
 	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code  CTarget::OnDraw (const CClr_Float& _clr) {
+	// it looks like the device object does not require to be checked itself, due to there is no direct call to it here;
+	err_code n_result = __s_ok;
+	if (this->Is_valid()) {
+		if (this->m_device.Ctx().Is_valid()) {
+#if (0)
+			float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha;
+			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, ClearColor);
+#endif
+			this->m_device.Ctx().Ptr()->ClearRenderTargetView(this->m_view, _clr.Get().data());
+
+			if (this->m_device.SwapChain().Is_valid()) {
+				// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present ;
+				this->m_device.SwapChain().Ptr()->Present(0, 0);
+			}
+			else n_result = this->m_device.SwapChain().Error();
+		} else n_result = this->m_device.Ctx().Error();
+	} else n_result = this->Error();
+	return n_result;
+}
+
+err_code  CTarget::OnSize (const RECT& _rc_allowed) {
+	_rc_allowed;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing ;
+	err_code n_result = __s_ok;
+	if (::IsRectEmpty(&_rc_allowed))
+		return (n_result = this->m_error << __e_rect);
+
+	/*
+		!attention! this target object must be re-created for applying new output/target rectangle;
+		thus, before making this object destroyed each of participants of this operation must be checked;
+	*/
+	if (false) {}
+	else if (false == this->Is_valid()) return n_result = this->Error();
+	else if (false == this->m_device.Is_valid()) return n_result = this->m_device.Error();
+	else if (false == this->m_device.Ctx().Is_valid()) return n_result = this->m_device.Ctx().Error();
+	else if (false == this->m_device.SwapChain().Is_valid()) return n_result = this->m_device.SwapChain().Error();
+
+	// (1) destroys this target view object;
+	this->m_view = nullptr;
+
+	// (2) removes bindings;
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-omsetrendertargets ;
+	this->m_device.Ctx().Ptr()->OMSetRenderTargets(0, nullptr, nullptr);
+
+	// (3) preserves the existing buffer count and format;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-resizebuffers ;
+	n_result = this->m_device.SwapChain().Ptr()->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+	if (__failed(n_result))
+	      return n_result;
+
+	// (4) gets the back buffer object, i.e. texture 2D;
+	using TTexPtr = ex_ui::draw::direct_x::_11::_2D::TTexPtr;
+	TTexPtr p_buffer;
+
+	n_result = this->m_device.SwapChain().Ptr()->GetBuffer(0, __uuidof(TTexPtr), (void**)&p_buffer);
+	if (__failed(n_result))
+	      return n_result;
+	
+	// (5) re-creates the target view; ToDo: the view description data is not updated yet;
+	n_result = this->m_device.Ptr()->CreateRenderTargetView(p_buffer, nullptr, &this->m_view);
+	if (__failed(n_result))
+	      return n_result;
+
+	this->m_device.Ctx().Ptr()->OMSetRenderTargets(1, &this->m_view, nullptr);
+
+	TViewPort v_port = {
+		float(_rc_allowed.left),
+		float(_rc_allowed.top ),
+		float(_rc_allowed.right - _rc_allowed.left),
+		float(_rc_allowed.bottom -_rc_allowed.top ),
+		0.0f, 1.0f
+	};
+
+	this->m_device.Ctx().Ptr()->RSSetViewports( 1, &v_port );
+
+	return n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////

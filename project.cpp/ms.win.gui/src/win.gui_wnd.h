@@ -6,6 +6,7 @@
 */
 #include "wnd.base.h"
 
+
 namespace ebo { namespace boo { namespace gui {
 #if (0)
 #ifndef _ATL_NO_AUTOMATIC_NAMESPACE

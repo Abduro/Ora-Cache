@@ -66,6 +66,7 @@ namespace _11 {
 	typedef ::std::vector< TModeDesc > TModeList;
 
 	// https://21stcenturyav.com/what-is-the-difference-between-monitor-and-display/ ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct3darticles/dxgi-best-practices ;
 	
 	class CDisplay {
 	public:
