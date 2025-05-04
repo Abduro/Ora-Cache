@@ -242,7 +242,7 @@ err_code     CSwapChain::GetZBuffer(TZBuffer& _z_buf) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getbuffer ;
 	this->m_error << this->Ptr()->GetBuffer(0, __uuidof(TZBuffPtr), (void**)&p_buffer);
 	if (false == this->Error()) {
-		if (__failed(_z_buf.Ptr(p_buffer.Detach())))
+		if (__failed(_z_buf.Ptr(p_buffer/*.Detach()*/)))
 			this->m_error = _z_buf.Error();
 	}
 
@@ -311,3 +311,61 @@ err_code     CSwapChain::UpdateDesc (void) {
 CSwapChain&  CSwapChain::operator = (const CSwapChain& _src) { *this << _src.Desc() << _src.Ptr(); return *this; }
 CSwapChain&  CSwapChain::operator <<(const CDesc_Wrap& _wrap) { this->Desc() = _wrap; return *this; }
 CSwapChain&  CSwapChain::operator <<(const TChainPtr& _p_chain) { this->Ptr(_p_chain, true); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDescEx_Wrap:: CDescEx_Wrap (void) : m_desc{0}, m_target(nullptr) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+TSwapDesc_Ex& CDescEx_Wrap::Ref (void) const { return this->m_desc; }
+TSwapDesc_Ex& CDescEx_Wrap::Ref (void)       { return this->m_desc; }
+
+HWND const CDescEx_Wrap::Target (void) const { return this->m_target; }
+err_code   CDescEx_Wrap::Target (HWND const _hwnd) {
+	_hwnd;
+	err_code n_result = __s_ok;
+
+	if (nullptr == _hwnd || !::IsWindow(_hwnd))
+		return n_result =  __e_inv_arg;
+
+	this->m_target = _hwnd;
+
+	return n_result;
+}
+
+bool  CDescEx_Wrap::Is_valid (void) const { return nullptr != this->Target() && !!::IsWindow(this->Target()); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDescEx_Wrap&  CDescEx_Wrap::operator <<(HWND const _h_target) { this->Target(_h_target); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSwapChain_Ex:: CSwapChain_Ex (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+
+/////////////////////////////////////////////////////////////////////////////
+const
+CDescEx_Wrap&  CSwapChain_Ex::Desc (void) const { return this->m_desc; }
+CDescEx_Wrap&  CSwapChain_Ex::Desc (void)       { return this->m_desc; }
+
+TError&  CSwapChain_Ex::Error (void) const { return this->m_error; }
+bool  CSwapChain_Ex::Is_valid (void) const { return nullptr != this->Ptr(); }
+
+const
+TChain_ExPtr&  CSwapChain_Ex::Ptr (void) const  { return this->m_p_chain; }
+err_code       CSwapChain_Ex::Ptr (const TChain_ExPtr& _p_chain) {
+	_p_chain;
+	this->m_error << __METHOD__ << __s_ok;
+	if (nullptr == _p_chain)
+		return this->m_error << __e_pointer;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code) TErrCodes::eObject::eExists;
+
+	this->m_p_chain = _p_chain;
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////

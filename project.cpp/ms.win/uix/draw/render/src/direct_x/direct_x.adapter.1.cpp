@@ -86,7 +86,7 @@ err_code  CAdapter::Outputs (void) {
 		}
 
 		COutput output;
-		output.Ptr(p_out.Detach());
+		output.Ptr(p_out/*.Detach()*/);
 		try {
 			this->m_outs.push_back(output);
 		}
@@ -241,7 +241,7 @@ err_code   CAdapter_Enum::GetWarp (CAdapter& _adapter) {
 		return  this->Error();
 	}
 	else
-		_adapter.Ptr(warp_ptr.Detach());
+		_adapter.Ptr(warp_ptr/*.Detach()*/);
 
 	return this->Error();
 }
@@ -269,7 +269,7 @@ err_code   CAdapter_Enum::Set (void) {
 			break;
 
 		CAdapter adapter;
-		adapter.Ptr(p_adapter.Detach());
+		adapter.Ptr(p_adapter/*.Detach()*/);
 
 		try {	
 			this->m_cached.push_back(adapter);

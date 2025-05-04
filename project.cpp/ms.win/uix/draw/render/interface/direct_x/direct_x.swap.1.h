@@ -111,6 +111,64 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TChainPtr  m_p_chain;
 		CDesc_Wrap m_desc   ;
 	};
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/ns-dxgi1_2-dxgi_swap_chain_desc1 ;
+	typedef DXGI_SWAP_CHAIN_DESC1 TSwapDesc_Ex;
+
+	class CDescEx_Wrap {
+	public:
+		 CDescEx_Wrap (void); CDescEx_Wrap (const CDescEx_Wrap&) = delete; CDescEx_Wrap (CDescEx_Wrap&&) = delete;
+		~CDescEx_Wrap (void) = default;
+
+	public:
+		bool     Is_valid (void) const;  // checks target window handle for validity only;
+		const
+		TSwapDesc_Ex& Ref (void) const;
+		TSwapDesc_Ex& Ref (void) ;
+
+		HWND const Target (void) const;
+		err_code   Target (HWND const);
+
+	public:
+		CDescEx_Wrap&  operator <<(HWND const _h_target);
+
+	private:
+		CDescEx_Wrap&  operator = (const CDescEx_Wrap&) = delete;
+		CDescEx_Wrap&  operator = (CDescEx_Wrap&&) = delete;
+
+	private:
+		TSwapDesc_Ex  m_desc;
+		HWND  m_target;  // this window handle is for creating the swap chain object;
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgiswapchain1 ;
+	typedef ::ATL::CComPtr<IDXGISwapChain1> TChain_ExPtr;
+
+	class CSwapChain_Ex {
+	public:
+		 CSwapChain_Ex (void); CSwapChain_Ex (const CSwapChain_Ex&) = delete; CSwapChain_Ex (CSwapChain_Ex&&) = delete;
+		~CSwapChain_Ex (void) = default;
+
+	public:
+		const
+		CDescEx_Wrap&  Desc (void) const;
+		CDescEx_Wrap&  Desc (void) ;
+		TError&  Error (void) const;
+		bool  Is_valid (void) const;  // checks target window handle for validity only;
+
+		const
+		TChain_ExPtr&  Ptr (void) const;
+		err_code       Ptr (const TChain_ExPtr&);
+
+	private:
+		CSwapChain_Ex&  operator = (const CSwapChain_Ex&) = delete;
+		CSwapChain_Ex&  operator = (CSwapChain_Ex&&) = delete;
+
+	private:
+	mutable
+		CError m_error;
+		CDescEx_Wrap  m_desc;
+		TChain_ExPtr  m_p_chain;
+	};
 }}}}
 
 #endif/*_DIRECT_X_SWAP_1_H_INCLUDED*/

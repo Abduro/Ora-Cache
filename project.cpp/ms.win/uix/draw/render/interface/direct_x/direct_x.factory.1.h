@@ -12,7 +12,11 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory ;
-
+	using CDevice = ex_ui::draw::direct_x::_11::CDevice;
+	using CSwapDesc = ex_ui::draw::direct_x::_11::CDesc_Wrap;
+	using CSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
+	using CSwapChain_Ex = ex_ui::draw::direct_x::_11::CSwapChain_Ex;
+	using CSwapDesc_Ex = ex_ui::draw::direct_x::_11::CDescEx_Wrap;
 	/*
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1 :
 		*Important*:
@@ -59,18 +63,20 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
 
-		using CDevice = ex_ui::draw::direct_x::_11::CDevice;
-		using CSwapDesc = ex_ui::draw::direct_x::_11::CDesc_Wrap;
-		using CSwapChain = ex_ui::draw::direct_x::_11::CSwapChain;
-
-		err_code  Get (const CDevice&, const CSwapDesc&, CSwapChain&); // tries to create swap chain for input device and swap description;
+		err_code  Get (CSwapChain&);     // tries to create swap chain for cached device;
+		err_code  Get (CSwapChain_Ex&);  // it is supposed the swap chain description is inside of in chain object;
 
 #if defined (_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
 		const
-		TFac2Ptr& Ptr  (void) const;
-		err_code  Ptr  (const TFac2Ptr&);
+		TFac2Ptr& Ptr (void) const;
+		err_code  Ptr (const TFac2Ptr&);
+
+		err_code  Set (const CDevice&);  // sets the cached device object, checks for input arg; if the device is already cached, it is replaced;
+
+	public:
+		CFac_2& operator <<(const CDevice&);
 
 	private:
 		CFac_2& operator = (const CFac_2&) = delete;
@@ -79,6 +85,7 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 	private:
 		TFac2Ptr m_p_fac;
 		CError   m_error;
+		CDevice  m_device; // cached device object that is required for swap chain creation;
 	};
 }}}}
 

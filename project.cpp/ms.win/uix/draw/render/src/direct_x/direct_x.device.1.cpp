@@ -99,7 +99,7 @@ err_code   CContext::Ptr (const TCtx0Ptr& _p_base) {
 
 	this->m_error << _p_base->QueryInterface(&p_ptr_4);
 	if (false == this->Error()){
-		this->m_p_ctx = p_ptr_4.Detach();
+		this->m_p_ctx = p_ptr_4/*.Detach()*/;
 		this->m_type = _p_base->GetType(); // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-gettype ;
 	}
 	return this->Error();
@@ -276,9 +276,9 @@ err_code  CDevice::Create (const CDrv_Type::e_type _drv_type, const bool _b_swap
 	}
 
 	if (false == this->Error()) {
-		if (nullptr != p_base)  this->Ptr(p_base.Detach());
-		if (nullptr != p_chain) this->SwapChain().Ptr(p_chain.Detach(), true);
-		if (nullptr != p_ctx)   this->Ctx().Ptr(p_ctx.Detach());
+		if (nullptr != p_base)  this->Ptr(p_base/*.Detach()*/);
+		if (nullptr != p_chain) this->SwapChain().Ptr(p_chain/*.Detach()*/, true);
+		if (nullptr != p_ctx)   this->Ctx().Ptr(p_ctx/*.Detach()*/);
 
 		this->m_level = n_level;
 	}
@@ -314,7 +314,7 @@ err_code  CDevice::Get (CAdapter& _adapter) {
 	TAdapterPtr p_adapter;
 	this->m_error << p_base->GetAdapter(&p_adapter);
 	if (false == this->Error()) {
-		_adapter.Ptr(p_adapter.Detach());
+		_adapter.Ptr(p_adapter/*.Detach()*/);
 	}
 
 #endif
@@ -335,7 +335,7 @@ err_code  CDevice::Get (CContext& _ctx) {
 
 	this->Ptr()->GetImmediateContext(&p_ctx);
 	if (p_ctx) {
-		_ctx.Ptr(p_ctx.Detach());
+		_ctx.Ptr(p_ctx/*.Detach()*/);
 	}
 
 	return this->Error();
@@ -371,7 +371,7 @@ err_code  CDevice::Get (CTex_2D& _tex) {
 
 	this->m_error << this->Ptr()->CreateTexture2D(&_tex.Desc().Raw(), nullptr, &p_tex);
 	if (this->Error() == false)
-		this->m_error << _tex.Ptr(p_tex.Detach());
+		this->m_error << _tex.Ptr(p_tex/*.Detach()*/);
 
 	return this->Error();
 }

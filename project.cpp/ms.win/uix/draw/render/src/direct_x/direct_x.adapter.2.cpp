@@ -280,7 +280,7 @@ err_code    CAdapter_Enum::Set (void)
 		}
 		
 		CAdapter ada_object;
-		ada_object.Ptr(p_adapter.Detach());
+		ada_object.Ptr(p_adapter/*.Detach()*/);
 		// checks a support of Direct3D 12; does not care about returned result;
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice ;
 		
@@ -322,7 +322,7 @@ err_code    CAdapter_Enum::Set (void)
 			    )
 			{
 				CAdapter fast_run;
-				fast_run.Ptr(p_adapter.Detach());
+				fast_run.Ptr(p_adapter/*.Detach()*/);
 
 				for (size_t i_ = 0; i_ < this->m_adapters.size(); i_++) // just trying to find existing adapter for setting its attr to true;
 				{

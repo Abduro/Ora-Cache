@@ -30,6 +30,13 @@ namespace ex_ui { namespace draw { namespace render {
 	// https://discussions.unity.com/t/a-question-about-renderer/900817 ;
 	using namespace shared::types;
 	using shared::sys_core::CSyncObject;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void) ;
+	// *very important* >> it returns a pointer to that interface after calling IUnknown::AddRef on it;
+
+	// https://stackoverflow.com/questions/26687569/atl-ccomptr-attach-detach-and-destructor ;
+	// https://learn.microsoft.com/en-us/cpp/atl/reference/ccomptrbase-class ;
+	// *very important* >> Attach/Detach don't affect reference counter;
 }}}
 
 #endif/*_RENDER_BASE_H_INCLUDED*/

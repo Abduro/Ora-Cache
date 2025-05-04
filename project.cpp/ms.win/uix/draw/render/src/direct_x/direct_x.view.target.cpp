@@ -255,6 +255,15 @@ err_code  CTarget::Ptr (const TTgtPtr& _p_view, const bool _b_upd_desc) {
 		return this->m_error << __e_pointer;
 
 	this->m_view =_p_view;
+
+	TViewPtr p_view;
+	TBase::m_error << _p_view->QueryInterface(__uuidof(TViewPtr), (void**)&p_view);
+	if (false == TBase::Error()) {
+		TBase::m_p_view = nullptr;
+		TBase::View(p_view);
+	}
+
+
 	if (_b_upd_desc)
 		this->UpdateDesc();
 
@@ -322,8 +331,14 @@ err_code  CTarget::OnSize (const RECT& _rc_allowed) {
 	// (3) preserves the existing buffer count and format;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-resizebuffers ;
 	n_result = this->m_device.SwapChain().Ptr()->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-	if (__failed(n_result))
-	      return n_result;
+	if (__failed(n_result)) {
+#if defined(_DEBUG)
+		this->m_error << n_result;
+#endif
+#if (0) // ignores the error for now;
+		return n_result;
+#endif
+	}
 
 	// (4) gets the back buffer object, i.e. texture 2D;
 	using TTexPtr = ex_ui::draw::direct_x::_11::_2D::TTexPtr;
@@ -332,13 +347,20 @@ err_code  CTarget::OnSize (const RECT& _rc_allowed) {
 	n_result = this->m_device.SwapChain().Ptr()->GetBuffer(0, __uuidof(TTexPtr), (void**)&p_buffer);
 	if (__failed(n_result))
 	      return n_result;
+
+	TTgtPtr p_view;
 	
 	// (5) re-creates the target view; ToDo: the view description data is not updated yet;
-	n_result = this->m_device.Ptr()->CreateRenderTargetView(p_buffer, nullptr, &this->m_view);
+	n_result = this->m_device.Ptr()->CreateRenderTargetView(p_buffer, nullptr, &p_view);
 	if (__failed(n_result))
 	      return n_result;
 
-	this->m_device.Ctx().Ptr()->OMSetRenderTargets(1, &this->m_view, nullptr);
+	this->Ptr(p_view, true);
+	if (this->Error())
+		return n_result = this->Error();
+
+	ID3D11RenderTargetView* pView = this->m_view;
+	this->m_device.Ctx().Ptr()->OMSetRenderTargets(1, &pView, nullptr);
 
 	TViewPort v_port = {
 		float(_rc_allowed.left),

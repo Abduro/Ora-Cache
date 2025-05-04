@@ -22,7 +22,7 @@ err_code CFac_0::Create(void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory ;
 	this->m_error << ::CreateDXGIFactory(__uuidof(TFac0Ptr), (void**)&p_object);
 	if (__succeeded(this->Error()))
-		this->m_p_fac = p_object.Detach();
+		this->m_p_fac = p_object/*.Detach()*/;
 
 	return this->Error();
 }
@@ -88,26 +88,50 @@ err_code CFac_2::Create(void) {
 TError&  CFac_2::Error (void) const { return this->m_error; }
 bool     CFac_2::Is_valid (void) const { return nullptr != this->Ptr(); }
 
-err_code CFac_2::Get (const CDevice& _device, const CSwapDesc& _desc, CSwapChain& _chain) {
-	_device; _desc; _chain;
-	this->m_error << __METHOD__, __s_ok;
+err_code CFac_2::Get (CSwapChain& _chain) {
+	_chain;
+	this->m_error << __METHOD__ << __s_ok;
 
 	if (_chain.Is_valid())
 		return (this->m_error << (err_code)TErrCodes::eObject::eExists);
 
-	if (false == _device.Is_valid())
-		return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Input device is not valid;");
-	if (false == _desc.Is_valid())
-		return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Input desc is not valid;");
+	const CSwapDesc& desc_ = _chain.Desc();
+
+	if (false == this->m_device.Is_valid())
+	     return  this->m_error = this->m_device.Error();
+	if (false == desc_.Is_valid())
+	     return (this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Swap chain desc is not valid;");
 
 	TChainPtr p_chain;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createswapchain ;
 	this->m_error << this->Ptr()->CreateSwapChain(
-		_device.Ptr(), (DXGI_SWAP_CHAIN_DESC*)&_desc.ref(), &p_chain
+		this->m_device.Ptr(), (DXGI_SWAP_CHAIN_DESC*)&desc_.ref(), &p_chain
 	);
 	if (this->Is_valid())
-		_chain.Ptr(p_chain.Detach(), true);
+		_chain.Ptr(p_chain/*.Detach()*/, true);
 
+	return this->Error();
+}
+
+err_code  CFac_2::Get (CSwapChain_Ex& _chain) {
+	_chain;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (_chain.Is_valid())
+		return (this->m_error << (err_code)TErrCodes::eObject::eExists);
+
+	if (false == this->m_device.Is_valid())
+	      return this->m_error = this->m_device.Error();
+	if (false == _chain.Desc().Is_valid())
+	      return(this->m_error << (err_code)TErrCodes::eObject::eHandle) = _T("Swap chain desc is not valid;");
+
+	const CSwapDesc_Ex& desc_ex = _chain.Desc();
+	
+	TChain_ExPtr p_chain;
+	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nf-dxgi1_2-idxgifactory2-createswapchainforhwnd ;
+	this->m_error << this->Ptr()->CreateSwapChainForHwnd(
+		this->m_device.Ptr(), desc_ex.Target(), (DXGI_SWAP_CHAIN_DESC1*)&desc_ex.Ref(), nullptr, nullptr, &p_chain
+	);
 	return this->Error();
 }
 
@@ -131,8 +155,8 @@ CString  CFac_2::Print(const e_print _e_opt) const {
 #endif
 
 const
-TFac2Ptr& CFac_2::Ptr  (void) const { return this->m_p_fac; }
-err_code  CFac_2::Ptr  (const TFac2Ptr& _p_fac) {
+TFac2Ptr& CFac_2::Ptr (void) const { return this->m_p_fac; }
+err_code  CFac_2::Ptr (const TFac2Ptr& _p_fac) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (this->Is_valid())
@@ -145,3 +169,19 @@ err_code  CFac_2::Ptr  (const TFac2Ptr& _p_fac) {
 
 	return this->Error();
 }
+
+err_code  CFac_2::Set (const CDevice& _device) {
+	_device;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (false == _device.Is_valid())
+		return this->m_error = _device.Error();
+
+	this->m_device = _device;
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CFac_2&   CFac_2::operator <<(const CDevice& _device) { this->Set(_device); return *this; }

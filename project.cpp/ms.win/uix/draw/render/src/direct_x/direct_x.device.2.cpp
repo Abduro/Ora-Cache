@@ -84,7 +84,7 @@ err_code  CDevice_HW::Create (const CAdapter& _adapter) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice ;
 	TBase::m_error << ::D3D12CreateDevice(_adapter.Ptr(), D3D_FEATURE_LEVEL_11_0, _uuidof(TAdapterPtr), (void**)&p_base);
 	if (false == this->Error())
-		this->m_p_dev = p_base.Detach();
+		this->m_p_dev = p_base/*.Detach()*/;
 
 	return TBase::Error();
 }
@@ -111,7 +111,7 @@ err_code CDevice_Warp::Create (const CAda_Warp& _ada_warp) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_feature_level ;
 	TBase::m_error << ::D3D12CreateDevice(_ada_warp.Ptr(), D3D_FEATURE_LEVEL_1_0_CORE, __uuidof(TWarpAdaPtr), (void**)&p_base);
 	if (false == TBase::Error())
-		TBase::Ptr(p_base.Detach());
+		TBase::Ptr(p_base/*.Detach()*/);
 
 	return TBase::Error();
 }

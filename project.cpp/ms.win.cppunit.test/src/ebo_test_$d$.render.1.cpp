@@ -556,9 +556,9 @@ void CFac_2::GetSwapChain (void) {
 		return;
 	}
 
-	TSwapChain chain;
+	TSwapChain chain; chain.Desc() = desc.Ref(); m_fac_2 << device;
 
-	this->m_fac_2.Get(device, desc.Ref(), chain);
+	this->m_fac_2.Get(chain);
 	if (this->m_fac_2.Error())
 		_out() += this->m_fac_2.Error().Print(TError::e_print::e_req);
 	else

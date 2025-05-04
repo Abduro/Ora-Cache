@@ -53,7 +53,7 @@ err_code  CFac_4::Get  (CAdapter& _adapter) {
 		if (__succeeded(n_error)) {
 
 			if (false == this->m_error) {
-				_adapter.Ptr(p_adapter.Detach());
+				_adapter.Ptr(p_adapter/*.Detach()*/);
 				found.push_back(_adapter);
 			}
 		}
@@ -249,7 +249,7 @@ err_code CFac_6::Get_Hi_Perf (void) {
 		)
 	{
 		CAdapter fast_run;
-		fast_run.Ptr(p_adapter.Detach());
+		fast_run.Ptr(p_adapter/*.Detach()*/);
 		fast_run.Props().Hi_Perf(0 == n_index);
 		try {
 			this->m_cached.push_back(fast_run);

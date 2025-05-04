@@ -164,7 +164,10 @@ err_code CFake_Swap::Create (void) {
 	if (desc.Error())
 		return this->m_error = desc.Error();
 
-	fac_2.Get(device, desc.Ref(), this->m_chain);
+	this->m_chain.Desc() = desc.Ref();
+	fac_2 << device;
+
+	fac_2.Get(this->m_chain);
 	if (fac_2.Error())
 			this->m_error = fac_2.Error();
 
