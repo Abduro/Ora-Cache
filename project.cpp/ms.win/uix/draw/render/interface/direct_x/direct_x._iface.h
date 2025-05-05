@@ -42,7 +42,12 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	using CSize_U = geometry::base::_2D::CSize_U;
 
 namespace _11 {
-
+	/*
+		https://stackoverflow.com/questions/70954015/can-i-use-idxgifactory2createswapchainforhwnd-for-directx-11-0 ;
+		In order to check DirectX 11.1 installed:
+		(1) QueryInterface for the ID3D11Device1 on ID3D11Device;
+		(2) more direct test is to try to QUeryInterface the IDXGIFactory2 interface;
+	*/
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_cpu_access_flag ;
 	using ECpu_Access = D3D11_CPU_ACCESS_FLAG;
 	class CCpu_Access {

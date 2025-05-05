@@ -4,9 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Apr-2025 at 02:50:32.714, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack DirectX draw render connect wrapper interface declaration file;
 */
-#include "win.gui_module.h"
+#include "win.gui.inc.h"
 #include "handlers.h"
-#include "color.rgb.h"
+
 #include "direct_x.device.1.h"
 #include "direct_x.view.target.h"
 #include "direct_x.texture.h"

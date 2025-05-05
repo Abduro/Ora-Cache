@@ -5,16 +5,10 @@
 	This is Window popup test app base declaration file;
 	Using the latest features of DirectX12 requires Windows Target Platform Version not less than 10.0.17763.0, 10.0.18362.0 is used;
 */
-#include <atlbase.h>
-#include <map>
-#include <cstdint>                             // for data type definitions, for example, uint32_t;
-
-#include "sys.error.h"
-#include "shared.preproc.h"
-#include "shared.string.h"
-#include "shared.types.h"
-
+#include "win.gui.inc.h"
 #include "win.gui_frame.h"
+#include "direct_x.wrap.h"
+#include "ebo.sha.gui.theme.h"
 
 #pragma comment(lib, "color_v15.lib")          // complementary colors;
 #pragma comment(lib, "geometry.2D_v15.lib")    // generic shapes;

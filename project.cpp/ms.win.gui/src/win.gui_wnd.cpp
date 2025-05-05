@@ -3,9 +3,6 @@
 	This is window popup test app main window interface implementation file;
 */
 #include "win.gui_wnd.h"
-#include "direct_x.wrap.h"      // ToDo:: if it is placed to header 'win.gui_wnd.h', the compilation is failed;
-#include "ebo.sha.gui.theme.h"
-#include "win.gui_layout.h"
 
 using namespace ebo::boo::gui;
 
@@ -64,8 +61,12 @@ err_code CView::IEvtLife_OnCreate  (const w_param, const l_param) {
 	err_code n_result = __s_false;
 
 	m_layout.Window() = TBase::m_hWnd;
+	RECT rc_surface = m_layout.DrawArea();
 
-	_render().Init(this->m_hWnd); // this view window does not care about renderer init() result;
+	HWND h_surface = this->m_surface.Create(TBase::m_hWnd, &rc_surface, nullptr, WS_CHILD|WS_VISIBLE);
+	if ( h_surface ) {
+		_render().Init(h_surface); // this view window does not care about renderer init() result;
+	}
 
 	return   n_result;
 }
@@ -75,6 +76,9 @@ err_code CView::IEvtLife_OnDestroy (const w_param, const l_param) {
 	err_code n_result = __s_false;
 
 	_render().Term();
+
+	if (this->m_surface)
+		this->m_surface.DestroyWindow();
 
 	return   n_result;
 }
@@ -112,8 +116,10 @@ err_code CView::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 
 err_code CView::IEvtFrame_OnSizing (const eEdges, LPRECT) {
 
-	_render().Target().OnSize(m_layout.DrawArea());
-
+	RECT rc_surface = m_layout.DrawArea();
+	if (this->m_surface) {
+		this->m_surface.MoveWindow(&rc_surface);
+	}
 	err_code n_result = __s_false;
 	return   n_result;
 }

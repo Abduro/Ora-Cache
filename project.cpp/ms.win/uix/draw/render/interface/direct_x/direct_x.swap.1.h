@@ -120,6 +120,9 @@ namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 		~CDescEx_Wrap (void) = default;
 
 	public:
+#if defined(_DEBUG)
+		void     Fake (void);            // configures this struct for applying to test cases;
+#endif
 		bool     Is_valid (void) const;  // checks target window handle for validity only;
 		const
 		TSwapDesc_Ex& Ref (void) const;

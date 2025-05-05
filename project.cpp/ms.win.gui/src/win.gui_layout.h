@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 03-May-2025 at 22:13:32.448, UTC+4, Batumi, Saturday;
 	This is Ebo Pack test desktop app GUI layout interface declaration file;
 */
-#include "win.gui_module.h"
+#include "win.gui.inc.h"
 namespace ebo { namespace boo { namespace gui {
 
 	using CWindow = ::ATL::CWindow;

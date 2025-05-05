@@ -5,8 +5,6 @@
 	Adopted to vs15 on 1-Jul-2018 at 6:11:43p, UTC+7, Phuket, Rawai, Sunday;
 */
 #include "win.gui_module.h"
-#include "direct_x.wrap.h"
-#include "ebo.sha.gui.theme.h"
 
 using namespace shared::sys_core;
 using namespace ebo::boo::gui;

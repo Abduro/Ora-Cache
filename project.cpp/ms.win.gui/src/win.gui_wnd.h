@@ -5,7 +5,10 @@
 	This is window popup test app main window interface declaration file;
 */
 #include "wnd.base.h"
-
+#include "direct_x.surface.h"
+#include "direct_x.wrap.h"      // ToDo:: if it is placed to header 'win.gui_wnd.h', the compilation is failed;
+#include "win.gui_layout.h"
+#include "ebo.sha.gui.theme.h"
 
 namespace ebo { namespace boo { namespace gui {
 #if (0)
@@ -14,6 +17,7 @@ namespace ebo { namespace boo { namespace gui {
 #endif
 #endif
 	using ex_ui::popup::CWndBase;
+	using ebo::boo::gui::render::CSurface;
 
 	using namespace ex_ui::message::handlers;
 
@@ -48,6 +52,9 @@ namespace ebo { namespace boo { namespace gui {
 	private:
 		CView& operator = (const CView&) = delete;
 		CView& operator = (CView&&) = delete;
+
+	private:
+		CSurface  m_surface;
 	};
 
 }}}

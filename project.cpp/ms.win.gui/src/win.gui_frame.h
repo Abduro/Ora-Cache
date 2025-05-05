@@ -4,10 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 17-Nov-2024 at 0:59:33.0970970, UTC+4, Batumi, Wednesday;
 	This is window popup test app main frame interface declration file;
 */
-#include "sys.error.h"
-#include "wnd.layout.h"
-#include "wnd.res.h"
-
+#include "win.gui.inc.h"
 #include "win.gui.res.h"
 #include "win.gui_wnd.h"
 

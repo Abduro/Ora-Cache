@@ -7,9 +7,7 @@
 	Adopted to Ebo Pack UM test project on 14-Jan-2021 at 12:03:27.717 pm, UTC+7, Novosibirsk, Thursday;
 	Adopted to Ebo Pack render project desktop GUI app on 26-Apr-2025 at 22:49:56.695, UTC+4, Batumi, Saturday; 
 */
-#include <atlbase.h>
-#include <map>
-#include "color.rgb.h"
+#include "win.gui.inc.h"
 #include "ebo.sha.dwm.wrap.h"
 
 namespace ebo { namespace sha { namespace theme { namespace colors {
@@ -134,14 +132,15 @@ namespace shared {
 namespace ebo { namespace sha { namespace theme { namespace direct_x {
 
 	using CClr_Float = ex_ui::color::rgb::CClr_Float;
-
+	// The theme color matrix was made for usage by GDI, thus no alpha value is taken into account;
+	// but DirectX uses the alpha channel value, so it must be taken into account;
 	class CUI_Parts {
 	public:
 		 CUI_Parts (void) {} CUI_Parts (const CUI_Parts&) = delete; CUI_Parts (CUI_Parts&&) = delete;
 		~CUI_Parts (void) {}
 
 	public:
-		CClr_Float Bkg (void) const; // gets the background color depending on the currently installed theme;
+		CClr_Float Bkg (clr_value _alpha = rgb_val_max) const; // gets the background color depending on the currently installed theme;
 
 	private:
 		CUI_Parts&  operator = (const CUI_Parts&) = delete;

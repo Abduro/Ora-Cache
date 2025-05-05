@@ -317,6 +317,9 @@ CSwapChain&  CSwapChain::operator <<(const TChainPtr& _p_chain) { this->Ptr(_p_c
 CDescEx_Wrap:: CDescEx_Wrap (void) : m_desc{0}, m_target(nullptr) {}
 
 /////////////////////////////////////////////////////////////////////////////
+#if defined (_DEBUG)
+
+#endif
 const
 TSwapDesc_Ex& CDescEx_Wrap::Ref (void) const { return this->m_desc; }
 TSwapDesc_Ex& CDescEx_Wrap::Ref (void)       { return this->m_desc; }
