@@ -488,3 +488,26 @@ TSize   operator - (const TSize&  _lsv, const TSize&  _rsv) { return TSize (_lsv
 
 TSizeU  operator + (const TSizeU& _lsv, const TSizeU& _rsv) { return TSizeU(_lsv.W() + _rsv.W(), _lsv.H() + _rsv.H()); }
 TSizeU  operator - (const TSizeU& _lsv, const TSizeU& _rsv) { return TSizeU(_lsv.W() - _rsv.W(), _lsv.H() - _rsv.H()); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAnchor:: CAnchor (const int32_t _x, const int32_t _y) : TBase(_x, _y) {}
+CAnchor:: CAnchor (const CAnchor& _src) : CAnchor() { *this = _src; }
+CAnchor:: CAnchor (CAnchor&& _victim) : CAnchor() { *this = _victim; }
+CAnchor::~CAnchor (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAnchor&  CAnchor::operator = (const CAnchor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+CAnchor&  CAnchor::operator = (CAnchor&& _victim) { (TBase&)*this = (TBase&&)_victim; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+#if (0)
+CPosition:: CPosition (void) { this->Clear(); }
+CPosition:: CPosition (const CPosition& _src) : CPosition() { *this = _src; }
+#endif
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////

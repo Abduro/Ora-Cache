@@ -25,33 +25,27 @@ namespace shared { namespace types {
 #if (1)
 	// these data types and structures are based on WinAPI, because the current implementation of Ebo Pack is intended for running under Windows OS;
 
-	typedef LPCTSTR _pc_sz; // since Win32 there is neither 'long' nor 'near' pointer types;
-	typedef LPTSTR  _p_sz ;
-	typedef TCHAR  t_char ;
-
-	typedef _GUID   _guid ;
-	typedef USHORT  ushort;
-	typedef ULONG   ulong ;
-	typedef DWORD   dword ;
-
-	typedef BOOL    _bool ;
-	typedef LONG    _long ;
-	typedef UINT    _uint ;
-	typedef WORD    _word ;
-
-	// https://en.wikipedia.org/wiki/err_code ;
-	typedef HRESULT err_code;
-	// for using in shared.mem project;
-	typedef HGLOBAL global;
-	typedef HANDLE  handle;
-	// for using in win.popup projects;
-	typedef LRESULT l_result;
-	typedef WPARAM  w_param ;
-	typedef LPARAM  l_param ;
-	// for using in geometry and window projects;
-	typedef POINT   t_point ; // it just is a base structure for holding point coordinate values;
-	typedef RECT    t_rect  ;
-	typedef SIZE    t_size  ; // it just is a base structure for holding shape size in two dimensional space;
+	typedef _GUID     _guid ;   // https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid ;
+	typedef BOOL      _bool ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
+	typedef BYTE      _byte ;
+	typedef DWORD     dword ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
+	typedef HANDLE    handle;   // for using in shared.mem project;
+	typedef HGLOBAL   global;   // for using in shared.mem project;
+	typedef HRESULT err_code;   // https://en.wikipedia.org/wiki/err_code ;
+	typedef LONG      _long ;
+	typedef LPARAM  l_param ;   // for using in win.popup projects;
+	typedef LPCTSTR   _pc_sz;   // since Win32 there is neither 'long' nor 'near' pointer types;
+	typedef LPTSTR    _p_sz ;
+	typedef LRESULT l_result;   // for using in win.popup projects;
+	typedef POINT   t_point ;   // it just is a base structure for holding point coordinate values;
+	typedef RECT    t_rect  ;   // for using in geometry and window projects;
+	typedef SIZE    t_size  ;   // it just is a base structure for holding shape size in two dimensional space;
+	typedef TCHAR    t_char ;   // https://learn.microsoft.com/en-us/office/client-developer/outlook/mapi/tchar ;
+	typedef UINT      _uint ;
+	typedef ULONG     ulong ;
+	typedef USHORT    ushort;
+	typedef WORD      _word ;
+	typedef WPARAM  w_param ;   // for using in win.popup projects;
 
 #endif
 }}

@@ -4,18 +4,83 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Oct-2024 at 17:52:08.453, UTC+4, Batumi, Monday;
 	This is Ebo Pack 2D space geometry base shape interface declaration file.
 */
-#include "shared.preproc.h"
-#include "shared.string.h"
-
 #include "2d.base.h"
 
 namespace geometry { namespace shape { namespace _2D {
 
+	// https://dictionary.cambridge.org/dictionary/english/shape ;
 	using namespace shared::types;
 
 	using CPoint  = geometry::base::_2D::CPoint;
 	using CPoints = geometry::base::_2D::CPoints;
 	using CMarker = geometry::base::_2D::CMarker;
+
+	// the radius value defines how smoothly the corner is rounded; it can have negative value, this, the corner can be convex and concave;
+	class CCorner {
+	public:
+		 CCorner (const uint32_t _marker = 0, const int8_t _radius = 0);
+		 CCorner (const CCorner&);
+		 CCorner (CCorner&&) = delete;
+		~CCorner (void);
+
+	public:
+		const
+		uint32_t  Id (void) const;     // using typedef 'dword' or uint32_t is not important for the time being;
+		uint32_t& Id (void) ;
+
+		bool Is_concave (void) const;
+		bool Is_convex (void) const;
+		bool Is_valid (void) const;    // returns 'true' in case when identifier value does not equel to zero;
+
+		int8_t   Radius (void) const;
+		int8_t&  Radius (void)      ;
+
+	public:
+		CCorner& operator = (const CCorner&);
+		CCorner& operator = (CCorner&&) = delete;
+		CCorner& operator <<(const int8_t _radius);
+		CCorner& operator <<(const uint32_t _marker);
+
+	protected:
+		uint32_t  m_marker;   // it seems to be better to call it as ID;
+		int8_t    m_radius;
+	};
+
+	// https://www.allacronyms.com/corners/abbreviated >> cors;
+	typedef ::std::map<uint32_t, CCorner> TRawCorners; // a key - is a corner marker of placement; a value is corner object itself;
+	typedef TRawCorners TRawCors; // just playing with shorter names;
+
+	class CCorners {
+	public:
+		 CCorners (void);
+		 CCorners (const CCorners&); CCorners (CCorners&&) = delete;
+		~CCorners (void);
+
+	public:
+		err_code   Add (const uint32_t _marker, const CCorner&);
+		const
+		CCorner&   Get (const uint32_t _marker) const; // returns a corner, if it found, otherwize, fake corner is returned; read-only access, but is not drawn;
+		CCorner&   Get (const uint32_t _marker)      ; // returns a corner, if it found, otherwize, fake corner is returned; read-write access, but is not drawn;
+		const bool Has (const uint32_t _marker) const; // checks for existing a corner by value provided;
+		const bool Is  (void) const;       // returns true if at least one corner is set;
+		const
+		TRawCorners&  Raw (void) const;       // a reference to corner(s) which are included to corner map; read-only;
+		TRawCorners&  Raw (void)      ;       // a reference to corner(s) which are included to corner map; read-write;
+		err_code   Rem (const uint32_t _marker);
+		err_code   Set (const uint32_t _marker, const int8_t _radius); // a corner will be added, if exists, will be updated;
+
+	public:
+		CCorners&  operator  =(const CCorners&);
+		CCorners&  operator  =(CCorners&&) = delete;
+		CCorners&  operator +=(const CCorner&);
+		CCorners&  operator -=(const CCorner&);
+
+	private:
+		TRawCorners m_corners;
+	};
+	// https://www.allacronyms.com/triangle/abbreviated ;
+	class CTri_Cors : public CCorners {
+	};
 
 	// https://simple.wikipedia.org/wiki/Side ;
 
@@ -178,7 +243,7 @@ namespace geometry { namespace shape { namespace _2D {
 		     e_D = 0x3, // the right-top corner;                 (B)— —(C) 
 		};
 	public:
-		class CCorners {
+		class CCorners { // ToDo: this class must be renamed, or inherited from corners class that is defined outside above;
 		static const uint32_t n_count = e_corners::e_D + 1;
 		public:
 			 CCorners (void);

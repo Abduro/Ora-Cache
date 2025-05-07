@@ -4,18 +4,19 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Oct-2024 at 21:55:27.203, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack 2D space geometry fundamental objects' interface declaration file.
 */
+#include <map>
 #include "shared.preproc.h"
 #include "shared.string.h"
 
 #include "shared.types.h"
+#include "sys.err.codes.h"
 
 // the 'base' namespace does not mean a base of shape, but basic notations or fundamental objects in geometry;
 namespace geometry { namespace base { namespace _2D {
-	
+
 	using namespace shared::types;
 
 	// https://www.allacronyms.com/primitive/abbreviated ;
-	// https://dictionary.cambridge.org/dictionary/english/shape ;
 
 	class CMarker {
 	public:
@@ -313,6 +314,49 @@ TSizeU  operator - (const TSizeU&, const TSizeU&);
 
 namespace geometry { namespace base { namespace _2D {
 
+	class CAnchor : public CPoint_2 { typedef CPoint_2 TBase;
+	public:
+		 CAnchor (const int32_t _x = 0, const int32_t _y = 0);
+		 CAnchor (const CAnchor&);
+		 CAnchor (CAnchor&&);
+		~CAnchor (void) ;
+
+	public:
+		CAnchor& operator = (const CAnchor&);
+		CAnchor& operator = (CAnchor&&);
+	};
+#if (0)
+	class CPosition {
+	public:
+		 CPosition (void);
+		 CPosition (const CPosition&); CPosition (CPosition&&) = delete;
+		~CPosition (void) = default;
+
+	public:
+		void  Clear (void);
+		const t_point& End (void) const;
+		      t_point& End (void)      ;
+		const bool     In    (const t_rect&) const; // returns true if points inside this rectangle; it's dependable on position orientation;
+		const bool     IsHorz(void) const;          // returns true if points have the same value of y-coordinate;
+		const bool     IsVert(void) const;          // returns true if points have the same value of x-coordinate;
+		const dword    Length(void) const;
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all) const;
+#endif
+		const t_point& Start (void) const;
+		      t_point& Start (void)      ;
+	public:
+		CPosition& operator = (const CPosition&);
+		CPosition& operator = (CPosition&&) = delete;
+		CPosition& operator <<(const t_rect&);      // transfers rectangle to position as follows: start={x<<left|y<<top}, end={x<<right|y<<bottom};
+		operator const t_rect (void) const;         // transfers position to rectangle as follows: {left<<start.x|top<<start.y|right<<end.x|bottom<<end.y};
+		CPosition& operator <<(const t_point&);     // sets the begin point;
+		CPosition& operator >>(const t_point&);     // sets the end point;
+
+	private:
+		t_point   m_points[2]; // 0:begin;1:end;
+	};
+#endif
 }}}
 
 #endif/*_2D_BASE_H_INCLUDED*/

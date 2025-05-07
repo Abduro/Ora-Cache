@@ -63,37 +63,7 @@ namespace ex_ui { namespace draw { namespace gdi_pls {
 
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
-}}}
 
-namespace ex_ui { namespace draw { namespace defs {
-
-	interface IExclusion {
-		virtual   err_code  Add  (const RECT&)       { return E_NOTIMPL; }
-		virtual   err_code  Apply(const HDC  ) const { return E_NOTIMPL; }
-		virtual   err_code  Clear(void)              { return E_NOTIMPL; }
-		virtual   ULONG     Count(void)        const { return 0; }
-		virtual   RECT&     Get  (const ULONG _ndx)  { _ndx; static RECT rc_empty = {0}; return rc_empty; }
-	};
-	interface IRenderer_Base {
-		virtual   IExclusion& Excluded(void);
-	};
-	/*
-		This interface is used as a pointer to parent window draw functionality;
-		Safity of assignment must be protected by critical section inside a receiver implementation;
-		But that is not enough taking into account that interface pointer being assigned may possibly point to destroyed object later;
-		the only protection here is an assignment of an interface that is implemented ***exactly*** by parent window;
-	*/
-	interface IRenderer : public IRenderer_Base
-	{
-		/*
-			This function maybe useful for direct call from child control to owner/parent function of filling the background;
-			maybe parent object implementation can identify a calling window by extracting window handle from DC provided for calculating required shifts;
-			but at the same time, it is much easier (at least it seems to be so) to provide a rectangle being calculated by child control;
-			child control knows who its parent, and to use appropriate shift(s) while calculating a rectangle; but it is not truth always;
-		*/
-		virtual err_code  DrawBackground(const HDC hSurface, const RECT& rcDrawArea) {hSurface; rcDrawArea; return E_NOTIMPL;}
-		virtual err_code  DrawParentBackground(const HWND hChild, const HDC hSurface, RECT& rcUpdated) PURE;
-	};
 }}}
 
 #endif/*_GDI_PLUS_DEFS_INCLUDED*/

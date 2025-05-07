@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000001}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-00000000000B}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,24 +64,24 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sys.shared.inc.props" />
+    <Import Project="gdi.zbuf.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sys.shared.inc.props" />
+    <Import Project="gdi.zbuf.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sys.shared.inc.props" />
+    <Import Project="gdi.zbuf.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sys.shared.inc.props" />
+    <Import Project="gdi.zbuf.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <!--It is assumed the environment variables contain paths that end up with backslash;-->
-    <!--The user path depends on the location where the project file is located, it is advisable to have output folders outside the project;-->
+    <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\..\</IntPath>
   </PropertyGroup>
@@ -116,7 +116,6 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -131,7 +130,6 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -148,7 +146,6 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -169,7 +166,6 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -182,35 +178,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <!--generic wrappers-->
-    <ClInclude Include="$(_0)shared.preproc.h" />
-    <ClCompile Include="$(_1)shared.preproc.cpp" />
-    <ClInclude Include="$(_0)shared.random.h" />
-    <ClCompile Include="$(_1)shared.random.cpp" />
-    <ClInclude Include="$(_0)shared.str.ext.h" />
-    <ClCompile Include="$(_1)shared.str.ext.cpp" />
-    <ClInclude Include="$(_0)shared.str.var.h" />
-    <ClCompile Include="$(_1)shared.str.var.cpp" />
-    <ClInclude Include="$(_0)shared.string.h" />
-    <ClInclude Include="$(_0)shared.types.h" />
-    <ClCompile Include="$(_1)shared.types.cpp" />
-    <ClInclude Include="$(_0)sys.gen.time.h" />
-    <ClCompile Include="$(_1)sys.gen.time.cpp" />
-    <ClInclude Include="$(_0)sys.sync_obj.h" />
-    <ClCompile Include="$(_1)sys.sync_obj.cpp" />
-    <ClInclude Include="$(_0)shared.dbg.h" />
+    <ClInclude Include="$(_0)uix.gdi.defs.h" />
+    <ClInclude Include="$(_0)uix.gdi.zbuf.h" />
+    <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="sys.shared_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="sys.err.core_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
+    </ProjectReference>
+    <ProjectReference Include="sys.com.core_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000A201}</Project>
+    </ProjectReference>
+    <ProjectReference Include="sys.mem.core_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000A301}</Project>
+    </ProjectReference>
+    <ProjectReference Include="color_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000022}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets" Condition="Exists('..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets'))" />
-  </Target>
 </Project>

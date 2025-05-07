@@ -42,17 +42,6 @@ namespace ex_ui { namespace draw { namespace gdi_pls { namespace _impl {
 		{ TAlias::e_inited    , TErrCodes::eObject::eInited    , _T("The object is already initialized;"), true  },
 		{ TAlias::e_uninited  , __e_not_inited                 , _T("The object is uninitialized;"), true  },
 	};
-
-	class CExclusion_Def : public ex_ui::draw::defs::IExclusion {
-	private:
-		RECT m_empty;
-	public:
-		 CExclusion_Def (void) : m_empty{0, 0, 0, 0} {}
-		~CExclusion_Def (void) {}
-
-	public: // IExclusionvirtual
-		RECT&     Get  (const ULONG _ndx) override { _ndx; return m_empty; }
-	};
 }}}}
 
 using namespace ex_ui::draw::gdi_pls::_impl;
