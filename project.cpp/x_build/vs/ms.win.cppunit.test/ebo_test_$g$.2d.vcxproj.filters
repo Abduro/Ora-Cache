@@ -11,5 +11,9 @@
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$g$.2d.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$g$.2d.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$g$.2d.base.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$g$.2d.base.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$g$.2d.shape.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$g$.2d.shape.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

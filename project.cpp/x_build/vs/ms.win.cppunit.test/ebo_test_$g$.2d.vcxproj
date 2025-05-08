@@ -204,6 +204,10 @@
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$g$.2d.h" />
     <ClCompile Include="$(_1)ebo_test_$g$.2d.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$g$.2d.base.h" />
+    <ClCompile Include="$(_1)ebo_test_$g$.2d.base.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$g$.2d.shape.h" />
+    <ClCompile Include="$(_1)ebo_test_$g$.2d.shape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

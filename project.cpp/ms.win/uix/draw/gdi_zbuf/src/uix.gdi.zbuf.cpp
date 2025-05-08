@@ -3,9 +3,17 @@
 	This is Ebo Pack shared draw library Z-buffer interface implementation file.
 */
 #include "uix.gdi.zbuf.h"
-#if (0)
-using namespace ex_ui::draw;
 
+using namespace ex_ui::draw::memory;
+
+#ifndef __W
+#define __W(_rect) (_rect.right - _rect.left)
+#endif
+#ifndef __H
+#define __H(_rect) (_rect.bottom - _rect.top)
+#endif
+
+#if (0)
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace draw { namespace details
@@ -36,14 +44,113 @@ namespace ex_ui { namespace draw { namespace details
 	}
 }}}
 using namespace ex_ui::draw::details;
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
-CZBuffer:: CZBuffer (void): m_hOrigin(NULL), m_hBmpOld(NULL) {}
-CZBuffer:: CZBuffer (const HDC hDC, const RECT& rcPaint) : CZBuffer() { this->Create(hDC, rcPaint); }
-CZBuffer::~CZBuffer (VOID) { this->Reset(); }
+CSurface:: CSurface (void) : m_surface{nullptr}, m_rc_draw{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CSurface::~CSurface (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+t_rect&    CSurface::Area (void) const { return this->m_rc_draw; }
+t_rect&    CSurface::Area (void)       { return this->m_rc_draw; }
+TError&    CSurface::Error(void) const { return this->m_error; }
+
+bool       CSurface::Is_valid (void) const {
+	bool b_result = false;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjecttype ;
+	b_result = (!::IsRectEmpty(&this->Area()) && nullptr != this->New() && OBJ_BITMAP == ::GetObjectType(this->New()));
+
+	return b_result;
+}
+
+err_code   CSurface::Create (const HDC hDC, const t_rect& _rc_draw) {
+	hDC; _rc_draw;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code) TErrCodes::eObject::eExists;
+
+	if (::IsRectEmpty(&_rc_draw))
+		return this->m_error << __e_rect;
+
+	if (nullptr == hDC || OBJ_DC != ::GetObjectType(hDC))
+		return this->m_error << (err_code) TErrCodes::eObject::eHandle;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap ;
+	this->New() = ::CreateCompatibleBitmap(hDC, __W(_rc_draw), __H(_rc_draw));
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createdibsection ;
+	if (nullptr == this->New()) {
+
+		BITMAPINFO info_ = { {sizeof( BITMAPINFO ), __W(_rc_draw), __H(_rc_draw), 1, 32, BI_RGB, 0, 0, 0, 0, 0}, {0, 0, 0}};
+		this->New() = ::CreateDIBSection(hDC, &info_, DIB_RGB_COLORS, NULL, NULL, 0);
+		if (nullptr == this->New())
+			return this->m_error.Last();
+	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject ;
+	this->Area() = _rc_draw;
+	this->Prev() = (HBITMAP)::SelectObject(hDC, this->New());
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportorgex ;
+	::SetViewportOrgEx(hDC, -_rc_draw.left, -_rc_draw.top, nullptr);
+
+	return this->Error();
+}
+
+const
+HBITMAP&   CSurface::Prev (void) const { return this->m_surface[0]; }
+HBITMAP&   CSurface::Prev (void)       { return this->m_surface[0]; }
+const
+HBITMAP&   CSurface::New  (void) const { return this->m_surface[1]; }
+HBITMAP&   CSurface::New  (void)       { return this->m_surface[1]; }
 
 /////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////////////
+
+CZBuffer:: CZBuffer (void) : m_origin(nullptr) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CZBuffer:: CZBuffer (const HDC _h_origin, const t_rect& _rc_draw) : CZBuffer() { this->Create(_h_origin, _rc_draw); }
+CZBuffer::~CZBuffer (void) { this->Reset(); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code CZBuffer::Create (const HDC _h_origin, const t_rect& _rc_draw)  {
+	_h_origin; _rc_draw;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code) TErrCodes::eObject::eExists;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc ;
+	if (nullptr == TDC::CreateCompatibleDC(this->m_origin))
+		return this->m_error.Last();
+
+	if (__failed(this->m_surface.Create(_h_origin, _rc_draw))) // needs to be checked against input dc and CreateDIBSection;
+		return this->m_error = this->m_surface.Error();
+
+	return this->Error();
+}
+
+TError& CZBuffer::Error (void) const { return this->m_error; }
+
+void    CZBuffer::Reset (void)
+{
+	if (this->m_surface.Prev()) {
+		#if (0)
+		::BitBlt(this->m_origin, m_rcPaint.left, m_rcPaint.top, iWidth, iHeight, TBaseDC::m_hDC, m_rcPaint.left, m_rcPaint.top, SRCCOPY);
+
+		TDC::SelectBitmap(m_hBmpOld);
+
+		this->m_origin = nullptr;
+		m_hBmpOld = NULL;
+		m_surface.DeleteObject();
+		#endif
+		::DeleteDC(TDC::m_hDC); TDC::m_hDC = NULL;
+	}
+}
+
+
+#if (0)
 HRESULT CZBuffer::CopyTo (HBITMAP& hBitmap)
 {
 	if (hBitmap)
@@ -103,34 +210,7 @@ HRESULT CZBuffer::CopyTo (CONST HDC hCompatibleDC, const INT _x, const INT _y, c
 	}
 }
 
-HRESULT CZBuffer::Create (const HDC hDC, const RECT& rcPaint)  {
-	this->Reset();
 
-	m_hOrigin = hDC;
-	m_rcPaint = rcPaint;
-	TBaseDC::CreateCompatibleDC(m_hOrigin);
-	if (!TBaseDC::m_hDC)
-		return (HRESULT_FROM_WIN32(::GetLastError()));
-
-	const SIZE sz_ = {
-		__W(m_rcPaint),
-		__H(m_rcPaint)
-	};
-	// TODO: DIB Section class already exists and must be used here;
-	m_surface.CreateCompatibleBitmap(m_hOrigin, sz_.cx, sz_.cy);
-	if (0==m_surface)
-	{
-		BITMAPINFO info_ = { {sizeof( BITMAPINFO ), sz_.cx, sz_.cy, 1, 32, BI_RGB, 0, 0, 0, 0, 0}, {0, 0, 0}};
-		m_surface = ::CreateDIBSection(hDC, &info_, DIB_RGB_COLORS, NULL, NULL, 0);
-
-		if(!m_surface)
-			return (HRESULT_FROM_WIN32(::GetLastError()));
-	}
-	m_hBmpOld = TBaseDC::SelectBitmap(m_surface);
-	TBaseDC::SetViewportOrg(-m_rcPaint.left, -m_rcPaint.top);
-
-	return S_OK;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -375,25 +455,6 @@ bool    CZBuffer::IsValid (void) const { bool b_result = false;
 	if (m_surface.IsNull()) return b_result;
 
 	return (b_result = true);
-}
-
-VOID    CZBuffer::Reset   (void)
-{
-	if (m_hBmpOld)
-	{
-		const INT iWidth  = m_rcPaint.right - m_rcPaint.left;
-		const INT iHeight = m_rcPaint.bottom - m_rcPaint.top;
-
-		::BitBlt(m_hOrigin, m_rcPaint.left, m_rcPaint.top, iWidth, iHeight, TBaseDC::m_hDC, m_rcPaint.left, m_rcPaint.top, SRCCOPY);
-
-		TBaseDC::SelectBitmap(m_hBmpOld);
-
-		m_hOrigin = NULL;
-		m_hBmpOld = NULL;
-		m_surface.DeleteObject();
-
-		::DeleteDC(TBaseDC::m_hDC); TBaseDC::m_hDC = NULL;
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

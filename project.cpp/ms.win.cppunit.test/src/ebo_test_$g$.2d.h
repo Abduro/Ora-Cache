@@ -2,7 +2,7 @@
 #define _EBO_TEST_$G$_2D_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Oct-2024 at 09:18:10.448, UTC+4, Batumi, Tuesday;
-	This is Ebo Pack 2D space geometry lib unit test interface declaration file; 
+	This is Ebo Pack 2D space geometry lib unit test common definition file; 
 */
 #include "_log.h"
 
@@ -10,6 +10,15 @@
 
 #include "2d.base.h"
 #include "2d.shape.h"
+
+namespace ebo { namespace boo { namespace test {
+
+	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+	using CError  = shared::sys_core::CError;
+	using TError  = const CError;
+	using TString = TStringEx   ;
+
+}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "geometry.2d_v15.lib")  // this one must be tested by this unit test project;

@@ -8,8 +8,10 @@
 */
 #include <atlbase.h>
 #include <atltypes.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/crect-class ;
-#include "atlapp.h"
-#include "atlgdi.h"
+
+#include "atlapp.h"         // wtl::App is required for working CDC;
+#include "atlgdi.h"         // wtl::CDC;
+
 #include "shared.types.h"
 #include "sys.error.h"
 

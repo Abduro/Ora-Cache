@@ -324,8 +324,9 @@ namespace geometry { namespace base { namespace _2D {
 	public:
 		CAnchor& operator = (const CAnchor&);
 		CAnchor& operator = (CAnchor&&);
+		CAnchor& operator <<(const t_rect&);    // sets: _x = _rect.left; _y = _rect.top;
 	};
-#if (0)
+
 	class CPosition {
 	public:
 		 CPosition (void);
@@ -333,30 +334,32 @@ namespace geometry { namespace base { namespace _2D {
 		~CPosition (void) = default;
 
 	public:
-		void  Clear (void);
-		const t_point& End (void) const;
-		      t_point& End (void)      ;
-		const bool     In    (const t_rect&) const; // returns true if points inside this rectangle; it's dependable on position orientation;
-		const bool     IsHorz(void) const;          // returns true if points have the same value of y-coordinate;
-		const bool     IsVert(void) const;          // returns true if points have the same value of x-coordinate;
-		const dword    Length(void) const;
+		const
+		CAnchor&   Anchor (void) const;
+		CAnchor&   Anchor (void) ;	
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
 #endif
-		const t_point& Start (void) const;
-		      t_point& Start (void)      ;
+		const
+		CSize_U&   Size (void) const;
+		CSize_U&   Size (void) ;
+
 	public:
 		CPosition& operator = (const CPosition&);
 		CPosition& operator = (CPosition&&) = delete;
-		CPosition& operator <<(const t_rect&);      // transfers rectangle to position as follows: start={x<<left|y<<top}, end={x<<right|y<<bottom};
-		operator const t_rect (void) const;         // transfers position to rectangle as follows: {left<<start.x|top<<start.y|right<<end.x|bottom<<end.y};
-		CPosition& operator <<(const t_point&);     // sets the begin point;
-		CPosition& operator >>(const t_point&);     // sets the end point;
+
+		CPosition& operator <<(const CAnchor&);
+		CPosition& operator <<(const CSize_U&);
+		CPosition& operator <<(const t_point&); // sets the anchor point;
+		CPosition& operator <<(const t_rect& ); // transfers rectangle to position as follows: anchor={x<<left|y<<top};size={right-left|bottom-top};
+
+		operator const t_rect (void) const;     // transfers position to rectangle as follows: anchor>>left|top;right=left+size.width;bottom=top+size.height;
+		
 
 	private:
-		t_point   m_points[2]; // 0:begin;1:end;
+		CAnchor   m_anchor;
+		CSize_U   m_size;
 	};
-#endif
 }}}
 
 #endif/*_2D_BASE_H_INCLUDED*/

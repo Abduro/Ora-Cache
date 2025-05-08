@@ -500,14 +500,48 @@ CAnchor::~CAnchor (void) {}
 
 CAnchor&  CAnchor::operator = (const CAnchor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CAnchor&  CAnchor::operator = (CAnchor&& _victim) { (TBase&)*this = (TBase&&)_victim; return *this; }
+CAnchor&  CAnchor::operator <<(const t_rect& _rect) {this->X(_rect.left); this->Y(_rect.right); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
-#if (0)
-CPosition:: CPosition (void) { this->Clear(); }
+#if (1)
+CPosition:: CPosition (void) {}
 CPosition:: CPosition (const CPosition& _src) : CPosition() { *this = _src; }
 #endif
 /////////////////////////////////////////////////////////////////////////////
+const
+CAnchor&    CPosition::Anchor (void) const { return this->m_anchor; }
+CAnchor&    CPosition::Anchor (void)       { return this->m_anchor; }
+#if defined (_DEBUG)
+CString     CPosition::Print  (const e_print e_opt) const {
+	e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{anchor=%s;size=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{anchor=%s;size=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{anchor=%s;size=%s}");
+
+	CString cs_anchor = this->Anchor().Print(e_print::e_req);
+	CString cs_size_u = this->Size().Print(e_print::e_req);
+	CString cs_out;
+
+	if (e_print::e_all   == e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_anchor, (_pc_sz) cs_size_u);
+	}
+	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,(_pc_sz) cs_anchor, (_pc_sz) cs_size_u); }
+	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_anchor, (_pc_sz) cs_size_u); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
+
+	return  cs_out;
+}
+#endif
+const
+CSize_U&    CPosition::Size (void) const { return this->m_size; }
+CSize_U&    CPosition::Size (void)       { return this->m_size; }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CPosition&  CPosition::operator = (const CPosition& _src) { *this << _src.Anchor() << _src.Size(); return *this; }
+CPosition&  CPosition::operator <<(const CAnchor& _anchor) { this->Anchor() = _anchor; return *this; }
+CPosition&  CPosition::operator <<(const CSize_U& _size_u) { this->Size() = _size_u; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
