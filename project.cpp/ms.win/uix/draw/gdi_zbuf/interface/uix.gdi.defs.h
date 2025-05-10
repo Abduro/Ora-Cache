@@ -12,6 +12,9 @@
 #include "atlapp.h"         // wtl::App is required for working CDC;
 #include "atlgdi.h"         // wtl::CDC;
 
+#include <map>
+#include "color.alpha.h"
+#include "color.rgb.h"
 #include "shared.types.h"
 #include "sys.error.h"
 
@@ -23,6 +26,8 @@
 namespace ex_ui { namespace draw { namespace defs {
 
 	using namespace shared::types;
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
 
 	interface IExclusion {
 		virtual   err_code   Add  (const t_rect&)        { return __e_not_impl; }
