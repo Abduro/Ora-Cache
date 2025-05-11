@@ -10,6 +10,7 @@
 
 #include "uix.gdi.defs.h"
 #include "uix.gdi.blend.h"
+#include "uix.gdi.shade.h"
 #include "uix.gdi.object.h"
 #include "uix.gdi.zbuf.h"
 
@@ -25,8 +26,41 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 	using TError  = const CError;
 	using TString = TStringEx   ;
 
-#pragma region __blend
-	using TVertex = ex_ui::draw::blend::CVertex;
+#pragma region __shade
+
+	using TRectMesh = ex_ui::draw::shade::CRectMesh;
+
+	__class(CRectMesh) {
+	public:
+		 CRectMesh (const bool _b_verb = false);
+		~CRectMesh (void) = default;
+
+	public:
+		__method (_ctor);
+		__method (Set);
+
+	private:
+		bool m_b_verb;
+		TRectMesh  m_mesh;
+	};
+
+	using TTriMesh = ex_ui::draw::shade::CTriMesh;
+
+	__class(CTriMesh) {
+	public:
+		 CTriMesh (const bool _b_verb = false);
+		~CTriMesh (void) = default;
+
+	public:
+		__method (_ctor);
+		__method (Set);
+
+	private:
+		bool m_b_verb;
+		TTriMesh  m_mesh;
+	};
+
+	using TVertex = ex_ui::draw::shade::CVertex;
 
 	__class(CVertex) {
 	public:
@@ -39,38 +73,6 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 	private:
 		bool m_b_verb;
 		TVertex  m_vertex;
-	};
-
-	using TRectGrad = ex_ui::draw::blend::CRectGrad;
-
-	__class(CRectGrad) {
-	public:
-		 CRectGrad (const bool _b_verb = false);
-		~CRectGrad (void) = default;
-
-	public:
-		__method (_ctor);
-		__method (Set);
-
-	private:
-		bool m_b_verb;
-		TRectGrad  m_grad;
-	};
-
-	using TTriaGrad = ex_ui::draw::blend::CTriaGrad;
-
-	__class(CTriaGrad) {
-	public:
-		 CTriaGrad (const bool _b_verb = false);
-		~CTriaGrad (void) = default;
-
-	public:
-		__method (_ctor);
-		__method (Set);
-
-	private:
-		bool m_b_verb;
-		TTriaGrad  m_grad;
 	};
 
 #pragma endregion

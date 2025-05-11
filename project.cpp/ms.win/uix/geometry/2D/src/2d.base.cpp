@@ -500,6 +500,7 @@ CAnchor::~CAnchor (void) {}
 
 CAnchor&  CAnchor::operator = (const CAnchor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CAnchor&  CAnchor::operator = (CAnchor&& _victim) { (TBase&)*this = (TBase&&)_victim; return *this; }
+CAnchor&  CAnchor::operator <<(const t_point& _pt ) { this->X(_pt.x); this->Y(_pt.y); return *this; }
 CAnchor&  CAnchor::operator <<(const t_rect& _rect) {this->X(_rect.left); this->Y(_rect.right); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -542,6 +543,13 @@ CSize_U&    CPosition::Size (void)       { return this->m_size; }
 
 CPosition&  CPosition::operator = (const CPosition& _src) { *this << _src.Anchor() << _src.Size(); return *this; }
 CPosition&  CPosition::operator <<(const CAnchor& _anchor) { this->Anchor() = _anchor; return *this; }
+CPosition&  CPosition::operator <<(const t_point& _pt) { this->Anchor() << _pt; return *this; }
 CPosition&  CPosition::operator <<(const CSize_U& _size_u) { this->Size() = _size_u; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CPosition::operator const t_rect (void) const {
+	return t_rect{
+		this->Anchor().X(), this->Anchor().Y(), this->Anchor().X() + (int32_t)this->Size().W(), this->Anchor().Y() + (int32_t)this->Size().H()
+	};
+}

@@ -183,6 +183,8 @@
     <ClInclude Include="$(_0)uix.gdi.defs.h" />
     <ClInclude Include="$(_0)uix.gdi.object.h" />
     <ClCompile Include="$(_1)uix.gdi.object.cpp" />
+    <ClInclude Include="$(_0)uix.gdi.shade.h" />
+    <ClCompile Include="$(_1)uix.gdi.shade.cpp" />
     <ClInclude Include="$(_0)uix.gdi.zbuf.h" />
     <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" />
   </ItemGroup>

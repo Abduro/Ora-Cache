@@ -324,6 +324,7 @@ namespace geometry { namespace base { namespace _2D {
 	public:
 		CAnchor& operator = (const CAnchor&);
 		CAnchor& operator = (CAnchor&&);
+		CAnchor& operator <<(const t_point&);
 		CAnchor& operator <<(const t_rect&);    // sets: _x = _rect.left; _y = _rect.top;
 	};
 
