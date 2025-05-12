@@ -202,8 +202,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_1)ebo_test_$d$.gdi.zbuf.h" />
-    <ClCompile Include="$(_1)ebo_test_$d$.gdi.zbuf.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.shade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

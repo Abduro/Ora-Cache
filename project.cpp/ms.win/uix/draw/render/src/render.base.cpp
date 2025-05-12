@@ -8,4 +8,4 @@ using namespace ex_ui::draw::render;
 
 /////////////////////////////////////////////////////////////////////////////
 
-void __dummy_2025_03_31 (void) {}
+void __warning_lnk_4221 (void) {}

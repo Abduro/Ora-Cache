@@ -26,61 +26,10 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 	using TError  = const CError;
 	using TString = TStringEx   ;
 
-#pragma region __shade
-
-	using TRectMesh = ex_ui::draw::shade::CRectMesh;
-
-	__class(CRectMesh) {
-	public:
-		 CRectMesh (const bool _b_verb = false);
-		~CRectMesh (void) = default;
-
-	public:
-		__method (_ctor);
-		__method (Set);
-
-	private:
-		bool m_b_verb;
-		TRectMesh  m_mesh;
-	};
-
-	using TTriMesh = ex_ui::draw::shade::CTriMesh;
-
-	__class(CTriMesh) {
-	public:
-		 CTriMesh (const bool _b_verb = false);
-		~CTriMesh (void) = default;
-
-	public:
-		__method (_ctor);
-		__method (Set);
-
-	private:
-		bool m_b_verb;
-		TTriMesh  m_mesh;
-	};
-
-	using TVertex = ex_ui::draw::shade::CVertex;
-
-	__class(CVertex) {
-	public:
-		 CVertex (const bool _b_verb = false);
-		~CVertex (void) = default;
-
-	public:
-		__method (_ctor);
-
-	private:
-		bool m_b_verb;
-		TVertex  m_vertex;
-	};
-
-#pragma endregion
-
 }}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
-#pragma comment(lib, "gdi.zbuf_v15.lib")       // this one must be tested by this unit test project;
+#pragma comment(lib, "gdi.zbuf_v15.lib")     // this one must be tested by this unit test project;
 #pragma comment(lib, "sys.err.core_v15.lib") // for using error object;
 #pragma comment(lib, "sys.shared_v15.lib")   // this is the shared base;
 

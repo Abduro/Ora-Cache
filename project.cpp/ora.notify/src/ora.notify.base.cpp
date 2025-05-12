@@ -8,6 +8,6 @@ using namespace ora::notify;
 
 namespace ora { namespace notify { namespace _impl {
 
-	void __dummy_2025_03_15_22_29_36(void) {}
+	void __warning_lnk_4221(void) {}
 
 }}}

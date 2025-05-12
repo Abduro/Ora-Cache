@@ -21,4 +21,4 @@ namespace shared { namespace types {
 	}
 }}
 #endif
-void _dummy_2025_02_05_11_57_04_u4 (void) {}
+void __warning_lnk_4221 (void) {}

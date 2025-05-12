@@ -8,7 +8,7 @@ using namespace ex_ui::draw::direct_x;
 
 /////////////////////////////////////////////////////////////////////////////
 // warning LNK4221: This object file does not define any previously undefined public symbols ;
-void _dummy_2025_04_03_16_31_42_u4 (void) {}
+void __warning_lnk_4221 (void) {}
 
 #if defined(_DEBUG)
 CString  CDrv_Type::Print (const uint32_t _n_type) {

@@ -1,8 +1,8 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 10-May-2025 at 13:19:23.132, UTC+4, Batumi, Saturday;
-	This is Ebo Pack WinAPI GDI in-memory draw renderer lib unit test interface implementation file; 
+	Created by Tech_dog (ebontrop@gmail.com) on 12-May-2025 at 09:04:39.378, UTC+4, Batumi, Monday;
+	This is Ebo Pack WinAPI GDI in-memory draw shade renderer lib unit test interface implementation file;
 */
-#include "ebo_test_$d$.gdi.zbuf.h"
+#include "ebo_test_$d$.zbuf.shade.h"
 
 using namespace ebo::boo::test::draw;
 
@@ -57,6 +57,38 @@ void CTriMesh::Set (void) {
 	this->m_mesh.Raw().Vertex3 = 2;
 
 	_out() += TStringEx().Format(_T("*after set*:%s"), (_pc_sz) this->m_mesh.Print(e_print::e_all));
+	_out()();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+CShader:: CShader (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CShader::_ctor (void) {
+
+	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out()();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+CRectShader:: CRectShader (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CRectShader::_ctor (void) {
+
+	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
 	_out()();
 }
 

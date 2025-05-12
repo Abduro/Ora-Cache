@@ -9,7 +9,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_1)ebo_test_$d$.gdi.zbuf.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)ebo_test_$d$.gdi.zbuf.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.shade.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

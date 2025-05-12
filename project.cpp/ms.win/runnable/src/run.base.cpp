@@ -8,4 +8,4 @@ using namespace shared::runnable;
 
 /////////////////////////////////////////////////////////////////////////////
 
-void __dummy_2024_12_3_16_15_47 (void) {}
+void __warning_lnk_4221 (void) {}

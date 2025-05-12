@@ -8,13 +8,15 @@
 
 namespace ex_ui { namespace draw { namespace shade {
 
+	// https://en.cppreference.com/w/cpp/language/integer_literal ;
+	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;
+
 	// https://en.wikipedia.org/wiki/List_of_mathematical_abbreviations   ;
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/smooth-shading ;
 
 	using namespace ex_ui::draw::defs;
 	
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-gradient_rect ;
-	// https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-a-shaded-rectangle << sample;
 
 	typedef GRADIENT_RECT TRectMesh;
 	typedef ::std::vector<TRectMesh> TRectMeshes;  // this is a set of raw meshes for filling by gradient;
@@ -23,8 +25,7 @@ namespace ex_ui { namespace draw { namespace shade {
 	public:
 		 CRectMesh (const uint32_t _left_top = 0, const uint32_t _right_bottom = 0);
 		 CRectMesh (const CRectMesh&);
-		 CRectMesh (const TRectMesh&);
-		 CRectMesh (CRectMesh&&) = delete;
+		 CRectMesh (const TRectMesh&); CRectMesh (CRectMesh&&);
 		~CRectMesh (void);
 
 	public:
@@ -45,7 +46,7 @@ namespace ex_ui { namespace draw { namespace shade {
 
 	public:
 		CRectMesh& operator = (const CRectMesh&);
-		CRectMesh& operator = (CRectMesh&&) = delete;
+		CRectMesh& operator = (CRectMesh&&);
 		CRectMesh& operator <<(const TRectMesh&);
 		CRectMesh& operator <<(const uint32_t _n_left_top);
 		CRectMesh& operator >>(const uint32_t _n_right_bottom);
@@ -60,8 +61,6 @@ namespace ex_ui { namespace draw { namespace shade {
 	typedef ::std::vector<CRectMesh> TRectMeshSet;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-gradient_triangle ;
-	// https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-a-shaded-triangle << sample;
-
 	// https://www.allacronyms.com/triangle/abbreviated ;
 
 	typedef GRADIENT_TRIANGLE TTriMesh;
@@ -77,7 +76,7 @@ namespace ex_ui { namespace draw { namespace shade {
 
 	public:
 		 CTriMesh (void);
-		 CTriMesh (const CTriMesh&); CTriMesh (CTriMesh&&) = delete;
+		 CTriMesh (const CTriMesh&); CTriMesh (CTriMesh&&);
 		 CTriMesh (const TTriMesh&);
 		~CTriMesh (void);
 
@@ -93,7 +92,7 @@ namespace ex_ui { namespace draw { namespace shade {
 
 	public:
 		CTriMesh&  operator = (const CTriMesh&);
-		CTriMesh&  operator = (CTriMesh&&) = delete;
+		CTriMesh&  operator = (CTriMesh&&);
 		CTriMesh&  operator <<(const TTriMesh&);
 
 	private:
@@ -109,7 +108,7 @@ namespace ex_ui { namespace draw { namespace shade {
 	// this is a vertex structure wrapper class;
 	class CVertex {
 	public:
-		 CVertex (void); CVertex (const CVertex&); CVertex (CVertex&&) = delete;
+		 CVertex (void); CVertex (const CVertex&); CVertex (CVertex&&);
 		~CVertex (void);
 
 	public:
@@ -135,38 +134,61 @@ namespace ex_ui { namespace draw { namespace shade {
 
 	public:
 		CVertex&  operator = (const CVertex&);
-		CVertex&  operator = (CVertex&&) = delete;
+		CVertex&  operator = (CVertex&&);
 
 	private:
 		TVertex m_vertex;
 	};
 
 	typedef ::std::vector<CVertex> TVertexSet;
+	// this is the base shader class declaration;
+	class CShader {
+	public:
+		static const uint32_t _n_vert_max = 1000ul; // this is the maximum nameber of vertices for this time;
+	public:
+		 CShader (const uint32_t _n_vert_count = 0); CShader (const CShader&) = delete; CShader (CShader&&) = delete;
+		~CShader (void) = default;
+	public:
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
+		TVertices     RawVertices (void) const;
+		const
+		TVertexSet&   Vertices (void) const;
+		TVertexSet&   Vertices (void) ;
 
-	class CRectShader {
+	protected:
+		TVertexSet    m_vertices;
+
+	private:
+		CShader& operator = (const CShader&) = delete;
+		CShader& operator = (CShader&&) = delete;
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-a-shaded-rectangle << sample;
+
+	class CRectShader : public CShader { typedef CShader TBase;
 	public:
 		enum e_mode : uint32_t {
-		e_horz = GRADIENT_FILL_RECT_H,
-		e_vert = GRADIENT_FILL_RECT_V,
+		     e_horz = GRADIENT_FILL_RECT_H,
+		     e_vert = GRADIENT_FILL_RECT_V,
 		};
 	public:
 		 CRectShader (void); CRectShader (const CRectShader&) = delete; CRectShader (CRectShader&&) = delete;
 		~CRectShader (void);
 
 	public:
+		void  Default(void); // adds 1 (one) mesh and 2 (two) vertices; if there are already defined objects, it removes them;
 		const
 		TRectMeshSet& Meshes (void) const;
 		TRectMeshSet& Meshes (void) ;
 
-		e_mode Mode (void) const;
-		bool   Mode (const e_mode);  // returns 'true' in case of mode change;
-
+		e_mode  Mode (void) const;
+		bool    Mode (const e_mode);  // returns 'true' in case of mode change;
+#if defined(_DEBUG)
+		CString Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
 		TRectMeshes   RawMeshes (void) const;
-		TVertices     RawVertices (void) const;
-
-		const
-		TVertexSet&   Vertices (void) const;
-		TVertexSet&   Vertices (void) ;
 
 	private:
 		CRectShader&  operator = (const CRectShader&) = delete;
@@ -174,9 +196,40 @@ namespace ex_ui { namespace draw { namespace shade {
 
 	private:
 		TRectMeshSet  m_meshes;
-		TVertexSet    m_vertices;
 		e_mode m_mode;
 	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-a-shaded-triangle << sample;
+
+	class CTriShader : public CShader { typedef CShader TBase;
+	public:
+		enum e_mode : uint32_t {
+		     e_triangle = GRADIENT_FILL_TRIANGLE, // the only available mode;
+		};
+	public:
+		 CTriShader (void); CTriShader (const CTriShader&) = delete; CTriShader (CTriShader&&) = delete;
+		~CTriShader (void);
+
+	public:
+		void  Default(void); // adds 1 (one) mesh and 3 (three) vertices; if there are already defined objects, it removes them;
+		const
+		TTriMeshSet&  Meshes (void) const;
+		TTriMeshSet&  Meshes (void) ;
+
+		e_mode Mode (void) const;
+		bool   Mode (const e_mode);  // returns 'true' in case of mode change; but there is only one mode availanle though;
+
+		TTriMeshes    RawMeshes (void) const;
+
+	private:
+		CTriShader&   operator = (const CTriShader&) = delete;
+		CTriShader&   operator = (CTriShader&&) = delete;
+
+	private:
+		TTriMeshSet   m_meshes;
+		e_mode m_mode;
+	};
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gradientfill ;
 
 	class CRenderer {
@@ -187,6 +240,7 @@ namespace ex_ui { namespace draw { namespace shade {
 	public:
 		TError&  Error(void) const;
 		err_code Draw (const HDC, const CRectShader&);
+		err_code Draw (const HDC, const CTriShader&);
 
 	private:
 		CRenderer&  operator = (const CRenderer&) = delete;
