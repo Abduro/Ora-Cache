@@ -57,11 +57,11 @@ namespace ex_ui { namespace color {
 		bool  Is_equal (const int32_t, const uint8_t _n_digits = CPercent_F::n_max_digits) const;
 
 #if defined(_DEBUG)
-		enum e_print {
+		enum e_print_f {
 		     e_as_is  = 0, // outputs out the percent value as float number, i.e. as is;
 		     e_as_int = 1, // outputs the percentage value as an integer, which can be rounded up or down;
 		};
-		CString  Print (const CPercent_F::e_print = CPercent_F::e_print::e_as_is) const;
+		CString  Print (const e_print_f = e_print_f::e_as_is, const e_print = e_print::e_no_ns) const;
 #endif
 	public:
 		CPercent_F&  operator = (const CPercent_F&);

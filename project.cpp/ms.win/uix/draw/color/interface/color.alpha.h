@@ -26,7 +26,8 @@ namespace ex_ui { namespace color { namespace rgb {
 			static rgb_value Get (const uint8_t _percent); // gets a value of transparency for input value of color light intensity percent;
 		};
 #if defined(_DEBUG)
-		static CString Print (const TPercent& _percent);   // prints alpha/transparency value for given input percent; 
+		static CString Print (const TPercent& _percent);   // prints alpha/transparency value for given input percent;
+		static CString Print (const rgb_value, const e_print = e_print::e_all);
 #endif
 	};
 

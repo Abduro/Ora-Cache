@@ -29,6 +29,7 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 	};
 
 	using TTriMesh = ex_ui::draw::shade::CTriMesh;
+	using TCorners = ex_ui::draw::shade::CTriMesh::e_corner;
 
 	__class(CTriMesh) {
 	public:
@@ -67,11 +68,28 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 		~CRectShader (void) = default;
 
 	public:
-		__method (_ctor);
+		__method (Set);
+		__method (Validate);
 
 	private:
 		bool m_b_verb;
 		TRectShader  m_shader;
+	};
+
+	using TTriShader = ex_ui::draw::shade::CTriShader;
+
+	__class(CTriShader) {
+	public:
+		 CTriShader (const bool _b_verb = false);
+		~CTriShader (void) = default;
+
+	public:
+		__method (Set);
+		__method (Validate);
+
+	private:
+		bool m_b_verb;
+		TTriShader  m_shader;
 	};
 
 	using TVertex = ex_ui::draw::shade::CVertex;

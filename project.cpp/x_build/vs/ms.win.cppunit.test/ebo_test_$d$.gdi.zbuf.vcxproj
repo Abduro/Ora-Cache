@@ -204,6 +204,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.blend.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.blend.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.shade.cpp" />
   </ItemGroup>

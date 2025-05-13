@@ -82,16 +82,16 @@ bool    CPercent_F::Is_equal (const int32_t _n_value, const uint8_t _n_digits) c
 }
 
 #if defined(_DEBUG)
-CString CPercent_F::Print (const CPercent_F::e_print e_opt) const {
-	e_opt;
-	static _pc_sz pc_sz_pat = _T("cls::[%s]>>{value=%s%%}");
+CString CPercent_F::Print (const e_print_f _e_opt_f, const e_print) const {
+	_e_opt_f;
+	static _pc_sz pc_sz_pat_ns = _T("cls::[%s]>>{value=%s%%}");
 
 	CString cs_out;
-	if (e_print::e_as_is == e_opt) cs_out.Format(pc_sz_pat, (_pc_sz)__CLASS__, TStringEx().Float(this->Get()));
-	if (e_print::e_as_int == e_opt) cs_out.Format(pc_sz_pat, (_pc_sz)__CLASS__, TStringEx().Long(this->GetAsInt()));
+	if (e_print_f::e_as_is  == _e_opt_f) cs_out.Format(pc_sz_pat_ns, (_pc_sz)__CLASS__, TStringEx().Float(this->Get()));
+	if (e_print_f::e_as_int == _e_opt_f) cs_out.Format(pc_sz_pat_ns, (_pc_sz)__CLASS__, TStringEx().Long(this->GetAsInt()));
 
 	if (cs_out.IsEmpty())
-		cs_out.Format(pc_sz_pat, (_pc_sz)__CLASS__, _T("#undef"));
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt_f);
 
 	return  cs_out;
 }

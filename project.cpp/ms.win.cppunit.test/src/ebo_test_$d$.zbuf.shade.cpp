@@ -86,9 +86,61 @@ CRectShader:: CRectShader (const bool _b_verb) : m_b_verb(_b_verb) {
 	}
 }
 
-void CRectShader::_ctor (void) {
+void CRectShader::Set (void) {
+	_out() += TStringEx().Format(_T("*before* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
 
-	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	this->m_shader.Default();
+
+	_out() += TStringEx().Format(_T("*after* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out()();
+}
+
+void CRectShader::Validate (void) {
+
+	this->m_shader.Default();
+
+	_out() += TStringEx().Format(_T("*befor* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("*result*: is_valid=%s"), TStringEx().Bool(this->m_shader.Is_valid()));
+
+	if (this->m_shader.Meshes().empty() == false)
+		this->m_shader.Meshes()[0].RightBottom(3);
+
+	_out() += TStringEx().Format(_T("*after* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("*result*: is_valid=%s"), TStringEx().Bool(this->m_shader.Is_valid()));
+	_out()();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+CTriShader:: CTriShader (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CTriShader::Set (void) {
+	_out() += TStringEx().Format(_T("*before* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+
+	this->m_shader.Default();
+
+	_out() += TStringEx().Format(_T("*after* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out()();
+}
+
+void CTriShader::Validate (void) {
+
+	this->m_shader.Default();
+
+	_out() += TStringEx().Format(_T("*befor* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("*result*: is_valid=%s"), TStringEx().Bool(this->m_shader.Is_valid()));
+
+	if (this->m_shader.Meshes().empty() == false)
+		this->m_shader.Meshes()[0].Index(TCorners::e_vert_b, 3);
+
+	_out() += TStringEx().Format(_T("*after* set:%s"), (_pc_sz) this->m_shader.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("*result*: is_valid=%s"), TStringEx().Bool(this->m_shader.Is_valid()));
 	_out()();
 }
 

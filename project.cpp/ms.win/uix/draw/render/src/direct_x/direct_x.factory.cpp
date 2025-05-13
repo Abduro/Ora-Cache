@@ -8,4 +8,4 @@ using namespace ex_ui::draw::direct_x;
 
 /////////////////////////////////////////////////////////////////////////////
 // warning LNK4221: This object file does not define any previously undefined public symbols;
-void __warning_lnk_4221 (void) {}
+void __warning_lnk_4221 (const bool _b_dummy) { _b_dummy; }

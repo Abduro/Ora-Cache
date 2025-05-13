@@ -28,6 +28,10 @@ CRectMesh::~CRectMesh (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+bool       CRectMesh::In_range(const uint32_t _n_max) const {
+	return (this->LeftTop() < _n_max && this->RightBottom() < _n_max);
+}
+
 uint32_t   CRectMesh::LeftTop (void) const { return this->Raw().UpperLeft; }
 bool       CRectMesh::LeftTop (const uint32_t _n_ndx) {
 	const bool b_changed = this->LeftTop() != _n_ndx;
@@ -103,6 +107,12 @@ CTriMesh:: CTriMesh (CTriMesh&& _victim) : CTriMesh() { *this = _victim; }
 CTriMesh::~CTriMesh (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool       CTriMesh::In_range (const uint32_t _n_max) const {
+	return (this->Index(e_corner::e_vert_a) < _n_max
+			&& this->Index(e_corner::e_vert_b) < _n_max
+				&& this->Index(e_corner::e_vert_c) < _n_max);
+}
 
 uint32_t   CTriMesh::Index (const e_corner _n_vertex) const {
 	switch (_n_vertex) {
@@ -314,7 +324,9 @@ CRectShader::~CRectShader (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-void  CRectShader::Default(void) {
+err_code  CRectShader::Default (void) {
+
+	err_code n_result = __s_ok;
 	
 	if (this->Meshes().empty() == false) this->Meshes().clear();
 	if (TBase::Vertices().empty() == false) TBase::Vertices().clear();
@@ -325,8 +337,24 @@ void  CRectShader::Default(void) {
 
 		this->Meshes().push_back(CRectMesh(0, 1));
 
-	} catch (const ::std::bad_alloc&) {}
+	} catch (const ::std::bad_alloc&) { n_result = __e_no_memory; }
 
+	return n_result;
+}
+
+bool  CRectShader::Is_valid (void) const {
+
+	bool b_valid = true;
+
+	for (size_t i_ = 0; i_ < this->Meshes().size(); i_++) {
+
+		const CRectMesh& mesh = this->Meshes().at(i_);
+		b_valid = mesh.In_range((uint32_t)this->Vertices().size());
+
+		if (!b_valid)
+			break;
+	}
+	return b_valid;
 }
 
 const
@@ -346,7 +374,7 @@ bool    CRectShader::Mode (const e_mode _mode) {
 #if defined(_DEBUG)
 CString CRectShader::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%smeshes={%s%s%s}%s;%s%smode=%s}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%smeshes={%s%s%s}%s;%s%smode=%s;in_range=%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%smeshes={%s%s%s}}");
 	static _pc_sz pc_sz_pat_r = _T("{%s%smeshes={%s%s%s}}");
 
@@ -354,10 +382,10 @@ CString CRectShader::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 
 	for (size_t i_ = 0; i_ < this->Meshes().size(); i_++) {
 		const CRectMesh& mesh = this->Meshes().at(i_);
-		if (cs_meshes.IsEmpty() == false) {
+	//	if (cs_meshes.IsEmpty() == false) {
 			cs_meshes += _p_sfx;
 			cs_meshes += _p_pfx;
-		}
+	//	}
 		cs_meshes += mesh.Print(e_print::e_req);
 	}
 	if (cs_meshes.IsEmpty()) {
@@ -370,6 +398,7 @@ CString CRectShader::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 	if (e_mode::e_horz == this->Mode()) cs_mode = TStringEx().Format(_T("%d(horizontal)"), this->Mode());
 	if (e_mode::e_vert == this->Mode()) cs_mode = TStringEx().Format(_T("%d(vertical)"), this->Mode());
 
+	CString cs_in_range = TStringEx().Bool(this->Is_valid());
 	CString cs_vertices = TBase::Print(e_print::e_req);
 	CString cs_out;
 	
@@ -377,7 +406,7 @@ CString CRectShader::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
 			_p_sfx, _p_pfx, (_pc_sz)cs_meshes,
 			_p_sfx, _p_pfx, (_pc_sz)cs_vertices,
-			_p_sfx, _p_pfx, (_pc_sz)cs_mode);
+			_p_sfx, _p_pfx, (_pc_sz)cs_mode, (_pc_sz)cs_in_range);
 	}
 	if (e_print::e_no_ns == _e_opt) {
 		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
@@ -395,7 +424,7 @@ CString CRectShader::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 }
 #endif
 
-TRectMeshes   CRectShader::RawMeshes (void) const {
+TRectMeshes  CRectShader::RawMeshes (void) const {
 	TRectMeshes meshes;
 	for (size_t i_ = 0; i_ < this->Meshes().size(); i_++) {
 	}
@@ -411,7 +440,9 @@ CTriShader::~CTriShader (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-void  CTriShader::Default(void) {
+err_code   CTriShader::Default(void) {
+
+	err_code n_result = __s_ok;
 
 	if (this->Meshes().empty() == false) this->Meshes().clear();
 	if (TBase::Vertices().empty() == false) TBase::Vertices().clear();
@@ -428,8 +459,23 @@ void  CTriShader::Default(void) {
 
 		this->Meshes().push_back(mesh);
 
-	} catch (const ::std::bad_alloc&) {}
+	} catch (const ::std::bad_alloc&) { n_result = __e_no_memory; }
+	return n_result;
+}
 
+bool  CTriShader::Is_valid (void) const {
+
+	bool b_valid = true;
+
+	for (size_t i_ = 0; i_ < this->Meshes().size(); i_++) {
+
+		const CTriMesh& mesh = this->Meshes().at(i_);
+		b_valid = mesh.In_range((uint32_t)this->Vertices().size());
+
+		if (!b_valid)
+			break;
+	}
+	return b_valid;
 }
 
 const
@@ -445,6 +491,59 @@ bool    CTriShader::Mode (const e_mode _mode) {
 
 	return b_changed;
 }
+
+#if defined(_DEBUG)
+CString CTriShader::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%smeshes={%s%s%s}%s;%s%smode=%s;in_range=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%smeshes={%s%s%s}}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%smeshes={%s%s%s}}");
+
+	CString cs_meshes;
+
+	for (size_t i_ = 0; i_ < this->Meshes().size(); i_++) {
+		const CTriMesh& mesh = this->Meshes().at(i_);
+	//	if (cs_meshes.IsEmpty() == false) {
+		cs_meshes += _p_sfx;
+		cs_meshes += _p_pfx;
+	//	}
+		cs_meshes += mesh.Print(e_print::e_req);
+	}
+	if (cs_meshes.IsEmpty()) {
+		cs_meshes += _p_sfx;
+		cs_meshes += _p_pfx;
+		cs_meshes += _T("#not_set");
+	}
+
+	CString cs_mode;
+	if (e_mode::e_triangle == this->Mode()) cs_mode = TStringEx().Format(_T("%d(triangle)"), this->Mode());
+	else cs_mode = _T("#undef");
+
+	CString cs_in_range = TStringEx().Bool(this->Is_valid());
+	CString cs_vertices = TBase::Print(e_print::e_req);
+	CString cs_out;
+
+	if (e_print::e_all == _e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+			_p_sfx, _p_pfx, (_pc_sz)cs_meshes,
+			_p_sfx, _p_pfx, (_pc_sz)cs_vertices,
+			_p_sfx, _p_pfx, (_pc_sz)cs_mode, (_pc_sz)cs_in_range);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+			_p_sfx, _p_pfx, (_pc_sz)cs_meshes,
+			_p_sfx, _p_pfx);
+	}
+	if (e_print::e_req == _e_opt) {
+		cs_out.Format(pc_sz_pat_r,
+			_p_sfx, _p_pfx, (_pc_sz)cs_meshes,
+			_p_sfx, _p_pfx);
+	}
+	if (true == cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 
 TTriMeshes   CTriShader::RawMeshes (void) const {
 	TTriMeshes meshes;
@@ -475,6 +574,8 @@ err_code CRenderer::Draw (const HDC _hdc, const CRectShader& _shader) {
 		return this->m_error << __e_inv_arg = _T("No meshes;");
 	if (vertices.empty())
 		return this->m_error << __e_inv_arg = _T("No vertex;");
+	if (_shader.Is_valid() == false)
+		return this->m_error << __e_inv_arg = _T("Mesh indices are out of range;");
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gradientfill ;
 	if (!::GradientFill(
 		_hdc, vertices.data(), (uint32_t)vertices.size(), meshes.data(), (uint32_t)meshes.size(), _shader.Mode()
@@ -496,6 +597,8 @@ err_code CRenderer::Draw (const HDC _hdc, const CTriShader& _shader) {
 		return this->m_error << __e_inv_arg = _T("No meshes;");
 	if (vertices.empty())
 		return this->m_error << __e_inv_arg = _T("No vertex;");
+	if (_shader.Is_valid() == false)
+		return this->m_error << __e_inv_arg = _T("Mesh indices are out of range;");
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gradientfill ;
 	if (!::GradientFill(
 		_hdc, vertices.data(), (uint32_t)vertices.size(), meshes.data(), (uint32_t)meshes.size(), _shader.Mode()

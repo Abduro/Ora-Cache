@@ -29,6 +29,7 @@ namespace ex_ui { namespace draw { namespace shade {
 		~CRectMesh (void);
 
 	public:
+		bool       In_range(const uint32_t _n_max) const;   // checks mesh indices for being in range specified;
 		uint32_t   LeftTop (void) const;
 		bool       LeftTop (const uint32_t);
 		uint32_t   RightBottom (void) const;
@@ -81,6 +82,7 @@ namespace ex_ui { namespace draw { namespace shade {
 		~CTriMesh (void);
 
 	public:
+		bool       In_range (const uint32_t _n_max) const;          // checks mesh indices for being in range specified;
 		uint32_t   Index (const e_corner) const;                    // if input argument value is out of range, the first one value is returned;
 		const bool Index (const e_corner, const uint32_t _n_value); // returns 'true' in case of index value is changed;
 #if defined(_DEBUG)
@@ -178,7 +180,8 @@ namespace ex_ui { namespace draw { namespace shade {
 		~CRectShader (void);
 
 	public:
-		void  Default(void); // adds 1 (one) mesh and 2 (two) vertices; if there are already defined objects, it removes them;
+		err_code  Default (void); // adds 1 (one) mesh and 2 (two) vertices; if there are already defined objects, it removes them;
+		bool      Is_valid (void) const ; // checks indices of meshes are not out of vertex set range;
 		const
 		TRectMeshSet& Meshes (void) const;
 		TRectMeshSet& Meshes (void) ;
@@ -211,14 +214,17 @@ namespace ex_ui { namespace draw { namespace shade {
 		~CTriShader (void);
 
 	public:
-		void  Default(void); // adds 1 (one) mesh and 3 (three) vertices; if there are already defined objects, it removes them;
+		err_code  Default (void); // adds 1 (one) mesh and 3 (three) vertices; if there are already defined objects, it removes them;
+		bool      Is_valid (void) const ; // checks indices of meshes are not out of vertex set range;
 		const
 		TTriMeshSet&  Meshes (void) const;
 		TTriMeshSet&  Meshes (void) ;
 
-		e_mode Mode (void) const;
-		bool   Mode (const e_mode);  // returns 'true' in case of mode change; but there is only one mode availanle though;
-
+		e_mode  Mode (void) const;
+		bool    Mode (const e_mode);  // returns 'true' in case of mode change; but there is only one mode availanle though;
+#if defined(_DEBUG)
+		CString Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
 		TTriMeshes    RawMeshes (void) const;
 
 	private:
