@@ -107,66 +107,82 @@ bool CBitmapInfo::IsValid(const HBITMAP _handle) {  return(_handle != NULL && OB
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDibSection:: CDibSection(void) { this->Reset(); }
-CDibSection:: CDibSection(const HDC hDC, const SIZE& sz) : CDibSection() { this->Create(hDC, sz); }
-CDibSection::~CDibSection(void) { if (this->Is()) { this->Destroy(); } }
+CDibSection:: CDibSection (void) {
+	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
+	this->Reset();
+}
+CDibSection:: CDibSection (const CDibSection& _src) : CDibSection() { *this = _src; }
+CDibSection:: CDibSection (const HDC hDC, const SIZE& sz) : CDibSection() { this->Create(hDC, sz); }
+CDibSection::~CDibSection (void) { if (this->Is()) { this->Destroy(); } }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDibSection::Create (const HDC hDC, const SIZE& sz) { HRESULT hr_ = S_OK;
-	if (NULL == hDC)
-		return (hr_ = __DwordToHresult(ERROR_INVALID_HANDLE));
+err_code CDibSection::Create (const HDC hDC, const SIZE& sz) {
+
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == hDC)
+		return this->m_error << (err_code) TErrCodes::eObject::eHandle;
 
 	if (1 > sz.cx || 1 > sz.cy)
-		return (hr_ = E_INVALIDARG);
+		return this->m_error << __e_inv_arg;
 
 	if (this->Is())
-		hr_ = this->Destroy();
-	if (FAILED(hr_))
-		return hr_;
+		this->Destroy();
+
+	if (this->Error())
+		return this->Error();
 
 	m_size = sz;
 
 	BITMAPINFO bi = {{sizeof(BITMAPINFOHEADER), sz.cx, sz.cy, 1, (WORD)32, BI_RGB, 0, 0, 0, 0, 0}, 0, 0, 0, 0};
 
 	m_handle = ::CreateDIBSection(hDC, &bi, DIB_RGB_COLORS, (void**)(&m_pData), NULL, 0);
-	if (NULL == m_handle) {
-		hr_ = __LastErrToHresult();
+	if (nullptr == m_handle) {
+		this->m_error.Last();
 	}
 	
-	return hr_;
+	return this->Error();
 }
 
-HRESULT CDibSection::Destroy(void) { HRESULT hr_ = S_OK;
+err_code CDibSection::Destroy(void) {
+
+	this->m_error << __METHOD__ << __s_ok;
+
 	if (this->Is() == false)
-		return (hr_ = __DwordToHresult(ERROR_INVALID_STATE));
+		return this->m_error << (err_code) TErrCodes::eExecute::eState;
 
 	try {
 		// https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject ;
 		const BOOL b_result = ::DeleteObject((HGDIOBJ)m_handle);
 		if (FALSE == b_result)
-			hr_ = __DwordToHresult(ERROR_INVALID_HANDLE);  // frankly speaking, the handle may be okay, but is still selected by DC at this time;
+			this->m_error.Last();  // frankly speaking, the handle may be okay, but is still selected by DC at this time;
 	}
-	catch (...) { hr_ = E_UNEXPECTED; }
+	catch (...) { this->m_error << __e_not_expect; }
 
-	if (SUCCEEDED(hr_))
+	if (false == this->Error())
 		this->Reset();
 
-	return hr_;
+	return this->Error();
 }
 
-HBITMAP CDibSection::Detach (void) { HBITMAP h_result = m_handle; this->Reset(); return h_result; }
+HBITMAP  CDibSection::Detach (void) { HBITMAP h_result = m_handle; this->Reset(); return h_result; }
 
-HRESULT CDibSection::Reset  (void) { HRESULT hr_ = S_OK;
+err_code CDibSection::Reset  (void) {
+
+	this->m_error << __METHOD__ << __s_ok;
 
 	if (this->Is()) {
-		return (hr_ = __DwordToHresult(ERROR_INVALID_STATE) ); // object still exists; cannot clean the variables;
+		return this->m_error << (err_code) TErrCodes::eExecute::eState; // object still exists; cannot clean the variables;
 	}
-	m_pData   = NULL;
-	m_handle  = NULL;
+
+	m_pData   = nullptr;
+	m_handle  = nullptr;
 	m_size.cx = m_size.cy = 0;
 
-	return hr_;
+	this->m_error << __e_not_inited;
+
+	return __s_ok;
 }
 
 /////////////////////////////////////////////////////////////////////////////

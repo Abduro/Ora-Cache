@@ -14,6 +14,7 @@
     <Gdi_pls Condition="'$(Gdi_pls)'==''">..\..\..\ms.win\uix\draw\gdi_plus\</Gdi_pls>
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ThisLib> <!--This is the target being compiled;-->
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
+    <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
@@ -28,12 +29,11 @@
     <_6>$(Gdi_pls)interface</_6>
     <_7>$(Color)interface\</_7>
     <_8>$(_7)named\</_8>
-    <_8></_8>
-    <_9></_9>
+    <_9>$(Geo-2D)interface\</_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

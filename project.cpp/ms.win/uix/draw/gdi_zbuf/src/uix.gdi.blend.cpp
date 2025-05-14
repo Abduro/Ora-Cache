@@ -3,12 +3,108 @@
 	This is Ebo Pack WinAPI blend function wrapper interface implemetation file;
 */
 #include "uix.gdi.blend.h"
+#include "uix.gdi.zbuf.h"
 
 using namespace ex_ui::draw::blend;
+using namespace ex_ui::draw::memory;
 
 /////////////////////////////////////////////////////////////////////////////
 
-void __warning_lnk_4221 (void) {}
+namespace ex_ui { namespace draw { namespace blend { namespace _impl {
+#if defined(_DEBUG)
+
+	class CInput_Fmt {
+	public:
+		 CInput_Fmt (const CInput& _input) : m_input(_input){} CInput_Fmt (const CInput_Fmt&) = delete; CInput_Fmt (CInput_Fmt&&) = delete;
+		~CInput_Fmt (void) {}
+
+	public:
+		_pc_sz ToString (_pc_sz _sp_name, _pc_sz __cls_name, const e_print _e_opt) {
+			
+			static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {ctx=%s;pos=%s;valid=%s}");
+			static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {ctx=%s;pos=%s;valid=%s}");
+			static _pc_sz pc_sz_pat_r = _T("{ctx=%s;pos=%s;valid=%s}");
+
+			CString cs_ctx = TStringEx().Format(_T("%p"), this->m_input.Ctx());
+			CString cs_pos = this->m_input.Position().Print(e_print::e_req);
+			CString cs_valid = TStringEx().Bool(this->m_input.Is_valid());
+
+			if (e_print::e_all   == _e_opt) {
+				this->m_out.Format(pc_sz_pat_a, _sp_name, __cls_name, (_pc_sz)cs_ctx, (_pc_sz)cs_pos, (_pc_sz)cs_valid);
+			}
+			if (e_print::e_no_ns == _e_opt) {
+				this->m_out.Format(pc_sz_pat_n, __cls_name, (_pc_sz)cs_ctx, (_pc_sz)cs_pos, (_pc_sz)cs_valid);
+			}
+			if (e_print::e_req   == _e_opt) {
+				this->m_out.Format(pc_sz_pat_r, (_pc_sz)cs_ctx, (_pc_sz)cs_pos, (_pc_sz)cs_valid);
+			}
+
+			if (this->m_out.IsEmpty())
+				this->m_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+			
+			return this->m_out.GetString();
+		}
+
+	private:
+		CInput_Fmt& operator = (const CInput_Fmt&) = delete;
+		CInput_Fmt& operator = (CInput_Fmt&&) = delete;
+	private:
+		const
+		CInput& m_input;
+		CString m_out;
+	};
+
+#endif
+}}}}
+using namespace ex_ui::draw::blend::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
+CInput:: CInput (void) : m_h_dc(nullptr) { this->m_error >>__CLASS__ << __METHOD__ << __e_not_inited; }
+
+const HDC  CInput::Ctx (void) const { return this->m_h_dc; }
+const bool CInput::Ctx (const HDC _h_dc) {
+	_h_dc;
+	bool b_result = CZBuffer::Is_DC(_h_dc);
+	if ( b_result == false)
+		return b_result;
+
+	this->m_h_dc = _h_dc;
+
+	return b_result;
+}
+
+TError&  CInput::Error (void) const { return this->m_error; }
+const bool CInput::Is_valid (void) const {
+	this->m_error << __METHOD__ << __s_ok;
+	if (false == CZBuffer::Is_DC(this->Ctx()))
+		return false == (this->m_error << (err_code) TErrCodes::eObject::eHandle = _T("Invalid device context")).Is();
+
+	if (this->Position().Size().Is_zero())
+		return false == (this->m_error << (err_code) TErrCodes::eData::eInvalid = _T("Invalid size")).Is();
+
+	return false == this->Error().Is(); // CError::Is() returns 'true' in case the error occurs and is registered;
+}
+
+const
+CPos&  CInput::Position (void) const { return this->m_pos; }
+CPos&  CInput::Position (void)       { return this->m_pos; }
+
+CIn_Out:: CIn_Out (void) : CInput() {
+	CInput::Position().Anchor().Marker().Set(1, _T("#dest_dev_ctx"), true);
+}
+
+CIn_Src:: CIn_Src (void) : CInput() {
+	CInput::Position().Anchor().Marker().Set(1, _T("#source_dev_ctx"), true);
+}
+
+#if defined(_DEBUG)
+CString  CIn_Out::Print(const e_print _e_opt) const {
+	return CInput_Fmt(*this).ToString((_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _e_opt);
+}
+CString  CIn_Src::Print(const e_print _e_opt) const {
+	return CInput_Fmt(*this).ToString((_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _e_opt);
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +153,26 @@ namespace ex_ui { namespace draw { namespace blend { namespace _impl {
 }}}}
 using namespace ex_ui::draw::blend::_impl;
 /////////////////////////////////////////////////////////////////////////////
-CBlend_Wrap:: CBlend_Wrap (void) : m_bl_fun{0} {}
+
+CBlend_Wrap:: CBlend_Wrap (void) : m_bl_fun{0}, m_bPerPixelAlpha(false) { this->Ref().BlendOp = AC_SRC_OVER; }
+
+bool    CBlend_Wrap::PerPixelAlpha (void) const {
+     return this->m_bPerPixelAlpha;
+}
+
+bool    CBlend_Wrap::PerPixelAlpha (const bool _b_use, const rgb_value _n_alpha) {
+	_b_use; _n_alpha;
+	const bool b_changed = (this->PerPixelAlpha() != _b_use || this->Ref().SourceConstantAlpha != _n_alpha);
+
+	if (b_changed) {
+		this->Ref().SourceConstantAlpha = _b_use ? 0xff : _n_alpha;
+		this->Ref().AlphaFormat = _b_use ? AC_SRC_ALPHA : 0;
+
+		this->m_bPerPixelAlpha  = _b_use;
+	}
+
+	return b_changed;
+}
 
 #if defined(_DEBUG)
 /*

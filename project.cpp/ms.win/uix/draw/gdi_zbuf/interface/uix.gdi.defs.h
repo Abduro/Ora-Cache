@@ -15,6 +15,9 @@
 #include <map>
 #include "color.alpha.h"
 #include "color.rgb.h"
+
+#include "2d.base.h"
+
 #include "shared.types.h"
 #include "sys.error.h"
 

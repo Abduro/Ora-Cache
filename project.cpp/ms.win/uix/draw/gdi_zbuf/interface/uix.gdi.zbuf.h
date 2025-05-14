@@ -5,6 +5,7 @@
 	This is Ebo Pack shared draw library Z-buffer interface declaration file.
 */
 #include "uix.gdi.defs.h"
+#include "uix.gdi.zbuf.h"
 
 namespace ex_ui { namespace draw { namespace memory {
 

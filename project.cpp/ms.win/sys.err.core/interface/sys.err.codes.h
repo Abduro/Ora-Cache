@@ -43,6 +43,9 @@
 #ifndef __e_pointer
 #define __e_pointer E_POINTER
 #endif
+#ifndef __e_not_expect
+#define __e_not_expect E_UNEXPECTED
+#endif
 
 #ifndef __s_ok
 #define __s_ok S_OK

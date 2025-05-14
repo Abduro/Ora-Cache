@@ -355,7 +355,6 @@ namespace geometry { namespace base { namespace _2D {
 		CPosition& operator <<(const t_rect& ); // transfers rectangle to position as follows: anchor={x<<left|y<<top};size={right-left|bottom-top};
 
 		operator const t_rect (void) const;     // transfers position to rectangle as follows: anchor>>left|top;right=left+size.width;bottom=top+size.height;
-		
 
 	private:
 		CAnchor   m_anchor;

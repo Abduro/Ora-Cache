@@ -61,34 +61,37 @@ namespace ex_ui { namespace draw { namespace memory {
 	typedef const PBYTE  PCBYTE;
 	// https://docs.microsoft.com/en-us/windows/win32/gdi/storing-an-image
 	class CDibSection {
-	private :
-		HBITMAP   m_handle;     // encapsulated bitmap descriptor;
-		PBYTE     m_pData ;     // a pointer to bitmap bits;
-		SIZE      m_size  ;     // bitmap size;
-
 	public:
 		 CDibSection (void);
-		 CDibSection (const CDibSection&);
+		 CDibSection (const CDibSection&);  CDibSection (CDibSection&&) = delete;
 		 CDibSection (const HDC, const SIZE&);
 		~CDibSection (void);
 
 	public: // bitmap life cycle;
-		HRESULT   Create  (const HDC, const SIZE&); // creates new bitmap by applying input arguments; the previous data is destroyed if any;
-		HRESULT   Destroy (void)      ;             // returned result is dependent on current state of DC: ERROR_INVALID_HANDLE|ERROR_INVALID_STATE;
+		err_code  Create  (const HDC, const SIZE&); // creates new bitmap by applying input arguments; the previous data is destroyed if any;
+		err_code  Destroy (void)      ;             // returned result is dependent on current state of DC: ERROR_INVALID_HANDLE|ERROR_INVALID_STATE;
 		HBITMAP   Detach  (void)      ;             // detaches from encapsulated bitmap descriptor;
-		HRESULT   Reset   (void)      ;             // clears all variables|no destroying bitmap handle; used in const|detach;
+		err_code  Reset   (void)      ;             // clears all variables|no destroying bitmap handle; used in const|detach;
 
 	public: // bitmap attributes and other;
 		PCBYTE    Bits    (void) const;             // gets bitmap data;
+		TError&   Error   (void) const;
 		HBITMAP   Handle  (void) const;             // gets a bitmap handle if success, otherwise returns NULL;
 		bool      Is      (void) const;             // checks a validity of the encapsulated bitmap descriptor;
 		SIZE      Size    (void) const;             // returns a size of bitmap;
 
 	public:
 		CDibSection& operator = (const CDibSection&);
+		CDibSection& operator = (CDibSection&&) = delete;
 		
 	public:
 		operator  HBITMAP (void) const;             // operator overloading, does the same as GetHandle_Safe()
+
+	private :
+		HBITMAP   m_handle;     // encapsulated bitmap descriptor;
+		PBYTE     m_pData ;     // a pointer to bitmap bits;
+		SIZE      m_size  ;     // bitmap size;
+		CError    m_error ;
 	};
 }}}
 

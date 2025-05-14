@@ -19,3 +19,50 @@ void CBlend_Wrap::_ctor (void) {
 	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_bl_wrap.Print(e_print::e_all));
 	_out()();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CIn_Out:: CIn_Out (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CIn_Out::_ctor (void) {
+
+	if (this->m_in_out.Is_valid())
+	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_in_out.Print(e_print::e_all));
+	else
+	_out() += this->m_in_out.Error().Print(TError::e_print::e_req);
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CIn_Src:: CIn_Src (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CIn_Src::_ctor (void) {
+	static bool b_is_called = false;
+
+	if (this->m_b_verb || b_is_called) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+	else 
+		b_is_called = true;
+
+	if (this->m_in_src.Is_valid())
+		_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_in_src.Print(e_print::e_all));
+	else
+		_out() += this->m_in_src.Error().Print(TError::e_print::e_all);
+	_out()();
+}

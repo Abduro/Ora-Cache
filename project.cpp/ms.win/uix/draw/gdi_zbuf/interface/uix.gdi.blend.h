@@ -5,11 +5,60 @@
 	This is Ebo Pack WinAPI blend function wrapper interface declaration file;
 */
 #include "uix.gdi.defs.h"
+#include "uix.gdi.object.h"
 
 namespace ex_ui { namespace draw { namespace blend {
 
 	using namespace ex_ui::draw::defs;
 	// https://stackoverflow.com/questions/11645532/alphablend-function << just as the example of good explanation ;
+
+	using CAnchor = geometry::base::_2D::CAnchor;
+	using CPosition = geometry::base::_2D::CPosition;
+	using CPos = CPosition;
+
+	class CInput {
+	public:
+		 CInput (void); CInput (const CInput&) = delete; CInput (CInput&&) = delete;
+		~CInput (void) = default;
+
+	public:
+		const HDC  Ctx (void) const;
+		const bool Ctx (const HDC) ;
+
+		TError&    Error (void) const;
+		const bool Is_valid (void) const;
+
+		const
+		CPos&  Position (void) const;
+		CPos&  Position (void) ;
+
+	private:
+		CInput&  operator = (const CInput&) = delete;
+		CInput&  operator = (CInput&&) = delete;
+
+	private:
+		mutable
+		CError  m_error ;
+		HDC     m_h_dc  ;
+		CPosition m_pos ;
+	};
+
+	class CIn_Out : public CInput { // this is a blend destination input data class;
+	public:
+		CIn_Out (void);
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all) const;
+#endif
+	};
+
+	class CIn_Src : public CInput { // this is a blend source input data class;
+	public:
+		CIn_Src (void);
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all) const;
+#endif
+	};
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-blendfunction ;
 
 	typedef BLENDFUNCTION TBlendFun;
@@ -25,6 +74,8 @@ namespace ex_ui { namespace draw { namespace blend {
 		CString Print (const TBlendFun&, const e_print = e_print::e_all);
 		CString Print (const e_print = e_print::e_all) const;
 #endif
+		bool    PerPixelAlpha (void) const;    // returns an option of using premultiplied value of alpha channel;
+		bool    PerPixelAlpha (const bool _b_use, const rgb_value _n_alpha); // returns 'true' in case of this field value is changed;
 		const
 		TBlendFun&  Ref (void) const;
 		TBlendFun&  Ref (void) ;
@@ -39,6 +90,7 @@ namespace ex_ui { namespace draw { namespace blend {
 
 	private:
 		TBlendFun  m_bl_fun;
+		bool       m_bPerPixelAlpha; // if set to 'true', alpha channel is applied, otherwise alpha value is calculated;
 	};
 
 	class CBlender {

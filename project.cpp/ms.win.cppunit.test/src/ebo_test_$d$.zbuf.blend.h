@@ -27,6 +27,35 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 		TBlend_Wrap  m_bl_wrap;
 	};
 
+	using TInput  = ex_ui::draw::blend::CInput;
+	using TIn_Out = ex_ui::draw::blend::CIn_Out;
+	using TIn_Src = ex_ui::draw::blend::CIn_Src;
+
+	__class(CIn_Out) {
+	public:
+		 CIn_Out (const bool _b_verb = false);
+		~CIn_Out (void) = default;
+
+	public:
+		__method (_ctor);
+
+	private:
+		bool m_b_verb;
+		TIn_Out  m_in_out;
+	};
+
+	__class(CIn_Src) {
+	public:
+		 CIn_Src (const bool _b_verb = false);
+		~CIn_Src (void) = default;
+
+	public:
+		__method (_ctor);
+
+	private:
+		bool m_b_verb;
+		TIn_Src  m_in_src;
+	};
 
 #pragma endregion
 
