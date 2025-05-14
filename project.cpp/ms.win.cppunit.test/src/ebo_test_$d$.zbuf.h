@@ -26,6 +26,32 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 	using TError  = const CError;
 	using TString = TStringEx   ;
 
+	using CWindow = ::ATL::CWindow;
+	// this is the same class of message-only window that is taken from the renderer test cases' project; copy-paste is okay for now;
+	// this fake window class is necessary to get the pseudo device context, otherwise some test cases cannot be passed;
+	class CFake_Wnd : public ::ATL::CWindowImpl<CFake_Wnd> { typedef ::ATL::CWindowImpl<CFake_Wnd> TBase;
+	public:
+		  CFake_Wnd (const bool _b_verb = false); CFake_Wnd (const CFake_Wnd&) = delete; CFake_Wnd (CFake_Wnd&&) = delete;
+		 ~CFake_Wnd (void);
+
+	public:
+		DECLARE_EMPTY_MSG_MAP();
+		const
+		HDC&     Ctx   (void) const;
+		TError&  Error (void) const;
+
+		operator const HDC& (void) const;
+
+	private:
+		CFake_Wnd& operator = (const CFake_Wnd&) = delete;
+		CFake_Wnd& operator = (CFake_Wnd&&) = delete;
+
+	private:
+		bool    m_verb ;
+		CError  m_error;
+		HDC     m_h_dc ;
+	};
+
 }}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);

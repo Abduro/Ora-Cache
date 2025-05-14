@@ -39,6 +39,29 @@ void CIn_Out::_ctor (void) {
 	_out()();
 }
 
+void CIn_Out::Set (void) {
+
+	CFake_Wnd fake_wnd;
+	if (fake_wnd.Error()) {
+		_out() += fake_wnd.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	this->m_in_out.Ctx(fake_wnd);
+	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_in_out.Print(e_print::e_all));
+
+	if (this->m_in_out.Is_valid() == false)
+		_out() += this->m_in_out.Error().Print(TError::e_print::e_req);
+
+	this->m_in_out.Position().Size().Set(256, 256);
+
+	if (this->m_in_out.Is_valid() == false)
+		_out() += this->m_in_out.Error().Print(TError::e_print::e_req);
+
+	_out()();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CIn_Src:: CIn_Src (const bool _b_verb) : m_b_verb(_b_verb) {

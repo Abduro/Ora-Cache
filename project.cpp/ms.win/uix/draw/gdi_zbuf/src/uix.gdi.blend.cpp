@@ -25,7 +25,8 @@ namespace ex_ui { namespace draw { namespace blend { namespace _impl {
 			static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {ctx=%s;pos=%s;valid=%s}");
 			static _pc_sz pc_sz_pat_r = _T("{ctx=%s;pos=%s;valid=%s}");
 
-			CString cs_ctx = TStringEx().Format(_T("%p"), this->m_input.Ctx());
+	//		CString cs_ctx = TStringEx().Format(_T("%p"), this->m_input.Ctx());
+			CString cs_ctx = TStringEx().__address_of(this->m_input.Ctx());
 			CString cs_pos = this->m_input.Position().Print(e_print::e_req);
 			CString cs_valid = TStringEx().Bool(this->m_input.Is_valid());
 

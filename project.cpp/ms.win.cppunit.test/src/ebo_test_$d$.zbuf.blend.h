@@ -38,6 +38,7 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 
 	public:
 		__method (_ctor);
+		__method (Set);
 
 	private:
 		bool m_b_verb;

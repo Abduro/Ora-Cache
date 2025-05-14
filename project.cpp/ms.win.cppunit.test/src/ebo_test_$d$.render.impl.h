@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2025 at 18:51:39.493, UTC+4, Batumi, Sunday;
 	This is Ebo Pack 2D/3D draw renderer lib unit test helper interface declaration file;
 	-----------------------------------------------------------------------------
-	*Important* : this project must refer the same Windows SDK version as render project does (10.0.18362.0);
+	*Important* : this project must refer to the same Windows SDK version as render project does (10.0.18362.0);
 */
 #include "_log.h"
 #include "direct_x.device.h"
