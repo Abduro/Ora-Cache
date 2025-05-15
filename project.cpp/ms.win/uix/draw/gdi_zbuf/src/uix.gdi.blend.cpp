@@ -87,8 +87,8 @@ const bool CInput::Is_valid (void) const {
 }
 
 const
-CPos&  CInput::Position (void) const { return this->m_pos; }
-CPos&  CInput::Position (void)       { return this->m_pos; }
+CPos&  CInput::Position (void) const { return this->m_pos; } const CPos& CInput::Pos (void) const { return this->m_pos; }
+CPos&  CInput::Position (void)       { return this->m_pos; }       CPos& CInput::Pos (void)       { return this->m_pos; }
 
 CIn_Out:: CIn_Out (void) : CInput() {
 	CInput::Position().Anchor().Marker().Set(1, _T("#dest_dev_ctx"), true);
@@ -231,7 +231,54 @@ CBlender:: CBlender (void) { this->m_error >>__CLASS__ << __METHOD__ << __e_not_
 CBlender::~CBlender (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+const
+CBlend_Wrap& CBlender::Func (void) const { return this->m_bl_fun; }
+CBlend_Wrap& CBlender::Func (void)       { return this->m_bl_fun; }
+
+err_code   CBlender::Draw  (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_ready() == false)
+		return this->Error();
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-alphablend ;
+	const bool b_result = ::AlphaBlend(
+		this->Out ().Ctx(), this->Out().Pos().Anchor().X(), this->Out().Pos().Anchor().Y(), this->Out().Pos().Size().W(), this->Out().Pos().Size().H(),
+		this->Src ().Ctx(), this->Src().Pos().Anchor().X(), this->Src().Pos().Anchor().Y(), this->Src().Pos().Size().W(), this->Src().Pos().Size().H(),
+		this->Func().Ref()
+	);
+
+	if (false == b_result)
+		this->m_error.Last();
+
+	return this->Error();
+}
 
 TError&    CBlender::Error (void) const { return this->m_error; }
+
+bool  CBlender::Is_ready (void) const {
+	this->m_error << __METHOD__ << __s_ok;
+
+	// (1) checks the destination data first;
+	if (this->Out().Is_valid() == false)
+		return this->m_error = this->Out().Error();
+
+	// (2) checks the source data wrapper;
+	if (this->Src().Is_valid() == false)
+		return this->m_error = this->Src().Error();
+
+	// (3) checks the destination and source device contexts;
+	if (this->Out().Ctx() == this->Src().Ctx())
+		return this->m_error << (err_code) TErrCodes::eExecute::eParameter = _T("The source and dest device contexts cannot be the same;");
+
+	return false == this->Error().Is();
+}
+
+const
+CIn_Out&   CBlender::Out (void) const { return this->m_in_out; }
+CIn_Out&   CBlender::Out (void)       { return this->m_in_out; }     
+const
+CIn_Src&   CBlender::Src (void) const { return this->m_in_src; }
+CIn_Src&   CBlender::Src (void)       { return this->m_in_src; }     
 
 /////////////////////////////////////////////////////////////////////////////

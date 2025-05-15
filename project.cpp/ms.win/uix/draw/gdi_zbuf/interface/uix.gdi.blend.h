@@ -29,8 +29,8 @@ namespace ex_ui { namespace draw { namespace blend {
 		const bool Is_valid (void) const;
 
 		const
-		CPos&  Position (void) const;
-		CPos&  Position (void) ;
+		CPos&  Position (void) const;  const CPos& Pos (void) const;
+		CPos&  Position (void)      ;        CPos& Pos (void)      ;  // just playing with shorter names of the properties;
 
 	private:
 		CInput&  operator = (const CInput&) = delete;
@@ -62,6 +62,8 @@ namespace ex_ui { namespace draw { namespace blend {
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-blendfunction ;
 
 	typedef BLENDFUNCTION TBlendFun;
+
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/alpha-blending-a-bitmap << as a good sample;
 
 	class CBlend_Wrap {
 	public:
@@ -99,14 +101,32 @@ namespace ex_ui { namespace draw { namespace blend {
 		~CBlender (void);
 
 	public:
+		const
+		CBlend_Wrap& Func (void) const; // returns a reference to blend function wrapper; (ra);
+		CBlend_Wrap& Func (void) ;      // returns a reference to blend function wrapper; (rw);
+
+		err_code  Draw  (void) ;
+
 		TError&   Error (void) const;
+		bool   Is_ready (void) const;   // checks input (source) and output (destination) data for validity;
+
+		const
+		CIn_Out&  Out (void) const;     // destination device context data wrapper; (ra);
+		CIn_Out&  Out (void) ;          // destination device context data wrapper; (rw);
+		const
+		CIn_Src&  Src (void) const;     // source device context data wrapper; (ra);
+		CIn_Src&  Src (void) ;          // source device context data wrapper; (rw);
 
 	private:
 		CBlender& operator = (const CBlender&) = delete;
 		CBlender& operator = (CBlender&&) = delete;
 
 	private:
+		mutable
 		CError  m_error;
+		CBlend_Wrap m_bl_fun;
+		CIn_Out m_in_out;
+		CIn_Src m_in_src;
 	};
 
 }}}

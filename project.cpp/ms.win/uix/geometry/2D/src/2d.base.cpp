@@ -294,7 +294,7 @@ namespace geometry { namespace base { namespace _2D { namespace _impl {
 
 			static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{height=%d;width=%d;zero=%s}");
 			static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{height=%d;width=%d;zero=%s}");
-			static _pc_sz pc_sz_pat_r = _T("{height=%d;width=%d}");
+			static _pc_sz pc_sz_pat_r = _T("{h|w=%d|%d(px)}");
 
 			if (e_print::e_all   == _e_opt) return pc_sz_pat_a;
 			if (e_print::e_no_ns == _e_opt) return pc_sz_pat_n;
@@ -414,7 +414,9 @@ bool      CSize_U::H (const uint32_t _value) { const bool b_changed = (this->H()
 uint32_t  CSize_U::Height (void) const { return this->H(); }
 bool      CSize_U::Height (const uint32_t _value) { return this->H(_value); }
 
-bool CSize_U::Is_zero (void) const { return (!this->H() && !this->W()); }
+bool CSize_U::Is_zero (void) const {
+	return (0 == this->H() || 0 == this->W());  // this is acceptable for a size of a shape; but not valid for a line, because it has a length;
+}
 
 #if defined(_DEBUG)
 CString   CSize_U::Print (const e_print e_opt) const {
