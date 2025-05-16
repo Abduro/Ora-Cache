@@ -92,7 +92,7 @@ namespace geometry { namespace shape { namespace _2D {
 		};
 
 	public:
-		static const uint32_t n_points = 2; // this is the count of the points of the size class: begin and end, nothing more or different;
+		static const uint32_t n_points = 2; // this is the count of the points of the side class: begin and end, nothing more or different;
 
 	public:
 		 CSide (void);
@@ -139,10 +139,10 @@ namespace geometry { namespace shape { namespace _2D {
 		bool operator == (const CSide&) const;
 		bool operator != (const CSide&) const;
 
-	private:
+	protected:
 		CMarker   m_marker;           // this is a marker of a side that is defined by particular geometrical figure or shape;
 		CPoint    m_points[n_points]; // this is a points of intersecting this side with other ones, or just for positioning in 2D space;
-		CString   m_desc;             // #not_set by default;
+		CString   m_desc;             // #not_set by default; ToDo: not sure that it is required for functionality of a shape;
 	};
 
 }}}

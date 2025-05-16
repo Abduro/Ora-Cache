@@ -5,11 +5,15 @@
 	This is Ebo Pack 2D space geometry fundamental objects' interface declaration file.
 */
 #include <map>
+#include <cmath> // https://en.cppreference.com/w/cpp/numeric/math/pow ; https://en.cppreference.com/w/cpp/numeric/math/sqrt ;
+
 #include "shared.preproc.h"
 #include "shared.string.h"
 
 #include "shared.types.h"
 #include "sys.err.codes.h"
+
+#include "color.rgb.h"
 
 // the 'base' namespace does not mean a base of shape, but basic notations or fundamental objects in geometry;
 namespace geometry { namespace base { namespace _2D {

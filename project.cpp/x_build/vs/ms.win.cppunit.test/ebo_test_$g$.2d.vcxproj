@@ -219,6 +219,9 @@
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\ms.win\color_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000022}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\ms.win\geometry.2d_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-000000000033}</Project>
     </ProjectReference>

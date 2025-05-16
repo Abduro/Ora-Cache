@@ -182,6 +182,8 @@
     <ClCompile Include="$(_1)2d.base.cpp" />
     <ClInclude Include="$(_0)2d.shape.h" />
     <ClCompile Include="$(_1)2d.shape.cpp" />
+    <ClInclude Include="$(_0)2d.shape.line.h" />
+    <ClCompile Include="$(_1)2d.shape.line.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">
@@ -189,6 +191,9 @@
     </ProjectReference>
     <ProjectReference Include="sys.err.core_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
+    </ProjectReference>
+    <ProjectReference Include="color_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000022}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

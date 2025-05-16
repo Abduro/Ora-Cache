@@ -52,10 +52,26 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 
 	public:
 		__method (_ctor);
+		__method (Set);
 
 	private:
 		bool m_b_verb;
 		TIn_Src  m_in_src;
+	};
+
+	using TBlender = ex_ui::draw::blend::CBlender;
+
+	__class(CBlender) {
+	public:
+		 CBlender (const bool _b_verb = false);
+		~CBlender (void) = default;
+
+	public:
+		__method (Is_ready);
+
+	private:
+		bool m_b_verb;
+		TBlender  m_blender;
 	};
 
 #pragma endregion

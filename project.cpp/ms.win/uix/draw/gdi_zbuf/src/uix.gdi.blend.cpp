@@ -261,15 +261,17 @@ bool  CBlender::Is_ready (void) const {
 
 	// (1) checks the destination data first;
 	if (this->Out().Is_valid() == false)
-		return this->m_error = this->Out().Error();
+		return false == (this->m_error = this->Out().Error()).Is();
 
 	// (2) checks the source data wrapper;
 	if (this->Src().Is_valid() == false)
-		return this->m_error = this->Src().Error();
+		return false == (this->m_error = this->Src().Error()).Is();
 
 	// (3) checks the destination and source device contexts;
 	if (this->Out().Ctx() == this->Src().Ctx())
-		return this->m_error << (err_code) TErrCodes::eExecute::eParameter = _T("The source and dest device contexts cannot be the same;");
+		return false == (
+				this->m_error << (err_code) TErrCodes::eExecute::eParameter = _T("The source and dest device contexts cannot be the same;")
+			).Is();
 
 	return false == this->Error().Is();
 }

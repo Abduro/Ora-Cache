@@ -10,6 +10,8 @@
 #include "wnd.base.h"
 #include "wnd.layout.h"
 
+#pragma comment(lib, "color_v15.lib")        // to colorize everything;
+#pragma comment(lib, "geometry.2d_v15.lib")  // this is for user control placement;
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "sys.err.core_v15.lib") // for using error object;
 #pragma comment(lib, "sys.shared_v15.lib")   // this is the shared base;

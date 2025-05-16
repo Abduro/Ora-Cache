@@ -10,6 +10,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
     <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop><!--This library is being tested;-->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
@@ -24,14 +25,14 @@
     <_3>$(Error)interface\</_3>
     <_4>$(Geo-2D)interface\</_4>
     <_5></_5>
-    <_6></_6>
+    <_6>$(Color)interface\</_6>
     <_7>$(Win-pop)interface\</_7><!--This library interface is being tested!-->
     <_8>$(_7)msg_handlers\</_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_7);$(_8);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_6);$(_7);$(_8);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -115,7 +115,6 @@ CCorners&  CCorners::operator  = (const CCorners& _src) {
 	return *this;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 
 CSide:: CSide (void) {}

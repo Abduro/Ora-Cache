@@ -10,6 +10,7 @@
 
 #include "2d.base.h"
 #include "2d.shape.h"
+#include "2d.shape.line.h"
 
 namespace ebo { namespace boo { namespace test {
 
@@ -21,6 +22,7 @@ namespace ebo { namespace boo { namespace test {
 }}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
+#pragma comment(lib, "color_v15.lib")        // color management library;
 #pragma comment(lib, "geometry.2d_v15.lib")  // this one must be tested by this unit test project;
 #pragma comment(lib, "sys.err.core_v15.lib") // for using error object;
 #pragma comment(lib, "sys.shared_v15.lib")   // this is the base;

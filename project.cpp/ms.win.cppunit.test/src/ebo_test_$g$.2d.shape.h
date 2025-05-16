@@ -40,6 +40,20 @@ namespace outline { namespace _2D {
 
 #pragma region __shapes
 
+	using TLine = geometry::shape::_2D::CLine;
+	__class(CLine) {
+	public:
+		 CLine (const bool _b_verb = false);
+		~CLine (void) = default;
+
+	public:
+		__ctor (_ctor);
+
+	private:
+		bool m_b_verb;
+		TLine  m_line;
+	};
+
 	using TRect = geometry::shape::_2D::CRectangle;
 
 	__class(CRect) {

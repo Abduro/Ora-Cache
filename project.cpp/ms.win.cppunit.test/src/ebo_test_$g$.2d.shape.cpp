@@ -59,6 +59,24 @@ void CSides::_ctor (void) {
 
 #pragma region __shapes
 
+CLine:: CLine (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CLine::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("Default: %s"), (_pc_sz) this->m_line.Print(e_print::e_all));
+	_out()();
+
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CRect:: CRect (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;

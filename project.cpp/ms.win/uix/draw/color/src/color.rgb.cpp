@@ -115,8 +115,8 @@ const bool  CQuad::Is(void) const {
 CString CQuad::Print (const e_print e_opt) const {
 	e_opt;
 	static _pc_sz pc_sz_pat_a  = _T("cls::[%s::%s]>>{value:[r=%u;g=%u;b=%u;a=%u];valid=%s}");
-	static _pc_sz pc_sz_pat_r  = _T("value:[r=%u;g=%u;b=%u;a=%u];valid=%s");
 	static _pc_sz pc_sz_pat_n  = _T("[%s]>>{value:[r=%u;g=%u;b=%u;a=%u];valid=%s}");
+	static _pc_sz pc_sz_pat_r  = _T("[r=%u;g=%u;b=%u;a=%u];valid=%s");
 
 	CString cs_valid = TStringEx().Bool(this->Is());
 	CString cs_out;
