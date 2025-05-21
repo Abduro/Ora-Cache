@@ -7,6 +7,9 @@
 
 namespace geometry { namespace shapes { namespace _3D {
 
+	// https://en.wikipedia.org/wiki/Transformation_matrix ;
+	// https://en.wikipedia.org/wiki/3D_projection ;
+
 }}}
 
 #endif/*_3D_SHAPE_H_INCLUDED*/

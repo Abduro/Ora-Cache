@@ -378,8 +378,8 @@ namespace geometry { namespace base { namespace _2D {
 	class CRotate {
 	public:
 		enum e_direct : uint32_t {
-		     e_cw  = 0x0, // clockwise;
-		     e_ccw = 0x1, // counter-clockwise;
+		     e_cw  = 0x0, // clockwise; if the rotate angle has negative value of degrees;
+		     e_ccw = 0x1, // counter-clockwise; it is just the opposition of above case: the angle has positive value of degrees;
 		};
 	public:
 		 CRotate (void) ; CRotate (const CRotate&) = delete; CRotate (CRotate&&) = delete;
@@ -394,8 +394,11 @@ namespace geometry { namespace base { namespace _2D {
 		const
 		CPoint&  Center (void) const;
 		CPoint&  Center (void) ;
-		e_direct Direct (void) const;
-		bool     Direct (const e_direct);
+		e_direct Direct (void) const;   // it is just informative and is dependable on the sign rotate angle value;
+//		bool     Direct (const e_direct); this is mostly not usefull due to: negative degree is clockwise rotation, otherwise counter-clockwise;
+#if defined(_DEBUG)
+		CString  DirectAsText (void) const;
+#endif
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
@@ -404,7 +407,7 @@ namespace geometry { namespace base { namespace _2D {
 		CRotate&  operator = (const CRotate&) = delete;
 		CRotate&  operator = (CRotate&&) = delete;
 
-		CRotate&  operator <<(const e_direct);
+//		CRotate&  operator <<(const e_direct);
 		CRotate&  operator <<(const CPoint& _center);    // sets a center of the rotation;
 		CRotate&  operator <<(const int16_t _angle);     // sets an angle of the rotation;
 

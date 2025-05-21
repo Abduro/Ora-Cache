@@ -301,15 +301,33 @@ void CRotate::Angle (void) {
 void CRotate::DoIt (void) {
 	_out() += TStringEx().Format(_T("*center* : %s"), (_pc_sz) this->m_rotate.Center().Print(e_print::e_all));
 
-	TPoint point(10,20);
-	this->m_rotate.Angle(-90);
+	TPoint point(10, 20);
+	_out() += TStringEx().Format(_T("*target* : %s"), (_pc_sz) point.Print(e_print::e_all));
 
-	_out() += TStringEx().Format(_T("*rotate* : %s"), (_pc_sz) point.Print(e_print::e_all));
-	_out() += TStringEx().Format(_T("angle=%d; direct=%u"), this->m_rotate.Angle(), this->m_rotate.Direct());
+	int16_t angles[] = {-90, 90, -180, 180, -270, 270};
+	for (uint16_t i_ = 0; i_ < _countof(angles); i_++) {
 
-	this->m_rotate.ApplyTo(point);
+		TPoint rotor = point;
 
-	_out() += TStringEx().Format(_T("*result* : %s"), (_pc_sz) point.Print(e_print::e_all));
+		this->m_rotate.Angle(angles[i_]);
+		this->m_rotate.ApplyTo(rotor);
+		_out() += TStringEx().Format(_T("angle=%d; direct=%s; *result* : %s"),
+			this->m_rotate.Angle(), (_pc_sz) this->m_rotate.DirectAsText(), (_pc_sz) rotor.Print(e_print::e_all)
+		);
+	}
+
+	this->m_rotate.Center() = TPoint(10,10);
+	_out() += TStringEx().Format(_T("*center changed* : %s"), (_pc_sz) this->m_rotate.Center().Print(e_print::e_all));
+	for (uint16_t i_ = 0; i_ < _countof(angles); i_++) {
+
+		TPoint rotor = point;
+
+		this->m_rotate.Angle(angles[i_]);
+		this->m_rotate.ApplyTo(rotor);
+		_out() += TStringEx().Format(_T("angle=%d; direct=%s; *result* : %s"),
+			this->m_rotate.Angle(), (_pc_sz) this->m_rotate.DirectAsText(), (_pc_sz) rotor.Print(e_print::e_all)
+		);
+	}
 
 	_out()();
 }

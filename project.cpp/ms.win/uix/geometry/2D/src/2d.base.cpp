@@ -648,6 +648,7 @@ bool      CRotate::Angle (const int16_t _degree) {
 
 	if (b_changed) {
 		this->m_angle = n_degree;
+		this->m_direct = n_degree < 0 ? e_direct::e_cw : e_direct::e_ccw;
 	}
 
 	return b_changed;
@@ -659,20 +660,46 @@ err_code  CRotate::ApplyTo (CPoint& _vertex) const {
 
 	if (this->Angle() == 0)
 		return n_result;
+
+	CPoint cast = _vertex - this->Center();
+	if (false) {}
+	else if (- 90 == this->Angle()) { _vertex << +cast.Y() >> -cast.X(); return n_result; } //  cw;
+	else if (+ 90 == this->Angle()) { _vertex << -cast.Y() >> +cast.X(); return n_result; } // ccw;
+	else if (-180 == this->Angle()) { _vertex << -cast.X() >> -cast.Y(); return n_result; } // just the inversion of the coordinate values;
+	else if (+180 == this->Angle()) { _vertex << -cast.X() >> -cast.Y(); return n_result; } // the same as above;
+	else if (-270 == this->Angle()) { _vertex << -cast.Y() >> +cast.X(); return n_result; } // the same as to rotate to +90;
+	else if (+270 == this->Angle()) { _vertex << +cast.Y() >> -cast.X(); return n_result; } // the same as to rotate to -90;
+
+	const float rads = this->Angle() * M_PI/180;
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/rotation ; the formula at the end of the article;
 	/* x' = (x * cos(angle)) - (y * sin(angle)) 
 	   y' = (x * sin(angle)) + (y * cos(angle)) 
 	*/
-	CPoint casted = _vertex - this->Center();
+#if (0)
 	if (e_direct::e_ccw == this->Direct()) {
 	_vertex.Set(
-		static_cast<int32_t>((float(casted.X()) * ::std::cos((float)this->Angle())) - (float(casted.Y()) * ::std::sin((float)this->Angle()))),
-		static_cast<int32_t>((float(casted.X()) * ::std::sin((float)this->Angle())) + (float(casted.Y()) * ::std::cos((float)this->Angle())))
+		static_cast<int32_t>((float(cast.X()) * ::std::cos((float)this->Angle())) - (float(cast.Y()) * ::std::sin((float)this->Angle()))),
+		static_cast<int32_t>((float(cast.X()) * ::std::sin((float)this->Angle())) + (float(cast.Y()) * ::std::cos((float)this->Angle())))
 	); } else {
 	_vertex.Set(
-		static_cast<int32_t>((float(casted.X()) * ::std::cos((float)this->Angle())) + (float(casted.Y()) * ::std::sin((float)this->Angle()))),
-		static_cast<int32_t>((float(casted.X()) * ::std::sin((float)this->Angle())) - (float(casted.Y()) * ::std::cos((float)this->Angle())))
+		static_cast<int32_t>((float(cast.X()) * ::std::cos((float)this->Angle())) + (float(cast.Y()) * ::std::sin((float)this->Angle()))),
+		static_cast<int32_t>((float(cast.X()) * ::std::sin((float)this->Angle())) - (float(cast.Y()) * ::std::cos((float)this->Angle())))
 	); }
+#else
+	const float x_0 = float(cast.X()) * ::std::cos(rads);
+	const float x_1 = float(cast.Y()) * ::std::sin(rads);
+	const float y_0 = float(cast.X()) * ::std::sin(rads);
+	const float y_1 = float(cast.Y()) * ::std::cos(rads);
+//	if (e_direct::e_ccw == this->Direct()) {
+	_vertex.Set(
+		static_cast<int32_t>((float(cast.X()) * ::std::cos(rads)) - (float(cast.Y()) * ::std::sin(rads))),
+		static_cast<int32_t>((float(cast.X()) * ::std::sin(rads)) + (float(cast.Y()) * ::std::cos(rads)))
+	);// } else {
+//	_vertex.Set(
+//		static_cast<int32_t>((float(cast.X()) * ::std::cos(rads)) + (float(cast.Y()) * ::std::sin(rads))),
+//		static_cast<int32_t>((float(cast.X()) * ::std::sin(rads)) - (float(cast.Y()) * ::std::cos(rads)))
+//	);// }
+#endif
 	return n_result;
 }
 
@@ -681,6 +708,7 @@ CPoint&   CRotate::Center (void) const { return this->m_center; }
 CPoint&   CRotate::Center (void)       { return this->m_center; }
 
 eRotDirect CRotate::Direct (void) const { return this->m_direct; }
+#if (0)
 bool CRotate::Direct (const e_direct _value) {
 	const bool b_changed = (this->Direct() != _value);
 	if (b_changed) {
@@ -688,8 +716,18 @@ bool CRotate::Direct (const e_direct _value) {
 	}
 	return b_changed;
 }
-
+#endif
 #if defined (_DEBUG)
+CString   CRotate::DirectAsText (void) const {
+
+	CString cs_direct;
+	if (false) {}
+	else if (e_direct::e_cw  == this->Direct()) { cs_direct = _T("clockwise"); }
+	else if (e_direct::e_ccw == this->Direct()) { cs_direct = _T("counter-cw"); }
+	else { cs_direct = _T("#undef"); }
+	return cs_direct;
+}
+
 CString   CRotate::Print (const e_print e_opt) const {
 	e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{center=%s;angle=%s;direct=%s}");
@@ -698,12 +736,8 @@ CString   CRotate::Print (const e_print e_opt) const {
 
 	CString cs_center = this->Center().Print(e_print::e_req);
 	CString cs_angle  = TStringEx().Long(this->Angle());
-	CString cs_direct;
-	if (false) {}
-	else if (e_direct::e_cw  == this->Direct()) { cs_direct = _T("clockwise"); }
-	else if (e_direct::e_ccw == this->Direct()) { cs_direct = _T("counter-cw"); }
-	else { cs_direct = _T("#undef"); }
-
+	CString cs_direct = this->DirectAsText();
+	
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) {
@@ -726,7 +760,8 @@ CString   CRotate::Print (const e_print e_opt) const {
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if (0)
 CRotate&  CRotate::operator <<(const e_direct  _value) { this->Direct(_value); return *this; }
+#endif
 CRotate&  CRotate::operator <<(const CPoint&  _center) { this->Center() = _center; return *this; }
 CRotate&  CRotate::operator <<(const int16_t   _angle) { this->Angle(_angle); return *this; }

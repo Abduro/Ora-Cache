@@ -15,6 +15,13 @@
 
 #include "color.rgb.h"
 
+// https://learn.microsoft.com/en-us/cpp/c-runtime-library/math-constants ;
+// https://www.gnu.org/software/libc/manual/html_node/Mathematical-Constants.html ;
+// https://en.wikipedia.org/wiki/Pi ~ 3.14159 is enough for graphics ;
+#ifndef M_PI
+#define M_PI (3.14159F)
+#endif
+
 namespace geometry { namespace base { using namespace shared::types; }}
 
 #endif/*_D_DEFS_H_INCLUDED*/
