@@ -5,9 +5,11 @@
 #include "ebo_test_$g$.2d.shape.h"
 
 using namespace ebo::boo::test;
-using namespace ebo::boo::test::outline::_2D;
+using namespace ebo::boo::test::_2D::shapes;
 
 #pragma region __sides
+
+/////////////////////////////////////////////////////////////////////////////
 
 CSide:: CSide (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
@@ -59,22 +61,6 @@ void CSides::_ctor (void) {
 
 #pragma region __shapes
 
-CLine:: CLine (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
-		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
-}
-
-void CLine::_ctor (void) {
-
-	_out() += TLog_Acc::e_new_line;
-	_out() += TString().Format(_T("Default: %s"), (_pc_sz) this->m_line.Print(e_print::e_all));
-	_out()();
-
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 CRect:: CRect (const bool _b_verb) : m_b_verb(_b_verb) {
@@ -91,6 +77,49 @@ void CRect::_ctor (void) {
 	_out() += TString().Format(_T("Default: %s"), (_pc_sz)TRect().Print(e_print::e_req));
 	_out()();
 
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CShape:: CShape (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CShape::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("Default: %s"), (_pc_sz)this->m_shape.Print(e_print::e_all));
+	_out()();
+
+}
+
+void CShape::Modify (void) {
+	_out() += TString().Format(_T("*before add* : %s"), (_pc_sz)this->m_shape.Print(e_print::e_all));
+
+	this->m_shape.Points().Count(2);
+	this->m_shape.Points().Get(0).Set(10,10);
+	this->m_shape.Points().Get(1).Set(20,20);
+
+	_out() += TString().Format(_T("*after add*  : %s"), (_pc_sz)this->m_shape.Print(e_print::e_all));
+#if (1)
+	/*
+		this command throws the error: 0xC0000005: Access violation;
+		the reason is va_list is recognised as nullptr and this leads to failure of StringCchVPrintfEx() function;
+	*/
+	_out() += TString().Format(_T("*removing* : at [%u]..."), 0); // fixed somehow;
+#else
+	CString cs_attempt; cs_attempt.Format(_T("%d"), 0);
+	_out() += TString().Format(_T("*removing* : at [%s]..."), (_pc_sz) cs_attempt );
+#endif
+	this->m_shape.Points().Rem(0);
+
+	_out() += TString().Format(_T("*after rem*  : %s"), (_pc_sz)this->m_shape.Print(e_print::e_all));
+
+	_out()();
 }
 
 #pragma endregion

@@ -4,6 +4,8 @@
 */
 #include "3d.shape.h"
 
-using namespace geometry::shape::_3D;
+using namespace geometry::shapes::_3D;
 
 /////////////////////////////////////////////////////////////////////////////
+
+namespace geometry { namespace shapes { namespace _3D { namespace _impl { void __warning_lnk_4221 (void) {} }}}}

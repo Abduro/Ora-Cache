@@ -5,10 +5,19 @@
 	This is Ebo Pack shared draw library Z-buffer interface declaration file.
 */
 #include "uix.gdi.defs.h"
+#include "uix.gdi.blend.h"
+#include "uix.gdi.shade.h"
 
 namespace ex_ui { namespace draw { namespace memory {
 
+	#define _ATL_NO_AUTOMATIC_NAMESPACE
+
 	using namespace ex_ui::draw::defs;
+	using CLine = geometry::shapes::_2D::CLine;
+	using CRect = ::ATL::CRect;
+
+	using namespace ex_ui::draw::blend;
+	using namespace ex_ui::draw::shade;
 
 	class CSurface { // this class is exactly for memory device context;
 	public:
@@ -21,7 +30,7 @@ namespace ex_ui { namespace draw { namespace memory {
 		t_rect&   Area (void) const;
 		t_rect&   Area (void) ;
 
-		err_code  Create (const HDC _h_origin, const t_rect& _rc_draw); // creates a new surface bitmat that is compatible to input device context;
+		err_code  Create (const HDC _h_origin, const t_rect& _rc_draw); // creates a new surface bitmap that is compatible to input device context;
 		err_code  Destroy(void);
 
 		TError&   Error(void) const;
@@ -53,19 +62,26 @@ namespace ex_ui { namespace draw { namespace memory {
 		 CZBuffer (const CZBuffer&) = delete; CZBuffer (CZBuffer&&) = delete;
 		~CZBuffer (void);
 
-	public:
+	public: // life cycle method(s)
 		err_code  Create(const HDC _h_origin, const t_rect& _rc_draw);
-		TError&   Error (void) const;
+		err_code  Reset (void) ; // copies the buffer content to original device context and resets the buffer to uninitialized state;
 
+	public: // error handling;
+		TError&   Error (void) const;
 		bool   Is_valid (void) const;
 
-		err_code  Reset (void) ; // copies the buffer content to original device context and resets the buffer to uninitialized state;
+	public: // draw method(s);
+		err_code  Draw  (const CLine&); // if color of line has the alpha value that is not opaque, the draw of a rectangle by alpha blend is used;
+		/* draws plain rectangle by using color provided, alpha blending is applicable;
+		   it is assumed the rectangle is not created or extracted from 32-bpp image, thus per-pixel-alpha option is not used; */
+		err_code  Draw  (const CRect&, const TRgbQuad&);
+
 		const
 		CSurface& Surface (void) const;
 		CSurface& Surface (void) ;
 
 	public:
-		static bool Is_DC (const HDC); // returns true if an input handle has proper data type such as: OBJ_DC|OBJ_MEMDC;
+		static bool Is_DC (const HDC);     // returns true if an input handle has proper data type such as: OBJ_DC|OBJ_MEMDC;
 		static bool Is_DC_mem (const HDC); // returns true if an input handle has proper data type is OBJ_MEMDC;
 
 	private:

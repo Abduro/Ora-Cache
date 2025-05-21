@@ -5,7 +5,7 @@
 	This is Ebo Pack 3D space geometry base shape interface declaration file.
 */
 
-namespace geometry { namespace shape { namespace _3D {
+namespace geometry { namespace shapes { namespace _3D {
 
 }}}
 

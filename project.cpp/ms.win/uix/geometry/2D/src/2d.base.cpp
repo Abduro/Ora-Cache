@@ -4,7 +4,15 @@
 */
 #include "2d.base.h"
 
+using namespace geometry::base;
 using namespace geometry::base::_2D;
+
+#ifndef __H
+#define __H(_rect) (_rect.bottom - _rect.top)
+#endif
+#ifndef __W
+#define __W(_rect) (_rect.right - _rect.left)
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +25,8 @@ CMarker::~CMarker (void) {}
 
 uint32_t  CMarker::Id (void) const { return this->m_id; }
 bool      CMarker::Id (const uint32_t _value) { const bool b_changed = (this->Id() != _value); if (b_changed) this->m_id = _value; return b_changed; }
+
+uint32_t& CMarker::Id_ref (void) { return this->m_id; }
 
 bool   CMarker::Is_valid (void) const { return this->m_valid; }
 bool   CMarker::Is_valid (const bool _b_valid) {
@@ -137,7 +147,7 @@ CString CPoint::Print (const e_print e_opt) const {
 	if (e_print::e_req == e_opt) { cs_out.Format(pc_sz_pat_r, this->X(), this->Y()); }
 
 	if (cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s].%s(#inv_arg==%d);"), (_pc_sz) __CLASS__, (_pc_sz) __METHOD__, e_opt);
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
 
 	return  cs_out;
 }
@@ -172,21 +182,47 @@ TPoint  operator - (const TPoint& _lsv, const TPoint& _rsv) { return TPoint(_lsv
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPoints:: CPoints (void) {}
+CPoints:: CPoints (const uint32_t _n_count) { *this << _n_count; }
 CPoints:: CPoints (const CPoints& _src) : CPoints() { *this = _src; }
 CPoints:: CPoints (CPoints&& _victim) : CPoints() { *this = _victim; }
 CPoints::~CPoints (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+
+uint32_t  CPoints::Count (void) const { return static_cast<uint32_t>(this->Raw().size()); }    
+err_code  CPoints::Count (const uint32_t _n_count) {
+	_n_count;
+	err_code n_result = __s_ok;
+
+	try {
+		if (false) {}
+		else if (0 == _n_count) {
+			this->Raw().clear();
+			this->Raw().shrink_to_fit();
+		}
+		else if (_n_count != this->Count()) { // removes element(s) or adds element(s);
+			this->Raw().resize(_n_count);
+			this->Raw().shrink_to_fit();
+		}
+		else
+			n_result = __s_false;
+	}
+	catch (const ::std::bad_alloc&) { n_result = __e_no_memory; }
+
+	return n_result;
+}
+
 const
-t_raw_pts& CPoints::Raw (void) const { return this->m_points; }
-t_raw_pts& CPoints::Raw (void)       { return this->m_points; }
+CPoint&  CPoints::Get (const uint32_t _ndx) const { if (_ndx >= this->Count()) { static CPoint pt_fake; return pt_fake; } else return this->Raw().at(_ndx); }
+CPoint&  CPoints::Get (const uint32_t _ndx)       { if (_ndx >= this->Count()) { static CPoint pt_fake; return pt_fake; } else return this->Raw().at(_ndx); }     
 
 #if defined(_DEBUG)
 
-CString CPoints::Print (void) const {
-
-	static _pc_sz pc_sz_pat_e = _T("cls::[%s]>>elements={%s}");
+CString CPoints::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>points:[%s]");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>points:[%s]");
+	static _pc_sz pc_sz_pat_r = _T("[%s]");
 
 	CString cs_out;
 	CString cs_pts;
@@ -198,23 +234,51 @@ CString CPoints::Print (void) const {
 		cs_pts += this->Raw().at(i_).Print(e_print::e_req);
 		if (i_ < b_last)
 			cs_pts += _T(";");
-
 	}
 	if (this->Raw().empty()) {
 		cs_pts = _T("#empty");
-		
 	}
-	cs_out.Format(pc_sz_pat_e, (_pc_sz)__CLASS__, (_pc_sz)cs_pts);
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, (_pc_sz) cs_pts); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz) __CLASS__, (_pc_sz) cs_pts); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_pts); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
 	return  cs_out;
 }
 
 #endif
+
+const
+t_raw_pts& CPoints::Raw (void) const { return this->m_points; }
+t_raw_pts& CPoints::Raw (void)       { return this->m_points; }
+
+err_code  CPoints::Rem (const uint32_t _ndx) {
+	_ndx;
+	err_code n_result = __s_ok;
+	if (_ndx >= this->Count())
+		return n_result = __e_inv_arg;
+
+	try {
+		// https://stackoverflow.com/questions/875103/how-do-i-erase-an-element-from-stdvector-by-index ;
+		this->Raw().erase(this->Raw().begin() + _ndx);
+		this->Raw().shrink_to_fit();
+	}
+	catch(...){ n_result = __e_no_memory; }
+
+	return n_result;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CPoints&  CPoints::operator = (const CPoints& _src) { this->Raw() = _src.Raw(); return *this; }
 CPoints&  CPoints::operator = (CPoints&& _victim) {
 	*this = _victim; _victim.Raw().clear(); return *this; // no swap is used yet;
 }
+
+CPoints&  CPoints::operator <<(const t_raw_pts& _pts) { this->Raw() = _pts; return *this; }
+CPoints&  CPoints::operator <<(const uint32_t _n_count) { this->Count(_n_count); return *this; }
 
 bool CPoints::operator == (const CPoints& _rhv) const {
 	_rhv;
@@ -457,6 +521,10 @@ bool    CSize_U::Set (const uint32_t _width, const uint32_t _height) {
 	return b_changed;
 }
 
+bool     CSize_U::Set (const t_rect& _rect) {
+	return this->Set(__W(_rect), __H(_rect));
+}
+
 uint32_t CSize_U::W (void) const { return this->m_size.cx; }
 bool     CSize_U::W (const uint32_t _value) { const bool b_changed = (this->W() != _value); if (b_changed) this->m_size.cx = _value; return b_changed; }
 
@@ -473,6 +541,8 @@ CSize_U& CSize_U::operator = (CSize_U&& _victim) {
 
 CSize_U& CSize_U::operator <<(const uint32_t _width) { this->W(_width); return *this; }
 CSize_U& CSize_U::operator >>(const uint32_t _height) { this->H(_height); return *this; }
+
+CSize_U& CSize_U::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
 
 CSize_U::operator const size_u& (void) const { return this->Raw(); }
 CSize_U::operator       size_u& (void)       { return this->Raw(); }
@@ -546,6 +616,11 @@ CSize_U&    CPosition::Size (void)       { return this->m_size; }
 CPosition&  CPosition::operator = (const CPosition& _src) { *this << _src.Anchor() << _src.Size(); return *this; }
 CPosition&  CPosition::operator <<(const CAnchor& _anchor) { this->Anchor() = _anchor; return *this; }
 CPosition&  CPosition::operator <<(const t_point& _pt) { this->Anchor() << _pt; return *this; }
+CPosition&  CPosition::operator <<(const t_rect& _rect) {
+	this->Anchor() << _rect;
+	this->Size() << _rect;
+	return *this;
+}
 CPosition&  CPosition::operator <<(const CSize_U& _size_u) { this->Size() = _size_u; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -555,3 +630,103 @@ CPosition::operator const t_rect (void) const {
 		this->Anchor().X(), this->Anchor().Y(), this->Anchor().X() + (int32_t)this->Size().W(), this->Anchor().Y() + (int32_t)this->Size().H()
 	};
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+using eRotDirect = CRotate::e_direct;
+
+CRotate:: CRotate (void) : m_angle(0), m_direct(e_direct::e_cw) {}
+CRotate::~CRotate (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+int16_t   CRotate::Angle (void) const { return this->m_angle; }  
+bool      CRotate::Angle (const int16_t _degree) {
+	_degree;
+	const int16_t n_degree = _degree % 360;
+	const bool b_changed = this->Angle() != n_degree;
+
+	if (b_changed) {
+		this->m_angle = n_degree;
+	}
+
+	return b_changed;
+}
+
+err_code  CRotate::ApplyTo (CPoint& _vertex) const {
+	_vertex;
+	err_code n_result = __s_ok;
+
+	if (this->Angle() == 0)
+		return n_result;
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/rotation ; the formula at the end of the article;
+	/* x' = (x * cos(angle)) - (y * sin(angle)) 
+	   y' = (x * sin(angle)) + (y * cos(angle)) 
+	*/
+	CPoint casted = _vertex - this->Center();
+	if (e_direct::e_ccw == this->Direct()) {
+	_vertex.Set(
+		static_cast<int32_t>((float(casted.X()) * ::std::cos((float)this->Angle())) - (float(casted.Y()) * ::std::sin((float)this->Angle()))),
+		static_cast<int32_t>((float(casted.X()) * ::std::sin((float)this->Angle())) + (float(casted.Y()) * ::std::cos((float)this->Angle())))
+	); } else {
+	_vertex.Set(
+		static_cast<int32_t>((float(casted.X()) * ::std::cos((float)this->Angle())) + (float(casted.Y()) * ::std::sin((float)this->Angle()))),
+		static_cast<int32_t>((float(casted.X()) * ::std::sin((float)this->Angle())) - (float(casted.Y()) * ::std::cos((float)this->Angle())))
+	); }
+	return n_result;
+}
+
+const
+CPoint&   CRotate::Center (void) const { return this->m_center; }
+CPoint&   CRotate::Center (void)       { return this->m_center; }
+
+eRotDirect CRotate::Direct (void) const { return this->m_direct; }
+bool CRotate::Direct (const e_direct _value) {
+	const bool b_changed = (this->Direct() != _value);
+	if (b_changed) {
+		this->m_direct = _value;
+	}
+	return b_changed;
+}
+
+#if defined (_DEBUG)
+CString   CRotate::Print (const e_print e_opt) const {
+	e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{center=%s;angle=%s;direct=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{center=%s;angle=%s;direct=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{center=%s;angle=%s;direct=%s}");
+
+	CString cs_center = this->Center().Print(e_print::e_req);
+	CString cs_angle  = TStringEx().Long(this->Angle());
+	CString cs_direct;
+	if (false) {}
+	else if (e_direct::e_cw  == this->Direct()) { cs_direct = _T("clockwise"); }
+	else if (e_direct::e_ccw == this->Direct()) { cs_direct = _T("counter-cw"); }
+	else { cs_direct = _T("#undef"); }
+
+	CString cs_out;
+
+	if (e_print::e_all   == e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_center, (_pc_sz) cs_angle, (_pc_sz) cs_direct);
+	}
+	if (e_print::e_no_ns == e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_center, (_pc_sz) cs_angle, (_pc_sz) cs_direct);
+	}
+	if (e_print::e_req   == e_opt) {
+		cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_center, (_pc_sz) cs_angle, (_pc_sz) cs_direct);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+CRotate&  CRotate::operator <<(const e_direct  _value) { this->Direct(_value); return *this; }
+CRotate&  CRotate::operator <<(const CPoint&  _center) { this->Center() = _center; return *this; }
+CRotate&  CRotate::operator <<(const int16_t   _angle) { this->Angle(_angle); return *this; }

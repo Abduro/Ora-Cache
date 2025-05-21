@@ -7,3 +7,5 @@
 using namespace ebo::boo::test;
 
 /////////////////////////////////////////////////////////////////////////////
+
+namespace ebo { namespace boo { namespace test { void __warning_lnk_4221 (void) {}}}}

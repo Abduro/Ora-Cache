@@ -32,6 +32,10 @@ namespace ex_ui { namespace draw { namespace blend {
 		CPos&  Position (void) const;  const CPos& Pos (void) const;
 		CPos&  Position (void)      ;        CPos& Pos (void)      ;  // just playing with shorter names of the properties;
 
+	public:
+		CInput&  operator <<(const HDC);
+		CInput&  operator <<(const t_rect&);
+
 	private:
 		CInput&  operator = (const CInput&) = delete;
 		CInput&  operator = (CInput&&) = delete;

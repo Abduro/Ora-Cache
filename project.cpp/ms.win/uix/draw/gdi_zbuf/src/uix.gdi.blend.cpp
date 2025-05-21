@@ -90,6 +90,11 @@ const
 CPos&  CInput::Position (void) const { return this->m_pos; } const CPos& CInput::Pos (void) const { return this->m_pos; }
 CPos&  CInput::Position (void)       { return this->m_pos; }       CPos& CInput::Pos (void)       { return this->m_pos; }
 
+CInput&  CInput::operator <<(const HDC _h_dc) { this->Ctx(_h_dc); return *this; }
+CInput&  CInput::operator <<(const t_rect& _rect) { this->Pos() << _rect; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CIn_Out:: CIn_Out (void) : CInput() {
 	CInput::Position().Anchor().Marker().Set(1, _T("#dest_dev_ctx"), true);
 }

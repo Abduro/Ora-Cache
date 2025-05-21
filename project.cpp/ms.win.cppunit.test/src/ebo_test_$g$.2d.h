@@ -9,8 +9,9 @@
 #include "sys.error.h"
 
 #include "2d.base.h"
+#include "2d.base.line.h"
 #include "2d.shape.h"
-#include "2d.shape.line.h"
+#include "2d.shape.rect.h"
 
 namespace ebo { namespace boo { namespace test {
 

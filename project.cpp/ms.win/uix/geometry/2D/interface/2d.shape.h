@@ -5,95 +5,21 @@
 	This is Ebo Pack 2D space geometry base shape interface declaration file.
 */
 #include "2d.base.h"
+#include "2d.base.line.h"
 
-namespace geometry { namespace shape { namespace _2D {
+namespace geometry { namespace shapes { namespace _2D {
 
 	// https://dictionary.cambridge.org/dictionary/english/shape ;
 	using namespace shared::types;
 
 	using CPoint  = geometry::base::_2D::CPoint;
 	using CPoints = geometry::base::_2D::CPoints;
-	using CMarker = geometry::base::_2D::CMarker;
-
-	// the radius value defines how smoothly the corner is rounded; it can have negative value, this, the corner can be convex and concave;
-	class CCorner {
-	public:
-		 CCorner (const uint32_t _marker = 0, const int8_t _radius = 0);
-		 CCorner (const CCorner&);
-		 CCorner (CCorner&&) = delete;
-		~CCorner (void);
-
-	public:
-		const
-		uint32_t  Id (void) const;     // using typedef 'dword' or uint32_t is not important for the time being;
-		uint32_t& Id (void) ;
-
-		bool Is_concave (void) const;
-		bool Is_convex (void) const;
-		bool Is_valid (void) const;    // returns 'true' in case when identifier value does not equel to zero;
-
-		int8_t   Radius (void) const;
-		int8_t&  Radius (void)      ;
-
-	public:
-		CCorner& operator = (const CCorner&);
-		CCorner& operator = (CCorner&&) = delete;
-		CCorner& operator <<(const int8_t _radius);
-		CCorner& operator <<(const uint32_t _marker);
-
-	protected:
-		uint32_t  m_marker;   // it seems to be better to call it as ID;
-		int8_t    m_radius;
-	};
-
-	// https://www.allacronyms.com/corners/abbreviated >> cors;
-	typedef ::std::map<uint32_t, CCorner> TRawCorners; // a key - is a corner marker of placement; a value is corner object itself;
-	typedef TRawCorners TRawCors; // just playing with shorter names;
-
-	class CCorners {
-	public:
-		 CCorners (void);
-		 CCorners (const CCorners&); CCorners (CCorners&&) = delete;
-		~CCorners (void);
-
-	public:
-		err_code   Add (const uint32_t _marker, const CCorner&);
-		const
-		CCorner&   Get (const uint32_t _marker) const; // returns a corner, if it found, otherwize, fake corner is returned; read-only access, but is not drawn;
-		CCorner&   Get (const uint32_t _marker)      ; // returns a corner, if it found, otherwize, fake corner is returned; read-write access, but is not drawn;
-		const bool Has (const uint32_t _marker) const; // checks for existing a corner by value provided;
-		const bool Is  (void) const;       // returns true if at least one corner is set;
-		const
-		TRawCorners&  Raw (void) const;       // a reference to corner(s) which are included to corner map; read-only;
-		TRawCorners&  Raw (void)      ;       // a reference to corner(s) which are included to corner map; read-write;
-		err_code   Rem (const uint32_t _marker);
-		err_code   Set (const uint32_t _marker, const int8_t _radius); // a corner will be added, if exists, will be updated;
-
-	public:
-		CCorners&  operator  =(const CCorners&);
-		CCorners&  operator  =(CCorners&&) = delete;
-		CCorners&  operator +=(const CCorner&);
-		CCorners&  operator -=(const CCorner&);
-
-	private:
-		TRawCorners m_corners;
-	};
-	// https://www.allacronyms.com/triangle/abbreviated ;
-	class CTri_Cors : public CCorners {
-	};
+	using CLine   = geometry::base::_2D::CLine;
+	using CMarker = geometry::base::CMarker;
 
 	// https://simple.wikipedia.org/wiki/Side ;
 
-	class CSide {
-	public:
-		enum e_points {      // it is assumed that a side can have only two points: at begin and at end;
-		     e_begin = 0x0,  // it is a point of the beginning of the side, no check is applied for estimating of the point values;
-		     e_end   = 0x1,  // it is a point of the side ending; of course, 'ending' and 'beginning' notions are used virtually;
-		};
-
-	public:
-		static const uint32_t n_points = 2; // this is the count of the points of the side class: begin and end, nothing more or different;
-
+	class CSide : public CLine { typedef CLine TBase;
 	public:
 		 CSide (void);
 		 CSide (const CPoint& _begin, const CPoint& _end);
@@ -103,26 +29,11 @@ namespace geometry { namespace shape { namespace _2D {
 		~CSide (void) = default;
 
 	public:
-		const
-		CPoint&  Begin(void) const;
-		CPoint&  Begin(void) ;
-
-		_pc_sz   Desc (void) const;    // returns a description of this side;
-		bool     Desc (_pc_sz) ;       // returns true in case if description value is changed, case sensitive; no trim is made and is assigned as it is;
-
-		const
-		CPoint&  End (void) const;
-		CPoint&  End (void) ;
-
+		_pc_sz   Desc (void) const;  // returns a description of this side;
+		bool     Desc (_pc_sz) ;     // returns true in case if description value is changed, case sensitive; no trim is made and is assigned as it is;
 		const
 		CMarker& Marker (void) const;
 		CMarker& Marker (void) ;
-
-		CPoint   Middle (void) const;  // returns a point that resides on middle of the side;
-
-		const
-		CPoint&  Point (const e_points) const;  // returns a reference to the point object (read-only);
-		CPoint&  Point (const e_points) ;       // returns a reference to the point object (read-write);
 
 #if defined (_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
@@ -132,27 +43,24 @@ namespace geometry { namespace shape { namespace _2D {
 		CSide&  operator = (const CSide&);
 		CSide&  operator = (CSide&&);
 		CSide&  operator <<(const CMarker&);
-		CSide&  operator <<(const CPoint& _begin); // sets a beginning point of the side;
-		CSide&  operator >>(const CPoint& _end);   // sets an ending point of the side;
 		CSide&  operator <<(_pc_sz _p_desc);
 
 		bool operator == (const CSide&) const;
 		bool operator != (const CSide&) const;
 
 	protected:
-		CMarker   m_marker;           // this is a marker of a side that is defined by particular geometrical figure or shape;
-		CPoint    m_points[n_points]; // this is a points of intersecting this side with other ones, or just for positioning in 2D space;
-		CString   m_desc;             // #not_set by default; ToDo: not sure that it is required for functionality of a shape;
+		CMarker   m_marker; // this is a marker of a side that is defined by particular geometrical figure or shape;
+		CString   m_desc;   // #not_set by default; ToDo: not sure that it is required for functionality of a shape;
 	};
 
 }}}
 
-typedef geometry::shape::_2D::CMarker  TMarker;
-typedef geometry::shape::_2D::CSide    TSide  ;
+typedef geometry::shapes::_2D::CMarker  TMarker;
+typedef geometry::shapes::_2D::CSide    TSide  ;
 
 typedef ::std::vector<TSide> TRawSides; typedef TRawSides t_raw_sides;
 
-namespace geometry { namespace shape { namespace _2D {
+namespace geometry { namespace shapes { namespace _2D {
 
 	class CSides {
 	public:
@@ -198,119 +106,47 @@ namespace geometry { namespace shape { namespace _2D {
 
 	class CShape {
 	public:
-		 CShape (void);
-		 CShape (const CShape&);
-		 CShape (CShape&&) = delete;
+		static const uint32_t n_min_point_count = 3; // a triangle is the simplest figure that can be considered as a shape;
+
+	public:
+		 CShape (const uint32_t _angles = 0); // there is a several words such as angle, angle, vertex, but they look like just a point;
+		 CShape (const CShape&); CShape (CShape&&) = delete;
 		~CShape (void);
 
 	public:
+		bool   Is_valid (void) const;
+		const
+		CPoints& Points (void) const;
+		CPoints& Points (void) ;
+
 #if defined (_DEBUG)
-		CString Print (const e_print = e_print::e_all) const;
+		enum e_prn_details {
+		e_out_sides  = 0,
+		e_out_points = 1,
+		};
+		CString Print (const e_print = e_print::e_all, const e_prn_details = e_prn_details::e_out_points) const;
 #endif
+#if (0)
 	const
 	CSides&  Sides (void) const;
 	CSides&  Sides (void) ;
-
+#endif
 	public:
 		CShape& operator = (const CShape&);
 		CShape& operator = (CShape&&) = delete;
-
+#if (1)
+		CShape& operator <<(const CPoints&);
+#else
 		CShape& operator <<(const CSides&);
-
-	protected:
-		CSides  m_sides;
-	};
-
-	// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions >> most rectangle related methods are designed for drawing only;
-	/*
-		Taking into account a rectangle has 4 (four) sides as a shape, it looks like do not use such a kind of rectangle declaration
-		due to a simple reason: both OpenGL and DirectX uses a vertices for drawing a rectangle in 2D (3D) spaces;
-
-		https://en.wikipedia.org/wiki/Rectangle ;
-		https://en.wikipedia.org/wiki/Vertex_(geometry) ;
-		https://en.wikipedia.org/wiki/Vertex_(computer_graphics) ;
-	*/
-
-	using CPoint_2 = geometry::base::_2D::CPoint_2;
-	using CSize = geometry::base::_2D::CSize;
-
-	class CRectangle { // ToDo: it is not optimized for drawing performance yet; perhaps, it would be better to use a vector as points' container;
-	public:
-		enum e_corners : uint32_t {
-		     e_A = 0x0, // the left-top corner of the rectangle; (A)— —(D)
-		     e_B = 0x1, // the left-bottom corner;                |     |
-		     e_C = 0x2, // the right-bottom corner;               |     |
-		     e_D = 0x3, // the right-top corner;                 (B)— —(C) 
-		};
-	public:
-		class CCorners { // ToDo: this class must be renamed, or inherited from corners class that is defined outside above;
-		static const uint32_t n_count = e_corners::e_D + 1;
-		public:
-			 CCorners (void);
-			 CCorners (const CCorners&);
-			 CCorners (CCorners&&) = delete;
-			~CCorners (void) = default;
-
-		public:
-			const CPoint_2& A(void) const; CPoint_2& A(void);
-			const CPoint_2& B(void) const; CPoint_2& B(void);
-			const CPoint_2& C(void) const; CPoint_2& C(void);
-			const CPoint_2& D(void) const; CPoint_2& D(void);
-
-			const CPoint_2& Corner(const e_corners) const; CPoint_2& Corner(const e_corners);
-
-		public:
-			CCorners& operator = (const CCorners&);
-			CCorners& operator = (CCorners&&) = delete;
-
-			const
-			CPoint_2& operator [](const e_corners) const; // in case when an index >= CRectangle::u_corners a reference to fake point is returned;
-			CPoint_2& operator [](const e_corners) ;      // in case when an index >= CRectangle::u_corners a reference to fake point is returned;
-
-		private:
-			CPoint_2  m_points[n_count];  // it is incorrect to call this a set of vertices here, since this is not the context of the drawing function;
-			friend class CRectangle;
-		};
-	public:
-		using e_index = e_corners;
-
-		static
-		const uint32_t u_corners = e_index::e_D + 1;
-
-	public:
-		 CRectangle (void) ;
-		 CRectangle (const CRectangle&) ;
-		 CRectangle (CRectangle&&) = delete;
-		~CRectangle (void);
-
-	public:
-		CPoint     Center  (void) const;
-		const
-		CCorners&  Corners (void) const;
-		CCorners&  Corners (void) ;
-
-		const bool Is_valid (void) const; // returns true in case if all corners have valid markers;
-
-#if defined (_DEBUG)
-		CString  Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
 #endif
-		CSize Size (void) const; // returns a size object of this rectangle;
-
-	public:
-		CRectangle& operator = (const CRectangle&);
-		CRectangle& operator = (CRectangle&&) = delete;
-
-		CRectangle& operator <<(const CCorners&);
-
-		const
-		CPoint_2&   operator [](const e_index) const; // in case when an index >= CRectangle::u_corners a reference to fake point is returned;
-		CPoint_2&   operator [](const e_index) ;      // in case when an index >= CRectangle::u_corners a reference to fake point is returned;
-
-	private:
-		CCorners m_corners;
+	protected:
+#if (0)
+		CSides  m_sides ;
+#endif
+		CPoints m_points;
 	};
 }}}
 
-typedef geometry::shape::_2D::CSides TSides;
+typedef geometry::shapes::_2D::CSides TSides;
 
 #endif/*_2D_SHAPE_H_INCLUDED*/

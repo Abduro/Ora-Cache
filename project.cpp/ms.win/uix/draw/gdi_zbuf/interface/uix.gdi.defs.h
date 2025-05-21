@@ -7,7 +7,10 @@
 	Adopted to Ebo Pack on 11-Aug-2018 at 4:14:00p, UTC+7, Novosibirsk, Saturday;
 */
 #include <atlbase.h>
-#include <atltypes.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/crect-class ;
+namespace ATL { // this namespace is required for distinguishing ATL primitive shapes from others;
+#include <atltypes.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/crect-class  ;
+}                           // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/classes-shared-by-mfc-and-atl ;
+#include <atlimage.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cimage-class ;
 
 #include "atlapp.h"         // wtl::App is required for working CDC;
 #include "atlgdi.h"         // wtl::CDC;
@@ -17,6 +20,9 @@
 #include "color.rgb.h"
 
 #include "2d.base.h"
+#include "2d.base.line.h"
+#include "2d.shape.h"
+#include "2d.shape.rect.h"
 
 #include "shared.types.h"
 #include "sys.error.h"
@@ -31,6 +37,9 @@ namespace ex_ui { namespace draw { namespace defs {
 	using namespace shared::types;
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
+
+	// https://learn.microsoft.com/en-us/cpp/atl/reference/compiler-options-macros ;
+	#define _ATL_NO_AUTOMATIC_NAMESPACE
 
 	interface IExclusion {
 		virtual   err_code   Add  (const t_rect&)        { return __e_not_impl; }

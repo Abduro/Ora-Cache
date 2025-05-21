@@ -4,129 +4,17 @@
 */
 #include "2d.shape.h"
 
-using namespace geometry::shape::_2D;
+using namespace geometry::shapes::_2D;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CCorner:: CCorner (const uint32_t _marker, const int8_t _radius) : m_marker(_marker), m_radius(_radius) {}
-CCorner:: CCorner (const CCorner& _ref) : CCorner() { *this = _ref; }
-CCorner::~CCorner (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-const
-uint32_t  CCorner::Id (void) const { return this->m_marker; }
-uint32_t& CCorner::Id (void)       { return this->m_marker; }
-
-bool CCorner::Is_concave (void) const { return this->Radius() < 0; }
-bool CCorner::Is_convex (void) const { return this->Radius() > 0; }
-
-bool CCorner::Is_valid (void) const { return !!this->Id(); }
-
-int8_t    CCorner::Radius (void) const { return this->m_radius; }
-int8_t&   CCorner::Radius (void)       { return this->m_radius; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CCorner&  CCorner::operator = (const CCorner& _ref ) { *this << _ref.Radius() << _ref.Id(); return *this; }
-CCorner&  CCorner::operator <<(const int8_t  _radius) {  this->Radius() = _radius; return *this; }
-CCorner&  CCorner::operator <<(const uint32_t  _marker) {  this->Id() = _marker; return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CCorners:: CCorners (void) {}
-CCorners:: CCorners (const CCorners& _ref) : CCorners() { *this = _ref; }
-CCorners::~CCorners (void) { if (this->Is()) m_corners.clear(); }
-
-/////////////////////////////////////////////////////////////////////////////
-
-err_code   CCorners::Add (const uint32_t _marker, const CCorner& _corner) {
-err_code n_result = __s_ok;
-	try {
-		this->m_corners[_marker] = _corner;
-	}
-	catch (const ::std::bad_alloc&) { n_result = __e_no_memory; }
-	return n_result;
-}
-const
-CCorner&   CCorners::Get (const uint32_t _marker) const {
-	TRawCorners::const_iterator it_ = this->Raw().find(_marker);
-	if (it_ == this->Raw().end()) {
-		static CCorner na_; return na_;
-	} else
-		return it_->second;
-}
-CCorner&   CCorners::Get (const uint32_t _marker)      {
-	TRawCorners::iterator it_ = this->Raw().find(_marker);
-	if (it_ == this->Raw().end()) {
-		static CCorner na_; return na_;
-	} else
-		return it_->second;
-}
-const bool CCorners::Has (const uint32_t _marker) const {
-	TRawCorners::const_iterator it_ = this->Raw().find(_marker); return (it_ != this->Raw().end());
-}
-const bool CCorners::Is  (void) const { return (this->Raw().empty() == false);}
-const
-TRawCors&  CCorners::Raw (void) const { return m_corners; }
-TRawCors&  CCorners::Raw (void)       { return m_corners; }
-
-err_code   CCorners::Rem (const uint32_t _marker) {
-	_marker;
-	err_code n_result = __s_ok;
-	TRawCors::iterator it_ = this->Raw().find(_marker);
-	if (it_ == this->Raw().end())
-		return n_result = (err_code)TErrCodes::eData::eNotFound;
-	try {
-		this->Raw().erase(it_);
-	} catch (...) { n_result = __e_no_memory; }
-	return n_result;
-}
-
-err_code   CCorners::Set (const uint32_t _marker, const int8_t _radius) {
-err_code n_result = __s_ok;
-	if (this->Has(_marker)) {
-		this->Get(_marker) << _radius;
-	}
-	else if (!!_marker) {
-		n_result = this->Add(_marker, CCorner(_marker, _radius));
-	}
-	else
-		n_result = __e_inv_arg;
-
-	return n_result;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CCorners&  CCorners::operator += (const CCorner& _corner) { this->Add(_corner.Id(), _corner); return *this; }
-CCorners&  CCorners::operator -= (const CCorner& _corner) { this->Rem(_corner.Id()); return *this; }
-
-CCorners&  CCorners::operator  = (const CCorners& _src) {
-	_src;
-	err_code n_result = __s_ok;
-	if (this->Raw().empty() == false)
-		this->Raw().clear();
-
-	for (TRawCorners::const_iterator it_ = _src.Raw().begin(); it_ != _src.Raw().end(); ++it_) {
-		n_result = this->Add(it_->first, it_->second);
-		if (__failed(n_result))
-			break;
-	}
-	return *this;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CSide:: CSide (void) {}
-CSide:: CSide (const CPoint& _begin, const CPoint& _end) : CSide() { *this << _begin >> _end; }
+CSide:: CSide (void) : TBase() {}
+CSide:: CSide (const CPoint& _begin, const CPoint& _end) : CSide() { (TBase&)*this << _begin >> _end; }
 CSide:: CSide (const CMarker& _marker) : CSide() { *this << _marker; }
 CSide:: CSide (const CSide& _src) : CSide() { *this = _src; }
 CSide:: CSide (CSide&& _victim) : CSide() { *this = _victim; }
 
 /////////////////////////////////////////////////////////////////////////////
-const
-CPoint& CSide::Begin(void) const { return this->Point(e_points::e_begin); }
-CPoint& CSide::Begin(void)       { return this->Point(e_points::e_begin); }
 
 _pc_sz  CSide::Desc (void) const { return this->m_desc.GetString(); }
 bool    CSide::Desc (_pc_sz _p_desc) {
@@ -140,46 +28,29 @@ bool    CSide::Desc (_pc_sz _p_desc) {
 }
 
 const
-CPoint& CSide::End (void)  const { return this->Point(e_points::e_end); }
-CPoint& CSide::End (void)        { return this->Point(e_points::e_end); }
-
-const
 CMarker& CSide::Marker (void) const { return this->m_marker; }
 CMarker& CSide::Marker (void)       { return this->m_marker; }
-
-CPoint  CSide::Middle (void) const {
-
-	const int32_t n_x = (this->Begin().X() > this->End().X() ? this->Begin().X() - this->End().X() : this->End().X() - this->Begin().X()  ) / 2;
-	const int32_t n_y = (this->Begin().Y() > this->End().Y() ? this->Begin().Y() - this->End().Y() : this->End().Y() - this->Begin().Y()  ) / 2;
-
-	return CPoint(n_x, n_y);
-}
-
-const
-CPoint& CSide::Point (const e_points _index) const { return this->m_points[_index]; }
-CPoint& CSide::Point (const e_points _index)       { return this->m_points[_index]; }
 
 #if defined (_DEBUG)
 CString   CSide::Print (const e_print e_opt) const {
 	e_opt;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{marker=%s;begin=%s;end=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{marker=%s;begin=%s;end=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{marker=%s;begin=%s;end=%s}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{marker=%s;line=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{marker=%s;line=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{marker=%s;line=%s}");
 
-	CString cs_begin  = this->Begin().Print(e_print::e_req);
-	CString cs_end    = this->End().Print(e_print::e_req);
+	CString cs_line   = TBase::Print(e_print::e_req);
 	CString cs_marker = this->Marker().Print(e_print::e_req);
 
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_marker, (_pc_sz) cs_begin, (_pc_sz) cs_end);
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_marker, (_pc_sz) cs_line);
 	}
 	if (e_print::e_no_ns == e_opt) {
-		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_marker, (_pc_sz) cs_begin, (_pc_sz) cs_end);
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_marker, (_pc_sz) cs_line);
 	}
 	if (e_print::e_req   == e_opt) {
-		cs_out.Format(pc_sz_pat_r,(_pc_sz) cs_marker, (_pc_sz) cs_begin, (_pc_sz) cs_end);
+		cs_out.Format(pc_sz_pat_r,(_pc_sz) cs_marker, (_pc_sz) cs_line);
 	}
 
 	if (cs_out.IsEmpty())
@@ -191,16 +62,13 @@ CString   CSide::Print (const e_print e_opt) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSide&  CSide::operator = (const CSide& _src) { *this << _src.Marker() << _src.Begin() << _src.Desc() >> _src.End(); return *this; }
+CSide&  CSide::operator = (const CSide& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Marker() << _src.Desc(); return *this; }
 CSide&  CSide::operator = (CSide&& _victim) {
 
 	*this = _victim; _victim.Marker().Set(0, nullptr, false); return *this;
 }
 
 CSide&  CSide::operator <<(const CMarker& _marker) { this->Marker() = _marker; return *this; }
-
-CSide&  CSide::operator <<(const CPoint& _begin) { this->Begin() = _begin; return *this; }
-CSide&  CSide::operator >>(const CPoint& _end) { this->End() = _end; return *this; }
 
 CSide&  CSide::operator <<(_pc_sz _p_desc) { this->Desc(_p_desc); return *this; }
 
@@ -386,14 +254,24 @@ CSides&  CSides::operator -=(const uint32_t _u_id) { this->Remove(_u_id); return
 
 /////////////////////////////////////////////////////////////////////////////
 
-CShape:: CShape (void) {}
+CShape:: CShape (const uint32_t _angles) : m_points(_angles) {}
 CShape:: CShape (const CShape& _src) : CShape() { *this = _src; }
 CShape::~CShape (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool CShape::Is_valid (void) const { 
+	 return n_min_point_count <= this->Points().Raw().size(); // it is not good idea to think about a line like about a shape;
+}
+
+const
+CPoints&  CShape::Points (void) const { return this->m_points; }
+CPoints&  CShape::Points (void)       { return this->m_points; }
+
 #if defined (_DEBUG)
-CString  CShape::Print (const e_print e_opt) const {
-	e_opt;
+CString  CShape::Print (const e_print e_opt, const e_prn_details e_details) const {
+	e_opt; e_details;
+#if (0)
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{sides=%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{sides=%s}");
 	static _pc_sz pc_sz_pat_r = _T("{sides=%s}");
@@ -406,176 +284,36 @@ CString  CShape::Print (const e_print e_opt) const {
 	}
 	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_sides); }
 	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_sides); }
+#else
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{points=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{points=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{points=%s}");
 
-	if (cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
-
-	return  cs_out;
-}
-#endif
-
-const
-CSides&  CShape::Sides (void) const { return this->m_sides; }
-CSides&  CShape::Sides (void)       { return this->m_sides; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CShape&  CShape::operator = (const CShape& _shape) { *this << _shape.Sides(); return *this; }
-CShape&  CShape::operator <<(const CSides& _sides) {  this->Sides() = _sides; return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-namespace geometry { namespace shape { namespace _2D { namespace _impl {
-
-
-	CPoint_2&  _get_invalid_point (void) {
-	
-		static CPoint_2 pt_inv;
-		{
-			(CPoint&)pt_inv >> 0 << 0; pt_inv.Marker() << (uint32_t)0 << _T("#invalid") << false; 
-		}
-		return pt_inv;
-	}
-
-	CString   _print_out_point_x_set(const CPoint_2* const _p_set, const uint32_t _n_size, _pc_sz _pfx, _pc_sz _sfx) {
-		_p_set; _n_size;
-		CString cs_out;
-
-		for (uint32_t i_ = 0; i_ < _n_size; i_++) {
-		
-			const CPoint_2& p_pt = _p_set[i_];
-			
-			cs_out += _pfx;
-			cs_out += p_pt.Print(e_print::e_req);
-			cs_out += _sfx;
-		}
-		return  cs_out;
-	}
-
-}}}}
-
-using namespace geometry::shape::_2D::_impl;
-using CRecCors = CRectangle::CCorners;
-/////////////////////////////////////////////////////////////////////////////
-
-CRecCors:: CCorners (void) {
-	m_points[e_index::e_A].Marker() << e_index::e_A << _T("A") << true; // otherwise the validity attribute is false by default;
-	m_points[e_index::e_B].Marker() << e_index::e_B << _T("B") << true;
-	m_points[e_index::e_C].Marker() << e_index::e_C << _T("C") << true;
-	m_points[e_index::e_D].Marker() << e_index::e_D << _T("D") << true;
-}
-CRecCors:: CCorners (const CCorners& _src) : CCorners() { *this = _src; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-const CPoint_2& CRecCors::A(void) const { return this->m_points[e_corners::e_A]; } CPoint_2& CRecCors::A(void) { return this->m_points[e_corners::e_A]; }
-const CPoint_2& CRecCors::B(void) const { return this->m_points[e_corners::e_A]; } CPoint_2& CRecCors::B(void) { return this->m_points[e_corners::e_A]; }
-const CPoint_2& CRecCors::C(void) const { return this->m_points[e_corners::e_A]; } CPoint_2& CRecCors::C(void) { return this->m_points[e_corners::e_A]; }
-const CPoint_2& CRecCors::D(void) const { return this->m_points[e_corners::e_A]; } CPoint_2& CRecCors::D(void) { return this->m_points[e_corners::e_A]; }
-
-const
-CPoint_2& CRecCors::Corner(const e_corners _n_corner) const {
-	
-	if (_n_corner < CRectangle::u_corners)
-		return this->m_points[_n_corner];
-	else
-		return _get_invalid_point();
-}
-
-CPoint_2& CRecCors::Corner(const e_corners _n_corner) {
-
-	if (_n_corner < CRectangle::u_corners)
-		return this->m_points[_n_corner];
-	else
-		return _get_invalid_point();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CRecCors& CRecCors::operator = (const CCorners& _src) {
-
-	this->A() = _src.A(); this->B() = _src.B(); this->C() = _src.C(); this->D() = _src.D(); return *this;
-}
-
-const
-CPoint_2& CRecCors::operator [] (const e_corners _n_ndx) const { return this->Corner(_n_ndx); }
-CPoint_2& CRecCors::operator [] (const e_corners _n_ndx)       { return this->Corner(_n_ndx); }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CRectangle:: CRectangle (void) {}
-CRectangle:: CRectangle (const CRectangle& _src) : CRectangle() { *this = _src; }
-CRectangle::~CRectangle (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CPoint       CRectangle::Center (void) const {
-
-	return CPoint(
-		CSide(this->Corners().A(), this->Corners().B()).Middle().X(),
-		CSide(this->Corners().A(), this->Corners().D()).Middle().Y()
-	);
-}
-const
-CRecCors&    CRectangle::Corners (void) const { return this->m_corners; }
-CRecCors&    CRectangle::Corners (void)       { return this->m_corners; }
-
-const bool   CRectangle::Is_valid (void) const {
-
-	bool b_valid = true;
-
-	if ( b_valid ) b_valid = this->Corners().A().Marker().Is_valid();
-	if ( b_valid ) b_valid = this->Corners().B().Marker().Is_valid();
-	if ( b_valid ) b_valid = this->Corners().C().Marker().Is_valid();
-	if ( b_valid ) b_valid = this->Corners().D().Marker().Is_valid();
-
-	return b_valid;
-}
-
-#if defined (_DEBUG)
-CString      CRectangle::Print  (const e_print e_opt, _pc_sz _pfx, _pc_sz _sfx) const {
-	e_opt; _pfx; _sfx;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{corners=%s%s%svalid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{corners=%s%s%svalid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{corners=%s%s%svalid=%s}");
-
-	CString cs_pts = _print_out_point_x_set(this->m_corners.m_points, CRectangle::u_corners, _pfx, _sfx);
-	CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_sides = this->Points().Print(e_print::e_req);
 	CString cs_out;
 
 	if (e_print::e_all   == e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _sfx, (_pc_sz) cs_pts, _pfx, (_pc_sz) cs_valid);
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_sides);
 	}
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, _sfx, (_pc_sz) cs_pts, _pfx, (_pc_sz) cs_valid); }
-	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, _sfx, (_pc_sz) cs_pts, _pfx, (_pc_sz) cs_valid); }
-
+	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_sides); }
+	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_sides); }
+#endif
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
 
 	return  cs_out;
 }
 #endif
-
-CSize CRectangle::Size (void) const {
-
-//	const int32_t n_height = (((const CRectangle&)*this)[e_index::e_A].X() > ((const CRectangle&)*this)[e_index::e_D].X());
-
-	const int32_t n_height = CSide(this->Corners().A(), this->Corners().D()).Middle().Y();
-	const int32_t n_width  = CSide(this->Corners().A(), this->Corners().B()).Middle().X();
-
-//	const int32_t n_height = (
-//		this->Corners().A().X() > this->Corners().D().X() ? this->Corners().A().X() - this->Corners().D().X() : this->Corners().D().X() > this->Corners().A().X()
-//		) / 2;
-
-	return CSize(n_width, n_height);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-
-CRectangle& CRectangle::operator = (const CRectangle& _src) { *this << _src.Corners();	return *this; }
-CRectangle& CRectangle::operator <<(const CCorners& _corners) { this->Corners() = _corners; return *this; }
-
+#if (0)
 const
-CPoint_2&   CRectangle::operator [] (const e_index _n_ndx) const { return this->Corners().Corner(_n_ndx); }
-CPoint_2&   CRectangle::operator [] (const e_index _n_ndx)       { return this->Corners().Corner(_n_ndx); }
+CSides&  CShape::Sides (void) const { return this->m_sides; }
+CSides&  CShape::Sides (void)       { return this->m_sides; }
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#if (1)
+CShape&  CShape::operator = (const CShape& _shape) { *this << _shape.Points(); return *this; }
+CShape&  CShape::operator <<(const CPoints& _pnts) {  this->Points() = _pnts; return *this; }
+#else
+CShape&  CShape::operator = (const CShape& _shape) { *this << _shape.Sides(); return *this; }
+CShape&  CShape::operator <<(const CSides& _sides) {  this->Sides() = _sides; return *this; }
+#endif

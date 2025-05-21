@@ -116,7 +116,7 @@ CString CQuad::Print (const e_print e_opt) const {
 	e_opt;
 	static _pc_sz pc_sz_pat_a  = _T("cls::[%s::%s]>>{value:[r=%u;g=%u;b=%u;a=%u];valid=%s}");
 	static _pc_sz pc_sz_pat_n  = _T("[%s]>>{value:[r=%u;g=%u;b=%u;a=%u];valid=%s}");
-	static _pc_sz pc_sz_pat_r  = _T("[r=%u;g=%u;b=%u;a=%u];valid=%s");
+	static _pc_sz pc_sz_pat_r  = _T("[r=%u;g=%u;b=%u;a=%u]");
 
 	CString cs_valid = TStringEx().Bool(this->Is());
 	CString cs_out;
@@ -129,7 +129,7 @@ CString CQuad::Print (const e_print e_opt) const {
 			this->R(), this->G(), this->B(), this->A(), (_pc_sz)cs_valid);
 	}
 	if (e_print::e_req == e_opt) {
-		cs_out.Format(pc_sz_pat_r, this->R(), this->G(), this->B(), this->A(), (_pc_sz)cs_valid);
+		cs_out.Format(pc_sz_pat_r, this->R(), this->G(), this->B(), this->A()/*, (_pc_sz)cs_valid*/);
 	}
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);

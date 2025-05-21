@@ -11,9 +11,15 @@
   <ItemGroup>
     <ClInclude Include="$(_0)2D.base.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)2D.base.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)2D.base.line.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)2D.base.line.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)2D.defs.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)2D.defs.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)2D.shape.cors.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)2D.shape.cors.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)2D.shape.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)2D.shape.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)2D.shape.line.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)2D.shape.line.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)2D.shape.rect.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)2D.shape.rect.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

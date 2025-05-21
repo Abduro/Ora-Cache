@@ -6,9 +6,7 @@
 */
 #include "ebo_test_$g$.2d.h"
 
-namespace ebo { namespace boo { namespace test {
-
-namespace outline { namespace _2D {
+namespace ebo { namespace boo { namespace test { namespace _2D { namespace shapes {
 
 #pragma region __sides
 
@@ -40,21 +38,7 @@ namespace outline { namespace _2D {
 
 #pragma region __shapes
 
-	using TLine = geometry::shape::_2D::CLine;
-	__class(CLine) {
-	public:
-		 CLine (const bool _b_verb = false);
-		~CLine (void) = default;
-
-	public:
-		__ctor (_ctor);
-
-	private:
-		bool m_b_verb;
-		TLine  m_line;
-	};
-
-	using TRect = geometry::shape::_2D::CRectangle;
+	using TRect = geometry::shapes::_2D::COblong; // TRect typedef is also applicable;
 
 	__class(CRect) {
 	public:
@@ -68,8 +52,22 @@ namespace outline { namespace _2D {
 		bool m_b_verb;
 	};
 
-#pragma endregion
-}}
+	using TShape = geometry::shapes::_2D::CShape;
 
-}}}
+	__class(CShape) {
+	public:
+		 CShape (const bool _b_verb = false);
+		~CShape (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Modify);
+
+	private:
+		bool m_b_verb;
+		TShape m_shape;
+	};
+
+#pragma endregion
+}}}}}
 #endif/*_EBO_TEST_$G$_2D_SHAPE_H_INCLUDED*/

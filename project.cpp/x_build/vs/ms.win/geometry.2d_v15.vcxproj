@@ -180,10 +180,16 @@
   <ItemGroup>
     <ClInclude Include="$(_0)2d.base.h" />
     <ClCompile Include="$(_1)2d.base.cpp" />
+    <ClInclude Include="$(_0)2d.base.line.h" />
+    <ClCompile Include="$(_1)2d.base.line.cpp" />
+    <ClInclude Include="$(_0)2d.defs.h" />
+    <ClCompile Include="$(_1)2d.defs.cpp" />
+    <ClInclude Include="$(_0)2d.shape.cors.h" />
+    <ClCompile Include="$(_1)2d.shape.cors.cpp" />
     <ClInclude Include="$(_0)2d.shape.h" />
     <ClCompile Include="$(_1)2d.shape.cpp" />
-    <ClInclude Include="$(_0)2d.shape.line.h" />
-    <ClCompile Include="$(_1)2d.shape.line.cpp" />
+    <ClInclude Include="$(_0)2d.shape.rect.h" />
+    <ClCompile Include="$(_1)2d.shape.rect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

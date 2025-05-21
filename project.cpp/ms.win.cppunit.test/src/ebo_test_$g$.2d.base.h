@@ -6,9 +6,36 @@
 */
 #include "ebo_test_$g$.2d.h"
 
-namespace ebo { namespace boo { namespace test {
+// 'outline' namespace is declared here in order do not intercept with 'geometry' namespace;
+namespace ebo { namespace boo { namespace test { namespace _2D { namespace base {
 
-namespace outline { namespace _2D { // 'outline' namespace is declared here in order do not intercept with 'geometry' namespace;
+	using TLine = geometry::base::_2D::CLine;
+
+	__class(CLine) {
+	public:
+		 CLine (const bool _b_verb = false);
+		~CLine (void) = default;
+
+	public:
+		__ctor (_ctor);
+
+	private:
+		bool m_b_verb;
+		TLine  m_line;
+	};
+
+	__class(CMarker) {
+	public:
+		 CMarker (const bool _b_verb = false);
+		~CMarker (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Operators);
+
+	private:
+		bool m_b_verb;
+	};
 
 #pragma region __points
 	__class(CPoint) {
@@ -76,19 +103,6 @@ namespace outline { namespace _2D { // 'outline' namespace is declared here in o
 
 #pragma endregion
 
-	__class(CMarker) {
-	public:
-		 CMarker (const bool _b_verb = false);
-		~CMarker (void) = default;
-
-	public:
-		__ctor (_ctor);
-		__method (Operators);
-
-	private:
-		bool m_b_verb;
-	};
-
 #pragma region __position
 
 	using TAnchor = geometry::base::_2D::CAnchor;
@@ -120,7 +134,22 @@ namespace outline { namespace _2D { // 'outline' namespace is declared here in o
 
 #pragma endregion
 
-}}
+	using TRotate = geometry::base::_2D::CRotate;
 
-}}}
+	__class(CRotate) {
+	public:
+		 CRotate (const bool _b_verb = false);
+		~CRotate (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Angle);
+		__method (DoIt);
+
+	private:
+		bool m_b_verb;
+		TRotate m_rotate;
+	};
+
+}}}}}
 #endif/*_EBO_TEST_$G$_BASE_2D_H_INCLUDED*/

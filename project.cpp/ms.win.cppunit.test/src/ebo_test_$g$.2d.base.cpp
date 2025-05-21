@@ -5,7 +5,56 @@
 #include "ebo_test_$g$.2d.base.h"
 
 using namespace ebo::boo::test;
-using namespace ebo::boo::test::outline::_2D;
+using namespace ebo::boo::test::_2D::base;
+
+/////////////////////////////////////////////////////////////////////////////
+
+CLine:: CLine (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CLine::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("Default: %s"), (_pc_sz) this->m_line.Print(e_print::e_all));
+	_out()();
+
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CMarker:: CMarker (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CMarker::_ctor (void) {
+	_out() += TLog_Acc::e_new_line;
+	_out() += TMarker().Print(e_print::e_all);
+	_out()();
+}
+
+void CMarker::Operators (void) {
+
+	TMarker mark_0(6, _T("The 1st one"), true);
+	TMarker mark_1(7, _T("The 2nd one"), true);
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(
+		_T("Marker %s equals to %s one >> %s"),
+		(_pc_sz) mark_0.Print(e_print::e_req), (_pc_sz) mark_1.Print(e_print::e_req), TStringEx().Bool(mark_0 == mark_1)
+	);
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 #pragma region __points
 
@@ -182,33 +231,6 @@ void CSizeU::Operators (void) {
 
 #pragma endregion
 
-CMarker:: CMarker (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
-		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
-}
-
-void CMarker::_ctor (void) {
-	_out() += TLog_Acc::e_new_line;
-	_out() += TMarker().Print(e_print::e_all);
-	_out()();
-}
-
-void CMarker::Operators (void) {
-
-	TMarker mark_0(6, _T("The 1st one"), true);
-	TMarker mark_1(7, _T("The 2nd one"), true);
-
-	_out() += TLog_Acc::e_new_line;
-	_out() += TStringEx().Format(
-		_T("Marker %s equals to %s one >> %s"),
-		(_pc_sz) mark_0.Print(e_print::e_req), (_pc_sz) mark_1.Print(e_print::e_req), TStringEx().Bool(mark_0 == mark_1)
-	);
-	_out()();
-}
-
 #pragma region __position
 
 CAnchor:: CAnchor (const bool _b_verb) : m_b_verb(_b_verb) {
@@ -250,3 +272,44 @@ void CPosition::_ctor(void) {
 }
 
 #pragma endregion
+
+CRotate:: CRotate (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CRotate::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("#ctor : %s"), (_pc_sz) this->m_rotate.Print(e_print::e_all));
+	_out()();
+}
+
+void CRotate::Angle (void) {
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("*before* set : %d"), this->m_rotate.Angle());
+
+	this->m_rotate.Angle(-372);
+	
+	_out() += TStringEx().Format(_T("*after * set : %d"), this->m_rotate.Angle());
+	_out()();
+}
+
+void CRotate::DoIt (void) {
+	_out() += TStringEx().Format(_T("*center* : %s"), (_pc_sz) this->m_rotate.Center().Print(e_print::e_all));
+
+	TPoint point(10,20);
+	this->m_rotate.Angle(-90);
+
+	_out() += TStringEx().Format(_T("*rotate* : %s"), (_pc_sz) point.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("angle=%d; direct=%u"), this->m_rotate.Angle(), this->m_rotate.Direct());
+
+	this->m_rotate.ApplyTo(point);
+
+	_out() += TStringEx().Format(_T("*result* : %s"), (_pc_sz) point.Print(e_print::e_all));
+
+	_out()();
+}

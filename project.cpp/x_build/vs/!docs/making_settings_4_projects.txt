@@ -1,3 +1,8 @@
+time build of the projects:
+https://stackoverflow.com/questions/82128/displaying-build-times-in-visual-studio ;
+1) Tools > Options > Projects and Solutions > Build and Run > MSBuild project build output verbosity; Normal is enough; this works;
+2) Tools > Options > Projects and Solutions > VC++ Project Settings > Build Timing; doesn't work in VS 2017 Community Edition;
+
 these URLs may help to configure project file(s):
 
 https://learn.microsoft.com/en-us/cpp/build/reference/property-page-xml-files ;
@@ -22,7 +27,7 @@ https://stackoverflow.com/questions/7883966/disabling-highlighting-of-current-li
 3) VS displayes the error box 'FileStream will not open Win32 devices such as disk partitions and tape drivers. Avoid use of "\\.\" in the path';
 4) Close the error box and right click on the file node for displaying the context menu;
 5) Choose 'Properties' menu command;
-!) Crash of the VS in couple of seconds; (VS2017 Community Edition)
+!) Crash of the VS in couple of seconds; (VS 2017 Community Edition)
 *) The reason is the code file name contains 'con' as part of the file name, like this: 'con.font.h' ; after renaming to 'console.font.h' VS works as expected;
 
 *important*

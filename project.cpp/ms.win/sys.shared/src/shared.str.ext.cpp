@@ -223,6 +223,10 @@ _pc_sz  CString_Ex::Format(_pc_sz _lp_sz_fmt, va_list _args) {
 
 	size_t t_size = 0;
 	HRESULT hr_ = S_OK;
+	if (nullptr == _args) {
+		TBase::Format(_lp_sz_fmt, _args);
+		return  (_pc_sz)*this;
+	}
 	try {
 		do {
 			t_size += 2048;

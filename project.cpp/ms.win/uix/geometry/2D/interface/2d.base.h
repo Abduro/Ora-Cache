@@ -4,21 +4,10 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Oct-2024 at 21:55:27.203, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack 2D space geometry fundamental objects' interface declaration file.
 */
-#include <map>
-#include <cmath> // https://en.cppreference.com/w/cpp/numeric/math/pow ; https://en.cppreference.com/w/cpp/numeric/math/sqrt ;
-
-#include "shared.preproc.h"
-#include "shared.string.h"
-
-#include "shared.types.h"
-#include "sys.err.codes.h"
-
-#include "color.rgb.h"
+#include "2d.defs.h"
 
 // the 'base' namespace does not mean a base of shape, but basic notations or fundamental objects in geometry;
-namespace geometry { namespace base { namespace _2D {
-
-	using namespace shared::types;
+namespace geometry { namespace base {
 
 	// https://www.allacronyms.com/primitive/abbreviated ;
 
@@ -31,8 +20,9 @@ namespace geometry { namespace base { namespace _2D {
 		~CMarker (void);
 
 	public:
-		uint32_t Id (void) const;
-		bool     Id (const uint32_t);  // returns true in case if this marker identifier is changed;
+		uint32_t  Id (void) const;
+		bool      Id (const uint32_t);  // returns true in case if this marker identifier is changed;
+		uint32_t& Id_ref (void);
 
 		bool  Is_valid (void) const;   // returns true if marker identifier is equal to 0; a tag name is optional
 		bool  Is_valid (const bool);   // sets a validity attribute to the input value;
@@ -66,6 +56,7 @@ namespace geometry { namespace base { namespace _2D {
 		bool     m_valid;
 	};
 	
+namespace _2D {
 	// https://en.wikipedia.org/wiki/Geometry ;  << all shapes are mentioned in this article;
 	// https://en.wikipedia.org/wiki/Point_(geometry) ;
 
@@ -157,23 +148,37 @@ namespace geometry { namespace base { namespace _2D {
 
 	class CPoints {
 	public:
-		 CPoints (void);
+		 CPoints (const uint32_t _count = 0); // initial count of points can be provided;
 		 CPoints (const CPoints&);
 		 CPoints (CPoints&&);
 		~CPoints (void);
 
 	public:
+		// https://en.cppreference.com/w/cpp/container/vector/resize ;
+		// https://en.cppreference.com/w/cpp/container/vector/shrink_to_fit ;
+		uint32_t Count (void) const;     // gets currently set count of points in the vector;
+		err_code Count (const uint32_t); // sets the count of points in the vector; returns 's_ok' if is set; 'false' if the same, otherwise error code;
+
+		const
+		CPoint&  Get (const uint32_t _ndx) const; // if input index is out of range, the referecence to fake element is returned;
+		CPoint&  Get (const uint32_t _ndx) ;      // if input index is out of range, the referecence to fake element is returned;
+
 		const
 		t_raw_pts& Raw (void) const;
 		t_raw_pts& Raw (void) ;
 
+		err_code Rem (const uint32_t _ndx) ;      // removes a point from the container, if input index is out of range, the error code is returned;
+
 #if defined (_DEBUG)
-		CString Print (void) const;
+		CString Print (const e_print = e_print::e_all) const;
 #endif
 	
 	public:
 		CPoints&  operator = (const CPoints&);
 		CPoints&  operator = (CPoints&&);
+
+		CPoints&  operator <<(const t_raw_pts&);
+		CPoints&  operator <<(const uint32_t _n_count);
 
 		bool operator == (const CPoints&) const;
 		bool operator != (const CPoints&) const;
@@ -279,6 +284,7 @@ namespace geometry { namespace base { namespace _2D {
 		size_u&   Raw (void) ;
 
 		bool  Set (const uint32_t _width, const uint32_t _height);
+		bool  Set (const t_rect&);
 
 		uint32_t  W (void) const;
 		bool      W (const uint32_t);
@@ -292,6 +298,8 @@ namespace geometry { namespace base { namespace _2D {
 
 		CSize_U&  operator <<(const uint32_t _width);
 		CSize_U&  operator >>(const uint32_t _height);
+
+		CSize_U&  operator <<(const t_rect&);
 
 		operator const size_u& (void) const;
 		operator       size_u& (void) ;
@@ -363,6 +371,47 @@ namespace geometry { namespace base { namespace _2D {
 	private:
 		CAnchor   m_anchor;
 		CSize_U   m_size;
+	};
+	// https://stackoverflow.com/questions/2285936/easiest-way-to-rotate-a-rectangle ; good example and explanation;
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/rotation ;
+	// https://learn.microsoft.com/en-us/windows/win32/direct2d/how-to-rotate ; as an example of the rotation in Direct2D;
+	class CRotate {
+	public:
+		enum e_direct : uint32_t {
+		     e_cw  = 0x0, // clockwise;
+		     e_ccw = 0x1, // counter-clockwise;
+		};
+	public:
+		 CRotate (void) ; CRotate (const CRotate&) = delete; CRotate (CRotate&&) = delete;
+		~CRotate (void) ;
+
+	public:
+		int16_t  Angle (void) const;    // returns an angle which the rotation must be made in;
+		bool     Angle (const int16_t); // returns 'true' in case of change; if the value more/less than 360 degree, it is casted to appropriate value;
+
+		err_code ApplyTo (CPoint& _vertex) const;
+
+		const
+		CPoint&  Center (void) const;
+		CPoint&  Center (void) ;
+		e_direct Direct (void) const;
+		bool     Direct (const e_direct);
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
+
+	public:
+		CRotate&  operator = (const CRotate&) = delete;
+		CRotate&  operator = (CRotate&&) = delete;
+
+		CRotate&  operator <<(const e_direct);
+		CRotate&  operator <<(const CPoint& _center);    // sets a center of the rotation;
+		CRotate&  operator <<(const int16_t _angle);     // sets an angle of the rotation;
+
+	private:
+		int16_t   m_angle ;
+		e_direct  m_direct;
+		CPoint    m_center;
 	};
 }}}
 
