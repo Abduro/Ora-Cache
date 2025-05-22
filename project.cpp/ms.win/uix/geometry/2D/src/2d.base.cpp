@@ -4,8 +4,8 @@
 */
 #include "2d.base.h"
 
-using namespace geometry::base;
-using namespace geometry::base::_2D;
+using namespace geometry::_2D;
+using namespace geometry::_2D::base;
 
 #ifndef __H
 #define __H(_rect) (_rect.bottom - _rect.top)
@@ -13,94 +13,6 @@ using namespace geometry::base::_2D;
 #ifndef __W
 #define __W(_rect) (_rect.right - _rect.left)
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-CMarker:: CMarker (void) : m_id (0), m_tag(_T("#undef")), m_valid(false) {} // possibly it is not good way for initialization of this object, but is okay for now;
-CMarker:: CMarker (const uint32_t _u_id, _pc_sz _p_tag, const bool _b_valid) : CMarker() { *this << _u_id << _p_tag << _b_valid; }
-CMarker:: CMarker (const CMarker& _src) : CMarker() { *this = _src; }
-CMarker::~CMarker (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-uint32_t  CMarker::Id (void) const { return this->m_id; }
-bool      CMarker::Id (const uint32_t _value) { const bool b_changed = (this->Id() != _value); if (b_changed) this->m_id = _value; return b_changed; }
-
-uint32_t& CMarker::Id_ref (void) { return this->m_id; }
-
-bool   CMarker::Is_valid (void) const { return this->m_valid; }
-bool   CMarker::Is_valid (const bool _b_valid) {
-	_b_valid;
-	const bool b_changed = (this->Is_valid() != _b_valid);
-
-	if (b_changed)
-		this->m_valid = _b_valid;
-
-	return b_changed;
-}
-
-#if defined(_DEBUG)
-CString CMarker::Print (const e_print e_opt) const {
-	e_opt;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{id=%u;tag=%s;valid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{id=%u;tag=%s;valid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{id=%u;tag=%s;valid=%s}");
-
-	CString cs_out;
-
-	if (e_print::e_all   == e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Id(), this->Tag(), TStringEx().Bool(this->Is_valid())); }
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Id(), this->Tag(), TStringEx().Bool(this->Is_valid())); }
-	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, this->Id(), this->Tag(), TStringEx().Bool(this->Is_valid())); }
-
-	if (cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
-
-	return  cs_out;
-}
-#endif
-
-bool    CMarker::Set (const uint32_t _u_id, _pc_sz _p_tag, const bool _b_valid) {
-	_u_id; _p_tag; _b_valid;
-	bool b_changed = false;
-
-	if (this->Id(_u_id)) b_changed = true;
-	if (this->Tag(_p_tag)) b_changed = true;
-	if (this->Is_valid(_b_valid)) b_changed = true;
-
-	return b_changed;
-}
-
-_pc_sz  CMarker::Tag (void) const { return (_pc_sz) this->m_tag; }
-bool    CMarker::Tag (_pc_sz _p_tag) {
-	_p_tag;
-	bool b_changed =!(nullptr == _p_tag && nullptr == this->Tag()); // there is no sense to replace nullptr by nullptr;
-	if (!b_changed)
-		return b_changed;
-
-	if (nullptr != _p_tag)
-		b_changed = !!this->m_tag.Compare(_p_tag);
-
-	if (b_changed) {
-		this->m_tag = _p_tag;
-		this->m_tag.Trim();
-		b_changed = !!m_tag.GetLength();
-	}
-
-	return b_changed;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CMarker&  CMarker::operator = (const CMarker& _src) { *this << _src.Id() << _src.Tag() << _src.Is_valid(); return *this; }
-CMarker&  CMarker::operator <<(const uint32_t _u_id) { this->Id(_u_id); return *this; }
-CMarker&  CMarker::operator <<(_pc_sz _p_tag) { this->Tag(_p_tag); return *this; }
-CMarker&  CMarker::operator <<(const bool _b_valid) { this->Is_valid(_b_valid); return *this; }
-
-CMarker::operator _pc_sz (void) const { return this->Tag(); }
-CMarker::operator uint32_t (void) const { return this->Id(); }
-
-bool CMarker::operator == (const CMarker& _rhv) const { return (this->Id() == _rhv.Id() && !this->m_tag.Compare(_rhv.Tag()) && this->Is_valid() == _rhv.Is_valid()); }
-bool CMarker::operator != (const CMarker& _rhv) const { return false == (*this == _rhv); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -344,7 +256,7 @@ CPoint_2& CPoint_2::operator <<(const CMarker& _marker) { this->Marker() = _mark
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace geometry { namespace base { namespace _2D { namespace _impl {
+namespace geometry { namespace _2D { namespace base { namespace _impl {
 
 #if defined(_DEBUG)
 
@@ -376,7 +288,7 @@ namespace geometry { namespace base { namespace _2D { namespace _impl {
 	};
 #endif
 }}}}
-using namespace geometry::base::_2D::_impl;
+using namespace geometry::_2D::base::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -630,138 +542,3 @@ CPosition::operator const t_rect (void) const {
 		this->Anchor().X(), this->Anchor().Y(), this->Anchor().X() + (int32_t)this->Size().W(), this->Anchor().Y() + (int32_t)this->Size().H()
 	};
 }
-
-/////////////////////////////////////////////////////////////////////////////
-
-using eRotDirect = CRotate::e_direct;
-
-CRotate:: CRotate (void) : m_angle(0), m_direct(e_direct::e_cw) {}
-CRotate::~CRotate (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-int16_t   CRotate::Angle (void) const { return this->m_angle; }  
-bool      CRotate::Angle (const int16_t _degree) {
-	_degree;
-	const int16_t n_degree = _degree % 360;
-	const bool b_changed = this->Angle() != n_degree;
-
-	if (b_changed) {
-		this->m_angle = n_degree;
-		this->m_direct = n_degree < 0 ? e_direct::e_cw : e_direct::e_ccw;
-	}
-
-	return b_changed;
-}
-
-err_code  CRotate::ApplyTo (CPoint& _vertex) const {
-	_vertex;
-	err_code n_result = __s_ok;
-
-	if (this->Angle() == 0)
-		return n_result;
-
-	CPoint cast = _vertex - this->Center();
-	if (false) {}
-	else if (- 90 == this->Angle()) { _vertex << +cast.Y() >> -cast.X(); return n_result; } //  cw;
-	else if (+ 90 == this->Angle()) { _vertex << -cast.Y() >> +cast.X(); return n_result; } // ccw;
-	else if (-180 == this->Angle()) { _vertex << -cast.X() >> -cast.Y(); return n_result; } // just the inversion of the coordinate values;
-	else if (+180 == this->Angle()) { _vertex << -cast.X() >> -cast.Y(); return n_result; } // the same as above;
-	else if (-270 == this->Angle()) { _vertex << -cast.Y() >> +cast.X(); return n_result; } // the same as to rotate to +90;
-	else if (+270 == this->Angle()) { _vertex << +cast.Y() >> -cast.X(); return n_result; } // the same as to rotate to -90;
-
-	const float rads = this->Angle() * M_PI/180;
-	// https://learn.microsoft.com/en-us/windows/win32/gdi/rotation ; the formula at the end of the article;
-	/* x' = (x * cos(angle)) - (y * sin(angle)) 
-	   y' = (x * sin(angle)) + (y * cos(angle)) 
-	*/
-#if (0)
-	if (e_direct::e_ccw == this->Direct()) {
-	_vertex.Set(
-		static_cast<int32_t>((float(cast.X()) * ::std::cos((float)this->Angle())) - (float(cast.Y()) * ::std::sin((float)this->Angle()))),
-		static_cast<int32_t>((float(cast.X()) * ::std::sin((float)this->Angle())) + (float(cast.Y()) * ::std::cos((float)this->Angle())))
-	); } else {
-	_vertex.Set(
-		static_cast<int32_t>((float(cast.X()) * ::std::cos((float)this->Angle())) + (float(cast.Y()) * ::std::sin((float)this->Angle()))),
-		static_cast<int32_t>((float(cast.X()) * ::std::sin((float)this->Angle())) - (float(cast.Y()) * ::std::cos((float)this->Angle())))
-	); }
-#else
-	const float x_0 = float(cast.X()) * ::std::cos(rads);
-	const float x_1 = float(cast.Y()) * ::std::sin(rads);
-	const float y_0 = float(cast.X()) * ::std::sin(rads);
-	const float y_1 = float(cast.Y()) * ::std::cos(rads);
-//	if (e_direct::e_ccw == this->Direct()) {
-	_vertex.Set(
-		static_cast<int32_t>((float(cast.X()) * ::std::cos(rads)) - (float(cast.Y()) * ::std::sin(rads))),
-		static_cast<int32_t>((float(cast.X()) * ::std::sin(rads)) + (float(cast.Y()) * ::std::cos(rads)))
-	);// } else {
-//	_vertex.Set(
-//		static_cast<int32_t>((float(cast.X()) * ::std::cos(rads)) + (float(cast.Y()) * ::std::sin(rads))),
-//		static_cast<int32_t>((float(cast.X()) * ::std::sin(rads)) - (float(cast.Y()) * ::std::cos(rads)))
-//	);// }
-#endif
-	return n_result;
-}
-
-const
-CPoint&   CRotate::Center (void) const { return this->m_center; }
-CPoint&   CRotate::Center (void)       { return this->m_center; }
-
-eRotDirect CRotate::Direct (void) const { return this->m_direct; }
-#if (0)
-bool CRotate::Direct (const e_direct _value) {
-	const bool b_changed = (this->Direct() != _value);
-	if (b_changed) {
-		this->m_direct = _value;
-	}
-	return b_changed;
-}
-#endif
-#if defined (_DEBUG)
-CString   CRotate::DirectAsText (void) const {
-
-	CString cs_direct;
-	if (false) {}
-	else if (e_direct::e_cw  == this->Direct()) { cs_direct = _T("clockwise"); }
-	else if (e_direct::e_ccw == this->Direct()) { cs_direct = _T("counter-cw"); }
-	else { cs_direct = _T("#undef"); }
-	return cs_direct;
-}
-
-CString   CRotate::Print (const e_print e_opt) const {
-	e_opt;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{center=%s;angle=%s;direct=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{center=%s;angle=%s;direct=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{center=%s;angle=%s;direct=%s}");
-
-	CString cs_center = this->Center().Print(e_print::e_req);
-	CString cs_angle  = TStringEx().Long(this->Angle());
-	CString cs_direct = this->DirectAsText();
-	
-	CString cs_out;
-
-	if (e_print::e_all   == e_opt) {
-		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_center, (_pc_sz) cs_angle, (_pc_sz) cs_direct);
-	}
-	if (e_print::e_no_ns == e_opt) {
-		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_center, (_pc_sz) cs_angle, (_pc_sz) cs_direct);
-	}
-	if (e_print::e_req   == e_opt) {
-		cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_center, (_pc_sz) cs_angle, (_pc_sz) cs_direct);
-	}
-
-	if (cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
-
-	return  cs_out;
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-#if (0)
-CRotate&  CRotate::operator <<(const e_direct  _value) { this->Direct(_value); return *this; }
-#endif
-CRotate&  CRotate::operator <<(const CPoint&  _center) { this->Center() = _center; return *this; }
-CRotate&  CRotate::operator <<(const int16_t   _angle) { this->Angle(_angle); return *this; }

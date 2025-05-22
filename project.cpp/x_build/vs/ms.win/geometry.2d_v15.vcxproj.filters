@@ -15,6 +15,8 @@
     <ClCompile Include="$(_1)2D.base.line.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)2D.defs.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)2D.defs.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)2D.rotate.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)2D.rotate.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)2D.shape.cors.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)2D.shape.cors.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)2D.shape.h" ><Filter>interface</Filter></ClInclude>

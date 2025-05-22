@@ -6,12 +6,12 @@
 */
 #include "2d.shape.h"
 
-namespace geometry { namespace shapes { namespace _2D {
+namespace geometry { namespace _2D { namespace shapes {
 
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions >> most rectangle related methods are designed for drawing only;
 
-	using CPoint_2 = geometry::base::_2D::CPoint_2;
-	using CSize    = geometry::base::_2D::CSize;
+	using CPoint_2 = geometry::_2D::base::CPoint_2;
+	using CSize    = geometry::_2D::base::CSize;
 	/*
 		Taking into account a rectangle has 4 (four) sides as a shape, it looks like do not use such a kind of rectangle declaration
 		due to a simple reason: both OpenGL and DirectX uses a vertices for drawing a rectangle in 2D (3D) spaces;
@@ -34,8 +34,8 @@ namespace geometry { namespace shapes { namespace _2D {
 		     exact describing or specifying a rectangle size and position, this is diagonal points: left-top and right-bottom; */
 		enum e_vertex : uint32_t { // this enumeration has different name from above one for better readability, nothing more;
 		     e__undef    = 0x0,
-		     e_left_top  = 0x1,
-		     e_right_low = 0x2,
+		     e_left_top  = 0x1,    // taking into account that left-top or left-up may be not at the top due to values or rotation, it would better to call it as e_A corner;
+		     e_right_low = 0x2,    // the same notice as above, and element name as e_C; so that means corners e_A and e_C are on diagonal, the same can be said for e_B and e_D;
 		};
 	public:
 		using e_index = e_corners;
@@ -55,7 +55,7 @@ namespace geometry { namespace shapes { namespace _2D {
 		TRgbQuad& Color (void) const;
 		TRgbQuad& Color (void) ;
 		
-		bool  Is_valid (void) const;             // returns true in case if have 2 (two) diagonal vertices have different coordinates from each other;
+		bool   Is_valid (void) const;            // returns true in case if it has 2 (two) diagonal vertices have different coordinates from each other;
 
 #if defined (_DEBUG)
 		CString  Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
@@ -77,6 +77,6 @@ namespace geometry { namespace shapes { namespace _2D {
 	};
 }}}
 
-typedef geometry::shapes::_2D::COblong  TRect;
+typedef geometry::_2D::shapes::COblong  TRect;
 
 #endif/*_2D_SHAPE_RECT_H_INCLUDED*/

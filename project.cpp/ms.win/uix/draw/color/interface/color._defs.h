@@ -7,12 +7,11 @@
 #include <algorithm>  // https://en.cppreference.com/w/cpp/algorithm/swap ;
 #include <cstddef>    // https://en.cppreference.com/w/cpp/language/types ;
 #include <limits>
-#include <cmath>      // https://en.cppreference.com/w/cpp/numeric/math/fabs ;
+#include <cmath>      // https://en.cppreference.com/w/cpp/numeric/math/fabs ; ceil() ;
+#include <stdint.h>   // uint8_t;
 
-#if defined(_DEBUG)
 #include "shared.preproc.h"
 #include "shared.string.h"
-#endif
 
 #include  "shared.types.h"
 

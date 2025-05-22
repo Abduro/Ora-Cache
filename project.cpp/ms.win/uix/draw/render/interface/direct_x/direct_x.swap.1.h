@@ -10,7 +10,7 @@
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 
 	using namespace ex_ui::draw::direct_x;
-	using CSize_U = geometry::base::_2D::CSize_U;
+	using CSize_U = geometry::_2D::base::CSize_U;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_swap_chain_desc ;
 	typedef DXGI_SWAP_CHAIN_DESC TSwapDesc;

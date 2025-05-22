@@ -39,7 +39,7 @@ namespace ex_ui { namespace draw { namespace direct_x {
 	using shared::sys_core::CSyncObject;
 	using ex_ui::color::rgb::CClr_Float;
 
-	using CSize_U = geometry::base::_2D::CSize_U;
+	using CSize_U = geometry::_2D::base::CSize_U;
 
 namespace _11 {
 	/*

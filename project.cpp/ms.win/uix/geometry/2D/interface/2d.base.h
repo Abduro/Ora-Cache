@@ -7,56 +7,8 @@
 #include "2d.defs.h"
 
 // the 'base' namespace does not mean a base of shape, but basic notations or fundamental objects in geometry;
-namespace geometry { namespace base {
+namespace geometry { namespace _2D { namespace base {
 
-	// https://www.allacronyms.com/primitive/abbreviated ;
-
-	class CMarker {
-	public:
-		 CMarker (void); 
-		 CMarker (const uint32_t _u_id, _pc_sz _p_tag, const bool _b_valid); // a tag or maybe better to call it as just a name;
-		 CMarker (const CMarker&);
-		 CMarker (CMarker&&) = delete; // is not required yet;
-		~CMarker (void);
-
-	public:
-		uint32_t  Id (void) const;
-		bool      Id (const uint32_t);  // returns true in case if this marker identifier is changed;
-		uint32_t& Id_ref (void);
-
-		bool  Is_valid (void) const;   // returns true if marker identifier is equal to 0; a tag name is optional
-		bool  Is_valid (const bool);   // sets a validity attribute to the input value;
-
-		bool  Set (const uint32_t _u_id, _pc_sz _p_tag, bool _b_valid = false); // returns true in case of the marker identifier or tag value is changed;
-
-		_pc_sz   Tag (void) const;
-		bool     Tag (_pc_sz) ;        // returns true if tag text is changed, case sensitive; nullptr is acceptable;
-
-#if defined(_DEBUG)
-		CString  Print (const e_print = e_print::e_all) const;
-#endif
-
-	public:
-		CMarker& operator = (const CMarker&);
-		CMarker& operator = (CMarker&&) = delete;   // is not required yet;
-
-		CMarker& operator <<(const uint32_t _u_id); // error C2666: 'geometry::shape::_2D::CMarker::operator <<': 2 overloads have similar conversions ...;
-		CMarker& operator <<(_pc_sz _p_tag);
-		CMarker& operator <<(const bool _b_valid);
-
-		operator _pc_sz   (void) const; // returns a pointer to tag string;
-		operator uint32_t (void) const; // returns an identifier of this marker;
-
-		bool operator == (const CMarker&) const;
-		bool operator != (const CMarker&) const;
-
-	private:
-		CString  m_tag;
-		uint32_t m_id ;
-		bool     m_valid;
-	};
-	
-namespace _2D {
 	// https://en.wikipedia.org/wiki/Geometry ;  << all shapes are mentioned in this article;
 	// https://en.wikipedia.org/wiki/Point_(geometry) ;
 
@@ -132,7 +84,7 @@ namespace _2D {
 	};
 }}}
 
-typedef geometry::base::_2D::CPoint  TPoint;
+typedef geometry::_2D::base::CPoint  TPoint;
 typedef ::std::vector<TPoint>    TRawPoints; typedef TRawPoints t_raw_pts;
 
 TPoint  operator + (const TPoint& _lsv, const TPoint& _rsv);
@@ -144,7 +96,7 @@ TPoint  operator + (const TPoint& _lsv, const TPoint& _rsv);
 */
 TPoint  operator - (const TPoint& _lsv, const TPoint& _rsv);
 
-namespace geometry { namespace base { namespace _2D {
+namespace geometry { namespace _2D { namespace base {
 
 	class CPoints {
 	public:
@@ -189,9 +141,9 @@ namespace geometry { namespace base { namespace _2D {
 
 }}}
 
-typedef geometry::base::_2D::CPoints TPoints;
+typedef geometry::_2D::base::CPoints TPoints;
 
-namespace geometry { namespace base { namespace _2D {
+namespace geometry { namespace _2D { namespace base {
 
 	// https://simple.wikipedia.org/wiki/Side ;
 
@@ -315,8 +267,8 @@ namespace geometry { namespace base { namespace _2D {
 	};
 }}}
 
-typedef geometry::base::_2D::CSize     TSize ;
-typedef geometry::base::_2D::CSize_U   TSizeU;
+typedef geometry::_2D::base::CSize     TSize ;
+typedef geometry::_2D::base::CSize_U   TSizeU;
 
 TSize   operator + (const TSize& , const TSize& );
 TSize   operator - (const TSize& , const TSize& );
@@ -324,7 +276,7 @@ TSize   operator - (const TSize& , const TSize& );
 TSizeU  operator + (const TSizeU&, const TSizeU&);
 TSizeU  operator - (const TSizeU&, const TSizeU&);
 
-namespace geometry { namespace base { namespace _2D {
+namespace geometry { namespace _2D { namespace base {
 
 	class CAnchor : public CPoint_2 { typedef CPoint_2 TBase;
 	public:
@@ -371,50 +323,6 @@ namespace geometry { namespace base { namespace _2D {
 	private:
 		CAnchor   m_anchor;
 		CSize_U   m_size;
-	};
-	// https://stackoverflow.com/questions/2285936/easiest-way-to-rotate-a-rectangle ; good example and explanation;
-	// https://learn.microsoft.com/en-us/windows/win32/gdi/rotation ;
-	// https://learn.microsoft.com/en-us/windows/win32/direct2d/how-to-rotate ; as an example of the rotation in Direct2D;
-	class CRotate {
-	public:
-		enum e_direct : uint32_t {
-		     e_cw  = 0x0, // clockwise; if the rotate angle has negative value of degrees;
-		     e_ccw = 0x1, // counter-clockwise; it is just the opposition of above case: the angle has positive value of degrees;
-		};
-	public:
-		 CRotate (void) ; CRotate (const CRotate&) = delete; CRotate (CRotate&&) = delete;
-		~CRotate (void) ;
-
-	public:
-		int16_t  Angle (void) const;    // returns an angle which the rotation must be made in;
-		bool     Angle (const int16_t); // returns 'true' in case of change; if the value more/less than 360 degree, it is casted to appropriate value;
-
-		err_code ApplyTo (CPoint& _vertex) const;
-
-		const
-		CPoint&  Center (void) const;
-		CPoint&  Center (void) ;
-		e_direct Direct (void) const;   // it is just informative and is dependable on the sign rotate angle value;
-//		bool     Direct (const e_direct); this is mostly not usefull due to: negative degree is clockwise rotation, otherwise counter-clockwise;
-#if defined(_DEBUG)
-		CString  DirectAsText (void) const;
-#endif
-#if defined(_DEBUG)
-		CString  Print (const e_print = e_print::e_all) const;
-#endif
-
-	public:
-		CRotate&  operator = (const CRotate&) = delete;
-		CRotate&  operator = (CRotate&&) = delete;
-
-//		CRotate&  operator <<(const e_direct);
-		CRotate&  operator <<(const CPoint& _center);    // sets a center of the rotation;
-		CRotate&  operator <<(const int16_t _angle);     // sets an angle of the rotation;
-
-	private:
-		int16_t   m_angle ;
-		e_direct  m_direct;
-		CPoint    m_center;
 	};
 }}}
 

@@ -6,7 +6,7 @@
 */
 #include "2d.base.h"
 
-namespace geometry { namespace base { namespace _2D {
+namespace geometry { namespace _2D { namespace base {
 
 	class CLine {
 	public:

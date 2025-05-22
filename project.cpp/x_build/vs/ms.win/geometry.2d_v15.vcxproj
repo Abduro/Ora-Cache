@@ -184,6 +184,8 @@
     <ClCompile Include="$(_1)2d.base.line.cpp" />
     <ClInclude Include="$(_0)2d.defs.h" />
     <ClCompile Include="$(_1)2d.defs.cpp" />
+    <ClInclude Include="$(_0)2d.rotate.h" />
+    <ClCompile Include="$(_1)2d.rotate.cpp" />
     <ClInclude Include="$(_0)2d.shape.cors.h" />
     <ClCompile Include="$(_1)2d.shape.cors.cpp" />
     <ClInclude Include="$(_0)2d.shape.h" />

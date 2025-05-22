@@ -4,7 +4,7 @@
 */
 #include "2d.shape.h"
 
-using namespace geometry::shapes::_2D;
+using namespace geometry::_2D::shapes;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -260,8 +260,20 @@ CShape::~CShape (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CShape::Is_valid (void) const { 
-	 return n_min_point_count <= this->Points().Raw().size(); // it is not good idea to think about a line like about a shape;
+bool CShape::Is_valid (void) const {
+
+	bool b_valid = n_min_point_count <= this->Points().Raw().size();
+	if ( b_valid == false)
+		return b_valid;
+
+	for (uint32_t i_ = 1; i_ < this->Points().Raw().size(); i_++) {
+		if (this->Points().Get(i_ - 0) == this->Points().Get(i_ - 1)) {
+			b_valid = false;
+			break;
+		}
+	}
+
+	return b_valid;
 }
 
 const

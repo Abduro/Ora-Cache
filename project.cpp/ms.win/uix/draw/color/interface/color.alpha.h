@@ -4,9 +4,6 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 12-Oct-2021 at 1:45:38.8392778 am, UTC+7, Novosibirsk, Tuesday;
 	This is Ebo Pack color alpha value interface declaration file;
 */
-#include <cmath>          // ceil() ;
-#include <stdint.h>       // uint8_t;
-
 #include "color._defs.h"
 
 #define _Opaque rgb_val_max

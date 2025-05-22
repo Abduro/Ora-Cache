@@ -13,7 +13,7 @@ namespace ex_ui { namespace draw { namespace memory {
 	#define _ATL_NO_AUTOMATIC_NAMESPACE
 
 	using namespace ex_ui::draw::defs;
-	using CLine = geometry::shapes::_2D::CLine;
+	using CLine = geometry::_2D::shapes::CLine;
 	using CRect = ::ATL::CRect;
 
 	using namespace ex_ui::draw::blend;

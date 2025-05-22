@@ -4,11 +4,11 @@
 */
 #include "2d.shape.rect.h"
 
-using namespace geometry::shapes::_2D;
+using namespace geometry::_2D::shapes;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace geometry { namespace shapes { namespace _2D { namespace _impl {
+namespace geometry { namespace _2D { namespace shapes { namespace _impl {
 
 
 	CPoint_2&  _get_invalid_point (void) {
@@ -37,7 +37,7 @@ namespace geometry { namespace shapes { namespace _2D { namespace _impl {
 
 }}}}
 
-using namespace geometry::shapes::_2D::_impl;
+using namespace geometry::_2D::shapes::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -6,11 +6,11 @@
 */
 #include "2d.base.h"
 
-namespace geometry { namespace base { namespace _2D {
+namespace geometry { namespace _2D { namespace shapes {
 
 	using namespace shared::types;
 
-	using CMarker = geometry::base::CMarker;
+	using CMarker = geometry::_2D::CMarker;
 
 	// the radius value defines how smoothly the angle is rounded; it can have negative value, this, the angle can be convex and concave;
 	class CCorner {

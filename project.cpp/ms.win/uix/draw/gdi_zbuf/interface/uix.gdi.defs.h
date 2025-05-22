@@ -27,10 +27,8 @@ namespace ATL { // this namespace is required for distinguishing ATL primitive s
 #include "shared.types.h"
 #include "sys.error.h"
 
-#if defined(_DEBUG)
 #include "shared.preproc.h"
 #include "shared.string.h"
-#endif
 
 namespace ex_ui { namespace draw { namespace defs {
 

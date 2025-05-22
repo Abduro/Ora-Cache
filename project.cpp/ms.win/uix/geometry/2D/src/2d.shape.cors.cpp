@@ -4,7 +4,7 @@
 */
 #include "2d.shape.cors.h"
 
-using namespace geometry::base::_2D;
+using namespace geometry::_2D::shapes;
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -38,7 +38,7 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace shape
 
 #pragma region __shapes
 
-	using TRect = geometry::shapes::_2D::COblong; // TRect typedef is also applicable;
+	using TRect = geometry::_2D::shapes::COblong; // TRect typedef is also applicable;
 
 	__class(CRect) {
 	public:
@@ -52,7 +52,7 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace shape
 		bool m_b_verb;
 	};
 
-	using TShape = geometry::shapes::_2D::CShape;
+	using TShape = geometry::_2D::shapes::CShape;
 
 	__class(CShape) {
 	public:

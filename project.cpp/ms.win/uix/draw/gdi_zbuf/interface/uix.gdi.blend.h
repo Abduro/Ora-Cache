@@ -12,8 +12,8 @@ namespace ex_ui { namespace draw { namespace blend {
 	using namespace ex_ui::draw::defs;
 	// https://stackoverflow.com/questions/11645532/alphablend-function << just as the example of good explanation ;
 
-	using CAnchor = geometry::base::_2D::CAnchor;
-	using CPosition = geometry::base::_2D::CPosition;
+	using CAnchor = geometry::_2D::base::CAnchor;
+	using CPosition = geometry::_2D::base::CPosition;
 	using CPos = CPosition;
 
 	class CInput {

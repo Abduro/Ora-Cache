@@ -7,15 +7,15 @@
 #include "2d.base.h"
 #include "2d.base.line.h"
 
-namespace geometry { namespace shapes { namespace _2D {
+namespace geometry { namespace _2D { namespace shapes {
 
 	// https://dictionary.cambridge.org/dictionary/english/shape ;
 	using namespace shared::types;
 
-	using CPoint  = geometry::base::_2D::CPoint;
-	using CPoints = geometry::base::_2D::CPoints;
-	using CLine   = geometry::base::_2D::CLine;
-	using CMarker = geometry::base::CMarker;
+	using CPoint  = geometry::_2D::base::CPoint;
+	using CPoints = geometry::_2D::base::CPoints;
+	using CLine   = geometry::_2D::base::CLine;
+	using CMarker = geometry::_2D::CMarker;
 
 	// https://simple.wikipedia.org/wiki/Side ;
 
@@ -55,12 +55,12 @@ namespace geometry { namespace shapes { namespace _2D {
 
 }}}
 
-typedef geometry::shapes::_2D::CMarker  TMarker;
-typedef geometry::shapes::_2D::CSide    TSide  ;
+typedef geometry::_2D::shapes::CMarker  TMarker;
+typedef geometry::_2D::shapes::CSide    TSide  ;
 
 typedef ::std::vector<TSide> TRawSides; typedef TRawSides t_raw_sides;
 
-namespace geometry { namespace shapes { namespace _2D {
+namespace geometry { namespace _2D { namespace shapes {
 
 	class CSides {
 	public:
@@ -114,7 +114,7 @@ namespace geometry { namespace shapes { namespace _2D {
 		~CShape (void);
 
 	public:
-		bool   Is_valid (void) const;
+		bool   Is_valid (void) const;  // checks a count of points and all points must have different values from each other; a rectangle overrides this property;
 		const
 		CPoints& Points (void) const;
 		CPoints& Points (void) ;
@@ -147,6 +147,6 @@ namespace geometry { namespace shapes { namespace _2D {
 	};
 }}}
 
-typedef geometry::shapes::_2D::CSides TSides;
+typedef geometry::_2D::shapes::CSides TSides;
 
 #endif/*_2D_SHAPE_H_INCLUDED*/

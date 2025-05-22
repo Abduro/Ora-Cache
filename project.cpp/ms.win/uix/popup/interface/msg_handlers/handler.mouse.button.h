@@ -9,7 +9,7 @@
 
 namespace ex_ui { namespace message { namespace handlers { namespace mouse { namespace buttons {
 
-	using CPoint = geometry::base::_2D::CPoint;
+	using CPoint = geometry::_2D::base::CPoint;
 
 	using CError = shared::sys_core::CError;
 	using TError = const CError;

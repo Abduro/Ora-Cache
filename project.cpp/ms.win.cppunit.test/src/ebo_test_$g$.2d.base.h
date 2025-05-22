@@ -9,7 +9,7 @@
 // 'outline' namespace is declared here in order do not intercept with 'geometry' namespace;
 namespace ebo { namespace boo { namespace test { namespace _2D { namespace base {
 
-	using TLine = geometry::base::_2D::CLine;
+	using TLine = geometry::_2D::base::CLine;
 
 	__class(CLine) {
 	public:
@@ -22,19 +22,6 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace base 
 	private:
 		bool m_b_verb;
 		TLine  m_line;
-	};
-
-	__class(CMarker) {
-	public:
-		 CMarker (const bool _b_verb = false);
-		~CMarker (void) = default;
-
-	public:
-		__ctor (_ctor);
-		__method (Operators);
-
-	private:
-		bool m_b_verb;
 	};
 
 #pragma region __points
@@ -61,7 +48,7 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace base 
 		bool m_b_verb;
 	};
 
-	using TPoint_2 =  geometry::base::_2D::CPoint_2; // this is the point class extended by marker;
+	using TPoint_2 =  geometry::_2D::base::CPoint_2; // this is the point class extended by marker;
 
 	__class(CPoint_2) {
 	public:
@@ -105,8 +92,8 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace base 
 
 #pragma region __position
 
-	using TAnchor = geometry::base::_2D::CAnchor;
-	using TPosition = geometry::base::_2D::CPosition;
+	using TAnchor = geometry::_2D::base::CAnchor;
+	using TPosition = geometry::_2D::base::CPosition;
 
 	__class(CAnchor) {
 	public:
@@ -133,23 +120,6 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace base 
 	};
 
 #pragma endregion
-
-	using TRotate = geometry::base::_2D::CRotate;
-
-	__class(CRotate) {
-	public:
-		 CRotate (const bool _b_verb = false);
-		~CRotate (void) = default;
-
-	public:
-		__ctor (_ctor);
-		__method (Angle);
-		__method (DoIt);
-
-	private:
-		bool m_b_verb;
-		TRotate m_rotate;
-	};
 
 }}}}}
 #endif/*_EBO_TEST_$G$_BASE_2D_H_INCLUDED*/
