@@ -203,7 +203,7 @@ void CSizeU::Operators (void) {
 #pragma endregion
 
 #pragma region __position
-
+#if (0)
 CAnchor:: CAnchor (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
@@ -220,7 +220,7 @@ void CAnchor::_ctor(void) {
 	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) anchor.Print(e_print::e_all));
 	_out()();
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 CPosition:: CPosition (const bool _b_verb) : m_b_verb(_b_verb) {
@@ -234,7 +234,7 @@ CPosition:: CPosition (const bool _b_verb) : m_b_verb(_b_verb) {
 void CPosition::_ctor(void) {
 
 	TPosition pos;
-	pos.Anchor().Marker().Set(1, _T("pos::anchor"), true);
+//	pos.Anchor().Marker().Set(1, _T("pos::anchor"), true);
 	pos.Size().Set(20, 10);
 
 	_out() += TLog_Acc::e_new_line;

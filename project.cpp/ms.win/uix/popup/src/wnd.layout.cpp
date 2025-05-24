@@ -6,74 +6,79 @@
 
 using namespace ex_ui::popup::layout;
 
+#ifndef __H
 #define __H(rc) (rc.bottom - rc.top)
 #define __W(rc) (rc.right - rc.left)
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPlacement:: CPlacement (void) : m_rect{0} {}
+CPlacement:: CPlacement (const CPlacement& _ref) : CPlacement() { *this = _ref; }
+CPlacement::~CPlacement (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool   CPlacement::DoNormal (void) {
+	
+	bool b_result = !!!::IsRectEmpty(&this->Rect());
+	if (!b_result)
+		return b_result;
+
+	if (this->Rect().left > this->Rect().right) {
+		const long left = this->Rect().left; this->Rect().left = this->Rect().right; this->Rect().right =  left; b_result = true;
+	}
+	if (this->Rect().top > this->Rect().bottom) {
+		const long top = this->Rect().top; this->Rect().top = this->Rect().bottom; this->Rect().bottom = top; b_result = true;
+	}
+
+	return b_result;
+}
+
+bool   CPlacement::IsNormal (void) const { return (this->Rect().left < this->Rect().right && this->Rect().top < this->Rect().bottom); }
+
+bool   CPlacement::Includes (const t_point& _pt) const {
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect ;
+	bool b_result = this->IsNormal();
+	if (!b_result)
+		return b_result;
+
+	return !!::PtInRect(&this->Rect(), _pt);
+}
+
+bool   CPlacement::Intercepts (const t_rect& _rect) const {
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect ;
+	bool b_result = !(::IsRectEmpty(&this->Rect()) || ::IsRectEmpty(&_rect));
+	if (!b_result)
+		return b_result;
+
+	t_rect rc_result = {0};
+	b_result = !!::IntersectRect(&rc_result, &this->Rect(), &_rect);
+
+	return b_result;
+}
+
+const
+t_rect&  CPlacement::Rect (void) const { return this->m_rect; }
+t_rect&  CPlacement::Rect (void)       { return this->m_rect; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPlacement&  CPlacement::operator = (const CPlacement& _ref) { *this << _ref.Rect(); return *this; }
+CPlacement&  CPlacement::operator <<(const t_rect& _rect) { this->Rect() = _rect; return *this;  }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CPosition:: CPosition (void) {}
-CPosition:: CPosition (const TPoint& _anchor, const TSize & _size) : CPosition() { *this << _anchor << _size; }
-CPosition:: CPosition (const CPosition& _src) : CPosition() { *this =  _src; }
-CPosition:: CPosition (CPosition&& _victim) : CPosition() { *this = _victim; }
-CPosition::~CPosition (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
-const
-TPoint&  CPosition::Anchor (void) const { return this->m_anchor; }
-TPoint&  CPosition::Anchor (void)       { return this->m_anchor; }
-
 const
 t_point  CPosition::Center (void) const {
-
-	return t_point{this->Anchor().X() + this->Size().W() / 2, this->Anchor().Y() + this->Size().H() / 2};
-
+	return t_point{
+		this->Anchor().X() + static_cast<_long>(this->Size().W() / 2),
+		this->Anchor().Y() + static_cast<_long>(this->Size().H() / 2)
+	};
 }
-#if defined(_DEBUG)
-
-CString  CPosition::Print (const e_print e_opt) const {
-	e_opt;
-
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{anchor=%s;size=%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{anchor=%s;size=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{anchor=%s;size=%s}");
-
-	CString cs_anch = this->Anchor().Print(e_print::e_req);
-	CString cs_size = this->Size().Print(e_print::e_req);
-
-	CString cs_out;
-	
-	if (e_print::e_all   == e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_anch, (_pc_sz)cs_size); }
-	if (e_print::e_no_ns == e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_anch, (_pc_sz)cs_size); }
-	if (e_print::e_req   == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_anch, (_pc_sz)cs_size); }
-
-	if (cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%u)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
-
-	return  cs_out;
-}
-
-#endif
-const
-TSize &  CPosition::Size (void) const { return this->m_size; }
-TSize &  CPosition::Size (void)       { return this->m_size; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CPosition&  CPosition::operator = (const CPosition& _src) { *this << _src.Anchor() << _src.Size(); return *this; }
-CPosition&  CPosition::operator = (CPosition&& _victim) {
-	*this = _victim; _victim.Anchor().X(0); _victim.Anchor().Y(0); _victim.Size().H(0); _victim.Size().W(0); // ToDo: no reason to play with victim object; 
-	return *this;
-}
-
-CPosition&  CPosition::operator << (const TPoint& _anchor) { this->Anchor() = _anchor; return *this; }
-CPosition&  CPosition::operator << (const TSize & _size) { this->Size() = _size;  return *this; }
-
-CPosition&  CPosition::operator << (const t_rect& _rect) {
-	_rect;
-
-	return *this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace popup { namespace layout { namespace _impl {
@@ -108,12 +113,12 @@ CPrimary::~CPrimary (void) {}
 
 t_rect  CPrimary::Autosize (void) const {
 	
-	const TSize  sz_wnd = { TBase::Size().W() / 2, (TBase::Size().H() / 4) * 2};
+	const TSizeU  sz_wnd = { TBase::Size().W() / 2, (TBase::Size().H() / 4) * 2};
 	
 	return this->Centered(sz_wnd);
 }
 
-t_rect  CPrimary::Centered (const TSize & _size) const {
+t_rect  CPrimary::Centered (const TSizeU & _size) const {
 #if (0)
 	const t_point left_top = {
 		TBase::Size().W() / 2  - _size.W() / 2, // 4 (four) dividings;
@@ -128,8 +133,10 @@ t_rect  CPrimary::Centered (const TSize & _size) const {
 	};
 #else
 	const t_point pt_at  = TBase::Center();
-//	const t_rect center_ = {pt_at.x - _size.W() / 2, pt_at.y - _size.H() / 2, pt_at.x + _size.W() / 2, pt_at.y + _size.H() / 2};  // 4 (four) dividings;
-	const t_rect center_ = {pt_at.x - _size.W() / 2, pt_at.y - _size.H() / 2, center_.left + _size.W(), center_.top + _size.H()}; // 2 (two ) dividings;
+//	const t_rect center_ = {pt_at.x - _size.W()/ 2, pt_at.y - _size.H() / 2, pt_at.x + _size.W() / 2, pt_at.y + _size.H() / 2};  // 4 (four) dividings;
+	const t_rect center_ = {
+		pt_at.x - static_cast<_long>(_size.W() / 2),
+		pt_at.y - static_cast<_long>(_size.H() / 2), center_.left + (_long)_size.W(), center_.top + (_long)_size.H()}; // 2 (two ) dividings;
 #endif
 	return center_;
 }
@@ -137,9 +144,9 @@ t_rect  CPrimary::Centered (const TSize & _size) const {
 t_size  CPrimary::Default  (const float _coeff) const {
 
 	if (0.0 == _coeff)
-		return t_size {TBase::Size().W(), TBase::Size().H()};
+		return t_size { _long(TBase::Size().W()), _long(TBase::Size().H()) };
 	else
-		return t_size{_long(TBase::Size().W()/_coeff), _long(TBase::Size().H()/_coeff)};
+		return t_size { _long(TBase::Size().W()/_coeff), _long(TBase::Size().H()/_coeff) };
 }
 
 /////////////////////////////////////////////////////////////////////////////

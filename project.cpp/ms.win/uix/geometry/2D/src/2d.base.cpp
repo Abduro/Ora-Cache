@@ -474,28 +474,15 @@ TSizeU  operator + (const TSizeU& _lsv, const TSizeU& _rsv) { return TSizeU(_lsv
 TSizeU  operator - (const TSizeU& _lsv, const TSizeU& _rsv) { return TSizeU(_lsv.W() - _rsv.W(), _lsv.H() - _rsv.H()); }
 
 /////////////////////////////////////////////////////////////////////////////
-
-CAnchor:: CAnchor (const int32_t _x, const int32_t _y) : TBase(_x, _y) {}
-CAnchor:: CAnchor (const CAnchor& _src) : CAnchor() { *this = _src; }
-CAnchor:: CAnchor (CAnchor&& _victim) : CAnchor() { *this = _victim; }
-CAnchor::~CAnchor (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CAnchor&  CAnchor::operator = (const CAnchor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
-CAnchor&  CAnchor::operator = (CAnchor&& _victim) { (TBase&)*this = (TBase&&)_victim; return *this; }
-CAnchor&  CAnchor::operator <<(const t_point& _pt ) { this->X(_pt.x); this->Y(_pt.y); return *this; }
-CAnchor&  CAnchor::operator <<(const t_rect& _rect) {this->X(_rect.left); this->Y(_rect.right); return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
 #if (1)
-CPosition:: CPosition (void) {}
+CPosition:: CPosition (const TPoint& _anchor, const TSizeU& _size) { *this << _anchor << _size; }
 CPosition:: CPosition (const CPosition& _src) : CPosition() { *this = _src; }
+CPosition:: CPosition (CPosition&& _victim) : CPosition() { *this = _victim; }
 #endif
 /////////////////////////////////////////////////////////////////////////////
 const
-CAnchor&    CPosition::Anchor (void) const { return this->m_anchor; }
-CAnchor&    CPosition::Anchor (void)       { return this->m_anchor; }
+CPoint&     CPosition::Anchor (void) const { return this->m_anchor; }
+CPoint&     CPosition::Anchor (void)       { return this->m_anchor; }
 #if defined (_DEBUG)
 CString     CPosition::Print  (const e_print e_opt) const {
 	e_opt;
@@ -526,10 +513,13 @@ CSize_U&    CPosition::Size (void)       { return this->m_size; }
 /////////////////////////////////////////////////////////////////////////////
 
 CPosition&  CPosition::operator = (const CPosition& _src) { *this << _src.Anchor() << _src.Size(); return *this; }
-CPosition&  CPosition::operator <<(const CAnchor& _anchor) { this->Anchor() = _anchor; return *this; }
-CPosition&  CPosition::operator <<(const t_point& _pt) { this->Anchor() << _pt; return *this; }
+
+CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPosition&)_victim; return *this; }
+
+CPosition&  CPosition::operator <<(const CPoint& _anchor) { this->Anchor() = _anchor; return *this; }
+CPosition&  CPosition::operator <<(const t_point&  _pt) { this->Anchor() << _pt; return *this; }
 CPosition&  CPosition::operator <<(const t_rect& _rect) {
-	this->Anchor() << _rect;
+	this->Anchor() << _rect.left >> _rect.top;
 	this->Size() << _rect;
 	return *this;
 }

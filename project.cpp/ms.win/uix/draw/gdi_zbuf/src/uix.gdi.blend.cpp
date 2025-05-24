@@ -96,11 +96,11 @@ CInput&  CInput::operator <<(const t_rect& _rect) { this->Pos() << _rect; return
 /////////////////////////////////////////////////////////////////////////////
 
 CIn_Out:: CIn_Out (void) : CInput() {
-	CInput::Position().Anchor().Marker().Set(1, _T("#dest_dev_ctx"), true);
+//	CInput::Position().Anchor().Marker().Set(1, _T("#dest_dev_ctx"), true);
 }
 
 CIn_Src:: CIn_Src (void) : CInput() {
-	CInput::Position().Anchor().Marker().Set(1, _T("#source_dev_ctx"), true);
+//	CInput::Position().Anchor().Marker().Set(1, _T("#source_dev_ctx"), true);
 }
 
 #if defined(_DEBUG)

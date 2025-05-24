@@ -6,6 +6,7 @@
 */
 #include "sys.error.h"
 #include "2d.base.h"
+#include "2d.shape.rect.h"
 
 #include "shared.types.h"
 
@@ -15,44 +16,49 @@ namespace ex_ui { namespace popup {  namespace layout {
 
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
+	using TPosition = geometry::_2D::base::CPosition;
+	using CRect  = geometry::_2D::shapes::COblong;
+
+	// https://wikidiff.com/position/placement ;
+	// https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize ;
+	//
+	// this class is used as a base one for providing an ability of saving current rectangle data of GUI component;
+	// it is expected the rectangle is calculated by layout class and is saved for using by drawing function(s);
+	class CPlacement {
+	public:
+		 CPlacement (void);
+		 CPlacement (const CPlacement&);
+		~CPlacement (void);
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions ;
+	public:
+		bool   Includes  (const t_point&) const; // checks this rectangle contains input point;  if placement rectangle is empty the false is returned;
+		bool   Intercepts(const t_rect&) const;  // checks an interception with input rectangle; empty rectangles are not taken into account;
+
+		bool   DoNormal  (void)      ; // empty rectangle is not affected, otherwise rectangle sides' values that are not normal are swapped;
+		bool   IsNormal  (void) const; // this is required that left < right and top < bottom, otherwise Includes() never returns true;
+		const
+		t_rect& Rect (void) const;
+		t_rect& Rect (void)      ;
+
+	public:
+		CPlacement& operator = (const CPlacement&);
+		CPlacement& operator <<(const t_rect&);
+	protected:
+		t_rect   m_rect;
+	};
 
 	// https://wikidiff.com/position/placement ;
 
-	class CPosition {
+	class CPosition : public TPosition { typedef TPosition TBase;
 	public:
-		 CPosition (void) ;
-		 CPosition (const TPoint&, const TSize &);
-		 CPosition (const CPosition&) ;
-		 CPosition (CPosition&&);
-		~CPosition (void);
+		 CPosition (void);
+		~CPosition (void) = default;
 
 	public:
+		// it is supposed the left-top corner of the window frame is at the anchor point;
+		// calculates a center point of the position in absolute coordinates;
 		const
-		TPoint&    Anchor (void) const;  // gets a point where an object is anchered to by its left-top corner; (read-obly);
-		TPoint&    Anchor (void) ;
-
-		const
-		t_point    Center (void) const;  // calculates a center point of the position in absolute coordinates;
-
-#if defined(_DEBUG)
-		CString    Print (const e_print = e_print::e_all) const;
-#endif
-		const
-		TSize &    Size (void) const;    // gets a width and a height of an object;
-		TSize &    Size (void);
-
-	public:
-		CPosition& operator = (const CPosition&);
-		CPosition& operator = (CPosition&&);
-
-		CPosition& operator <<(const TPoint&);
-		CPosition& operator <<(const TSize &);
-
-		CPosition& operator <<(const t_rect& _pos); // sets the anchor(r.left|r.top) and the size(r.right-r.left|r.bottom-r.top) values;
-
-	protected:
-		TPoint  m_anchor;
-		TSize   m_size  ;  // a size class of unsigned values cannot be used here due to compiler requirement to cast data types;
+		t_point    Center (void) const; 
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
@@ -64,9 +70,9 @@ namespace ex_ui { namespace popup {  namespace layout {
 		~CPrimary (void) ;
 
 	public:
-		t_rect Autosize (void) const;                       // a window size is calculated as: width = resolution / 2; height = (resolution / 4) * 2;
-		t_rect Centered (const TSize& _size) const;         // returns a rectangle of the specidied size at the center of monitor area;
-		t_size Default  (const float _coeff = 1.56) const ; // this is a default size of a window; the size is dependable from current resolution;
+		t_rect Autosize (void) const;                        // a window size is calculated as: width = resolution / 2; height = (resolution / 4) * 2;
+		t_rect Centered (const TSizeU& _size) const;         // returns a rectangle of the specidied size at the center of monitor area;
+		t_size Default  (const float  _coeff = 1.56) const ; // this is a default size of a window; the size is dependable from current resolution;
 	};
 
 	class CWndLayout : public CPrimary {

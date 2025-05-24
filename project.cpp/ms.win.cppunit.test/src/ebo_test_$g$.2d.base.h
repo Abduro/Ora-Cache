@@ -92,10 +92,10 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace base 
 
 #pragma region __position
 
-	using TAnchor = geometry::_2D::base::CAnchor;
+	using TAnchor = geometry::_2D::base::CPoint;
 	using TPosition = geometry::_2D::base::CPosition;
-
-	__class(CAnchor) {
+#if (0)
+	__class(CAnchor) { // this class is deprecated;
 	public:
 		 CAnchor (const bool _b_verb = false);
 		~CAnchor (void) = default;
@@ -106,7 +106,7 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace base 
 	private:
 		bool m_b_verb;
 	};
-
+#endif
 	__class(CPosition) {
 	public:
 		 CPosition (const bool _b_verb = false);

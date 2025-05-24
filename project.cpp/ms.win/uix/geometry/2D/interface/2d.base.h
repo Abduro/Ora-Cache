@@ -278,30 +278,18 @@ TSizeU  operator - (const TSizeU&, const TSizeU&);
 
 namespace geometry { namespace _2D { namespace base {
 
-	class CAnchor : public CPoint_2 { typedef CPoint_2 TBase;
-	public:
-		 CAnchor (const int32_t _x = 0, const int32_t _y = 0);
-		 CAnchor (const CAnchor&);
-		 CAnchor (CAnchor&&);
-		~CAnchor (void) ;
-
-	public:
-		CAnchor& operator = (const CAnchor&);
-		CAnchor& operator = (CAnchor&&);
-		CAnchor& operator <<(const t_point&);
-		CAnchor& operator <<(const t_rect&);    // sets: _x = _rect.left; _y = _rect.top;
-	};
-
 	class CPosition {
 	public:
-		 CPosition (void);
-		 CPosition (const CPosition&); CPosition (CPosition&&) = delete;
+		 CPosition (const TPoint& = TPoint(), const TSizeU& = TSizeU());
+		 CPosition (const CPosition&); CPosition (CPosition&&);
 		~CPosition (void) = default;
 
 	public:
+		// gets a point where an object is anchored to by left-top corner of the area of position size ;
+		// it is supposed for a shape of rectangular form; but what is about of a triangle? this question is still open yet;
 		const
-		CAnchor&   Anchor (void) const;
-		CAnchor&   Anchor (void) ;	
+		CPoint&    Anchor (void) const;
+		CPoint&    Anchor (void) ;	
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
 #endif
@@ -311,18 +299,18 @@ namespace geometry { namespace _2D { namespace base {
 
 	public:
 		CPosition& operator = (const CPosition&);
-		CPosition& operator = (CPosition&&) = delete;
+		CPosition& operator = (CPosition&&);    // no move operation is used;
 
-		CPosition& operator <<(const CAnchor&);
+		CPosition& operator <<(const CPoint&);
 		CPosition& operator <<(const CSize_U&);
 		CPosition& operator <<(const t_point&); // sets the anchor point;
 		CPosition& operator <<(const t_rect& ); // transfers rectangle to position as follows: anchor={x<<left|y<<top};size={right-left|bottom-top};
 
 		operator const t_rect (void) const;     // transfers position to rectangle as follows: anchor>>left|top;right=left+size.width;bottom=top+size.height;
 
-	private:
-		CAnchor   m_anchor;
-		CSize_U   m_size;
+	protected:
+		CPoint   m_anchor;
+		CSize_U  m_size;
 	};
 }}}
 
