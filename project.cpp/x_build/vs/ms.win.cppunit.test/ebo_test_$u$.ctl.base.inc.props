@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 25-May-2025 at 11:18:42.960, UTC+4, Batumi, Sunday;
+	This is Ebo Pack user control base interface library unit test project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" /><!-- https://learn.microsoft.com/en-us/biztalk/core/which-node-name-characters-get-encoded -->
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
+    <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
+    <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase><!--This library is being tested;-->
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Error)interface\</_3>
+    <_4>$(Color)interface\</_4>
+    <_5>$(Geo-2D)interface\</_5>
+    <_6>$(Win-pop)interface\</_6>
+    <_7>$(_6)msg_handlers\</_7>
+    <_8>$(CtlBase)interface\</_8><!--This library interface is being tested!-->
+    <_9></_9>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

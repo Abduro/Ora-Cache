@@ -52,6 +52,9 @@
 			ebo_test_$2$.mem : {00000C13-EEEE-BBBB-6667-00000006A201} << test cases for system memory wrapper lib;
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000002200} << draing and GUI related projects' node;
+			controls : {00000C13-EEEE-BBBB-6667-100000002250} << the node for user control projects' testing;
+				ebo_test_$u$_ctl.base : {00000C13-EEEE-BBBB-6667-00000006000C} << test cases for user control base project;
+
 			draw : {00000C13-EEEE-BBBB-6667-100000002210} << the node of draw libs' test cases;
 				ebo_test_$d$.clr      : {00000C13-EEEE-BBBB-6667-000000060022} << test cases for color project;
 				ebo_test_$d$.gdi.zbuf : {00000C13-EEEE-BBBB-6667-00000006000B} << test cases for in-memory device context project;

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000600C0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000600C1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_1)ebo_test_$u$.ctl.base.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$u$.ctl.base.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

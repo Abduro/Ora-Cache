@@ -79,6 +79,13 @@ t_point  CPosition::Center (void) const {
 		this->Anchor().Y() + static_cast<_long>(this->Size().H() / 2)
 	};
 }
+
+t_rect   CPosition::Place (void) const {
+	return {
+		TBase::Anchor().X(), TBase::Anchor().Y(), TBase::Anchor().X() + _long(TBase::Size().W()), TBase::Anchor().Y() + _long(TBase::Size().H())
+	};
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace popup { namespace layout { namespace _impl {
@@ -148,6 +155,63 @@ t_size  CPrimary::Default  (const float _coeff) const {
 	else
 		return t_size { _long(TBase::Size().W()/_coeff), _long(TBase::Size().H()/_coeff) };
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CRatios:: CRatios (void) {
+	/*
+		https://en.wikipedia.org/wiki/Advanced_Video_Coding ;
+		It looks very like that nothing was made better than H.264;
+		Commonly supported resolutions and aspect ratios include:
+	*/
+	m_ratios.push_back(SIZE{ 640,  480}); //  640 x 480  ( 4:3 480p) ;
+	m_ratios.push_back(SIZE{ 854,  480}); //  854 x 480  (16:9 480p) ;
+	m_ratios.push_back(SIZE{1280,  720}); // 1280 x 720  (16:9 720p) ;
+	m_ratios.push_back(SIZE{1280, 1024}); // 1280 x 1024 ( 5:4);
+	m_ratios.push_back(SIZE{1920, 1080}); // 1920 x 1080 (16:9 1080p);
+	m_ratios.push_back(SIZE{1920, 1440}); // 1920 x 1440 ( 4:3);
+}
+CRatios:: CRatios (const CRatios& _ref) : CRatios() { *this = _ref; }
+CRatios::~CRatios (void) {} 
+
+/////////////////////////////////////////////////////////////////////////////
+
+t_rect    CRatios::Accepted (const t_rect& _work_area) const {
+
+	t_rect  rc_pos = {0};
+	if (!!::IsRectEmpty(&_work_area))
+		return rc_pos;
+
+	const SIZE sz_available = {__H(_work_area), __W(_work_area)};
+	
+	// it requires to analyze both sizes of screen, a width and a height, because system taskbar can be set to vertical position;
+	TRatios::const_iterator it_ = ::std::lower_bound(
+		m_ratios.begin(), m_ratios.end(), sz_available,
+		[&](const t_size& _sz, const t_size& sz_available) { return _sz.cy < sz_available.cy && _sz.cx < sz_available.cx; }
+	);
+	if (m_ratios.end() == it_) {} // actually it is almost impossible, but nevertheless;
+	else
+	{
+		const t_point pt_anchor = {
+			_work_area.left + (__W(_work_area) - it_->cx) / 2,
+			_work_area.top  + (__H(_work_area) - it_->cy) / 2,
+		};
+		::SetRect(&rc_pos, pt_anchor.x, pt_anchor.y, pt_anchor.x + it_->cx, pt_anchor.y + it_->cy);
+	}
+	return rc_pos;
+}
+
+RECT CRatios::Accepted (const CPosition& _res) const {
+	return this->Accepted(_res.Place());
+}
+
+const
+TRatios&  CRatios::Get (void) const { return this->m_ratios; }
+TRatios&  CRatios::Get (void)       { return this->m_ratios; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CRatios&  CRatios::operator = (const CRatios& _ref) { this->Get() = _ref.Get(); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

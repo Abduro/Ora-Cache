@@ -11,5 +11,7 @@
   <ItemGroup>
     <ClInclude Include="$(_0)ctl.base.defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ctl.base.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)ctl.base.lyt.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ctl.base.lyt.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

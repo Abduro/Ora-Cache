@@ -58,7 +58,8 @@ namespace ex_ui { namespace popup {  namespace layout {
 		// it is supposed the left-top corner of the window frame is at the anchor point;
 		// calculates a center point of the position in absolute coordinates;
 		const
-		t_point    Center (void) const; 
+		t_point    Center (void) const;
+		t_rect     Place  (void) const;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
@@ -73,6 +74,32 @@ namespace ex_ui { namespace popup {  namespace layout {
 		t_rect Autosize (void) const;                        // a window size is calculated as: width = resolution / 2; height = (resolution / 4) * 2;
 		t_rect Centered (const TSizeU& _size) const;         // returns a rectangle of the specidied size at the center of monitor area;
 		t_size Default  (const float  _coeff = 1.56) const ; // this is a default size of a window; the size is dependable from current resolution;
+	};
+
+	// https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/video-stabilization-resolution-limits-h-264 ;
+	// https://en.wikipedia.org/wiki/Advanced_Video_Coding ;
+	typedef ::std::vector<t_size> TRatios;
+
+	class CRatios {
+	public:
+		 CRatios (void);
+		 CRatios (const CRatios&); CRatios (CRatios&&) = delete;
+		~CRatios (void);
+
+	public:
+		RECT   Accepted (const t_rect& _work_area) const; // gets an accepted ratio for primary monitor work area;
+		RECT   Accepted (const CPosition&  _res) const;   // gets an accepted ratio for primary monitor resolution;
+
+		const
+		TRatios& Get (void) const ;
+		TRatios& Get (void)       ;
+
+	public:
+		CRatios& operator = (const CRatios&);
+		CRatios& operator = (CRatios&&) = delete;
+
+	private:
+		TRatios  m_ratios;
 	};
 
 	class CWndLayout : public CPrimary {

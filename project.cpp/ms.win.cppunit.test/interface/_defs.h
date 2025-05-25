@@ -42,6 +42,8 @@ namespace ebo { namespace boo { namespace test {
 #define __init(name) TEST_CLASS_INITIALIZE(name) // an event of loading a test class object ;
 #define __term(name) TEST_CLASS_CLEANUP(name)
 
+	using namespace shared::types;
+
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
 
