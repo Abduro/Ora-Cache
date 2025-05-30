@@ -14,6 +14,9 @@
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
     <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
+    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
+    <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
+    <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
     <ThisExe Condition="'$(ThisExe)'==''">..\..\..\ms.win.gui\</ThisExe>
   </PropertyGroup>
   <PropertyGroup>
@@ -35,9 +38,12 @@
     <_c>$(_1)render\</_c>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
     <_d>$(_9)direct_x\</_d>
     <_e>$(_1)themes\</_e>
+    <_f>$(ZBuffer)interface\</_f>
+    <_g>$(CtlBase)interface\</_g>
+    <_h>$(MS-WTL)include\</_h>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(_c);$(_d);$(_e);$(IncludePath)</IncludePath>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

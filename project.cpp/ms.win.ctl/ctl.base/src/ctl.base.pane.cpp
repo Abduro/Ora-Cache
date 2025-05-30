@@ -5,5 +5,38 @@
 #include "ctl.base.pane.h"
 
 using namespace ex_ui::controls;
+using CFormat = CPane::CFormat;
+using CLayout = CPane::CLayout;
+/////////////////////////////////////////////////////////////////////////////
+
+CFormat:: CFormat (CPane& _pane) : m_pane(_pane) {}
+
+const
+TRgbQuad& CFormat::Bkgnd (void) const { return this->m_bkgnd; }
+TRgbQuad& CFormat::Bkgnd (void)       { return this->m_bkgnd; }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CLayout:: CLayout (CPane& _pane) : m_pane(_pane) {}
+
+const
+CPosition& CLayout::Position (void) const { return this->m_position; }
+CPosition& CLayout::Position (void)       { return this->m_position; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPane:: CPane (void) : m_format(*this), m_layout(*this)  {}
+CPane::~CPane (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+const
+CBorders& CPane::Borders (void) const { return this->m_borders; }
+CBorders& CPane::Borders (void)       { return this->m_borders; }
+const
+CFormat&  CPane::Format  (void) const { return this->m_format ; }
+CFormat&  CPane::Format  (void)       { return this->m_format ; }
+const
+CLayout&  CPane::Layout  (void) const { return this->m_layout ; }
+CLayout&  CPane::Layout  (void)       { return this->m_layout ; }
+

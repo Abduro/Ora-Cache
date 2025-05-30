@@ -15,7 +15,7 @@ namespace ebo { namespace boo { namespace gui {
 		~CLayout (void) = default;
 
 	public:
-		RECT      DrawArea (void) const;
+		t_rect    DrawArea (void) const;
 
 		TError&   Error  (void) const;
 

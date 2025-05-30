@@ -18,6 +18,8 @@
 #include "wnd.layout.h"
 #include "wnd.res.h"
 
+#include "ctl.base.pane.h"
+
 namespace ebo { namespace boo { namespace gui {
 
 	using CError = shared::sys_core::CError;

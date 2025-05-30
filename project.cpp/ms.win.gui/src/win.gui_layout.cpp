@@ -10,7 +10,7 @@ using namespace ebo::boo::gui;
 
 namespace ebo { namespace boo { namespace gui { namespace _impl {
 
-	class CMargins {
+	class CMargins { // ToDo: the class of such functionality is already defined in ctl.base.lyt.h ;
 	public:
 		 CMargins (void) {} CMargins (const CMargins&) = delete; CMargins (CMargins&&) = delete;
 		~CMargins (void) {}
@@ -31,7 +31,7 @@ CLayout:: CLayout (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_i
 
 /////////////////////////////////////////////////////////////////////////////
 
-RECT      CLayout::DrawArea (void) const {
+t_rect    CLayout::DrawArea (void) const {
 	this->m_error << __METHOD__ << __s_ok;
 
 	RECT rc_draw = {0};
@@ -45,7 +45,7 @@ RECT      CLayout::DrawArea (void) const {
 		return rc_draw;
 	}
 
-	const RECT rc_margins = CMargins().DrawArea();
+	const t_rect rc_margins = CMargins().DrawArea();
 
 	rc_draw.left   += rc_margins.left ;
 	rc_draw.top    += rc_margins.top  ;
