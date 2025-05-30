@@ -87,7 +87,7 @@ err_code  CRotate::ApplyTo (CPoint& _vertex) const {
 	else if (-270 == this->Angle()) { _vertex << -cast.Y() >> +cast.X(); return n_result; } // the same as to rotate to +90;
 	else if (+270 == this->Angle()) { _vertex << +cast.Y() >> -cast.X(); return n_result; } // the same as to rotate to -90;
 
-	const float rads = this->Angle() * M_PI/180;
+	const float rads = this->Angle() * __pi/180;
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/rotation ; the formula at the end of the article;
 	/* x' = (x * cos(angle)) - (y * sin(angle)) 
 	   y' = (x * sin(angle)) + (y * cos(angle)) 

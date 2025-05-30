@@ -47,17 +47,26 @@ bool     CNamed::Name  (_pc_sz _lp_sz_name) {
 const bool CNamed::Is (void) const { return (this->Color().Is() && false == this->m_name.IsEmpty()); }
 
 #if defined(_DEBUG)
-CString  CNamed::Print (const e_print e_opt) const {
-	e_opt;
-
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s]>>{clr=%s;name=%s}");
-	static _pc_sz pc_sz_pat_r = _T("%s;%s");
+CString  CNamed::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{clr=%s;name=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{clr=%s;name=%s}");
+	static _pc_sz pc_sz_pat_r = _T("clr=%s;name=%s");
 
 	CString cs_out;
 
-	if (e_print::e_all == e_opt) { cs_out.Format(pc_sz_pat_a,
-	                                       (_pc_sz)__CLASS__, (_pc_sz)CHex::Print(this->Color().ToRgbA()), this->Name()); }
-	if (e_print::e_req == e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz)CHex::Print(this->Color().ToRgbA()), this->Name()); }
+	if (e_print::e_all == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz)CHex::Print(this->Color().ToRgbA()), this->Name());
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz)CHex::Print(this->Color().ToRgbA()), this->Name());
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r,
+		(_pc_sz)CHex::Print(this->Color().ToRgbA()), this->Name());
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
 
 	return  cs_out;
 }

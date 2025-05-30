@@ -21,7 +21,7 @@ CSurface::~CSurface(void) {
 
 err_code CSurface::IEvtDraw_OnPaint (const w_param, const l_param) {
 
-	using ex_ui::color::rgb::CClr_Float;
+	using ex_ui::color::rgb::CFloat;
 
 	using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
 	_render().Target().OnDraw(CUI_Parts().Bkg());

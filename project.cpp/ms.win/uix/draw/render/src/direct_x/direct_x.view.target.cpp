@@ -283,7 +283,7 @@ err_code  CTarget::UpdateDesc (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CTarget::OnDraw (const CClr_Float& _clr) {
+err_code  CTarget::OnDraw (const CFloat& _clr) {
 	// it looks like the device object does not require to be checked itself, due to there is no direct call to it here;
 	err_code n_result = __s_ok;
 	if (this->Is_valid()) {

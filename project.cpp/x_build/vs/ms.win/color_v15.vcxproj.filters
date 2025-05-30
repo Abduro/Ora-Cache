@@ -24,7 +24,10 @@
     <!--files reside in root of interface folder!-->
     <ClInclude Include="$(_0)color._defs.h"><Filter>interface</Filter></ClInclude>
     <ClInclude Include="$(_0)color.alpha.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)color.gradient.h"><Filter>interface</Filter></ClInclude>
     <ClInclude Include="$(_0)color.rgb.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_1)color.compl.h"><Filter>interface\compl</Filter></ClInclude>
+    <ClInclude Include="$(_1)color.compl.predefs.h"><Filter>interface\compl</Filter></ClInclude>
     <ClInclude Include="$(_2)color.named.h"><Filter>interface\named</Filter></ClInclude>
     <ClInclude Include="$(_2)color.shade.h"><Filter>interface\named</Filter></ClInclude>
     <ClInclude Include="$(_2)color.x11.h"><Filter>interface\named</Filter></ClInclude>
@@ -33,7 +36,10 @@
     <!--this is the root folder of source!-->
     <ClCompile Include="$(_3)color._defs.cpp"><Filter>src</Filter></ClCompile>
     <ClCompile Include="$(_3)color.alpha.cpp"><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_3)color.gradient.cpp"><Filter>src</Filter></ClCompile>
     <ClCompile Include="$(_3)color.rgb.cpp"><Filter>src</Filter></ClCompile>
+    <ClCompile Include="$(_4)color.compl.cpp"><Filter>src\compl</Filter></ClCompile>
+    <ClCompile Include="$(_4)color.compl.predefs.cpp"><Filter>src\compl</Filter></ClCompile>
     <ClCompile Include="$(_5)color.named.cpp"><Filter>src\named</Filter></ClCompile>
     <ClCompile Include="$(_5)color.shade.cpp"><Filter>src\named</Filter></ClCompile>
     <ClCompile Include="$(_5)color.x11.cpp"><Filter>src\named</Filter></ClCompile>

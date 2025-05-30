@@ -120,7 +120,7 @@ namespace _11 {
 		err_code  UpdateDesc (void);
 
 	public:
-		err_code  OnDraw (const CClr_Float&) ;
+		err_code  OnDraw (const CFloat&) ;
 		err_code  OnSize (const RECT& _rc_allowed);
 
 	public:

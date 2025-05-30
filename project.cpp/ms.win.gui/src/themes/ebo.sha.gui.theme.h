@@ -65,7 +65,7 @@ namespace ebo { namespace sha { namespace theme { namespace colors {
 
 	public:
 		 CColor_Matrix& operator = (const CColor_Matrix&);
-		 const COLORREF operator <<(const CColor_Marker&) const;   // returns CLR_NONE if marker does not match any value;
+		 const COLORREF operator <<(const CColor_Marker&) const;   // returns __clr_none if marker does not match any value;
 	};
 
 }}}}
@@ -131,7 +131,7 @@ namespace shared {
 
 namespace ebo { namespace sha { namespace theme { namespace direct_x {
 
-	using CClr_Float = ex_ui::color::rgb::CClr_Float;
+	using CFloat = ex_ui::color::rgb::CFloat;
 	// The theme color matrix was made for usage by GDI, thus no alpha value is taken into account;
 	// but DirectX uses the alpha channel value, so it must be taken into account;
 	class CUI_Parts {
@@ -140,7 +140,7 @@ namespace ebo { namespace sha { namespace theme { namespace direct_x {
 		~CUI_Parts (void) {}
 
 	public:
-		CClr_Float Bkg (clr_value _alpha = rgb_val_max) const; // gets the background color depending on the currently installed theme;
+		CFloat Bkg (clr_value _alpha = rgb_val_max) const; // gets the background color depending on the currently installed theme;
 
 	private:
 		CUI_Parts&  operator = (const CUI_Parts&) = delete;

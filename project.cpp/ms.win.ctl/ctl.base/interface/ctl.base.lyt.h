@@ -12,7 +12,7 @@ namespace ex_ui { namespace controls { namespace layout {
 	
 	class CMargin {
 	public:
-		 CMargin (const uint16_t _n_id = 0, const int16_t _n_value = 0); CMargin (const CMargin&) = delete; CMargin (CMargin&&) = delete;
+		 CMargin (const uint16_t _n_id = 0, const int16_t _n_value = 0); CMargin (const CMargin&); CMargin (CMargin&&) = delete;
 		~CMargin (void) = default;
 
 	public:
@@ -25,7 +25,7 @@ namespace ex_ui { namespace controls { namespace layout {
 		bool      Value (const int16_t); // returns 'true' in case of change;
 
 	public:
-		CMargin&  operator = (const CMargin&) = delete;
+		CMargin&  operator = (const CMargin&);
 		CMargin&  operator = (CMargin&&) = delete;
 
 		CMargin&  operator <<(const uint16_t _n_id);

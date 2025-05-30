@@ -10,6 +10,7 @@
 
 #include "ctl.base.defs.h"
 #include "ctl.base.lyt.h"
+#include "ctl.base.border.h"
 
 namespace ebo { namespace boo { namespace test { namespace ctl { namespace base {
 
@@ -27,6 +28,38 @@ namespace ebo { namespace boo { namespace test { namespace ctl { namespace base 
 		bool m_b_verb;
 		TMargin m_margin;
 	};
+
+	using TBorder = ex_ui::controls::borders::COne;
+
+	__class (CBorder) {
+	public:
+		 CBorder (const bool _b_verb = false);
+		~CBorder (void) = default;
+
+	public:
+		__method (_ctor);
+
+	private:
+		bool m_b_verb;
+		TBorder m_border;
+	};
+
+	using TBorders = ex_ui::controls::borders::CSet;
+
+	__class (CBorders) {
+	public:
+		 CBorders (const bool _b_verb = false);
+		~CBorders (void) = default;
+
+	public:
+		__method (_ctor);
+		__method (Modify);
+
+	private:
+		bool m_b_verb;
+		TBorders m_bdrset;
+	};
+
 }}}}}
 
 #pragma comment(lib, "color_v15.lib")        // to colorize everything;

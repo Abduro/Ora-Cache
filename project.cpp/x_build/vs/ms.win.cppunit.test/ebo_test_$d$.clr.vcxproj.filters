@@ -10,8 +10,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$d$.clr.h"><Filter>interface</Filter></ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="$(_1)ebo_test_$d$.clr.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.clr.compl.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.clr.compl.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.clr.grad.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.clr.grad.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.clr.named.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.clr.named.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

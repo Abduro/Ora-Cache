@@ -12,7 +12,7 @@
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
-    <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</Render><!--This library is being tested!-->
+    <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer><!--This library is being tested!-->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <_3>$(Color)interface\</_3>
     <_4>$(_3)named\</_4>
     <_5>$(Geo-2D)interface\</_5>
-    <_6>$(Render)interface\</_6><!--This library interface is being tested!-->
+    <_6>$(ZBuffer)interface\</_6><!--This library interface is being tested!-->
     <_7>$(MS-WTL)include\</_7>
     <_8>$(Error)interface\</_8>
     <_9>$(_8)seh\</_9>

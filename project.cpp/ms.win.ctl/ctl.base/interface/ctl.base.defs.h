@@ -6,6 +6,7 @@
 */
 #include <atlbase.h>
 #include <atlwin.h>
+#include <map>
 
 #include "sys.error.h"
 #include "shared.preproc.h"

@@ -9,6 +9,7 @@ using namespace ex_ui::controls::layout;
 /////////////////////////////////////////////////////////////////////////////
 
 CMargin:: CMargin (const uint16_t _n_id, const int16_t _n_value) : m_id(_n_id), m_value(_n_value) {}
+CMargin:: CMargin (const CMargin& _src) : CMargin() { *this = _src; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -56,6 +57,8 @@ bool      CMargin::Value (const int16_t _n_value) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CMargin&  CMargin::operator = (const CMargin& _src) { *this << _src.Id() >> _src.Value(); return *this; }
 
 CMargin&  CMargin::operator <<(const uint16_t _n_id) { this->Id(_n_id); return *this; }
 CMargin&  CMargin::operator >>(const  int16_t _n_value) { this->Value(_n_value); return *this; }

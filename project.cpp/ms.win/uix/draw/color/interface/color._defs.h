@@ -9,15 +9,21 @@
 #include <limits>
 #include <cmath>      // https://en.cppreference.com/w/cpp/numeric/math/fabs ; ceil() ;
 #include <stdint.h>   // uint8_t;
+#include <stdlib.h>   // _countof();
+#include <vector>
 
 #include "shared.preproc.h"
 #include "shared.string.h"
 
-#include  "shared.types.h"
+#include "shared.types.h"
+#include "sys.err.codes.h"
+#include "sys.error.h"
 
 namespace ex_ui { namespace color {
 
 	using namespace shared::types;
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
 	// https://stackoverflow.com/questions/2745074/fast-ceiling-of-an-integer-division-in-c-c/2745086#2745086 ;
 	/*
 		https://en.wikipedia.org/wiki/Percentage ;
@@ -169,15 +175,23 @@ typedef ex_ui::color::rgb::clr_value rgb_value; // similar to a color channel ei
 typedef ex_ui::color::rgb::clr_type  rgb_color; // it looks like COLORREF that is defined for GDI API;
 #define rgb_clr_max (ex_ui::color::rgb::clr_max)
 
-#define rgb_clr_none rgb_clr_max // this is the value for indicating non-existance a color, as CLR_NONE in GDI definitions;
+#define rgb_clr_none rgb_clr_max // this is the value for indicating non-existance a color, as __clr_none in GDI definitions;
 
-#define _r_g_b(r,g,b) ((rgb_color)(uint8_t(r) | ((uint16_t(uint8_t(g))) << 8) | (uint32_t(uint8_t(b)) << 16))) // just substitutes RGB by data types with new names;
-#define _r_g_b_a(r,g,b,a) (_r_g_b(r,g,b) | ((uint32_t(a))<<24) )                                               // just playing with data type names or definitions ;
+#define _r_g_b_a(r,g,b,a) ((rgb_color)(uint8_t(r) | ((uint16_t(uint8_t(g))) << 8) | (uint32_t(uint8_t(b)) << 16) | ((uint32_t(a))<<24)))
+#define _r_g_b(r,g,b) (_r_g_b_a(r, g, b, rgb_val_max)) // just substitutes RGB by data types with new names; alpha channel value is set to opaque;
 
 #define HexToRgb(_hex) (_r_g_b( (uint32_t(_hex)>>16), (uint16_t(_hex)>>8), uint8_t(_hex)))
 
 bool Is_equal (const rgb_color _lhs, const rgb_color _rhs, const bool _b_compare_alpha = true) ;
 bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold = 0.0000001);
+
+// for windows common controls' compatibility: commctrl.h;
+#ifndef __clr_none
+#define __clr_none    0xFFFFFFFFL
+#endif
+#ifndef __clr_default
+#define __clr_default 0xFF000000L
+#endif
 
 namespace ex_ui { namespace color { namespace hsl {
 }}}

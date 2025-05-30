@@ -86,14 +86,14 @@ TColorMatrix::~CColor_Matrix (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLR_NONE
-#define CLR_NONE 0xFFFFFFFFL
+#ifndef __clr_none
+#define __clr_none 0xFFFFFFFFL
 #endif
 
 TColorMatrix&  TColorMatrix::operator = (const TColorMatrix& _ref) { this->m_palettes = _ref.m_palettes; return *this; }
 const COLORREF TColorMatrix::operator <<(const CColor_Marker& _marker) const {
 
-	COLORREF clr_result = CLR_NONE;
+	COLORREF clr_result = __clr_none;
 	if (_marker.Is()) {
 		TColor_Palette::const_iterator it_palette = m_palettes.find(_marker.Palette());
 		if (it_palette != m_palettes.end() ) {
@@ -164,11 +164,11 @@ namespace shared {
 
 using namespace ebo::sha::theme::direct_x;
 
-CClr_Float CUI_Parts::Bkg (clr_value _alpha) const {
+CFloat CUI_Parts::Bkg (clr_value _alpha) const {
 #if (1)
 	CQuad quad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back), _alpha);
-	return CClr_Float(quad.ToRgbA());
+	return CFloat(quad.ToRgbA());
 #else
-	return CClr_Float(_r_g_b_a(255, 140, 0, 255));
+	return CFloat(_r_g_b_a(255, 140, 0, 255));
 #endif
 }

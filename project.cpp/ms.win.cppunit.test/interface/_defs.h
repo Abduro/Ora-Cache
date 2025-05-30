@@ -44,8 +44,9 @@ namespace ebo { namespace boo { namespace test {
 
 	using namespace shared::types;
 
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
+	using CError  = shared::sys_core::CError;
+	using TError  = const CError;
+	using TString = TStringEx ;
 
 }}}
 

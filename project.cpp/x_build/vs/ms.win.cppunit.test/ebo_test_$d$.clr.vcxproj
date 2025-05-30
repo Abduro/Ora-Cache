@@ -203,9 +203,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$d$.clr.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="$(_1)ebo_test_$d$.clr.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.clr.compl.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.clr.compl.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.clr.grad.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.clr.grad.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.clr.named.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.clr.named.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

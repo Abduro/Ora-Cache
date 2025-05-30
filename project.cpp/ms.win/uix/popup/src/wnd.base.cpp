@@ -72,7 +72,7 @@ err_code   CWndBase::BkgBrush (COLORREF _clr_bkg) {
 	_clr_bkg;
 	TBase::m_error << __METHOD__ << S_OK;
 
-	if (CLR_NONE == _clr_bkg)
+	if (__clr_none == _clr_bkg)
 		return (TBase::m_error << E_INVALIDARG);
 
 	if (false == !!TWindow::IsWindow())

@@ -177,6 +177,9 @@
     <ClInclude Include="$(_0)color._defs.h" />
     <ClInclude Include="$(_0)color.alpha.h" />
     <ClInclude Include="$(_0)color.rgb.h" />
+    <ClInclude Include="$(_1)color.compl.h" />
+    <ClInclude Include="$(_1)color.compl.predefs.h" />
+    <ClInclude Include="$(_0)color.gradient.h" />
     <ClInclude Include="$(_2)color.named.h" />
     <ClInclude Include="$(_2)color.shade.h" />
     <ClInclude Include="$(_2)color.x11.h" />
@@ -184,7 +187,10 @@
   <ItemGroup>
     <ClCompile Include="$(_3)color._defs.cpp" />
     <ClCompile Include="$(_3)color.alpha.cpp" />
+    <ClCompile Include="$(_3)color.gradient.cpp" />
     <ClCompile Include="$(_3)color.rgb.cpp" />
+    <ClCompile Include="$(_4)color.compl.cpp" />
+    <ClCompile Include="$(_4)color.compl.predefs.cpp" />
     <ClCompile Include="$(_5)color.named.cpp" />
     <ClCompile Include="$(_5)color.shade.cpp" />
     <ClCompile Include="$(_5)color.x11.cpp" />
@@ -212,6 +218,14 @@
     <Image Include="$(_1)yellow-green.png" />
     <Image Include="$(_1)yellow-red.png" />
   </ItemGroup-->
+  <ItemGroup>
+    <ProjectReference Include="sys.shared_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="sys.err.core_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

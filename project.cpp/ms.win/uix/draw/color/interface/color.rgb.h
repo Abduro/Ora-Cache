@@ -16,7 +16,7 @@ namespace ex_ui { namespace color { namespace rgb {
 	using TPercent = TPct_Flt;
 	// perhaps it would be better to consider RGBQUAD as the base for this class:
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad ;
-	class CQuad {
+	class CQuad	{
 	public:
 		enum channel : uint32_t { // strictly speaking, alpha value is not an rgb color channel, but just a transparency value;
 			r = 0, g = 1, b = 2, a = 3, _count = a + 1 
@@ -49,7 +49,7 @@ namespace ex_ui { namespace color { namespace rgb {
 		__inline bool Set (clr_value _r, clr_value _g, clr_value _b, clr_value _a);  // sets color quad by input primary colors separately, plus alpha;
 
 	public: // convertor(s)
-		clr_type ToRgb  (void) const;          // classic or plain color reference that actually does not care about transparency;
+		clr_type ToRgb  (void) const;          // classic or plain color reference that actually does not care about transparency; alpha value is set to opaque;
 		clr_type ToRgbA (void) const;          // this is complete color value that has alpha channel set to some level;
 
 	public:
@@ -79,7 +79,7 @@ namespace ex_ui { namespace color { namespace rgb {
 		CQuad&  operator <<(clr_value _alpha); // accepts a magic alpha;
 
 		operator bool (void) const;
-		operator rgb_color (void) const;
+		operator rgb_color (void) const;       // returns RGB color value; alpha channel is set to opaque value;
 
 		bool operator == (rgb_color) const;    // compares for equality the rgb color values  ; valid flags are not taken into account;
 		bool operator != (rgb_color) const;    // compares for inequality the rgb color values; valid flags are not taken into account;
@@ -128,36 +128,40 @@ namespace ex_ui { namespace color { namespace rgb {
 
 	// this class is some sort of a replacement for D3DXCOLOR structure ;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-d3dxcolor ;
-	class CClr_Float {
+	class CFloat {
 	public:
-		 CClr_Float (void) ; CClr_Float (const CClr_Float&) = delete; CClr_Float (CClr_Float&&) = delete;
-		 CClr_Float (const clr_type); // sets value from rgba data;
-		 CClr_Float (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a = _Opaque);
-		~CClr_Float (void) = default;
+		 CFloat (void) ; CFloat (const CFloat&) = delete; CFloat (CFloat&&) = delete;
+		 CFloat (const clr_type); // sets value from rgba data;
+		 CFloat (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a = _Opaque);
+		~CFloat (void) = default;
 
 	public:
-		float A (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
-		float B (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
-		float G (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
-		float R (void) const;        // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float A (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float B (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float G (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float R (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
 
-		clr_float  Get (void) const; // gets a float value of rgba color as a vector of 4 elements;
+		clr_float  Get (void) const;  // gets a float value of rgba color as a vector of 4 elements;
 
-		bool A (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-		bool B (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-		bool G (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-		bool R (const clr_value) ;   // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool A (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool B (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool G (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool R (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
-		bool Set (const clr_type);   // sets float color value from rgba color; returns 'true' in case of change float color value;
+		bool Set (const clr_type);    // sets float color value from rgba color; returns 'true' in case of change float color value;
+
+	public: // convertor(s); these methods below use CConvert class that is declared in color._defs.h;
+		clr_type ToRgb  (void) const; // converts current float color channels' values to RGB color, the alpha value is set to rgb_val_max (0xff);
+		clr_type ToRgbA (void) const; // converts current float color channels' values to RGB color, the alpha value is kept as is;
 
 	public:
-		CClr_Float&  operator <<(const clr_type);
+		CFloat&  operator <<(const clr_type);
 
 	private:
-		CClr_Float&  operator = (const CClr_Float&) = delete;
-		CClr_Float&  operator = (CClr_Float&&) = delete;
+		CFloat&  operator = (const CFloat&) = delete;
+		CFloat&  operator = (CFloat&&) = delete;
 
 	private:
 		float  m_value[CQuad::channel::_count];

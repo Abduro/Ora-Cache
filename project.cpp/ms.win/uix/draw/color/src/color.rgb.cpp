@@ -274,8 +274,8 @@ CString CColor::Print (const e_print e_opt) const {
 		return TBase::Print(e_opt);
 #endif
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{rgba=%u:%u:%u:%u;(0x%x)}");
-	static _pc_sz pc_sz_pat_r = _T("rgba=%u:%u:%u:%u;(0x%x)");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{rgba=%u:%u:%u:%u;(0x%x)}");
+	static _pc_sz pc_sz_pat_r = _T("rgba=%u:%u:%u:%u;(0x%x);valid=%s");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{rgba=%u:%u:%u:%u;(0x%x);}");
 
 	CString cs_out;
 	if (e_print::e_all == e_opt)
@@ -287,7 +287,7 @@ CString CColor::Print (const e_print e_opt) const {
 			TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA()
 		);
 	if (e_print::e_req == e_opt)
-		cs_out.Format(pc_sz_pat_r, TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA());
+		cs_out.Format(pc_sz_pat_r, TBase::R(), TBase::G(), TBase::B(), TBase::A(), TBase::ToRgbA(), TStringEx().Bool(this->Is()));
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, e_opt);
@@ -298,9 +298,9 @@ CString CColor::Print (const e_print e_opt) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CClr_Float:: CClr_Float (void) : m_value{0.0f} {}
-CClr_Float:: CClr_Float (const clr_type _clr) : CClr_Float() { *this << _clr; }
-CClr_Float:: CClr_Float (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a) : CClr_Float() {
+CFloat:: CFloat (void) : m_value{0.0f} {}
+CFloat:: CFloat (const clr_type _clr) : CFloat() { *this << _clr; }
+CFloat:: CFloat (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a) : CFloat() {
 	this->Set(_r_g_b_a(_r,_g,_b,_a));
 }
 
@@ -308,42 +308,42 @@ CClr_Float:: CClr_Float (const clr_value _r, const clr_value _g, const clr_value
 
 using e_ndx = CQuad::channel;
 
-float CClr_Float::A (void) const { return this->m_value[e_ndx::a]; }
-float CClr_Float::B (void) const { return this->m_value[e_ndx::b]; }
-float CClr_Float::G (void) const { return this->m_value[e_ndx::g]; }
-float CClr_Float::R (void) const { return this->m_value[e_ndx::r]; }
+float CFloat::A (void) const { return this->m_value[e_ndx::a]; }
+float CFloat::B (void) const { return this->m_value[e_ndx::b]; }
+float CFloat::G (void) const { return this->m_value[e_ndx::g]; }
+float CFloat::R (void) const { return this->m_value[e_ndx::r]; }
 
-clr_float CClr_Float::Get (void) const {
+clr_float CFloat::Get (void) const {
 	const clr_float v_result = {this->R(), this->G(), this->B(), this->A()};
 	return v_result;
 }
 
-bool CClr_Float::A (const clr_value _u_value) {
+bool CFloat::A (const clr_value _u_value) {
 	_u_value;
 	const float f_value  = CConvert::ToFloat(_u_value);
 	const bool b_changed = !Is_equal(this->A(), f_value); if (b_changed) this->m_value[e_ndx::a] = f_value;  return b_changed;
 }
 
-bool CClr_Float::B (const clr_value _u_value) {
+bool CFloat::B (const clr_value _u_value) {
 	_u_value;
 	const float f_value  = CConvert::ToFloat(_u_value);
 	const bool b_changed = !Is_equal(this->B(), f_value); if (b_changed) this->m_value[e_ndx::b] = f_value;  return b_changed;
 }
 
-bool CClr_Float::G (const clr_value _u_value) {
+bool CFloat::G (const clr_value _u_value) {
 	_u_value;
 	const float f_value  = CConvert::ToFloat(_u_value);
 	const bool b_changed = !Is_equal(this->G(), f_value); if (b_changed) this->m_value[e_ndx::g] = f_value;  return b_changed;
 }
 
-bool CClr_Float::R (const clr_value _u_value) {
+bool CFloat::R (const clr_value _u_value) {
 	_u_value;
 	const float f_value  = CConvert::ToFloat(_u_value);
 	const bool b_changed = !Is_equal(this->R(), f_value); if (b_changed) this->m_value[e_ndx::r] = f_value;  return b_changed;
 }
 
 #if defined(_DEBUG)
-CString  CClr_Float::Print (const e_print _e_opt) const {
+CString  CFloat::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{r:%s;g:%s;b:%s;a:%s};");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{r:%s;g:%s;b:%s;a:%s};");
@@ -375,7 +375,7 @@ CString  CClr_Float::Print (const e_print _e_opt) const {
 }
 #endif
 
-bool CClr_Float::Set (const clr_type _clr) {
+bool CFloat::Set (const clr_type _clr) {
 	_clr;
 	bool b_changed = false;
 	if (this->A(get_a_value(_clr))) b_changed = true;
@@ -385,9 +385,16 @@ bool CClr_Float::Set (const clr_type _clr) {
 	return b_changed;
 }
 
+clr_type CFloat::ToRgb  (void) const {
+	return CQuad(CConvert::ToValue(this->R()), CConvert::ToValue(this->G()), CConvert::ToValue(this->B()), rgb_val_max).ToRgb();
+}
+clr_type CFloat::ToRgbA (void) const {
+	return CQuad(CConvert::ToValue(this->R()), CConvert::ToValue(this->G()), CConvert::ToValue(this->B()), CConvert::ToValue(this->A())).ToRgbA();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-CClr_Float&  CClr_Float::operator <<(const clr_type _clr) {
+CFloat&  CFloat::operator <<(const clr_type _clr) {
 	this->Set(_clr);
 	return *this;
 }
