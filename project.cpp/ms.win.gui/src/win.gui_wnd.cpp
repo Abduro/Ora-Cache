@@ -102,14 +102,14 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 	err_code n_result = __s_false;
 
 	switch (_e_state) {
-	case eState::eRestored: {
-	} break;
+	case eState::eRestored: {} break;
 	}
 
 	return   n_result;
 }
 
-err_code CWnd::IEvtFrame_OnSizing (const eEdges, LPRECT) {
+err_code CWnd::IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect) {
+	_p_rect;
 
 	t_rect rc_surface = m_layout.DrawArea();
 	if (this->m_surface) {

@@ -26,7 +26,7 @@
 #include "wnd.res.h"
 #pragma endregion
 
-#include "ctl.base.lyt.h"
+#include "ctl.base.layout.h"
 #include "ctl.base.pane.h"
 
 namespace ebo { namespace boo { namespace gui {

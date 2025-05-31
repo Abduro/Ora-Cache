@@ -17,47 +17,38 @@ using namespace ebo::boo::gui;
 
 namespace ebo { namespace boo { namespace gui { namespace _impl {
 
-	class CMargins { // ToDo: the class of such functionality is already defined in ctl.base.lyt.h ;
-	public:
-		 CMargins (void) {} CMargins (const CMargins&) = delete; CMargins (CMargins&&) = delete;
-		~CMargins (void) {}
-
-	public:
-		RECT  DrawArea (void) const { return RECT{10, 10, 10, 10}; }
-
-	private:
-		CMargins& operator = (const CMargins&) = delete;
-		CMargins& operator = (CMargins&&) = delete;
-	};
-
 	class CLayout_Default {
 	public:
-		 CLayout_Default (void) {} CLayout_Default (const CLayout_Default&) = delete; CLayout_Default (CLayout_Default&&) = delete;
+		 CLayout_Default (void) { this->m_padding.Set(10,10,-10,-10); } // sets nagative values to the right and the bottom gaps!
+		 CLayout_Default (const CLayout_Default&) = delete; CLayout_Default (CLayout_Default&&) = delete;
 		~CLayout_Default (void) {}
 
 	public:
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 		uint32_t GetPaneHeight (void) const { return 35; }
 #endif
+		const
+		CPadding& Padding(void) const { return this->m_padding; }
 
 	private:
 		CLayout_Default& operator = (const CLayout_Default&) = delete;
 		CLayout_Default& operator = (CLayout_Default&&) = delete;
-	
+	private:
+		CPadding m_padding;
 	};
 
 }}}}
 using namespace ebo::boo::gui::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout:: CLayout (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CLayout:: CLayout (void) : m_draw_area{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-t_rect    CLayout::DrawArea (void) const {
+t_rect    CLayout::DrawArea (void)/* const */{
 	this->m_error << __METHOD__ << __s_ok;
-
-	RECT rc_draw = {0};
+#if (0)
+	t_rect rc_draw = {0};
 	if (false == this->Is_valid()) {
 		this->m_error << __e_not_inited;
 		return  rc_draw;
@@ -68,14 +59,12 @@ t_rect    CLayout::DrawArea (void) const {
 		return rc_draw;
 	}
 
-	const t_rect rc_margins = CMargins().DrawArea();
-
-	rc_draw.left   += rc_margins.left ;
-	rc_draw.top    += rc_margins.top  ;
-	rc_draw.right  -= rc_margins.right;
-	rc_draw.bottom -= rc_margins.bottom;
-
+	CLayout_Default().Padding().ApplyTo(rc_draw);
 	return rc_draw;
+#else
+	this->Update();
+	return this->m_draw_area;
+#endif
 }
 
 TError&   CLayout::Error  (void) const { return this->m_error;}
@@ -83,8 +72,8 @@ TError&   CLayout::Error  (void) const { return this->m_error;}
 bool      CLayout::Is_valid (void) const { return !!this->m_main; }
 
 const
-CMrgns&   CLayout::Margins (void) const { return this->m_mrgns; }
-CMrgns&   CLayout::Margins (void)       { return this->m_mrgns; }
+CPadding& CLayout::Padding (void) const { return this->m_padding; }
+CPadding& CLayout::Padding (void)       { return this->m_padding; }
 
 err_code  CLayout::Update (void) {
 	
@@ -106,16 +95,19 @@ err_code  CLayout::Update (const t_rect* const _p_rect) {
 		return this->m_error << _what << __e_rect;
 	}
 
-	t_rect rect_ = *_p_rect;
+	this->m_draw_area = *_p_rect; // resets the draw area rectangle to the input one;  
 
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 
-	rect_.top = rect_.bottom - CLayout_Default().GetPaneHeight();
+	this->m_draw_area.bottom -= CLayout_Default().GetPaneHeight(); // updates the bottom value for reserving the space of pane control;
+
+	t_rect rect_pane = *_p_rect;
+	rect_pane.top = rect_pane.bottom - CLayout_Default().GetPaneHeight();
 
 	CPane& status_bar = _get_view().Pane();
-	status_bar.Layout().Position() << rect_;
-
+	status_bar.Layout().Position() << rect_pane;
 #endif
+	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 
 	return __s_ok;
 }

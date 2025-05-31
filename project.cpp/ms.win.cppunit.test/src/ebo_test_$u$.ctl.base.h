@@ -9,25 +9,10 @@
 #include "sys.error.h"
 
 #include "ctl.base.defs.h"
-#include "ctl.base.lyt.h"
 #include "ctl.base.border.h"
+#include "ctl.base.layout.h"
 
 namespace ebo { namespace boo { namespace test { namespace ctl { namespace base {
-
-	using TMargin = ex_ui::controls::layout::CMargin;
-
-	__class (CMargin) {
-	public:
-		 CMargin (const bool _b_verb = false);
-		~CMargin (void) = default;
-
-	public:
-		__method (_ctor);
-
-	private:
-		bool m_b_verb;
-		TMargin m_margin;
-	};
 
 	using TBorder = ex_ui::controls::borders::COne;
 
@@ -58,6 +43,38 @@ namespace ebo { namespace boo { namespace test { namespace ctl { namespace base 
 	private:
 		bool m_b_verb;
 		TBorders m_bdrset;
+	};
+
+	using TGap = ex_ui::controls::layout::CGap;
+
+	__class (CGap) {
+	public:
+		 CGap (const bool _b_verb = false);
+		~CGap (void) = default;
+
+	public:
+		__ctor(_ctor);
+
+	private:
+		bool m_b_verb;
+		TGap m_gap;
+	};
+
+	using TGapSet = ex_ui::controls::layout::CGaps_of_rect;
+
+	__class (CGaps_of_rect) {
+	public:
+		 CGaps_of_rect (const bool _b_verb = false);
+		~CGaps_of_rect (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (ApplyMargins);
+		__method (ApplyPadding);
+
+	private:
+		bool    m_b_verb;
+		TGapSet m_gaps;
 	};
 
 }}}}}

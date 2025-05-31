@@ -9,7 +9,7 @@
 
 namespace ebo { namespace boo { namespace gui {
 
-	using CMrgns = ex_ui::controls::layout::CMargins_of_rect;
+	using CPadding = ex_ui::controls::layout::CPadding_of_rect;
 
 	class CLayout {
 	public:
@@ -18,14 +18,14 @@ namespace ebo { namespace boo { namespace gui {
 
 	public:
 	//	void    Default  (void) ;                // this is a default size(s) and position(s) of the GUI controls;
-		t_rect  DrawArea (void) const;
+		t_rect  DrawArea (void) /*const*/;       // const is temporarilly removed due to this::Update() sets or changes value of the draw area;
 		bool    Is_valid (void) const;
 
 		TError&   Error  (void) const;
 
 		const
-		CMrgns&   Margins (void) const;
-		CMrgns&   Margins (void) ;
+		CPadding& Padding (void) const;
+		CPadding& Padding (void) ;
 
 		err_code  Update (void) ;
 		err_code  Update (const t_rect* const) ; // recalculates the main view layout; the client rect can be provided on window sizing event;
@@ -41,8 +41,9 @@ namespace ebo { namespace boo { namespace gui {
 	private:
 		mutable
 		CError   m_error;
-		CMrgns   m_mrgns;  // main window client rectangle draw area margins;
-		CWindow  m_main ;  // main window handle;
+		CPadding m_padding; // main window client rectangle draw area padding;
+		CWindow  m_main ;   // main window handle;
+		t_rect   m_draw_area;
 	};
 
 }}}

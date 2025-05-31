@@ -44,6 +44,8 @@ namespace geometry { namespace _2D { namespace shapes {
 
 	public:
 		 COblong (void) ;
+		 COblong (const int32_t _left, const int32_t _top, const int32_t _right, const int32_t _bottom) ;
+		 COblong (const t_rect&);
 		 COblong (const COblong&) ; COblong (COblong&&);
 		~COblong (void);
 
@@ -65,12 +67,18 @@ namespace geometry { namespace _2D { namespace shapes {
 		CPoint&  Vertex (const e_vertex) const;
 		CPoint&  Vertex (const e_vertex) ;
 
+		t_rect   Get (void) const;
+		bool     Set (const t_rect&);
+
 	public:
 		COblong& operator = (const COblong&);
 		COblong& operator = (COblong&&);
 
 		COblong& operator <<(const CPoint& _left_up);
 		COblong& operator >>(const CPoint& _right_low);
+
+		COblong& operator <<(const t_rect&);
+
 
 	private:
 		TRgbQuad m_color; // the color that fills this rectangle body;
