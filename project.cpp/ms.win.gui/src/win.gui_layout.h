@@ -5,9 +5,11 @@
 	This is Ebo Pack test desktop app GUI layout interface declaration file;
 */
 #include "win.gui.inc.h"
+#include "win.gui_view.h"
+
 namespace ebo { namespace boo { namespace gui {
 
-	using CWindow = ::ATL::CWindow;
+	using CMrgns = ex_ui::controls::layout::CMargins_of_rect;
 
 	class CLayout {
 	public:
@@ -15,11 +17,18 @@ namespace ebo { namespace boo { namespace gui {
 		~CLayout (void) = default;
 
 	public:
-		t_rect    DrawArea (void) const;
+	//	void    Default  (void) ;                // this is a default size(s) and position(s) of the GUI controls;
+		t_rect  DrawArea (void) const;
+		bool    Is_valid (void) const;
 
 		TError&   Error  (void) const;
 
-		bool    Is_valid (void) const;
+		const
+		CMrgns&   Margins (void) const;
+		CMrgns&   Margins (void) ;
+
+		err_code  Update (void) ;
+		err_code  Update (const t_rect* const) ; // recalculates the main view layout; the client rect can be provided on window sizing event;
 
 		const
 		CWindow&  Window (void) const;
@@ -32,7 +41,8 @@ namespace ebo { namespace boo { namespace gui {
 	private:
 		mutable
 		CError   m_error;
-		CWindow  m_main;
+		CMrgns   m_mrgns;  // main window client rectangle draw area margins;
+		CWindow  m_main ;  // main window handle;
 	};
 
 }}}

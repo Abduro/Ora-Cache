@@ -2,7 +2,7 @@
 #define _WIN_GUI_FRAME_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 17-Nov-2024 at 0:59:33.0970970, UTC+4, Batumi, Wednesday;
-	This is window popup test app main frame interface declration file;
+	This is Ebo Pack draw renderer test app main frame interface declration file;
 */
 #include "win.gui.inc.h"
 #include "win.gui.res.h"
@@ -16,7 +16,7 @@ namespace ebo { namespace boo { namespace gui {
 #define _ATL_NO_AUTOMATIC_NAMESPACE // https://learn.microsoft.com/en-us/cpp/atl/reference/compiler-options-macros ;
 #endif
 
-	using CView = ebo::boo::gui::CView;
+	using CWnd = ebo::boo::gui::CWnd;
 
 	class CFrame {
 	public:
@@ -48,13 +48,14 @@ namespace ebo { namespace boo { namespace gui {
 		err_code Create (void);
 		err_code Destroy(void);
 		TError&  Error  (void) const;
+
 		const
 		CIcon&   Icon (void) const;
 		CIcon&   Icon (void) ;
 
 		const
-		CView&   View (void) const;
-		CView&   View (void) ;
+		CWnd&    Window (void) const; // gets a reference to main window; (ro)
+		CWnd&    Window (void) ;      // gets a reference to main window; (rw)
 
 	private:
 		CFrame&  operator = (const CFrame&) = delete;
@@ -63,7 +64,7 @@ namespace ebo { namespace boo { namespace gui {
 	private:
 		CError   m_error;
 		CIcon    m_icon ;
-		CView    m_view ;
+		CWnd     m_wnd  ;
 	};
 
 }}}

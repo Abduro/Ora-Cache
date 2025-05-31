@@ -28,6 +28,8 @@
     <ClInclude Include="$(_1)win.gui_layout.h"><Filter>src</Filter></ClInclude>
     <ClInclude Include="$(_1)win.gui_module.h"><Filter>src</Filter></ClInclude>
     <ClCompile Include="$(_1)win.gui_module.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)win.gui_view.h"><Filter>src</Filter></ClInclude>
+    <ClCompile Include="$(_1)win.gui_view.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)win.gui_wnd.h"><Filter>src</Filter></ClInclude>
     <ClCompile Include="$(_1)win.gui_wnd.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_c)direct_x.surface.h"><Filter>src\render</Filter></ClInclude>

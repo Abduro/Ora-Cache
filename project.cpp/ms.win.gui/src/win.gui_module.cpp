@@ -3,6 +3,7 @@
 	This is File Guardian (thefileguardian.com) app entry point implementation file.
 	-----------------------------------------------------------------------------
 	Adopted to vs15 on 1-Jul-2018 at 6:11:43p, UTC+7, Phuket, Rawai, Sunday;
+	Adopted to Ebo Pack draw renderer test app 30-Mar-2025 at 16:28:15.839, UTC+4, Batumi, Sunday;
 */
 #include "win.gui_module.h"
 
@@ -54,7 +55,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		_Module.WinMain(nCmdShow);
 #else
 		MSG msg = {0};
-		while( WM_QUIT != msg.message ) {
+		while( WM_QUIT != msg.message ) { // PeekMessage is used for getting an ability of drawing render surface when no message is in the queue;
 			if (::PeekMessage( &msg, NULL, 0, 0, PM_REMOVE )) {
 				::TranslateMessage( &msg );
 				::DispatchMessage ( &msg );

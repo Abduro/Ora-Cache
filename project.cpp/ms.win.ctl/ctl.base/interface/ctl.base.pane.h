@@ -13,6 +13,9 @@ namespace ex_ui { namespace controls {
 	using CPosition = geometry::_2D::base::CPosition;
 	using CPos = CPosition;
 
+	// http://ptitben2000.chez.com/info/lookandfeel/higk.htm ;
+	// https://ux.stackexchange.com/questions/124588/whats-the-difference-between-a-panel-and-pane ;
+
 	class CPane {
 	public:
 		class CFormat {

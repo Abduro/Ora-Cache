@@ -62,7 +62,6 @@ err_code  CRender_Wrap::Term (void) {
 	if (this->m_device.Ctx().Is_valid())
 		this->m_device.Ctx().Ptr()->ClearState();
 
-
 	return this->Error();
 }
 
