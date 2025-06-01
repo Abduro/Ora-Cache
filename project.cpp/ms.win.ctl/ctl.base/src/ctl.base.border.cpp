@@ -158,9 +158,16 @@ CSet&  CSet::operator = (CSet&& _victim) {
 
 CSet&  CSet::operator <<(const TRawBorders& _raw) { this->Raw() = _raw; return *this; }
 
-CSet&  CSet::operator +=(const COne& _border) { this->Add(_border); return *this; }
+CSet&  CSet::operator +=(const CBorder& _border) { this->Add(_border); return *this; }
 CSet&  CSet::operator -=(const uint16_t _n_id) { this->Rem(_n_id); return *this; }
 
 const
 COne&     CSet::operator [](const uint16_t _n_id) const { return this->Get(_n_id); }
 COne&     CSet::operator [](const uint16_t _n_id)       { return this->Get(_n_id); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSet_for_rect:: CSet_for_rect (void) : TBase() {
+
+}
+CSet_for_rect::~CSet_for_rect (void) {}

@@ -293,6 +293,7 @@ namespace geometry { namespace _2D { namespace base {
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
 #endif
+		t_rect     Place(void) const;
 		const
 		CSize_U&   Size (void) const;
 		CSize_U&   Size (void) ;

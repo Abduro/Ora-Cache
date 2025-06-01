@@ -42,8 +42,11 @@ namespace ex_ui { namespace controls {
 
 		public:
 			const
-			CPosition& Position (void) const;
-			CPosition& Position (void) ;
+			CPosition& Position (void) const; // gets a reference to current position of the pane; (ro)
+			CPosition& Position (void) ;      // gets a reference to current position of the pane; (rw)
+
+			bool  Update (void);                         // updates the sizes and points of components of the pane; a placement of the pane is calculated;
+			bool  Update (const t_rect& _rect_of_place); // updates the sizes and points of components of the pane; a placement is set by input rect;
 
 		private:
 			CLayout& operator = (const CLayout&) = delete;

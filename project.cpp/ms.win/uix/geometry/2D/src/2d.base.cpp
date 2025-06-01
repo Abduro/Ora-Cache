@@ -506,6 +506,11 @@ CString     CPosition::Print  (const e_print e_opt) const {
 	return  cs_out;
 }
 #endif
+t_rect      CPosition::Place(void) const {
+	return t_rect{
+		this->Anchor().X(), this->Anchor().Y(), this->Anchor().X() + (int32_t)this->Size().W(), this->Anchor().Y() + (int32_t)this->Size().H()
+	};
+}
 const
 CSize_U&    CPosition::Size (void) const { return this->m_size; }
 CSize_U&    CPosition::Size (void)       { return this->m_size; }
@@ -528,7 +533,5 @@ CPosition&  CPosition::operator <<(const CSize_U& _size_u) { this->Size() = _siz
 /////////////////////////////////////////////////////////////////////////////
 
 CPosition::operator const t_rect (void) const {
-	return t_rect{
-		this->Anchor().X(), this->Anchor().Y(), this->Anchor().X() + (int32_t)this->Size().W(), this->Anchor().Y() + (int32_t)this->Size().H()
-	};
+	return this->Place();
 }

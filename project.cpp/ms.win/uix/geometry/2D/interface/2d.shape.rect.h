@@ -62,6 +62,13 @@ namespace geometry { namespace _2D { namespace shapes {
 #if defined (_DEBUG)
 		CString  Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
 #endif
+		const
+		CPoint&  LeftTop (void) const;           // returns a reference to the vertex of the left-top e_corners::e_A; (ro)
+		CPoint&  LeftTop (void) ;                // returns a reference to the vertex of the left-top e_corners::e_A; (rw)
+		const
+		CPoint&  RightLow (void) const;          // returns a reference to the vertex of the right-low e_corners::e_C; (ro)
+		CPoint&  RightLow (void) ;               // returns a reference to the vertex of the right-low e_corners::e_C; (rw)
+
 		CSize    Size (void) const;              // returns a size object of this rectangle;
 		const
 		CPoint&  Vertex (const e_vertex) const;
@@ -74,7 +81,7 @@ namespace geometry { namespace _2D { namespace shapes {
 		COblong& operator = (const COblong&);
 		COblong& operator = (COblong&&);
 
-		COblong& operator <<(const CPoint& _left_up);
+		COblong& operator <<(const CPoint& _left_top);
 		COblong& operator >>(const CPoint& _right_low);
 
 		COblong& operator <<(const t_rect&);

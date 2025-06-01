@@ -48,7 +48,8 @@ namespace ex_ui { namespace controls { namespace borders {
 		CMargin  m_margin;
 	};
 
-	typedef ::std::map<uint16_t, COne> TRawBorders;  // a key is a margin identifier, a value is a border class object;
+	typedef COne CBorder;
+	typedef ::std::map<uint16_t, CBorder> TRawBorders;  // a key is a margin identifier, a value is a border class object;
 
 	class CSet {
 	public:
@@ -58,8 +59,8 @@ namespace ex_ui { namespace controls { namespace borders {
 	public:
 		err_code  Add (const COne&); // returns 's_ok' in case of success, otherwise error code; an identifier value must be set in margin class;
 		const
-		COne&  Get (const uint16_t _n_id) const;  // returns a reference to fake object in case if not found; (ro);
-		COne&  Get (const uint16_t _n_id);        // returns a reference to fake object in case if not found; (rw);
+		CBorder&  Get (const uint16_t _n_id) const;  // returns a reference to fake object in case if not found; (ro);
+		CBorder&  Get (const uint16_t _n_id);        // returns a reference to fake object in case if not found; (rw);
 		err_code  Rem (const uint16_t _n_id);
 
 #if defined(_DEBUG)
@@ -74,15 +75,24 @@ namespace ex_ui { namespace controls { namespace borders {
 		CSet& operator = (CSet&&);
 		CSet& operator <<(const TRawBorders&);
 
-		CSet& operator +=(const COne&);
+		CSet& operator +=(const CBorder&);
 		CSet& operator -=(const uint16_t _n_id);
 
 		const
 		COne& operator [](const uint16_t _n_id) const;
 		COne& operator [](const uint16_t _n_id) ;
 
-	private:
+	protected:
 		TRawBorders m_borders;
+	};
+
+	class CSet_for_rect : public CSet { typedef CSet TBase;
+	public: using e_sides = layout::CGaps_of_rect::e_sides;
+	public:
+		 CSet_for_rect (void); /*CSet_for_rect (const CSet_for_rect&); CSet_for_rect (CSet_for_rect&&);*/
+		~CSet_for_rect (void);
+
+		// ToDo: COne::Margin() must be removed or deprecated;
 	};
 
 }}}

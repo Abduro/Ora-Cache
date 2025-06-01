@@ -23,6 +23,19 @@ const
 CPosition& CLayout::Position (void) const { return this->m_position; }
 CPosition& CLayout::Position (void)       { return this->m_position; }
 
+bool CLayout::Update (void) {
+	
+	bool b_changed = false;
+
+	return b_changed;
+}
+
+bool CLayout::Update (const t_rect& _rect_of_place) {
+	this->Position() << _rect_of_place;
+	// pane borders require theit coords update;
+	return this->Update();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CPane:: CPane (void) : m_format(*this), m_layout(*this)  {}

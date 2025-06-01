@@ -118,6 +118,13 @@ CString      COblong::Print  (const e_print e_opt, _pc_sz _pfx, _pc_sz _sfx) con
 }
 #endif
 
+const
+CPoint&  COblong::LeftTop (void) const { return this->Vertex(e_vertex::e_left_top); } 
+CPoint&  COblong::LeftTop (void)       { return this->Vertex(e_vertex::e_left_top); }      
+const
+CPoint&  COblong::RightLow (void) const { return this->Vertex(e_vertex::e_right_low); }
+CPoint&  COblong::RightLow (void)       { return this->Vertex(e_vertex::e_right_low); }     
+
 CSize COblong::Size (void) const {
 
 //	const int32_t n_height = (((const COblong&)*this)[e_index::e_A].X() > ((const COblong&)*this)[e_index::e_D].X());
