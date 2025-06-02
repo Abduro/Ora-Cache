@@ -9,7 +9,7 @@
 
 namespace ex_ui { namespace controls {
 
-	using CBorders  = ex_ui::controls::borders::CSet;
+	using CBorders  = ex_ui::controls::borders::CBorders_for_rect;
 	using CPosition = geometry::_2D::base::CPosition;
 	using CPos = CPosition;
 
@@ -37,6 +37,7 @@ namespace ex_ui { namespace controls {
 			friend class CPane;		
 		};
 		class CLayout {
+			friend class CPane;
 		private:
 			CLayout (CPane&); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete; ~CLayout (void) = default;
 
@@ -54,7 +55,6 @@ namespace ex_ui { namespace controls {
 		private:
 			CPane&    m_pane;
 			CPosition m_position;
-			friend class CPane;
 		};
 	public:
 		 CPane (void); CPane (const CPane&) = delete; CPane (CPane&&) = delete;

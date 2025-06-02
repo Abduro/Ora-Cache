@@ -97,6 +97,16 @@ CString   CLine::Print (const e_print _e_opt) const {
 }
 #endif
 
+bool     CLine::Set (const t_rect& _rect) {
+	_rect;
+	bool b_changed = false;
+
+	if (this->Begin().Set(_rect.left, _rect.top)) b_changed = true;
+	if (this->End().Set(_rect.right, _rect.bottom)) b_changed = true;
+
+	return b_changed;
+}
+
 uint8_t  CLine::Thickness (void) const { return this->m_thick; }
 bool     CLine::Thickness (const uint8_t _n_value) {
 	const bool b_changed = this->Thickness() != _n_value;
@@ -114,6 +124,8 @@ CLine&  CLine::operator <<(const uint8_t& _n_thick) { this->Thickness(_n_thick);
 
 CLine&  CLine::operator <<(const CPoint& _begin) { this->Begin() = _begin; return *this; }
 CLine&  CLine::operator >>(const CPoint& _end) { this->End() = _end; return *this; }
+
+CLine&  CLine::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
 
 CLine&  CLine::operator = (const CLine& _src) {
 	*this << _src.Begin() >> _src.End() << _src.Thickness() << _src.Color(); return *this;

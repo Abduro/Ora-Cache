@@ -95,7 +95,7 @@ err_code  CLayout::Update (const t_rect* const _p_rect) {
 		return this->m_error << _what << __e_rect;
 	}
 
-	this->m_draw_area = *_p_rect; // resets the draw area rectangle to the input one;  
+	this->m_draw_area = *_p_rect; // assigns the draw area rectangle to the input one;  
 
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 
@@ -105,7 +105,7 @@ err_code  CLayout::Update (const t_rect* const _p_rect) {
 	rect_pane.top = rect_pane.bottom - CLayout_Default().GetPaneHeight();
 
 	CPane& status_bar = _get_view().Pane();
-	status_bar.Layout().Position() << rect_pane;
+	status_bar.Layout().Update(rect_pane);
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 
