@@ -238,14 +238,48 @@ CBorder& CSet_for_rect::Top (void)       { return this->Get(e_sides::e_top); }
 bool  CSet_for_rect::Set (const t_rect& _rect) {
 	_rect;
 	bool b_changed = false;
+
+#define u_use_case 2
+
+	// https://stackoverflow.com/questions/261963/how-can-i-iterate-over-an-enum ;
+	static const e_sides e_all[] = { e_sides::e_left, e_sides::e_top, e_sides::e_right, e_sides::e_bottom};
+
+#if u_use_case == 1
+	
 	// https://learn.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp ;
 	// https://en.cppreference.com/w/cpp/language/lambda.html ;
-	// https://stackoverflow.com/questions/261963/how-can-i-iterate-over-an-enum ;
-#if (1)
-	static const e_sides e_all[] = { e_sides::e_left, e_sides::e_top, e_sides::e_right, e_sides::e_bottom};
+	
 	::std::for_each (::std::begin(e_all), ::std::end(e_all),
-			[this, &_rect, &b_changed](const e_sides _e_side){ if (this->Get(_e_side).Set(_rect)) b_changed = true; }
+			[this, &_rect, &b_changed](const e_sides _e_side){
+				if (this->Get(_e_side).Set(_rect)) b_changed = true;
+			}
 		);
+#elif u_use_case == 2
+	using CPoint = geometry::_2D::base::CPoint;
+	/*
+		(A)— —(D) left->B::A; top->A::D; right->D::C; bottom->C::B;
+		 |     |
+		 |     |
+		(B)— —(C)
+	*/
+	TRect rect_(_rect);
+	const CPoint cnr_A = rect_.Corner(TRect::e_corners::e_A);
+	const CPoint cnr_B = rect_.Corner(TRect::e_corners::e_B);
+	const CPoint cnr_C = rect_.Corner(TRect::e_corners::e_C);
+	const CPoint cnr_D = rect_.Corner(TRect::e_corners::e_D);
+
+	for (int16_t i_ = e_sides::e_left; i_ <= e_sides::e_bottom; i_++) {
+
+		const e_sides e_side = static_cast<e_sides>(i_);
+		
+		if (false) {} 
+		else if (e_sides::e_left   == e_side) { if (this->Left().Set(cnr_B, cnr_A))   b_changed = true; } // B->A ;
+		else if (e_sides::e_top    == e_side) { if (this->Top().Set(cnr_A, cnr_D))    b_changed = true; } // A->D ;
+		else if (e_sides::e_right  == e_side) { if (this->Right().Set(cnr_D, cnr_C))  b_changed = true; } // D->C ;
+		else if (e_sides::e_bottom == e_side) { if (this->Bottom().Set(cnr_C, cnr_B)) b_changed = true; } // C->B ;
+		else
+			break;
+	}	
 #else
 	if (this->Bottom().Set(_rect)) b_changed = true;
 	if (this->Left().Set(_rect))   b_changed = true;

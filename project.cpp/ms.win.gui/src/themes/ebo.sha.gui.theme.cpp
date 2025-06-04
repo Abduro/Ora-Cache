@@ -19,70 +19,71 @@ namespace ebo { namespace sha { namespace gui { namespace format { namespace _im
 using namespace ebo::sha::gui::format::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
-TColorMarker:: CColor_Marker (void) : m_palette(TThemePalette::e_none), m_ui_part(TThemePart::e_none), m_ui_state(TThemeState::e_default) {}
-TColorMarker:: CColor_Marker (const TColorMarker& _ref) : TColorMarker() { *this = _ref; }
-TColorMarker:: CColor_Marker (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element, const TThemeState _state) : TColorMarker() {
+namespace ebo { namespace sha { namespace theme { namespace colors {
+
+CColor_Marker:: CColor_Marker (void) : m_palette(TThemePalette::e_none), m_ui_part(TThemePart::e_none), m_ui_state(TThemeState::e_default) {}
+CColor_Marker:: CColor_Marker (const CColor_Marker& _ref) : CColor_Marker() { *this = _ref; }
+CColor_Marker:: CColor_Marker (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element, const TThemeState _state) : CColor_Marker() {
 	*this << _palette << _part << _element << _state;
 }
-TColorMarker::~CColor_Marker (void) {}
+CColor_Marker::~CColor_Marker (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-const TThemeElement   TColorMarker::Element (void) const { return m_element ; }
-const TThemePalette   TColorMarker::Palette (void) const { return m_palette ; }
-const TThemePart      TColorMarker::Part    (void) const { return m_ui_part ; }
-const TThemeState     TColorMarker::State   (void) const { return m_ui_state; }
+const TThemeElement   CColor_Marker::Element (void) const { return m_element ; }
+const TThemePalette   CColor_Marker::Palette (void) const { return m_palette ; }
+const TThemePart      CColor_Marker::Part    (void) const { return m_ui_part ; }
+const TThemeState     CColor_Marker::State   (void) const { return m_ui_state; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-const bool TColorMarker::Is (void) const { return !(TThemePalette::e_none == m_palette || TThemePart::e_none == m_ui_part || TThemeElement::e_none == m_element); }
+const bool CColor_Marker::Is (void) const { return !(TThemePalette::e_none == m_palette || TThemePart::e_none == m_ui_part || TThemeElement::e_none == m_element); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-TColorMarker& TColorMarker::operator = (const CColor_Marker& _ref) { *this << _ref.Palette() << _ref.Part() << _ref.State() << _ref.Element(); return *this; }
-TColorMarker& TColorMarker::operator <<(const CTheme_Element _element) { this->m_element = _element; return *this; }
-TColorMarker& TColorMarker::operator <<(const CTheme_Palette _palette) { this->m_palette = _palette; return *this; }
-TColorMarker& TColorMarker::operator <<(const CTheme_Part _part) { this->m_ui_part = _part; return *this; }
-TColorMarker& TColorMarker::operator <<(const CTheme_State _state) { this->m_ui_state = _state; return *this; }
+CColor_Marker& CColor_Marker::operator = (const CColor_Marker& _ref) { *this << _ref.Palette() << _ref.Part() << _ref.State() << _ref.Element(); return *this; }
+CColor_Marker& CColor_Marker::operator <<(const CTheme_Element _element) { this->m_element = _element; return *this; }
+CColor_Marker& CColor_Marker::operator <<(const CTheme_Palette _palette) { this->m_palette = _palette; return *this; }
+CColor_Marker& CColor_Marker::operator <<(const CTheme_Part _part) { this->m_ui_part = _part; return *this; }
+CColor_Marker& CColor_Marker::operator <<(const CTheme_State _state) { this->m_ui_state = _state; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-TColorMatrix:: CColor_Matrix (void) {
+CColor_Matrix:: CColor_Matrix (void) {
 	// ToDo: of course, this is not the best approach to defining theme colors in this way;
 	//       it would be better to use XML or JSON files as the source of theme colors;
 	m_palettes = {
-		{
-			TThemePalette::e_dark, {
-				{ TThemePart::e_button , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }, { TThemeState::e_hovered , RGB( 102,  90,  71) }, { TThemeState::e_selected, RGB(  70,  70,  70) }} },
-				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 115, 115, 115) }, { TThemeState::e_hovered , RGB( 229, 183,  66) },
-				                                                      { TThemeState::e_disable, RGB( 115, 115, 115) }, { TThemeState::e_selected, RGB( 229, 183,  66) }} },
-				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }, { TThemeState::e_hovered , RGB( 229, 183,  66) },
-				                                                      { TThemeState::e_disable, RGB( 115, 115, 115) }, { TThemeState::e_selected, RGB( 183, 163,  66) }} }}},
-				{ TThemePart::e_caption, {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }} },
-				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
-				{ TThemePart::e_edit   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }, { TThemeState::e_disable , RGB(  70,  70,  70) }} },
-				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 115, 115, 115) }, { TThemeState::e_disable , RGB( 115, 115, 115) }} },
-				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }, { TThemeState::e_disable , RGB( 230, 230, 230) }} }}},
-				{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  39,  39,  39) }} },     // 61, 61, 61
-				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 229, 183,  66) }} },     // #e5b742
-				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
-				{ TThemePart::e_label  , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }} },
-				                          { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
-				{ TThemePart::e_panel  , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  61,  61,  61) }} },
-				                          { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 229, 183,  66) }, { TThemeState::e_disable , RGB( 115, 115, 115) }} }}}//,
-			//	{ TThemePart::, {{, {{ }} }} }
-			}
-		},
-		{
-			TThemePalette::e_light, {
-				{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB( 249, 249, 249) }} }
-				}}
-			}
+	{
+		TThemePalette::e_dark, {
+			{ TThemePart::e_button , {{   TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }, { TThemeState::e_hovered , RGB( 102,  90,  71) }, { TThemeState::e_selected, RGB(  70,  70,  70) }} },
+				                        { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 115, 115, 115) }, { TThemeState::e_hovered , RGB( 229, 183,  66) },
+				                                                    { TThemeState::e_disable, RGB( 115, 115, 115) }, { TThemeState::e_selected, RGB( 229, 183,  66) }} },
+				                        { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }, { TThemeState::e_hovered , RGB( 229, 183,  66) },
+				                                                    { TThemeState::e_disable, RGB( 115, 115, 115) }, { TThemeState::e_selected, RGB( 183, 163,  66) }} }}},
+			{ TThemePart::e_caption, {{   TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }} },
+				                        { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
+			{ TThemePart::e_edit   ,   {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }, { TThemeState::e_disable , RGB(  70,  70,  70) }} },
+				                        { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 115, 115, 115) }, { TThemeState::e_disable , RGB( 115, 115, 115) }} },
+				                        { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }, { TThemeState::e_disable , RGB( 230, 230, 230) }} }}},
+			{ TThemePart::e_form   ,   {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  39,  39,  39) }} },     // 61, 61, 61
+				                        { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 229, 183,  66) }} },     // #e5b742
+				                        { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
+			{ TThemePart::e_label  ,   {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  70,  70,  70) }} },
+				                        { TThemeElement::e_fore  , {{ TThemeState::e_default, RGB( 230, 230, 230) }} } }},
+			{ TThemePart::e_panel  ,   {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB(  61,  61,  61) }} },
+				                        { TThemeElement::e_border, {{ TThemeState::e_default, RGB( 229, 183,  66) }, { TThemeState::e_disable , RGB( 115, 115, 115) }} }}}//,
+		//	{ TThemePart::, {{, {{ }} }} }
 		}
-	};
+	},
+	{
+		TThemePalette::e_light, {
+			{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default, RGB( 249, 249, 249) }} }
+			}}
+		}
+	}};
 }
-TColorMatrix:: CColor_Matrix (const TColorMatrix& _ref) : TColorMatrix() { *this = _ref; }
-TColorMatrix::~CColor_Matrix (void) {}
+CColor_Matrix:: CColor_Matrix (const CColor_Matrix& _ref) : CColor_Matrix() { *this = _ref; }
+CColor_Matrix::~CColor_Matrix (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -90,8 +91,8 @@ TColorMatrix::~CColor_Matrix (void) {}
 #define __clr_none 0xFFFFFFFFL
 #endif
 
-TColorMatrix&  TColorMatrix::operator = (const TColorMatrix& _ref) { this->m_palettes = _ref.m_palettes; return *this; }
-const COLORREF TColorMatrix::operator <<(const CColor_Marker& _marker) const {
+CColor_Matrix&  CColor_Matrix::operator = (const CColor_Matrix& _ref) { this->m_palettes = _ref.m_palettes; return *this; }
+const COLORREF  CColor_Matrix::operator <<(const CColor_Marker& _marker) const {
 
 	COLORREF clr_result = __clr_none;
 	if (_marker.Is()) {
@@ -113,6 +114,8 @@ const COLORREF TColorMatrix::operator <<(const CColor_Marker& _marker) const {
 	return clr_result;
 }
 
+}}}}
+namespace ebo { namespace sha { namespace theme {
 /////////////////////////////////////////////////////////////////////////////
 
 bool CClr_Simple::Is_light(const clr_type _clr) {
@@ -121,24 +124,34 @@ bool CClr_Simple::Is_light(const clr_type _clr) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-TTheme:: CTheme (void) {
+CTheme:: CTheme (void) {
 	if (CTheme::IsDark())
 		m_current = TThemePalette::e_dark;
 	else
 		m_current = TThemePalette::e_light;
 }
-TTheme:: CTheme (const TTheme& _ref) : TTheme() { *this = _ref; }
-TTheme::~CTheme (void) {}
+CTheme:: CTheme (const CTheme& _ref) : TTheme() { *this = _ref; }
+CTheme::~CTheme (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-const TColorMatrix&  TTheme::Matrix  (void) const { return m_clr_mtx; }
-const TThemePalette  TTheme::Palette (void) const { return m_current; }
+const TColorMatrix&  CTheme::Matrix  (void) const { return m_clr_mtx; }
+const TThemePalette  CTheme::Palette (void) const { return m_current; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-clr_type TTheme::Get (const TThemePart _part, const TThemeElement _el, const TThemeState _state) const {
-	return ((const clr_type)(m_clr_mtx << TColorMarker(this->Palette(), _part, _el, _state)));
+#ifndef rgb_value_max
+#define rgb_value_max (0xff)
+#endif
+
+clr_type CTheme::Get (const TThemePart _part, const TThemeElement _el, const TThemeState _state, clr_value _alpha) const {
+
+	clr_type clr_result = (const clr_type)(m_clr_mtx << TColorMarker(this->Palette(), _part, _el, _state));
+
+	if (rgb_value_max != _alpha) {
+		clr_result = CQuad(clr_result, _alpha).ToRgbA();
+	}
+	return clr_result;
 }
 
 bool CTheme::IsDark (void) {
@@ -147,9 +160,10 @@ bool CTheme::IsDark (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-TTheme&  TTheme::operator = (const TTheme& _ref) { this->m_clr_mtx = _ref.Matrix(); this->m_current = _ref.Palette();  return *this; }
+CTheme&  CTheme::operator = (const CTheme& _ref) { this->m_clr_mtx = _ref.Matrix(); this->m_current = _ref.Palette();  return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
+}}}
 
 namespace shared {
 	

@@ -32,12 +32,19 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	return   n_result;
 }
 
-err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) {
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint ;
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint ;
 
+err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
+
+	using WTL::CPaintDC;
 	using ex_ui::color::rgb::CFloat;
-
+	// this goes first;
 	using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
 	_render().Target().OnDraw(CUI_Parts().Bkg());
+
+	CPaintDC dc_(*this);
+	shared::Get_View().Draw(dc_.m_hDC, dc_.m_ps.rcPaint); // *important*: the rectangle being sent is entire window client area!
 
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
@@ -108,12 +115,13 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 	return   n_result;
 }
 
-err_code CWnd::IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect) {
+err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	_p_rect;
 
 	t_rect rc_surface = m_layout.DrawArea();
-	if (this->m_surface) {
-		this->m_surface.MoveWindow(&rc_surface);
+	if (this->m_surface) {	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
+		this->m_surface.MoveWindow(&rc_surface, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
+		this->m_surface.IEvtFrame_OnSizing(_edges, &rc_surface);
 	}
 	err_code n_result = __s_false;
 	return   n_result;

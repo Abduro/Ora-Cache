@@ -71,12 +71,17 @@ CPoint COblong::Corner (const e_corners _e_corner) const {
 
 	const CPoint& pt_l_t = this->Vertex(e_vertex::e_left_top);
 	const CPoint& pt_r_l = this->Vertex(e_vertex::e_right_low);
-
+	/*  vertex: e_left_top (A);
+		(A)— —(D)
+		 |     |
+		 |     |
+		(B)— —(C) vertex: e_right_low (C);
+	*/
 	switch (_e_corner) {
 	case e_corners::e_A: return CPoint(pt_l_t);
-	case e_corners::e_B: return CPoint(pt_r_l.X(), pt_l_t.Y());
+	case e_corners::e_B: return CPoint(pt_l_t.X(), pt_r_l.Y());
 	case e_corners::e_C: return CPoint(pt_r_l);
-	case e_corners::e_D: return CPoint(pt_l_t.X(), pt_r_l.Y());
+	case e_corners::e_D: return CPoint(pt_r_l.X(), pt_l_t.Y());
 	}
 	static CPoint pt_inv;
 	return pt_inv;

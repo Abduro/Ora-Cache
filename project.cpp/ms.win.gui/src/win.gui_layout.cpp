@@ -19,22 +19,33 @@ namespace ebo { namespace boo { namespace gui { namespace _impl {
 
 	class CLayout_Default {
 	public:
+		class CPane {
+		public:
+			 CPane (void) {} CPane (const CPane&) = delete; CPane (CPane&&) = delete;
+			~CPane (void) {}
+		public:
+			uint32_t Height (void) const { return 35; }
+		private:
+			CPane& operator = (const CPane&) = delete;
+			CPane& operator = (CPane&&) = delete;
+		};
+	public:
 		 CLayout_Default (void) { this->m_padding.Set(10,10,-10,-10); } // sets nagative values to the right and the bottom gaps!
 		 CLayout_Default (const CLayout_Default&) = delete; CLayout_Default (CLayout_Default&&) = delete;
 		~CLayout_Default (void) {}
 
 	public:
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
-		uint32_t GetPaneHeight (void) const { return 35; }
-#endif
 		const
 		CPadding& Padding(void) const { return this->m_padding; }
+		const
+		CPane&  Pane (void) const { return this->m_pane; }
 
 	private:
 		CLayout_Default& operator = (const CLayout_Default&) = delete;
 		CLayout_Default& operator = (CLayout_Default&&) = delete;
 	private:
 		CPadding m_padding;
+		CPane    m_pane;
 	};
 
 }}}}
@@ -99,13 +110,20 @@ err_code  CLayout::Update (const t_rect* const _p_rect) {
 
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 
-	this->m_draw_area.bottom -= CLayout_Default().GetPaneHeight(); // updates the bottom value for reserving the space of pane control;
+	this->m_draw_area.bottom -= CLayout_Default().Pane().Height(); // updates the bottom value for reserving the space of pane control;
 
 	t_rect rect_pane = *_p_rect;
-	rect_pane.top = rect_pane.bottom - CLayout_Default().GetPaneHeight();
+	rect_pane.top = rect_pane.bottom - CLayout_Default().Pane().Height();
+	/*
+		the issue which  appears here is this layout works in client area coordinates of the main window,
+		but the view components, including this test pane object, use the in-memory device context which draws only in particular area,
+		and finally, the clipping being made for better performance gives not proper result due to the components resides outside of
+		the draw area of the in-memory device context; for solving this issue the following may be made:
+		(a) to re-calculate component points inside of their draw function;
+		(b) each component of the view must be windowed for better isolation from each one other; (the better solution than above one);
+	*/
+	shared::Get_View().Pane().Layout().Update(rect_pane);
 
-	CPane& status_bar = _get_view().Pane();
-	status_bar.Layout().Update(rect_pane);
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 

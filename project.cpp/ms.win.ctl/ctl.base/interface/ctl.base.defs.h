@@ -37,6 +37,8 @@ namespace ex_ui { namespace controls {
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
 
+	using CZBuffer = ex_ui::draw::memory::CZBuffer;
+
 }}
 
 #endif/*_CTL_BASE_DEFS_H_INCLUDED*/

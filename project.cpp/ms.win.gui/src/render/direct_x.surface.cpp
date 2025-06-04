@@ -32,6 +32,18 @@ err_code CSurface::IEvtDraw_OnPaint (const w_param, const l_param) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+err_code CSurface::IEvtFrame_OnMove   (const t_point& _top_left_client_area) {
+	_top_left_client_area;
+	err_code n_result = __s_false;
+	return   n_result;
+
+}
+err_code CSurface::IEvtFrame_OnMoving (const t_rect* _p_wnd_coords){
+	_p_wnd_coords;
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
 
@@ -47,7 +59,13 @@ err_code CSurface::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 	return   n_result;
 }
 
-err_code CSurface::IEvtFrame_OnSizing (const eEdges, LPRECT) {
+err_code CSurface::IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect_applied) {
+
+	t_rect rc_applied = *_p_rect_applied;  // *attention*: this rectangle in parent window client area coordinates;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect ;
+	::OffsetRect(&rc_applied, -rc_applied.left, -rc_applied.top);
+
+	_render().Target().OnSize(rc_applied); // error code is not useful yet;
 
 	err_code n_result = __s_false;
 	return   n_result;

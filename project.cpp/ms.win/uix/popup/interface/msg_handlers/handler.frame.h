@@ -44,13 +44,34 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			err_code n_result = __s_false; return n_result;
 		}
 
-		virtual err_code  IEvtFrame_OnEnable   (const w_param, const l_param) { // wparam is enable/disable value; lparam is not used;
+		virtual err_code  IEvtFrame_OnEnable (const w_param, const l_param) { // wparam is enable/disable value; lparam is not used;
 			err_code n_result = __s_false; return n_result;
 		}
-		virtual err_code  IEvtFrame_OnMove     (const w_param, const l_param) { // wparam is not used; coordinates of corners of the client area;
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move ;
+		// wparam is not used; lparam coordinates of the left-top corner of the client area;
+		virtual err_code  IEvtFrame_OnMove (const w_param, const l_param _l_param) {
+			return IEvtFrame_OnMove (t_point{LOWORD(_l_param), HIWORD(_l_param)});
+		}
+
+		virtual err_code  IEvtFrame_OnMove (const t_point& _top_left_client_area) {
+			_top_left_client_area;
 			err_code n_result = __s_false; return n_result;
 		}
-		virtual err_code  IEvtFrame_OnMoving   (const w_param, const l_param) { // wparam is not used; coordinates of corners of the client area;
+
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-moving ;
+		// wparam is not used; l_param is a pointer to a RECT structure with the current position of the window, in screen coordinates ;
+		virtual err_code  IEvtFrame_OnMoving (const w_param, const l_param _l_param) {
+			LPRECT p_rect = nullptr;
+			if (_l_param) {
+				p_rect = reinterpret_cast<LPRECT>(_l_param);
+				if (p_rect)
+					return IEvtFrame_OnMoving(p_rect);
+			}
+			return __s_false;
+		}
+
+		virtual err_code  IEvtFrame_OnMoving (const t_rect* _p_wnd_coords) {
+			_p_wnd_coords; 
 			err_code n_result = __s_false; return n_result;
 		}
 
@@ -79,10 +100,16 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			eUndefined   = 0,
 		};
 
-		virtual err_code  IEvtFrame_OnSizing   (const w_param _w_param, const l_param _l_param) { // wparam is a size mode; lparam is window rectangle in screen coords;
-			return IEvtFrame_OnSizing((const eEdges)_w_param, reinterpret_cast<LPRECT>(_l_param));
+		virtual err_code  IEvtFrame_OnSizing (const w_param _w_param, const l_param _l_param) { // wparam is a size mode; lparam is window rectangle in screen coords;
+			LPRECT p_rect = nullptr;
+			if (_l_param) {
+				p_rect = reinterpret_cast<LPRECT>(_l_param);
+				if (p_rect)
+					return IEvtFrame_OnSizing((const eEdges)_w_param, p_rect);
+			}
+			return __s_false;
 		}
-		virtual err_code  IEvtFrame_OnSizing   (const eEdges, LPRECT _p_rect) { _p_rect;
+		virtual err_code  IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect) { _p_rect;
 			err_code n_result = __s_false; return n_result;
 		}
 	};

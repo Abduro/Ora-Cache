@@ -86,12 +86,12 @@ namespace geometry { namespace _2D { namespace shapes {
 
 		COblong& operator <<(const t_rect&);
 
-
 	private:
 		TRgbQuad m_color; // the color that fills this rectangle body;
 	};
 }}}
 
 typedef geometry::_2D::shapes::COblong  TRect;
+typedef geometry::_2D::shapes::COblong::e_corners TRectConers;
 
 #endif/*_2D_SHAPE_RECT_H_INCLUDED*/

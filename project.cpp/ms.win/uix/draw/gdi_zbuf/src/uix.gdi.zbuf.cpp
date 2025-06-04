@@ -153,7 +153,11 @@ err_code  CZBuffer::Reset (void){
 		const t_rect& rc_draw = this->m_surface.Area();
 
 		const bool b_result = !!::BitBlt(
-			this->m_origin, rc_draw.left, rc_draw.top, __W(rc_draw), __H(rc_draw), TDC::m_hDC, rc_draw.left, rc_draw.top, SRCCOPY
+		/*  the surface object that is applied to this in-memory device context sets the view port to 0:0,
+		    this is made for cases when the device context is created for particular area of drawing operation, not for entire client rectangle;
+		    thus, in-memory device context draw area is always set to 0:0; perhaps it must be reviewed more carefully for applying clipping regions properly;
+		*/
+			this->m_origin, rc_draw.left, rc_draw.top, __W(rc_draw), __H(rc_draw), TDC::m_hDC, /*rc_draw.left*/0, /*rc_draw.top*/0, SRCCOPY
 		);
 		if (false == b_result)
 			this->m_error.Last();
@@ -185,21 +189,81 @@ err_code  CZBuffer::Draw (const CLine& _line) {
 	if (_line.Is_valid() == false) return this->m_error << __e_inv_arg;
 	if (this->Is_valid() == false) return this->m_error << __e_not_inited;
 
-	if (_line.Color().A() ) { // it's used the alpha blend, thus the line is substituted by the rectangle of appropriate size;
-	}
-	else if (_line.Thickness() > 1) { // the line is still be replaced by the rectangle of the appropriate size, no blending occurs;
+	class CAdjuster { // the line is already checked for validity and requires to be checked for direction: vertical or horizontal;
+	public:           // actually the line direction may be ignored, but it's very possible to have a drawing that looks like not expected to;
+		 CAdjuster (const CLine& _line) : m_line(_line){} CAdjuster (void) = delete; CAdjuster (const CAdjuster&) = delete; CAdjuster (CAdjuster&&) = delete;
+		~CAdjuster (void) {}
+	public:
+		err_code Do (CRect& _rect) const {
+			_rect;
+			err_code n_result = __s_ok;
+			_rect.SetRect(this->m_line.Begin(), this->m_line.End());
+
+			if (false){}
+			else if (this->m_line.Is_horz()) {
+				// the line thickness is added to the end point Y value; it is assumed the end point Y not less than start point Y;
+				_rect.bottom += this->m_line.Thickness();
+			} 
+			else if (this->m_line.Is_vert()) {
+				// the line thickness is added to the end point X value; it is assumed the end point X not less than start point X;
+				_rect.right  += this->m_line.Thickness();
+			}
+			else {
+				n_result = /*__e_not_expect*/(err_code)TErrCodes::eData::eUnsupport;
+			}
+			return n_result;
+		}
+
+	private:
+		CAdjuster& operator = (const CAdjuster&) = delete; CAdjuster& operator = (CAdjuster&&) = delete;
+	private:
+		const CLine& m_line;
+	};
+#if (0)
+	if (_line.Is_vert () == false && _line.Is_horz() == false)
+		return this->m_error << (err_code)TErrCodes::eData::eUnsupport;
+#endif
+	// it uses the alpha blend, thus the line is substituted by the rectangle of appropriate size;
+	// or the line thickeness is greater than 1px, the same approach is used;
+	if (_line.Color().A() != _Opaque || _line.Thickness() > 1) { 
+		
+		CRect rect_;
+		this->m_error << CAdjuster(_line).Do(rect_);
+		if (this->Error())
+			return this->Error();
+		
+		this->Draw(rect_, _line.Color());
 	}
 	else { // the line is drawn in regular manner;
+		::WTL::CPen cPen;
+		cPen.CreatePen(PS_SOLID, _line.Thickness(), _line.Color().ToRgb());
+
+		const int32_t nSave = TDC::SaveDC();
+		TDC::SelectPen(cPen);
+
+		TDC::MoveTo(_line.Begin().X(), _line.Begin().Y());
+		TDC::LineTo(_line.End().X(), _line.End().Y());
+
+		TDC::RestoreDC(nSave);
 	}
 
 	return this->Error();
 }
 
 err_code  CZBuffer::Draw  (const CRect& _rect, const TRgbQuad& _clr) {
+	return this->Draw((const t_rect&)_rect, _clr);
+}
+
+err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
+	_rect; _clr;
 	this->m_error << __METHOD__ << __s_ok;
 
-	if (_rect.IsRectNull()) return this->m_error << __e_rect;
+	if (::IsRectEmpty(&_rect)) return this->m_error << __e_rect;
 	if (this->Is_valid() == false) return this->m_error << __e_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectvisible ;
+	if (false == !!::RectVisible(TDC::m_hDC, &_rect))
+		return this->m_error << __s_false;
 
 	if (false) {}                    // https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;
 	else if (_clr.A() == 0) {}       // is transparent and nothing to draw;
@@ -209,7 +273,7 @@ err_code  CZBuffer::Draw  (const CRect& _rect, const TRgbQuad& _clr) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
 		class CBrush {
 		public:
-			 CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
+			CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
 			~CBrush (void) { if (this->m_brush){ ::DeleteObject(this->m_brush); this->m_brush = nullptr; }}
 			HBRUSH  Get (void) const { return this->m_brush; }
 		private:

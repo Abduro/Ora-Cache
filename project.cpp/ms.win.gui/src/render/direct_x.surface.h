@@ -28,7 +28,9 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 	private:  // IDrawEvtSink override(s);
 		err_code IEvtDraw_OnPaint   (const w_param, const l_param) override final;
 
-	private: // IFormEvtSink override(s); 
+	public: // IFormEvtSink override(s); 
+		err_code IEvtFrame_OnMove   (const t_point& _top_left_client_area) override final;
+		err_code IEvtFrame_OnMoving (const t_rect* _p_wnd_coords) override final;
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final;
 		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
 

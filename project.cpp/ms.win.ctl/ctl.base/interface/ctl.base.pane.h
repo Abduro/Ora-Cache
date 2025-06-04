@@ -71,6 +71,8 @@ namespace ex_ui { namespace controls {
 		CLayout&  Layout  (void) const;
 		CLayout&  Layout  (void) ;
 
+		err_code  Draw (const HDC, const t_rect& _drw_area) const;
+
 	public:
 		CPane& operator = (const CPane&) = delete;
 		CPane& operator = (CPane&&) = delete;

@@ -97,7 +97,17 @@ CString   CLine::Print (const e_print _e_opt) const {
 }
 #endif
 
-bool     CLine::Set (const t_rect& _rect) {
+bool CLine::Set (const CPoint& _begin, const CPoint& _end) {
+
+	bool b_changed = false;
+
+	if (this->Begin() != _begin) { this->Begin() = _begin; b_changed = true; }
+	if (this->End() != _end) { this->End() = _end; b_changed = true; }
+
+	return b_changed;
+}
+
+bool CLine::Set (const t_rect& _rect) {
 	_rect;
 	bool b_changed = false;
 

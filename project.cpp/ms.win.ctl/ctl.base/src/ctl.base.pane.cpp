@@ -49,3 +49,37 @@ const
 CLayout&  CPane::Layout  (void) const { return this->m_layout ; }
 CLayout&  CPane::Layout  (void)       { return this->m_layout ; }
 
+err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
+	_hdc; _drw_area;
+	err_code n_result = __s_ok;
+
+	const t_rect drw_area = this->Layout().Position();
+
+	CZBuffer z_buffer(_hdc, drw_area);
+
+	if (z_buffer.Is_valid() == false)
+		return (n_result = z_buffer.Error());
+
+	// (1) draws the background first;
+	const TRgbQuad& bkg_ = this->Format().Bkgnd();
+	if (bkg_.Is() && bkg_.A() != 0) { // alpha value must be checked too;
+		n_result = z_buffer.Draw(drw_area, bkg_);
+	}
+
+	using e_sides = ex_ui::controls::layout::CGaps_of_rect::e_sides;
+	using CBorder = ex_ui::controls::borders::CBorder;
+
+	for (int16_t i_ = 0; i_ <= e_sides::e_bottom; i_++) { // border set for rectangular area is expected, but nevertheless;
+
+		const CBorder& border = this->Borders().Get(static_cast<e_sides>(i_));
+
+		if (border.IsClear())
+			continue;
+
+		n_result = z_buffer.Draw(border);
+		if (__failed(n_result))
+			break;
+	}
+
+	return  n_result;
+}

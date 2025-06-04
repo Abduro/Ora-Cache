@@ -51,7 +51,10 @@ namespace geometry { namespace _2D { namespace base {
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
-		bool     Set (const t_rect&) ; // sets the begin point to left-top vertex of the input rectangle and the end point to right-low vertex; returns 'true' in case of change;
+		bool Set (const CPoint& _begin, const CPoint& _end);
+		// sets the begin point to left-top vertex of the input rectangle and the end point to right-low vertex; returns 'true' in case of change;
+		// the notes above does not exactly to reflect the required truth: the line starts to be the diagonal of the rectangle that actually is not intended; 
+		bool Set (const t_rect&) ;
 
 		uint8_t  Thickness (void) const;
 		bool     Thickness (const uint8_t);        // returns 'true' in case of thickness value is changed;

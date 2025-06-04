@@ -19,10 +19,12 @@ namespace ex_ui { namespace message { namespace handlers { namespace draw {
 		virtual err_code IEvtDraw_OnErase (const HDC _dev_ctx) { _dev_ctx;
 			err_code n_result = __s_ok; return n_result;
 		}
-		// https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint
+		// https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ;  // both input args are not used, the only way is to use BeginPaint function;
 		virtual err_code IEvtDraw_OnPaint (const w_param, const l_param) { // S_OK is handled, S_FALSE is not handled, otherwise is error code;
 			err_code n_result = __s_ok; return n_result;
 		}
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint ;
 	};
 
 	typedef ::std::set<IDrawEventSink*> TDrawEvtListeners;

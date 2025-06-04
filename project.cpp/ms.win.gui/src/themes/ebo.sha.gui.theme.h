@@ -112,7 +112,7 @@ namespace ebo { namespace sha { namespace theme {
 		const TThemePalette  Palette (void) const;
 
 	public:
-		clr_type Get (const TThemePart, const TThemeElement, const TThemeState = TThemeState::e_default) const;
+		clr_type Get (const TThemePart, const TThemeElement, const TThemeState = TThemeState::e_default, clr_value _alpha = rgb_val_max) const;
 
 	public:
 		static  bool IsDark (void);

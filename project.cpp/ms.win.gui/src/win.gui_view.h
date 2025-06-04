@@ -10,6 +10,8 @@
 #include "direct_x.surface.h"
 #include "direct_x.wrap.h"
 
+#include "ebo.sha.gui.theme.h"
+
 // https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
 // https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);
 
@@ -17,7 +19,10 @@
 
 namespace ebo { namespace boo { namespace gui {
 
-	using CPane = ex_ui::controls::CPane;
+	using namespace ebo::sha::theme;
+
+	using CPane = ex_ui::controls::CPane;    // this is the pane control class that is not windowed yet;
+
 	// this is the view of the main window;
 	class CView {
 	public:
@@ -25,6 +30,9 @@ namespace ebo { namespace boo { namespace gui {
 		~CView (void) ;
 
 	public:
+
+		err_code Draw (const HDC, const t_rect& _drw_area) const;
+
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 		const
 		CPane&   Pane (void) const;
@@ -40,7 +48,7 @@ namespace ebo { namespace boo { namespace gui {
 
 	private:
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
-		CPane  m_sta_place;
+		CPane   m_pane;
 #endif
 		CWindow m_parent;  // this is the main window of this app;
 	};
@@ -49,6 +57,7 @@ namespace ebo { namespace boo { namespace gui {
 
 typedef ebo::boo::gui::CView TView;
 
-TView&  _get_view(void);
-
+namespace shared {
+	TView&  Get_View (void);
+}
 #endif/*_WIN_GUI_VIEW_H_INCLUDED*/
