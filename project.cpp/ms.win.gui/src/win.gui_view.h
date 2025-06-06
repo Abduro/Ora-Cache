@@ -15,13 +15,14 @@
 // https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
 // https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);
 
-#define _tst_case_01 1
+#define _tst_case_01 0
 
 namespace ebo { namespace boo { namespace gui {
 
 	using namespace ebo::sha::theme;
 
 	using CPane = ex_ui::controls::CPane;    // this is the pane control class that is not windowed yet;
+	using CStatus = ex_ui::controls::sfx::status::CControl;
 
 	// this is the view of the main window;
 	class CView {
@@ -41,6 +42,9 @@ namespace ebo { namespace boo { namespace gui {
 		const
 		CWindow& Parent (void) const;
 		CWindow& Parent (void) ;
+		const
+		CStatus& Status (void) const;
+		CStatus& Status (void) ;
 
 	public:
 		CView& operator = (const CView&) = delete;
@@ -51,6 +55,7 @@ namespace ebo { namespace boo { namespace gui {
 		CPane   m_pane;
 #endif
 		CWindow m_parent;  // this is the main window of this app;
+		CStatus m_status;
 	};
 
 }}}

@@ -187,6 +187,8 @@
     <ClCompile Include="$(_1)uix.gdi.shade.cpp" />
     <ClInclude Include="$(_0)uix.gdi.zbuf.h" />
     <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" />
+    <ClInclude Include="$(_0)uix.gen.font.h" />
+    <ClCompile Include="$(_1)uix.gen.font.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

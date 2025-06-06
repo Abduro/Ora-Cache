@@ -6,19 +6,60 @@
 	-----------------------------------------------------------------------------
 	Reincarnation to Ebo Pack is made on 22-Aug-2020 at 7:16:49a, UTC+7, Novosibirsk, Saturday;
 */
-#if (0)
-#include "shared.gen.sys.err.h"
-#include "shared.uix.ctrl.defs.h"
 #include "sfx.status.fmt.h"
+#include "sfx.status.inc.h"
 #include "sfx.status.lay.h"
+#if (0)
+
 #include "sfx.status.ext.h"
 #endif
-namespace ST_Ctrls {
+namespace ex_ui { namespace controls { namespace sfx { namespace status {
+
+	using namespace ex_ui::controls::sfx;
+
+	class CControl {
+	public:
+		 CControl (void); CControl (const CControl&) = delete; CControl (CControl&&) = delete;
+		~CControl (void);
+
+	public:
+		const
+		CBorders& Borders(void) const;
+		CBorders& Borders(void) ;
+
+		err_code  Create (const HWND hParent, const uint32_t _ctrl_id);
+		err_code  Destroy(void) ;
+		TError&   Error  (void) const;
+
+		const
+		CFormat&  Format (void) const;
+		CFormat&  Format (void)      ;
+
+		const
+		CLayout&  Layout (void) const;
+		CLayout&  Layout (void) ;
+
+		err_code  Refresh(void) ;
+		CWindow   Window (void) const; // returns status bar control internal window handle;
+
+	private:
+		CControl& operator = (const CControl&) = delete;
+		CControl& operator = (CControl&&) = delete;
+
+	protected:
+		CError   m_error  ;
+		uint32_t m_ctrl_id;
+		HANDLE   m_wnd_ptr;
+		CLayout  m_layout ;
+		CBorders m_borders;
+		CFormat  m_format ;
+	};
+
+}}}}
 #if (0)
-	using shared::sys_core::CError;
+namespace ST_Ctrls {
+
 	using ex_ui::draw::defs::IRenderer;
-	using ex_ui::controls::CBorders;
-	using ex_ui::controls::CMargins;
 
 	interface IStatusEvents : public ex_ui::controls::IControlEvent {
 		virtual HRESULT  IStatusEvt_OnAppend (const CPanel& _added) PURE;
@@ -29,39 +70,15 @@ namespace ST_Ctrls {
 	class CStatusBar : public IStatusEvents {
 	protected:
 		IStatusEvents& m_evt_snk;
-		HANDLE         m_wnd_ptr;
-		CError         m_error  ;
-		UINT           m_ctrl_id;
-		TStatusLay     m_layout ;
 		CPanels        m_panels ;
-		CBorders       m_borders;
 
 	public:
-		 CStatusBar (IStatusEvents&);
-		~CStatusBar (void);
-
-	public:
-		HRESULT      Create  (const HWND hParent, const UINT _ctrl_id);
-		HRESULT      Destroy (void)      ;
-
-	public:
-		const
-		CBorders&    Borders (void) const;
-		CBorders&    Borders (void)      ;
-		const
-		TStatusFmt&  Format  (void) const;
-		TStatusFmt&  Format  (void)      ;
-		TErrorRef    Error   (void) const;
-		const
-		TStatusLay&  Layout  (void) const;
-		TStatusLay&  Layout  (void)      ;
+		
+		
 		const
 		CPanels&     Panels  (void) const;
 		CPanels&     Panels  (void)      ;
 		HRESULT      Renderer(IRenderer*  const _p_parent_renderer);
-		HRESULT      Refresh (void)      ;
-		CWindow      Window  (void) const;
-
 	public:
 		ex_ui::controls::IControlEvent&  MouseEvtSink(void);
 
@@ -75,8 +92,8 @@ namespace ST_Ctrls {
 		CStatusBar (const CStatusBar&);
 		CStatusBar&  operator = (const CStatusBar&);
 	};
-#endif
 }
+#endif
 #if (0)
 typedef ST_Ctrls::CStatusBar  TStatusCtrl;
 #endif

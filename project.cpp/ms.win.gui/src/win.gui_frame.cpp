@@ -41,7 +41,7 @@ err_code TIcon::Set (const uint16_t _u_res_id) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CFrame:: CFrame (void) : m_icon(*this) {this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CFrame:: CFrame (void) : m_icon(*this), m_wnd(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__)) {this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CFrame::~CFrame (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -66,9 +66,27 @@ err_code CFrame::Create (void) {
 	if (::IsRectEmpty(&rc_))
 		return (m_error << __e_rect);
 
-	HWND hView = m_wnd.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS);
+	static const DWORD dw_style = WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
+#if (0)
+	m_wnd.Atom().Register(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, m_wnd.GetWindowProc()));
+	if (m_wnd.Atom().Is_valid()) {
+
+		::ATL::CWindowImplBaseT<>& base = (::ATL::CWindowImplBaseT<>&)m_wnd;
+
+		HWND hView = base.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_style, 0u, 0u, (ATOM)m_wnd.Atom(), nullptr);
+		if (!hView)
+			return m_error.Last();
+	}
+	else {
+		HWND hView = m_wnd.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_style);
+		if (!hView)
+			return m_error.Last();
+	}
+#else
+	HWND hView = m_wnd.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_style);
 	if (!hView)
 		return m_error.Last();
+#endif
 
 	if (false == m_error) {
 		

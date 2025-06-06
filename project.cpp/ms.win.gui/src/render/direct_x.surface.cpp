@@ -70,3 +70,22 @@ err_code CSurface::IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect_applied) {
 	err_code n_result = __s_false;
 	return   n_result;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code  CSurface::Create (const HWND _h_parent, const t_rect& _rc_place) {
+	_h_parent; _rc_place;
+
+	err_code n_result = __s_ok;
+
+	t_rect rc_place_ = _rc_place;
+
+	HWND h_surface = TBase::Create(_h_parent, &rc_place_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE);
+	if ( h_surface ) {
+		_render().Init(h_surface); // this view window does not care about renderer init() result;
+	}
+	else
+		n_result = __LastErrToHresult();
+
+	return n_result;
+}

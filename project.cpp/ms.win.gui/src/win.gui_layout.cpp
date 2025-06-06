@@ -123,7 +123,8 @@ err_code  CLayout::Update (const t_rect* const _p_rect) {
 		(b) each component of the view must be windowed for better isolation from each one other; (the better solution than above one);
 	*/
 	shared::Get_View().Pane().Layout().Update(rect_pane);
-
+#else
+	this->m_draw_area.bottom -= ::shared::Get_View().Status().Layout().Height();
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 

@@ -182,6 +182,8 @@
     <ClCompile Include="$(_1)ctl.base.layout.cpp" />
     <ClInclude Include="$(_0)ctl.base.pane.h" />
     <ClCompile Include="$(_1)ctl.base.pane.cpp" />
+    <ClInclude Include="$(_0)ctl.base.props.h" />
+    <ClCompile Include="$(_1)ctl.base.props.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

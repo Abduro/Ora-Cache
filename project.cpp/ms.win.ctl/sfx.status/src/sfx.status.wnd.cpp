@@ -3,6 +3,80 @@
 	This is Ebo Pack Sfx status bar control window interface implementation file.
 */
 #include "sfx.status.wnd.h"
+
+using namespace ex_ui::controls::sfx::status;
+
+/////////////////////////////////////////////////////////////////////////////
+
+CWnd:: CWnd(void) : TBase() {
+	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this);
+	TBase::Handlers().Frame().Subscribe(this);
+}
+CWnd::~CWnd(void) {
+	TBase::Handlers().Draw().Unsubscribe(this); TBase::Handlers().Live().Unsubscribe(this);
+	TBase::Handlers().Frame().Unsubscribe(this);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
+	_dev_ctx;
+	/*
+		this is the really issue: the main window of the test app and this control window have the same window class;
+		that means any manipulating with class pointer as it is made below, will affect all windows of such class;
+	*/
+	static bool  b_fst_time = false;
+	if (false == b_fst_time) {
+		HBRUSH brush = ::CreateSolidBrush(RGB(61, 61, 61));
+		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
+		b_fst_time = true;
+	}
+
+	err_code n_result = __s_false;  // this message is handled;
+	return   n_result;
+}
+
+err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
+
+	using WTL::CPaintDC;
+	
+	CPaintDC dc_(*this);
+
+	err_code n_result = __s_false;  // this message is handled;
+	return   n_result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+using eState = IFormEvtSink::eState;
+using eEdges = IFormEvtSink::eEdges;
+
+err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
+	_e_state;
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
+	_edges; _p_rect;
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
 #if (0)
 using namespace ST_Ctrls;
 using namespace ST_Ctrls::_impl;

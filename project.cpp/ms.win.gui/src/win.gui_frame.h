@@ -16,7 +16,8 @@ namespace ebo { namespace boo { namespace gui {
 #define _ATL_NO_AUTOMATIC_NAMESPACE // https://learn.microsoft.com/en-us/cpp/atl/reference/compiler-options-macros ;
 #endif
 
-	using CWnd = ebo::boo::gui::CWnd;
+	using CAtom = ex_ui::popup::CAtom;
+	using CWnd  = ebo::boo::gui::CWnd;
 
 	class CFrame {
 	public:

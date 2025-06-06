@@ -18,5 +18,7 @@
     <ClCompile Include="$(_1)uix.gdi.shade.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)uix.gdi.zbuf.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)uix.gen.font.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)uix.gen.font.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

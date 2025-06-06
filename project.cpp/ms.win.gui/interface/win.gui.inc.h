@@ -26,8 +26,11 @@
 #include "wnd.res.h"
 #pragma endregion
 
+#pragma region __comm_ctrls__
 #include "ctl.base.layout.h"
 #include "ctl.base.pane.h"
+#include "sfx.status.ctrl.h"
+#pragma endregion
 
 namespace ebo { namespace boo { namespace gui {
 

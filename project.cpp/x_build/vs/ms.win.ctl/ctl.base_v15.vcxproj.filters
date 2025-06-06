@@ -17,5 +17,7 @@
     <ClCompile Include="$(_1)ctl.base.layout.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)ctl.base.pane.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ctl.base.pane.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)ctl.base.props.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ctl.base.props.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

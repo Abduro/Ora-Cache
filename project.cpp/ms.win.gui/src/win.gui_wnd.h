@@ -30,10 +30,12 @@ namespace ebo { namespace boo { namespace gui {
 
 	class CWnd : public CWndBase, IDrawEvtSink, ILifeEvtSink, ISysEvtSink, IFormEvtSink { typedef CWndBase TBase;
 	public:
-		 CWnd (void) ;
+		 CWnd (_pc_sz _p_cls_name = nullptr) ;
 		 CWnd (const CWnd&) = delete;
 		 CWnd (CWnd&&) = delete;
 		~CWnd (void) ;
+
+		// DECLARE_WND_CLASS(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__)); // doesn't work and shouldn't;
 		// https://learn.microsoft.com/en-us/cpp/preprocessor/region-endregion ;
 		// overrides of virtual functions must go first;
 #pragma region __msg_handler_callbacks__

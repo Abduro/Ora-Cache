@@ -3,11 +3,26 @@
 	This is Ebo Pack Sfx status bar control format interface implementation file.
 */
 #include "sfx.status.fmt.h"
-#if (0)
-using namespace ST_Ctrls;
-using namespace ST_Ctrls::format;
+#include "sfx.status.ctrl.h" // this header is included here due to exclude cyclic dependencies through header files;
+
+using namespace ex_ui::controls::sfx::status;
+using namespace ex_ui::controls::sfx::status::format;
 
 /////////////////////////////////////////////////////////////////////////////
+
+CFormat:: CFormat (CControl& _ctrl) : m_ctrl(_ctrl) { this->Default(); }
+CFormat::~CFormat (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CFormat::Default (void) {
+
+	CBorder& top = this->m_ctrl.Borders().Top();
+	top.Thickness(1);
+	top.Color() = TRgbQuad(0xff, 0x0, 0x0, _Opaque);
+}
+
+#if (0)
 
 CPane:: CPane (void) {}
 CPane:: CPane (const CPane& _ref) : CPane () { *this = _ref; }

@@ -30,11 +30,14 @@ namespace ATL { // this namespace is required for distinguishing ATL primitive s
 #include "shared.preproc.h"
 #include "shared.string.h"
 
-namespace ex_ui { namespace draw { namespace defs {
+namespace ex_ui { namespace draw {
 
 	using namespace shared::types;
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
+
+namespace defs {
+	using namespace ex_ui::draw;
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/compiler-options-macros ;
 	#define _ATL_NO_AUTOMATIC_NAMESPACE

@@ -8,7 +8,7 @@ using namespace ebo::boo::gui;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CWnd:: CWnd(void) : TBase() {
+CWnd:: CWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name) {
 	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this); TBase::Handlers().System().Subscribe(this);
 	TBase::Handlers().Frame().Subscribe(this);
 }
@@ -62,15 +62,20 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
 
-	m_layout.Window() = TBase::m_hWnd;
-	RECT rc_surface = m_layout.DrawArea();
-
-	HWND h_surface = this->m_surface.Create(TBase::m_hWnd, &rc_surface, nullptr, WS_CHILD|WS_VISIBLE);
+	m_layout.Window() = *this;     // ATL::CWindow operator is applied here;
+	t_rect rc_surface = m_layout.DrawArea();
+#if (0)
+	HWND h_surface = this->m_surface.Create(TBase::m_hWnd, &rc_surface, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE);
 	if ( h_surface ) {
 		_render().Init(h_surface); // this view window does not care about renderer init() result;
 	}
+#else
+	n_result = this->m_surface.Create(*this, rc_surface);
+#endif
+	::shared::Get_View().Parent() = *this;
+	::shared::Get_View().Status().Create(*this, 0xA); // no error handling is made yet;
 
-	return   n_result;
+	return n_result;
 }
 
 err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
@@ -81,6 +86,8 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 
 	if (this->m_surface)
 		this->m_surface.DestroyWindow();
+
+	::shared::Get_View().Status().Destroy(); // no error handling is made yet;
 
 	return   n_result;
 }
@@ -116,13 +123,21 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 }
 
 err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
-	_p_rect;
+	_p_rect; // this rectangle is in screen coordinates of entire window, including non-client area;
 
 	t_rect rc_surface = m_layout.DrawArea();
-	if (this->m_surface) {	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
+	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
+	if (this->m_surface) {
 		this->m_surface.MoveWindow(&rc_surface, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
 		this->m_surface.IEvtFrame_OnSizing(_edges, &rc_surface);
 	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
+	// ::MapWindowPoints(HWND_DESKTOP, *this, (LPPOINT)_p_rect, 2);
+	t_rect rc_client = {0};
+	TBase::GetClientRect(&rc_client);
+
+	::shared::Get_View().Status().Layout().Update(rc_client);
+	
 	err_code n_result = __s_false;
 	return   n_result;
 }

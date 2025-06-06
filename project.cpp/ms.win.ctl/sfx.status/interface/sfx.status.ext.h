@@ -1,18 +1,25 @@
-#ifndef _SFXSTATUSEXT_H_706041B4_32C4_48E8_B705_1DA2C30FAB29_INCLUDED
-#define _SFXSTATUSEXT_H_706041B4_32C4_48E8_B705_1DA2C30FAB29_INCLUDED
+#ifndef _SFXSTATUSEXT_H_INCLUDED
+#define _SFXSTATUSEXT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 24-Aug-2020 at 6:37:00a, UTC+7, Novosibirsk, Monday;
 	This is Ebo Pack shared status bar control panel interface declaration file.
 */
+#include "sfx.status.inc.h"
+
+namespace ex_ui { namespace controls { namespace sfx {
+
+	using CPane_Base = ex_ui::controls::CPane;
+
+	class CPane : public CPane_Base { typedef CPane_Base TBase;
+	};
+
+}}}
+
 #if (0)
-#include "shared.gen.sys.err.h"
-#include "shared.uix.ctrl.defs.h"
-#include "shared.uix.ctrl.border.h"
 #include "sfx.status.lay.h"
 
 namespace ST_Ctrls { class CStatus;
 
-	using shared::sys_core::CError;
 	using ex_ui::controls::CAlign ;
 	using ex_ui::controls::CStyle ;
 	using ex_ui::controls::format::CBorders_Ex;
@@ -129,4 +136,4 @@ namespace ST_Ctrls { class CStatus;
 
 typedef ST_Ctrls::CPanel_Child  TPanelChild;
 #endif
-#endif/*_SFXSTATUSEXT_H_706041B4_32C4_48E8_B705_1DA2C30FAB29_INCLUDED*/
+#endif/*_SFXSTATUSEXT_H_INCLUDED*/

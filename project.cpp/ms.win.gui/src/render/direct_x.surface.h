@@ -25,6 +25,8 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 		 CSurface (void) ; CSurface (const CSurface&) = delete; CSurface (CSurface&&) = delete;
 		~CSurface (void) ;
 
+	err_code  Create (const HWND _h_parent, const t_rect& _rc_place);
+
 	private:  // IDrawEvtSink override(s);
 		err_code IEvtDraw_OnPaint   (const w_param, const l_param) override final;
 

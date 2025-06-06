@@ -65,8 +65,20 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 				const bool b_is_dark = TTheme::IsDark();
 				if (b_is_dark) {}
 			#else
-				using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
-				_render().Target().OnDraw(CUI_Parts().Bkg());
+				static uint32_t n_counter = 0;
+				if (0 == n_counter) {
+					using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
+					_render().Target().OnDraw(CUI_Parts().Bkg()); // ToDo: eats a lot of CPU time, and needs to be reviewed;
+					n_counter += 1;
+				}
+				else {
+					n_counter += 1;
+					::Sleep(10);         // works unexpectedly great!;
+					if (n_counter == 60)
+						n_counter = 0;
+				}
+				// if no size of the direct_x surface is changed, it should not be called from here;
+				// maybe an animation can be produced, but at least on separate time event;
 			#endif
 			}
 		}
