@@ -20,6 +20,7 @@
 			sys.err.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A101} << system error core wrapper;
 			sys.mem.core_v15 : {00000C13-EEEE-BBBB-6667-00000000A201} << system memory core wrapper;
 			sys.shared_v15   : {00000C13-EEEE-BBBB-6667-000000000001} << generic shared classes;
+			sys.shell_v15    : {00000C13-EEEE-BBBB-6667-00000000000D} << system shell wrapper;
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000001200} << drawing and GUI related projects' node;
 			draw : {00000C13-EEEE-BBBB-6667-100000001210} << the node of draw projects;
@@ -34,6 +35,8 @@
 					geometry.3d_v15 : {00000C13-EEEE-BBBB-6667-000000000034} << 3D space geometry project;
 			popup : {00000C13-EEEE-BBBB-6667-100000001230} << window popup project node;
 				win.popup_v15 : {00000C13-EEEE-BBBB-6667-000000000025} << window popup project;
+			theme : {00000C13-EEEE-BBBB-6667-100000001240} << drawing theme project node;
+				theme_v15 : {00000C13-EEEE-BBBB-6667-000000000023} << draw color theme project;
 
 		uix.con : {00000C13-EEEE-BBBB-6667-100000001300} << console related projects' node;
 			console.ext_v15 : {00000C13-EEEE-BBBB-6667-E00000000020} << console extension project;

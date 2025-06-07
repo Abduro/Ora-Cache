@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 07-Jun-2025 at 11:51:55.896, UTC+7, Batumi, Saturday;
+	This is Ebo pack color theme library project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\theme\</ThisLib><!--This project is being compiled; -->
+    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(_0)named\</_1>
+    <_2>$(Root)src\</_2>
+    <_3>$(_2)named\</_3>
+    <_4>$(Shared)interface\</_4>
+    <_5>$(Error)interface\</_5>
+    <_6>$(Color)interface\</_6>
+    <_7>$(_6)compl\</_7>
+    <_8>$(_6)named\</_8>
+    <_9>$(MS-WTL)include\</_9>
+    <_a>$(Shell)interface\</_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

@@ -63,6 +63,11 @@ namespace ex_ui { namespace draw { namespace memory {
 		~CZBuffer (void);
 
 	public: // life cycle method(s)
+		/*
+			Todo: *important*: the this::Reset() copies entire bitmap of this in-memory device to specified location of the target one;
+			                   because it is assumed this in-memory device context serves the entire client area of the target;
+			it requires a review: the Reset() must be dependent on what draw area must be copied entire or just a part;
+		*/
 		err_code  Create(const HDC _h_origin, const t_rect& _rc_draw);
 		err_code  Reset (void) ; // copies the buffer content to original device context and resets the buffer to uninitialized state;
 

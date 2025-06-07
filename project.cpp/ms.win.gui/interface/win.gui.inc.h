@@ -32,6 +32,9 @@
 #include "sfx.status.ctrl.h"
 #pragma endregion
 
+#include "sys.shell.dwm.h"
+#include "uix.theme.h"
+
 namespace ebo { namespace boo { namespace gui {
 
 	using CError = shared::sys_core::CError;

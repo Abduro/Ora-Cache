@@ -18,6 +18,7 @@
 #pragma comment(lib, "sfx.status_v15.lib")     // status bar user common control;
 #pragma comment(lib, "sys.err.core_v15.lib")   // system error handling;
 #pragma comment(lib, "sys.shared_v15.lib")     // shared macros for debug info output;
+#pragma comment(lib, "theme_v15.lib")          // color theme support;
 #pragma comment(lib, "win.popup_v15.lib")      // window message handlers;
 
 namespace ebo { namespace boo { namespace gui {

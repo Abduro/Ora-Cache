@@ -9,54 +9,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)shared.preproc.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)shared.preproc.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)shared.random.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)shared.random.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)shared.str.ext.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)shared.str.ext.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)shared.str.var.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)shared.str.var.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)shared.string.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="$(_0)shared.types.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)shared.types.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)sys.gen.time.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)sys.gen.time.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)sys.sync_obj.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClCompile Include="$(_1)sys.sync_obj.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClInclude Include="$(_0)shared.dbg.h">
-      <Filter>interface</Filter>
-    </ClInclude>
+    <ClInclude Include="$(_0)shared.preproc.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.preproc.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.random.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.random.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.str.ext.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.str.ext.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.str.var.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.str.var.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.string.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)shared.types.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.types.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.gen.time.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.gen.time.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.sync_obj.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.sync_obj.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.dbg.h"><Filter>interface</Filter></ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

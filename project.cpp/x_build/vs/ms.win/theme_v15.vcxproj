@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-00000003000A}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000023}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sfx.status.inc.props" />
+    <Import Project="theme.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sfx.status.inc.props" />
+    <Import Project="theme.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sfx.status.inc.props" />
+    <Import Project="theme.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="sfx.status.inc.props" />
+    <Import Project="theme.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -174,42 +174,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)sfx.status.ctrl.h" />
-    <ClCompile Include="$(_1)sfx.status.ctrl.cpp" />
-    <ClInclude Include="$(_0)sfx.status.ext.h" />
-    <ClCompile Include="$(_1)sfx.status.ext.cpp" />
-    <ClInclude Include="$(_0)sfx.status.fmt.h" />
-    <ClCompile Include="$(_1)sfx.status.fmt.cpp" />
-    <ClInclude Include="$(_0)sfx.status.inc.h" />
-    <ClInclude Include="$(_0)sfx.status.lay.h" />
-    <ClCompile Include="$(_1)sfx.status.lay.cpp" />
-    <ClInclude Include="$(_1)sfx.status.wnd.h" />
-    <ClCompile Include="$(_1)sfx.status.wnd.cpp" />
+    <ClInclude Include="$(_0)uix.theme.inc.h" />
+    <ClCompile Include="$(_2)uix.theme.inc.cpp" />
+    <ClInclude Include="$(_0)uix.theme.h" />
+    <ClCompile Include="$(_2)uix.theme.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
+    <ProjectReference Include="sys.shared_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-000000000001}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\ms.win\sys.err.core_v15.vcxproj">
+    <ProjectReference Include="sys.err.core_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\ms.win\color_v15.vcxproj">
+    <ProjectReference Include="sys.shell_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000D}</Project>
+    </ProjectReference>
+    <ProjectReference Include="color_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-000000000022}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ms.win\theme_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000023}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ms.win\geometry.2d_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000033}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ms.win\gdi.zbuf_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-00000000000B}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ms.win\win.popup_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000025}</Project>
-    </ProjectReference>
-    <ProjectReference Include="ctl.base_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-00000000000C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

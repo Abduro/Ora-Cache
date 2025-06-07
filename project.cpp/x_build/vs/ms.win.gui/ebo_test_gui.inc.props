@@ -10,6 +10,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
@@ -19,6 +20,7 @@
     <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
     <SfxStatus Condition="'$(SfxStatus)'==''">..\..\..\ms.win.ctl\sfx.status\</SfxStatus> <!--Sfx::Status::CControl >> statusbar ctrl!-->
     <ThisExe Condition="'$(ThisExe)'==''">..\..\..\ms.win.gui\</ThisExe>
+    <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisExe)</Root>
@@ -46,10 +48,15 @@
     <_g>$(CtlBase)interface\</_g>
     <_h>$(MS-WTL)include\</_h>
     <_j>$(SfxStatus)interface\</_j>
+    <_k>$(Theme)interface\</_k>
+    <_l>$(Theme)interface\named</_l>
+    <_m>$(Shell)interface\</_m>
+    <_n>$(Color)interface\compl\</_n>
+    <_o>$(Color)interface\named\</_o>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_j)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />
