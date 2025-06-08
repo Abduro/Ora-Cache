@@ -11,6 +11,10 @@ namespace ebo { namespace boo { namespace gui {
 
 	using CPadding = ex_ui::controls::layout::CPadding_of_rect;
 
+	using IFormEvtSink = ex_ui::message::handlers::frame::IFrameEventSink;
+	using eState = IFormEvtSink::eState;
+	using eEdges = IFormEvtSink::eEdges;
+
 	class CLayout {
 	public:
 		 CLayout (void) ; CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
@@ -24,11 +28,11 @@ namespace ebo { namespace boo { namespace gui {
 		TError&   Error  (void) const;
 
 		const
-		CPadding& Padding (void) const;
-		CPadding& Padding (void) ;
+		CPadding& Padding(void) const;
+		CPadding& Padding(void) ;
 
-		err_code  Update (void) ;
-		err_code  Update (const t_rect* const) ; // recalculates the main view layout; the client rect can be provided on window sizing event;
+		err_code  Update (void) ;                // gets main window client area rectangle and calls this::Update(rect);
+		err_code  Update (const t_rect&);        // recalculates the main view layout; the client rect can be provided on window sizing event;
 
 		const
 		CWindow&  Window (void) const;

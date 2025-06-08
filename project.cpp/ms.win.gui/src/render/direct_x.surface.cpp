@@ -38,7 +38,7 @@ err_code CSurface::IEvtFrame_OnMove   (const t_point& _top_left_client_area) {
 	return   n_result;
 
 }
-err_code CSurface::IEvtFrame_OnMoving (const t_rect* _p_wnd_coords){
+err_code CSurface::IEvtFrame_OnMoving (const t_rect& _p_wnd_coords){
 	_p_wnd_coords;
 	err_code n_result = __s_false;
 	return   n_result;

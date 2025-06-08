@@ -70,10 +70,12 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 		_render().Init(h_surface); // this view window does not care about renderer init() result;
 	}
 #else
-	n_result = this->m_surface.Create(*this, rc_surface);
+	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
 #endif
 	::shared::Get_View().Parent() = *this;
 	::shared::Get_View().Status().Create(*this, 0xA); // no error handling is made yet;
+
+	TBase::m_error << __METHOD__ << __s_ok;
 
 	return n_result;
 }
@@ -84,8 +86,8 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 
 	_render().Term();
 
-	if (this->m_surface)
-		this->m_surface.DestroyWindow();
+	if (shared::Get_View().Surface())
+		shared::Get_View().Surface().DestroyWindow();
 
 	::shared::Get_View().Status().Destroy(); // no error handling is made yet;
 
@@ -123,13 +125,27 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 }
 
 err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
-	_p_rect; // this rectangle is in screen coordinates of entire window, including non-client area;
+	_edges; _p_rect;     // this rectangle is in screen coordinates of entire window, including non-client area;
+#if (1)
+	t_rect rc_client = {0};
+	if (_p_rect && false) { // it doesn't work as expected because the input rectangle contains non-client area dimensions;
+		rc_client = {0, 0, _p_rect->right - _p_rect->left, _p_rect->bottom - _p_rect->top};
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
+		 if (0 == ::MapWindowPoints(HWND_DESKTOP, *this, (t_point*)&rc_client, sizeof(t_rect)/sizeof(t_point)))
+			TBase::m_error.Last();
+	}
+	else
+		if (0 == this->GetClientRect(&rc_client)) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+			(TBase::m_error << __METHOD__).Last();
 
+	if (TBase::m_error == false)
+		TBase::m_error << this->Layout().Update(rc_client);
+#else
 	t_rect rc_surface = m_layout.DrawArea();
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
-	if (this->m_surface) {
-		this->m_surface.MoveWindow(&rc_surface, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
-		this->m_surface.IEvtFrame_OnSizing(_edges, &rc_surface);
+	if (::shared::Get_View().Surface()) {
+		::shared::Get_View().Surface().MoveWindow(&rc_surface, false);
+		::shared::Get_View().Surface().IEvtFrame_OnSizing(_edges, &rc_surface);
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
 	// ::MapWindowPoints(HWND_DESKTOP, *this, (LPPOINT)_p_rect, 2);
@@ -137,7 +153,8 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	TBase::GetClientRect(&rc_client);
 
 	::shared::Get_View().Status().Layout().Update(rc_client);
-	
+
+#endif
 	err_code n_result = __s_false;
 	return   n_result;
 }

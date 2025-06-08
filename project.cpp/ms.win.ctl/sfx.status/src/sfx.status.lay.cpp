@@ -44,6 +44,9 @@ err_code CLayout::Update (void) {
 		return (this->m_error << __METHOD__).Last();
 	}
 
+	// (1) updates border position(s);
+	this->m_ctrl.Borders().Top().Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
+
 	return n_result;
 }
 

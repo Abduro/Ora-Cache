@@ -34,16 +34,19 @@ err_code CView::Draw (const HDC _h_dc, const t_rect& _drw_area) const {
 
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 const
-CPane&   CView::Pane (void) const { return this->m_pane; }
-CPane&   CView::Pane (void)       { return this->m_pane; }
+CPane&    CView::Pane (void) const { return this->m_pane; }
+CPane&    CView::Pane (void)       { return this->m_pane; }
 #endif
 const
-CWindow& CView::Parent (void) const { return this->m_parent; }
-CWindow& CView::Parent (void)       { return this->m_parent; }
+CWindow&  CView::Parent (void) const { return this->m_parent; }
+CWindow&  CView::Parent (void)       { return this->m_parent; }
 
 const
-CStatus& CView::Status (void) const { return this->m_status; }
-CStatus& CView::Status (void)       { return this->m_status; }
+CStatus&  CView::Status (void) const { return this->m_status; }
+CStatus&  CView::Status (void)       { return this->m_status; }
+const
+CSurface& CView::Surface(void) const { return this->m_surface; }
+CSurface& CView::Surface(void)       { return this->m_surface; }
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -65,7 +65,6 @@ namespace ebo { namespace boo { namespace gui {
 		CWnd& operator = (CWnd&&) = delete;
 
 	private:
-		CSurface  m_surface;
 		CLayout   m_layout ;
 	};
 

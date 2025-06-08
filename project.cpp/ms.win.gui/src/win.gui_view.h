@@ -23,6 +23,7 @@ namespace ebo { namespace boo { namespace gui {
 
 	using CPane = ex_ui::controls::CPane;    // this is the pane control class that is not windowed yet;
 	using CStatus = ex_ui::controls::sfx::status::CControl;
+	using CSurface = ebo::boo::gui::render::CSurface;
 
 	// this is the view of the main window;
 	class CView {
@@ -32,19 +33,22 @@ namespace ebo { namespace boo { namespace gui {
 
 	public:
 
-		err_code Draw (const HDC, const t_rect& _drw_area) const;
+		err_code  Draw (const HDC, const t_rect& _drw_area) const;
 
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 		const
-		CPane&   Pane (void) const;
-		CPane&   Pane (void) ;
+		CPane&    Pane (void) const;
+		CPane&    Pane (void) ;
 #endif
 		const
-		CWindow& Parent (void) const;
-		CWindow& Parent (void) ;
+		CWindow&  Parent (void) const;
+		CWindow&  Parent (void) ;
 		const
-		CStatus& Status (void) const;
-		CStatus& Status (void) ;
+		CStatus&  Status (void) const;
+		CStatus&  Status (void) ;
+		const
+		CSurface& Surface(void) const;
+		CSurface& Surface(void) ;
 
 	public:
 		CView& operator = (const CView&) = delete;
@@ -54,8 +58,9 @@ namespace ebo { namespace boo { namespace gui {
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 		CPane   m_pane;
 #endif
-		CWindow m_parent;  // this is the main window of this app;
-		CStatus m_status;
+		CWindow  m_parent ;  // this is the main window of this app;
+		CSurface m_surface;
+		CStatus  m_status ;
 	};
 
 }}}

@@ -6,7 +6,7 @@
 */
 #include "sfx.status.inc.h"
 
-namespace ex_ui { namespace controls { namespace sfx { namespace status {
+namespace ex_ui { namespace controls { namespace sfx { namespace status { class CControl;
 
 	using namespace ex_ui::controls::sfx;
 	using namespace ex_ui::message::handlers;
@@ -16,9 +16,9 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 	using ILifeEvtSink = ex_ui::message::handlers::life::ILifeEvtSink;
 	using ex_ui::popup::CWndBase;
 
-	class CWnd : public CWndBase, IDrawEvtSink, ILifeEvtSink, IFormEvtSink { typedef CWndBase TBase;
+	class CWnd : public CWndBase, IDrawEvtSink, ILifeEvtSink, IFormEvtSink { typedef CWndBase TWindow;
 	public:
-		 CWnd (void) ; CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;
+		 CWnd (CControl&) ; CWnd (void) = delete; CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;
 		~CWnd (void) ;
 
 #ifndef __WND_CLS_CHILD__
@@ -42,6 +42,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 	private:
 		CWnd& operator = (const CWnd&) = delete;
 		CWnd& operator = (CWnd&&) = delete;
+	private:
+		CControl& m_ctrl;
 	};
 
 }}}}

@@ -65,12 +65,12 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			if (_l_param) {
 				p_rect = reinterpret_cast<LPRECT>(_l_param);
 				if (p_rect)
-					return IEvtFrame_OnMoving(p_rect);
+					return IEvtFrame_OnMoving(*p_rect);
 			}
 			return __s_false;
 		}
 
-		virtual err_code  IEvtFrame_OnMoving (const t_rect* _p_wnd_coords) {
+		virtual err_code  IEvtFrame_OnMoving (const t_rect& _p_wnd_coords) {
 			_p_wnd_coords; 
 			err_code n_result = __s_false; return n_result;
 		}

@@ -15,7 +15,7 @@ using namespace ex_ui::controls::sfx::status;
 /////////////////////////////////////////////////////////////////////////////
 
 CControl:: CControl (void) : m_ctrl_id(0), m_wnd_ptr(nullptr), m_layout(*this), m_format(*this) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
-	try { m_wnd_ptr = new CWnd(); } catch (::std::bad_alloc&){ this->m_error << __e_no_memory; }
+	try { m_wnd_ptr = new CWnd(*this); } catch (::std::bad_alloc&){ this->m_error << __e_no_memory; }
 }
 CControl::~CControl (void) {
 	if (_wnd_ptr(m_wnd_ptr)) {

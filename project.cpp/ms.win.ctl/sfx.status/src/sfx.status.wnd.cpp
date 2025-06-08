@@ -3,18 +3,19 @@
 	This is Ebo Pack Sfx status bar control window interface implementation file.
 */
 #include "sfx.status.wnd.h"
+#include "sfx.status.ctrl.h"
 
 using namespace ex_ui::controls::sfx::status;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CWnd:: CWnd(void) : TBase() {
-	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this);
-	TBase::Handlers().Frame().Subscribe(this);
+CWnd:: CWnd(CControl& _ctrl) : TWindow(), m_ctrl(_ctrl) {
+	TWindow::Handlers().Draw().Subscribe (this); TWindow::Handlers().Live().Subscribe(this);
+	TWindow::Handlers().Frame().Subscribe(this);
 }
 CWnd::~CWnd(void) {
-	TBase::Handlers().Draw().Unsubscribe(this); TBase::Handlers().Live().Unsubscribe(this);
-	TBase::Handlers().Frame().Unsubscribe(this);
+	TWindow::Handlers().Draw().Unsubscribe (this); TWindow::Handlers().Live().Unsubscribe(this);
+	TWindow::Handlers().Frame().Unsubscribe(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,21 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 
+	t_rect rc_area = {0};
+	TWindow::GetClientRect(&rc_area);
+
+	CZBuffer dc_(_dev_ctx, rc_area);
+
+	// (0) draw background (test)
+	dc_.Draw(rc_area, TRgbQuad(0,0,0xff,0xff));
+
+	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
+	const CBorder& top_ = this->m_ctrl.Borders().Top();
+
+	if (top_.Is_valid()) {
+		dc_.Draw(top_);
+	}
+
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
 }
@@ -41,7 +57,19 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	using WTL::CPaintDC;
 	
 	CPaintDC dc_(*this);
+#if (0)
+	t_rect rc_area = {0};
+	TWindow::GetClientRect(&rc_area);
 
+	CZBuffer z_buffer(dc_.m_hDC, rc_area);
+
+	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
+	const CBorder& top_ = this->m_ctrl.Borders().Top();
+
+	if (top_.Is_valid()) {
+		z_buffer.Draw(top_);
+	}
+#endif
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
 }

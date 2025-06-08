@@ -97,16 +97,15 @@ err_code  CLayout::Update (void) {
 		return (this->m_error << _what).Last();
 	}
 
-	return this->Update(&rect_);
+	return this->Update(rect_);
 }
 
-err_code  CLayout::Update (const t_rect* const _p_rect) {
-	_p_rect;
-	if (nullptr == _p_rect || ::IsRectEmpty(_p_rect)) {
+err_code  CLayout::Update (const t_rect& _rect) {
+	_rect;
+	if (::IsRectEmpty(&_rect)) {
 		return this->m_error << _what << __e_rect;
 	}
-
-	this->m_draw_area = *_p_rect; // assigns the draw area rectangle to the input one;  
+	this->m_draw_area = _rect; // assigns the draw area rectangle to the input one;  
 
 #if defined(_tst_case_01) && (_tst_case_01 > 0)
 
@@ -127,6 +126,14 @@ err_code  CLayout::Update (const t_rect* const _p_rect) {
 	this->m_draw_area.bottom -= ::shared::Get_View().Status().Layout().Height();
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
+
+	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
+	if (shared::Get_View().Surface()) {
+		shared::Get_View().Surface().MoveWindow(&this->m_draw_area, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
+		shared::Get_View().Surface().IEvtFrame_OnSizing(eEdges::eUndefined, &this->m_draw_area);
+	}
+
+	::shared::Get_View().Status().Layout().Update(_rect);
 
 	return __s_ok;
 }
