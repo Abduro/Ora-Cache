@@ -21,6 +21,7 @@ CWnd::~CWnd(void) {
 
 err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	_dev_ctx;
+	#if (1)
 	static bool  b_fst_time = false;
 	if (false == b_fst_time) {
 		HBRUSH brush = ::CreateSolidBrush(RGB(61, 61, 61)); // ToDo: it requires getting a color from the currently set theme;
@@ -30,6 +31,9 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
+	#else
+	return   __s_ok;
+	#endif
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint ;
@@ -39,15 +43,28 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 
 	using WTL::CPaintDC;
 	using ex_ui::color::rgb::CFloat;
+#if defined(_test_case_lvl) && (_test_case_lvl == 2)
 	// this goes first;
 	using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
 	_render().Target().OnDraw(CUI_Parts().Bkg());
-
+#endif
+#if (1)
 	CPaintDC dc_(*this);
 	shared::Get_View().Draw(dc_.m_hDC, dc_.m_ps.rcPaint); // *important*: the rectangle being sent is entire window client area!
 
-	err_code n_result = __s_false;  // this message is handled;
+	err_code n_result = __s_ok;  // this message is handled;
 	return   n_result;
+#else
+	CPaintDC dc_(*this);
+	WTL::CBrush brush;
+
+	uint32_t clr_0  = _r_g_b  (0, 0, 255);     clr_0;
+	uint32_t clr_1  = _r_g_b_a(0, 0, 255, 0);  clr_1;
+	brush.CreateSolidBrush(clr_0);
+	::FillRect(dc_.m_hDC, &dc_.m_ps.rcPaint, brush.m_hBrush);
+
+	return __s_ok;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,12 +86,14 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	if ( h_surface ) {
 		_render().Init(h_surface); // this view window does not care about renderer init() result;
 	}
-#else
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl == 2)
 	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
 #endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 1)
 	::shared::Get_View().Parent() = *this;
 	::shared::Get_View().Status().Create(*this, 0xA); // no error handling is made yet;
-
+#endif
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	return n_result;

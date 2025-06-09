@@ -177,8 +177,15 @@ typedef ex_ui::color::rgb::clr_type  rgb_color; // it looks like COLORREF that i
 
 #define rgb_clr_none rgb_clr_max // this is the value for indicating non-existance a color, as __clr_none in GDI definitions;
 
+/*
+	regarding the classic GDI of MS Windows OS, RGB and alpha channel value:
+	(a) alpha channel values in standard range [0...255], that means 0 - fully transparent, 255 - opaque;
+	(b) but classic GDI treats it in oposite side: alpha == 0 means opaque, otherwise - black screen;
+	it is the talking about the 4th bit of the RGB color that aka COLORREF;
+*/
+
 #define _r_g_b_a(r,g,b,a) ((rgb_color)(uint8_t(r) | ((uint16_t(uint8_t(g))) << 8) | (uint32_t(uint8_t(b)) << 16) | ((uint32_t(a))<<24)))
-#define _r_g_b(r,g,b) (_r_g_b_a(r, g, b, rgb_val_max)) // just substitutes RGB by data types with new names; alpha channel value is set to opaque;
+#define _r_g_b(r,g,b)  (_r_g_b_a(r, g, b, 0x0)) // just substitutes RGB by data types with new names; alpha channel value is set to opaque, i.e. 0x0;
 
 #define HexToRgb(_hex) (_r_g_b( (uint32_t(_hex)>>16), (uint16_t(_hex)>>8), uint8_t(_hex)))
 

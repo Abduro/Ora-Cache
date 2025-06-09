@@ -9,7 +9,7 @@ using namespace ebo::boo::gui;
 /////////////////////////////////////////////////////////////////////////////
 
 CView:: CView (void) {
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
 	this->Pane().Borders().Top().Thickness(1);
 	this->Pane().Borders().Top().Color() << shared::Get_Theme().Get(TThemePart::e_panel, TThemeElement::e_border);
 
@@ -26,13 +26,13 @@ CView::~CView (void) {}
 err_code CView::Draw (const HDC _h_dc, const t_rect& _drw_area) const {
 	_h_dc; _drw_area;
 	err_code n_result = __s_ok;
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
 	n_result = this->Pane().Draw(_h_dc, _drw_area); // *important*: the rectangle being received is entire window client area!
 #endif
 	return n_result;
 }
 
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
 const
 CPane&    CView::Pane (void) const { return this->m_pane; }
 CPane&    CView::Pane (void)       { return this->m_pane; }

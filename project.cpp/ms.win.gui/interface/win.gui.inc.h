@@ -42,6 +42,12 @@ namespace ebo { namespace boo { namespace gui {
 
 	using namespace shared::types;
 	using CWindow = ::ATL::CWindow;
+
+	// https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
+	// https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);
+
+	// 0 : the test pane draw only; no surface of direct_x;
+	#define _test_case_lvl 0
 }}}
 
 #endif/*_WIN_GUI_INC_H_INCLUDED*/

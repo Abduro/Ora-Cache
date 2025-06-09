@@ -107,14 +107,14 @@ err_code  CLayout::Update (const t_rect& _rect) {
 	}
 	this->m_draw_area = _rect; // assigns the draw area rectangle to the input one;  
 
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
 
 	this->m_draw_area.bottom -= CLayout_Default().Pane().Height(); // updates the bottom value for reserving the space of pane control;
 
-	t_rect rect_pane = *_p_rect;
+	t_rect rect_pane = _rect;
 	rect_pane.top = rect_pane.bottom - CLayout_Default().Pane().Height();
 	/*
-		the issue which  appears here is this layout works in client area coordinates of the main window,
+		the issue which appears here is this layout works in client area coordinates of the main window,
 		but the view components, including this test pane object, use the in-memory device context which draws only in particular area,
 		and finally, the clipping being made for better performance gives not proper result due to the components resides outside of
 		the draw area of the in-memory device context; for solving this issue the following may be made:
@@ -126,15 +126,16 @@ err_code  CLayout::Update (const t_rect& _rect) {
 	this->m_draw_area.bottom -= ::shared::Get_View().Status().Layout().Height();
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
-
+#if defined(_test_case_lvl) && (_test_case_lvl == 2)
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
 	if (shared::Get_View().Surface()) {
 		shared::Get_View().Surface().MoveWindow(&this->m_draw_area, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
 		shared::Get_View().Surface().IEvtFrame_OnSizing(eEdges::eUndefined, &this->m_draw_area);
 	}
-
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl == 2)
 	::shared::Get_View().Status().Layout().Update(_rect);
-
+#endif
 	return __s_ok;
 }
 

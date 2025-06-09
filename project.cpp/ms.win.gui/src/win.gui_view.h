@@ -12,11 +12,6 @@
 
 #include "ebo.sha.gui.theme.h"
 
-// https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
-// https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);
-
-#define _tst_case_01 0
-
 namespace ebo { namespace boo { namespace gui {
 
 	using namespace ebo::sha::theme;
@@ -35,7 +30,7 @@ namespace ebo { namespace boo { namespace gui {
 
 		err_code  Draw (const HDC, const t_rect& _drw_area) const;
 
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
 		const
 		CPane&    Pane (void) const;
 		CPane&    Pane (void) ;
@@ -55,7 +50,7 @@ namespace ebo { namespace boo { namespace gui {
 		CView& operator = (CView&&) = delete;
 
 	private:
-#if defined(_tst_case_01) && (_tst_case_01 > 0)
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
 		CPane   m_pane;
 #endif
 		CWindow  m_parent ;  // this is the main window of this app;

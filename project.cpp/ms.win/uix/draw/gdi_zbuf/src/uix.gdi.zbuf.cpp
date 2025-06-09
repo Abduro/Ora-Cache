@@ -155,9 +155,10 @@ err_code  CZBuffer::Reset (void){
 		const bool b_result = !!::BitBlt(
 		/*  the surface object that is applied to this in-memory device context sets the view port to 0:0,
 		    this is made for cases when the device context is created for particular area of drawing operation, not for entire client rectangle;
-		    thus, in-memory device context draw area is always set to 0:0; perhaps it must be reviewed more carefully for applying clipping regions properly;
+		    thus, in-memory device context draw area is always set to 0:0 in case of using entire client area of the window being drawn;
+			perhaps it must be reviewed more carefully for applying clipping regions properly;
 		*/
-			this->m_origin, rc_draw.left, rc_draw.top, __W(rc_draw), __H(rc_draw), TDC::m_hDC, /*rc_draw.left*/0, /*rc_draw.top*/0, SRCCOPY
+			this->m_origin, rc_draw.left, rc_draw.top, __W(rc_draw), __H(rc_draw), TDC::m_hDC, rc_draw.left, rc_draw.top, SRCCOPY
 		);
 		if (false == b_result)
 			this->m_error.Last();
@@ -273,7 +274,7 @@ err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
 		class CBrush {
 		public:
-			CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
+			 CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
 			~CBrush (void) { if (this->m_brush){ ::DeleteObject(this->m_brush); this->m_brush = nullptr; }}
 			HBRUSH  Get (void) const { return this->m_brush; }
 		private:
