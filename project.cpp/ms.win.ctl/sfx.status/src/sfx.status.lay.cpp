@@ -45,7 +45,8 @@ err_code CLayout::Update (void) {
 	}
 
 	// (1) updates border position(s);
-	this->m_ctrl.Borders().Top().Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
+	CBorder& top_ = this->m_ctrl.Borders().Top();
+	top_.Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
 
 	return n_result;
 }

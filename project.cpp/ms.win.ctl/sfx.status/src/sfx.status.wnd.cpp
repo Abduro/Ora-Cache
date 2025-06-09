@@ -28,26 +28,25 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	*/
 	static bool  b_fst_time = false;
 	if (false == b_fst_time) {
-		HBRUSH brush = ::CreateSolidBrush(RGB(61, 61, 61));
+		HBRUSH brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
 		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
 		b_fst_time = true;
 	}
-
+#if(0)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
-	CZBuffer dc_(_dev_ctx, rc_area);
+	CZBuffer z_buffer(_dev_ctx, rc_area);
 
-	// (0) draw background (test)
-	dc_.Draw(rc_area, TRgbQuad(0,0,0xff,0xff));
+	z_buffer.Draw(rc_area, TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back)));
 
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 	const CBorder& top_ = this->m_ctrl.Borders().Top();
 
 	if (top_.Is_valid()) {
-		dc_.Draw(top_);
+		z_buffer.Draw(top_);
 	}
-
+#endif
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
 }
@@ -57,11 +56,13 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	using WTL::CPaintDC;
 	
 	CPaintDC dc_(*this);
-#if (0)
+#if (1)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(dc_.m_hDC, rc_area);
+
+	z_buffer.Draw(rc_area, TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back)));
 
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 	const CBorder& top_ = this->m_ctrl.Borders().Top();

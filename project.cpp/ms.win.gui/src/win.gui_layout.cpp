@@ -133,7 +133,7 @@ err_code  CLayout::Update (const t_rect& _rect) {
 		shared::Get_View().Surface().IEvtFrame_OnSizing(eEdges::eUndefined, &this->m_draw_area);
 	}
 #endif
-#if defined(_test_case_lvl) && (_test_case_lvl == 2)
+#if defined(_test_case_lvl) && (_test_case_lvl >= 0)
 	::shared::Get_View().Status().Layout().Update(_rect);
 #endif
 	return __s_ok;

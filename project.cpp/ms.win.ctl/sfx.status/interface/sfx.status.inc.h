@@ -31,6 +31,8 @@
 #include "ctl.base.props.h"
 #pragma endregion
 
+#include "uix.theme.h"
+
 namespace ex_ui { namespace controls { namespace sfx {
 
 	using namespace shared::types;

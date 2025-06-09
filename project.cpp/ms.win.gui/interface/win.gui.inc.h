@@ -47,7 +47,8 @@ namespace ebo { namespace boo { namespace gui {
 	// https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);
 
 	// 0 : the test pane draw only; no surface of direct_x;
-	#define _test_case_lvl 0
+	// 1 : the status bar control is enabled;
+	#define _test_case_lvl 1
 }}}
 
 #endif/*_WIN_GUI_INC_H_INCLUDED*/

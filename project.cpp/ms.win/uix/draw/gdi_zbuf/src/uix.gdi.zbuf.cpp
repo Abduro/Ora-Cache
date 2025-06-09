@@ -242,8 +242,8 @@ err_code  CZBuffer::Draw (const CLine& _line) {
 		const int32_t nSave = TDC::SaveDC();
 		TDC::SelectPen(cPen);
 
-		TDC::MoveTo(_line.Begin().X(), _line.Begin().Y());
-		TDC::LineTo(_line.End().X(), _line.End().Y());
+		TDC::MoveTo(_line.Begin().X(), _line.Begin().Y()); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex ;
+		TDC::LineTo(_line.End().X(), _line.End().Y());     // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto ;
 
 		TDC::RestoreDC(nSave);
 	}
@@ -267,8 +267,8 @@ err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
 		return this->m_error << __s_false;
 
 	if (false) {}                    // https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;
-	else if (_clr.A() == 0) {}       // is transparent and nothing to draw;
-	else if (_clr.A() == _Opaque) {  // draws the rectangle by filling solid color;
+	else if (_clr.A() == 0xff) {}    // is transparent and nothing to draw;
+	else if (_clr.A() == 0x00) {     // draws the rectangle by filling solid color;
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
