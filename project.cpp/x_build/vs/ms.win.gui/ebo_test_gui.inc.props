@@ -50,7 +50,7 @@
     <_h>$(MS-WTL)include\</_h>
     <_j>$(SfxStatus)interface\</_j>
     <_k>$(Theme)interface\</_k>
-    <_l>$(Theme)interface\named</_l>
+    <_l>$(Theme)interface\named\</_l>
     <_m>$(Shell)interface\</_m>
     <_n>$(Color)interface\compl\</_n>
     <_o>$(Color)interface\named\</_o>

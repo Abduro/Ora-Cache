@@ -9,6 +9,48 @@ using namespace ebo::boo::test::ctl::format;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CBase:: CBase (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CBase::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_base.Print(e_print::e_all));
+	_out()();
+
+}
+
+void CBase::Set (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TStringEx().Format(_T("*before* : %s"), (_pc_sz) this->m_base.Print(e_print::e_all));
+
+	_out() += TLog_Acc::e_new_line;
+#if (0) // this code snippet is not ready yet;
+	_out() += TStringEx().Format(_T("*adding* : %s"), (_pc_sz) TFontOpts::Print(TFontOpts::eExactSize | TFontOpts::eUnderline));
+
+	this->m_base += TFontOpts::eExactSize;
+	this->m_base += TFontOpts::eUnderline;
+
+	_out() += TStringEx().Format(_T("*after * : %s"), (_pc_sz) this->m_base.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("*remove* : %s"), (_pc_sz) TFontOpts::Print(TFontOpts::eUnderline));
+
+	this->m_base -= TFontOpts::eUnderline;
+	_out() += TStringEx().Format(_T("*result* : %s"), (_pc_sz) this->m_base.Print(e_print::e_all));
+#endif
+	_out()();
+
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CBkgnd:: CBkgnd (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;

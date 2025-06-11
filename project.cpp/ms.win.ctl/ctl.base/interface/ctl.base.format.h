@@ -118,15 +118,17 @@ namespace ex_ui { namespace controls { namespace format {
 
 	public:
 		const
-		CBkgnd&    Bkgnd (void) const;
-		CBkgnd&    Bkgnd (void) ;
+		CBkgnd&     Bkgnd (void) const;
+		CBkgnd&     Bkgnd (void) ;
 		const
-		CBorders&  Borders (void) const;
-		CBorders&  Borders (void) ;
+		CBorders&   Borders (void) const;
+		CBorders&   Borders (void) ;
 		const
-		CFontSpec& Font (void) const;
-		CFontSpec& Font (void) ;
-
+		CFontSpec&  Font (void) const;
+		CFontSpec&  Font (void) ;
+#if defined(_DEBUG)
+		CString     Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
 	public:
 		CBase&  operator = (const CBase& );
 		CBase&  operator = (CBase&&) = delete;

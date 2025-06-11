@@ -8,6 +8,23 @@
 
 namespace ebo { namespace boo { namespace test { namespace ctl {
 namespace format {
+
+	using TBase  = ex_ui::controls::format::CBase;
+
+	__class (CBase) {
+	public:
+		 CBase (const bool _b_verb = false);
+		~CBase (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Set);
+
+	private:
+		bool    m_b_verb;
+		TBase   m_base;
+	};
+
 	using TBkgnd = ex_ui::controls::format::CBkgnd;
 
 	__class (CBkgnd) {

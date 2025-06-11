@@ -44,8 +44,8 @@ CPadding&  CBkgnd::Padding (void)       { return this->m_padding ; }
 CString    CBkgnd::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%sgrad={%s};%s%simg_res=%u;%s%smargins=%s;%s%spadding=%s;%s%sclr_solid=%s%s%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{grad=%s;img_res=%u;margins=%s;padding=%s;solid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{grad=%s;img_res=%u;margins=%s;padding=%s;solid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%sgrad={%s};%s%simg_res=%u;%s%smargins=%s;%s%spadding=%s;%s%sclr_solid=%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%sgrad={%s};%s%simg_res=%u;%s%smargins=%s;%s%spadding=%s;%s%sclr_solid=%s%s%s}");
 
 	CString cs_grad    = this->Gradient().Print(e_print::e_req);
 	CString cs_margins = this->Margins().Print(e_print::e_req);
@@ -61,10 +61,18 @@ CString    CBkgnd::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) co
 		_p_sfx, _p_pfx, (_pc_sz) cs_solid  , _p_sfx, _p_pfx);
 	}
 	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_grad, this->ImageRes(), (_pc_sz) cs_margins, (_pc_sz) cs_padding, (_pc_sz) cs_solid);
+		_p_sfx, _p_pfx, (_pc_sz) cs_grad,
+		_p_sfx, _p_pfx, this->ImageRes(),
+		_p_sfx, _p_pfx, (_pc_sz) cs_margins,
+		_p_sfx, _p_pfx, (_pc_sz) cs_padding,
+		_p_sfx, _p_pfx, (_pc_sz) cs_solid  , _p_sfx, _p_pfx);
 	}
 	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r,
-		(_pc_sz) cs_grad, this->ImageRes(), (_pc_sz) cs_margins, (_pc_sz) cs_padding, (_pc_sz) cs_solid);
+		_p_sfx, _p_pfx, (_pc_sz) cs_grad,
+		_p_sfx, _p_pfx, this->ImageRes(),
+		_p_sfx, _p_pfx, (_pc_sz) cs_margins,
+		_p_sfx, _p_pfx, (_pc_sz) cs_padding,
+		_p_sfx, _p_pfx, (_pc_sz) cs_solid  , _p_sfx, _p_pfx);
 	}
 
 	if (cs_out.IsEmpty())
@@ -187,6 +195,44 @@ CBorders& CBase::Borders (void)       { return m_borders; }
 const
 CFontSpec&  CBase::Font  (void) const { return m_spec; }
 CFontSpec&  CBase::Font  (void)       { return m_spec; }
+
+#if defined(_DEBUG)
+CString     CBase::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
+
+	CString cs_bkgnd   = this->Bkgnd().Print(e_print::e_req);
+	CString cs_borders = this->Borders().Print(e_print::e_req);
+	CString cs_font    = this->Font().Print(e_print::e_req);
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		_p_sfx, _p_pfx, (_pc_sz) cs_bkgnd,
+		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
+		_p_sfx, _p_pfx, (_pc_sz) cs_font,
+		_p_sfx, _p_pfx  );
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		_p_sfx, _p_pfx, (_pc_sz) cs_bkgnd,
+		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
+		_p_sfx, _p_pfx, (_pc_sz) cs_font,
+		_p_sfx, _p_pfx  );
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r,
+		_p_sfx, _p_pfx, (_pc_sz) cs_bkgnd,
+		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
+		_p_sfx, _p_pfx, (_pc_sz) cs_font,
+		_p_sfx, _p_pfx  );
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return cs_out;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

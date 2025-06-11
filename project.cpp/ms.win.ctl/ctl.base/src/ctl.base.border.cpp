@@ -141,12 +141,12 @@ CString   CSet::Print (const e_print _e_opt, _pc_sz _pfx, _pc_sz _sfx) const {
 	_e_opt; _pfx; _sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%s%s%s%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::%s>>{%s}");
-	static _pc_sz pc_sz_pat_r = _T("{%s}");
+	static _pc_sz pc_sz_pat_r = _T("%s");
 
 	CString cs_brds;
 	if (this->Raw().size()) {
 		for (TRawBorders::const_iterator it_ = this->Raw().begin(); it_ != this->Raw().end(); ++it_) {
-			if (cs_brds.IsEmpty() == false) {
+			if (cs_brds.IsEmpty() == false || true) { // always set new line;
 				cs_brds += _sfx;
 				cs_brds += _pfx;
 			}
