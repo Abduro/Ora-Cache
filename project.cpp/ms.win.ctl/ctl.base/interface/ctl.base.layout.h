@@ -119,7 +119,7 @@ namespace ex_ui { namespace controls { namespace layout {
 			e_left = 0, e_top, e_right, e_bottom
 		};
 	public:
-		 CGaps_of_rect (void); CGaps_of_rect (const CGaps_of_rect&) = delete; CGaps_of_rect (CGaps_of_rect&&) = delete;
+		 CGaps_of_rect (void); CGaps_of_rect (const CGaps_of_rect&); CGaps_of_rect (CGaps_of_rect&&) = delete;
 		~CGaps_of_rect (void);
 	public:
 		/* this::ApplyTo(): possibly the second parameter is required for indicating how to apply gaps for calculating margins or padding,
@@ -136,6 +136,10 @@ namespace ex_ui { namespace controls { namespace layout {
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 		bool  Set (const int16_t _left, const int16_t _top, const int16_t _right, const int16_t _bottom); // returns 'true' if at least one of the gaps is changed;
+
+	public:
+		CGaps_of_rect&  operator = (const CGaps_of_rect&);
+		CGaps_of_rect&  operator = (CGaps_of_rect&&) = delete;
 	};
 
 	typedef CGaps_of_rect CMargins_of_rect;

@@ -47,12 +47,12 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		CControl& operator = (CControl&&) = delete;
 
 	protected:
-		CError   m_error  ;
-		uint32_t m_ctrl_id;
-		HANDLE   m_wnd_ptr;
-		CLayout  m_layout ;
 		CBorders m_borders;
 		CFormat  m_format ;
+		CError   m_error  ;
+		CLayout  m_layout ;
+		HANDLE   m_wnd_ptr;
+		uint32_t m_ctrl_id;
 	};
 
 }}}}

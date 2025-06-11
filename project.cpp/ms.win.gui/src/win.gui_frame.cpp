@@ -65,8 +65,10 @@ err_code CFrame::Create (void) {
 
 	if (::IsRectEmpty(&rc_))
 		return (m_error << __e_rect);
+	// https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles ; WS_EX_COMPOSITED|WS_EX_NOPARENTNOTIFY|WS_EX_TRANSPARENT;
+	static const DWORD std_style = WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
+	static const DWORD ext_style = WS_EX_NOPARENTNOTIFY;
 
-	static const DWORD dw_style = WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 #if (0)
 	m_wnd.Atom().Register(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, m_wnd.GetWindowProc()));
 	if (m_wnd.Atom().Is_valid()) {
@@ -83,7 +85,7 @@ err_code CFrame::Create (void) {
 			return m_error.Last();
 	}
 #else
-	HWND hView = m_wnd.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_style);
+	HWND hView = m_wnd.Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, std_style, ext_style);
 	if (!hView)
 		return m_error.Last();
 #endif

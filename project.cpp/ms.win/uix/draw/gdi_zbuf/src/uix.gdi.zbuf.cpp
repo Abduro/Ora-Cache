@@ -226,7 +226,7 @@ err_code  CZBuffer::Draw (const CLine& _line) {
 #endif
 	// it uses the alpha blend, thus the line is substituted by the rectangle of appropriate size;
 	// or the line thickeness is greater than 1px, the same approach is used;
-	if (_line.Color().A() != _Opaque || _line.Thickness() > 1) { 
+	if (_line.Color().A() != 0x0 || _line.Thickness() > 1) { 
 		
 		CRect rect_;
 		this->m_error << CAdjuster(_line).Do(rect_);
@@ -257,14 +257,14 @@ err_code  CZBuffer::Draw  (const CRect& _rect, const TRgbQuad& _clr) {
 
 err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
 	_rect; _clr;
-	this->m_error << __METHOD__ << __s_ok;
+	err_code n_result = __s_ok;
 
-	if (::IsRectEmpty(&_rect)) return this->m_error << __e_rect;
-	if (this->Is_valid() == false) return this->m_error << __e_not_inited;
+	if (::IsRectEmpty(&_rect)) return this->m_error <<__METHOD__ << __e_rect;
+	if (this->Is_valid() == false) return this->m_error <<__METHOD__ << __e_not_inited;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectvisible ;
 	if (false == !!::RectVisible(TDC::m_hDC, &_rect))
-		return this->m_error << __s_false;
+		return this->m_error <<__METHOD__ << __s_false;
 
 	if (false) {}                    // https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;
 	else if (_clr.A() == 0xff) {}    // is transparent and nothing to draw;
@@ -280,8 +280,13 @@ err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
 		private:
 			HBRUSH m_brush;
 		};
+#if (1)
+		if (false == !!TDC::FillRect(&_rect, CBrush(/*_clr.ToRgb()*/TRgbQuad(0,0,0xff).ToRgb()).Get()))
+			return (this->m_error << __METHOD__).Last();
+#else
 		if (false == !!::FillRect(TDC::m_hDC, &_rect, CBrush(_clr.ToRgb()).Get()))
-			this->m_error.Last();
+			return (this->m_error << __METHOD__).Last();
+#endif
 	}
 	else { // draws semitransparent rectangle by applying alpha blend;
 
@@ -291,10 +296,45 @@ err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
 		blender.Src() << TDC::m_hDC << (const t_rect&)_rect;
 
 		if (__failed(blender.Draw()))
-			this->m_error = blender.Error();
+			n_result = this->m_error = blender.Error();
 	}
 
-	return this->Error();
+	return n_result;
+}
+
+err_code  CZBuffer::Draw  (const t_rect& _rect, const rgb_color _clr) {
+	_rect; _clr;
+	err_code n_result = __s_ok;
+
+	if (::IsRectEmpty(&_rect)) return this->m_error <<__METHOD__ << __e_rect;
+	if (this->Is_valid() == false) return this->m_error <<__METHOD__ << __e_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectvisible ;
+	if (false == !!::RectVisible(TDC::m_hDC, &_rect))
+		return this->m_error <<__METHOD__ << __s_false;
+
+	if (false) {}                    // https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;
+	else {
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
+		class CBrush {
+		public:
+			 CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
+			~CBrush (void) { if (this->m_brush){ ::DeleteObject(this->m_brush); this->m_brush = nullptr; }}
+			HBRUSH  Get (void) const { return this->m_brush; }
+		private:
+			HBRUSH m_brush;
+		};
+#if (1)
+		if (false == !!TDC::FillRect(&_rect, CBrush(_clr).Get()))
+			return (this->m_error << __METHOD__).Last();
+#else
+		if (false == !!::FillRect(TDC::m_hDC, &_rect, CBrush(_clr.ToRgb()).Get()))
+			return (this->m_error << __METHOD__).Last();
+#endif
+	}
+	
+	return n_result;
 }
 
 const

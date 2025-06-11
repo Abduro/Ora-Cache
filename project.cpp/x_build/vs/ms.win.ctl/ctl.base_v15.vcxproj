@@ -178,6 +178,8 @@
     <ClCompile Include="$(_1)ctl.base.border.cpp" />
     <ClInclude Include="$(_0)ctl.base.defs.h" />
     <ClCompile Include="$(_1)ctl.base.defs.cpp" />
+    <ClInclude Include="$(_0)ctl.base.format.h" />
+    <ClCompile Include="$(_1)ctl.base.format.cpp" />
     <ClInclude Include="$(_0)ctl.base.layout.h" />
     <ClCompile Include="$(_1)ctl.base.layout.cpp" />
     <ClInclude Include="$(_0)ctl.base.pane.h" />

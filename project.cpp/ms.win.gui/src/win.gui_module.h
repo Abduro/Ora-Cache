@@ -16,6 +16,7 @@
 #pragma comment(lib, "geometry.2D_v15.lib")    // generic shapes;
 #pragma comment(lib, "render_v15.lib")         // graphic render;
 #pragma comment(lib, "sfx.status_v15.lib")     // status bar user common control;
+#pragma comment(lib, "sfx.tabbed_v15.lib")     // tabbed control common control;
 #pragma comment(lib, "sys.err.core_v15.lib")   // system error handling;
 #pragma comment(lib, "sys.shared_v15.lib")     // shared macros for debug info output;
 #pragma comment(lib, "theme_v15.lib")          // color theme support;

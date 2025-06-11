@@ -195,6 +195,11 @@ CSet&  CSet::operator = (CSet&& _victim) {
 }
 
 CSet&  CSet::operator <<(const TRawBorders& _raw) { this->Raw() = _raw; return *this; }
+CSet&  CSet::operator <<(const TRgbQuad& _color) { this->Color(_color); return *this; }
+
+CSet&  CSet::operator <<(const uint8_t _n_thickness) {
+	this->Thickness(_n_thickness); return *this;
+}
 
 CSet&  CSet::operator +=(const CBorder& _border) { this->Add(_border); return *this; }
 CSet&  CSet::operator -=(const uint16_t _n_id) { this->Rem(_n_id); return *this; }
@@ -288,3 +293,6 @@ bool  CSet_for_rect::Set (const t_rect& _rect) {
 #endif
 	return b_changed;
 }
+
+CSet_for_rect& CSet_for_rect::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
+CSet_for_rect& CSet_for_rect::operator <<(const uint8_t _n_thickness) { (TBase&)*this << _n_thickness; return *this; }

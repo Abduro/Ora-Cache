@@ -10,6 +10,72 @@ using namespace ex_ui::draw;
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ex_ui { namespace draw { namespace _impl {
+#if defined (_DEBUG)
+	/*
+		enum _opt : ULONG {
+			eNone          = 0x0000,
+			eExactSize     = 0x0001,
+			eRelativeSize  = 0x0002,
+			eBold          = 0x0004,
+			eItalic        = 0x0008,
+			eUnderline     = 0x0010,
+		};
+	*/
+	class CFontOpt_Fmt {
+	using opts = CFontOptions::_opt;
+	public:
+		CFontOpt_Fmt (const uint32_t _u_flags = 0) : m_flags(_u_flags) {}
+		CFontOpt_Fmt (const CFontOpt_Fmt&) = delete; CFontOpt_Fmt (CFontOpt_Fmt&&) = delete; ~CFontOpt_Fmt (void) = default;
+
+	public:
+		CString  ToString (void) const {
+		
+			CString cs_out;
+			// ::std::vector may be used here;
+			static const opts e_all[] = {opts::eExactSize, opts::eRelativeSize, opts::eBold, opts::eItalic, opts::eUnderline};
+			static const uint32_t u_size = 5;
+
+			CString cs_name;
+
+			for (uint32_t i_ = 0; i_ < u_size; i_++) {
+
+				if (0 == (this->m_flags & e_all[i_]))
+					continue;
+
+				if (cs_out.IsEmpty() == false)
+					cs_out += _T("|");
+
+				switch (e_all[i_]) {
+				case opts::eExactSize   : cs_name = _T("eExactSize"); break;
+				case opts::eRelativeSize: cs_name = _T("eRelativeSize"); break;
+				case opts::eBold        : cs_name = _T("eBold"); break;
+				case opts::eItalic      : cs_name = _T("eItalic"); break;
+				case opts::eUnderline   : cs_name = _T("eUnderline"); break;
+				default:
+					cs_name = _T("#undef");
+				}
+				cs_out += TStringEx().Format(_T("0x%02x(%s)"), e_all[i_], (_pc_sz)cs_name);
+			}
+
+			if (cs_out.IsEmpty())
+				cs_out.Format(_T("0x%02x(%s)"), this->m_flags, _T("#undef"));
+
+			return  cs_out;
+		}
+	private:
+		CFontOpt_Fmt& operator = (const CFontOpt_Fmt&) = delete;
+		CFontOpt_Fmt& operator = (CFontOpt_Fmt&&) = delete;
+	
+	private:
+		uint32_t  m_flags;
+	};
+
+#endif
+}}}
+using namespace ex_ui::draw::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
 CFontOptions:: CFontOptions(void) : m_opts(_opt::eNone) {}
 CFontOptions:: CFontOptions(const CFontOptions& _ref) : CFontOptions() { *this = _ref; }
 CFontOptions:: CFontOptions(const DWORD _opts) : CFontOptions() { this->Set() = _opts; }
@@ -27,6 +93,35 @@ bool    CFontOptions::IsBold (void) const { return (0 != (this->m_opts & _opt::e
 bool    CFontOptions::IsItalic (void) const { return (0 != (this->m_opts & _opt::eItalic)); }
 bool    CFontOptions::IsUnderline (void) const { return (0 != (this->m_opts & _opt::eUnderline)); }
 
+#if defined(_DEBUG)
+
+CString CFontOptions::Print (const uint32_t _u_flags) {
+	return CFontOpt_Fmt(_u_flags).ToString();
+}
+
+CString CFontOptions::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s}");
+
+	CString cs_flags = CFontOpt_Fmt(this->Get()).ToString();
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_flags);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_flags);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_flags); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 CFontOptions&  CFontOptions::operator = (const DWORD _opts) { this->Set() = _opts; return *this; }
@@ -141,11 +236,11 @@ bool CFont_Base::Is (const HFONT _target) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-TFont:: CFont(LPCTSTR pszFamily, const DWORD dwOptions, const LONG lParam): TBase(), m_bManaged(false) {
+ex_ui::draw::CFont:: CFont(_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) : TBase(), m_bManaged(false) {
 	this->Create(pszFamily, dwOptions, lParam);
 }
 
-TFont::~CFont(void)
+ex_ui::draw::CFont::~CFont(void)
 {
 	if (m_bManaged) {
 		TBase::Destroy();
@@ -155,7 +250,7 @@ TFont::~CFont(void)
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  TFont::Create(_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) {
+err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) {
 	pszFamily; dwOptions; lParam;
 
 	err_code n_result = __s_ok;
@@ -194,7 +289,7 @@ err_code  TFont::Create(_pc_sz pszFamily, const DWORD dwOptions, const LONG lPar
 	return n_result;
 }
 
-HFONT     TFont::Detach(void)
+HFONT     ex_ui::draw::CFont::Detach(void)
 {
 	m_bManaged = false;
 	return TBase::Detach();
@@ -202,7 +297,7 @@ HFONT     TFont::Detach(void)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CFontScalable:: CFontScalable (const HDC hDC, LPCTSTR lpszFontFamily, const INT nSize, const DWORD dwOptions) : TBase() {
+CFontScalable:: CFontScalable (const HDC hDC, _pc_sz lpszFontFamily, const INT nSize, const DWORD dwOptions) : TBase() {
 	this->Create(hDC, lpszFontFamily, nSize, dwOptions);
 }
 
@@ -246,24 +341,22 @@ err_code  CFontScalable::Create(const HDC hDC, _pc_sz lpszFontFamily, const INT 
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ex_ui { namespace draw {
-
-CLogFont:: CLogFont (void) : m_log{0} { m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CLogFont:: CLogFont (const CLogFont& _ref) : CLogFont() { *this = _ref; }
-CLogFont:: CLogFont (const HFONT _h_font) : CLogFont() { *this << _h_font; }
-CLogFont:: CLogFont (const LOGFONT& _log) : CLogFont() { *this << _log; }
-CLogFont:: CLogFont (CLogFont&& _src) : CLogFont() { *this = _src; }
-CLogFont::~CLogFont (void) {}
+ex_ui::draw::CLogFont:: CLogFont (void) : m_log{0} { m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+ex_ui::draw::CLogFont:: CLogFont (const CLogFont& _ref) : CLogFont() { *this = _ref; }
+ex_ui::draw::CLogFont:: CLogFont (const HFONT _h_font) : CLogFont() { *this << _h_font; }
+ex_ui::draw::CLogFont:: CLogFont (const LOGFONT& _log) : CLogFont() { *this << _log; }
+ex_ui::draw::CLogFont:: CLogFont (CLogFont&& _src) : CLogFont() { *this = _src; }
+ex_ui::draw::CLogFont::~CLogFont (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-TErrorRef  CLogFont::Error (void) const { return this->m_error; }
+TErrorRef  ex_ui::draw::CLogFont::Error (void) const { return this->m_error; }
 
 const
-LOGFONT&   CLogFont::Get (void) const { return this->m_log; }
-LOGFONT&   CLogFont::Get (void)       { return this->m_log; }
+LOGFONT&   ex_ui::draw::CLogFont::Get (void) const { return this->m_log; }
+LOGFONT&   ex_ui::draw::CLogFont::Get (void)       { return this->m_log; }
 
-HRESULT    CLogFont::Set (void) {
+HRESULT    ex_ui::draw::CLogFont::Set (void) {
 	m_error << __METHOD__ << __e_not_inited;
 	// https://pvs-studio.com/en/blog/posts/cpp/0360/ ;
 	// https://stackoverflow.com/questions/56565539/memset-s-what-does-the-standard-mean-with-this-piece-of-text ;
@@ -275,7 +368,7 @@ HRESULT    CLogFont::Set (void) {
 	return m_error;
 }
 
-HRESULT    CLogFont::Set (const LOGFONT& _log) {
+HRESULT    ex_ui::draw::CLogFont::Set (const LOGFONT& _log) {
 	m_error << __METHOD__ << __s_ok;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
 	errno_t t_result = ::memcpy_s(&this->m_log, sizeof(LOGFONT), &_log, sizeof(LOGFONT));
@@ -285,7 +378,7 @@ HRESULT    CLogFont::Set (const LOGFONT& _log) {
 	return m_error;
 }
 
-HRESULT    CLogFont::Set (const HFONT _font, const DWORD _opts) {
+HRESULT    ex_ui::draw::CLogFont::Set (const HFONT _font, const DWORD _opts) {
 	m_error << __METHOD__ << __s_ok;
 
 	if (!CFont_Base::Is(_font))
@@ -309,16 +402,14 @@ HRESULT    CLogFont::Set (const HFONT _font, const DWORD _opts) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLogFont&  CLogFont::operator = (const CLogFont& _ref) { *this << _ref.Get(); return *this; }
-CLogFont&  CLogFont::operator <<(const HFONT _h_font) { this->Set(_h_font); return *this; }
-CLogFont&  CLogFont::operator <<(const LOGFONT& _log) { this->Set(_log); return *this; }
-CLogFont&  CLogFont::operator = (CLogFont&& _src) {
+ex_ui::draw::CLogFont&  ex_ui::draw::CLogFont::operator = (const CLogFont& _ref) { *this << _ref.Get(); return *this; }
+ex_ui::draw::CLogFont&  ex_ui::draw::CLogFont::operator <<(const HFONT _h_font) { this->Set(_h_font); return *this; }
+ex_ui::draw::CLogFont&  ex_ui::draw::CLogFont::operator <<(const LOGFONT& _log) { this->Set(_log); return *this; }
+ex_ui::draw::CLogFont&  ex_ui::draw::CLogFont::operator = (CLogFont&& _src) {
 	this->Set(_src.Get()); _src.Set(); return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLogFont::operator const  LOGFONT&(void) const { return this->Get(); }
-CLogFont::operator        LOGFONT&(void)       { return this->Get(); }
-
-}}
+ex_ui::draw::CLogFont::operator const  LOGFONT&(void) const { return this->Get(); }
+ex_ui::draw::CLogFont::operator        LOGFONT&(void)       { return this->Get(); }

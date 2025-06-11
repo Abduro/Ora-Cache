@@ -14,7 +14,8 @@ using namespace ex_ui::controls::sfx::status;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CControl:: CControl (void) : m_ctrl_id(0), m_wnd_ptr(nullptr), m_layout(*this), m_format(*this) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
+CControl:: CControl (void) : m_ctrl_id(0), m_wnd_ptr(nullptr), m_layout(*this), m_format(*this) {
+	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
 	try { m_wnd_ptr = new CWnd(*this); } catch (::std::bad_alloc&){ this->m_error << __e_no_memory; }
 }
 CControl::~CControl (void) {
@@ -79,12 +80,12 @@ const
 CLayout&  CControl::Layout (void) const { return this->m_layout; }
 CLayout&  CControl::Layout (void)       { return this->m_layout; }
 
-err_code  CControl::Refresh (void) {
+err_code  CControl::Refresh(void) {
 
 	if (nullptr == m_wnd_ptr)
 		return __e_pointer;
 
-	if (false == _wnd_ref(m_wnd_ptr).RedrawWindow(0, 0, RDW_ERASE|RDW_INVALIDATE|RDW_ERASENOW|RDW_NOCHILDREN)) {
+	if (false == _wnd_ref(m_wnd_ptr).RedrawWindow(0, 0, /*RDW_ERASE|*/RDW_INVALIDATE|/*RDW_ERASENOW|*/RDW_NOCHILDREN)) {
 		return (this->m_error << __METHOD__).Last();
 	}
 	else return __s_ok;
@@ -99,17 +100,6 @@ CWindow   CControl::Window (void) const {
 
 #if (0)
 /////////////////////////////////////////////////////////////////////////////
-
-namespace ST_Ctrls { namespace _impl {
-
-	TStatusFmt&  StatusBar_Format (void) {
-		static TStatusFmt format_;
-		return format_;
-	}
-
-}}
-using namespace ST_Ctrls::_impl;
-
 
 CStatusBar:: CStatusBar(IStatusEvents& _snk) : m_wnd_ptr(NULL), m_evt_snk(_snk), m_ctrl_id(0), m_layout(*this) {
 	m_borders.Top().Thickness() = 1;

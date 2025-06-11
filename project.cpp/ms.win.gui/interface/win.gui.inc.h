@@ -19,6 +19,8 @@
 #pragma endregion
 
 #include "color.rgb.h"
+#include "color.compl.h"
+#include "color.compl.predefs.h"
 
 #pragma region __wnd_popup__
 #include "wnd.base.h"
@@ -30,6 +32,7 @@
 #include "ctl.base.layout.h"
 #include "ctl.base.pane.h"
 #include "sfx.status.ctrl.h"
+#include "sfx.tabs.ctrl.h"
 #pragma endregion
 
 #include "sys.shell.dwm.h"

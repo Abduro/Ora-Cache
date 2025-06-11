@@ -73,7 +73,9 @@ namespace ex_ui { namespace controls { namespace properties {
 		 CAlign_Horz (const _value _n_value = _value::eLeft, _pc_sz _p_name = _T("#horz_align"), IProperty_Events* = nullptr);
 		 CAlign_Horz (const CAlign_Horz&); CAlign_Horz (CAlign_Horz&&) = delete;
 		~CAlign_Horz (void);
-
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CAlign_Horz& operator = (const CAlign_Horz&);
 		CAlign_Horz& operator = (CAlign_Horz&&) = delete; // not required yet;
@@ -90,7 +92,9 @@ namespace ex_ui { namespace controls { namespace properties {
 		 CAlign_Vert (const _value = _value::eMiddle,  _pc_sz _p_name = _T("#vert_align"), IProperty_Events* = nullptr);
 		 CAlign_Vert (const CAlign_Vert&); CAlign_Vert (CAlign_Vert&&) = delete;
 		~CAlign_Vert (void);
-
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CAlign_Vert& operator = (const CAlign_Vert&);
 		CAlign_Vert& operator = (CAlign_Vert&&) = delete; // not required yet;
@@ -107,7 +111,9 @@ namespace ex_ui { namespace controls { namespace properties {
 
 	public:
 		void ApplyTo (const t_rect& _rc_available, const t_size& _sz_accept, t_rect& _rc_aligned) const; // applies alignment setting to available rectangle;
-
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		const
 		CAlign_Horz&   Horz(void) const;

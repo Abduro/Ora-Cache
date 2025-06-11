@@ -26,19 +26,24 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		this is the really issue: the main window of the test app and this control window have the same window class;
 		that means any manipulating with class pointer as it is made below, will affect all windows of such class;
 	*/
+#if (0)
 	static bool  b_fst_time = false;
-	if (false == b_fst_time) {
+	if (true == b_fst_time) { // intentionally is set to 'true'; the main window of the app should care about the background brush;
 		HBRUSH brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
-		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
+		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 		b_fst_time = true;
 	}
-#if(0)
+#endif
+#if (0)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(_dev_ctx, rc_area);
 
-	z_buffer.Draw(rc_area, TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back)));
+	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
+
+	z_buffer.Draw(rc_area, set_.Medium());
 
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 	const CBorder& top_ = this->m_ctrl.Borders().Top();
@@ -56,13 +61,12 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	using WTL::CPaintDC;
 	
 	CPaintDC dc_(*this);
-#if (1)
-	t_rect rc_area = {0};
-	TWindow::GetClientRect(&rc_area);
 
-	CZBuffer z_buffer(dc_.m_hDC, rc_area);
+#if (0)
 
-	z_buffer.Draw(rc_area, TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back)));
+	CZBuffer z_buffer(dc_.m_hDC, dc_.m_ps.rcPaint);
+
+	z_buffer.Draw(dc_.m_ps.rcPaint, TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back)));
 
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 	const CBorder& top_ = this->m_ctrl.Borders().Top();
@@ -70,8 +74,15 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	if (top_.Is_valid()) {
 		z_buffer.Draw(top_);
 	}
+#elif (0!=1)
+
+	CZBuffer z_buffer(dc_.m_hDC, dc_.m_ps.rcPaint);
+
+	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
+	z_buffer.Draw(dc_.m_ps.rcPaint, set_.Light());
+	
 #endif
-	err_code n_result = __s_false;  // this message is handled;
+	err_code n_result = __s_ok;  // this message is handled;
 	return   n_result;
 }
 
@@ -94,13 +105,13 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
 
-err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
+err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size) {
 	_e_state;
 	err_code n_result = __s_false;
 	return   n_result;
 }
 
-err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
+err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
 	_edges; _p_rect;
 	err_code n_result = __s_false;
 	return   n_result;

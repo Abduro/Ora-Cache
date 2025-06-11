@@ -19,7 +19,12 @@ void CFormat::Default (void) {
 
 	CBorder& top = this->m_ctrl.Borders().Top();
 	top.Thickness(1);
-	top.Color() = TRgbQuad(0xff, 0x0, 0x0, _Opaque);
+#if (0)
+	top.Color() = TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border));
+#else
+	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
+	top.Color() = TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border));
+#endif
 }
 
 #if (0)

@@ -111,8 +111,8 @@ namespace ex_ui { namespace theme {
 		const TColorMatrix&  Matrix  (void) const;
 		const TThemePalette  Palette (void) const;
 
-	public:
-		clr_type Get (const TThemePart, const TThemeElement, const TThemeState = TThemeState::e_default, clr_value _alpha = rgb_val_max) const;
+	public: // important: _alpha value == 0x0 means the color is fully opaque;
+		clr_type Get (const TThemePart, const TThemeElement, const TThemeState = TThemeState::e_default, clr_value _alpha = 0x0) const;
 
 	public:
 		static  bool IsDark (void);
@@ -140,7 +140,7 @@ namespace ex_ui { namespace theme { namespace direct_x {
 		~CUI_Parts (void) {}
 
 	public:
-		CFloat Bkg (clr_value _alpha = rgb_val_max) const; // gets the background color depending on the currently installed theme;
+		CFloat Bkg (clr_value _alpha = /*rgb_val_max*/0x0) const; // gets the background color depending on the currently installed theme;
 
 	private:
 		CUI_Parts&  operator = (const CUI_Parts&) = delete;

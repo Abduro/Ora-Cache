@@ -33,7 +33,11 @@ namespace ex_ui { namespace draw {
 		DWORD   Get (void) const;
 		bool    Has (const DWORD _opts) const;
 		DWORD&  Set (void)      ;
-
+#if defined(_DEBUG)
+		static
+		CString Print (const uint32_t _u_flags) ;             // prints only flags provided for testing purpose;
+		CString Print (const e_print = e_print::e_all) const; // the same as above, but value is currently set to field of this class;
+#endif
 	public:
 		bool    IsBold (void) const;
 		bool    IsItalic (void) const;
@@ -159,7 +163,6 @@ namespace ex_ui { namespace draw {
 }}
 
 typedef ex_ui::draw::CFont        TFont;
-typedef ex_ui::draw::CFontOptions TFontOpts;
 typedef ex_ui::draw::CLogFont     TLogFont;
 
 #endif/*__OWNERDRAW_GDIPLUS_WRAP_H_*/

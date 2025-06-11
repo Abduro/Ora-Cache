@@ -16,6 +16,7 @@
 #include "shared.preproc.h"
 #include "shared.string.h"
 #include "shared.types.h"
+#include "sys.sync_obj.h"
 #pragma endregion
 
 #pragma region __wnd_popup__
@@ -31,7 +32,10 @@
 #include "ctl.base.props.h"
 #pragma endregion
 
+#include "color.compl.h"
+#include "color.compl.predefs.h"
 #include "uix.theme.h"
+#include "uix.gen.font.h"
 
 namespace ex_ui { namespace controls { namespace sfx {
 

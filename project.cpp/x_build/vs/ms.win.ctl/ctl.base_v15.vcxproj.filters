@@ -13,6 +13,8 @@
     <ClCompile Include="$(_1)ctl.base.border.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)ctl.base.defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ctl.base.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)ctl.base.format.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ctl.base.format.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)ctl.base.layout.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ctl.base.layout.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)ctl.base.pane.h"><Filter>interface</Filter></ClInclude>

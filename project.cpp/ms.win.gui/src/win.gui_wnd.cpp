@@ -8,6 +8,11 @@ using namespace ebo::boo::gui;
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ebo { namespace boo { namespace gui { namespace _impl {
+}}}}
+using namespace ebo::boo::gui::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
 CWnd:: CWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name) {
 	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this); TBase::Handlers().System().Subscribe(this);
 	TBase::Handlers().Frame().Subscribe(this);
@@ -21,19 +26,29 @@ CWnd::~CWnd(void) {
 
 err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	_dev_ctx;
-	#if (1)
+#if (1)
 	static bool  b_fst_time = false;
 	if (false == b_fst_time) {
-		HBRUSH brush = ::CreateSolidBrush(RGB(61, 61, 61)); // ToDo: it requires getting a color from the currently set theme;
+		HBRUSH brush = nullptr;
+
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
+		brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
+	#if defined(_test_case_lvl) && (_test_case_lvl == 0)
+		// if setting the background brash is made several times, returned brush handle must be destroyed?
+		brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_caption, TThemeElement::e_back));
+	#else
+		const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
+		brush = ::CreateSolidBrush(set_.Dark());
+	#endif
 		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 		b_fst_time = true;
 	}
 
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
-	#else
+#else
 	return   __s_ok;
-	#endif
+#endif
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint ;

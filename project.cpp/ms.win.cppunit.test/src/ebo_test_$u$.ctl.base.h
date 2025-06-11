@@ -10,74 +10,15 @@
 
 #include "ctl.base.defs.h"
 #include "ctl.base.border.h"
+#include "ctl.base.format.h"
 #include "ctl.base.layout.h"
+#include "ctl.base.props.h"
 
-namespace ebo { namespace boo { namespace test { namespace ctl { namespace base {
+namespace ebo { namespace boo { namespace test { namespace ctl {
 
-	using TBorder = ex_ui::controls::borders::COne;
+namespace base {}
 
-	__class (CBorder) {
-	public:
-		 CBorder (const bool _b_verb = false);
-		~CBorder (void) = default;
-
-	public:
-		__method (_ctor);
-
-	private:
-		bool m_b_verb;
-		TBorder m_border;
-	};
-
-	using TBorders = ex_ui::controls::borders::CSet;
-
-	__class (CBorders) {
-	public:
-		 CBorders (const bool _b_verb = false);
-		~CBorders (void) = default;
-
-	public:
-		__method (_ctor);
-		__method (Modify);
-
-	private:
-		bool m_b_verb;
-		TBorders m_bdrset;
-	};
-
-	using TGap = ex_ui::controls::layout::CGap;
-
-	__class (CGap) {
-	public:
-		 CGap (const bool _b_verb = false);
-		~CGap (void) = default;
-
-	public:
-		__ctor(_ctor);
-
-	private:
-		bool m_b_verb;
-		TGap m_gap;
-	};
-
-	using TGapSet = ex_ui::controls::layout::CGaps_of_rect;
-
-	__class (CGaps_of_rect) {
-	public:
-		 CGaps_of_rect (const bool _b_verb = false);
-		~CGaps_of_rect (void) = default;
-
-	public:
-		__ctor (_ctor);
-		__method (ApplyMargins);
-		__method (ApplyPadding);
-
-	private:
-		bool    m_b_verb;
-		TGapSet m_gaps;
-	};
-
-}}}}}
+}}}}
 
 #pragma comment(lib, "color_v15.lib")        // to colorize everything;
 #pragma comment(lib, "ctl.base_v15.lib")     // this one must be tested by this unit test project;

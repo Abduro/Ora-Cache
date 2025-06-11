@@ -16,7 +16,8 @@ namespace ex_ui { namespace theme { namespace colors {
 
 CColor_Marker:: CColor_Marker (void) : m_palette(TThemePalette::e_none), m_ui_part(TThemePart::e_none), m_ui_state(TThemeState::e_default) {}
 CColor_Marker:: CColor_Marker (const CColor_Marker& _ref) : CColor_Marker() { *this = _ref; }
-CColor_Marker:: CColor_Marker (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element, const TThemeState _state) : CColor_Marker() {
+CColor_Marker:: CColor_Marker (
+	const CTheme_Palette _palette, const CTheme_Part _part, const CTheme_Element _element, const CTheme_State _state) : CColor_Marker() {
 	*this << _palette << _part << _element << _state;
 }
 CColor_Marker::~CColor_Marker (void) {}
@@ -65,7 +66,7 @@ CColor_Matrix:: CColor_Matrix (void) {
 			                          { TThemeElement::e_fore  , {{ TThemeState::e_default , RGB( 230, 230, 230) }} } }},
 			{ TThemePart::e_panel  , {{ TThemeElement::e_back  , {{ TThemeState::e_default , RGB(  61,  61,  61) }} },
 			                          { TThemeElement::e_border, {{ TThemeState::e_default , RGB( 229, 183,  66) }, { TThemeState::e_disabled, RGB( 115, 115, 115) }} }}}//,
-		//	{ TThemePart::, {{, {{ }} }} }
+		//	{ TThemePart:: , {{ TThemeElement:: , {{ TThemeState:: , RGB()}} }} }
 		}
 	},
 	{
@@ -98,11 +99,7 @@ const COLORREF  CColor_Matrix::operator <<(const CColor_Marker& _marker) const {
 					TColor_State::const_iterator it_state = it_element->second.find(_marker.State());
 					if (it_state != it_element->second.end()) {
 						clr_result = it_state->second;
-					}
-				}
-			}
-		}
-	}
+	}	}	}	}	}
 
 	return clr_result;
 }
@@ -142,7 +139,7 @@ clr_type CTheme::Get (const TThemePart _part, const TThemeElement _el, const TTh
 
 	clr_type clr_result = (const clr_type)(m_clr_mtx << TColorMarker(this->Palette(), _part, _el, _state));
 
-	if (rgb_value_max != _alpha) {
+	if (/*rgb_value_max*/0x0 != _alpha) {
 		clr_result = CQuad(clr_result, _alpha).ToRgbA();
 	}
 	return clr_result;
@@ -174,8 +171,12 @@ using namespace ex_ui::theme::direct_x;
 
 CFloat CUI_Parts::Bkg (clr_value _alpha) const {
 #if (1)
-	CQuad quad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back), _alpha);
-	return CFloat(quad.ToRgbA());
+	if (0x0 != _alpha) {
+		CQuad quad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back), _alpha);
+		return CFloat(quad.ToRgbA());
+	}
+	else
+		return CFloat(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
 #else
 	return CFloat(_r_g_b_a(255, 140, 0, 255));
 #endif

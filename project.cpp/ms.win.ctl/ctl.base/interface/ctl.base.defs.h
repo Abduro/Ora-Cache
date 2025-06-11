@@ -18,6 +18,7 @@
 #pragma endregion
 
 #include "color.rgb.h"
+#include "color.gradient.h"
 
 #pragma region __2d_geometry__
 #include "2d.base.h"
@@ -27,6 +28,8 @@
 #pragma endregion
 
 #include "uix.gdi.zbuf.h"
+#include "uix.gen.font.h"
+
 #include "wnd.base.h"
 
 namespace ex_ui { namespace controls {
@@ -38,7 +41,10 @@ namespace ex_ui { namespace controls {
 	using TError = const CError;
 
 	using CZBuffer = ex_ui::draw::memory::CZBuffer;
+	using ex_ui::draw::CFont;
+	using ex_ui::draw::CFontOptions;
 
+	using ex_ui::color::rgb::CGradient ;
 }}
 
 #endif/*_CTL_BASE_DEFS_H_INCLUDED*/

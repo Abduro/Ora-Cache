@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 10-Jun-2025 at 02:26:11.454, UTC+4, Batumi, Tuesday;
+	This is Ebo Pack generic tabbed control project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
+    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
+    <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
+    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
+    <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
+    <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\sfx.tabbed\</ThisLib> <!--This project is being built!-->
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Error)interface\</_3>
+    <_4>$(Geo-2d)interface\</_4>
+    <_5>$(Color)interface\</_5>
+    <_z>$(Color)interface\compl\</_z>
+    <_w>$(Color)interface\named\</_w>
+    <_6>$(Win-pop)interface\</_6>
+    <_7>$(_6)msg_handlers\</_7>
+    <_8>$(ZBuffer)interface\</_8>
+    <_9>$(CtlBase)interface\</_9>
+    <_a>$(MS-WTL)include\</_a>
+    <_b>$(Theme)interface\</_b>
+    <_c>$(Shell)interface\</_c>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(_c);$(_w);$(_z);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

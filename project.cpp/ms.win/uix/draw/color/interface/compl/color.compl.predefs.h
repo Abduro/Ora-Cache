@@ -50,4 +50,11 @@ namespace ex_ui { namespace color { namespace complementary {
 
 typedef ex_ui::color::complementary::CPredefined::_index TClrPredefined;
 
+using CComplSet = ex_ui::color::complementary::CSet;
+using CComplPredefs = ex_ui::color::complementary::CPredefined;
+
+namespace shared {
+
+const CComplPredefs&  ThemeTriplets(void);
+}
 #endif/*_SHAREDUIXCMPCLRSDEFINED_H_INCLUDED*/

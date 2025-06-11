@@ -81,8 +81,9 @@ namespace ex_ui { namespace draw { namespace memory {
 		err_code  Draw  (const CLine&);
 		/* draws plain rectangle by using color provided, alpha blending is applicable;
 		   it is assumed the rectangle is not created or extracted from 32-bpp image, thus per-pixel-alpha option is not used; */
-		err_code  Draw  (const CRect&, const TRgbQuad&);
+		err_code  Draw  (const CRect& , const TRgbQuad&);
 		err_code  Draw  (const t_rect&, const TRgbQuad&);
+		err_code  Draw  (const t_rect&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
 
 		const
 		CSurface& Surface (void) const;

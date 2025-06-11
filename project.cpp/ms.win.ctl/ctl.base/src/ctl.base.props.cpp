@@ -22,6 +22,40 @@ CAlign_Horz::~CAlign_Horz (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+#if defined(_DEBUG)
+CString  CAlign_Horz::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{name=%s;value=%d(%s)}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{name=%s;value=%d(%s)}");
+	static _pc_sz pc_sz_pat_r = _T("{name=%s;value=%d(%s)}");
+
+	CString cs_value;
+	switch (TBase::Value()) {
+	case _value::eCenter: cs_value = _T("eCenter"); break;
+	case _value::eLeft  : cs_value = _T("eLeft"); break;
+	case _value::eRight : cs_value = _T("eRight"); break;
+	default:
+		cs_value = _T("#invalid");
+	}
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Name(), this->Value(), (_pc_sz) cs_value);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Name(), this->Value(), (_pc_sz) cs_value);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, this->Name(), this->Value(), (_pc_sz) cs_value); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
 CAlign_Horz::operator uint32_t (void) const
 {
 	if (TBase::Has(_value::eRight))  return _value::eRight ;
@@ -40,6 +74,39 @@ CAlign_Vert::~CAlign_Vert (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+#if defined(_DEBUG)
+CString  CAlign_Vert::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{name=%s;value=%d(%s)}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{name=%s;value=%d(%s)}");
+	static _pc_sz pc_sz_pat_r = _T("{name=%s;value=%d(%s)}");
+
+	CString cs_value;
+	switch (TBase::Value()) {
+	case _value::eBottom: cs_value = _T("eBottom"); break;
+	case _value::eMiddle: cs_value = _T("eMiddle"); break;
+	case _value::eTop   : cs_value = _T("eTop"); break;
+	default:
+		cs_value = _T("#invalid");
+	}
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Name(), this->Value(), (_pc_sz) cs_value);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, this->Name(), this->Value(), (_pc_sz) cs_value);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, this->Name(), this->Value(), (_pc_sz) cs_value); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
 CAlign_Vert::operator uint32_t (void) const
 {
 	if (TBase::Has(_value::eMiddle)) return _value::eMiddle ;
@@ -82,6 +149,34 @@ void CAlign::ApplyTo (const t_rect& _rc_available, const t_size& _sz_accept, t_r
 	case CAlign_Vert::eBottom:  { _rc_aligned.top = _rc_aligned.bottom - _sz_accept.cy; } break;
 	}
 }
+
+#if defined(_DEBUG)
+CString  CAlign::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s;%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s;%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s;%s}");
+
+	CString cs_horz = this->Horz().Print(e_print::e_req);
+	CString cs_vert = this->Vert().Print(e_print::e_req);
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) {
+		cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_horz, (_pc_sz) cs_vert);
+	}
+	if (e_print::e_no_ns == _e_opt) {
+		cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_horz, (_pc_sz) cs_vert);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_horz, (_pc_sz) cs_vert); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+
 const
 CAlign_Horz& CAlign::Horz(void) const { return m_horz; }
 CAlign_Horz& CAlign::Horz(void)       { return m_horz; }

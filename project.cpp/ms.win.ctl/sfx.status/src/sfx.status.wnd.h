@@ -36,8 +36,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 		err_code IEvtLife_OnDestroy (const w_param, const l_param) override final;
 
 	private: // IFormEvtSink override(s); 
-		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final;
-		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
+		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, t_rect*) override final;
 #pragma endregion
 	private:
 		CWnd& operator = (const CWnd&) = delete;

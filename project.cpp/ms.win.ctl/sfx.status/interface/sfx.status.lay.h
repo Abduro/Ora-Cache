@@ -37,6 +37,10 @@ namespace layout {
 		t_rect   operator = (const t_rect& _rc_area) const;  // returns calculated rectangle of status bar control for area provided;
 
 	private:
+		CLayout& operator = (const CLayout&) = delete;
+		CLayout& operator = (CLayout&&) = delete;
+
+	private:
 		mutable
 		CError    m_error ;
 		CControl& m_ctrl  ;

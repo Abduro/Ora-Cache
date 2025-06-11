@@ -28,7 +28,7 @@ namespace ebo { namespace boo { namespace gui {
 
 	public:
 
-		err_code  Draw (const HDC, const t_rect& _drw_area) const;
+		err_code  Draw (const HDC, const t_rect& _drw_area);
 
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 		const

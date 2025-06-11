@@ -86,6 +86,8 @@ namespace ex_ui { namespace controls { namespace borders {
 		CSet& operator = (const CSet&);
 		CSet& operator = (CSet&&);
 		CSet& operator <<(const TRawBorders&);
+		CSet& operator <<(const TRgbQuad&);
+		CSet& operator <<(const uint8_t _n_thickness);
 
 		CSet& operator +=(const CBorder&);
 		CSet& operator -=(const uint16_t _n_id);
@@ -113,6 +115,9 @@ namespace ex_ui { namespace controls { namespace borders {
 
 	public:
 		const
+		CSet&    Base (void) const { return (const TBase&)*this; }
+		CSet&    Base (void)       { return (TBase&)*this; }
+		const
 		CBorder& Get (const e_sides) const;
 		CBorder& Get (const e_sides) ;
 
@@ -120,6 +125,10 @@ namespace ex_ui { namespace controls { namespace borders {
 		      CBorder& Bottom (void)      ;       CBorder&  Left (void) ;            CBorder& Right (void)      ;       CBorder& Top (void) ;
 
 		bool  Set (const t_rect&); // sets borders' points of all sides; empty rectangle is applicable; returns true in case if at least on side coords is changed;
+
+	public:
+		CSet_for_rect& operator <<(const t_rect&); // calls this::Set(const t_rect&);
+		CSet_for_rect& operator <<(const uint8_t _n_thickness);
 	};
 	typedef CSet_for_rect CBorders_for_rect;
 }}}

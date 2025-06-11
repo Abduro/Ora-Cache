@@ -48,3 +48,12 @@ CPredefined:: CPredefined (void) : TBase() {
 	}
 	catch (const ::std::bad_alloc&) {}
 }
+
+namespace shared {
+
+	const CComplPredefs&  ThemeTriplets(void) {
+		static CComplPredefs triplets;
+		return triplets;
+	}
+
+}

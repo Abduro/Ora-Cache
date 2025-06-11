@@ -23,11 +23,14 @@ CView::~CView (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code CView::Draw (const HDC _h_dc, const t_rect& _drw_area) const {
+err_code CView::Draw (const HDC _h_dc, const t_rect& _drw_area) {
 	_h_dc; _drw_area;
 	err_code n_result = __s_ok;
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 	n_result = this->Pane().Draw(_h_dc, _drw_area); // *important*: the rectangle being received is entire window client area!
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 1)
+	n_result = this->Status().Refresh();
 #endif
 	return n_result;
 }
