@@ -9,10 +9,11 @@
 namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class CControl;
 
 	using namespace ex_ui::controls::sfx;
+	using TBase = ex_ui::controls::format::CBase;
 
 namespace format {
 }
-	class CFormat {
+	class CFormat : public TBase {
 	friend class  CControl;
 	private:
 		 CFormat (CControl&); CFormat (void) = delete; CFormat (const CFormat&); CFormat (CFormat&&) = delete;

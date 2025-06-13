@@ -67,7 +67,6 @@ namespace ex_ui { namespace theme { namespace colors {
 		 const COLORREF operator <<(const CColor_Marker&) const;   // returns __clr_none if marker does not match any value;
 	};
 
-
 }}}
 
 typedef ex_ui::theme::colors::CTheme_Element    TThemeElement;

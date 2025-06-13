@@ -43,8 +43,7 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 		b_fst_time = true;
 	}
-
-	err_code n_result = __s_false;  // this message is handled;
+	err_code n_result = __s_ok;  // do not hold this message, otherwise child windows will not be able to draw anything on this one;
 	return   n_result;
 #else
 	return   __s_ok;
@@ -102,12 +101,15 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 		_render().Init(h_surface); // this view window does not care about renderer init() result;
 	}
 #endif
-#if defined(_test_case_lvl) && (_test_case_lvl == 2)
-	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
-#endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
 	::shared::Get_View().Parent() = *this;
 	::shared::Get_View().Status().Create(*this, 0xA); // no error handling is made yet;
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+	::shared::Get_View().Tabbed().Create(*this, 0xB);
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 3)
+	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
 #endif
 	TBase::m_error << __METHOD__ << __s_ok;
 

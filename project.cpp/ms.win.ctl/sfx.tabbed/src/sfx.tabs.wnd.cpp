@@ -27,12 +27,30 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	*/
 #if (0)
 	static bool  b_fst_time = true;
-	if (false == b_fst_time) {
+	if (false == b_fst_time) { // parent window must care about this;
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
 		HBRUSH brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
 		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 		b_fst_time = true;
 	}
+#endif
+#if (1)
+	t_rect rc_area = {0};
+	TWindow::GetClientRect(&rc_area);
+
+	CZBuffer z_buffer(_dev_ctx, rc_area);
+
+	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
+
+	z_buffer.Draw(rc_area, set_.Dark());
+
+	using ex_ui::controls::borders::TRawBorders;
+
+	for(TRawBorders::const_iterator iter_ = this->m_ctrl.Borders().Raw().begin(); iter_ != this->m_ctrl.Borders().Raw().end(); ++iter_) {
+		const CBorder& border = iter_->second;
+		z_buffer.Draw( border );
+	}
+
 #endif
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd ;
 	// this message is handled; the handlers of the most windows messages returns 0 to indicate the message is handled,
@@ -46,7 +64,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	using WTL::CPaintDC;
 
 	CPaintDC dc_(*this);
-#if (1)
+#if (0)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 

@@ -32,19 +32,18 @@ void CBase::Set (void) {
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += TStringEx().Format(_T("*before* : %s"), (_pc_sz) this->m_base.Print(e_print::e_all));
 
-	_out() += TLog_Acc::e_new_line;
-#if (0) // this code snippet is not ready yet;
-	_out() += TStringEx().Format(_T("*adding* : %s"), (_pc_sz) TFontOpts::Print(TFontOpts::eExactSize | TFontOpts::eUnderline));
+	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
 
-	this->m_base += TFontOpts::eExactSize;
-	this->m_base += TFontOpts::eUnderline;
+	_out() += TLog_Acc::e_new_line;
+	const TRgbQuad lo_(set_.Dark());
+	const TRgbQuad hi_(set_.Light());
+
+	_out() += TStringEx().Format(_T("*gradient* : from %s to %s"), (_pc_sz) lo_.Print(e_print::e_all),  (_pc_sz) hi_.Print(e_print::e_all));
+
+	this->m_base.Bkgnd().Gradient().Set(lo_.ToRgb(), hi_.ToRgb());
 
 	_out() += TStringEx().Format(_T("*after * : %s"), (_pc_sz) this->m_base.Print(e_print::e_all));
-	_out() += TStringEx().Format(_T("*remove* : %s"), (_pc_sz) TFontOpts::Print(TFontOpts::eUnderline));
-
-	this->m_base -= TFontOpts::eUnderline;
-	_out() += TStringEx().Format(_T("*result* : %s"), (_pc_sz) this->m_base.Print(e_print::e_all));
-#endif
+	
 	_out()();
 
 }

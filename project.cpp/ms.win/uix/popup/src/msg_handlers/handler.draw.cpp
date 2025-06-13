@@ -28,8 +28,8 @@ l_result   CHandler::OnErase  (uint32_t, w_param _w_param, l_param _l_param, int
 			continue;
 
 		err_code n_result = pSink->IEvtDraw_OnErase(_w_param, _l_param);
-		if (__s_ok == n_result) {
-			_b_handled = true; l_result = _b_handled;
+		if (__s_false == n_result) {
+			_b_handled = true; l_result = n_result;
 			break;
 		}
 		if (__failed (n_result)) {

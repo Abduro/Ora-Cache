@@ -51,6 +51,10 @@ const
 CSurface& CView::Surface(void) const { return this->m_surface; }
 CSurface& CView::Surface(void)       { return this->m_surface; }
 
+const
+CTabbed&  CView::Tabbed (void) const { return this->m_tabbed; }
+CTabbed&  CView::Tabbed (void)       { return this->m_tabbed; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 namespace shared {

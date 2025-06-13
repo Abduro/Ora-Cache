@@ -27,6 +27,7 @@
 
 #pragma region __ctl_base__
 #include "ctl.base.border.h"
+#include "ctl.base.format.h"
 #include "ctl.base.layout.h"
 #include "ctl.base.pane.h"
 #include "ctl.base.props.h"

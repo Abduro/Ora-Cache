@@ -35,15 +35,15 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 #endif
-#if (0)
+#if (1)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(_dev_ctx, rc_area);
 
-	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
+	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
 
-	z_buffer.Draw(rc_area, set_.Medium());
+	z_buffer.Draw(rc_area, set_.Dark()/*_r_g_b(200, 200, 200)*/);
 
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 	const CBorder& top_ = this->m_ctrl.Borders().Top();
@@ -74,12 +74,20 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	if (top_.Is_valid()) {
 		z_buffer.Draw(top_);
 	}
-#elif (0!=1)
+#elif (0==1)
+
+	dc_.SetBkMode(TRANSPARENT);
 
 	CZBuffer z_buffer(dc_.m_hDC, dc_.m_ps.rcPaint);
 
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
-	z_buffer.Draw(dc_.m_ps.rcPaint, set_.Light());
+	z_buffer.Draw(dc_.m_ps.rcPaint, set_.Dark());
+
+	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
+	const CBorder& top_ = this->m_ctrl.Borders().Top();
+	if (top_.Is_valid()) {
+		z_buffer.Draw(top_);
+	}
 	
 #endif
 	err_code n_result = __s_ok;  // this message is handled;

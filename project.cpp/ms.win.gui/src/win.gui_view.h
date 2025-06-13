@@ -16,8 +16,9 @@ namespace ebo { namespace boo { namespace gui {
 
 	using namespace ebo::sha::theme;
 
-	using CPane = ex_ui::controls::CPane;    // this is the pane control class that is not windowed yet;
-	using CStatus = ex_ui::controls::sfx::status::CControl;
+	using CPane    = ex_ui::controls::CPane;    // this is the pane control class that is not windowed yet;
+	using CStatus  = ex_ui::controls::sfx::status::CControl;
+	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
 	using CSurface = ebo::boo::gui::render::CSurface;
 
 	// this is the view of the main window;
@@ -45,6 +46,10 @@ namespace ebo { namespace boo { namespace gui {
 		CSurface& Surface(void) const;
 		CSurface& Surface(void) ;
 
+		const
+		CTabbed&  Tabbed (void) const;
+		CTabbed&  Tabbed (void) ;
+
 	public:
 		CView& operator = (const CView&) = delete;
 		CView& operator = (CView&&) = delete;
@@ -56,6 +61,7 @@ namespace ebo { namespace boo { namespace gui {
 		CWindow  m_parent ;  // this is the main window of this app;
 		CSurface m_surface;
 		CStatus  m_status ;
+		CTabbed  m_tabbed ;
 	};
 
 }}}

@@ -48,8 +48,7 @@ err_code  CLayout::Update (void) {
 	}
 #endif
 	// (1) updates border position(s);
-	CBorder& top_ = this->m_ctrl.Borders().Top();
-	top_.Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
+	this->m_ctrl.Borders() << rc_area;
 
 	return n_result;
 }
@@ -86,7 +85,6 @@ t_rect    CLayout::operator =(const t_rect& _rc_area) const {
 	}
 
 	rc_  = _rc_area;
-	rc_.top = rc_.bottom - 0;
 	return rc_;
 }
 #if (0)

@@ -66,15 +66,16 @@ namespace ex_ui { namespace controls { namespace borders {
 		~CSet (void) ;
 
 	public:
-		err_code  Add (const COne&);      // returns 's_ok' in case of success, otherwise error code; an identifier value must be set in margin class;
-		bool    Color (const TRgbQuad&);  // returns 'true' in case if at least one border's color is changed; input color quad is set to all borders;
+		err_code   Add (const COne&);      // returns 's_ok' in case of success, otherwise error code; an identifier value must be set in margin class;
+		bool     Color (const TRgbQuad&);  // returns 'true' in case if at least one border's color is changed; input color quad is set to all borders;
+		uint16_t Count (void) const;       // https://en.cppreference.com/w/cpp/container/map/size ;
 		const
-		CBorder&  Get (const uint16_t _n_id) const;   // returns a reference to fake object in case if not found; (ro);
-		CBorder&  Get (const uint16_t _n_id);         // returns a reference to fake object in case if not found; (rw);
-		err_code  Rem (const uint16_t _n_id);
+		CBorder&   Get (const uint16_t _n_id) const;   // returns a reference to fake object in case if not found; (ro);
+		CBorder&   Get (const uint16_t _n_id);         // returns a reference to fake object in case if not found; (rw);
+		err_code   Rem (const uint16_t _n_id);
 
 #if defined(_DEBUG)
-		CString   Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
+		CString    Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
 #endif
 		const
 		TRawBorders& Raw (void) const;

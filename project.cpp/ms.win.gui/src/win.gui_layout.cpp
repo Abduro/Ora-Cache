@@ -122,19 +122,21 @@ err_code  CLayout::Update (const t_rect& _rect) {
 		(b) each component of the view must be windowed for better isolation from each one other; (the better solution than above one);
 	*/
 	shared::Get_View().Pane().Layout().Update(rect_pane);
-#else
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 1)
+	::shared::Get_View().Status().Layout().Update(_rect);
 	this->m_draw_area.bottom -= ::shared::Get_View().Status().Layout().Height();
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
-#if defined(_test_case_lvl) && (_test_case_lvl == 2)
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+	::shared::Get_View().Tabbed().Layout().Update(this->m_draw_area);
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 3)
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
 	if (shared::Get_View().Surface()) {
 		shared::Get_View().Surface().MoveWindow(&this->m_draw_area, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
 		shared::Get_View().Surface().IEvtFrame_OnSizing(eEdges::eUndefined, &this->m_draw_area);
 	}
-#endif
-#if defined(_test_case_lvl) && (_test_case_lvl >= 0)
-	::shared::Get_View().Status().Layout().Update(_rect);
 #endif
 	return __s_ok;
 }

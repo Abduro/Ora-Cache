@@ -104,6 +104,10 @@ bool   CSet::Color (const TRgbQuad& _clr) {
 
 	return b_changed;
 }
+
+uint16_t CSet::Count (void) const {
+	return static_cast<uint16_t>(this->Raw().size());
+}
 const
 COne&  CSet::Get (const uint16_t _n_id) const {
 	_n_id;
@@ -262,26 +266,47 @@ bool  CSet_for_rect::Set (const t_rect& _rect) {
 #elif u_use_case == 2
 	using CPoint = geometry::_2D::base::CPoint;
 	/*
-		(A)— —(D) left->B::A; top->A::D; right->D::C; bottom->C::B;
+		(A)— —(D) left->B::A; top->A::D; right->D::C; bottom->C::B; thus, the direction is clockwise;
 		 |     |
 		 |     |
 		(B)— —(C)
+		Taking into account that changing window size in horizontal direction affects draw speed significantly in comparison with changing window size in vertical direction,
+		it is necessary to set priorities as to which border thickness prevails over others, that is, the thickness of the right and left borders prevails over the thickness of the upper and lower ones;
+		that is *not* like this:
+		(A )+ — — — +(D )
+		(A')+ — — — +(D')
+		    |       |
+		    |       |
+		(B')+ — — — +(C')
+		(B )+ — — — +(C )
+		but that looks exactly like this:
+		(A)(A') (D')(D) so borders' points are defined as following:
+		 +—+ — — — +—+  the left   : the begin(_rect.left (B), _rect.bottom - 1); the end(_rect.left, _rect.top (A));
+		 | |       | |  the top    : the begin(_rect.left + left.thicknes (A'), _rect.top); the end(_rect.right - right.thickness (D'), _rect.top);
+		 | |       | |  the right  : the begin(_rect.right - right.thickness (D'), _rect top); the end(_rect.right - right.thickness (C'), _rect.bottom);
+		 +—+ — — — +—+  the bottom : the begin(_rect.right - right.thickness (C'), _rect.bottom - bottom.thickness()); the end(_rect.left - left.thickness, _rect.bottom - bottom.thickness);
+		(B)(B') (C')(C)
 	*/
-	TRect rect_(_rect);
-	const CPoint cnr_A = rect_.Corner(TRect::e_corners::e_A);
-	const CPoint cnr_B = rect_.Corner(TRect::e_corners::e_B);
-	const CPoint cnr_C = rect_.Corner(TRect::e_corners::e_C);
-	const CPoint cnr_D = rect_.Corner(TRect::e_corners::e_D);
-
 	for (int16_t i_ = e_sides::e_left; i_ <= e_sides::e_bottom; i_++) {
 
 		const e_sides e_side = static_cast<e_sides>(i_);
 		
 		if (false) {} 
-		else if (e_sides::e_left   == e_side) { if (this->Left().Set(cnr_B, cnr_A))   b_changed = true; } // B->A ;
-		else if (e_sides::e_top    == e_side) { if (this->Top().Set(cnr_A, cnr_D))    b_changed = true; } // A->D ;
-		else if (e_sides::e_right  == e_side) { if (this->Right().Set(cnr_D, cnr_C))  b_changed = true; } // D->C ;
-		else if (e_sides::e_bottom == e_side) { if (this->Bottom().Set(cnr_C, cnr_B)) b_changed = true; } // C->B ;
+		else if (e_sides::e_left   == e_side) { // B->A ;
+			if (this->Left().Set(CPoint(_rect.left, _rect.bottom - 1), CPoint(_rect.left, _rect.top - 1))) b_changed = true; // subtracting one from the top has no explanation for now;
+		}
+		else if (e_sides::e_top    == e_side) { // A->D ;
+			if (this->Top().Set(CPoint(_rect.left  + this->Left().Thickness() , _rect.top),
+			                    CPoint(_rect.right - this->Right().Thickness(), _rect.top))) b_changed = true;
+		}
+		else if (e_sides::e_right  == e_side) { // D->C ;
+			if (this->Right().Set(CPoint(_rect.right - this->Right().Thickness(), _rect.top),
+			                      CPoint(_rect.right - this->Right().Thickness(), _rect.bottom - 1))) b_changed = true;
+		}
+		else if (e_sides::e_bottom == e_side) { // C->B ;
+			if (this->Bottom().Set(CPoint(_rect.right - this->Right().Thickness(), _rect.bottom - this->Bottom().Thickness()),
+			                       CPoint(_rect.left  - this->Left().Thickness() , _rect.bottom - this->Bottom().Thickness()))) b_changed = true;
+		}
 		else
 			break;
 	}	
