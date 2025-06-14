@@ -44,9 +44,10 @@ err_code CFonts::GetInstalled (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-enumfontfamiliesexa ;
 #else
 	// https://stackoverflow.com/questions/11253827/too-many-fonts-when-enumerating-with-enumfontfamiliesex-function ;
-	LPITEMIDLIST pFontList = nullptr;
+	// LPITEMIDLIST pFontList = nullptr;
+	CCoItemIdList pFontList;
 	// https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid ; >> FOLDERID_Fonts is used below;
-	this->m_error << ::SHGetKnownFolderIDList(FOLDERID_Fonts, 0, nullptr, &pFontList);
+	this->m_error << ::SHGetKnownFolderIDList(FOLDERID_Fonts, 0, nullptr, pFontList);
 	if (this->Error().Is())
 		return this->Error();
 
@@ -60,12 +61,12 @@ err_code CFonts::GetInstalled (void) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-enumobjects ;
 		if (__succeeded(pFolder->EnumObjects(nullptr, u_flags, &pEnum))) {
 
-			LPITEMIDLIST pFile = nullptr;
 			ULONG uFetched = 0;
 			STRRET s_result = {0};
 			t_char t_buffer[_MAX_PATH] = {0};
-
-			while (__s_ok == pEnum->Next(1, &pFile, &uFetched)) {
+#if (0)
+			LPITEMIDLIST  pFile = nullptr;
+			while (__s_ok == pEnum->Next(1, pFile, &uFetched)) {
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_shgdnf ;
 				// https://learn.microsoft.com/en-us/windows/win32/shell/folder-info ;
@@ -80,10 +81,31 @@ err_code CFonts::GetInstalled (void) {
 				}
 				::CoTaskMemFree(pFile);
 			}
+#else
+			do {
+				CCoItemIdList pFile;
+				this->m_error << pEnum->Next(1, pFile, &uFetched);
+				if (true == this->Error())
+					break;
+
+				this->m_error << pFolder->GetDisplayNameOf(pFile, SHGDN_NORMAL, &s_result);
+				if (true == this->Error())
+					break;
+
+				this->m_error << ::StrRetToBuf(&s_result, pFontList, t_buffer, sizeof(t_buffer));
+				if (true == this->Error())
+					break;
+
+				try {
+					this->m_installed.push_back(CString(t_buffer));
+				} catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; }
+			
+			} while (false == this->Error());
+#endif
 		}
 	}
 
-	::CoTaskMemFree(pFontList);
+//	::CoTaskMemFree(pFontList);
 #endif
 
 	return this->Error();

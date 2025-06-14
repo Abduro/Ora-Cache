@@ -112,6 +112,33 @@ namespace shared { namespace sys_core { namespace com {
 		CString  p_prog_id;
 	};
 
+	class CCoItemIdList {
+	public:
+		 CCoItemIdList (void); CCoItemIdList (const CCoItemIdList&) = delete; CCoItemIdList (CCoItemIdList&&) = delete;
+		~CCoItemIdList (void);
+
+	public:
+		bool  Is_valid (void) const; // just checks pointer value to be not equal to nullptr;
+		const
+		LPITEMIDLIST*  Ptr (void) const;
+		LPITEMIDLIST*  Ptr (void) ;
+		const
+		LPITEMIDLIST&  Ref (void) const;
+		LPITEMIDLIST&  Ref (void) ;
+
+	public:
+		operator const LPITEMIDLIST* (void) const;
+		operator       LPITEMIDLIST* (void) ;
+		operator const LPITEMIDLIST& (void) const;
+		operator       LPITEMIDLIST& (void) ;
+
+	private:
+		 CCoItemIdList&  operator = (const CCoItemIdList&) = delete;
+		 CCoItemIdList&  operator = (CCoItemIdList&&) = delete;
+
+	private:
+		LPITEMIDLIST m_p_list;
+	};
 }}}
 
 #endif/*_COM_DEF_BASE_H_INCLUDED*/

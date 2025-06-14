@@ -10,6 +10,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
@@ -31,7 +32,7 @@
     <_4>$(Color)interface\</_4>
     <_5>$(Geo-2D)interface\</_5>
     <_6>$(Win-pop)interface\</_6>
-    <_7>$(_6)msg_handlers\</_7>
+    <_7>$(Win-pop)interface\msg_handlers\</_7>
     <_8>$(CtlBase)interface\</_8><!--This library interface is being tested!-->
     <_9>$(ZBuffer)interface\</_9>
     <_a>$(MS-WTL)include\</_a>
@@ -40,10 +41,11 @@
     <_d>$(Theme)interface\</_d>
     <_e>$(Theme)interface\named\</_e>
     <_f>$(Shell)interface\</_f>
+    <_g>$(ComCore)interface\</_g>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

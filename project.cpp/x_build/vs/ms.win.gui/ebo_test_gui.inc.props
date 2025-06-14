@@ -10,6 +10,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
@@ -26,39 +27,37 @@
   <PropertyGroup>
     <Root>$(ThisExe)</Root>
   </PropertyGroup>
-  <PropertyGroup>
-    <Ctrls></Ctrls>
-  </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
     <_2>$(_1)resources\</_2>
-    <_3>$(_2)icons\</_3>
-    <_4>$(Shared)interface\</_4>
-    <_5>$(Error)interface\</_5>
-    <_6>$(_5)seh\</_6>
-    <_7>$(Geo-2d)interface\</_7>
-    <_8>$(Color)interface\</_8>
-    <_9>$(Render)interface\</_9>
-    <_a>$(Win-pop)interface\</_a>
-    <_b>$(_a)msg_handlers\</_b>
-    <_c>$(_1)render\</_c>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
-    <_d>$(_9)direct_x\</_d>
-    <_e>$(_1)themes\</_e>
-    <_f>$(ZBuffer)interface\</_f>
-    <_g>$(CtlBase)interface\</_g>
+    <_3>$(_1)render\</_3>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
+    <_4>$(_1)themes\</_4>
+    <_5>$(_2)icons\</_5>
+    <_6>$(Shared)interface\</_6>
+    <_7>$(Error)interface\</_7>
+    <_8>$(Error)interface\seh\</_8>
+    <_9>$(ComCore)interface\</_9>
+    <_a>$(Shell)interface\</_a>
+    <_b>$(Color)interface\</_b>
+    <_c>$(Color)interface\compl\</_c>
+    <_d>$(Color)interface\named\</_d>
+    <_e>$(Theme)interface\</_e>
+    <_f>$(Theme)interface\named\</_f>
+    <_g>$(Geo-2d)interface\</_g>
     <_h>$(MS-WTL)include\</_h>
-    <_j>$(SfxStatus)interface\</_j>
-    <_k>$(Theme)interface\</_k>
-    <_l>$(Theme)interface\named\</_l>
-    <_m>$(Shell)interface\</_m>
-    <_n>$(Color)interface\compl\</_n>
-    <_o>$(Color)interface\named\</_o>
-    <_p>$(SfxTabbed)interface\</_p>
+    <_j>$(Win-pop)interface\</_j>
+    <_k>$(Win-pop)interface\msg_handlers\</_k>
+    <_l>$(Render)interface\</_l>
+    <_m>$(Render)interface\direct_x\</_m>
+    <_n>$(ZBuffer)interface\</_n>
+    <_o>$(CtlBase)interface\</_o>
+    <_p>$(SfxStatus)interface\</_p>
+    <_q>$(SfxTabbed)interface\</_q>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />

@@ -32,14 +32,14 @@
     <ClCompile Include="$(_1)win.gui_view.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)win.gui_wnd.h"><Filter>src</Filter></ClInclude>
     <ClCompile Include="$(_1)win.gui_wnd.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_c)direct_x.surface.h"><Filter>src\render</Filter></ClInclude>
-    <ClCompile Include="$(_c)direct_x.surface.cpp"><Filter>src\render</Filter></ClCompile>
-    <ClInclude Include="$(_c)direct_x.wrap.h"><Filter>src\render</Filter></ClInclude>
-    <ClCompile Include="$(_c)direct_x.wrap.cpp"><Filter>src\render</Filter></ClCompile>
-    <ClInclude Include="$(_e)ebo.sha.dwm.wrap.h"><Filter>src\themes</Filter></ClInclude>
-    <ClCompile Include="$(_e)ebo.sha.dwm.wrap.cpp"><Filter>src\themes</Filter></ClCompile>
-    <ClInclude Include="$(_e)ebo.sha.gui.theme.h"><Filter>src\themes</Filter></ClInclude>
-    <ClCompile Include="$(_e)ebo.sha.gui.theme.cpp"><Filter>src\themes</Filter></ClCompile>
+    <ClInclude Include="$(_3)direct_x.surface.h"><Filter>src\render</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.surface.cpp"><Filter>src\render</Filter></ClCompile>
+    <ClInclude Include="$(_3)direct_x.wrap.h"><Filter>src\render</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.wrap.cpp"><Filter>src\render</Filter></ClCompile>
+    <ClInclude Include="$(_4)ebo.sha.dwm.wrap.h"><Filter>src\themes</Filter></ClInclude>
+    <ClCompile Include="$(_4)ebo.sha.dwm.wrap.cpp"><Filter>src\themes</Filter></ClCompile>
+    <ClInclude Include="$(_4)ebo.sha.gui.theme.h"><Filter>src\themes</Filter></ClInclude>
+    <ClCompile Include="$(_4)ebo.sha.gui.theme.cpp"><Filter>src\themes</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(_0)win.gui.app.manifest">
@@ -55,7 +55,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="$(_3)wanderer_rootless.ico">
+    <Image Include="$(_5)wanderer_rootless.ico">
       <Filter>src\resources\icons</Filter>
     </Image>
   </ItemGroup>

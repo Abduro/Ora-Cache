@@ -17,6 +17,8 @@
 #include "sys.err.codes.h"
 #include "sys.error.h"
 
+#include "com.def.base.h"
+
 #define STRICT_TYPED_ITEMIDS // https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist ;
 
 namespace shared { namespace sys_core { namespace shell {
@@ -24,6 +26,8 @@ namespace shared { namespace sys_core { namespace shell {
 	using namespace shared::types;
 	using CError  = shared::sys_core::CError;
 	using TError  = const CError;
+
+	using CCoItemIdList = shared::sys_core::com::CCoItemIdList;
 
 }}}
 

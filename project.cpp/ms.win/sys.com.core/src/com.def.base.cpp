@@ -217,3 +217,29 @@ bool  CProgId::Has (const _guid& _cls_id) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CCoItemIdList:: CCoItemIdList (void) : m_p_list(nullptr) {}
+CCoItemIdList::~CCoItemIdList (void) {
+	if (this->Is_valid()) {
+		::CoTaskMemFree(this->m_p_list); this->m_p_list = nullptr;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool  CCoItemIdList::Is_valid (void) const { return !!this->m_p_list; }
+
+const
+LPITEMIDLIST*  CCoItemIdList::Ptr (void) const { return &this->m_p_list; }
+LPITEMIDLIST*  CCoItemIdList::Ptr (void)       { return &this->m_p_list; }
+const
+LPITEMIDLIST&  CCoItemIdList::Ref (void) const { return  this->m_p_list; }
+LPITEMIDLIST&  CCoItemIdList::Ref (void)       { return  this->m_p_list; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CCoItemIdList::operator const LPITEMIDLIST* (void) const { return this->Ptr(); }
+CCoItemIdList::operator       LPITEMIDLIST* (void)       { return this->Ptr(); }
+
+CCoItemIdList::operator const LPITEMIDLIST& (void) const { return this->Ref(); }
+CCoItemIdList::operator       LPITEMIDLIST& (void)       { return this->Ref(); }
