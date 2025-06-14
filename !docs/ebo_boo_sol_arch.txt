@@ -50,11 +50,12 @@
 		
 	test.cases : {00000C13-EEEE-BBBB-6667-100000002000} << the root of test cases' projects;
 		core : {00000C13-EEEE-BBBB-6667-100000002100} << core wrapper projects' node;
-			ebo_test_$$$     : {00000C13-EEEE-BBBB-6667-C00000060000} << shared/common unit test lib project;
-			ebo_test_$0$.base: {00000C13-EEEE-BBBB-6667-000000060001} << test cases for generic shared project;
-			ebo_test_$1$.err : {00000C13-EEEE-BBBB-6667-00000006A101} << test cases for system error wrapper lib;
-			ebo_test_$3$.com : {00000C13-EEEE-BBBB-6667-00000006A301} << test cases for COM-wrapper lib;
-			ebo_test_$2$.mem : {00000C13-EEEE-BBBB-6667-00000006A201} << test cases for system memory wrapper lib;
+			ebo_test_$$$       : {00000C13-EEEE-BBBB-6667-C00000060000} << shared/common unit test lib project;
+			ebo_test_$0$.base  : {00000C13-EEEE-BBBB-6667-000000060001} << test cases for generic shared project;
+			ebo_test_$1$.err   : {00000C13-EEEE-BBBB-6667-00000006A101} << test cases for system error wrapper lib;
+			ebo_test_$3$.com   : {00000C13-EEEE-BBBB-6667-00000006A301} << test cases for COM-wrapper lib;
+			ebo_test_$2$.mem   : {00000C13-EEEE-BBBB-6667-00000006A201} << test cases for system memory wrapper lib;
+			ebo_test_$4$.shell : {00000C13-EEEE-BBBB-6667-00000006000D} << test cases for system shell wrapper lib;
 
 		uix  : {00000C13-EEEE-BBBB-6667-100000002200} << draing and GUI related projects' node;
 			controls : {00000C13-EEEE-BBBB-6667-100000002250} << the node for user control projects' testing;

@@ -6,6 +6,7 @@
 */
 #include <atlbase.h>
 #include <dwmapi.h>
+#include <shlobj.h>     // for font enumeration in the system 'Font' folder;
 #include <sysinfoapi.h> // for getting OS version, it is required for DwmGetWindowAttribute() & DwmSetWindowAttribute();
 #include <winreg.h>     // required to be included after 'atlbase.h', otherwise the error C1189: "No Target Architecture";
 
@@ -15,6 +16,8 @@
 #include "shared.types.h"
 #include "sys.err.codes.h"
 #include "sys.error.h"
+
+#define STRICT_TYPED_ITEMIDS // https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist ;
 
 namespace shared { namespace sys_core { namespace shell {
 

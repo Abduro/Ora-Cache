@@ -13,5 +13,7 @@
     <ClCompile Include="$(_1)sys.shell.inc.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.shell.dwm.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.shell.dwm.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.shell.font.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.shell.font.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>
