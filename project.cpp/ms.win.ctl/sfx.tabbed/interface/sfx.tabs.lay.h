@@ -8,7 +8,56 @@
 
 namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class CControl;
 
+	using CSides = ex_ui::controls::layout::CMargins_of_rect::CSides;
+	using eSide  = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
+
+	class CLayout;
+
 namespace layout {
+
+	using namespace ex_ui::controls::sfx::tabbed;
+	using CLayout = ex_ui::controls::sfx::tabbed::CLayout;
+
+	class CTabs { friend class ex_ui::controls::sfx::tabbed::CLayout;
+	public :
+		 CTabs (void); CTabs (const CTabs&) = delete; CTabs (CTabs&&) = delete;
+		~CTabs (void);
+
+	public:
+		uint32_t  Gap (void) const;
+		uint32_t& Gap (void)      ;
+		bool      Gap (const uint32_t _u_value);
+
+		uint32_t  Height(void) const;
+		uint32_t& Height(void)      ;     // sets a height of all tabs;
+		bool      Height(const uint32_t); // sets a height of all tabs; returns 'true' in case if the height value is changed;
+
+		uint32_t  Ledge (void) const;
+		uint32_t& Ledge (void)      ;
+		bool      Ledge (const uint32_t);
+
+		t_rect    Rect  (void) const;     // gets a rectangle of tabs area;
+
+		eSide     Side  (void) const;     // gets a side where all tabs reside;
+		eSide&    Side  (void)      ;     // sets a side where all tabs reside;
+		bool      Side  (const TSide);
+		// ToDo: t_size must be replaced to geometry::_2D::base::CSize_U;
+		const
+		t_size&   Size  (void) const;     // gets a size of each tab;
+		uint32_t& Width (void)      ;     // sets a width of each tab;
+		bool      Width (const uint32_t&);
+
+	private:
+		CTabs&  operator = (const CTabs&) = delete;
+		CTabs&  operator = (CTabs&&) =  delete;
+
+	private:
+		CSides   m_sides  ;   // sides of tab control where tabs can be located; the top side is default;
+		t_size   m_size   ;   // a size of each tab;
+		t_rect   m_rect   ;   // entire area of tabs, including free space of the background;
+		uint32_t m_gap    ;   // a gap between tabs;
+		uint32_t m_ledge  ;   // extra part of tabs which resides out of tab area; this part of tabs overlaps parent window area; by default is 3;
+	};
 }
 
 	class CLayout {
@@ -24,12 +73,12 @@ namespace layout {
 		err_code  Update (const t_rect& _rc_area);   // updates tabbed control window position into an area provided;
 
 	public:
-		CLayout& operator <<(const t_rect& _rc_area);        // updates tabbed control window position in accordance with area  ;
-		t_rect   operator = (const t_rect& _rc_area) const;  // returns calculated rectangle of tabbed control for area provided;
+		CLayout&  operator <<(const t_rect& _rc_area);        // updates tabbed control window position in accordance with area  ;
+		t_rect    operator = (const t_rect& _rc_area) const;  // returns calculated rectangle of tabbed control for area provided;
 
 	private:
-		CLayout& operator = (const CLayout&) = delete;
-		CLayout& operator = (CLayout&&) = delete;
+		CLayout&  operator = (const CLayout&) = delete;
+		CLayout&  operator = (CLayout&&) = delete;
 
 	private:
 		mutable
@@ -48,53 +97,6 @@ namespace ST_Ctrls { class CTabbed; namespace layout {
 	using ex_ui::controls::CSides;
 	using ex_ui::controls::TSide ;
 	using ex_ui::controls::CMargins;
-
-#if (0)
-	class CTab {
-	private:
-		RECT   m_rect;
-
-	public:
-		 CTab (void);
-		 CTab (const CTab&);
-		~CTab (void);
-
-	public:
-		const
-		RECT&   Rect (void) const;
-		HRESULT Rect (const RECT&)      ;
-
-	public:
-		CTab&   operator = (const CTab&);
-		CTab&   operator <<(const RECT&);
-	};
-#endif
-	class CTabs { friend class CTabLayout;
-	private:
-		CSides   m_side   ;   // sides of tab control where tabs can be located; the top side is default;
-		SIZE     m_size   ;   // a size of each tab;
-		RECT     m_rect   ;   // entire area of tabs, including free space of the background;
-		DWORD    m_gap    ;   // a gap between tabs;
-		DWORD    m_ledge  ;   // extra part of tabs wich resides out of tab area;
-		                      // this part of tabs overlaps parent window area; by default is 3;
-	public :
-		 CTabs (void);
-		~CTabs (void);
-
-	public:
-		DWORD    Gap   (void) const;
-		DWORD&   Gap   (void)      ;
-		DWORD    Height(void) const;
-		DWORD&   Height(void)      ; // sets a height of all tabs;
-		DWORD    Ledge (void) const;
-		DWORD&   Ledge (void)      ;
-		RECT     Rect  (void) const; // gets a rectangle of tabs area;
-		TSide    Side  (void) const; // gets a side where all tabs reside;
-		TSide&   Side  (void)      ; // sets a side where all tabs reside;
-		const
-		SIZE&    Size  (void) const; // gets a size of each tab;
-		DWORD&   Width (void)      ; // sets a width of each tab;
-	};
 
 	class CTabLayout {
 	protected:
@@ -134,4 +136,5 @@ typedef ST_Ctrls::layout::CTabs       TTabs;
 typedef ST_Ctrls::layout::TSide       TTabsSide;
 typedef ST_Ctrls::layout::CTabLayout  TTabsLay ;
 #endif
+
 #endif/*_SFXTABSLAY_H_ED51B0CD_0B83_4607_923A_CC1046DCD60A_INCLUDED*/

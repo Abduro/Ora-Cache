@@ -33,10 +33,10 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
 		brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
-	#if defined(_test_case_lvl) && (_test_case_lvl == 0)
+	#if (0)
 		// if setting the background brash is made several times, returned brush handle must be destroyed?
 		brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_caption, TThemeElement::e_back));
-	#else
+	#elif (1==0)
 		const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
 		brush = ::CreateSolidBrush(set_.Dark());
 	#endif
@@ -92,10 +92,9 @@ err_code CWnd::IEvtLife_OnClose  (const w_param, const l_param) {
 err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
-
-	m_layout.Window() = *this;     // ATL::CWindow operator is applied here;
-	t_rect rc_surface = m_layout.DrawArea();
+	
 #if (0)
+	t_rect rc_surface = m_layout.DrawArea();
 	HWND h_surface = this->m_surface.Create(TBase::m_hWnd, &rc_surface, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE);
 	if ( h_surface ) {
 		_render().Init(h_surface); // this view window does not care about renderer init() result;
@@ -109,8 +108,16 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	::shared::Get_View().Tabbed().Create(*this, 0xB);
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 3)
+	t_rect rc_surface = m_layout.DrawArea();
 	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
 #endif
+
+	t_rect rc_client = {0};
+	this->GetClientRect(&rc_client);
+
+	m_layout.Window() = *this;     // ATL::CWindow operator is applied here;
+	m_layout.Update(rc_client);
+
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	return n_result;

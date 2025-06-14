@@ -5,7 +5,7 @@
 #include "sys.shell.font.h"
 
 using namespace shared::sys_core::shell;
-
+#if (0)
 CFontStub:: CFontStub (void) : m_log{0} {}
 CFontStub:: CFontStub (const CFontStub& _src) : CFontStub() { *this = _src; }
 CFontStub:: CFontStub (CFontStub&& _victim) : CFontStub() { *this = _victim; }
@@ -24,7 +24,7 @@ CFontStub&  CFontStub::operator <<(const LOGFONT& _log) {  this->Raw() = _log; r
 
 CFontStub::operator const LOGFONT& (void) const { return this->Raw(); }
 CFontStub::operator       LOGFONT& (void)       { return this->Raw(); }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 CFonts:: CFonts (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
@@ -40,12 +40,16 @@ err_code CFonts::GetInstalled (void) {
 
 	if (this->m_installed.empty() == false)
 		this->m_installed.clear();
+
 #if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-enumfontfamiliesexa ;
 #else
 	// https://stackoverflow.com/questions/11253827/too-many-fonts-when-enumerating-with-enumfontfamiliesex-function ;
-	// LPITEMIDLIST pFontList = nullptr;
+#if (0)
+	LPITEMIDLIST  pFontList = nullptr;
+#else
 	CCoItemIdList pFontList;
+#endif
 	// https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid ; >> FOLDERID_Fonts is used below;
 	this->m_error << ::SHGetKnownFolderIDList(FOLDERID_Fonts, 0, nullptr, pFontList);
 	if (this->Error().Is())
@@ -85,7 +89,7 @@ err_code CFonts::GetInstalled (void) {
 			do {
 				CCoItemIdList pFile;
 				this->m_error << pEnum->Next(1, pFile, &uFetched);
-				if (true == this->Error())
+				if (true == this->Error() || false == pFile.Is_valid()) // in case when the next item does not exist must be handled also;
 					break;
 
 				this->m_error << pFolder->GetDisplayNameOf(pFile, SHGDN_NORMAL, &s_result);
@@ -104,11 +108,35 @@ err_code CFonts::GetInstalled (void) {
 #endif
 		}
 	}
-
-//	::CoTaskMemFree(pFontList);
+#if (0)
+	::CoTaskMemFree(pFontList);
 #endif
-
+	if (1 < this->List().size()) {
+		::std::sort(this->m_installed.begin(), this->m_installed.end());
+	}
+#endif
 	return this->Error();
+}
+
+bool     CFonts::Has  (_pc_sz _p_name) const {
+	_p_name;
+	CString cs_name(_p_name); cs_name.Trim();
+
+	if (cs_name.IsEmpty())
+		return false;
+
+	if (this->List().empty())
+		return false;
+
+	bool b_found = false;
+
+	for (uint16_t i_ = 0; i_ < this->List().size(); i_++) {
+		b_found = -1 != this->List().at(i_).Find((_pc_sz) cs_name);
+		if (b_found)
+			break;
+	}
+
+	return b_found;
 }
 
 const

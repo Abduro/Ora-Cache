@@ -115,12 +115,46 @@ namespace ex_ui { namespace controls { namespace layout {
 
 	class CGaps_of_rect : public CGapSet { typedef CGapSet TBase;
 	public:
-		enum e_sides : int16_t {
-			e_left = 0, e_top, e_right, e_bottom
+		class CSides {
+		public:
+			enum _part : int16_t {
+				e_left   = 0x0,
+				e_top    = 0x1, // by default;
+				e_right  = 0x2,
+				e_bottom = 0x3,
+			};
+			static const int16_t n_count = 4;
+		public:
+			 CSides (void);
+			 CSides (const _part _selected); CSides (CSides&&) = delete;
+			 CSides (const CSides&);
+			~CSides (void);
+
+		public:
+			_part   Selected(void) const;
+			_part&  Selected(void)      ;
+
+		public:
+			CSides& operator = (const CSides&);
+			CSides& operator = (CSides&&) = delete;
+			CSides& operator <<(const _part _selected) ;
+
+		protected:
+			_part  m_selected;
+
+		public:
+			typedef	_part  _e;
+			static size_t     EnumToIndex(const CSides::_part);
+			static CString    EnumToName (const CSides::_part);
+			static CSides::_e IndexToEnum(const size_t);        // if given index is greater than e_bottom, default e_top is returned;
 		};
+	public:
+		using e_sides = CSides::_part;
+		
 	public:
 		 CGaps_of_rect (void); CGaps_of_rect (const CGaps_of_rect&); CGaps_of_rect (CGaps_of_rect&&) = delete;
 		~CGaps_of_rect (void);
+
 	public:
 		/* this::ApplyTo(): possibly the second parameter is required for indicating how to apply gaps for calculating margins or padding,
 		   but it can be made by specifying appropriate sign for particular gap value, because gaps' values are always added to sides of input rectangle;

@@ -59,8 +59,8 @@ CColor_Matrix:: CColor_Matrix (void) {
 			{ TThemePart::e_edit   , {{ TThemeElement::e_back  , {{ TThemeState::e_default , RGB(  70,  70,  70) }, { TThemeState::e_disabled, RGB(  70,  70,  70) }} },
 			                          { TThemeElement::e_border, {{ TThemeState::e_default , RGB( 115, 115, 115) }, { TThemeState::e_disabled, RGB( 115, 115, 115) }} },
 			                          { TThemeElement::e_fore  , {{ TThemeState::e_default , RGB( 230, 230, 230) }, { TThemeState::e_disabled, RGB( 230, 230, 230) }} }}},
-			{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default , RGB(  39,  39,  39) }} },     // 61, 61, 61
-			                          { TThemeElement::e_border, {{ TThemeState::e_default , RGB( 229, 183,  66) }} },     // #e5b742
+			{ TThemePart::e_form   , {{ TThemeElement::e_back  , {{ TThemeState::e_default , RGB(  39,  39,  39) }} },
+			                          { TThemeElement::e_border, {{ TThemeState::e_default , RGB(  61,  61,  61) }, { TThemeState::e_selected, RGB( 229, 183,  66) }} },
 			                          { TThemeElement::e_fore  , {{ TThemeState::e_default , RGB( 230, 230, 230) }} } }},
 			{ TThemePart::e_label  , {{ TThemeElement::e_back  , {{ TThemeState::e_default , RGB(  70,  70,  70) }} },
 			                          { TThemeElement::e_fore  , {{ TThemeState::e_default , RGB( 230, 230, 230) }} } }},

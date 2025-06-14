@@ -10,6 +10,60 @@ using namespace ex_ui::controls::sfx::tabbed::layout;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CTabs:: CTabs(void) : m_ledge(3), m_rect{0}, m_size{0}, m_gap(0) {
+	this->m_size.cy = 31;
+	this->m_size.cx = this->m_size.cy * 5; this->m_gap = this->m_size.cy / 2;
+}
+CTabs::~CTabs(void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+uint32_t  CTabs::Gap (void) const { return m_gap; }
+uint32_t& CTabs::Gap (void)       { return m_gap; }
+bool      CTabs::Gap (const uint32_t _n_value) {
+	_n_value;
+	const bool b_changed = this->Gap() != _n_value;
+	if (b_changed)
+		this->m_gap = _n_value;
+
+	return b_changed;
+}
+
+uint32_t  CTabs::Height (void) const { return (uint32_t )m_size.cy; }
+uint32_t& CTabs::Height (void)       { return (uint32_t&)m_size.cy; }
+bool      CTabs::Height (const uint32_t _n_value) {
+	_n_value;
+	const bool b_changed = this->Height() != _n_value;
+	if (b_changed)
+		this->m_size.cy = _n_value;
+
+	return b_changed;
+}
+
+uint32_t  CTabs::Ledge (void) const { return m_ledge; }
+uint32_t& CTabs::Ledge (void)       { return m_ledge; }
+bool      CTabs::Ledge (const uint32_t _n_value) {
+	_n_value;
+	const bool b_changed = this->Ledge() != _n_value;
+	if (b_changed)
+		this->m_ledge = _n_value;
+
+	return b_changed;
+}
+
+t_rect    CTabs::Rect  (void) const { return m_rect ; }
+
+eSide     CTabs::Side  (void) const { return m_sides.Selected()  ; }
+eSide&    CTabs::Side  (void)       { return m_sides.Selected()  ; }
+
+const
+t_size&   CTabs::Size  (void) const { return m_size; }
+uint32_t& CTabs::Width (void)       { return (uint32_t&)m_size.cx; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+
 CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
 CLayout::~CLayout (void) {}
 
@@ -87,78 +141,3 @@ t_rect    CLayout::operator =(const t_rect& _rc_area) const {
 	rc_  = _rc_area;
 	return rc_;
 }
-#if (0)
-/////////////////////////////////////////////////////////////////////////////
-#if (0)
-CTab:: CTab (void) { ::SetRectEmpty(&m_rect); }
-CTab:: CTab (const CTab& _ref) : CTab() { *this = _ref; }
-CTab::~CTab (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-const
-RECT&   CTab::Rect (void) const { return m_rect; }
-HRESULT CTab::Rect (const RECT& _rect) { if (::IsRectEmpty(&_rect)) return OLE_E_INVALIDRECT; ::CopyRect(&m_rect, &_rect); return S_OK; } 
-
-/////////////////////////////////////////////////////////////////////////////
-
-CTab&   CTab::operator = (const CTab& _ref) { *this << _ref.Rect(); return *this; }
-CTab&   CTab::operator <<(const RECT& _rect) { this->Rect(_rect); return *this; }
-#endif
-/////////////////////////////////////////////////////////////////////////////
-
-TTabs:: CTabs(void) : m_gap(0), m_ledge(3) {
-	::SetRectEmpty(&m_rect); m_size.cy = 31; m_size.cx = m_size.cy * 5; m_gap = m_size.cy / 2;
-}
-TTabs::~CTabs(void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-DWORD    TTabs::Gap   (void) const { return m_gap; }
-DWORD&   TTabs::Gap   (void)       { return m_gap; }
-DWORD    TTabs::Height(void) const { return (DWORD )m_size.cy; }
-DWORD&   TTabs::Height(void)       { return (DWORD&)m_size.cy; }
-DWORD    TTabs::Ledge (void) const { return m_ledge; }
-DWORD&   TTabs::Ledge (void)       { return m_ledge; }
-RECT     TTabs::Rect  (void) const { return m_rect  ; }
-TSide    TTabs::Side  (void) const { return m_side.Selected()  ; }
-TSide&   TTabs::Side  (void)       { return m_side.Selected()  ; }
-const
-SIZE&    TTabs::Size  (void) const { return m_size  ; }
-DWORD&   TTabs::Width (void)       { return (DWORD&)m_size.cx; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CTabLayout:: CTabLayout (TTabCtrl& _ctrl) : m_control(_ctrl) { m_error << __MODULE__ << S_OK >> __MODULE__; }
-CTabLayout::~CTabLayout (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-TErrorRef   CTabLayout::Error  (void) const { return m_error; }
-const
-CMargins&   CTabLayout::Margins(void) const { return m_margins; }
-CMargins&   CTabLayout::Margins(void)       { return m_margins; }
-RECT        CTabLayout::Page   (void) const {
-	m_error << __MODULE__ << S_OK;
-	RECT rc_page = {0};
-
-	CWindow wnd_ = m_control.Window();
-	if (wnd_.IsWindow() == FALSE) {
-		m_error << OLE_E_INVALIDHWND;
-		return rc_page;
-	}
-
-	wnd_.GetClientRect(&rc_page); rc_page.top = m_tabs.m_rect.bottom;
-	
-	rc_page.left   += m_control.Format().Borders().Left().Thickness();
-	rc_page.right  -= m_control.Format().Borders().Right().Thickness();
-	rc_page.bottom -= m_control.Format().Borders().Bottom().Thickness();
-	
-	m_margins.ApplyTo(rc_page);
-
-	return rc_page;
-}
-const
-TTabs&      CTabLayout::Tabs   (void) const { return m_tabs ; }
-TTabs&      CTabLayout::Tabs   (void)       { return m_tabs ; }
-
-#endif

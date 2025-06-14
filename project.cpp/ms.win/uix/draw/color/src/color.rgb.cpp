@@ -148,7 +148,7 @@ CQuad&  CQuad::operator = (const CQuad& _ref) { *this << _ref.Is() << _ref.ToRgb
 CQuad&  CQuad::operator = (CQuad&& _victim) { *this = _victim; /*_victim.Reset();*/ return *this; }
 
 CQuad&  CQuad::operator <<(bool _valid) { this->Is() = _valid; return *this; }
-CQuad&  CQuad::operator <<(rgb_color _color) { this->Set(_color, value_max); return *this; }
+CQuad&  CQuad::operator <<(rgb_color _color) { this->Set(_color, /*value_max*/0x0, true); return *this; }
 CQuad&  CQuad::operator <<(clr_value _alpha) { this->A(_alpha); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////

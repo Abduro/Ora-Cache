@@ -40,14 +40,21 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(_dev_ctx, rc_area);
-
+#if (0)
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
 
 	z_buffer.Draw(rc_area, set_.Dark()/*_r_g_b(200, 200, 200)*/);
-
+#elif (1==0)
+	z_buffer.Draw(rc_area, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
+#else
+	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb());
+#endif
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 	const CBorder& top_ = this->m_ctrl.Borders().Top();
-
+#if (0)
+	CBorder border = top_;
+	border.Color().A(0);
+#endif
 	if (top_.Is_valid()) {
 		z_buffer.Draw(top_);
 	}

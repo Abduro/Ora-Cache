@@ -14,7 +14,7 @@ CView:: CView (void) {
 	this->Pane().Borders().Top().Color() << shared::Get_Theme().Get(TThemePart::e_panel, TThemeElement::e_border);
 
 	this->Pane().Format().Bkgnd() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
-#else
+#elif (1==0)
 	this->Status().Borders().Top().Thickness(1);
 	this->Status().Borders().Top().Color() << shared::Get_Theme().Get(TThemePart::e_panel, TThemeElement::e_border);
 #endif

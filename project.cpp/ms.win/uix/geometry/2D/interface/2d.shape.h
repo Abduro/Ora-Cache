@@ -121,8 +121,8 @@ namespace geometry { namespace _2D { namespace shapes {
 
 #if defined (_DEBUG)
 		enum e_prn_details {
-		e_out_sides  = 0,
-		e_out_points = 1,
+		     e_out_sides  = 0,
+		     e_out_points = 1,
 		};
 		CString Print (const e_print = e_print::e_all, const e_prn_details = e_prn_details::e_out_points) const;
 #endif

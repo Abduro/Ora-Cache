@@ -19,6 +19,8 @@ void CFormat::Default (void) {
 
 	this->m_ctrl.Borders() << (uint8_t)1;
 	this->m_ctrl.Borders().Base() << TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border));
+
+	TBase::Bkgnd().Solid() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
 }
 #if(0)
 using namespace ST_Ctrls::format;

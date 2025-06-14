@@ -39,11 +39,15 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(_dev_ctx, rc_area);
-
+#if (0)
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
 
 	z_buffer.Draw(rc_area, set_.Dark());
-
+#elif (1==0)
+	z_buffer.Draw(rc_area, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
+#else
+	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb()); // ToRgb() must be called, otherwise, black screen due to GDI does not know alpha channel;
+#endif
 	using ex_ui::controls::borders::TRawBorders;
 
 	for(TRawBorders::const_iterator iter_ = this->m_ctrl.Borders().Raw().begin(); iter_ != this->m_ctrl.Borders().Raw().end(); ++iter_) {

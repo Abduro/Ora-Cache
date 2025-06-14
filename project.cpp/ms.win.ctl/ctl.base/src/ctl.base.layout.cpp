@@ -150,6 +150,52 @@ CMargins& CMargins::operator <<(const TRawMargins& _raw) { this->Set(_raw); retu
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
+CGaps_of_rect::CSides:: CSides (void) : m_selected(_part::e_top) {}
+CGaps_of_rect::CSides:: CSides (const _part _selected) : CSides() { *this << _selected; }
+CGaps_of_rect::CSides:: CSides (const CSides& _ref) : CSides() { *this = _ref; }
+CGaps_of_rect::CSides::~CSides (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CGaps_of_rect::CSides::_part  CGaps_of_rect::CSides::Selected (void) const { return m_selected; }
+CGaps_of_rect::CSides::_part& CGaps_of_rect::CSides::Selected (void)       { return m_selected; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CGaps_of_rect::CSides&  CGaps_of_rect::CSides::operator = (const CSides& _ref) { *this << _ref.Selected(); return *this; }
+CGaps_of_rect::CSides&  CGaps_of_rect::CSides::operator <<(const _part _selected) { this->Selected() = _selected; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+size_t   CGaps_of_rect::CSides::EnumToIndex(const CSides::_part _value) {
+	_value;
+	size_t ndx_ = static_cast<size_t>(_value);
+	return ndx_;
+}
+
+CString  CGaps_of_rect::CSides::EnumToName (const CSides::_part _value) {
+	_value;
+	CString cs_name(_T("#Undef"));
+
+	switch(_value) {
+	case CSides::e_bottom: { cs_name = _T("Bottom"); } break;
+	case CSides::e_left  : { cs_name = _T("Left");   } break;
+	case CSides::e_right : { cs_name = _T("Right");  } break;
+	case CSides::e_top   : { cs_name = _T("Top");    } break;
+	}
+	return cs_name;
+}
+
+CGaps_of_rect::CSides::_e CGaps_of_rect::CSides::IndexToEnum(const size_t _ndx) {
+	_ndx;
+	if (_ndx <= CSides::e_bottom)
+		return static_cast<CSides::_e>(_ndx);
+	else
+		return CSides::e_top;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CGaps_of_rect:: CGaps_of_rect (void) : TBase() {
 
 	try {

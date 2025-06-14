@@ -10,7 +10,8 @@ namespace shared { namespace sys_core { namespace shell {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-enumfontfamiliesexa ;
 	// https://learn.microsoft.com/en-us/previous-versions/dd162618(v=vs.85) ;
-
+	// this stuff is not required yet;
+#if (0)
 	class CFontStub {
 	public:
 		 CFontStub (void); CFontStub (const CFontStub&); CFontStub(CFontStub&&);
@@ -34,8 +35,11 @@ namespace shared { namespace sys_core { namespace shell {
 	};
 
 	typedef ::std::vector<CFontStub> TFntInstalled;
+#endif
 	typedef ::std::vector<CString> TFntList;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-addfontresourcea   ; for installing the required font dynamicalli;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-addfontresourceexa ; for the private access;
 	// this class enumerates all installed fonts in the operating system;
 	class CFonts {
 	public:
@@ -49,6 +53,7 @@ namespace shared { namespace sys_core { namespace shell {
 		const
 		TFntInstalled&  Raw (void) const;
 #else
+		bool     Has  (_pc_sz _p_name) const; // returns 'true' in case of installed font set containse the font of the input name;
 		const
 		TFntList List (void) const;
 #endif

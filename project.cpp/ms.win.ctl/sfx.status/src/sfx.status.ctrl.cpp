@@ -26,8 +26,12 @@ CControl::~CControl (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 const
-CBorders& CControl::Borders (void) const { return m_borders; }
-CBorders& CControl::Borders (void)       { return m_borders; }
+CBorders& CControl::Borders (void) const {
+	return m_borders;
+}
+CBorders& CControl::Borders (void)       {
+	return m_borders;
+}
 
 err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	hParent; _ctrl_id;

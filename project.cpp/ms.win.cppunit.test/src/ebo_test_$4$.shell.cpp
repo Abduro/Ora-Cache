@@ -25,14 +25,36 @@ void CFonts::_ctor (void) {
 
 }
 
-void CFonts::Set (void) {
+void CFonts::Has (void) {
 
 	_out() += TLog_Acc::e_new_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	this->m_fonts.GetInstalled();
+	if (this->m_fonts.Error()) {
+		_out() += this->m_fonts.Error().Print(TError::e_print::e_req);
+	}
+	else {
+
+		CString cs_name(_T("Pirulen"));
+
+		_out() += TStringEx().Format(_T("Trying to find font: %s..."), (_pc_sz) cs_name);
+
+		if (this->m_fonts.Has((_pc_sz)cs_name))
+			_out() += _T("*result* : installed");
+		else
+			_out() += _T("*result* : not installed");
+	}
+	_out()();
+}
+
+void CFonts::GetInstalled (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	this->m_fonts.GetInstalled(); // no check for error this time;
 
 	_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_fonts.Print(e_print::e_all));
 	_out()();
-
 }

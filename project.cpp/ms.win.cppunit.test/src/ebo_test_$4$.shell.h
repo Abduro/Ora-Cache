@@ -20,7 +20,8 @@ namespace ebo { namespace boo { namespace test { namespace shell {
 
 	public:
 		__ctor (_ctor);
-		__method (Set);
+		__method (Has);
+		__method (GetInstalled);
 
 	private:
 		bool    m_b_verb;
