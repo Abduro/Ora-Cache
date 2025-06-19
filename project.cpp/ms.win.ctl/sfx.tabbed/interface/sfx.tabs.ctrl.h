@@ -8,6 +8,7 @@
 	Adopted to Ebo Pack on 12-Jul-2020 at 8:23:49p, UTC+7, Novosibirsk, Sunday;
 */
 #include "sfx.tabs.fmt.h"
+#include "sfx.tabs.ext.h"
 #include "sfx.tabs.inc.h"
 #include "sfx.tabs.lay.h"
 
@@ -15,7 +16,17 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
 
 	using namespace ex_ui::controls::sfx;
 
-	class CControl {
+	interface ITabEvents {
+		virtual err_code ITabEvent_OnAppend (const CTab&)    = 0;
+		virtual err_code ITabEvent_OnFormat (const CFormat&) = 0;
+		virtual err_code ITabEvent_OnRemove (const uint16_t _tab_id) = 0; 
+		virtual err_code ITabEvent_OnSelect (const int16_t _tab_ndx) = 0;
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/controls/create-a-tabbed-dialog-box ;
+	// https://learn.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/aa228545(v=vs.60)?redirectedfrom=MSDN ;
+
+	class CControl : public ITabEvents { // ITabEvents interface is used as a callback internally between different parts of this control;
 	public:
 		 CControl (void); CControl (const CControl&) = delete; CControl (CControl&&) = delete;
 		~CControl (void);
@@ -40,27 +51,34 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
 		err_code  Refresh(void) ;
 		CWindow   Window (void) const; // returns tabbed control internal window handle;
 
+		const CTabs& Tabs(void) const;
+		      CTabs& Tabs(void)      ;
+
+	private: // ITabEvents
+#pragma warning(disable: 4481)
+		virtual err_code ITabEvent_OnAppend (const CTab& _added ) override sealed;
+		virtual err_code ITabEvent_OnFormat (const CFormat&) override sealed;
+		virtual err_code ITabEvent_OnRemove (const uint16_t _tab_id) override sealed;
+		virtual err_code ITabEvent_OnSelect (const int16_t _tab_ndx) override sealed;
+#pragma warning(default: 4481)
+
 	private:
 		CControl& operator = (const CControl&) = delete;
 		CControl& operator = (CControl&&) = delete;
 
 	protected:
-		CBorders m_borders;
-		CFormat  m_format ;
-		CError   m_error  ;
-		CLayout  m_layout ;
-		HANDLE   m_wnd_ptr;
-		uint32_t m_ctrl_id;
+		CBorders  m_borders;
+		CFormat   m_format ;
+		CError    m_error  ;
+		CLayout   m_layout ;
+		CTabs     m_tabs   ;
+		HANDLE    m_wnd_ptr;
+		uint32_t  m_ctrl_id;
 	};
 
 }}}}
 
 #if (0)
-#include "shared.gen.sys.err.h"
-#include "shared.uix.ctrl.defs.h"
-#include "sfx.tabs.fmt.h"
-#include "sfx.tabs.ext.h"
-#include "sfx.tabs.lay.h"
 
 namespace ST_Ctrls {
 
@@ -77,35 +95,14 @@ namespace ST_Ctrls {
 	class CTabbed : private ITabEvents {
 	protected:
 		ITabEvents&  m_evt_snk;  // tab control owner event sink;
-		HANDLE       m_wnd_ptr;
-		CError       m_error  ;
-		UINT         m_ctrl_id;
-		TTabsLay     m_layout ;
-		CTabs        m_tabs   ;
-	
 	public:
 		 CTabbed (ITabEvents& _evt_sink);
 		~CTabbed (void);
 
 	public:
-		HRESULT      Create  (const HWND hParent, const RECT& _rc_area, const UINT _ctrl_id);
-		HRESULT      Destroy (void)      ;
-		TErrorRef    Error   (void) const;
-		const
-		TTabbedFmt&  Format  (void) const;
-		TTabbedFmt&  Format  (void)      ;
 		HRESULT      ParentRenderer (IRenderer*  const );
-		HRESULT      Refresh (void)      ;
-		const CTabs& Tabs    (void) const;
-		      CTabs& Tabs    (void)      ;
-		CWindow      Window  (void) const;
 
-	private: // ITabEvents
-#pragma warning(disable: 4481)
-		virtual HRESULT  ITabEvent_OnAppend (const CTab& _added  ) override sealed;
-		virtual HRESULT  ITabEvent_OnFormat (const TTabbedFmt&   ) override sealed;
-		virtual HRESULT  ITabEvent_OnSelect (const DWORD _tab_ndx) override sealed;
-#pragma warning(default: 4481)
+	
 	private: // IControlEvent
 #pragma warning(disable:4481)
 		virtual HRESULT  IControlEvent_OnClick(const UINT ctrlId) override sealed;

@@ -56,11 +56,11 @@ err_code CFrame::Create (void) {
 //	RECT rc_ = CWndLayout().Centered(CWndLayout().Default());
 	RECT rc_ = CWndLayout().Autosize();
 
-	_pc_sz pc_sz_title = _T("Window Popup GUI Test App-%s"); // no loading string from resources yet;
+	_pc_sz pc_sz_title = _T("3D Graphics Test App [%s]"); // no loading string from resources yet;
 #if defined(WIN64)
-	CString cs_bits; cs_bits.Format(pc_sz_title, _T("64-bit"));
+	CString cs_bits; cs_bits.Format(pc_sz_title, _T("64-bits"));
 #else // duplication code lines is made intentionally;
-	CString cs_bits; cs_bits.Format(pc_sz_title, _T("32-bit"));
+	CString cs_bits; cs_bits.Format(pc_sz_title, _T("32-bits"));
 #endif
 
 	if (::IsRectEmpty(&rc_))

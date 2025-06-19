@@ -161,6 +161,10 @@ namespace ex_ui { namespace controls { namespace layout {
 			for example >>
 				for applying margins: gaps={left:-10;top:-10;right:+10;bottom:+10};
 				for applying padding: gaps={left:+10;top:+10;right:-10;bottom:-10};
+		   but at the same time such approach is not consistent with defininitions of what margins and padding mean:
+		    (a) the margins mean extending an object area;
+		    (b) the padding means decreasing an object area;
+		   thus applying a negative values to either margins or padding sides is not coincident with meaning what those notations/definitions have;
 		*/
 		bool  ApplyTo(t_rect& _rect) const; // returns true in case of change at least one side of the input rectangle;
 		const

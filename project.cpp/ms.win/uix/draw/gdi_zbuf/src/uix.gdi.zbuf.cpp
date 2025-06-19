@@ -185,10 +185,11 @@ bool      CZBuffer::Is_valid (void) const { return nullptr != TDC::m_hDC && OBJ_
 /////////////////////////////////////////////////////////////////////////////
 
 err_code  CZBuffer::Draw (const CLine& _line) {
-	this->m_error << __METHOD__ << __s_ok;
+	
+	err_code n_result = __s_ok;
 
-	if (_line.Is_valid() == false) return this->m_error << __e_inv_arg;
-	if (this->Is_valid() == false) return this->m_error << __e_not_inited;
+	if (_line.Is_valid() == false) return n_result = this->m_error << __METHOD__ << __e_inv_arg;
+	if (this->Is_valid() == false) return n_result = this->m_error << __METHOD__ << __e_not_inited;
 
 	class CAdjuster { // the line is already checked for validity and requires to be checked for direction: vertical or horizontal;
 	public:           // actually the line direction may be ignored, but it's very possible to have a drawing that looks like not expected to;
@@ -225,7 +226,7 @@ err_code  CZBuffer::Draw (const CLine& _line) {
 		return this->m_error << (err_code)TErrCodes::eData::eUnsupport;
 #endif
 	// it uses the alpha blend, thus the line is substituted by the rectangle of appropriate size;
-	// or the line thickeness is greater than 1px, the same approach is used;
+	// or if the line thickeness is greater than 1px, the same approach is used;
 	if (_line.Color().A() != 0x0 || _line.Thickness() > 1) { 
 		
 		CRect rect_;
@@ -248,14 +249,35 @@ err_code  CZBuffer::Draw (const CLine& _line) {
 		TDC::RestoreDC(nSave);
 	}
 
-	return this->Error();
+	return n_result;
 }
 
-err_code  CZBuffer::Draw  (const CRect& _rect, const TRgbQuad& _clr) {
+err_code  CZBuffer::Draw (const CLine& _line, const rgb_color _clr) {
+	_line; _clr;
+	err_code n_result = __s_ok;
+
+	if (_line.Is_valid() == false) return n_result = this->m_error << __METHOD__ << __e_inv_arg;
+	if (this->Is_valid() == false) return n_result = this->m_error << __METHOD__ << __e_not_inited;
+
+	::WTL::CPen cPen;
+	cPen.CreatePen(PS_SOLID, _line.Thickness(), _clr);
+
+	const int32_t nSave = TDC::SaveDC();
+	TDC::SelectPen(cPen);
+
+	TDC::MoveTo(_line.Begin().X(), _line.Begin().Y());
+	TDC::LineTo(_line.End().X(), _line.End().Y());
+
+	TDC::RestoreDC(nSave);
+
+	return n_result;
+}
+
+err_code  CZBuffer::Draw (const CRect& _rect, const TRgbQuad& _clr) {
 	return this->Draw((const t_rect&)_rect, _clr);
 }
 
-err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
+err_code  CZBuffer::Draw (const t_rect& _rect, const TRgbQuad& _clr) {
 	_rect; _clr;
 	err_code n_result = __s_ok;
 
@@ -302,7 +324,7 @@ err_code  CZBuffer::Draw  (const t_rect& _rect, const TRgbQuad& _clr) {
 	return n_result;
 }
 
-err_code  CZBuffer::Draw  (const t_rect& _rect, const rgb_color _clr) {
+err_code  CZBuffer::Draw (const t_rect& _rect, const rgb_color _clr) {
 	_rect; _clr;
 	err_code n_result = __s_ok;
 

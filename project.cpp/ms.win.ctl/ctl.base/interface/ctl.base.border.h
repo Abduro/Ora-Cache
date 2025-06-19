@@ -25,12 +25,12 @@ namespace ex_ui { namespace controls { namespace borders {
 	// ToDo: a border identification through margine identifier is not good approach and must be reviewed;
 	class COne : public CLine { typedef CLine TBase;
 	public:
-		 COne (int16_t _n_id = 0); COne(const COne&) ; COne (COne&&);
+		 COne (uint32_t _n_id = 0); COne(const COne&) ; COne (COne&&);
 		~COne (void);
 
 	public:
-		int16_t     Id (void) const;
-		bool        Id (const int16_t _n_id);
+		uint32_t    Id (void) const;
+		bool        Id (const uint32_t _n_id);
 
 		const bool  IsClear  (void) const;  // this border visibility actually is expressed through alpha channel of the color and border thickness;
 		const bool  IsLimpid (void) const;  // this border visibility actually is expressed through alpha channel of the color and border thickness; just playing with names;
@@ -48,17 +48,17 @@ namespace ex_ui { namespace controls { namespace borders {
 #if (0)
 		COne& operator <<(const CMargin&);
 #else
-		COne& operator <<(const int16_t _n_id);
+		COne& operator <<(const uint32_t _n_id);
 #endif
 	private:
-		int16_t  m_Id;
+		uint32_t m_Id;
 #if (0)
 		CMargin  m_margin;
 #endif
 	};
 
 	typedef COne CBorder;
-	typedef ::std::map<int16_t, CBorder> TRawBorders; // a key is a margin identifier, a value is a border class object;
+	typedef ::std::map<uint32_t, CBorder> TRawBorders; // a key is a border identifier, a value is a border class itself;
 
 	class CSet {
 	public:
@@ -68,11 +68,11 @@ namespace ex_ui { namespace controls { namespace borders {
 	public:
 		err_code   Add (const COne&);      // returns 's_ok' in case of success, otherwise error code; an identifier value must be set in margin class;
 		bool     Color (const TRgbQuad&);  // returns 'true' in case if at least one border's color is changed; input color quad is set to all borders;
-		uint16_t Count (void) const;       // https://en.cppreference.com/w/cpp/container/map/size ;
+		uint32_t Count (void) const;       // https://en.cppreference.com/w/cpp/container/map/size ;
 		const
-		CBorder&   Get (const uint16_t _n_id) const;   // returns a reference to fake object in case if not found; (ro);
-		CBorder&   Get (const uint16_t _n_id);         // returns a reference to fake object in case if not found; (rw);
-		err_code   Rem (const uint16_t _n_id);
+		CBorder&   Get (const uint32_t _n_id) const;   // returns a reference to fake object in case if not found; (ro);
+		CBorder&   Get (const uint32_t _n_id);         // returns a reference to fake object in case if not found; (rw);
+		err_code   Rem (const uint32_t _n_id);
 
 #if defined(_DEBUG)
 		CString    Print (const e_print = e_print::e_all, _pc_sz _pfx = _T("\t\t"), _pc_sz _sfx = _T("\n")) const;
@@ -91,11 +91,11 @@ namespace ex_ui { namespace controls { namespace borders {
 		CSet& operator <<(const uint8_t _n_thickness);
 
 		CSet& operator +=(const CBorder&);
-		CSet& operator -=(const uint16_t _n_id);
+		CSet& operator -=(const uint32_t _n_id);
 
 		const
-		COne& operator [](const uint16_t _n_id) const;
-		COne& operator [](const uint16_t _n_id) ;
+		COne& operator [](const uint32_t _n_id) const;
+		COne& operator [](const uint32_t _n_id) ;
 
 	protected:
 		TRawBorders m_borders;

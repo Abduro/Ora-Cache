@@ -14,7 +14,7 @@ using namespace ex_ui::controls::sfx::tabbed;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CControl:: CControl (void) : m_ctrl_id(0), m_wnd_ptr(nullptr), m_format(*this), m_layout(*this) {
+CControl:: CControl (void) : m_ctrl_id(0), m_wnd_ptr(nullptr), m_format(*this), m_layout(*this), m_tabs(*this) {
 	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
 	try { m_wnd_ptr = new CWnd(*this); } catch (::std::bad_alloc&){ this->m_error << __e_no_memory; }
 }
@@ -79,7 +79,7 @@ const
 CLayout&  CControl::Layout (void) const { return this->m_layout; }
 CLayout&  CControl::Layout (void)       { return this->m_layout; }
 
-err_code  CControl::Refresh (void) {
+err_code  CControl::Refresh(void) {
 
 	if (nullptr == m_wnd_ptr)
 		return __e_pointer;
@@ -97,14 +97,30 @@ CWindow   CControl::Window (void) const {
 		return _wnd_ref(m_wnd_ptr);
 }
 
+const CTabs& CControl::Tabs(void) const { return this->m_tabs; }
+      CTabs& CControl::Tabs(void)       { return this->m_tabs; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+err_code CControl::ITabEvent_OnAppend (const CTab& _added) {_added;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CWindow win_ = this->Window();
+	if (false == win_.IsWindow() ) // not created yet;
+		return this->Error();
+
+	err_code n_result = m_layout.Update();
+	if (__failed(n_result))
+		this->m_error = m_layout.Error();
+
+	return this->Error();
+}
+err_code CControl::ITabEvent_OnFormat (const CFormat&) { return __s_ok; }
+err_code CControl::ITabEvent_OnRemove (const uint16_t _tab_id) { _tab_id; return __s_ok; }
+err_code CControl::ITabEvent_OnSelect (const int16_t _tab_ndx) { _tab_ndx; return __s_ok; }
+
 /////////////////////////////////////////////////////////////////////////////
 #if (0)
-const
-TTabbedFmt&   TTabCtrl::Format (void) const { return TTabbed_Format(); }
-TTabbedFmt&   TTabCtrl::Format (void)       { return TTabbed_Format(); }
-const
-TTabsLay&     TTabCtrl::Layout (void) const { return m_layout; }
-TTabsLay&     TTabCtrl::Layout (void)       { return m_layout; }
 
 HRESULT       TTabCtrl::ParentRenderer (IRenderer*  const _renderer) {
 	if (NULL == m_wnd_ptr)
@@ -114,33 +130,6 @@ HRESULT       TTabCtrl::ParentRenderer (IRenderer*  const _renderer) {
 
 	return S_OK;
 }
-const
-CTabs&        TTabCtrl::Tabs   (void) const { return m_tabs; }
-CTabs&        TTabCtrl::Tabs   (void)       { return m_tabs; }
-CWindow       TTabCtrl::Window (void) const {
-	if (NULL == m_wnd_ptr)
-		return CWindow();
-	else
-		return _wnd_ref(m_wnd_ptr);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT  TTabCtrl::ITabEvent_OnAppend (const CTab& _added) {_added;
-	m_error << __MODULE__ << S_OK;
-
-	CWindow win_ = this->Window();
-	if (win_.IsWindow() == FALSE) // not created yet;
-		return m_error;
-
-	HRESULT hr_ = m_layout.Update();
-	if (FAILED(hr_))
-		m_error = m_layout.Error();
-
-	return m_error;
-}
-HRESULT  TTabCtrl::ITabEvent_OnFormat (const TTabbedFmt&) { return S_OK; }
-HRESULT  TTabCtrl::ITabEvent_OnSelect (const DWORD _tab_ndx) {return m_evt_snk.ITabEvent_OnSelect(_tab_ndx); }
 
 /////////////////////////////////////////////////////////////////////////////
 

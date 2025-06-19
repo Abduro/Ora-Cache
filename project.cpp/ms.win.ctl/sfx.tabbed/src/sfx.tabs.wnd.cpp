@@ -36,7 +36,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #endif
 #if (1)
 	t_rect rc_area = {0};
-	TWindow::GetClientRect(&rc_area);
+	TWindow::GetClientRect(&rc_area);  // perhaps the layout knows about available area better than the window itself;
 
 	CZBuffer z_buffer(_dev_ctx, rc_area);
 #if (0)
@@ -46,13 +46,24 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #elif (1==0)
 	z_buffer.Draw(rc_area, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
 #else
+	// (1) fills the background goes first;
 	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb()); // ToRgb() must be called, otherwise, black screen due to GDI does not know alpha channel;
 #endif
 	using ex_ui::controls::borders::TRawBorders;
+	// (2) draws tabbed control borders; if no tabs there;
+	if (this->m_ctrl.Tabs().Count() == 0) {
+		for(TRawBorders::const_iterator iter_ = this->m_ctrl.Borders().Raw().begin(); iter_ != this->m_ctrl.Borders().Raw().end(); ++iter_) {
+			const CBorder& border = iter_->second;
+			z_buffer.Draw( border );
+		}
+	}
+	// (3) draws active tab borders;
+	const TRawBorders& act_tab = this->m_ctrl.Layout().Tabs().Active().Raw();
+	const rgb_color act_clr = this->m_ctrl.Format().Border_Clrs().Get(TStateValue::eSelected);
 
-	for(TRawBorders::const_iterator iter_ = this->m_ctrl.Borders().Raw().begin(); iter_ != this->m_ctrl.Borders().Raw().end(); ++iter_) {
+	for (TRawBorders::const_iterator iter_ = act_tab.begin(); iter_ != act_tab.end(); ++iter_) {
 		const CBorder& border = iter_->second;
-		z_buffer.Draw( border );
+		z_buffer.Draw( border, act_clr);
 	}
 
 #endif

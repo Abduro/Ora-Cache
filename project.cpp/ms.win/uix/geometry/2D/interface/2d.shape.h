@@ -56,9 +56,10 @@ namespace geometry { namespace _2D { namespace shapes {
 }}}
 
 typedef geometry::_2D::shapes::CMarker  TMarker;
+#if (0)
 typedef geometry::_2D::shapes::CSide    TSide  ;
-
-typedef ::std::vector<TSide> TRawSides; typedef TRawSides t_raw_sides;
+#endif
+typedef ::std::vector<geometry::_2D::shapes::CSide> TRawSides; typedef TRawSides t_raw_sides;
 
 namespace geometry { namespace _2D { namespace shapes {
 
@@ -146,7 +147,7 @@ namespace geometry { namespace _2D { namespace shapes {
 		CPoints m_points;
 	};
 }}}
-
-typedef geometry::_2D::shapes::CSides TSides;
-
+#if (0)
+typedef geometry::_2D::shapes::CSides TSides; // it is not necessary to declare such a king typedef, because user controls may use side enumeration only;
+#endif
 #endif/*_2D_SHAPE_H_INCLUDED*/

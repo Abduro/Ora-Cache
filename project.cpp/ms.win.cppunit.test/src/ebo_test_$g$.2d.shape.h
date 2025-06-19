@@ -10,6 +10,8 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace shape
 
 #pragma region __sides
 
+	using TSide = geometry::_2D::shapes::CSide;
+
 	__class(CSide) {
 	public:
 		 CSide (const bool _b_verb = false);
@@ -21,6 +23,8 @@ namespace ebo { namespace boo { namespace test { namespace _2D { namespace shape
 	private:
 		bool m_b_verb;
 	};
+
+	using TSides = geometry::_2D::shapes::CSides;
 
 	__class(CSides) {
 	public:

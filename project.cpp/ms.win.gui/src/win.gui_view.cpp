@@ -18,6 +18,20 @@ CView:: CView (void) {
 	this->Status().Borders().Top().Thickness(1);
 	this->Status().Borders().Top().Color() << shared::Get_Theme().Get(TThemePart::e_panel, TThemeElement::e_border);
 #endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
+#define _use_case 3
+#if defined(_use_case) && (_use_case == 1) // for this mode of tabs placement, a compact option must be considered too;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_left);
+#endif
+#if defined(_use_case) && (_use_case == 2) // for this mode of tabs placement, a compact option must be considered too;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_right);
+#endif
+#if defined(_use_case) && (_use_case == 3)
+	this->Tabbed().Layout().Tabs().Side(TSide::e_bottom);
+#endif
+	this->Tabbed().Tabs().Append(1, _T("DirectX"));
+#endif
 }
 CView::~CView (void) {}
 

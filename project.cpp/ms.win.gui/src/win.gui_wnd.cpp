@@ -57,7 +57,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 
 	using WTL::CPaintDC;
 	using ex_ui::color::rgb::CFloat;
-#if defined(_test_case_lvl) && (_test_case_lvl == 2)
+#if defined(_test_case_lvl) && (_test_case_lvl == 3)
 	// this goes first;
 	using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
 	_render().Target().OnDraw(CUI_Parts().Bkg());
@@ -128,12 +128,16 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 	err_code n_result = __s_false;
 
 	_render().Term();
-
+#if defined(_test_case_lvl) && (_test_case_lvl >= 3)
 	if (shared::Get_View().Surface())
 		shared::Get_View().Surface().DestroyWindow();
-
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+	::shared::Get_View().Tabbed().Destroy();
+#endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 1)
 	::shared::Get_View().Status().Destroy(); // no error handling is made yet;
-
+#endif
 	return   n_result;
 }
 

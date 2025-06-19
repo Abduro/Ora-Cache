@@ -10,15 +10,15 @@ using namespace ex_ui::controls::borders;
 
 /////////////////////////////////////////////////////////////////////////////
 
-COne:: COne (int16_t _n_id) : TBase() { *this << _n_id; }
+COne:: COne (uint32_t _n_id) : TBase() { *this << _n_id; }
 COne:: COne (const COne& _src) : COne() { *this = _src; }
 COne:: COne (COne&& _victim) : COne() { *this = _victim;}
 COne::~COne (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-int16_t COne::Id (void) const { return this->m_Id; }
-bool    COne::Id (const int16_t _n_id) {
+uint32_t COne::Id (void) const { return this->m_Id; }
+bool     COne::Id (const uint32_t _n_id) {
 	const bool b_changed = (_n_id != this->Id());
 	if (b_changed)
 		this->m_Id = _n_id;
@@ -67,7 +67,7 @@ COne& COne::operator = (COne&& _victim) { *this = (const COne&)_victim; return *
 #if (0)
 COne& COne::operator <<(const CMargin& _margin) { this->Margin() = _margin; return *this; }
 #else
-COne& COne::operator <<(const int16_t _n_id) { this->Id(_n_id); return *this; }
+COne& COne::operator <<(const uint32_t _n_id) { this->Id(_n_id); return *this; }
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
@@ -105,11 +105,11 @@ bool   CSet::Color (const TRgbQuad& _clr) {
 	return b_changed;
 }
 
-uint16_t CSet::Count (void) const {
-	return static_cast<uint16_t>(this->Raw().size());
+uint32_t CSet::Count (void) const {
+	return static_cast<uint32_t>(this->Raw().size());
 }
 const
-COne&  CSet::Get (const uint16_t _n_id) const {
+COne&  CSet::Get (const uint32_t _n_id) const {
 	_n_id;
 	TRawBorders::const_iterator it_ = this->Raw().find(_n_id);
 	if (it_ != this->Raw().end())
@@ -118,7 +118,7 @@ COne&  CSet::Get (const uint16_t _n_id) const {
 	return brd_inv;
 }
 
-COne&  CSet::Get (const uint16_t _n_id) {
+COne&  CSet::Get (const uint32_t _n_id) {
 	_n_id;
 	TRawBorders::iterator it_ = this->Raw().find(_n_id);
 	if (it_ != this->Raw().end())
@@ -127,7 +127,7 @@ COne&  CSet::Get (const uint16_t _n_id) {
 	return brd_inv;
 }
 
-err_code  CSet::Rem (const uint16_t _n_id) {
+err_code  CSet::Rem (const uint32_t _n_id) {
 	_n_id;
 	TRawBorders::iterator it_ = this->Raw().find(_n_id);
 	if (it_ == this->Raw().end())
@@ -206,11 +206,11 @@ CSet&  CSet::operator <<(const uint8_t _n_thickness) {
 }
 
 CSet&  CSet::operator +=(const CBorder& _border) { this->Add(_border); return *this; }
-CSet&  CSet::operator -=(const uint16_t _n_id) { this->Rem(_n_id); return *this; }
+CSet&  CSet::operator -=(const uint32_t _n_id) { this->Rem(_n_id); return *this; }
 
 const
-COne&  CSet::operator [](const uint16_t _n_id) const { return this->Get(_n_id); }
-COne&  CSet::operator [](const uint16_t _n_id)       { return this->Get(_n_id); }
+COne&  CSet::operator [](const uint32_t _n_id) const { return this->Get(_n_id); }
+COne&  CSet::operator [](const uint32_t _n_id)       { return this->Get(_n_id); }
 
 /////////////////////////////////////////////////////////////////////////////
 

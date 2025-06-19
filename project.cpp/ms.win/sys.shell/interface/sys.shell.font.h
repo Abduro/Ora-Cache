@@ -38,7 +38,7 @@ namespace shared { namespace sys_core { namespace shell {
 #endif
 	typedef ::std::vector<CString> TFntList;
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-addfontresourcea   ; for installing the required font dynamicalli;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-addfontresourcea   ; for installing the required font dynamically;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-addfontresourceexa ; for the private access;
 	// this class enumerates all installed fonts in the operating system;
 	class CFonts {

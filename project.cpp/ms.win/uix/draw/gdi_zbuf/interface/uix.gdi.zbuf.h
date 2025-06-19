@@ -79,6 +79,7 @@ namespace ex_ui { namespace draw { namespace memory {
 		/* if color of line has the alpha value that is not opaque, the draw of a rectangle by alpha blend is used;
 		   strictly vertical or horizontal line is drawn by this function in this version of this lib implementation; */
 		err_code  Draw  (const CLine&);
+		err_code  Draw  (const CLine& , const rgb_color); // draws the line by overriding its color by input one;
 		/* draws plain rectangle by using color provided, alpha blending is applicable;
 		   it is assumed the rectangle is not created or extracted from 32-bpp image, thus per-pixel-alpha option is not used; */
 		err_code  Draw  (const CRect& , const TRgbQuad&);
