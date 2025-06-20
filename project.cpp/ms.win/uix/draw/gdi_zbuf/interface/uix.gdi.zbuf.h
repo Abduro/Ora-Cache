@@ -11,6 +11,9 @@
 namespace ex_ui { namespace draw { namespace memory {
 
 	#define _ATL_NO_AUTOMATIC_NAMESPACE
+	#define __no_bkg TRANSPARENT
+
+	// https://learn.microsoft.com/en-us/windows/win32/gdi/font-and-text-functions ;
 
 	using namespace ex_ui::draw::defs;
 	using CLine = geometry::_2D::shapes::CLine;
@@ -18,6 +21,8 @@ namespace ex_ui { namespace draw { namespace memory {
 
 	using namespace ex_ui::draw::blend;
 	using namespace ex_ui::draw::shade;
+
+	using h_font = HFONT;
 
 	class CSurface { // this class is exactly for memory device context;
 	public:
@@ -85,6 +90,8 @@ namespace ex_ui { namespace draw { namespace memory {
 		err_code  Draw  (const CRect& , const TRgbQuad&);
 		err_code  Draw  (const t_rect&, const TRgbQuad&);
 		err_code  Draw  (const t_rect&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
+
+		err_code  Draw  (_pc_sz pszText, const h_font& _fnt, const t_rect& rcDraw, const rgb_color clrFore, const dword _u_format);
 
 		const
 		CSurface& Surface (void) const;

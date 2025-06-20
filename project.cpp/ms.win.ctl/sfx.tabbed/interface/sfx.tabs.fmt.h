@@ -10,6 +10,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 
 	using namespace ex_ui::controls::sfx;
 	using TBase = ex_ui::controls::format::CBase;
+	using CFontSpec = ex_ui::controls::format::CFontSpec;
 
 namespace format {
 

@@ -157,6 +157,9 @@ CGaps_of_rect::CSides::~CSides (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+bool  CGaps_of_rect::CSides::IsHorz (void) const { return this->Selected() == _part::e_bottom || this->Selected() == _part::e_top; }
+bool  CGaps_of_rect::CSides::IsVert (void) const { return this->Selected() == _part::e_left || this->Selected() == _part::e_right; }
+
 CGaps_of_rect::CSides::_part  CGaps_of_rect::CSides::Selected (void) const { return m_selected; }
 CGaps_of_rect::CSides::_part& CGaps_of_rect::CSides::Selected (void)       { return m_selected; }
 

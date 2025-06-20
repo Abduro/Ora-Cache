@@ -12,6 +12,18 @@ using namespace ex_ui::controls::sfx::tabbed;
 CWnd:: CWnd(CControl& _ctrl) : TWindow(), m_ctrl(_ctrl) {
 	TWindow::Handlers().Draw().Subscribe (this); TWindow::Handlers().Live().Subscribe(this);
 	TWindow::Handlers().Frame().Subscribe(this);
+#if (1)
+	TWindow::m_error << m_font.Create(
+		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
+	);
+
+	m_font_vert.Angle(90);
+
+	TWindow::m_error << m_font_vert.Create(
+		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
+	);
+
+#endif
 }
 CWnd::~CWnd(void) {
 	TWindow::Handlers().Draw().Unsubscribe (this); TWindow::Handlers().Live().Unsubscribe(this);
@@ -60,10 +72,30 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	// (3) draws active tab borders;
 	const TRawBorders& act_tab = this->m_ctrl.Layout().Tabs().Active().Raw();
 	const rgb_color act_clr = this->m_ctrl.Format().Border_Clrs().Get(TStateValue::eSelected);
+	const rgb_color nrm_clr = this->m_ctrl.Format().Border_Clrs().Get(TStateValue::eNormal);
 
 	for (TRawBorders::const_iterator iter_ = act_tab.begin(); iter_ != act_tab.end(); ++iter_) {
 		const CBorder& border = iter_->second;
 		z_buffer.Draw( border, act_clr);
+	}
+
+	static const dword dw_flags = DT_CENTER|DT_VCENTER|DT_END_ELLIPSIS|DT_NOCLIP|DT_NOPREFIX|DT_SINGLELINE;
+	// (4) draws captions of the tabs; the color of the text depends on activity of the tab and the same as tab border color;
+	if (this->m_ctrl.Layout().Tabs().Sides().IsHorz()) {
+
+		const TTabArray& tabs = this->m_ctrl.Tabs().Raw();
+		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+			const CTab& tab_ = tabs.at(i_);
+			z_buffer.Draw(tab_.Caption(), this->m_font.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
+		}
+	}
+	if (this->m_ctrl.Layout().Tabs().Sides().IsVert()) {
+
+		const TTabArray& tabs = this->m_ctrl.Tabs().Raw();
+		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+			const CTab& tab_ = tabs.at(i_);
+			z_buffer.Draw(tab_.Caption(), this->m_font_vert.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
+		}
 	}
 
 #endif

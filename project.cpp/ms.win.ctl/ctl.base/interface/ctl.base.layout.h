@@ -131,6 +131,9 @@ namespace ex_ui { namespace controls { namespace layout {
 			~CSides (void);
 
 		public:
+			bool  IsHorz (void) const;  // returns 'true' if selected part is either 'top' or 'bottom';
+			bool  IsVert (void) const;  // returns 'true' if selected part is either 'left' or 'right';
+
 			_part   Selected(void) const;
 			_part&  Selected(void)      ;
 

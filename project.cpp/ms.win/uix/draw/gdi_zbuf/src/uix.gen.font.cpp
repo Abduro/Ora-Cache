@@ -236,11 +236,14 @@ bool CFont_Base::Is (const HFONT _target) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-ex_ui::draw::CFont:: CFont(_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) : TBase(), m_bManaged(false) {
+ex_ui::draw::CFont:: CFont (void) : TBase(), m_bManaged(false), m_angle(0) {
+}
+
+ex_ui::draw::CFont:: CFont (_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) : CFont() {
 	this->Create(pszFamily, dwOptions, lParam);
 }
 
-ex_ui::draw::CFont::~CFont(void)
+ex_ui::draw::CFont::~CFont (void)
 {
 	if (m_bManaged) {
 		TBase::Destroy();
@@ -250,14 +253,29 @@ ex_ui::draw::CFont::~CFont(void)
 
 /////////////////////////////////////////////////////////////////////////////
 
+int16_t   ex_ui::draw::CFont::Angle (void) const { return this->m_angle; }  
+bool      ex_ui::draw::CFont::Angle (const int16_t _n_degrees) {
+	_n_degrees;
+	int16_t n_degrees = _n_degrees; // no modulus operator is applied here;
+	if (+360 < n_degrees) n_degrees = 360;
+	if (-360 > n_degrees) n_degrees =-360;
+
+	const bool b_changed = this->Angle() != n_degrees;
+	if (b_changed)
+		this->m_angle = n_degrees;
+
+	return b_changed;
+}
+
 err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) {
 	pszFamily; dwOptions; lParam;
 
 	err_code n_result = __s_ok;
-	LOGFONT log = {0} ;
+	LOGFONT log = {0} ; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfonta ; 
+	                    // lfHeight = -MulDiv(PointSize, GetDeviceCaps(hDC, LOGPIXELSY), 72);
 
 	if (this->Is())
-		return n_result = (err_code)TErrCodes::eObject::eExists;
+		return n_result = TBase::m_error << (err_code)TErrCodes::eObject::eExists;
 
 	if (::SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &log, 0)) {
 		if (pszFamily)
@@ -274,14 +292,23 @@ err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const DWORD dwOptions, co
 				log.lfHeight += lParam;
 			}
 		}
-		if (CFontOptions(dwOptions).IsBold()) log.lfWeight |= FW_BOLD;
-		if (CFontOptions(dwOptions).IsItalic()) log.lfItalic = TRUE;
-		if (CFontOptions(dwOptions).IsUnderline()) log.lfUnderline = TRUE;
+		if (TFontOpts(dwOptions).IsBold()) log.lfWeight |= FW_BOLD;
+		if (TFontOpts(dwOptions).IsItalic()) log.lfItalic = TRUE;
+		if (TFontOpts(dwOptions).IsUnderline()) log.lfUnderline = TRUE;
 
 		log.lfQuality = CLEARTYPE_NATURAL_QUALITY;
 
-		m_handle = ::CreateFontIndirect(&log);
-		m_bManaged = true;
+		if (!!this->Angle()) {
+			log.lfEscapement = this->Angle() * 10;
+		}
+
+		this->m_handle = ::CreateFontIndirect(&log); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirecta ;
+		if (nullptr == this->m_handle)
+			n_result = (TBase::m_error << __METHOD__).Last();
+		else {
+			TBase::m_error << __METHOD__ << n_result; // otherwise the error of the base class object will be in error state 'not initialized';
+			m_bManaged = true;
+		}
 	}
 	else {
 		m_handle = reinterpret_cast<HFONT>(::GetStockObject(DEFAULT_GUI_FONT));

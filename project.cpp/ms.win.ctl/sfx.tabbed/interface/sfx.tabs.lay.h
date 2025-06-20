@@ -34,6 +34,12 @@ namespace layout {
 #else
 	using ex_ui::controls::borders::TRawBorders;
 #endif
+	/*
+		tabs layout must be the following:
+		(a) at top and bottom sides: from left to right (by default); otherwise, in accordance with alignment of the tabs sequence (not implemented yet);
+		(b) at left and right sides: for the left side tabs reside from bottom to top; for the right side from the top to bottom; (by default)
+		    otherwise in accordance with tab sequence alignement value (not implemented yet);
+	*/
 	class CActiveTab {
 	public:
 		enum _ndx : uint32_t {
@@ -59,6 +65,8 @@ namespace layout {
 		CControl&   m_ctrl;
 		TRawBorders m_borders;
 	};
+
+	using Selected = CActiveTab;
 
 	class CPage {
 	public:
@@ -86,8 +94,12 @@ namespace layout {
 
 	public:
 		const
-		CActiveTab& Active (void) const;
-		CActiveTab& Active (void) ;
+		Selected& Active (void) const;
+		Selected& Active (void) ;
+
+		const
+		TAlign&   Align (void) const;     // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (ro);
+		TAlign&   Align (void) ;          // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (rw);
 
 		uint32_t  Gap (void) const;
 		uint32_t& Gap (void)      ;
@@ -106,6 +118,9 @@ namespace layout {
 
 		TSide     Side  (void) const;     // gets a side where all tabs reside;
 		TSide&    Side  (void)      ;     // sets a side where all tabs reside;
+		const
+		CSides&   Sides (void) const;     // gets a reference to all sides collection; (ro);
+		CSides&   Sides (void) ;          // gets a reference to all sides collection; (rw);
 		bool      Side  (const TSide);
 		// ToDo: t_size must be replaced to geometry::_2D::base::CSize_U;
 		const
@@ -118,13 +133,14 @@ namespace layout {
 		CTabs&  operator = (CTabs&&) =  delete;
 
 	private:
-		CSides     m_sides  ;   // sides of tab control where tabs can be located; the top side is default;
-		t_size     m_size   ;   // a size of each tab;
-		t_rect     m_rect   ;   // entire area of tabs, including free space of the background that is inline with tabs;
-		uint32_t   m_gap    ;   // a gap between tabs;
-		uint32_t   m_ledge  ;   // extra part of tabs which resides out of tab area; this part of tabs overlaps parent window area; by default is 3;
-		CControl&  m_ctrl   ;
-		CActiveTab m_active ;
+		CSides     m_sides ;   // sides of tab control where tabs can be located; the top side is default;
+		t_size     m_size  ;   // a size of each tab;
+		t_rect     m_rect  ;   // entire area of tabs, including free space of the background that is inline with tabs;
+		uint32_t   m_gap   ;   // a gap between tabs;
+		uint32_t   m_ledge ;   // extra part of tabs which resides out of tab area; this part of tabs overlaps parent window area; by default is 3;
+		CControl&  m_ctrl  ;
+		Selected   m_active;
+		TAlign     m_align ;
 	};
 }
 	class CLayout {

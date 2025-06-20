@@ -27,8 +27,19 @@ TLayersEx& CTab::Layers (void) const { return this->m_layers; }
 TLayersEx& CTab::Layers (void)       { return this->m_layers; }
 
 const
-t_rect&    CTab::Rect   (void) const { return this->m_rect; }
-t_rect&    CTab::Rect   (void)       { return this->m_rect; }
+t_rect&    CTab::Rect (void) const { return this->m_rect; }
+t_rect&    CTab::Rect (void)       { return this->m_rect; }
+const bool CTab::Rect (const _long _left, const _long _top, const _long _right, const _long _bottom) {
+	_left; _top; _right; _bottom;
+	bool b_changed = false;
+
+	if (_bottom != this->m_rect.bottom) { this->m_rect.bottom = _bottom; b_changed = true; }
+	if (_left   != this->m_rect.left)   { this->m_rect.left = _left; b_changed = true; }
+	if (_right  != this->m_rect.right)  { this->m_rect.right = _right; b_changed = true; }
+	if (_top    != this->m_rect.top)    { this->m_rect.top = _top; b_changed = true; }
+
+	return b_changed;
+}
 
 const
 TState& CTab::State  (void) const { return this->m_state; }

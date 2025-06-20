@@ -11,6 +11,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 	using namespace ex_ui::controls::sfx;
 	using namespace ex_ui::message::handlers;
 
+	using CFont = ex_ui::draw::CFont;
+
 	using IDrawEvtSink = ex_ui::message::handlers::draw::IDrawEventSink;
 	using IFormEvtSink = ex_ui::message::handlers::frame::IFrameEventSink;
 	using ILifeEvtSink = ex_ui::message::handlers::life::ILifeEvtSink;
@@ -44,85 +46,10 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		CWnd& operator = (CWnd&&) = delete;
 	private:
 		CControl& m_ctrl;
+		CFont     m_font;
+		CFont     m_font_vert;  // ToDo: it would be better to re-create the one font if the tabs' orientation is changed;
 	};
-
-
 
 }}}}
-#if (0)
-#include "shared.uix.gdi.draw.defs.h"
-#include "shared.uix.gdi.renderer.h"
-#include "shared.uix.ctrl.base.wnd.h"
-#include "sfx.tips.h"
-#include "sfx.tabs.ctrl.h"
-#include "sfx.tabs.fmt.h"
 
-#include "shared.gen.syn.obj.h"
-
-namespace ST_Ctrls { namespace _impl {
-
-	using ex_ui::controls::CControlCrt  ;
-	using ex_ui::controls::IControlEvent;
-
-	using shared::sys_core::CSyncObject ;
-
-	using ex_ui::draw::defs::IRenderer;
-
-	using ST_Common::CToolTipHelper   ; typedef CToolTipHelper::ICallback TTipsCallback;
-	using ST_Ctrls::format::CTabFormat;
-
-	class CTabs_Wnd : public  ::ATL::CWindowImpl<CTabs_Wnd>, public TTipsCallback {
-	                  typedef ::ATL::CWindowImpl<CTabs_Wnd> TWindow;
-	private:
-		CTabbed&         m_control;
-		IRenderer*       m_parent ;
-		CSyncObject      m_guard  ;
-		TRndTile         m_bkg_rnd;
-		CToolTipHelper   m__TTips ;      // tool tip helper object;
-		CStringW         m__tips  ;
-		
-	public:
-		 CTabs_Wnd (CTabbed&);
-		~CTabs_Wnd (void);
-
-	public:
-		#define WM_ERASE     WM_ERASEBKGND
-		#define WM_LBUTTONDN WM_LBUTTONDOWN
-
-		DECLARE_WND_CLASS(_T("ST::controls::tabbed::wnd"));
-		BEGIN_MSG_MAP(CTabs_Wnd)
-			MESSAGE_HANDLER(WM_CREATE      , OnCreate     )
-			MESSAGE_HANDLER(WM_DESTROY     , OnDestroy    )
-			MESSAGE_HANDLER(WM_ERASE       , OnErase      )
-			MESSAGE_HANDLER(WM_LBUTTONDN   , OnLButtonDn  )
-			MESSAGE_HANDLER(WM_LBUTTONUP   , OnLButtonUp  )
-			MESSAGE_HANDLER(WM_MOUSEMOVE   , OnMouseMove  )
-			MESSAGE_HANDLER(WM_MOUSELEAVE  , OnMouseOut   )
-			MESSAGE_HANDLER(WM_PAINT       , OnPaint      )
-			NOTIFY_CODE_HANDLER(
-				TTN_GETDISPINFO,   OnDispInfo
-			)
-		END_MSG_MAP()
-
-	public:
-		VOID    ParentRenderer (IRenderer* const);
-
-	private:
-		LRESULT OnCreate    (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnDestroy   (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnErase     (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnLButtonDn (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnLButtonUp (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnMouseMove (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnMouseOut  (UINT, WPARAM, LPARAM, BOOL&);
-		LRESULT OnPaint     (UINT, WPARAM, LPARAM, BOOL&);
-	private:
-		LRESULT OnDispInfo  (INT , LPNMHDR lpHead, BOOL&);
-
-	private:  //TTipsCallback
-		LPCTSTR OnToolTipTextRequest(void) override;
-	};
-
-}}
-#endif
 #endif/*_SFXTABSWND_H_F2EE9082_4F3E_4968_B138_F7D2D87695C1_INCLUDED*/

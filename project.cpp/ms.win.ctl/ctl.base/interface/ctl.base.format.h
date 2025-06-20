@@ -90,15 +90,15 @@ namespace ex_ui { namespace controls { namespace format {
 #if defined(_DEBUG)
 		CString     Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
-		uint32_t    Size   (void) const;
-		uint32_t&   Size   (void)      ;
+		int32_t     Size   (void) const;
+		int32_t&    Size   (void)      ;
 
 	public:
 		CFontSpec&  operator = (const CFontSpec&);
 		CFontSpec&  operator = (CFontSpec&&) = delete;
 		CFontSpec&  operator <<(const CAlign&);
 		CFontSpec&  operator >>(const rgb_color _clr_fore); // error C2535: member function already defined or declared; there is a mix with DWORD of size attribute;
-		CFontSpec&  operator <<(const uint32_t  _dw_size );
+		CFontSpec&  operator <<(const int32_t  _dw_size );
 		CFontSpec&  operator <<(const TFontOpts&);
 		CFontSpec&  operator <<(_pc_sz _lp_sz_family);
 
@@ -107,7 +107,7 @@ namespace ex_ui { namespace controls { namespace format {
 		rgb_color   m_fore    ;  // fore color of the font;
 		CString     m_name    ;  // font name/family, by default 'verdana';
 		TFontOpts   m_opts    ;  // include font options for creating a font in accordance with required options;
-		uint32_t    m_size    ;  // font size, by default it is a font size of desktop item labels: 10 pt;
+		int32_t     m_size    ;  // font size, by default it is a font size of desktop item labels: -12 pt; the size in logical units;
 	};
 
 	class CBase {

@@ -20,17 +20,44 @@ CView:: CView (void) {
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
-#define _use_case 3
-#if defined(_use_case) && (_use_case == 1) // for this mode of tabs placement, a compact option must be considered too;
+
+#define _use_case 2
+
+#if defined(_use_case) && (_use_case == 0)   // sets tabs layout on the top side and the horizontal align from the left side;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_top);
+	this->Tabbed().Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
+#elif defined(_use_case) && (_use_case == 1) // sets tabs layout on the top side and the horizontal align from the right side;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_top);
+	this->Tabbed().Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
+#elif defined(_use_case) && (_use_case == 2) // sets tabs layout on the left side and the vertical align from the bottom side;
+	// for this mode of tabs placement, a compact option must be considered;
 	this->Tabbed().Layout().Tabs().Side(TSide::e_left);
-#endif
-#if defined(_use_case) && (_use_case == 2) // for this mode of tabs placement, a compact option must be considered too;
+	this->Tabbed().Layout().Tabs().Align().Vert().Value() = TVertAlign::eBottom;
+#elif defined(_use_case) && (_use_case == 3) // sets tabs layout on the left side and the vertical align from the top side;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_left);
+	this->Tabbed().Layout().Tabs().Align().Vert().Value() = TVertAlign::eTop;
+#elif defined(_use_case) && (_use_case == 4) // sets tabs layout on the right side and the vertical align from the top side;
+	// for this mode of tabs placement, a compact option must be considered too;
 	this->Tabbed().Layout().Tabs().Side(TSide::e_right);
-#endif
-#if defined(_use_case) && (_use_case == 3)
+	this->Tabbed().Layout().Tabs().Align().Vert().Value() = TVertAlign::eTop;
+#elif defined(_use_case) && (_use_case == 5) // sets tabs layout on the right side and the vertical align from the bottom side;
+	// for this mode of tabs placement, a compact option must be considered too;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_right);
+	this->Tabbed().Layout().Tabs().Align().Vert().Value() = TVertAlign::eBottom;
+#elif defined(_use_case) && (_use_case == 6) // sets tabs layout on the bottom side and the horizontal align from the left side;
 	this->Tabbed().Layout().Tabs().Side(TSide::e_bottom);
+	this->Tabbed().Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
+#elif defined(_use_case) && (_use_case == 7) // sets tabs layout on the bottom side and the horizontal align from the right side;
+	this->Tabbed().Layout().Tabs().Side(TSide::e_bottom);
+	this->Tabbed().Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
 #endif
-	this->Tabbed().Tabs().Append(1, _T("DirectX"));
+ 	this->Tabbed().Tabs().Append(1, _T("DirectX"));
+	/*
+		the exact name is very important and can be seen in the system font viewer:
+		Control Panel >> Appearance and Personalization >> Fonts >> double click on 'Pirulen Regular' item;
+		the font name is in the top-left corner (not in window caption);
+	*/
+// 	this->Tabbed().Tabs().Append(1, _T("A1G2U3X4")); // for testing 'Pirulen Rg' font;
 #endif
 }
 CView::~CView (void) {}

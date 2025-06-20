@@ -46,4 +46,14 @@ void CFormat::Default (void) {
 	this->m_ctrl.Borders().Base() << TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border));
 
 	TBase::Bkgnd().Solid() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
+
+	static _pc_sz pc_sz_fnt_names[] = {
+		_T("Pirulen Rg"), _T("Verdana"), _T("Age Normal"), _T("Trebuchet MS")
+		//       0               1               2                 3
+	};
+
+	TBase::Font().Family(pc_sz_fnt_names[0]); // the exact name is very important, otherwise the other system font will be created (default for GUI);
+	TBase::Font().Fore() = this->Border_Clrs().Get(TStateValue::eSelected);
+	TBase::Font().Size() = -12;
+	TBase::Font().Options() += TFontOpts::eExactSize;
 }

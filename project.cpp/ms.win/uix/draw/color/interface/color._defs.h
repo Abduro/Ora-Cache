@@ -199,6 +199,9 @@ bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold 
 #ifndef __clr_default
 #define __clr_default 0xFF000000L
 #endif
+#ifndef __clr_invalid
+#define __clr_invalid __clr_none
+#endif
 
 namespace ex_ui { namespace color { namespace hsl {
 }}}

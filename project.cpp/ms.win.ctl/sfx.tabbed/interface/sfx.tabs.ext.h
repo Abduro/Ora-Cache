@@ -34,8 +34,9 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		TLayersEx& Layers (void)      ;
 
 		const
-		t_rect&    Rect   (void) const;
-		t_rect&    Rect   (void) ;
+		t_rect&    Rect (void) const;
+		t_rect&    Rect (void) ;
+		const bool Rect (const _long _left, const _long _top, const _long _right, const _long _bottom); // returns 'true' in case of change at least one of the rectangle values;
 
 		const
 		TState&    State  (void) const;
@@ -51,11 +52,11 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		CTab& operator << (_pc_sz _lp_sz_cap);
 
 	private:
-		uint16_t   m_id    ;
-		TLayersEx  m_layers;
-		t_rect     m_rect  ;
-		TState     m_state ;
-		CString    m_cap   ;
+		uint16_t   m_id    ;  // the tab identifier;
+		TLayersEx  m_layers;  // for layered draw; not used yet;
+		t_rect     m_rect  ;  // the tab rectangle that does not include the tab page rectangle;
+		TState     m_state ;  // the tab current state: either selected or not;
+		CString    m_cap   ;  // the tab caption;
 	};
 
 	typedef ::std::vector<CTab> TTabArray;

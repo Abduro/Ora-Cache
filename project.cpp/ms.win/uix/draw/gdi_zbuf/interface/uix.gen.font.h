@@ -101,18 +101,21 @@ namespace ex_ui { namespace draw {
 		static bool Is (const HFONT);
 	};
 	//  https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw
-	class CFont : public CFont_Base {
-	             typedef CFont_Base TBase;
-	private:
-		bool      m_bManaged; // flag that indicates font handle must be destroyed (if the font is not stock one)
+	class CFont : public CFont_Base { typedef CFont_Base TBase;
 	public:
-		 CFont(_pc_sz pszFamily = nullptr, const DWORD dwOptions = CFontOptions::eNone, const LONG lParam = 0);
-		~CFont(void);
+		 CFont (void); // no font is created on this constructor;
+		 CFont (_pc_sz pszFamily, const dword dwOptions = TFontOpts::eNone, const LONG lParam = 0); // system font is created from the desktop;
+		~CFont (void);
 	public:
+		int16_t   Angle (void) const;    // gets the current rotation angle in degrees; by default is set to zero;
+		bool      Angle (const int16_t); // sets the rotation angle; returns true if the value is changed;
 		/* inputs:
 				pszFamily - font name; dwOptions - font attributes; lParam - an exact font size or size factor (+/-); */
 		err_code  Create (_pc_sz pszFamily = nullptr, const DWORD dwOptions = CFontOptions::eNone, const LONG lParam = 0);
 		HFONT     Detach (void);
+	private:
+		bool      m_bManaged; // flag that indicates font handle must be destroyed (if the font is not stock one)
+		int16_t   m_angle   ; // the rotation angle, can be eiter positive (for counter-cw) in range [0:360];
 	};
 
 	class CFontScalable : public CFont_Base {
@@ -162,7 +165,7 @@ namespace ex_ui { namespace draw {
 	};
 }}
 
-typedef ex_ui::draw::CFont        TFont;
-typedef ex_ui::draw::CLogFont     TLogFont;
+typedef ex_ui::draw::CFont TFont;
+typedef ex_ui::draw::CLogFont TLogFont;
 
 #endif/*__OWNERDRAW_GDIPLUS_WRAP_H_*/

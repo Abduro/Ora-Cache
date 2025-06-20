@@ -136,9 +136,9 @@ TFontOpts&  CFontSpec::Options(void)       { return m_opts ; }
 #if defined(_DEBUG)
 CString     CFontSpec::Print  (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%salign=%s;%s%sfamily=%s;fore=%s;opts=%s;size=%u(pt)%s%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{align=%s;family=%s;fore=%s;opts=%s;size=%u(pt)}");
-	static _pc_sz pc_sz_pat_r = _T("{align=%s;family=%s;fore=%s;opts=%s;size=%u(pt)}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%salign=%s;%s%sfamily=%s;fore=%s;opts=%s;size=%d(pt)%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{align=%s;family=%s;fore=%s;opts=%s;size=%d(pt)}");
+	static _pc_sz pc_sz_pat_r = _T("{align=%s;family=%s;fore=%s;opts=%s;size=%d(pt)}");
 
 	CString cs_align = this->Align().Print(e_print::e_req);
 	CString cs_fore  = TRgbQuad(this->Fore()).Print(e_print::e_req);
@@ -164,8 +164,8 @@ CString     CFontSpec::Print  (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sf
 }
 #endif
 
-uint32_t    CFontSpec::Size   (void) const { return m_size ; }
-uint32_t&   CFontSpec::Size   (void)       { return m_size ; }
+int32_t    CFontSpec::Size   (void) const { return m_size ; }
+int32_t&   CFontSpec::Size   (void)       { return m_size ; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -175,7 +175,7 @@ CFontSpec&  CFontSpec::operator = (const CFontSpec& _spec) {
 
 CFontSpec&  CFontSpec::operator <<(const CAlign& _align ) { this->Align() = _align; return *this; }
 CFontSpec&  CFontSpec::operator >>(const rgb_color _clr_fore) { this->Fore() = _clr_fore; return *this; }
-CFontSpec&  CFontSpec::operator <<(const uint32_t _dw_size ) { this->Size() = _dw_size; return *this; }
+CFontSpec&  CFontSpec::operator <<(const int32_t _dw_size ) { this->Size() = _dw_size; return *this; }
 CFontSpec&  CFontSpec::operator <<(const TFontOpts& _opts) { this->Options() = _opts; return *this; }
 CFontSpec&  CFontSpec::operator <<(_pc_sz _lp_sz_family) { this->Family(_lp_sz_family); return *this; }
 

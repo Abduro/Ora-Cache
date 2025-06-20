@@ -123,14 +123,14 @@ CZBuffer::~CZBuffer (void) { this->Reset(); }
 
 err_code  CZBuffer::Create (const HDC _h_origin, const t_rect& _rc_draw)  {
 	_h_origin; _rc_draw;
-	this->m_error << __METHOD__ << __s_ok;
+	err_code n_result = __s_ok;
 
 	if (this->Is_valid())
-		return this->m_error << (err_code) TErrCodes::eObject::eExists;
+		return this->m_error << __METHOD__ << (err_code) TErrCodes::eObject::eExists;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc ;
 	if (nullptr == TDC::CreateCompatibleDC(_h_origin))
-		return this->m_error.Last();
+		return n_result = (this->m_error << __METHOD__).Last();
 
 	this->m_origin = _h_origin;
 
@@ -140,13 +140,14 @@ err_code  CZBuffer::Create (const HDC _h_origin, const t_rect& _rc_draw)  {
 	if (__failed(this->m_surface.ApplyTo(TDC::m_hDC)))         // applying new surface created above to select into this memory device context;
 		return this->m_error = this->m_surface.Error();
 
-	return this->Error();
+	return n_result;
 }
 err_code  CZBuffer::Reset (void){
-	this->m_error << __METHOD__ << __s_ok;
+	
+	err_code n_result = __s_ok;
 
 	if (this->Is_valid() == false)
-		return this->m_error << __e_not_inited;
+		return this->m_error << __METHOD__ << __e_not_inited;
 
 	if (this->m_surface.Prev()) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt ;
@@ -161,7 +162,7 @@ err_code  CZBuffer::Reset (void){
 			this->m_origin, rc_draw.left, rc_draw.top, __W(rc_draw), __H(rc_draw), TDC::m_hDC, rc_draw.left, rc_draw.top, SRCCOPY
 		);
 		if (false == b_result)
-			this->m_error.Last();
+			n_result = (this->m_error << __METHOD__).Last();
 
 		// https://stackoverflow.com/questions/27422871/does-deletedc-automatically-unselect-objects ;
 
@@ -172,9 +173,9 @@ err_code  CZBuffer::Reset (void){
 		if (::DeleteDC(TDC::m_hDC))
 			TDC::m_hDC = nullptr;
 		else
-			this->m_error.Last();
+			n_result = (this->m_error << __METHOD__).Last();
 	}
-	return this->Error();
+	return n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -335,7 +336,7 @@ err_code  CZBuffer::Draw (const t_rect& _rect, const rgb_color _clr) {
 	if (false == !!::RectVisible(TDC::m_hDC, &_rect))
 		return this->m_error <<__METHOD__ << __s_false;
 
-	if (false) {}                    // https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;
+	if (false) {} // https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;
 	else {
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
@@ -355,7 +356,40 @@ err_code  CZBuffer::Draw (const t_rect& _rect, const rgb_color _clr) {
 			return (this->m_error << __METHOD__).Last();
 #endif
 	}
-	
+	return n_result;
+}
+
+err_code  CZBuffer::Draw  (_pc_sz pszText, const h_font& fnt_, const t_rect& _rect, const rgb_color clrFore, const dword _u_format) {
+	pszText; fnt_; _rect; clrFore; _u_format;
+
+	err_code n_result = __s_ok;
+
+	if (::IsRectEmpty(&_rect)) return this->m_error <<__METHOD__<<__e_rect;
+	if (this->Is_valid() == false) return this->m_error <<__METHOD__<<__e_not_inited;
+
+	if (!pszText || !::lstrlenW(pszText))
+		return this->m_error <<__METHOD__<<__e_inv_arg;
+
+	static const dword fmt_ = DT_LEFT | DT_VCENTER |/*DT_WORDBREAK*/DT_END_ELLIPSIS | DT_NOCLIP | DT_NOPREFIX /*|DT_MODIFYSTRING*/;
+
+	const h_font    fnt_loc = (nullptr == fnt_ ? (h_font)::GetStockObject(DEFAULT_GUI_FONT) : fnt_);
+	const rgb_color clr_loc = (__clr_none == clrFore ? ::GetSysColor(COLOR_WINDOWTEXT) : clrFore);
+	const dword     fmt_loc = (0 == _u_format ? fmt_ : _u_format);
+
+	const int32_t nSave = TDC::SaveDC();
+
+	TDC::SelectFont(fnt_loc);          // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject ;
+	if (0 == TDC::SetBkMode(__no_bkg)) // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode ; the example of text rotation;
+		n_result = (this->m_error << __METHOD__).Last();
+	if (__clr_invalid == TDC::SetTextColor(clr_loc))
+		n_result = (this->m_error << __METHOD__).Last();
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext ;
+	if (0 == ::DrawText(TDC::m_hDC, pszText, -1, const_cast<t_rect*>(&_rect), fmt_loc))
+		n_result = (this->m_error <<__METHOD__).Last();
+
+	TDC::RestoreDC(nSave);
+
 	return n_result;
 }
 
