@@ -49,6 +49,7 @@ namespace text{ namespace vertical {
 
 	public:
 		__ctor (_ctor);
+		__method (Set);
 	
 	private:
 		bool   m_b_verb;

@@ -65,4 +65,30 @@ void CAlign::_ctor (void) {
 	_out()();
 }
 
+void CAlign::Set (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out() += TStringEx().Format(_T("*before*:%s"), (_pc_sz) this->m_align.Print(e_print::e_all));
+
+	CFake_Wnd fake_wnd(true);
+
+	if (fake_wnd.Error().Is()) {
+		_out() += fake_wnd.Error().Print(TError::e_print::e_req);
+		_out()();
+		return;
+	}
+
+	this->m_align << fake_wnd.Ctx();
+	if (this->m_align.Error().Is()) {
+		_out() += this->m_align.Error().Print(TError::e_print::e_req);
+	}
+	else {
+		_out() += TStringEx().Format(_T("*after *:%s"), (_pc_sz) this->m_align.Print(e_print::e_all));
+	}
+
+	_out()();
+}
+
 }}}}}}
