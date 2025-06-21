@@ -10,8 +10,9 @@
 
 #include "uix.gdi.defs.h"
 #include "uix.gdi.blend.h"
-#include "uix.gdi.shade.h"
 #include "uix.gdi.object.h"
+#include "uix.gdi.shade.h"
+#include "uix.gdi.text.h"
 #include "uix.gdi.zbuf.h"
 
 namespace ebo { namespace boo { namespace test { namespace draw {
@@ -50,6 +51,23 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 		bool    m_verb ;
 		CError  m_error;
 		HDC     m_h_dc ;
+	};
+
+	using TMode = ex_ui::draw::memory::CMode;
+
+	__class(CMode){
+	public:
+		 CMode (const bool _b_verb = false);
+		~CMode (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Get);
+		__method (Set);
+
+	private:
+		bool m_b_verb;
+		TMode  m_mode;
 	};
 
 }}}}

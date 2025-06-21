@@ -12,18 +12,6 @@ using namespace ex_ui::controls::sfx::tabbed;
 CWnd:: CWnd(CControl& _ctrl) : TWindow(), m_ctrl(_ctrl) {
 	TWindow::Handlers().Draw().Subscribe (this); TWindow::Handlers().Live().Subscribe(this);
 	TWindow::Handlers().Frame().Subscribe(this);
-#if (1)
-	TWindow::m_error << m_font.Create(
-		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
-	);
-
-	m_font_vert.Angle(90);
-
-	TWindow::m_error << m_font_vert.Create(
-		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
-	);
-
-#endif
 }
 CWnd::~CWnd(void) {
 	TWindow::Handlers().Draw().Unsubscribe (this); TWindow::Handlers().Live().Unsubscribe(this);
@@ -134,6 +122,19 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 
 err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 
+#if (1)
+	TWindow::m_error << m_font.Create(
+		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
+	);
+
+	m_font_vert.Angle(90);
+
+	TWindow::m_error << m_font_vert.Create(
+		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
+	);
+
+#endif
+
 	err_code n_result = __s_false;
 	return   n_result;
 }
@@ -162,18 +163,10 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
 }
 
 #if (0)
-using namespace ST_Ctrls;
-using namespace ST_Ctrls::_impl;
-using namespace ST_Ctrls::format;
-
-using namespace ex_ui;
-using namespace ex_ui::controls;
 
 #include "shared.uix.gdi.provider.h"
 #include "shared.uix.gen.hsl.h"
 #include "shared.uix.gen.theme.h"
-
-using namespace ex_ui::draw;
 
 /////////////////////////////////////////////////////////////////////////////
 #define SAFE_LOCK_RENDER() SAFE_LOCK(this->m_guard);

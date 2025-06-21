@@ -299,7 +299,8 @@ err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const DWORD dwOptions, co
 		log.lfQuality = CLEARTYPE_NATURAL_QUALITY;
 
 		if (!!this->Angle()) {
-			log.lfEscapement = this->Angle() * 10;
+			log.lfEscapement  = this->Angle() * 10;
+			log.lfOrientation = log.lfEscapement;
 		}
 
 		this->m_handle = ::CreateFontIndirect(&log); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirecta ;

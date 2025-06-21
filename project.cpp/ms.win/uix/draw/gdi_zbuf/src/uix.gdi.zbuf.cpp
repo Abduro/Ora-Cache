@@ -16,9 +16,121 @@ using namespace ex_ui::draw::memory;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace draw { namespace _impl {
+
+	using TMode = CMode::e_mode;
+
+	class CMode_Fmt {
+	public:
+		 CMode_Fmt (const uint32_t _mode) : m_raw_mode(_mode) {}
+		 CMode_Fmt (void) = delete; CMode_Fmt (const CMode_Fmt&) = delete; CMode_Fmt (CMode_Fmt&&) = delete;
+		~CMode_Fmt (void) {}
+
+	public:
+		CString  ToString (void) const {
+		
+			CString cs_out;
+
+			switch (this->m_raw_mode) {
+			case TMode::e__undef     : { cs_out = _T("#not_set"); } break;
+			case TMode::e_advanced   : { cs_out = _T("advanced"); } break;
+			case TMode::e_compatible : { cs_out = _T("compatible"); } break;
+			default:;
+				cs_out.Format(_T("#unkn:%d"), this->m_raw_mode);
+			}
+
+			return  cs_out;
+		}
+
+	private:
+		CMode_Fmt& operator = (const CMode_Fmt&) = delete;
+		CMode_Fmt& operator = (CMode_Fmt&&) = delete;
+
+	private:
+		uint32_t m_raw_mode;
+	};
+
 }}}
 
 using namespace ex_ui::draw::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
+CMode:: CMode (void) : m_value(e_mode::e__undef), m_h_dc(nullptr) {}
+CMode:: CMode (const HDC& _h_dc) : CMode() { *this << _h_dc; }
+CMode::~CMode (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+int32_t  CMode::Get (void) const {
+
+	err_code n_result = __s_ok;
+
+	if (false == CZBuffer::Is_DC(this->m_h_dc)) {
+		this->m_value = e_mode::e__undef;
+		n_result = (err_code) TErrCodes::eObject::eHandle;
+	}
+	else {
+		this->m_value = ::GetGraphicsMode(this->m_h_dc); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
+		if (0 == this->m_value)
+			n_result = __LastErrToHresult();
+	}
+
+	return this->m_value;
+}
+
+err_code CMode::Set (const e_mode _e_value) {
+	_e_value;
+	err_code n_result = __s_ok;
+
+	if (false == CZBuffer::Is_DC(this->m_h_dc)) {
+		this->m_value = e_mode::e__undef;
+		n_result = (err_code) TErrCodes::eObject::eHandle;
+	}
+	else if (0 == ::SetGraphicsMode(this->m_h_dc, _e_value)) {
+		n_result = __LastErrToHresult();
+	}
+	else
+		this->m_value = _e_value;
+
+	return n_result;
+}
+
+bool CMode::IsAdvanced (void) const { return this->m_value == e_mode::e_advanced; }
+
+bool CMode::Is_valid (void) const { return this->m_value != e_mode::e__undef; }
+
+#if defined(_DEBUG)
+CString  CMode::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {hdc=%s;mode='%s';valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {hdc=%s;mode='%s';valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("hdc=%s;mode='%s';valid=%s");
+
+	CString cs_hdc   = TStringEx().__address_of(this->m_h_dc);
+	CString cs_mode  = CMode_Fmt(this->m_value).ToString();
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_hdc, (_pc_sz) cs_mode, (_pc_sz) cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_hdc, (_pc_sz) cs_mode, (_pc_sz) cs_valid);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r,
+		(_pc_sz) cs_hdc, (_pc_sz) cs_mode, (_pc_sz) cs_valid);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+CMode&  CMode::operator << (const HDC& _h_dc) { this->m_h_dc = _h_dc; return *this; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 CSurface:: CSurface (void) : m_surface{nullptr}, m_rc_draw{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
@@ -113,9 +225,7 @@ HBITMAP&   CSurface::New  (void)       { return this->m_surface[1]; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////
-
-CZBuffer:: CZBuffer (void) : m_origin(nullptr) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CZBuffer:: CZBuffer (void) : m_origin(nullptr), m_mode(*this) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CZBuffer:: CZBuffer (const HDC _h_origin, const t_rect& _rc_draw) : CZBuffer() { this->Create(_h_origin, _rc_draw); }
 CZBuffer::~CZBuffer (void) { this->Reset(); }
 
@@ -133,6 +243,8 @@ err_code  CZBuffer::Create (const HDC _h_origin, const t_rect& _rc_draw)  {
 		return n_result = (this->m_error << __METHOD__).Last();
 
 	this->m_origin = _h_origin;
+	this->Mode() << TDC::m_hDC;
+	this->Mode().Set(CMode::e_advanced);
 
 	if (__failed(this->m_surface.Create(_h_origin, _rc_draw))) // needs to be checked against input dc and CreateDIBSection; (done)
 		return this->m_error = this->m_surface.Error();
@@ -392,7 +504,9 @@ err_code  CZBuffer::Draw  (_pc_sz pszText, const h_font& fnt_, const t_rect& _re
 
 	return n_result;
 }
-
+const
+CMode&    CZBuffer::Mode (void) const { return this->m_mode; }
+CMode&    CZBuffer::Mode (void)       { return this->m_mode; }
 const
 CSurface& CZBuffer::Surface (void) const { return this->m_surface; }
 CSurface& CZBuffer::Surface (void)       { return this->m_surface; }

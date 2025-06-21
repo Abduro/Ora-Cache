@@ -185,6 +185,8 @@
     <!--generic wrappers-->
     <ClInclude Include="$(_0)shared.preproc.h" />
     <ClCompile Include="$(_1)shared.preproc.cpp" />
+    <ClInclude Include="$(_0)shared.props.h" />
+    <ClCompile Include="$(_1)shared.props.cpp" />
     <ClInclude Include="$(_0)shared.random.h" />
     <ClCompile Include="$(_1)shared.random.cpp" />
     <ClInclude Include="$(_0)shared.str.ext.h" />
@@ -200,17 +202,17 @@
     <ClCompile Include="$(_1)sys.sync_obj.cpp" />
     <ClInclude Include="$(_0)shared.dbg.h" />
   </ItemGroup>
-  <ItemGroup>
+  <!--ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
+  </ItemGroup-->
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
+  <!--ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets" Condition="Exists('..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+  </ImportGroup-->
+  <!--Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\packages\wtl.10.0.10320\build\native\wtl.targets'))" />
-  </Target>
+  </Target-->
 </Project>

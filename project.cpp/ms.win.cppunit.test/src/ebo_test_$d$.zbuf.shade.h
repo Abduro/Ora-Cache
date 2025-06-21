@@ -20,7 +20,7 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 		~CRectMesh (void) = default;
 
 	public:
-		__method (_ctor);
+		__ctor (_ctor);
 		__method (Set);
 
 	private:

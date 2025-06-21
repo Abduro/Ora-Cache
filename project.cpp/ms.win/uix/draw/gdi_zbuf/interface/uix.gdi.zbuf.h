@@ -24,6 +24,44 @@ namespace ex_ui { namespace draw { namespace memory {
 
 	using h_font = HFONT;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;
+
+	class CMode {
+	public:
+		enum e_mode : int32_t { // for what reason signed data type is applied?
+		     e__undef  = 0,     // the error mode;
+		     e_advanced   = GM_ADVANCED  , // the mode for the possibility to apply world transformations;
+		     e_compatible = GM_COMPATIBLE, // the mode for the compatibility with 16-bit operating system; (default);
+		};
+	public:
+		 CMode (void); 
+		 CMode (const HDC&); CMode(const CMode&) = delete; CMode (CMode&&) = delete;
+		~CMode (void);
+
+	public:
+		int32_t  Get (void) const;   // gets the current graphic mode which the input device context is in;
+		err_code Set (const e_mode); // sets the new graphic mode which the input device context is in;
+
+		bool IsAdvanced (void) const;
+		bool Is_valid (void) const;
+
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
+	public:
+		CMode& operator <<(const HDC&) ; // sets the target device context handle for manupulating by its graphical mode;
+
+	private:
+		CMode& operator = (const CMode&) = delete;
+		CMode& operator = (CMode&&) = delete;
+
+	private:
+		mutable
+		int32_t m_value;
+		HDC     m_h_dc ; // this is the context device handle which the graphics mode is received from and can be set to;
+	};
+
 	class CSurface { // this class is exactly for memory device context;
 	public:
 		 CSurface (void); CSurface (const CSurface&) = delete; CSurface (CSurface&&) = delete;
@@ -94,6 +132,10 @@ namespace ex_ui { namespace draw { namespace memory {
 		err_code  Draw  (_pc_sz pszText, const h_font& _fnt, const t_rect& rcDraw, const rgb_color clrFore, const dword _u_format);
 
 		const
+		CMode&    Mode (void) const;
+		CMode&    Mode (void) ;
+
+		const
 		CSurface& Surface (void) const;
 		CSurface& Surface (void) ;
 
@@ -109,6 +151,7 @@ namespace ex_ui { namespace draw { namespace memory {
 		CError   m_error ;
 		HDC      m_origin;
 		CSurface m_surface;
+		CMode    m_mode;
 	};
 }}}
 #if (0)

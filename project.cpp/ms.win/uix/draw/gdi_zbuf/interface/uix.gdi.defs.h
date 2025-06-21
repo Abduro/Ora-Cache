@@ -24,6 +24,7 @@ namespace ATL { // this namespace is required for distinguishing ATL primitive s
 #include "2d.shape.h"
 #include "2d.shape.rect.h"
 
+#include "shared.props.h"
 #include "shared.types.h"
 #include "sys.error.h"
 

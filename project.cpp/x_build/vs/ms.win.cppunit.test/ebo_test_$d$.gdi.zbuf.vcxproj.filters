@@ -15,5 +15,7 @@
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.blend.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.shade.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.text.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.text.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

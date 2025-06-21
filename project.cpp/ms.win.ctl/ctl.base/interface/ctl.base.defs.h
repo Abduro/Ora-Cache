@@ -15,6 +15,7 @@
 #include "shared.preproc.h"
 #include "shared.string.h"
 #include "shared.types.h"
+#include "shared.props.h"
 #pragma endregion
 
 #include "color.rgb.h"

@@ -208,6 +208,8 @@
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.blend.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.shade.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.text.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
