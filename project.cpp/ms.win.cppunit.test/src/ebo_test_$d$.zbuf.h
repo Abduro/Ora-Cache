@@ -14,6 +14,7 @@
 #include "uix.gdi.shade.h"
 #include "uix.gdi.text.h"
 #include "uix.gdi.zbuf.h"
+#include "uix.gen.font.h"
 
 namespace ebo { namespace boo { namespace test { namespace draw {
 

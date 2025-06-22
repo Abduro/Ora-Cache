@@ -16,8 +16,8 @@ CProperty_U::~CProperty_U (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 const
-CProperty& CProperty_U::Base (void) const { return (const TBase&)*this; }
-CProperty& CProperty_U::Base (void)       { return (      TBase&)*this; }
+CProperty& CProperty_U::Base (void) const { return (TBase&)*this; }
+CProperty& CProperty_U::Base (void)       { return (TBase&)*this; }
 
 TError&    CProperty_U::Error(void) const { return this->m_error; }
 
@@ -51,7 +51,7 @@ namespace _impl {
 			else if ( e_value::e_left   & this->m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_left"); }
 			else if ( e_value::e_right  & this->m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_right"); }
 			else {
-				cs_out = _T("#not_set");
+				cs_out = _T("e_left"); // because this is default value and it equals to '0';
 			}
 
 			return  cs_out;
@@ -81,7 +81,7 @@ namespace _impl {
 			else if ( e_value::e_center & this->m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_center"); }
 			else if ( e_value::e_top    & this->m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_top"); }
 			else {
-				cs_out = _T("#not_set");
+				cs_out = _T("e_top");  // because this is default value and it equals to '0';
 			}
 
 			return  cs_out;
@@ -110,7 +110,7 @@ namespace _impl {
 			else if ( e_value::e_no_update & this->m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_no_update"); }
 			else if ( e_value::e_update_cp & this->m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_update_cp"); }
 			else {
-				cs_out = _T("#not_set");
+				cs_out = _T("e_no_update"); // because this is default value and it equals to '0';
 			}
 
 			return  cs_out;
@@ -136,7 +136,7 @@ CString   CAlign_Horz::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{align=%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{align=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{align=%s}");
+	static _pc_sz pc_sz_pat_r = _T("horz=%s");
 
 	CString cs_val = CAlign_H_Fmt(TBase::Value()).ToString();
 	CString cs_out;
@@ -152,6 +152,17 @@ CString   CAlign_Horz::Print (const e_print _e_opt) const {
 }
 #endif
 
+bool CAlign_Horz::Set (const uint32_t _u_flags) {
+	_u_flags;
+	switch ((e_value::e_center | e_value::e_left | e_value::e_right) & _u_flags) {
+	case e_value::e_center : (TBase&)*this += e_value::e_center; break;
+	case e_value::e_left   : (TBase&)*this += e_value::e_left  ; break;
+	case e_value::e_right  : (TBase&)*this += e_value::e_right ; break;
+	default:;
+	}
+	return !!TBase::Value();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CAlign_Vert:: CAlign_Vert (const uint32_t _n_value) : TBase(_n_value) {}
@@ -162,7 +173,7 @@ CString   CAlign_Vert::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{align=%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{align=%s}");
-	static _pc_sz pc_sz_pat_r = _T("{align=%s}");
+	static _pc_sz pc_sz_pat_r = _T("vert=%s");
 
 	CString cs_val = CAlign_V_Fmt(TBase::Value()).ToString();
 	CString cs_out;
@@ -177,6 +188,17 @@ CString   CAlign_Vert::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 #endif
+
+bool CAlign_Vert::Set (const uint32_t _u_flags) {
+	_u_flags;
+	switch ((e_value::e_bottom | e_value::e_center | e_value::e_top) & _u_flags) {
+	case e_value::e_bottom : (TBase&)*this += e_value::e_bottom; break;
+	case e_value::e_center : (TBase&)*this += e_value::e_center; break;
+	case e_value::e_top    : (TBase&)*this += e_value::e_top   ; break;
+	default:;
+	}
+	return !!TBase::Value();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -198,12 +220,49 @@ err_code CAlign::Ctx (const HDC& _h_dc) {
 }
 
 err_code CAlign::Get (void) {
-	return TBase::m_error << __e_not_impl;
+#if (0)
+	return TBase::m_error << __METHOD__ << __e_not_impl;
+#else
+	err_code n_result = __s_ok;
+
+	if (nullptr == this->m_h_dc) // it is supposed the device context is already set and is passed the check operation;
+		return n_result = TBase::m_error << __METHOD__ << __e_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextalign ;
+	const uint32_t n_flags = ::GetTextAlign(this->m_h_dc);
+	if (GDI_ERROR == n_flags)
+		return n_result = (TBase::m_error << __METHOD__).Last();
+
+	switch ((e_value::e_update_cp | e_value::e_no_update) & n_flags) {
+	case e_value::e_no_update: (TBase&)*this += e_value::e_no_update; break;
+	case e_value::e_update_cp: (TBase&)*this += e_value::e_update_cp; break;
+	default:;
+	}
+
+	this->Horz().Set(n_flags);
+	this->Vert().Set(n_flags);
+
+	TBase::m_error << __METHOD__ << n_result;
+	return n_result;
+#endif
 }
 
 err_code CAlign::Set (const uint32_t _flags) {
 	_flags;
-	return TBase::m_error << __e_not_impl;
+#if (0)
+	return TBase::m_error << __METHOD__ << __e_not_impl;
+#else
+	err_code n_result = __s_ok;
+
+	if (nullptr == this->m_h_dc)
+		return n_result = TBase::m_error << __METHOD__ << __e_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextalign ;
+	if (GDI_ERROR == ::SetTextAlign(this->m_h_dc, _flags))
+		n_result = (TBase::m_error << __METHOD__).Last();
+
+	return n_result;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -220,7 +279,11 @@ CString   CAlign::Print (const e_print _e_opt) const {
 	static _pc_sz pc_sz_pat_r = _T("{hdc=%s;align=%s}");
 
 	CString cs_ctx = TStringEx().__address_of(this->m_h_dc);
-	CString cs_val = CAlign_Fmt(TBase::Value()).ToString();
+	CString cs_val = TStringEx().Format(_T("%s;%s;%s"),
+			(_pc_sz) CAlign_Fmt(TBase::Value()).ToString(),
+			(_pc_sz) this->Horz().Print(e_print::e_req),
+			(_pc_sz) this->Vert().Print(e_print::e_req)
+	);
 	CString cs_out;
 
 	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_ctx, (_pc_sz) cs_val); }

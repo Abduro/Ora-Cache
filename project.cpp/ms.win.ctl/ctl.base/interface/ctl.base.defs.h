@@ -28,6 +28,7 @@
 #include "2d.shape.rect.h"
 #pragma endregion
 
+#include "uix.gdi.text.h"
 #include "uix.gdi.zbuf.h"
 #include "uix.gen.font.h"
 

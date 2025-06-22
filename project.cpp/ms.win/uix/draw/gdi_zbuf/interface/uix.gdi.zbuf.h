@@ -7,6 +7,7 @@
 #include "uix.gdi.defs.h"
 #include "uix.gdi.blend.h"
 #include "uix.gdi.shade.h"
+#include "uix.gen.font.h"
 
 namespace ex_ui { namespace draw { namespace memory {
 
@@ -23,6 +24,23 @@ namespace ex_ui { namespace draw { namespace memory {
 	using namespace ex_ui::draw::shade;
 
 	using h_font = HFONT;
+
+	class CFont_Selector {
+	public:
+		 CFont_Selector (const HDC&, const HFONT&);
+		 CFont_Selector (void) = delete; CFont_Selector (const CFont_Selector&) = delete; CFont_Selector (CFont_Selector&&) = delete;
+		~CFont_Selector (void);
+
+	private:
+		CFont_Selector&  operator = (const CFont_Selector&) = delete;
+		CFont_Selector&  operator = (CFont_Selector&&) = delete;
+
+	private:
+		bool    m_selected;
+		HDC     m_h_dc    ;
+		HFONT   m_h_font  ; // is not required if using safe point of the device context;
+		int32_t m_save_pt ;
+	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;

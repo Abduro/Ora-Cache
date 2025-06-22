@@ -80,7 +80,9 @@ namespace ex_ui { namespace draw {
 		bool      Is     (void) const;
 
 		TErrorRef Error (void) const;
-
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		HFONT const Get (void) const ; // the same as Handle();
 		err_code    Set (const HFONT); // duplicates an input font; 
@@ -100,6 +102,24 @@ namespace ex_ui { namespace draw {
 	public:
 		static bool Is (const HFONT);
 	};
+
+#if defined(_DEBUG)
+	class CFont_Dbg : public CFont_Base { typedef CFont_Base TBase;
+	public:
+		 CFont_Dbg (void); CFont_Dbg (const CFont_Dbg&) = delete; CFont_Dbg (CFont_Dbg&&) = delete;
+		~CFont_Dbg (void);
+
+	public:
+		const
+		CFont_Base&  Base (void) const;
+		CFont_Base&  Base (void) ;
+
+	private:
+		CFont_Dbg&  operator = (const CFont_Dbg&) = delete;
+		CFont_Dbg&  operator = (CFont_Dbg&&) = delete;
+	};
+#endif
+
 	//  https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw
 	class CFont : public CFont_Base { typedef CFont_Base TBase;
 	public:
@@ -111,11 +131,16 @@ namespace ex_ui { namespace draw {
 		bool      Angle (const int16_t); // sets the rotation angle; returns true if the value is changed;
 		/* inputs:
 				pszFamily - font name; dwOptions - font attributes; lParam - an exact font size or size factor (+/-); */
-		err_code  Create (_pc_sz pszFamily = nullptr, const DWORD dwOptions = CFontOptions::eNone, const LONG lParam = 0);
+		err_code  Create (_pc_sz pszFamily = nullptr, const dword dwOptions = CFontOptions::eNone, const _long lParam = 0);
 		HFONT     Detach (void);
+		_pc_sz    Family (void) const;
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all) const;
+#endif
 	private:
 		bool      m_bManaged; // flag that indicates font handle must be destroyed (if the font is not stock one)
 		int16_t   m_angle   ; // the rotation angle, can be eiter positive (for counter-cw) in range [0:360];
+		CString   m_family  ;
 	};
 
 	class CFontScalable : public CFont_Base {

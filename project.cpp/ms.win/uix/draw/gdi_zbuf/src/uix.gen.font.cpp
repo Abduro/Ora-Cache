@@ -175,6 +175,28 @@ bool      CFont_Base::Is     (void) const { return CFont_Base::Is(m_handle); }
 
 TErrorRef CFont_Base::Error  (void) const { return this->m_error; }
 
+#if defined(_DEBUG)
+CString   CFont_Base::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("valid=%s");
+
+	CString cs_valid = TStringEx().Bool(this->Is());
+
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_valid); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 HFONT const CFont_Base::Get (void) const { return this->Handle(); }
@@ -235,6 +257,17 @@ bool CFont_Base::Is (const HFONT _target) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CFont_Dbg:: CFont_Dbg (void) : TBase() {}
+CFont_Dbg::~CFont_Dbg (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+CFont_Base& CFont_Dbg::Base (void) const { return (TBase&)*this; }
+CFont_Base& CFont_Dbg::Base (void)       { return (TBase&)*this; }
+
+#endif
+/////////////////////////////////////////////////////////////////////////////
 
 ex_ui::draw::CFont:: CFont (void) : TBase(), m_bManaged(false), m_angle(0) {
 }
@@ -267,7 +300,7 @@ bool      ex_ui::draw::CFont::Angle (const int16_t _n_degrees) {
 	return b_changed;
 }
 
-err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const DWORD dwOptions, const LONG lParam) {
+err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const dword dwOptions, const _long lParam) {
 	pszFamily; dwOptions; lParam;
 
 	err_code n_result = __s_ok;
@@ -308,6 +341,7 @@ err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const DWORD dwOptions, co
 			n_result = (TBase::m_error << __METHOD__).Last();
 		else {
 			TBase::m_error << __METHOD__ << n_result; // otherwise the error of the base class object will be in error state 'not initialized';
+			this->m_family = pszFamily;
 			m_bManaged = true;
 		}
 	}
@@ -322,6 +356,37 @@ HFONT     ex_ui::draw::CFont::Detach(void)
 	m_bManaged = false;
 	return TBase::Detach();
 }
+
+_pc_sz    ex_ui::draw::CFont::Family (void) const {
+	return this->m_family.GetString();
+}
+
+#if defined(_DEBUG)
+CString   ex_ui::draw::CFont::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {family='%s';angle=%d(deg);valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {family='%s';angle=%d(deg);valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("family='%s';angle=%d(deg);valid=%s");
+
+	CString cs_valid = TStringEx().Bool(TBase::Is());
+	CString cs_family = TBase::Is() ? this->Family() : _T("#n/a");
+
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_family, this->Angle(), (_pc_sz) cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_family, this->Angle(), (_pc_sz) cs_valid);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, (_pc_sz) cs_family, this->Angle(), (_pc_sz) cs_valid); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

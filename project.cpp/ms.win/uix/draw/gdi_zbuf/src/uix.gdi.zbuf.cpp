@@ -15,6 +15,27 @@ using namespace ex_ui::draw::memory;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CFont_Selector:: CFont_Selector (const HDC& _h_dc, const HFONT& _h_fnt) : m_selected(false), m_save_pt(0) {
+
+	if (CZBuffer::Is_DC(_h_dc) && CFont_Base::Is(_h_fnt)) {
+
+		this->m_h_dc = _h_dc;
+
+		this->m_save_pt = ::SaveDC(this->m_h_dc);
+		this->m_h_font  = (HFONT)::SelectObject(this->m_h_dc, _h_fnt); m_selected = true;
+
+	}
+}
+
+CFont_Selector::~CFont_Selector (void) {
+
+	if (m_selected) {
+		::RestoreDC(this->m_h_dc, this->m_save_pt); m_selected = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 namespace ex_ui { namespace draw { namespace _impl {
 
 	using TMode = CMode::e_mode;

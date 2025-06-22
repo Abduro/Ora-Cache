@@ -79,6 +79,8 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	}
 	if (this->m_ctrl.Layout().Tabs().Sides().IsVert()) {
 
+		CAlign align; align << z_buffer; align.Set(TVert_Flags::e_center); // no check of error yet;
+
 		const TTabArray& tabs = this->m_ctrl.Tabs().Raw();
 		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 			const CTab& tab_ = tabs.at(i_);

@@ -36,7 +36,7 @@ void CFonts::Has (void) {
 	}
 	else {
 
-		CString cs_name(_T("Pirulen"));
+		CString cs_name(_T("Pirulen Rg"));
 
 		_out() += TStringEx().Format(_T("Trying to find font: %s..."), (_pc_sz) cs_name);
 

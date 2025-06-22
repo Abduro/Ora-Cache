@@ -16,6 +16,9 @@ namespace text{ namespace vertical {
 	using TAlign_V = ex_ui::draw::text::output::vertical::CAlign_Vert;
 	using TAlign   = ex_ui::draw::text::output::vertical::CAlign;
 
+	using THorz_Flags = TAlign_H::e_value;
+	using TVert_Flags = TAlign_V::e_value;
+
 	__class(CAlign_H){
 	public:
 		 CAlign_H (const bool _b_verb = false);
@@ -42,6 +45,8 @@ namespace text{ namespace vertical {
 		TAlign_V m_align_v;
 	};
 
+	using TFnt_Sel = ex_ui::draw::memory::CFont_Selector;
+
 	__class(CAlign){
 	public:
 		 CAlign (const bool _b_verb = false);
@@ -49,6 +54,7 @@ namespace text{ namespace vertical {
 
 	public:
 		__ctor (_ctor);
+		__method (Get);
 		__method (Set);
 	
 	private:
