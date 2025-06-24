@@ -78,14 +78,29 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		}
 	}
 	if (this->m_ctrl.Layout().Tabs().Sides().IsVert()) {
-
-		CAlign align; align << z_buffer; align.Set(TVert_Flags::e_center); // no check of error yet;
-
+#if (0)
+		const HFONT h_prev = z_buffer.SelectFont(this->m_font_vert.Handle());
+		CAlign align; align << z_buffer; align.Set(TVert_Flags::e_center); // no check of error yet; does not work: the text still is trimmed;
+#else
+		ex_ui::draw::text::CTextOut text;
+		text.Align().Horz().Set(THorz_Flags::e_center);
+		text.Align().Vert().Set(TVert_Flags::e_center);
+		text.Align() >> z_buffer;
+		text << z_buffer;  // it is required for correct calculation text position;
+#endif
 		const TTabArray& tabs = this->m_ctrl.Tabs().Raw();
 		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 			const CTab& tab_ = tabs.at(i_);
+#if (0)
 			z_buffer.Draw(tab_.Caption(), this->m_font_vert.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
+#else
+			text << tab_.Caption() << tab_.Rect() << (i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr);
+			z_buffer.Draw(text, this->m_font_vert.Handle(), dw_flags);
+#endif
 		}
+#if (0)
+		z_buffer.SelectFont(h_prev);
+#endif
 	}
 
 #endif
@@ -128,8 +143,12 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	TWindow::m_error << m_font.Create(
 		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
 	);
-
-	m_font_vert.Angle(90);
+	// ToDo: it must be made in format class of this tabbed control;
+	//       also, taking into account a user may change the tab position side, it should be dynamically updated;
+	if (this->m_ctrl.Layout().Tabs().Side() == TSide::e_left)
+		m_font_vert.Angle(90);
+	else if (this->m_ctrl.Layout().Tabs().Side() == TSide::e_right)
+		m_font_vert.Angle(270);
 
 	TWindow::m_error << m_font_vert.Create(
 		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()

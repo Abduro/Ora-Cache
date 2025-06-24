@@ -46,8 +46,9 @@ namespace ex_ui { namespace controls { namespace sfx {
 	using CBorder = ex_ui::controls::borders::CBorder;
 	using CPoint  = geometry::_2D::base::CPoint;
 
-	using CAlign  = ex_ui::draw::text::output::vertical::CAlign;
-	using TVert_Flags = ex_ui::draw::text::output::vertical::CAlign_Vert::e_value;
+	using CAlign  = ex_ui::draw::text::output::CAlign;
+	using THorz_Flags = ex_ui::draw::text::output::CAlign_Horz::e_value;
+	using TVert_Flags = ex_ui::draw::text::output::CAlign_Vert::e_value;
 
 	using CWindow = ::ATL::CWindow;
 }}}

@@ -525,6 +525,35 @@ err_code  CZBuffer::Draw  (_pc_sz pszText, const h_font& fnt_, const t_rect& _re
 
 	return n_result;
 }
+
+err_code  CZBuffer::Draw (const CTextOut& _txt_out, const h_font& _fnt, const dword _u_format) {
+	_txt_out; _fnt; _u_format;
+
+	err_code n_result = __s_ok;
+
+	if (::IsRectEmpty(&_txt_out.Out_to())) return this->m_error <<__METHOD__<<__e_rect;
+	if (this->Is_valid() == false) return this->m_error <<__METHOD__<<__e_not_inited;
+
+	if (_txt_out.Text().IsEmpty())
+		return this->m_error <<__METHOD__<<__e_inv_arg;
+
+	const int32_t nSave = TDC::SaveDC();
+	TDC::SelectFont(_fnt);
+
+	if (0 == TDC::SetBkMode(__no_bkg))
+		n_result = (this->m_error << __METHOD__).Last();
+
+	if (__clr_invalid == TDC::SetTextColor(_txt_out.Fore()))
+		n_result = (this->m_error << __METHOD__).Last();
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textouta ;
+	if (false == !!TDC::TextOut(_txt_out.Anchor().x, _txt_out.Anchor().y, (_pc_sz) _txt_out.Text(), _txt_out.Text().GetLength()))
+		n_result = (this->m_error << __METHOD__).Last();
+
+	TDC::RestoreDC(nSave);
+
+	return n_result;
+}
+
 const
 CMode&    CZBuffer::Mode (void) const { return this->m_mode; }
 CMode&    CZBuffer::Mode (void)       { return this->m_mode; }

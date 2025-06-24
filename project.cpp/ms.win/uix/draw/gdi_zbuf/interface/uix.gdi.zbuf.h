@@ -7,6 +7,7 @@
 #include "uix.gdi.defs.h"
 #include "uix.gdi.blend.h"
 #include "uix.gdi.shade.h"
+#include "uix.gdi.text.h"
 #include "uix.gen.font.h"
 
 namespace ex_ui { namespace draw { namespace memory {
@@ -116,7 +117,7 @@ namespace ex_ui { namespace draw { namespace memory {
 	};
 
 	//the CZBuffer is not inherited from ::WTL::CMemoryDC due to it makes public its fields, that is not necessary definitely;
-	class CZBuffer : public ::WTL::CDC { typedef ::WTL::CDC TDC;
+	class CZBuffer : public ::WTL::CDC { typedef ::WTL::CDC TDC; using CTextOut = ex_ui::draw::text::CTextOut;
 	public:
 		 CZBuffer (void);
 		 CZBuffer (const HDC _h_origin, const t_rect& _rc_draw);
@@ -139,20 +140,19 @@ namespace ex_ui { namespace draw { namespace memory {
 	public: // draw method(s);
 		/* if color of line has the alpha value that is not opaque, the draw of a rectangle by alpha blend is used;
 		   strictly vertical or horizontal line is drawn by this function in this version of this lib implementation; */
-		err_code  Draw  (const CLine&);
-		err_code  Draw  (const CLine& , const rgb_color); // draws the line by overriding its color by input one;
+		err_code  Draw (const CLine&);
+		err_code  Draw (const CLine& , const rgb_color); // draws the line by overriding its color by input one;
 		/* draws plain rectangle by using color provided, alpha blending is applicable;
 		   it is assumed the rectangle is not created or extracted from 32-bpp image, thus per-pixel-alpha option is not used; */
-		err_code  Draw  (const CRect& , const TRgbQuad&);
-		err_code  Draw  (const t_rect&, const TRgbQuad&);
-		err_code  Draw  (const t_rect&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
+		err_code  Draw (const CRect& , const TRgbQuad&);
+		err_code  Draw (const t_rect&, const TRgbQuad&);
+		err_code  Draw (const t_rect&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
 
-		err_code  Draw  (_pc_sz pszText, const h_font& _fnt, const t_rect& rcDraw, const rgb_color clrFore, const dword _u_format);
-
+		err_code  Draw (_pc_sz pszText , const h_font& _fnt, const t_rect& rcDraw, const rgb_color clrFore, const dword _u_format);
+		err_code  Draw (const CTextOut&, const h_font& _fnt, const dword _u_format);
 		const
-		CMode&    Mode (void) const;
-		CMode&    Mode (void) ;
-
+		CMode&    Mode (void) const;       // gets a reference to graphics mode of the device context; (ro);
+		CMode&    Mode (void) ;            // gets a reference to graphics mode of the device context; (rw);
 		const
 		CSurface& Surface (void) const;
 		CSurface& Surface (void) ;
