@@ -11,6 +11,7 @@
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
@@ -29,23 +30,24 @@
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <_4>$(Color)interface\</_4>
-    <_5>$(Geo-2D)interface\</_5>
-    <_6>$(Win-pop)interface\</_6>
-    <_7>$(Win-pop)interface\msg_handlers\</_7>
-    <_8>$(CtlBase)interface\</_8><!--This library interface is being tested!-->
-    <_9>$(ZBuffer)interface\</_9>
-    <_a>$(MS-WTL)include\</_a>
-    <_b>$(Color)interface\compl\</_b>
-    <_c>$(Color)interface\named\</_c>
-    <_d>$(Theme)interface\</_d>
-    <_e>$(Theme)interface\named\</_e>
-    <_f>$(Shell)interface\</_f>
-    <_g>$(ComCore)interface\</_g>
+    <_4>$(Memory)interface\</_4>
+    <_5>$(ComCore)interface\</_5>
+    <_6>$(Shell)interface\</_6>
+    <_7>$(Geo-2D)interface\</_7>
+    <_8>$(Color)interface\</_8>
+    <_9>$(Color)interface\compl\</_9>
+    <_a>$(Color)interface\named\</_a>
+    <_b>$(Theme)interface\</_b>
+    <_c>$(Theme)interface\named\</_c>
+    <_d>$(Win-pop)interface\</_d>
+    <_e>$(Win-pop)interface\msg_handlers\</_e>
+    <_f>$(CtlBase)interface\</_f><!--This library interface is being tested!-->
+    <_g>$(MS-WTL)include\</_g>
+    <_h>$(ZBuffer)interface\</_h>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

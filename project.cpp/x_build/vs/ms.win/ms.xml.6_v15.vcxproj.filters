@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\data">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\data">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000093}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)msxml.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)msxml.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)msxml.doc.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)msxml.doc.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)msxml.error.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)msxml.error.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)msxml.base.h"><Filter>interface\data</Filter></ClInclude>
+    <ClCompile Include="$(_3)msxml.base.cpp"><Filter>src\data</Filter></ClCompile>
+    <ClInclude Include="$(_2)msxml.http.h"><Filter>interface\data</Filter></ClInclude>
+    <ClCompile Include="$(_3)msxml.http.cpp"><Filter>src\data</Filter></ClCompile>
+    <ClInclude Include="$(_2)msxml.ntfs.h"><Filter>interface\data</Filter></ClInclude>
+    <ClCompile Include="$(_3)msxml.ntfs.cpp"><Filter>src\data</Filter></ClCompile>
+  </ItemGroup>
+</Project>

@@ -11,6 +11,7 @@
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
@@ -30,22 +31,23 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
-    <_2>$(_1)resources\</_2>
-    <_3>$(_1)render\</_3>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
-    <_4>$(_1)themes\</_4>
-    <_5>$(_2)icons\</_5>
+    <_2>$(Root)src\resources\</_2>
+    <_3>$(Root)src\render\</_3>          <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
+    <_4>$(Root)src\themes\</_4>
+    <_5>$(Root)src\resources\icons\</_5>
     <_6>$(Shared)interface\</_6>
     <_7>$(Error)interface\</_7>
     <_8>$(Error)interface\seh\</_8>
-    <_9>$(ComCore)interface\</_9>
-    <_a>$(Shell)interface\</_a>
-    <_b>$(Color)interface\</_b>
-    <_c>$(Color)interface\compl\</_c>
-    <_d>$(Color)interface\named\</_d>
-    <_e>$(Theme)interface\</_e>
-    <_f>$(Theme)interface\named\</_f>
-    <_g>$(Geo-2d)interface\</_g>
-    <_h>$(MS-WTL)include\</_h>
+    <_9>$(Memory)interface\</_9>
+    <_a>$(ComCore)interface\</_a>
+    <_b>$(Shell)interface\</_b>
+    <_c>$(Geo-2d)interface\</_c>
+    <_d>$(Color)interface\</_d>
+    <_e>$(Color)interface\compl\</_e>
+    <_f>$(Color)interface\named\</_f>
+    <_g>$(Theme)interface\</_g>
+    <_h>$(Theme)interface\named\</_h>
+    <_i>$(MS-WTL)include\</_i>
     <_j>$(Win-pop)interface\</_j>
     <_k>$(Win-pop)interface\msg_handlers\</_k>
     <_l>$(Render)interface\</_l>
@@ -57,7 +59,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />

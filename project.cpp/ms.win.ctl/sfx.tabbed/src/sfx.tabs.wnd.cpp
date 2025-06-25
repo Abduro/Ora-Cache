@@ -67,14 +67,29 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		z_buffer.Draw( border, act_clr);
 	}
 
-	static const dword dw_flags = DT_CENTER|DT_VCENTER|DT_END_ELLIPSIS|DT_NOCLIP|DT_NOPREFIX|DT_SINGLELINE;
 	// (4) draws captions of the tabs; the color of the text depends on activity of the tab and the same as tab border color;
 	if (this->m_ctrl.Layout().Tabs().Sides().IsHorz()) {
+		// ToDo: using the same names with classes, but of other namespace must be solved, otherwise the compiler generates the warning;
+		using TFlags_Horz = ex_ui::draw::text::format::CAlign_Horz::e_value;
+		using TFlags_Vert = ex_ui::draw::text::format::CAlign_Vert::e_value;
+		using TAlt_Flags  = ex_ui::draw::text::format::CAlterer::e_value;
+		using TCut_Flags  = ex_ui::draw::text::format::CCutter::e_value;
+		using TOpt_Flags  = ex_ui::draw::text::format::COptimizer::e_value;
+
+		ex_ui::draw::text::CDrawText text;
+
+		text.Format().Set(
+			TFlags_Horz::e_center | TFlags_Vert::e_middle | TCut_Flags::e_end | TOpt_Flags::e_no_clip | TOpt_Flags::e_single | TAlt_Flags::e_no_prefix
+		);
 
 		const TTabArray& tabs = this->m_ctrl.Tabs().Raw();
+
 		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 			const CTab& tab_ = tabs.at(i_);
-			z_buffer.Draw(tab_.Caption(), this->m_font.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
+
+			text << tab_.Caption() << tab_.Rect() << (i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr);
+
+			z_buffer.Draw(text, this->m_font.Handle());
 		}
 	}
 	if (this->m_ctrl.Layout().Tabs().Sides().IsVert()) {
@@ -94,8 +109,9 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #if (0)
 			z_buffer.Draw(tab_.Caption(), this->m_font_vert.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
 #else
-			text << tab_.Caption() << tab_.Rect() << (i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr);
-			z_buffer.Draw(text, this->m_font_vert.Handle(), dw_flags);
+			((ex_ui::draw::text::CText_Base&)text) << tab_.Caption()  << (i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr);
+			text << tab_.Rect();
+			z_buffer.Draw(text, this->m_font_vert.Handle(), 0);
 #endif
 		}
 #if (0)

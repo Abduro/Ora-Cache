@@ -21,7 +21,7 @@ CView:: CView (void) {
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
-#define _use_case 2
+#define _use_case 0
 
 #if defined(_use_case) && (_use_case == 0)   // sets tabs layout on the top side and the horizontal align from the left side;
 	this->Tabbed().Layout().Tabs().Side(TSide::e_top);

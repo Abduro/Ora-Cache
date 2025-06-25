@@ -47,6 +47,7 @@
 			sfx.tabbed_v15 : {00000C13-EEEE-BBBB-6667-00000003000B} << tabbed control project;
 
 		runnable_v15 : {00000C13-EEEE-BBBB-6667-000000000007} << system thread pool wrapper;
+		ms.xml.6_v15 : {00000C13-EEEE-BBBB-6667-000000000009} << MS XML v6 wrapper;
 		
 	test.cases : {00000C13-EEEE-BBBB-6667-100000002000} << the root of test cases' projects;
 		core : {00000C13-EEEE-BBBB-6667-100000002100} << core wrapper projects' node;

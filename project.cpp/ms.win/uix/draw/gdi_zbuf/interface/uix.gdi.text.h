@@ -97,6 +97,7 @@ namespace format {
 #if defined(_DEBUG)
 		CString      Print(const e_print = e_print::e_all) const;
 #endif
+		uint32_t Get (void) const;
 		bool Set (const uint32_t _u_flags); // updates/sets the horizontal and vertical alignments of of this class object; the two flags may be accepted;
 		const
 		CAlign_Vert& Vert (void) const;
@@ -132,10 +133,11 @@ namespace format {
 	public:
 		enum e_value : uint32_t {
 		     e__na  = 0x0,
-		     e_do_modify = DT_MODIFYSTRING, // Modifies the specified string to match the displayed text;
-		     e_do_prefix = DT_PREFIXONLY  , // Draws only an underline at the position of the character following the ampersand (&) prefix character;
-		     e_no_prefix = DT_HIDEPREFIX  , // Ignores the ampersand (&) prefix character in the text;
-		     e_tabs_ext  = DT_EXPANDTABS  , // Expands tab characters; The default number of characters per tab is 8 (eight);
+		     e_do_modify   = DT_MODIFYSTRING, // Modifies the specified string to match the displayed text;
+		     e_no_prefix   = DT_NOPREFIX    , // Turns off processing of prefix characters;
+		     e_do_prefix   = DT_PREFIXONLY  , // Draws only an underline at the position of the character following the ampersand (&) prefix character;
+		     e_hide_prefix = DT_HIDEPREFIX  , // Ignores the ampersand (&) prefix character in the text;
+		     e_tabs_ext    = DT_EXPANDTABS  , // Expands tab characters; The default number of characters per tab is 8 (eight);
 		};
 	public:
 		 CModifier (void) ;
@@ -196,6 +198,7 @@ namespace format {
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
+		uint32_t  Get (void) const;       // gets flags from all components of this format object;
 		bool Set (const uint32_t _flags); // change any format component in accordance with input flags; returns 'true' in case of at least one flag is changed;
 
 	public:
@@ -213,8 +216,54 @@ namespace format {
 		CAlterer  m_modify;
 		COptima   m_optima;
 	};
-
 }
+	class CText_Base {
+	protected:
+		 CText_Base (void); CText_Base (const CText_Base&) = delete; CText_Base (CText_Base&&) = delete;
+		~CText_Base (void);
+
+	public:
+		const
+		rgb_color& Fore  (void) const;
+		rgb_color& Fore  (void) ;
+		const
+		t_rect&    Out_to(void) const;
+		t_rect&    Out_to(void) ;
+		const
+		CString&   Text  (void) const;
+		CString&   Text  (void) ;
+
+	protected:
+		rgb_color  m_clr_fore ;
+		t_rect     m_draw_rect;
+		CString    m_text ;
+
+	public:
+		CText_Base&  operator <<(_pc_sz _p_text);
+		CText_Base&  operator <<(const rgb_color& _clr_fore);
+		CText_Base&  operator <<(const t_rect&);
+
+	private:
+		CText_Base&  operator = (const CText_Base&) = delete;
+		CText_Base&  operator = (CText_Base&&) = delete;
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext ;
+
+	class CDrawText : public CText_Base { typedef CText_Base TBase;
+	using CFormat = ex_ui::draw::text::format::CFormat;
+	public:
+		 CDrawText (void);
+		~CDrawText (void);
+
+	public:
+		const
+		CFormat&   Format(void) const;
+		CFormat&   Format(void) ;
+
+	private:
+		CFormat   m_format;
+	};
 
 namespace output {
 
@@ -306,10 +355,10 @@ namespace output {
 	// https://stackoverflow.com/questions/2250437/how-to-draw-vertical-text-in-windows-gui << the question;
 	// https://stackoverflow.com/a/2250840/4325555 << the answer;
 
-	class CTextOut {
+	class CTextOut : public CText_Base { typedef CText_Base TBase;
 	using CAlign = ex_ui::draw::text::output::CAlign;
 	public:
-		 CTextOut (void); CTextOut (const CTextOut&) = delete; CTextOut (CTextOut&&) = delete;
+		 CTextOut (void);
 		~CTextOut (void);
 
 	public:
@@ -324,30 +373,16 @@ namespace output {
 		const
 		HDC&       Ctx   (void) const;
 		HDC&       Ctx   (void) ;
-		const
-		rgb_color& Fore  (void) const;
-		rgb_color& Fore  (void) ;
-
-	//	bool    Is_valid (void) const;
+		
 		/* *note*: using the rectangle does not provide correct text placement, especially for vertical output the text;
 		   for example, tabs of the tabbed control reside on the left side of the window, in such case rectangle is applicable for drawing the tab borders only,
 		   but for text output of the tab caption is not, because the text must be placed to correct point for the TextOut() function,
 		   thus, X & Y must be calculated for specific alignment in any case, otherwise the text is drawn at the place that is not expected to be;
 		*/
-		const
-		t_rect&    Out_to(void) const;
-		t_rect&    Out_to(void) ;
-
 		err_code   Recalc_anchor (void); // it is required for correct alignment of the text, especially for vertical output;
 
-		const
-		CString&   Text  (void) const;
-		CString&   Text  (void) ;
-
 	public:
-		CTextOut&  operator <<(_pc_sz _p_text);
 		CTextOut&  operator <<(const HDC&);
-		CTextOut&  operator <<(const rgb_color& _clr_fore);
 		CTextOut&  operator <<(const t_rect&);
 
 	private:
@@ -358,9 +393,6 @@ namespace output {
 		CAlign    m_align;
 		HDC       m_h_dc ;
 		t_point   m_anchor;
-		t_rect    m_draw_rect;
-		rgb_color m_clr_fore ;
-		CString   m_text ;
 	};
 
 }}}

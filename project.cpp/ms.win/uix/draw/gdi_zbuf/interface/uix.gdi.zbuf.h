@@ -117,7 +117,11 @@ namespace ex_ui { namespace draw { namespace memory {
 	};
 
 	//the CZBuffer is not inherited from ::WTL::CMemoryDC due to it makes public its fields, that is not necessary definitely;
-	class CZBuffer : public ::WTL::CDC { typedef ::WTL::CDC TDC; using CTextOut = ex_ui::draw::text::CTextOut;
+	class CZBuffer : public ::WTL::CDC { typedef ::WTL::CDC TDC;
+
+	using CDrawText = ex_ui::draw::text::CDrawText;
+	using CTextOut  = ex_ui::draw::text::CTextOut;
+
 	public:
 		 CZBuffer (void);
 		 CZBuffer (const HDC _h_origin, const t_rect& _rc_draw);
@@ -148,8 +152,8 @@ namespace ex_ui { namespace draw { namespace memory {
 		err_code  Draw (const t_rect&, const TRgbQuad&);
 		err_code  Draw (const t_rect&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
 
-		err_code  Draw (_pc_sz pszText , const h_font& _fnt, const t_rect& rcDraw, const rgb_color clrFore, const dword _u_format);
-		err_code  Draw (const CTextOut&, const h_font& _fnt, const dword _u_format);
+		err_code  Draw (const CDrawText&, const h_font& _fnt);
+		err_code  Draw (const CTextOut& , const h_font& _fnt, const dword _u_format);
 		const
 		CMode&    Mode (void) const;       // gets a reference to graphics mode of the device context; (ro);
 		CMode&    Mode (void) ;            // gets a reference to graphics mode of the device context; (rw);

@@ -133,10 +133,11 @@ namespace _impl {
 	public:
 		CString  ToString (void) const {
 		CString  cs_out;
-			if ( e_value::e_do_modify & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_do_modify"); }
-			if ( e_value::e_do_prefix & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_do_prefix"); }
-			if ( e_value::e_no_prefix & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_no_prefix"); }
-			if ( e_value::e_tabs_ext  & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_tabs_ext" ); }
+			if ( e_value::e_do_modify   & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_do_modify"); }
+			if ( e_value::e_do_prefix   & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_do_prefix"); }
+			if ( e_value::e_no_prefix   & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_no_prefix"); }
+			if ( e_value::e_tabs_ext    & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_tabs_ext" ); }
+			if ( e_value::e_hide_prefix & TBase::m_value ) { if (cs_out.IsEmpty() == false) cs_out += _T("|"); cs_out += _T("e_hide_prefix" ); }
 			if (cs_out.IsEmpty()) {
 				cs_out = _T("#not_set");
 			}
@@ -271,6 +272,10 @@ CString   CAlign::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 #endif
+
+uint32_t CAlign::Get (void) const {
+	return this->Horz().Value() | this->Vert().Value();
+}
 
 bool  CAlign::Set (const uint32_t _u_flags) {
 	_u_flags;
@@ -417,7 +422,7 @@ COptima& CFormat::Optimize (void) const { return this->m_optima; }
 COptima& CFormat::Optimize (void)       { return this->m_optima; }
 
 #if defined(_DEBUG)
-CString   CFormat::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+CString  CFormat::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt;_p_pfx;_p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%salign=%s%s%scut=%s%s%salt=%s%s%sopt=%s%s%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%salign=%s%s%scut=%s%s%salt=%s%s%sopt=%s%s%s}");
@@ -454,6 +459,10 @@ CString   CFormat::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) co
 	return  cs_out;
 }
 #endif
+
+uint32_t CFormat::Get (void) const {
+	return this->Align().Get() | this->Cut().Value() | this->Modify().Value() | this->Optimize().Value();
+}
 
 bool CFormat::Set (const uint32_t _flags) {
 	_flags;
@@ -497,6 +506,18 @@ CFormat& CFormat::operator -= (const uint32_t _flags) {
 }
 
 }}}}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDrawText:: CDrawText (void) {}
+CDrawText::~CDrawText (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+ex_ui::draw::text::format::CFormat& CDrawText::Format (void) const { return this->m_format; }
+ex_ui::draw::text::format::CFormat& CDrawText::Format (void)       { return this->m_format; }
+
+/////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -758,7 +779,29 @@ err_code CAlign::operator >>(const HDC& _h_dc) { return this->SetTo(_h_dc); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CTextOut:: CTextOut (void) : m_h_dc(nullptr), m_draw_rect{0}, m_clr_fore(__clr_none), m_anchor{0} {}
+CText_Base:: CText_Base (void) : m_draw_rect{0}, m_clr_fore(__clr_none){}
+CText_Base::~CText_Base (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+rgb_color& CText_Base::Fore  (void) const { return this->m_clr_fore; }
+rgb_color& CText_Base::Fore  (void)       { return this->m_clr_fore; }
+const
+t_rect&    CText_Base::Out_to(void) const { return this->m_draw_rect; }
+t_rect&    CText_Base::Out_to(void)       { return this->m_draw_rect; }
+const
+CString&   CText_Base::Text  (void) const { return this->m_text; }
+CString&   CText_Base::Text  (void)       { return this->m_text; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CText_Base&  CText_Base::operator <<(_pc_sz _p_text) { this->Text() = _p_text; return *this; }
+CText_Base&  CText_Base::operator <<(const rgb_color& _clr_fore) { this->Fore() = _clr_fore; return *this; }
+CText_Base&  CText_Base::operator <<(const t_rect& _out) { this->Out_to() = _out; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CTextOut:: CTextOut (void) : TBase(), m_h_dc(nullptr), m_anchor{0} {}
 CTextOut::~CTextOut (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -773,12 +816,6 @@ t_point&   CTextOut::Anchor(void)       { return this->m_anchor; }
 const
 HDC&  CTextOut::Ctx (void) const { return this->m_h_dc; }
 HDC&  CTextOut::Ctx (void)       { return this->m_h_dc; }
-const
-rgb_color& CTextOut::Fore  (void) const { return this->m_clr_fore; }
-rgb_color& CTextOut::Fore  (void)       { return this->m_clr_fore; }
-const
-t_rect&    CTextOut::Out_to(void) const { return this->m_draw_rect; }
-t_rect&    CTextOut::Out_to(void)       { return this->m_draw_rect; }
 
 err_code   CTextOut::Recalc_anchor (void) {
 
@@ -803,16 +840,10 @@ err_code   CTextOut::Recalc_anchor (void) {
 	return n_result;
 }
 
-const
-CString&   CTextOut::Text  (void) const { return this->m_text; }
-CString&   CTextOut::Text  (void)       { return this->m_text; }
-
 /////////////////////////////////////////////////////////////////////////////
 
-CTextOut&  CTextOut::operator <<(_pc_sz _p_text) { this->Text() = _p_text; return *this; }
 CTextOut&  CTextOut::operator <<(const HDC& _h_dc) { this->Ctx() = _h_dc; return *this; }
-CTextOut&  CTextOut::operator <<(const rgb_color& _clr_fore) { this->Fore() = _clr_fore; return *this; }
 CTextOut&  CTextOut::operator <<(const t_rect& _out) {
-	this->Out_to() = _out;
+	(TBase&)*this << _out;
 	this->Recalc_anchor(); return *this;
 }

@@ -18,8 +18,13 @@
 #include "shared.types.h"
 #include "sys.err.codes.h"
 #include "sys.error.h"
+#include "sys.mem.handle.h"
 
 #include "com.def.base.h"
+
+#include <psapi.h>
+#pragma comment (lib, "psapi.lib")
+#pragma comment (lib, "shlwapi.lib")
 
 #define STRICT_TYPED_ITEMIDS // https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist ;
 

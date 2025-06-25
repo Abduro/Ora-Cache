@@ -10,6 +10,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
     <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
@@ -21,20 +22,23 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
-    <_1>$(_0)named\</_1>
+    <_1>$(Root)interface\named\</_1>
     <_2>$(Root)src\</_2>
-    <_3>$(_2)named\</_3>
+    <_3>$(Root)src\named\</_3>
     <_4>$(Shared)interface\</_4>
     <_5>$(Error)interface\</_5>
-    <_6>$(Color)interface\</_6>
-    <_7>$(_6)compl\</_7>
-    <_8>$(_6)named\</_8>
-    <_9>$(MS-WTL)include\</_9>
-    <_a>$(Shell)interface\</_a>
-    <_b>$(ComCore)interface\</_b>
+    <_6>$(ComCore)interface\</_6>
+    <_7>$(Memory)interface\</_7>
+    <_8>$(Color)interface\</_8>
+    <_9>$(Color)interface\compl\</_9>
+    <_a>$(Color)interface\named\</_a>
+    <_b>$(MS-WTL)include\</_b>
+    <_c>$(Shell)interface\</_c>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(_a);$(_b);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
+    <Include_abc>$(_a);$(_b);$(_c)</Include_abc>
+    <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

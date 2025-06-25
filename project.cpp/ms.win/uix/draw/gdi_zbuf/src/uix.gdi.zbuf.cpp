@@ -492,33 +492,28 @@ err_code  CZBuffer::Draw (const t_rect& _rect, const rgb_color _clr) {
 	return n_result;
 }
 
-err_code  CZBuffer::Draw  (_pc_sz pszText, const h_font& fnt_, const t_rect& _rect, const rgb_color clrFore, const dword _u_format) {
-	pszText; fnt_; _rect; clrFore; _u_format;
+err_code  CZBuffer::Draw (const CDrawText& _text, const h_font& _fnt) {
+	_text; _fnt;
 
 	err_code n_result = __s_ok;
 
-	if (::IsRectEmpty(&_rect)) return this->m_error <<__METHOD__<<__e_rect;
+	if (::IsRectEmpty(&_text.Out_to())) return this->m_error <<__METHOD__<<__e_rect;
 	if (this->Is_valid() == false) return this->m_error <<__METHOD__<<__e_not_inited;
 
-	if (!pszText || !::lstrlenW(pszText))
+	if (_text.Text().IsEmpty())
 		return this->m_error <<__METHOD__<<__e_inv_arg;
-
-	static const dword fmt_ = DT_LEFT | DT_VCENTER |/*DT_WORDBREAK*/DT_END_ELLIPSIS | DT_NOCLIP | DT_NOPREFIX /*|DT_MODIFYSTRING*/;
-
-	const h_font    fnt_loc = (nullptr == fnt_ ? (h_font)::GetStockObject(DEFAULT_GUI_FONT) : fnt_);
-	const rgb_color clr_loc = (__clr_none == clrFore ? ::GetSysColor(COLOR_WINDOWTEXT) : clrFore);
-	const dword     fmt_loc = (0 == _u_format ? fmt_ : _u_format);
 
 	const int32_t nSave = TDC::SaveDC();
 
-	TDC::SelectFont(fnt_loc);          // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject ;
+	TDC::SelectFont(_fnt);             // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject ;
 	if (0 == TDC::SetBkMode(__no_bkg)) // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode ; the example of text rotation;
 		n_result = (this->m_error << __METHOD__).Last();
-	if (__clr_invalid == TDC::SetTextColor(clr_loc))
+
+	if (__clr_invalid == TDC::SetTextColor(_text.Fore()))
 		n_result = (this->m_error << __METHOD__).Last();
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext ;
-	if (0 == ::DrawText(TDC::m_hDC, pszText, -1, const_cast<t_rect*>(&_rect), fmt_loc))
+	if (0 == ::DrawText(TDC::m_hDC, _text.Text().GetString(), -1, const_cast<t_rect*>(&_text.Out_to()), _text.Format().Get()))
 		n_result = (this->m_error <<__METHOD__).Last();
 
 	TDC::RestoreDC(nSave);

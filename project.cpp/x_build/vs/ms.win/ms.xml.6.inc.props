@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 14-Jun-2025 at 09:10:31.486, UTC+4, Batumi, Monday;
-	This is Ebo pack system shell wrapper library unit test project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 24-Jun-2025 at 23:32:49.046, UTC+4, Batumi, Tuesday;
+	This is MS XML v6. library wrapper project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -9,11 +9,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <com_core Condition="'$(com_core)'==''">..\..\..\ms.win\sys.com.core\</com_core>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
-    <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
-    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell><!--This is the target for testing!-->
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\msxml.6.core\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
@@ -21,19 +20,19 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
-    <_2>$(Shared)interface\</_2>
-    <_3>$(Error)interface\</_3>
-    <_4>$(Error)interface\seh\</_4>
-    <_5>$(Memory)interface\</_5><!--This interface is being tested!-->
-    <_6>$(ComCore)interface\</_6>
-    <_7>$(Shell)interface\</_7>
-    <_8></_8>
+    <_2>$(Root)interface\data\</_2>
+    <_3>$(Root)src\data\</_3>
+    <_4>$(Shared)interface\</_4>
+    <_5>$(Error)interface\</_5>
+    <_6>$(Error)interface\seh\</_6>
+    <_7>$(Memory)interface\</_7>
+    <_8>$(com_core)interface\</_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
-  </PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>                           	
   <ItemDefinitionGroup />
   <ItemGroup />
 </Project>

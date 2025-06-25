@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 03-Dec-2024 at 22:03:40.571, UTC+4, Batumi, Tuesday;
-	This is Ebo Pack runnable thread library unit test project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 25-Jun-2025 at 03:20:10.455, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack MS XML wrapper library unit test project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -10,7 +10,9 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <Runnable Condition="'$(Runnable)'==''">..\..\..\ms.win\runnable\</Runnable><!--This is the target being tested!-->
+    <ComObj Condition="'$(ComObj)'==''">..\..\..\ms.win\sys.com.core\</ComObj>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
+    <MSXML Condition="'$(MSXML)'==''">..\..\..\ms.win\msxml.6.core\</MSXML><!--This is the target being tested!-->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
@@ -21,16 +23,16 @@
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <_4>$(Runnable)interface\</_4><!--This library interface is being tested!-->
-    <_5></_5>
-    <_6></_6>
-    <_7></_7>
+    <_4>$(ComObj)interface\</_4>
+    <_5>$(Memory)interface\</_5>
+    <_6>$(MSXML)interface\</_6>
+    <_7>$(MSXML)interface\data\</_7>
     <_8></_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />
