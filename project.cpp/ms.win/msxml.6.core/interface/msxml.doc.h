@@ -8,18 +8,14 @@
 */
 #include "msxml.defs.h"
 #include "msxml.error.h"
+#include "msxml.gen.iface.h"
+#include "msxml.root.h"
 
 namespace shared { namespace xml { namespace ms {
 
 	using CPrs_Err = CParseError;
 	using TPrs_Err = const CPrs_Err;
 	using CSvc_Id  = CServiceId ;
-
-	typedef ::ATL::CComPtr<IXMLDOMDocument2>  TDocumentPtr; typedef TDocumentPtr TDocPtr;
-
-	// https://stackoverflow.com/questions/3080224/ways-to-parse-xml-in-c-win32 ;
-	// https://libexpat.github.io/doc/api/latest/ ; for the next use;
-	// https://gitlab.gnome.org/GNOME/libxml2 ; for the next use;
 
 	class CDocument {
 	public:
@@ -29,9 +25,13 @@ namespace shared { namespace xml { namespace ms {
 		~CDocument (void);
 
 	public:
-		err_code   Create(void) ;
-		TPrs_Err&  Error (void) const;
-		const bool Is (void) const;     // returns true if XML document interface is created successfully; maybe replaced by calling if (!!Ptr());
+		err_code   Create(const bool _b_norm = false) ; // if input arg is true, XML DOM document object removes all whitespaces;
+		err_code   Close (void) ;                       // destroys XML DOM document object;
+		TPrs_Err&  Error (void) const;                  // gets a reference to the last error object;
+
+		const bool Is (void) const;                     // returns true if xml document interface is created successfully; maybe replaced by calling if (!!Ptr());
+
+		err_code   Load (_pc_sz _xml_file_path);
 
 #if defined(_DEBUG)
 		CString    Print (const e_print = e_print::e_all) const;
@@ -40,20 +40,28 @@ namespace shared { namespace xml { namespace ms {
 		TDocPtr&   Ptr (void) const;
 		TDocPtr&   Ptr (void)      ;
 		const
+		CNode&     Root  (void) const;          // gets root node reference (ra);
+		CNode&     Root  (void)      ;          // gets root node reference (rw);
+		const
 		CSvc_Id&   Svc_Id (void) const;
 		CSvc_Id&   Svc_Id (void) ;
 
 	public:
 		CDocument& operator = (const CDocument&);
 		CDocument& operator = (CDocument&&) = delete;
+
 		CDocument& operator <<(const TDocPtr&);
 		CDocument& operator <<(const CSvc_Id&);
 
-	private:
-		TDocPtr  m_pDoc ;
-		CPrs_Err m_error;
-		CSvc_Id  m_svc_id;
+		const
+		TDocPtr&   operator ()(void) const;
+		TDocPtr&   operator ()(void)      ;
 
+	private:
+		TDocPtr    m_pDoc ;
+		CPrs_Err   m_error;
+		CSvc_Id    m_svc_id;
+		CNode      m_root ;
 	};
 
 }}}

@@ -287,7 +287,7 @@ CError::~CError(void) { }
 
 /////////////////////////////////////////////////////////////////////////////
 
-_pc_sz  CError::Class (void) const      { Safe_Lock(m_state); return m_class.GetString(); }
+_pc_sz   CError::Class (void) const      { Safe_Lock(m_state); return m_class.GetString(); }
 void     CError::Class (_pc_sz _pClass) { Safe_Lock(m_state); m_class = _pClass;  }
 void     CError::Class (_pc_sz _lp_sz_val, const bool bFormatted) {
 	_lp_sz_val;
@@ -350,7 +350,11 @@ err_code  CError::Result(const err_code _new)
 		m_class = CErr_Msg().Na ();
 	if (NULL == this->State().Get())
 		this->State() = (CErr_Fmt() << (CErr_Pattern() << CErr_Pattern::e_line) << *this);
-
+	/*
+		this method actually updates the error state description, but what is about error code itself?
+		it must be set to the state too, otherwise such property as Is() returns incorrect response;
+	*/
+	this->State().Set(_new);
 	return this->Result();
 }
 

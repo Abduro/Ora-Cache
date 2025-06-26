@@ -139,12 +139,19 @@ CProvider::~CProvider (void) {}
 err_code    CProvider::Load (_pc_sz _p_sz_path, bool b_async) {
 	_p_sz_path; b_async;
 
-	err_code e_result = TErrCodes::no_error;
+	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (TBase::Doc().Is() == false)
-		e_result = TBase::Doc().Create();
+		TBase::Doc().Create();
 
-	return e_result;
+	if (TBase::Doc().Error().Is())
+		return TBase::m_error = TBase::Doc().Error();
+
+	TBase::Doc().Load(_p_sz_path);
+	if (TBase::Doc().Error().Is())
+		return TBase::m_error = TBase::Doc().Error(); // taking into account the error is contained in child error object, the parent does not know about it :(
+
+	return TBase::Error();
 }
 
 

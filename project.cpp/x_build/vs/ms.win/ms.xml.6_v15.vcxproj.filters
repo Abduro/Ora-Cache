@@ -21,6 +21,12 @@
     <ClCompile Include="$(_1)msxml.doc.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)msxml.error.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)msxml.error.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)msxml.gen.iface.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)msxml.gen.iface.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)msxml.root.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)msxml.root.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2)msxml.base.h"><Filter>interface\data</Filter></ClInclude>
     <ClCompile Include="$(_3)msxml.base.cpp"><Filter>src\data</Filter></ClCompile>
     <ClInclude Include="$(_2)msxml.http.h"><Filter>interface\data</Filter></ClInclude>

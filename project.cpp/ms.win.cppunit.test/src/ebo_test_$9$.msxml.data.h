@@ -33,6 +33,9 @@ namespace ebo { namespace boo { namespace test { namespace xml {
 		__ctor (_ctor);
 		__method (Refresh);
 
+		const
+		TLocator& GetObject (void) const;
+
 	private:
 		bool m_b_verb;
 		TLocator m_locator;

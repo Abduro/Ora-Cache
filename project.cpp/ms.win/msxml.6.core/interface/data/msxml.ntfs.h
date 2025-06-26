@@ -8,8 +8,6 @@
 
 namespace shared { namespace xml { namespace ms { namespace ntfs {
 
-	using TBase  = shared::xml::ms::CProv_Base;
-
 	class CLocator {
 	public:
 		enum e_finder : uint32_t {
@@ -43,7 +41,7 @@ namespace shared { namespace xml { namespace ms { namespace ntfs {
 		CString  m_path ;  // this is the path to the XML file; no file name is included;
 	};
 
-	class CProvider : public TBase {
+	class CProvider : public shared::xml::ms::CProv_Base { typedef shared::xml::ms::CProv_Base TBase;
 	public:
 		 CProvider (void);
 		 CProvider (const CProvider&);
@@ -51,7 +49,7 @@ namespace shared { namespace xml { namespace ms { namespace ntfs {
 		~CProvider (void);
 
 	public:
-		err_code  Load (_pc_sz _p_file, bool _b_async = false); // opens a file that resides on given path;
+		err_code  Load (_pc_sz _p_file, bool _b_async = false); // opens a file that resides on given path; ToDo: _b_async is not implemented yet; XMLDocument has property of async parsing;
 
 	public:
 		CProvider& operator = (const CProvider&);

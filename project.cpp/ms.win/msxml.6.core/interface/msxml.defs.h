@@ -31,6 +31,12 @@
 	https://learn.microsoft.com/en-us/windows/deployment/usmt/xml-file-requirements ;
 	https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-custom-xml-examples ;
 */
+#ifndef __vt_true
+#define __vt_true VARIANT_TRUE
+#endif
+#ifndef __vt_false
+#define __vt_false VARIANT_FALSE
+#endif
 
 namespace shared { namespace xml { namespace ms {
 
@@ -47,6 +53,9 @@ namespace shared { namespace xml { namespace ms {
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms754671(v=vs.85) ; Msxml2.DOMDocument.4.0, requires its installation;
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms759214(v=vs.85) ; Msxml2.DOMDocument.5.0, requires its installation;
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms764622(v=vs.85) ; Msxml2.DOMDocument.6.0, requires its installation;
+
+	typedef ::ATL::CComPtr<IXMLDOMDocument2> TXmlDocumentPtr;    typedef TXmlDocumentPtr TDocPtr ;
+	typedef ::ATL::CComPtr<IXMLDOMElement  > TXmlElementPtr ;    typedef TXmlElementPtr  TNodePtr;
 
 	class CServiceId { // this class field set may be extended if necessary;
 	public:

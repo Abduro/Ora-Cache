@@ -20,7 +20,28 @@ void CFileData::Load (void) {
 
 	_out() += TLog_Acc::e_new_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out() += _T("Getting color theme configuration file...");
+
+	CLocator locator;
+	locator.Refresh();
+
+	const TLocator& the_object = locator.GetObject();
+
+	if (the_object.Error().Is())
+		return;
+
+	CString cs_full_path = TStringEx().Format(_T("%s%s"), the_object.Path(), the_object.File());
+
+	_out() += TStringEx().Format(_T("Color theme cfg file: %s"), (_pc_sz) cs_full_path);
+
+	this->m_loader.Load(cs_full_path.GetString());
+
+	if (this->m_loader.Error().Is())
+		_out() += this->m_loader.Error().Print(TError::e_print::e_req);
+	else {
 	
+	}
 	_out()();
 
 }
@@ -45,6 +66,9 @@ void CLocator::_ctor (void) {
 	_out()();
 
 }
+
+const
+TLocator&  CLocator::GetObject (void) const { return this->m_locator; }
 
 void CLocator::Refresh (void) {
 

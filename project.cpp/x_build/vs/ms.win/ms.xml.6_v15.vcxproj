@@ -196,6 +196,12 @@
     <ClCompile Include="$(_1)msxml.doc.cpp"/>
     <ClInclude Include="$(_0)msxml.error.h"/>
     <ClCompile Include="$(_1)msxml.error.cpp"/>
+    <ClInclude Include="$(_0)msxml.gen.iface.h"/>
+    <ClCompile Include="$(_1)msxml.gen.iface.cpp"/>
+    <ClInclude Include="$(_0)msxml.root.h"/>
+    <ClCompile Include="$(_1)msxml.root.cpp"/>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2)msxml.base.h" />
     <ClCompile Include="$(_3)msxml.base.cpp" />
     <ClInclude Include="$(_2)msxml.http.h" />
