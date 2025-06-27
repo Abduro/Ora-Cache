@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 27-Jun-2025 at 12:28:42.114, UTC+4, Batumi, Friday;
+	This is Ebo Pack generic events' logger library unit test project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" /><!-- https://learn.microsoft.com/en-us/biztalk/core/which-node-name-characters-get-encoded -->
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <ComObj Condition="'$(ComObj)'==''">..\..\..\ms.win\sys.com.core\</ComObj>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
+    <Logger Condition="'$(Logger)'==''">..\..\..\ms.win\logger\</Logger><!--This is the target being tested!-->
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Error)interface\</_3>
+    <_4>$(ComObj)interface\</_4>
+    <_5>$(Memory)interface\</_5>
+    <_6>$(Logger)interface\</_6>
+    <_7></_7>
+    <_8></_8>
+    <_9></_9>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>
