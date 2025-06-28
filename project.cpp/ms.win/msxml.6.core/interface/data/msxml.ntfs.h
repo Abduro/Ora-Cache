@@ -25,6 +25,8 @@ namespace shared { namespace xml { namespace ms { namespace ntfs {
 
 		bool Is_valid (void) const;
 
+		CString  Get_full_path (void) const;
+
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif

@@ -1,0 +1,27 @@
+#ifndef _EBO_TEST_$D$_THEME_NAMED_H_INCLUDED
+#define _EBO_TEST_$D$_THEME_NAMED_H_INCLUDED
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 28-Jun-2025 at 08:35:01.886, UTC+4, Batumi, Saturday;
+	This is Ebo Pack custom color theme named interface unit test declaration file; 
+*/
+#include "ebo_test_$d$.theme.defs.h"
+
+namespace ebo { namespace boo { namespace test { namespace themes {
+
+	using TNamed = ex_ui::theme::CNamed;
+
+	__class (CNamed) {
+	public:
+		 CNamed (const bool _b_verb = false);
+		~CNamed (void) = default;
+
+	public:
+		__ctor (_ctor);
+
+	private:
+		bool    m_b_verb;
+		TNamed  m_named;
+	};
+}}}}
+
+#endif/*_EBO_TEST_$D$_THEME_NAMED_H_INCLUDED*/

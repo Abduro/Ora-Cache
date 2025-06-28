@@ -40,7 +40,8 @@ void CFileData::Load (void) {
 	if (this->m_loader.Error().Is())
 		_out() += this->m_loader.Error().Print(TError::e_print::e_req);
 	else {
-	
+		const TXmlNode& root_ = this->m_loader.Doc().Root();
+		_out() += TStringEx().Format(_T("Root: %s"), (_pc_sz) root_.Print(_T("\t\t\n")));
 	}
 	_out()();
 

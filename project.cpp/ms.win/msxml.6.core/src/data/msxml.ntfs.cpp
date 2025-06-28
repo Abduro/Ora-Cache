@@ -45,6 +45,16 @@ bool  CLocator::Is_valid (void) const {
 	return b_valid;
 }
 
+CString  CLocator::Get_full_path (void) const {
+
+	CString cs_full_path;
+
+	cs_full_path += this->Path();
+	cs_full_path += this->File();
+
+	return cs_full_path;
+}
+
 #if defined(_DEBUG)
 CString  CLocator::Print (const e_print _e_opt) const {
 	_e_opt;

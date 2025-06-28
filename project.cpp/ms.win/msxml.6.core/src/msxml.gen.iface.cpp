@@ -20,14 +20,14 @@ err_code     CAttribute::Name (_pc_sz _v ) {
 	m_name = _v;
 	return __s_ok;
 }
-CAtlString& CAttribute::Name_Ref (void)   { return m_name ; }
+CAtlString&  CAttribute::Name_Ref (void)   { return m_name ; }
 const
-_variant_t& CAttribute::Value(void) const { return m_value; }
-_variant_t& CAttribute::Value(void)       { return m_value; }
+_variant_t&  CAttribute::Value(void) const { return m_value; }
+_variant_t&  CAttribute::Value(void)       { return m_value; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-const bool  CAttribute::ToBool(const bool _b_def) const {
+const bool   CAttribute::ToBool(const bool _b_def) const {
 	if (this->Is() == false)
 		return _b_def;
 	if (VT_BOOL == m_value.vt)
@@ -43,14 +43,14 @@ const bool  CAttribute::ToBool(const bool _b_def) const {
 	else
 		return 0 != ::_tstol(cs_val.GetString());
 }
-err_code    CAttribute::ToBool(const bool _b_val) {
+err_code     CAttribute::ToBool(const bool _b_val) {
 	if (this->Is() == false)
 		return __DwordToHresult(ERROR_INVALID_ACCESS);
 	m_value.Clear();
 	m_value = _b_val;
 	return __s_ok;
 }
-const LONG  CAttribute::ToLong(const LONG _l_def) const {
+const LONG   CAttribute::ToLong(const LONG _l_def) const {
 	if (this->Is() == false)
 		return _l_def;
 	if (VT_I4 == m_value.vt)
@@ -58,14 +58,14 @@ const LONG  CAttribute::ToLong(const LONG _l_def) const {
 	_variant_t val_; val_.ChangeType(VT_I4, &m_value);
 	return   ( val_.vt == VT_I4 ? val_.lVal : _l_def);
 }
-err_code    CAttribute::ToLong(const LONG _l_val) {
+err_code     CAttribute::ToLong(const LONG _l_val) {
 	if (this->Is() == false)
 		return __DwordToHresult(ERROR_INVALID_ACCESS);
 	m_value.Clear();
 	m_value = _l_val;
 	return __s_ok;
 }
-CAtlString  CAttribute::ToText(void) const {
+CAtlString   CAttribute::ToText(void) const {
 	CAtlString cs_val;
 	if (this->Is() == false)
 		return cs_val;
@@ -77,7 +77,7 @@ CAtlString  CAttribute::ToText(void) const {
 	}
 	return cs_val;
 }
-err_code    CAttribute::ToText(_pc_sz lp_sz_val)   {
+err_code     CAttribute::ToText(_pc_sz lp_sz_val)   {
 	if (this->Is() == false)
 		return __DwordToHresult(ERROR_INVALID_ACCESS);
 	m_value.Clear();
@@ -103,9 +103,9 @@ const bool  CAttribute::operator== (_pc_sz _lp_sz_name) const {
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CAtlString  CAttribute::Print     (_pc_sz _lp_sz_sep) const {
+CAtlString  CAttribute::Print (_pc_sz _lp_sz_sep) const {
 	static _pc_sz lp_sz_pat = _T(
-		"name =%s; value =%s"
+		"name = %s; value = %s"
 	);
 	CAtlString cs_prn; cs_prn.Format(
 		lp_sz_pat,
@@ -211,7 +211,7 @@ TAttributes& CAttribute_Enum::Ref (void) const { return m_atts; }
 #if defined(_DEBUG)
 CAtlString   CAttribute_Enum::Print  (_pc_sz _lp_sz_sep) const {
 	static _pc_sz lp_sz_pat = _T(
-			"count =% 2u;"
+			"count = % 2u;"
 		);
 	CAtlString cs_prn; cs_prn.Format(
 			lp_sz_pat,
@@ -311,21 +311,25 @@ CAtlString&  CNode::Text_Ref  (void)       { return m_text; }
 CAtlString   CNode::Print     (_pc_sz _lp_sz_sep) const {
 	static _pc_sz lp_sz_pat = _T(
 		"name  = %s %s"
-		"atts  ={%s %s%s }%s"
+		"atts  = {%s %s%s }%s"
 		"text  = %s %s"
-		"kids  ={%s}  "
+		"kids  = {%s}  "
 	);
-	CAtlString cs_kids = (nullptr !=  m_kids ? m_kids->Print(_lp_sz_sep).GetString() : _T("#error"));
-	CAtlString cs_sep; cs_sep = _lp_sz_sep; if (cs_sep.IsEmpty()) cs_sep = _T("; ");
-	CAtlString cs_prn; cs_prn.Format(
+	CString cs_kids = (nullptr !=  m_kids ? m_kids->Print(_lp_sz_sep).GetString() : _T("#error"));
+	CString cs_sep; cs_sep = _lp_sz_sep; if (cs_sep.IsEmpty()) cs_sep = _T("; ");
+	CString cs_text = TStringEx(this->Text()).Trim();
+	if (cs_text.IsEmpty())
+		cs_text = _T("#empty");
+
+	CString cs_out; cs_out.Format(
 			lp_sz_pat       ,
 			this->Name()    , (_pc_sz)cs_sep , 
 			(_pc_sz) cs_sep , (_pc_sz)this->Attributes().Print(_lp_sz_sep), (_pc_sz)cs_sep , (_pc_sz)cs_sep ,
-			this->Text()    ,
+			(_pc_sz) cs_text,
 			(_pc_sz) cs_sep ,
 			(_pc_sz) cs_kids
 		);
-	return cs_prn;
+	return cs_out;
 }
 #endif
 
@@ -430,7 +434,7 @@ CNode_Enum& CNode_Enum::operator = (const CNode_Enum& _ref) {
 #if defined(_DEBUG)
 CAtlString   CNode_Enum::Print     (_pc_sz _lp_sz_sep) const {
 	static _pc_sz lp_sz_pat = _T(
-		"count =% 2u;"
+		"count = % 2u;"
 	);
 	CAtlString cs_prn; cs_prn.Format(
 		lp_sz_pat,

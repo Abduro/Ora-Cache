@@ -10,6 +10,7 @@
 #include "msxml.doc.h"
 #include "msxml.error.h"
 #include "msxml.ntfs.h"
+#include "msxml.gen.iface.h"
 
 namespace ebo { namespace boo { namespace test { namespace xml {
 

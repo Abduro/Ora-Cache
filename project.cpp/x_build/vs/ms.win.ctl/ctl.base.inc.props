@@ -15,6 +15,7 @@
     <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
     <Popup Condition="'$(Popup)'==''">..\..\..\ms.win\uix\popup\</Popup>
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL> <!--it is required for including the references to z-buffer, unfortunately; -->
+    <!--MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML-->
     <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\ctl.base\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>

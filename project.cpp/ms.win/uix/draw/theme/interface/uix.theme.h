@@ -23,13 +23,26 @@ namespace ex_ui { namespace theme { namespace colors {
 	typedef ::std::map <CTheme_Part   , TColor_Element> TColor_Part   ;
 	typedef ::std::map <CTheme_Palette, TColor_Part   > TColor_Palette;
 
-	class CColor_Marker {
-	protected:
-		CTheme_Palette m_palette ;
-		CTheme_Part    m_ui_part ;
-		CTheme_State   m_ui_state;
-		CTheme_Element m_element ;
+#if defined(_DEBUG)
+	class CTheme_Printer {
+	private: CTheme_Printer (void) = delete; CTheme_Printer (const CTheme_Printer&) = delete; CTheme_Printer (CTheme_Printer&&) = delete;
+	        ~CTheme_Printer (void) = delete;
 
+	public:
+		static CString  Out (const CTheme_Element&);
+		static CString  Out (const CTheme_Palette&);
+		static CString  Out (const CTheme_Part&);
+		static CString  Out (const CTheme_State&);
+
+	private:
+			CTheme_Printer& operator = ( const CTheme_Printer& ) = delete;
+			CTheme_Printer& operator = ( CTheme_Printer&& ) = delete;
+	};
+
+	typedef CTheme_Printer TPrint;
+#endif
+
+	class CColor_Marker {
 	public:
 		 CColor_Marker (void);
 		 CColor_Marker (const CColor_Marker&);
@@ -44,13 +57,21 @@ namespace ex_ui { namespace theme { namespace colors {
 
 	public:
 		const bool Is (void) const;  // returns true if all attributes are assigned (there is no e_none value);
-
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CColor_Marker& operator = (const CColor_Marker&);
 		CColor_Marker& operator <<(const CTheme_Element);
 		CColor_Marker& operator <<(const CTheme_Palette);
 		CColor_Marker& operator <<(const CTheme_Part );
 		CColor_Marker& operator <<(const CTheme_State);
+
+	protected:
+		CTheme_Palette m_palette ;
+		CTheme_Part    m_ui_part ;
+		CTheme_State   m_ui_state;
+		CTheme_Element m_element ;
 	};
 
 	class CColor_Matrix {

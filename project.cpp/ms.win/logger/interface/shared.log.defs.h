@@ -51,7 +51,7 @@ namespace shared { namespace log {
 
 	interface ILogGenericCallback
 	{
-		virtual VOID ILog_OnGenericEvent(const eMsgType::_e, CAtlString _evt_details) PURE;
+		virtual void ILog_OnGenericEvent(const eMsgType::_e, CAtlString _evt_details) = 0;
 	};
 
 	// it is assumed that the first call to the logger is done from the main thread, for example, from the main function ;

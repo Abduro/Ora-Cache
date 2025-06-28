@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 07-Jun-2025 at 11:51:55.896, UTC+4, Batumi, Saturday;
-	This is Ebo pack color theme library project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 28-Jun-2025 at 07:19:44.877, UTC+4, Batumi, Saturday;
+	This is Ebo pack color theme library unit test project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -14,8 +14,9 @@
     <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\theme\</ThisLib><!--This project is being compiled; -->
-    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
+    <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme><!--This project is being tested; -->
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
+    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL> <!--For theme unit test project it must be included!-->
     <MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML>
   </PropertyGroup>
   <PropertyGroup>
@@ -23,20 +24,20 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
-    <_1>$(Root)interface\named\</_1>
-    <_2>$(Root)src\</_2>
-    <_3>$(Root)src\named\</_3>
-    <_4>$(Shared)interface\</_4>
-    <_5>$(Error)interface\</_5>
-    <_6>$(ComCore)interface\</_6>
-    <_7>$(Memory)interface\</_7>
-    <_8>$(Shell)interface\</_8>
-    <_9>$(Color)interface\</_9>
-    <_a>$(Color)interface\compl\</_a>
-    <_b>$(Color)interface\named\</_b>
-    <_c>$(MS-WTL)include\</_c>
-    <_d>$(MS-XML)interface\</_d>
-    <_e>$(MS-XML)interface\data\</_e>
+    <_1>$(Root)src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Error)interface\</_3>
+    <_4>$(ComCore)interface\</_4>
+    <_5>$(Memory)interface\</_5>
+    <_6>$(Shell)interface\</_6>
+    <_7>$(Color)interface\</_7>
+    <_8>$(Color)interface\compl\</_8>
+    <_9>$(Color)interface\named\</_9>
+    <_a>$(MS-WTL)include\</_a>
+    <_b>$(MS-XML)interface\</_b>
+    <_c>$(MS-XML)interface\data\</_c>
+    <_d>$(Theme)interface\</_d>
+    <_e>$(Theme)interface\named\</_e>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>

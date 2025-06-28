@@ -13,6 +13,63 @@ using CTheme = ex_ui::theme::CTheme;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace theme { namespace colors {
+#if defined(_DEBUG)
+CString  CTheme_Printer::Out (const CTheme_Element& _element) {
+	_element;
+	CString cs_out;
+	switch (_element) {
+	case CTheme_Element::e_back  : cs_out = _T("e_back"); break;
+	case CTheme_Element::e_fore  : cs_out = _T("e_fore"); break;
+	case CTheme_Element::e_border: cs_out = _T("e_border"); break;
+	default:
+		cs_out = _T("e_none");
+	}
+	return  cs_out;
+}
+
+CString  CTheme_Printer::Out (const CTheme_Palette& _palette) {
+	_palette;
+	CString cs_out;
+	switch (_palette) {
+	case CTheme_Palette::e_dark  : cs_out = _T("e_dark"); break;
+	case CTheme_Palette::e_light : cs_out = _T("e_dark"); break;
+	default:
+		cs_out = _T("e_none");
+	}
+	return  cs_out;
+}
+
+CString  CTheme_Printer::Out (const CTheme_Part& _part) {
+	_part;
+	CString cs_out;
+	switch (_part) {
+	case CTheme_Part::e_form    : cs_out = _T("e_form" );   break;
+	case CTheme_Part::e_panel   : cs_out = _T("e_panel");   break;
+	case CTheme_Part::e_edit    : cs_out = _T("e_edit" );   break;
+	case CTheme_Part::e_label   : cs_out = _T("e_label");   break;
+	case CTheme_Part::e_caption : cs_out = _T("e_caption"); break;
+	case CTheme_Part::e_button  : cs_out = _T("e_button");  break;
+	default:
+		cs_out = _T("e_none");
+	}
+	return  cs_out;
+}
+
+CString  CTheme_Printer::Out (const CTheme_State& _state) {
+	_state;
+	CString cs_out;
+	switch (_state) {
+	case CTheme_State::e_normal   : cs_out = _T("e_normal"  ); break;
+	case CTheme_State::e_disabled : cs_out = _T("e_disabled"); break;
+	case CTheme_State::e_hovered  : cs_out = _T("e_hovered" ); break;
+	case CTheme_State::e_selected : cs_out = _T("e_selected"); break;
+	default:
+		cs_out = _T("e_default");
+	}
+	return  cs_out;
+}
+#endif
+/////////////////////////////////////////////////////////////////////////////
 
 CColor_Marker:: CColor_Marker (void) : m_palette(TThemePalette::e_none), m_ui_part(TThemePart::e_none), m_ui_state(TThemeState::e_default) {}
 CColor_Marker:: CColor_Marker (const CColor_Marker& _ref) : CColor_Marker() { *this = _ref; }
@@ -31,7 +88,40 @@ const CTheme_State   CColor_Marker::State   (void) const { return m_ui_state; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-const bool CColor_Marker::Is (void) const { return !(TThemePalette::e_none == m_palette || TThemePart::e_none == m_ui_part || TThemeElement::e_none == m_element); }
+const bool CColor_Marker::Is (void) const {
+	return !(TThemePalette::e_none == m_palette || TThemePart::e_none == m_ui_part || TThemeElement::e_none == m_element);
+}
+
+#if defined(_DEBUG)
+CString    CColor_Marker::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {pallete=%s;part=%s;element=%s;state=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {pallete=%s;part=%s;element=%s;state=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{pallete=%s;part=%s;element=%s;state=%s}");
+
+	CString cs_out;
+
+	if (e_print::e_all == _e_opt) {
+		cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+			(_pc_sz) TPrint::Out(this->Palette()), (_pc_sz) TPrint::Out(this->Part()),
+			(_pc_sz) TPrint::Out(this->Element()), (_pc_sz) TPrint::Out(this->State())
+		);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
+			(_pc_sz) TPrint::Out(this->Palette()), (_pc_sz) TPrint::Out(this->Part()),
+			(_pc_sz) TPrint::Out(this->Element()), (_pc_sz) TPrint::Out(this->State())
+		);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
+			(_pc_sz) TPrint::Out(this->Palette()), (_pc_sz) TPrint::Out(this->Part()),
+			(_pc_sz) TPrint::Out(this->Element()), (_pc_sz) TPrint::Out(this->State())
+		);
+	}
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
