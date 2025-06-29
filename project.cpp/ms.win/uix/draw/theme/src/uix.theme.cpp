@@ -32,7 +32,7 @@ CString  CTheme_Printer::Out (const CTheme_Palette& _palette) {
 	CString cs_out;
 	switch (_palette) {
 	case CTheme_Palette::e_dark  : cs_out = _T("e_dark"); break;
-	case CTheme_Palette::e_light : cs_out = _T("e_dark"); break;
+	case CTheme_Palette::e_light : cs_out = _T("e_light"); break;
 	default:
 		cs_out = _T("e_none");
 	}

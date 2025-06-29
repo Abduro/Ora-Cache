@@ -178,6 +178,8 @@
     <ClCompile Include="$(_2)uix.theme.inc.cpp" />
     <ClInclude Include="$(_0)uix.theme.h" />
     <ClCompile Include="$(_2)uix.theme.cpp" />
+    <ClInclude Include="$(_0)uix.theme.reg.h" />
+    <ClCompile Include="$(_2)uix.theme.reg.cpp" />
     <ClInclude Include="$(_1)uix.theme.named.h" />
     <ClCompile Include="$(_3)uix.theme.named.cpp" />
   </ItemGroup>

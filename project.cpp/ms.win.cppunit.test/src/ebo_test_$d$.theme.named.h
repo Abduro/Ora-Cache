@@ -22,6 +22,22 @@ namespace ebo { namespace boo { namespace test { namespace themes {
 		bool    m_b_verb;
 		TNamed  m_named;
 	};
+
+	using TNamed_Enum = ex_ui::theme::CNamed_Enum;
+
+	__class (CNamed_Enum) {
+	public:
+		 CNamed_Enum (const bool _b_verb = false);
+		~CNamed_Enum (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Load);
+
+	private:
+		bool   m_b_verb;
+		TNamed_Enum  m_named_enum;
+	};
 }}}}
 
 #endif/*_EBO_TEST_$D$_THEME_NAMED_H_INCLUDED*/

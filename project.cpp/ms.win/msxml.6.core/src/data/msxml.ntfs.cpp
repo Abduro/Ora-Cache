@@ -99,7 +99,7 @@ err_code CLocator::Refresh (const e_finder _e_what_is) {
 
 		// https://stackoverflow.com/questions/6924195/get-dll-path-at-runtime ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexa 
-		static dword dw_flags = /*GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | */GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;
+		static dword dw_flags = GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;
 
 		if (false == ::GetModuleHandleEx (dw_flags, cs_module.GetBuffer(), &h_module))
 			return this->m_error.Last();

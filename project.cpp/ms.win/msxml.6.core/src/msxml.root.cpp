@@ -181,7 +181,7 @@ err_code CRoot::Text  (CAtlString& _text) {
 /////////////////////////////////////////////////////////////////////////////
 
 CRoot& CRoot::operator << (const TXmlElementPtr _p) { m_ptr = _p; return *this; }
-CRoot& CRoot::operator <<(const CNode_Atts& _atts) {
+CRoot& CRoot::operator << (const CNode_Atts& _atts) {
 	_atts;
 	this->m_error << __METHOD__ << __s_ok;
 

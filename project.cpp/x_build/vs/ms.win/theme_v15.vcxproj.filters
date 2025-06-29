@@ -17,6 +17,8 @@
   <ItemGroup>
     <ClInclude Include="$(_0)uix.theme.inc.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)uix.theme.inc.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)uix.theme.reg.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_2)uix.theme.reg.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)uix.theme.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)uix.theme.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)uix.theme.named.h"><Filter>interface\named</Filter></ClInclude>

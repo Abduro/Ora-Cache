@@ -13,7 +13,7 @@ namespace ex_ui { namespace theme {
 
 	class CNamed {
 	public:
-		 CNamed (void); CNamed (const CNamed&) = delete; CNamed (CNamed&&) = delete;
+		 CNamed (const TThemePalette = TThemePalette::e_none); CNamed (const CNamed&); CNamed (CNamed&&);
 		~CNamed (void);
 
 	public:
@@ -32,30 +32,43 @@ namespace ex_ui { namespace theme {
 #endif
 
 	public:
-		CNamed& operator = (const CNamed&) = delete;
+		CNamed& operator = (const CNamed&);
 		CNamed& operator = (CNamed&&) = delete;
+		CNamed& operator <<(const TThemePalette);
+		CNamed& operator <<(_pc_sz _p_name);
+		CNamed& operator >>(_pc_sz _p_desc);
 
 	private:
 		CString m_desc;
 		CString m_name;
 		TThemePalette m_palette;	
 	};
-	// ToDo: it looks like possible to use XSLT for generating or transforming XML data to objects, but not in this version yet;
+
+	typedef ::std::vector<CNamed> TRawNamed;
+
 	class CNamed_Enum {
 	public:
 		 CNamed_Enum (void); CNamed_Enum (const CNamed_Enum&) = delete; CNamed_Enum (CNamed_Enum&&) = delete;
 		~CNamed_Enum (void);
 
 	public:
-		TError& Error(void) const;
-		err_code Load(void);         // loads custom color themes from XML file by using MSXML data provider;
+		TError& Error (void) const;
+		err_code Load (void);         // loads custom color themes from system registry;
+
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
+		const
+		TRawNamed& Raw (void) const;
+		TRawNamed& Raw (void) ;
 
 	public:
 		CNamed_Enum& operator = (const CNamed_Enum&) = delete;
 		CNamed_Enum& operator = (CNamed_Enum&&) = delete;
 
 	private:
-		CError  m_error;
+		CError m_error;
+		TRawNamed m_themes;
 	};
 
 }}

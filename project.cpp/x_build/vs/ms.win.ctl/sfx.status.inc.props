@@ -12,13 +12,13 @@
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
+    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
-    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
-    <MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML>
+    <!--MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML-->
     <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
     <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\sfx.status\</ThisLib> <!--This project is being built!-->
@@ -42,14 +42,14 @@
     <_c>$(Win-pop)interface\msg_handlers\</_c>
     <_d>$(MS-WTL)include\</_d>
     <_e>$(ZBuffer)interface\</_e>
-    <_f>$(MS-XML)interface\</_f>
-    <_g>$(MS-XML)interface\data\</_g>
+    <!--_f>$(MS-XML)interface\</_f>
+    <_g>$(MS-XML)interface\data\</_g-->
     <_h>$(Theme)interface\</_h>
     <_i>$(CtlBase)interface\</_i>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_h);$(_i)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

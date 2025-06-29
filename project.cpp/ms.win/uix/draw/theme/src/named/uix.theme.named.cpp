@@ -3,6 +3,7 @@
 	This is Ebo Pack generic custom color theme named interface implementation file.
 */
 #include "uix.theme.named.h"
+#include "uix.theme.reg.h"
 
 // hiding this reference to MSXML from consumers of custom theme, otherwise, it will introduce not necessary references;
 #include "msxml.doc.h"
@@ -22,7 +23,8 @@ namespace ex_ui { namespace theme {
 // otherwise the ambiguity of the names: ex_ui::color::rgb::CNamed;
 /////////////////////////////////////////////////////////////////////////////
 
-CNamed:: CNamed (void) : m_palette(TThemePalette::e_none) {}
+CNamed:: CNamed (const TThemePalette _palette) : m_palette(_palette) {} CNamed:: CNamed (const CNamed& _src) : CNamed() { *this = _src; }
+CNamed:: CNamed (CNamed&& _victim) : CNamed() { *this = (const CNamed&)_victim; } // does not care about move or swap operation;
 CNamed::~CNamed (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -89,14 +91,25 @@ CString  CNamed::Print (const e_print _e_opt) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
+CNamed&  CNamed::operator = (const CNamed& _src) { *this << _src.Palette() << _src.Name() >> _src.Desc(); return *this; }
+
+CNamed&  CNamed::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+CNamed&  CNamed::operator >>(_pc_sz _p_desc) { this->Desc(_p_desc); return *this; }
+
+CNamed&  CNamed::operator <<(const TThemePalette _palette) {
+	this->Palette(_palette); return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CNamed_Enum:: CNamed_Enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CNamed_Enum::~CNamed_Enum (void) {}
 
-TError& CNamed_Enum::Error(void) const { return this->m_error; }
+TError&  CNamed_Enum::Error(void) const { return this->m_error; }
 
 err_code CNamed_Enum::Load(void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
+#if (0)
 	CDataLocator locator;
 	CDataProvider provider;
 
@@ -108,11 +121,61 @@ err_code CNamed_Enum::Load(void) {
 	if (__failed(n_result))
 		return this->m_error = provider.Error();
 
-//	const CXmlDoc& doc_ = provider.Doc();
-//	const CRoot root_; root_ << doc_.Root().;
+	const CXmlDoc& doc_ = provider.Doc();
+	const CNode& root_ = doc_.Root();
 
+	const CNode_Enum* p_kids = root_.Children();
+	if (p_kids) {
+		const TNodes& nodes =  p_kids->Raw();
+		for (uint32_t i_ = 0; i_ < nodes.size(); i_++) {
 
+		}
+	}
+#else
+	storage::CRegistry storage;
 
+	if (__failed(storage.Load(*this)))
+		this->m_error = storage.Error();
+
+#endif
 	return this->Error();
 }
+
+#if defined(_DEBUG)
+CString  CNamed_Enum::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%s%s}");
+
+	CString cs_themes;
+	for (size_t i_ = 0; i_ < this->Raw().size(); i_++) {
+		const CNamed& named = this->Raw().at(i_);
+		cs_themes += _p_sfx;
+		cs_themes += _p_pfx;
+		cs_themes += named.Print(e_print::e_req);
+	}
+	if (cs_themes.IsEmpty()) {
+		cs_themes += _p_sfx;
+		cs_themes += _p_pfx;
+		cs_themes += _T("#empty");
+	}
+
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format ( pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_themes, _p_sfx, _p_pfx); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format ( pc_sz_pat_n, (_pc_sz)__CLASS__  , (_pc_sz) cs_themes, _p_sfx, _p_pfx); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format ( pc_sz_pat_r, (_pc_sz) cs_themes , _p_sfx, _p_pfx); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+const
+TRawNamed& CNamed_Enum::Raw (void) const { return this->m_themes; }
+TRawNamed& CNamed_Enum::Raw (void)       { return this->m_themes; }
+
 }}
