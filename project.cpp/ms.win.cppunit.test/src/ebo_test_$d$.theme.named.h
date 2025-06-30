@@ -38,6 +38,22 @@ namespace ebo { namespace boo { namespace test { namespace themes {
 		bool   m_b_verb;
 		TNamed_Enum  m_named_enum;
 	};
+
+	using TState = ex_ui::theme::CState;
+
+	__class (CState) {
+	public:
+		 CState (const bool _b_verb = false);
+		~CState (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Set);
+
+	private:
+		bool    m_b_verb;
+		TState  m_state ;
+	};
 }}}}
 
 #endif/*_EBO_TEST_$D$_THEME_NAMED_H_INCLUDED*/

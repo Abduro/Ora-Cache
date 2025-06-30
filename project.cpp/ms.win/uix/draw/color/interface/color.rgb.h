@@ -186,11 +186,14 @@ namespace ex_ui { namespace color { namespace rgb {
 		static CString Print (const clr_type);
 		static CString Print (const CQuad&, const e_print = e_print::e_req);
 #endif
+		bool   Set (_pc_sz); // returns 'true' in case of value changed; expected format is #xxxxxx, where 'x' is a digit in range [0..9];
 	public:
 		CHex&  operator = (const CHex&);
 		CHex&  operator = (CHex&&) = delete;
+
+		CHex&  operator <<(_pc_sz _p_val) ;
 		CHex&  operator <<(const clr_type);
-		CHex&  operator <<(const CQuad&);
+		CHex&  operator <<(const CQuad&)  ;
 
 	private:
 		CQuad  m_color;

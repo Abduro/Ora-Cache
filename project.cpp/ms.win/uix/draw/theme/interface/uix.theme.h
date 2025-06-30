@@ -13,17 +13,17 @@ namespace ex_ui { namespace theme { namespace colors {
 	using namespace ex_ui::color::rgb;
 	using namespace shared::sys_core::shell;
 
-	enum class CTheme_Palette { e_none  , e_dark, e_light };
-	enum class CTheme_Part    { e_none  , e_form, e_panel, e_edit, e_label, e_caption, e_button };
-	enum class CTheme_State   { e_normal, e_disabled, e_hovered, e_selected, e_default = e_normal};
-	enum class CTheme_Element { e_none  , e_back, e_fore , e_border };
+	enum class CTheme_Palette : uint32_t { e_none  , e_dark, e_light };
+	enum class CTheme_Part    : uint32_t { e_none  , e_form, e_panel, e_edit, e_label, e_caption, e_button };
+	enum class CTheme_State   : uint32_t { e_normal, e_disabled, e_hovered, e_selected, e_default = e_normal};
+	enum class CTheme_Element : uint32_t { e_none  , e_back, e_fore , e_border };
 
 	typedef ::std::map <CTheme_State  , uint32_t      > TColor_State  ;
 	typedef ::std::map <CTheme_Element, TColor_State  > TColor_Element;
 	typedef ::std::map <CTheme_Part   , TColor_Element> TColor_Part   ;
 	typedef ::std::map <CTheme_Palette, TColor_Part   > TColor_Palette;
 
-#if defined(_DEBUG)
+#if defined(_DEBUG) || (true != false)
 	class CTheme_Printer {
 	private: CTheme_Printer (void) = delete; CTheme_Printer (const CTheme_Printer&) = delete; CTheme_Printer (CTheme_Printer&&) = delete;
 	        ~CTheme_Printer (void) = delete;
@@ -96,6 +96,8 @@ typedef ex_ui::theme::colors::CTheme_Part       TThemePart ;
 typedef ex_ui::theme::colors::CTheme_State      TThemeState;
 typedef ex_ui::theme::colors::CColor_Marker     TColorMarker;
 typedef ex_ui::theme::colors::CColor_Matrix     TColorMatrix;
+
+typedef ::std::array<rgb_color, 4> TRawStateClrs; // 0:e_normal|e_default;1:e_disabled;2:e_hovered;3:e_selected;
 
 namespace ex_ui { namespace theme {
 

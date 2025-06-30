@@ -15,6 +15,9 @@ namespace ebo { namespace boo { namespace test { namespace themes {
 	using TPercent = TPct_Flt;
 	using clr_type = ex_ui::color::rgb::clr_type;
 
+	using TPrint = ex_ui::theme::colors::TPrint;
+	using CHex   = ex_ui::color::rgb::CHex;
+
 }}}}
 
 #pragma comment(lib, "theme_v15.lib")        // this one must be tested by this unit test project;

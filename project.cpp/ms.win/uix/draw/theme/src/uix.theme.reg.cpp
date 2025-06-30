@@ -11,6 +11,9 @@ using CRegKey = ::ATL::CRegKey;
 
 namespace ex_ui { namespace theme { namespace storage { namespace _impl {
 	#define ThemeRoot HKEY_CURRENT_USER
+
+	using namespace ex_ui::theme;
+
 	class CReg_router {
 	public:
 		class CCategory {
@@ -59,14 +62,14 @@ namespace ex_ui { namespace theme { namespace storage { namespace _impl {
 
 	public:
 		TError&  Error (void) const { return this->m_error; }
-		err_code Get (const HKEY _parent, const TThemePalette _palette, TRawNamed& _raw) {
-			_parent; _raw;
+		err_code Get (const HKEY _plt_key, const TThemePalette _palette, TRawNamed& _raw) {
+			_plt_key; _raw;
 			this->m_error << __METHOD__ << __s_ok;
 
 			dword d_count = 0;
-			CRegKey counter; counter.Attach(_parent);
+			CRegKey plt_key_; plt_key_.Attach(_plt_key);
 			
-			LSTATUS n_result = counter.QueryDWORDValue(_T("Count"), d_count);
+			LSTATUS n_result = plt_key_.QueryDWORDValue(_T("Count"), d_count);
 
 			if (!!n_result)
 				return this->m_error = dword(n_result);
@@ -81,7 +84,7 @@ namespace ex_ui { namespace theme { namespace storage { namespace _impl {
 				cs_theme.Format(_T("Theme#%u"), i_);
 				CRegKey  theme_;
 				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexa ;
-				n_result = theme_.Open(counter, (_pc_sz) cs_theme);
+				n_result = theme_.Open(plt_key_, (_pc_sz) cs_theme);
 				if (!!n_result) {
 					this->m_error = dword(n_result); break;
 				}
@@ -110,7 +113,7 @@ namespace ex_ui { namespace theme { namespace storage { namespace _impl {
 				}
 				catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory;  break; }
 			}
-			counter.Detach();
+			plt_key_.Detach();
 			return this->Error();
 		}
 
@@ -121,6 +124,72 @@ namespace ex_ui { namespace theme { namespace storage { namespace _impl {
 		CError m_error;
 	};
 
+	class CTheme_parts {
+	public:
+		 CTheme_parts (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+		 CTheme_parts (const CTheme_parts&) = delete; CTheme_parts (CTheme_parts&&) = delete;
+		~CTheme_parts (void) {}
+
+	public:
+		TError&  Error (void) const { return this->m_error; }
+		err_code Get (const HKEY _theme, TRawParts& _raw_parts) {
+			_theme; _raw_parts;
+			this->m_error << __METHOD__ << __s_ok;
+
+			CRegKey theme_; theme_.Attach(_theme);
+
+			CRegKey parts_;
+
+
+			theme_.Detach();
+			return this->Error();
+		}
+
+	private:
+		CTheme_parts&  operator = (const CTheme_parts&) = delete;
+		CTheme_parts&  operator = (CTheme_parts&&) = delete;
+	private:
+		CError m_error;
+	};
+
+	class CTheme_state {
+	public:
+		 CTheme_state (void) {} CTheme_state (const CTheme_state&) = delete; CTheme_state (CTheme_state&&) = delete;
+		~CTheme_state (void) {}
+
+	public:
+		err_code Get (const HKEY _h_key, TRawStates& _states) {
+			_h_key; _states;
+			err_code n_result = __s_ok;
+			CRegKey  key_state; key_state.Attach(_h_key);
+
+			t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
+			for (size_t i_ = 0; i_ < _states.size(); i_++) {
+#if (0)
+			//	https://stackoverflow.com/questions/20264530/c-warning-c4930-prototyped-function-not-called-was-a-variable-definition-i ;
+			//	https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4930 ;
+			//	warning C4930: 'ex_ui::theme::CState state(TThemeState)': prototyped function not called (was a variable definition intended?) ;
+
+			//	CState state((TThemeState(i_));
+				CState state_((TThemeState)i_);
+#else
+				CState& state_ = _states.at(i_);
+				state_.Id ((TThemeState)i_, true);
+#endif
+				unsigned long n_chars = u_count;
+				n_result = key_state.QueryStringValue(state_.Name(), sz_buffer, &n_chars);
+				if (!!n_result) // there is no value with such name;
+					continue;
+				state_.Hex().Set(sz_buffer);
+			}
+
+			key_state.Detach();
+			return n_result;		
+		}
+	private:
+		CTheme_state& operator = (const CTheme_state&) = delete;
+		CTheme_state& operator = (CTheme_state&&) = delete;
+	};
 }}}}
 
 using namespace ex_ui::theme::storage::_impl;
@@ -145,18 +214,18 @@ err_code  CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 
 	CTheme_enum theme_enum; TRawNamed& raw_themes = _enum.Raw();
 
-	CRegKey cat_dark;
-	n_result = cat_dark.Open(themes, _T("Dark"));
+	CRegKey plt_dark;
+	n_result = plt_dark.Open(themes, _T("Dark"));
 	if (__s_ok == n_result) {
-		if (__failed(theme_enum.Get(cat_dark, TThemePalette::e_dark, raw_themes))) {
+		if (__failed(theme_enum.Get(plt_dark, TThemePalette::e_dark, raw_themes))) {
 			this->m_error = theme_enum.Error();
 		}
 	}
 
-	CRegKey cat_light;
-	n_result = cat_light.Open(themes, _T("Light"));
+	CRegKey plt_light;
+	n_result = plt_light.Open(themes, _T("Light"));
 	if (__s_ok == n_result) {
-		if (__failed(theme_enum.Get(cat_light, TThemePalette::e_light, raw_themes))) {
+		if (__failed(theme_enum.Get(plt_light, TThemePalette::e_light, raw_themes))) {
 			this->m_error = theme_enum.Error();
 		}
 	}

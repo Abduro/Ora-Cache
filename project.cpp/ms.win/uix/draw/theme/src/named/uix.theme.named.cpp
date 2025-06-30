@@ -19,6 +19,128 @@ using CDataLocator = shared::xml::ms::ntfs::CLocator;
 using CDataProvider = shared::xml::ms::ntfs::CProvider;
 using CXmlDoc = shared::xml::ms::CDocument;
 
+/////////////////////////////////////////////////////////////////////////////
+
+CPart:: CPart (const TThemePart _part) : m_part_id(_part) {}
+CPart:: CPart (const CPart& _src) : CPart() { *this = _src; }
+CPart:: CPart (CPart&& _victim ) : CPart() { *this = _victim; }
+CPart::~CPart (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TThemePart  CPart::Id (void) const { return this->m_part_id; }
+bool CPart::Id (const TThemePart _part) {
+	_part;
+	const bool b_changed = this->Id() != _part;
+
+	if (b_changed)
+		this->m_part_id = _part;
+
+	return b_changed;
+}
+
+bool CPart::Is_valid (void) const {
+	return (this->Id() != TThemePart::e_none);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPart& CPart::operator = (const CPart& _src) { this->Id(_src.Id()); return *this; }
+CPart& CPart::operator = (CPart&& _victim) { *this = (const CPart&)_victim; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CState:: CState (const TThemeState _id) : m_state_id (_id) { this->m_name = TPrint::Out(_id); }
+CState:: CState (const CState& _src) : CState() { *this = _src; }
+CState:: CState (CState&& _victim) : CState() { *this = _victim; }
+CState::~CState (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+rgb_color CState::Color (void) const { return this->m_color.Color().ToRgb(); }
+bool      CState::Color (const rgb_color _color) {
+	_color;
+	const bool b_changed = _color != this->Color();
+	if (b_changed)
+		this->m_color.Color() = _color;
+
+	return b_changed;
+}
+
+bool   CState::Is_valid (void) const { return 0 == ex_ui::color::rgb::get_a_value(this->Color()); } // GDI recognizes color in this case only;
+
+TThemeState  CState::Id (void) const { return this->m_state_id; }
+const bool   CState::Id (const TThemeState _id, const bool b_update_name) {
+	_id; b_update_name;
+	const bool b_changed = _id != this->Id();
+	if (b_changed) {
+		this->m_state_id = _id;
+		if (b_update_name)
+			this->m_name = TPrint::Out(_id);
+	}
+	return b_changed;
+}
+
+const
+CHex&  CState::Hex  (void) const { return this->m_color; }
+CHex&  CState::Hex  (void)       { return this->m_color; }
+
+_pc_sz CState::Name (void) const { return (_pc_sz) this->m_name; }
+bool   CState::Name (_pc_sz _p_name) {
+	_p_name;
+
+	if (nullptr == _p_name || 0 == ::_tcslen(_p_name))
+		return false;
+
+	const bool b_changed = 0 == this->m_name.CompareNoCase(_p_name);
+	if (b_changed)
+		this->m_name = _p_name;
+
+	return b_changed;
+}
+
+#if defined(_DEBUG)
+CString CState::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;color=%s;id=%u;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("");
+	static _pc_sz pc_sz_pat_r = _T("");
+
+	CString cs_name  = this->m_name.IsEmpty() ? _T("#not_set") : this->Name();
+	CString cs_color = CHex::Print(this->Color());
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_out;
+
+	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, (_pc_sz) cs_color, this->Id(), (_pc_sz) cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, (_pc_sz) cs_color, this->Id(), (_pc_sz) cs_valid);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
+		(_pc_sz) cs_name, (_pc_sz) cs_color, this->Id(), (_pc_sz) cs_valid);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+CState& CState::operator = (const CState& _src) { *this << _src.Id() << _src.Name() << _src.Color(); return *this; }
+CState& CState::operator = (CState&& _victim)   { *this = (const CState&)_victim; return *this; }
+
+CState& CState::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+
+CState& CState::operator <<(const TThemeState _e_id) { this->Id(_e_id, false); return *this; }
+CState& CState::operator <<(const rgb_color  _color) { this->Color(_color); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 namespace ex_ui { namespace theme {
 // otherwise the ambiguity of the names: ex_ui::color::rgb::CNamed;
 /////////////////////////////////////////////////////////////////////////////
@@ -88,16 +210,23 @@ CString  CNamed::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 #endif
+const
+TRawParts&  CNamed::Parts (void) const { return this->m_parts; }
+TRawParts&  CNamed::Parts (void)       { return this->m_parts; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CNamed&  CNamed::operator = (const CNamed& _src) { *this << _src.Palette() << _src.Name() >> _src.Desc(); return *this; }
+CNamed&  CNamed::operator = (const CNamed& _src) { *this << _src.Palette() << _src.Name() >> _src.Desc() << _src.Parts(); return *this; }
 
 CNamed&  CNamed::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
 CNamed&  CNamed::operator >>(_pc_sz _p_desc) { this->Desc(_p_desc); return *this; }
 
 CNamed&  CNamed::operator <<(const TThemePalette _palette) {
 	this->Palette(_palette); return *this;
+}
+
+CNamed&  CNamed::operator <<(const TRawParts& _parts) {
+	this->Parts() = _parts; return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -7,6 +7,7 @@
 #include <atlbase.h>
 #include <atlapp.h>
 #include <uxtheme.h>
+#include <array>
 
 #include "shared.preproc.h"
 #include "shared.string.h"

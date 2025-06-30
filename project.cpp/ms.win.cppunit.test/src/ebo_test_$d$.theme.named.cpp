@@ -55,3 +55,51 @@ void CNamed_Enum::Load (void) {
 	_out()();
 
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CState:: CState (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CState::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_state.Print(e_print::e_all));
+	_out()();
+
+}
+
+void CState::Set (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_state.Print(e_print::e_all));
+
+	const TThemeState e_state = TThemeState::e_default;
+	const rgb_color color_ = _r_g_b(0x0, 0xff, 0x0);
+
+	CString cs_name  = TStringEx().Format(_T("#test_case: %s"), (_pc_sz) TPrint::Out(e_state));
+	CString cs_color = TStringEx().Format(_T("%s(%s)"), (_pc_sz) CHex::Print(color_), _T("green"));
+
+	_out() += TStringEx().Format(
+		_T("Input:"
+		"\n\t\tmarker/ID: %u;"
+		"\n\t\tname: %s;"
+		"\n\t\tcolor: %s;"), e_state, (_pc_sz) cs_name, (_pc_sz) cs_color
+	);
+
+	this->m_state.Id(e_state, false);
+	this->m_state.Name((_pc_sz)cs_name);
+	this->m_state.Color(color_);
+
+	_out() += TStringEx().Format(_T("*after *: %s"), (_pc_sz) this->m_state.Print(e_print::e_all));
+
+	_out()();
+
+}

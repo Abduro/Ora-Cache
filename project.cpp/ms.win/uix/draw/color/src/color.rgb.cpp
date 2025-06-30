@@ -416,6 +416,8 @@ CHex& CHex::operator = (const CHex& _src) { *this << _src.Color(); return *this;
 CHex& CHex::operator <<(const clr_type _type) { this->Color() = _type; return *this; }
 CHex& CHex::operator <<(const CQuad& _color) { this->Color() = _color; return *this; }
 
+CHex& CHex::operator <<(_pc_sz _p_val) { this->Set(_p_val); return *this; }
+
 /////////////////////////////////////////////////////////////////////////////
 #if defined (_DEBUG)
 CString CHex::Print (const clr_type _clr) {
@@ -452,3 +454,24 @@ CString CHex::Print (const CQuad& _quad, const e_print e_opt) {
 	return  cs_out;
 }
 #endif
+
+bool CHex::Set (_pc_sz _p_val) {
+	_p_val;
+	bool b_changed = false;
+
+	CString cs_value(_p_val); cs_value.Trim();
+	if (_T("#") != cs_value.Left(1))
+		return b_changed;
+
+	if (cs_value.GetLength() < 2)
+		return b_changed;
+
+	cs_value = cs_value.Right(cs_value.GetLength() - 1);
+
+	const clr_value clr_ = HexToRgb(TStringEx((_pc_sz)cs_value).Dword());
+	b_changed = clr_ != this->m_color.ToRgb();
+
+	this->m_color.Set(clr_);
+
+	return b_changed;
+}
