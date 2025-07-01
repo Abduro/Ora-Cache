@@ -4,7 +4,7 @@
 */
 #include "ebo_test_$d$.theme.named.h"
 
-using namespace ebo::boo::test::themes;
+using namespace ebo::boo::test::theme;
 
 /////////////////////////////////////////////////////////////////////////////
 

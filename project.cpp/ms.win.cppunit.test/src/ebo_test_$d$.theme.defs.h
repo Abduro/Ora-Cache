@@ -8,8 +8,9 @@
 
 #include "uix.theme.h"
 #include "uix.theme.named.h"
+#include "uix.theme.reg.h"
 
-namespace ebo { namespace boo { namespace test { namespace themes {
+namespace ebo { namespace boo { namespace test { namespace theme {
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 	using TPercent = TPct_Flt;
@@ -17,6 +18,12 @@ namespace ebo { namespace boo { namespace test { namespace themes {
 
 	using TPrint = ex_ui::theme::colors::TPrint;
 	using CHex   = ex_ui::color::rgb::CHex;
+
+	using TMarker = TColorMarker;
+
+	using TNamed = ex_ui::theme::CNamed;
+	using TNamed_Enum = ex_ui::theme::CNamed_Enum;
+	using TState = ex_ui::theme::CState;
 
 }}}}
 

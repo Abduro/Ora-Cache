@@ -7,47 +7,70 @@
 using namespace ex_ui::theme::storage;
 
 using CRegKey = ::ATL::CRegKey;
+
+#define ThemeRoot HKEY_CURRENT_USER
+/////////////////////////////////////////////////////////////////////////////
+
+CReg_router:: CReg_router (void) : m_root(ThemeRoot) {}
+CReg_router::~CReg_router (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+_pc_sz CReg_router::Element (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element) const {
+	_palette; _part; _element;
+	static CString cs_out;
+	cs_out.Format(_T("%s\\%s"), this->Part(_palette, _part), (_pc_sz) TPrint::Out(_element));
+
+	return cs_out.GetString();
+}
+
+_pc_sz CReg_router::Marker (const TColorMarker& _marker) const {
+	_marker;
+	static CString cs_out;
+
+	cs_out.Format(_T("%s\\%s\\%s\\%s\\%s"),
+		this->Themes(),
+		(_pc_sz) TPrint::Out(_marker.Palette()), (_pc_sz) TPrint::Out(_marker.Part()), (_pc_sz) TPrint::Out(_marker.Element()), (_pc_sz) TPrint::Out(_marker.State())
+	);
+
+	return cs_out.GetString();
+}
+
+_pc_sz CReg_router::Palette (const TThemePalette _palette) const {
+	_palette;
+	static CString cs_out;
+	cs_out.Format(_T("%s\\%s"), this->Themes(), (_pc_sz) TPrint::Out(_palette));
+
+	return cs_out.GetString();
+}
+
+_pc_sz CReg_router::Part (const TThemePalette _palette, const TThemePart _part) const {
+	_palette; _part;
+	static CString cs_out;
+	cs_out.Format(_T("%s\\%s"), this->Palette(_palette), (_pc_sz) TPrint::Out(_part));
+
+	return cs_out.GetString();
+}
+
+HKEY   CReg_router::Root (void) const { return this->m_root; }
+
+_pc_sz CReg_router::State (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element, const TThemeState _state) const {
+	_palette; _part; _element; _state;
+	static CString cs_out;
+	cs_out.Format(_T("%s\\%s"), this->Element(_palette, _part, _element), (_pc_sz) TPrint::Out(_state));
+
+	return cs_out.GetString();
+}
+
+_pc_sz CReg_router::Themes (void) const {
+	static _pc_sz pc_sz_root = _T("Software\\ebo::boo::renderer\\Themes");
+	return  pc_sz_root;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace theme { namespace storage { namespace _impl {
-	#define ThemeRoot HKEY_CURRENT_USER
-
-	using namespace ex_ui::theme;
-
-	class CReg_router {
-	public:
-		class CCategory {
-		public:
-			 CCategory (void) {} CCategory (const CCategory&) = delete; CCategory (CCategory&&) = delete;
-			~CCategory (void) {}
-
-		public:
-			CString  Dark (void) const { CString cs_key(CReg_router::Themes()); cs_key += _T("Dark"); return cs_key; }
-			CString  Light (void) const { CString cs_key(CReg_router::Themes()); cs_key += _T("Light"); return cs_key; }
-
-		private:
-			CCategory& operator = (const CCategory&) = delete;
-			CCategory& operator = (CCategory&&) = delete;
-		};
-	public:
-		 CReg_router (void) : m_root(ThemeRoot) {} CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
-		~CReg_router (void) {}
-
-	public:
-		const
-		HKEY&   Root (void) const { return this->m_root; }
-
-		static _pc_sz Themes (void) {
-			static _pc_sz pc_sz_root = _T("Software\\ebo::boo::renderer\\Themes");
-			return  pc_sz_root;
-		}
-
-	private:
-		CReg_router& operator = (const CReg_router&) = delete;
-		CReg_router& operator = (CReg_router&&) = delete;
-	private:
-		HKEY m_root;
-	};
+	
 
 	CReg_router&  Get_rooter (void) {
 		static CReg_router rooter;
@@ -203,7 +226,33 @@ CRegistry::~CRegistry (void) {}
 
 TError&  CRegistry::Error (void) const { return this->m_error; }
 
-err_code  CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
+err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _state) {
+	_p_path; _state;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
+		return this->m_error << __e_inv_arg;
+
+	CRegKey k_state;
+	LSTATUS n_result = k_state.Open(Get_rooter().Root(), _p_path);
+
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+
+	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
+
+	unsigned long n_chars = u_count;
+
+	CString cs_value = TThemeState::e_default == _e_state ? _T("") : (_pc_sz) TPrint::Out(_e_state);
+
+	n_result = k_state.QueryStringValue((_pc_sz) cs_value, sz_buffer, &n_chars);
+	if (!!n_result) // there is no value with such name;
+		(this->m_error = dword(n_result)) = TStringEx().Format(_T("%s such state is not defined;"), (_pc_sz) TPrint::Out(_e_state));
+		
+	return this->Error();
+}
+
+err_code CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 	_enum;
 	this->m_error << __METHOD__ << __s_ok;
 	// *attention*: registry does not return hresult, in case of success a key function returns '0', i.e. error_success;
@@ -232,6 +281,3 @@ err_code  CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 
 	return this->Error();
 }
-
-/////////////////////////////////////////////////////////////////////////////
-

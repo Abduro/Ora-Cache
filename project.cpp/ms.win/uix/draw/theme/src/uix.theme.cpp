@@ -18,9 +18,9 @@ CString  CTheme_Printer::Out (const CTheme_Element& _element) {
 	_element;
 	CString cs_out;
 	switch (_element) {
-	case CTheme_Element::e_back  : cs_out = _T("e_back"); break;
-	case CTheme_Element::e_fore  : cs_out = _T("e_fore"); break;
-	case CTheme_Element::e_border: cs_out = _T("e_border"); break;
+	case CTheme_Element::e_back  : cs_out = _T("Back"); break;
+	case CTheme_Element::e_fore  : cs_out = _T("Fore"); break;
+	case CTheme_Element::e_border: cs_out = _T("Border"); break;
 	default:
 		cs_out = _T("e_none");
 	}
@@ -31,8 +31,8 @@ CString  CTheme_Printer::Out (const CTheme_Palette& _palette) {
 	_palette;
 	CString cs_out;
 	switch (_palette) {
-	case CTheme_Palette::e_dark  : cs_out = _T("e_dark"); break;
-	case CTheme_Palette::e_light : cs_out = _T("e_light"); break;
+	case CTheme_Palette::e_dark  : cs_out = _T("Dark"); break;
+	case CTheme_Palette::e_light : cs_out = _T("Light"); break;
 	default:
 		cs_out = _T("e_none");
 	}
@@ -43,12 +43,12 @@ CString  CTheme_Printer::Out (const CTheme_Part& _part) {
 	_part;
 	CString cs_out;
 	switch (_part) {
-	case CTheme_Part::e_form    : cs_out = _T("e_form" );   break;
-	case CTheme_Part::e_panel   : cs_out = _T("e_panel");   break;
-	case CTheme_Part::e_edit    : cs_out = _T("e_edit" );   break;
-	case CTheme_Part::e_label   : cs_out = _T("e_label");   break;
-	case CTheme_Part::e_caption : cs_out = _T("e_caption"); break;
-	case CTheme_Part::e_button  : cs_out = _T("e_button");  break;
+	case CTheme_Part::e_form    : cs_out = _T("Form" );   break;
+	case CTheme_Part::e_panel   : cs_out = _T("Panel");   break;
+	case CTheme_Part::e_edit    : cs_out = _T("Edit" );   break;
+	case CTheme_Part::e_label   : cs_out = _T("Label");   break;
+	case CTheme_Part::e_caption : cs_out = _T("Caption"); break;
+	case CTheme_Part::e_button  : cs_out = _T("Button");  break;
 	default:
 		cs_out = _T("e_none");
 	}
@@ -59,12 +59,12 @@ CString  CTheme_Printer::Out (const CTheme_State& _state) {
 	_state;
 	CString cs_out;
 	switch (_state) {
-	case CTheme_State::e_normal   : cs_out = _T("e_normal"  ); break;
-	case CTheme_State::e_disabled : cs_out = _T("e_disabled"); break;
-	case CTheme_State::e_hovered  : cs_out = _T("e_hovered" ); break;
-	case CTheme_State::e_selected : cs_out = _T("e_selected"); break;
+	case CTheme_State::e_normal   : cs_out = _T("Normal"  ); break;
+	case CTheme_State::e_disabled : cs_out = _T("Disabled"); break;
+	case CTheme_State::e_hovered  : cs_out = _T("Hovered" ); break;
+	case CTheme_State::e_selected : cs_out = _T("Selected"); break;
 	default:
-		cs_out = _T("e_default");
+		cs_out = _T("Default");
 	}
 	return  cs_out;
 }

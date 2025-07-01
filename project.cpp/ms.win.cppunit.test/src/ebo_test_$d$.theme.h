@@ -6,9 +6,7 @@
 */
 #include "ebo_test_$d$.theme.defs.h"
 
-namespace ebo { namespace boo { namespace test { namespace themes {
-
-	using TMarker = TColorMarker;
+namespace ebo { namespace boo { namespace test { namespace theme {
 
 	__class (CMarker) {
 	public:

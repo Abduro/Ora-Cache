@@ -6,9 +6,7 @@
 */
 #include "ebo_test_$d$.theme.defs.h"
 
-namespace ebo { namespace boo { namespace test { namespace themes {
-
-	using TNamed = ex_ui::theme::CNamed;
+namespace ebo { namespace boo { namespace test { namespace theme {
 
 	__class (CNamed) {
 	public:
@@ -23,8 +21,6 @@ namespace ebo { namespace boo { namespace test { namespace themes {
 		TNamed  m_named;
 	};
 
-	using TNamed_Enum = ex_ui::theme::CNamed_Enum;
-
 	__class (CNamed_Enum) {
 	public:
 		 CNamed_Enum (const bool _b_verb = false);
@@ -38,8 +34,6 @@ namespace ebo { namespace boo { namespace test { namespace themes {
 		bool   m_b_verb;
 		TNamed_Enum  m_named_enum;
 	};
-
-	using TState = ex_ui::theme::CState;
 
 	__class (CState) {
 	public:

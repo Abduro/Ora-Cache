@@ -208,6 +208,8 @@
     <ClCompile Include="$(_1)ebo_test_$d$.theme.defs.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.theme.named.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.theme.named.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.theme.reg.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.theme.reg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
