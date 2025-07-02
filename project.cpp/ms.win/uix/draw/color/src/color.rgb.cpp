@@ -468,10 +468,47 @@ bool CHex::Set (_pc_sz _p_val) {
 
 	cs_value = cs_value.Right(cs_value.GetLength() - 1);
 
-	const clr_value clr_ = HexToRgb(TStringEx((_pc_sz)cs_value).Dword());
-	b_changed = clr_ != this->m_color.ToRgb();
+	const int n_len = cs_value.GetLength();
+	if (!(n_len == 3 || n_len == 6))
+		return b_changed;
+#if (1)
+	CString cs_red;
+	CString cs_green;
+	CString cs_blue;
 
-	this->m_color.Set(clr_);
+	if (3 == n_len) {
+		cs_red += cs_value.Left(1);
+		cs_red += cs_value.Left(1);
+
+		cs_green += cs_value.Mid(1, 1);
+		cs_green += cs_value.Mid(1, 1);
+
+		cs_blue += cs_value.Right(1);
+		cs_blue += cs_value.Right(1);
+	}
+	else {
+		cs_red += cs_value.Left(2);
+		cs_green += cs_value.Mid(2, 2);
+		cs_blue += cs_value.Right(2);
+	}
+
+	const rgb_value n_red = static_cast<rgb_value>(::std::stoi((_pc_sz)cs_red, nullptr, 16));
+	const rgb_value n_green = static_cast<rgb_value>(::std::stoi((_pc_sz)cs_green, nullptr, 16));
+	const rgb_value n_blue = static_cast<rgb_value>(::std::stoi((_pc_sz)cs_blue, nullptr, 16));
+
+	this->m_color.Set(n_red, n_green, n_blue, 0x0);
+#else
+#pragma warning(disable: 4996)
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/scanf-s-scanf-s-l-wscanf-s-wscanf-s-l ;
+	int r,g,b;
+	if (3 == n_len) {
+		::_tscanf((_pc_sz) cs_value, "%01x%01x%01x", &r, &g, &b);
+	}
+	else {
+		::_tscanf((_pc_sz) cs_value, "%02x%02x%02x", &r, &g, &b);
+	}
+	this->m_color.Set(clr_value(r), clr_value(g), clr_value(b));
+#endif
 
 	return b_changed;
 }

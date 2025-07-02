@@ -7,3 +7,5 @@
 using namespace ebo::boo::test::theme;
 
 /////////////////////////////////////////////////////////////////////////////
+
+namespace ebo { namespace boo { namespace test { namespace theme { void __warning_lnk_4221 (void) {}}}}}

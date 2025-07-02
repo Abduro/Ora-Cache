@@ -13,6 +13,8 @@
 namespace ebo { namespace boo { namespace test { namespace theme {
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+	using namespace shared::types;
+
 	using TPercent = TPct_Flt;
 	using clr_type = ex_ui::color::rgb::clr_type;
 
@@ -21,9 +23,16 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 
 	using TMarker = TColorMarker;
 
-	using TNamed = ex_ui::theme::CNamed;
+	using TElement = ex_ui::theme::CElement; 
+	using TNamed   = ex_ui::theme::CNamed;
 	using TNamed_Enum = ex_ui::theme::CNamed_Enum;
 	using TState = ex_ui::theme::CState;
+
+	using CCurrentTheme = ex_ui::theme::CCurrent;
+
+	static _pc_sz _p_pfx = _T("\t\t");
+	static _pc_sz _p_sfx = _T("\n");
+	static _pc_sz _p_new_line = _T("\n\t\t");
 
 }}}}
 

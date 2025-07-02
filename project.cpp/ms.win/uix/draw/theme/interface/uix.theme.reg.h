@@ -17,11 +17,25 @@ namespace ex_ui { namespace theme { namespace storage {
 		~CReg_router (void) ;
 
 	public:
+		const
+		CCurrent&  CurrentTheme (void) const;
+		CCurrent&  CurrentTheme (void) ;
+
+		_pc_sz Element (void) const;                // composes the registry path to the UI element by using currently selected theme;
 		_pc_sz Element (const TThemePalette, const TThemePart, const TThemeElement) const;
 		_pc_sz Marker  (const TColorMarker&) const; // composes the registry path in accordance with input color marker;
+
+		_pc_sz Palette (void) const;                // composes the registry path for input palette by using currently selected theme;
 		_pc_sz Palette (const TThemePalette) const; // composes the registry path for input palette;
+
+		_pc_sz Part    (void) const;                // composes the path to the part by using currently selected theme;
 		_pc_sz Part    (const TThemePalette, const TThemePart) const;
+
+		_pc_sz State   (void) ;                     // composes the path to the element state by using currently selected theme;
 		_pc_sz State   (const TThemePalette, const TThemePart, const TThemeElement, const TThemeState) const;
+
+		_pc_sz Theme   (const TThemePalette) const;                      // returns the path to currently selected theme node;
+		_pc_sz Theme   (const TThemePalette, const uint32_t _ndx) const; // returns the path of the theme node by specified index;
 
 		HKEY   Root    (void) const;
 		_pc_sz Themes  (void) const;                // this is the path to the root node of the named/custom themes; the entry point;
@@ -30,8 +44,11 @@ namespace ex_ui { namespace theme { namespace storage {
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
 	private:
-		HKEY  m_root;
+		HKEY     m_root;
+		CCurrent m_current;  // the currently selected theme;
 	};
+
+	CReg_router&  Get_router (void);  // returns the reference to the singleton of the router object;
 
 	class CRegistry {
 	public:
@@ -42,7 +59,11 @@ namespace ex_ui { namespace theme { namespace storage {
 		TError&  Error (void) const;
 		err_code Load  (CNamed_Enum&);
 
-		err_code Value (_pc_sz _path, const TThemeState, CState&); // loads the registry key value specified by path for theme state;
+		err_code Node  (_pc_sz _p_path, CElement&);
+		err_code Node  (_pc_sz _p_path, const TThemeElement, CElement&);
+		err_code Value (_pc_sz _p_path, CState&);    // it is supposed the state identifier is already set;
+		err_code Value (TRawStates&);                // gets values of all states by using currently selected theme;
+		err_code Value (_pc_sz _p_path, const TThemeState, CState&);
 
 	public:
 		CRegistry& operator = (const CRegistry&) = delete;

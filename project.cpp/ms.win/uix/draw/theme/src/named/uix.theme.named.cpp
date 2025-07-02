@@ -21,6 +21,192 @@ using CXmlDoc = shared::xml::ms::CDocument;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CBase:: CBase (void) : m_valid(false) {}
+CBase:: CBase (_pc_sz _p_name, const bool _b_valid) : CBase() { *this << _p_name << _b_valid; }
+CBase:: CBase (const CBase& _src) : CBase() { *this = _src; }
+CBase:: CBase (CBase&& _victim) : CBase() { *this = _victim; }
+CBase::~CBase (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool   CBase::Is_valid (void) const { return this->m_valid; /*0 == ex_ui::color::rgb::get_a_value(this->Color());*/ }
+void   CBase::Is_valid (const bool _b_valid) { this->m_valid = _b_valid; }
+
+_pc_sz CBase::Name (void) const { return (_pc_sz) this->m_name; }
+bool   CBase::Name (_pc_sz _p_name) {
+	_p_name;
+
+	if (nullptr == _p_name || 0 == ::_tcslen(_p_name))
+		return false;
+
+	const bool b_changed = 0 == this->m_name.CompareNoCase(_p_name);
+	if (b_changed)
+		this->m_name = _p_name;
+
+	return b_changed;
+}
+
+#if defined(_DEBUG)
+CString  CBase::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{name=%s;valid=%s}");
+
+	CString cs_name  = this->m_name.IsEmpty() ? _T("#not_set") : this->Name();
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_name, (_pc_sz) cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_name, (_pc_sz) cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_name, (_pc_sz) cs_valid); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
+
+bool   CBase::Set (_pc_sz _p_name, const bool _b_valid) {
+	_p_name; _b_valid;
+	bool b_changed = false;
+
+	if (this->Name(_p_name)) b_changed = true;
+	if (this->Is_valid() != _b_valid) { this->Is_valid(_b_valid); b_changed = true; }
+
+	return b_changed;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CBase& CBase::operator = (const CBase& _src) { *this << _src.Name() << _src.Is_valid(); return *this; }
+CBase& CBase::operator = (CBase&& _victim) { *this = (const CBase&)_victim; return *this; }
+CBase& CBase::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+CBase& CBase::operator <<(const bool _b_valid) { this->Is_valid(_b_valid); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CCurrent:: CCurrent (void) : TBase(), m_theme_ndx(0) { this->Default(); }
+CCurrent:: CCurrent (const CCurrent& _src) : CCurrent() { *this = _src; }
+CCurrent:: CCurrent (CCurrent&& _victim) : CCurrent() { *this = _victim; }
+CCurrent::~CCurrent (void) {}
+
+void       CCurrent::Default (void) {
+	(TBase&)*this << TThemePalette::e_dark;
+	(TBase&)*this << TThemePart::e_form;
+	(TBase&)*this << TThemeElement::e_back;
+	(TBase&)*this << TThemeState::e_normal;
+
+	this->ThemeIndex(0);
+}
+
+uint32_t   CCurrent::ThemeIndex (void) const { return this->m_theme_ndx; }
+bool       CCurrent::ThemeIndex (const uint32_t _ndx) {
+
+	const bool b_changed = _ndx != this->ThemeIndex();
+	if (b_changed)
+		this->m_theme_ndx = _ndx;
+
+	return b_changed;
+}
+
+CCurrent&  CCurrent::operator = (const CCurrent& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.ThemeIndex(); return *this; }
+CCurrent&  CCurrent::operator = (CCurrent&& _victim) { *this = (const CCurrent&)_victim; return *this; }
+
+CCurrent&  CCurrent::operator <<(const uint32_t _ndx) {
+	this->ThemeIndex(_ndx); return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CElement:: CElement (const TThemeElement _id) : m_el_id(_id) {
+	this->m_name = TPrint::Out(_id);
+	for (size_t i_ = 0; i_ < this->States().size(); i_++) {
+		CState& state = this->States().at(i_);
+		state.Id((TThemeState)i_, true);
+	}
+}
+CElement:: CElement (const CElement& _src) : CElement() { *this = _src; }
+CElement:: CElement (CElement&& _victim) : CElement() { *this = _victim; }
+CElement::~CElement (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TThemeElement CElement::Id (void) const { return this->m_el_id; }
+const bool    CElement::Id (const TThemeElement _e_id, const bool b_update_name) {
+	_e_id; b_update_name;
+	const bool b_changed = this->Id() != _e_id;
+
+	if (b_changed) {
+		this->m_el_id = _e_id;
+		if (b_update_name)
+			this->m_name = TPrint::Out(_e_id);
+		for (size_t i_ = 0; i_ < this->States().size(); i_++) // clears all states;
+			this->States().at(i_).Clear();
+	}
+
+	return b_changed;
+}
+
+#if defined(_DEBUG)
+CString CElement::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;id=%u;valid=%s;%s%sstates:%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;id=%u;valid=%s;states:%}");
+	static _pc_sz pc_sz_pat_r = _T("{name=%s;id=%u;valid=%s;states:%s}");
+
+	CString cs_name  = this->m_name.IsEmpty() ? _T("#not_set") : this->Name();
+	CString cs_valid = TStringEx().Bool(this->Is_valid());
+
+	CString cs_states;
+	for (size_t i_ = 0; i_ < this->States().size(); i_++) {
+		const CState& state = this->States().at(i_);
+		cs_states += _p_sfx;
+		cs_states += _p_pfx;
+		cs_states += state.Print(e_print::e_req);
+	}
+	if (cs_states.IsEmpty()) {
+		cs_states += _p_sfx;
+		cs_states += _p_pfx;
+		cs_states += _T("#empty");
+	}
+
+	CString cs_out;
+
+	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_states);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, (_pc_sz) cs_states/*, _p_sfx, _p_pfx*/);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, (_pc_sz) cs_states/*, _p_sfx, _p_pfx*/);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+const
+TRawStates&  CElement::States (void) const { return this->m_states; }
+TRawStates&  CElement::States (void)       { return this->m_states; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CElement& CElement::operator = (const CElement& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id() << _src.States(); return *this; }
+CElement& CElement::operator = (CElement&& _victim) { *this = (const CElement&)_victim; return *this; }
+
+CElement& CElement::operator <<(const TRawStates& _states) { this->States() = _states; return *this; }
+
+CElement& CElement::operator <<(const TThemeElement& _e_id) {
+	this->Id(_e_id, true); return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CPart:: CPart (const TThemePart _part) : m_part_id(_part) {}
 CPart:: CPart (const CPart& _src) : CPart() { *this = _src; }
 CPart:: CPart (CPart&& _victim ) : CPart() { *this = _victim; }
@@ -50,12 +236,20 @@ CPart& CPart::operator = (CPart&& _victim) { *this = (const CPart&)_victim; retu
 
 /////////////////////////////////////////////////////////////////////////////
 
-CState:: CState (const TThemeState _id) : m_state_id (_id) { this->m_name = TPrint::Out(_id); }
+CState:: CState (const TThemeState _id) : TBase(), m_state_id (_id) { TBase::m_name = TPrint::Out(_id); }
 CState:: CState (const CState& _src) : CState() { *this = _src; }
 CState:: CState (CState&& _victim) : CState() { *this = _victim; }
 CState::~CState (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool      CState::Clear (void) {
+	bool b_changed = false;
+	if (TBase::Is_valid()) { TBase::Is_valid(false); b_changed = true; }
+	if (this->Color() != 0) { this->Color(0); b_changed = true; }
+
+	return b_changed;
+}
 
 rgb_color CState::Color (void) const { return this->m_color.Color().ToRgb(); }
 bool      CState::Color (const rgb_color _color) {
@@ -66,8 +260,6 @@ bool      CState::Color (const rgb_color _color) {
 
 	return b_changed;
 }
-
-bool   CState::Is_valid (void) const { return 0 == ex_ui::color::rgb::get_a_value(this->Color()); } // GDI recognizes color in this case only;
 
 TThemeState  CState::Id (void) const { return this->m_state_id; }
 const bool   CState::Id (const TThemeState _id, const bool b_update_name) {
@@ -85,26 +277,12 @@ const
 CHex&  CState::Hex  (void) const { return this->m_color; }
 CHex&  CState::Hex  (void)       { return this->m_color; }
 
-_pc_sz CState::Name (void) const { return (_pc_sz) this->m_name; }
-bool   CState::Name (_pc_sz _p_name) {
-	_p_name;
-
-	if (nullptr == _p_name || 0 == ::_tcslen(_p_name))
-		return false;
-
-	const bool b_changed = 0 == this->m_name.CompareNoCase(_p_name);
-	if (b_changed)
-		this->m_name = _p_name;
-
-	return b_changed;
-}
-
 #if defined(_DEBUG)
 CString CState::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;color=%s;id=%u;valid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("");
-	static _pc_sz pc_sz_pat_r = _T("");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;color=%s;id=%u;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{name=%s;color=%s;id=%u;valid=%s}");
 
 	CString cs_name  = this->m_name.IsEmpty() ? _T("#not_set") : this->Name();
 	CString cs_color = CHex::Print(this->Color());
@@ -131,10 +309,8 @@ CString CState::Print (const e_print _e_opt) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CState& CState::operator = (const CState& _src) { *this << _src.Id() << _src.Name() << _src.Color(); return *this; }
+CState& CState::operator = (const CState& _src) { (TBase)*this = (const TBase&) _src; *this << _src.Id() << _src.Color(); return *this; }
 CState& CState::operator = (CState&& _victim)   { *this = (const CState&)_victim; return *this; }
-
-CState& CState::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
 
 CState& CState::operator <<(const TThemeState _e_id) { this->Id(_e_id, false); return *this; }
 CState& CState::operator <<(const rgb_color  _color) { this->Color(_color); return *this; }

@@ -8,8 +8,10 @@
 
 namespace ebo { namespace boo { namespace test { namespace theme {
 
-	using TRegistry = ex_ui::theme::storage::CRegistry;
-	using TRouter   = ex_ui::theme::storage::CReg_router;
+	using TRegistry  = ex_ui::theme::storage::CRegistry;
+	using TRouter    = ex_ui::theme::storage::CReg_router;
+
+	using TRawStates = ex_ui::theme::TRawStates;
 
 	__class (CRouter) {
 	public:
@@ -30,6 +32,7 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 		~CRegistry (void) = default;
 
 	public:
+		__method (Get_Element);
 		__method (Get_State);
 
 	private:

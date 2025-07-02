@@ -15,6 +15,13 @@ CReg_router:: CReg_router (void) : m_root(ThemeRoot) {}
 CReg_router::~CReg_router (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+const
+CCurrent&     CReg_router::CurrentTheme (void) const { return this->m_current; }
+CCurrent&     CReg_router::CurrentTheme (void)       { return this->m_current; }
+
+_pc_sz CReg_router::Element (void) const {
+	return this->Element(this->CurrentTheme().Palette(), this->CurrentTheme().Part(), this->CurrentTheme().Element());
+}
 
 _pc_sz CReg_router::Element (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element) const {
 	_palette; _part; _element;
@@ -28,12 +35,18 @@ _pc_sz CReg_router::Marker (const TColorMarker& _marker) const {
 	_marker;
 	static CString cs_out;
 
-	cs_out.Format(_T("%s\\%s\\%s\\%s\\%s"),
-		this->Themes(),
-		(_pc_sz) TPrint::Out(_marker.Palette()), (_pc_sz) TPrint::Out(_marker.Part()), (_pc_sz) TPrint::Out(_marker.Element()), (_pc_sz) TPrint::Out(_marker.State())
+	cs_out.Format(_T("%s\\%s\\%s\\%s"),
+		this->Theme(_marker.Palette()),
+		(_pc_sz) TPrint::Out(_marker.Part()),
+		(_pc_sz) TPrint::Out(_marker.Element()),
+		(_pc_sz) TPrint::Out(_marker.State())
 	);
 
 	return cs_out.GetString();
+}
+
+_pc_sz CReg_router::Palette (void) const {
+	return this->Palette(this->CurrentTheme().Palette());
 }
 
 _pc_sz CReg_router::Palette (const TThemePalette _palette) const {
@@ -44,21 +57,39 @@ _pc_sz CReg_router::Palette (const TThemePalette _palette) const {
 	return cs_out.GetString();
 }
 
+_pc_sz CReg_router::Part (void) const {
+	return this->Part(this->CurrentTheme().Palette(), this->CurrentTheme().Part());
+}
+
 _pc_sz CReg_router::Part (const TThemePalette _palette, const TThemePart _part) const {
 	_palette; _part;
 	static CString cs_out;
-	cs_out.Format(_T("%s\\%s"), this->Palette(_palette), (_pc_sz) TPrint::Out(_part));
+	cs_out.Format(_T("%s\\Parts\\%s"), this->Theme(_palette), (_pc_sz) TPrint::Out(_part));
 
 	return cs_out.GetString();
 }
 
 HKEY   CReg_router::Root (void) const { return this->m_root; }
 
+_pc_sz CReg_router::State (void) {
+	return this->State(this->CurrentTheme().Palette(), this->CurrentTheme().Part(), this->CurrentTheme().Element(), this->CurrentTheme().State());
+}
+
 _pc_sz CReg_router::State (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element, const TThemeState _state) const {
 	_palette; _part; _element; _state;
 	static CString cs_out;
 	cs_out.Format(_T("%s\\%s"), this->Element(_palette, _part, _element), (_pc_sz) TPrint::Out(_state));
 
+	return cs_out.GetString();
+}
+
+_pc_sz CReg_router::Theme (const TThemePalette _palette) const {
+	return this->Theme(_palette, this->CurrentTheme().ThemeIndex());
+}
+
+_pc_sz CReg_router::Theme (const TThemePalette _palette, const uint32_t _ndx) const {
+	_ndx;
+	static CString cs_out; cs_out.Format(_T("%s\\Theme#%u"), (_pc_sz) this->Palette(_palette), _ndx);
 	return cs_out.GetString();
 }
 
@@ -69,13 +100,14 @@ _pc_sz CReg_router::Themes (void) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ex_ui { namespace theme { namespace storage { namespace _impl {
+namespace ex_ui { namespace theme { namespace storage { 
 	
-
-	CReg_router&  Get_rooter (void) {
-		static CReg_router rooter;
-		return rooter;
+	CReg_router&  Get_router (void) {
+		static CReg_router router;
+		return router;
 	}
+
+namespace _impl {
 
 	class CTheme_enum {
 	public:
@@ -226,6 +258,65 @@ CRegistry::~CRegistry (void) {}
 
 TError&  CRegistry::Error (void) const { return this->m_error; }
 
+err_code CRegistry::Node  (_pc_sz _p_path, CElement& _element) {
+	return this->Node(_p_path, Get_router().CurrentTheme().Element(), _element);
+}
+
+err_code CRegistry::Node  (_pc_sz _p_path, const TThemeElement _e_el, CElement& _element) {
+	_p_path; _e_el; _element;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
+		return this->m_error << __e_inv_arg;
+
+	CRegKey k_state;
+	LSTATUS n_result = k_state.Open(Get_router().Root(), _p_path);
+
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+	else
+		_element.Is_valid(true);
+#if (1)
+	n_result = this->Value (_element.States());
+#else
+	for (size_t i_ = 0; i_ < _element.States().size(); i_++ ){
+
+		CState& state_ = _element.States().at(i_); // the particular state has already proper identifier and name that is set by its owner;
+
+		CCurrent& theme = Get_router().CurrentTheme();
+		theme.State() = state_.Id();
+
+		CString cs_path = Get_router().State();
+
+		n_result = this->Value((_pc_sz) cs_path, state_); // the error is ignored due to the fact the state is not saved in the registry;
+	}
+#endif
+	return this->Error();
+}
+
+err_code CRegistry::Value (TRawStates& _states) {
+	_states;
+	err_code n_result = __s_ok;
+	CString cs_path = Get_router().Element();
+
+	bool b_at_least = false; // this is intermediate result that indicates at least one state is loaded;
+
+	for (size_t i_ = 0; i_ < _states.size(); i_++) {
+		CState& state = _states.at(i_);
+		n_result = this->Value((_pc_sz) cs_path, state); // result code is ignored;
+		if (n_result == __s_ok)
+			b_at_least = true;
+	}
+	if (b_at_least)
+		this->m_error << __s_ok; // restores the no error state if at least one state has been loaded;
+
+	return n_result;
+}
+
+err_code CRegistry::Value (_pc_sz _p_path, CState& _state) {
+	return this->Value (_p_path, _state.Id(), _state);
+}
+
 err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _state) {
 	_p_path; _state;
 	this->m_error << __METHOD__ << __s_ok;
@@ -234,7 +325,7 @@ err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _
 		return this->m_error << __e_inv_arg;
 
 	CRegKey k_state;
-	LSTATUS n_result = k_state.Open(Get_rooter().Root(), _p_path);
+	LSTATUS n_result = k_state.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
 		return this->m_error = dword(n_result);
@@ -248,7 +339,10 @@ err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _
 	n_result = k_state.QueryStringValue((_pc_sz) cs_value, sz_buffer, &n_chars);
 	if (!!n_result) // there is no value with such name;
 		(this->m_error = dword(n_result)) = TStringEx().Format(_T("%s such state is not defined;"), (_pc_sz) TPrint::Out(_e_state));
-		
+	else {
+		_state.Hex().Set(sz_buffer);
+		_state.Is_valid(true);
+	}
 	return this->Error();
 }
 
@@ -257,7 +351,7 @@ err_code CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 	this->m_error << __METHOD__ << __s_ok;
 	// *attention*: registry does not return hresult, in case of success a key function returns '0', i.e. error_success;
 	CRegKey themes;
-	LSTATUS n_result = themes.Open(Get_rooter().Root(), Get_rooter().Themes());
+	LSTATUS n_result = themes.Open(Get_router().Root(), Get_router().Themes());
 	if (!!n_result)
 		return this->m_error = dword(n_result);
 

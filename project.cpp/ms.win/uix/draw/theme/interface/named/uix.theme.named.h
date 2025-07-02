@@ -12,16 +12,60 @@ namespace ex_ui { namespace theme {
 	using namespace ex_ui::theme::colors;
 	using CHex = ex_ui::color::rgb::CHex;
 
-	class CState {
+	class CCurrent : public TColorMarker { typedef TColorMarker TBase;
+	public:
+		 CCurrent (void); CCurrent (const CCurrent&); CCurrent (CCurrent&&);
+		~CCurrent (void);
+
+	public:
+		void      Default    (void) ;
+		uint32_t  ThemeIndex (void) const;
+		bool      ThemeIndex (const uint32_t);
+
+	public:
+		CCurrent& operator = (const CCurrent&);
+		CCurrent& operator = (CCurrent&&);
+
+		CCurrent& operator <<(const uint32_t _ndx);
+
+	private:
+		uint32_t m_theme_ndx;
+	};
+
+	class CBase {
+	public:
+		 CBase (void); CBase (_pc_sz _p_name, const bool _b_valid); CBase (const CBase&); CBase (CBase&&);
+		~CBase (void);
+
+	public:
+		bool   Is_valid (void) const;  // returns 'true' if this class object is successfully loaded from the registry;
+		void   Is_valid (const bool);  // sets the validity flag of this class object, for example, in case when the registry has no data of this object;
+
+		_pc_sz Name (void) const;
+		bool   Name (_pc_sz)    ;      // sets the base name, returns 'true' if the name is changed;
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
+		bool   Set (_pc_sz _p_name, const bool _b_valid);
+	public:
+		CBase& operator = (const CBase&);
+		CBase& operator = (CBase&&);
+		CBase& operator <<(_pc_sz _p_name);
+		CBase& operator <<(const bool _b_valid);
+	protected:
+		bool    m_valid;
+		CString m_name ;
+	};
+
+	class CState : public CBase { typedef CBase TBase;
 	public:
 		 CState (const TThemeState = TThemeState::e_default); CState (const CState&); CState (CState&&);
 		~CState (void);
 
 	public:
+		bool      Clear (void) ; // changes color to transparent 'black' and sets 'valid' flag to false;
 		rgb_color Color (void) const;
 		bool      Color (const rgb_color);
-
-		bool   Is_valid (void) const;  // returns 'true' if color is not transparent; 'alpha' channel value must be zero;
 
 		TThemeState  Id (void) const;
 		const bool   Id (const TThemeState, const bool b_update_name); // sets the state identifier and updates the name;
@@ -30,26 +74,46 @@ namespace ex_ui { namespace theme {
 		CHex&  Hex  (void) const;
 		CHex&  Hex  (void) ;
 
-		_pc_sz Name (void) const;
-		bool   Name (_pc_sz)    ;  // sets the state name, returns 'true' if the name is changed;
-
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
 	public:
 		CState& operator = (const CState&);
 		CState& operator = (CState&&);        // no move or swap operation, just copying data;
-		CState& operator <<(_pc_sz _p_name);
 		CState& operator <<(const TThemeState _e_id);
 		CState& operator <<(const rgb_color);
 
 	private:
 		TThemeState  m_state_id;
 		CHex    m_color;
-		CString m_name ;
 	};
 
 	typedef ::std::array<CState, 4> TRawStates;
+
+	class CElement : public CBase { typedef CBase TBase;
+	public:
+		 CElement (const TThemeElement = TThemeElement::e_none); CElement (const CElement&); CElement (CElement&&);
+		~CElement (void);
+	public:
+		TThemeElement  Id (void) const;
+		const bool     Id (const TThemeElement, const bool b_update_name); // sets the element identifier and updates the name; clears its states;
+		const
+		TRawStates&  States (void) const;
+		TRawStates&  States (void) ;
+#if defined(_DEBUG)
+		CString   Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
+	public:
+		CElement& operator = (const CElement&);
+		CElement& operator = (CElement&&);
+
+		CElement& operator <<(const TRawStates&);
+		CElement& operator <<(const TThemeElement& _e_id);
+
+	private:
+		TThemeElement m_el_id;
+		TRawStates    m_states;
+	};
 
 	class CPart {
 	public:

@@ -81,10 +81,10 @@ CColor_Marker::~CColor_Marker (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-const CTheme_Element CColor_Marker::Element (void) const { return m_element ; }
-const CTheme_Palette CColor_Marker::Palette (void) const { return m_palette ; }
-const CTheme_Part    CColor_Marker::Part    (void) const { return m_ui_part ; }
-const CTheme_State   CColor_Marker::State   (void) const { return m_ui_state; }
+const CTheme_Element CColor_Marker::Element (void) const { return m_element ; } CTheme_Element& CColor_Marker::Element (void) { return m_element ; }
+const CTheme_Palette CColor_Marker::Palette (void) const { return m_palette ; } CTheme_Palette& CColor_Marker::Palette (void) { return m_palette ; }
+const CTheme_Part    CColor_Marker::Part    (void) const { return m_ui_part ; } CTheme_Part&    CColor_Marker::Part    (void) { return m_ui_part ; }
+const CTheme_State   CColor_Marker::State   (void) const { return m_ui_state; } CTheme_State&   CColor_Marker::State   (void) { return m_ui_state; }
 
 /////////////////////////////////////////////////////////////////////////////
 

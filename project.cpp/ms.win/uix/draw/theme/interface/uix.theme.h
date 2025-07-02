@@ -50,10 +50,10 @@ namespace ex_ui { namespace theme { namespace colors {
 		~CColor_Marker (void);
 
 	public:
-		const CTheme_Element   Element (void) const;
-		const CTheme_Palette   Palette (void) const;
-		const CTheme_Part      Part    (void) const;
-		const CTheme_State     State   (void) const;
+		const CTheme_Element   Element (void) const; CTheme_Element&   Element (void);
+		const CTheme_Palette   Palette (void) const; CTheme_Palette&   Palette (void);
+		const CTheme_Part      Part    (void) const; CTheme_Part&      Part    (void);
+		const CTheme_State     State   (void) const; CTheme_State&     State   (void);
 
 	public:
 		const bool Is (void) const;  // returns true if all attributes are assigned (there is no e_none value);
