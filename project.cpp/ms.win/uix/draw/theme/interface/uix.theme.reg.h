@@ -50,7 +50,7 @@ namespace ex_ui { namespace theme { namespace storage {
 
 	CReg_router&  Get_router (void);  // returns the reference to the singleton of the router object;
 
-	class CRegistry {
+	class CRegistry { // if the path is not provided to one of the functions of this class that means current theme is used;
 	public:
 		 CRegistry (void); CRegistry (const CRegistry&) = delete; CRegistry (CRegistry&&) = delete;
 		~CRegistry (void);
@@ -60,7 +60,12 @@ namespace ex_ui { namespace theme { namespace storage {
 		err_code Load  (CNamed_Enum&);
 
 		err_code Node  (_pc_sz _p_path, CElement&);
-		err_code Node  (_pc_sz _p_path, const TThemeElement, CElement&);
+		err_code Node  (TRawElements&);              // returns the error in case when no elements found for parent part node;
+
+		err_code Node  (_pc_sz _p_path, CPalette&);
+		err_code Node  (_pc_sz _p_path, CPart&);
+		err_code Node  (TRawParts&);                 // returns the error in case when no parts found for the parent palette node;
+
 		err_code Value (_pc_sz _p_path, CState&);    // it is supposed the state identifier is already set;
 		err_code Value (TRawStates&);                // gets values of all states by using currently selected theme;
 		err_code Value (_pc_sz _p_path, const TThemeState, CState&);

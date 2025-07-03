@@ -26,6 +26,8 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 	using TElement = ex_ui::theme::CElement; 
 	using TNamed   = ex_ui::theme::CNamed;
 	using TNamed_Enum = ex_ui::theme::CNamed_Enum;
+	using TPallete    = ex_ui::theme::CPalette;
+	using TPart  = ex_ui::theme::CPart;
 	using TState = ex_ui::theme::CState;
 
 	using CCurrentTheme = ex_ui::theme::CCurrent;

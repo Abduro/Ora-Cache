@@ -259,18 +259,14 @@ CRegistry::~CRegistry (void) {}
 TError&  CRegistry::Error (void) const { return this->m_error; }
 
 err_code CRegistry::Node  (_pc_sz _p_path, CElement& _element) {
-	return this->Node(_p_path, Get_router().CurrentTheme().Element(), _element);
-}
-
-err_code CRegistry::Node  (_pc_sz _p_path, const TThemeElement _e_el, CElement& _element) {
-	_p_path; _e_el; _element;
+	_p_path; _element;
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
 		return this->m_error << __e_inv_arg;
 
-	CRegKey k_state;
-	LSTATUS n_result = k_state.Open(Get_router().Root(), _p_path);
+	CRegKey k_element;
+	LSTATUS n_result = k_element.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
 		return this->m_error = dword(n_result);
@@ -291,6 +287,97 @@ err_code CRegistry::Node  (_pc_sz _p_path, const TThemeElement _e_el, CElement& 
 		n_result = this->Value((_pc_sz) cs_path, state_); // the error is ignored due to the fact the state is not saved in the registry;
 	}
 #endif
+	return this->Error();
+}
+
+err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CPalette& _palette) {
+	_p_path; _palette;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
+		return this->m_error << __e_inv_arg;
+
+	CRegKey k_palette;
+	LSTATUS n_result = k_palette																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					.Open(Get_router().Root(), _p_path);
+
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+	else
+		_palette.Is_valid(true);
+
+	this->Node(_palette.Parts());
+
+	return this->Error();
+}
+
+err_code CRegistry::Node  (_pc_sz _p_path, CPart& _part) {
+	_p_path; _part;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
+		return this->m_error << __e_inv_arg;
+
+	CRegKey k_part;
+	LSTATUS n_result = k_part.Open(Get_router().Root(), _p_path);
+
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+	else
+		_part.Is_valid(true);
+
+	this->Node(_part.Elements());
+
+	return this->Error();
+}
+
+err_code CRegistry::Node  (TRawElements& _elements) {
+	_elements;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CString cs_path ;
+	bool b_at_least = false;                // is set to 'true' in case when at least one element is loaded from the regestry;
+
+	for (size_t i_ = 0; i_ < _elements.size(); i_++) {
+		CElement& element = _elements.at(i_);
+
+		Get_router().CurrentTheme().Element() = element.Id();
+		cs_path = Get_router().Element();   // currently selected theme is used for composing the path required;
+
+		if (__failed(this->Node((_pc_sz) cs_path, element))) {
+			continue; // ignores the error returned;
+		}
+		else
+			b_at_least = true;
+	}
+	if (b_at_least)
+		this->m_error << __s_ok;
+
+	return this->Error();
+}
+
+err_code CRegistry::Node  (TRawParts& _parts) {
+	_parts;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CString cs_path ;
+	bool b_at_least = false;                // is set to 'true' in case when at least one part is loaded from the regestry;
+
+	for (size_t i_ = 0; i_ < _parts.size(); i_++) {
+		CPart& part = _parts.at(i_);
+
+		Get_router().CurrentTheme().Part() = part.Id();
+		cs_path = Get_router().Part();      // currently selected theme is used for composing the path required;
+
+		if (__failed(this->Node((_pc_sz) cs_path, part))) {
+			continue; // ignores the error returned;
+		}
+		else
+			b_at_least = true;
+	}
+
+	if (b_at_least)
+		this->m_error << __s_ok;
+
 	return this->Error();
 }
 

@@ -33,6 +33,8 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 
 	public:
 		__method (Get_Element);
+		__method (Get_Palette);
+		__method (Get_Part);
 		__method (Get_State);
 
 	private:

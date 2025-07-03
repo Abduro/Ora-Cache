@@ -133,19 +133,28 @@ CElement::~CElement (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+const bool CElement::Clear (void) {
+	bool b_changed = false;
+
+	if (TBase::Is_valid()) { TBase::Is_valid(false); b_changed = true; }
+	for (size_t i_ = 0; i_ < this->States().size(); i_++) // clears all states;
+			if (this->States().at(i_).Clear())
+				b_changed = true;
+
+	return b_changed;
+}
+
 TThemeElement CElement::Id (void) const { return this->m_el_id; }
 const bool    CElement::Id (const TThemeElement _e_id, const bool b_update_name) {
 	_e_id; b_update_name;
-	const bool b_changed = this->Id() != _e_id;
+	bool b_changed = this->Id() != _e_id;
 
 	if (b_changed) {
 		this->m_el_id = _e_id;
 		if (b_update_name)
 			this->m_name = TPrint::Out(_e_id);
-		for (size_t i_ = 0; i_ < this->States().size(); i_++) // clears all states;
-			this->States().at(i_).Clear();
+		this->Clear();
 	}
-
 	return b_changed;
 }
 
@@ -153,11 +162,11 @@ const bool    CElement::Id (const TThemeElement _e_id, const bool b_update_name)
 CString CElement::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;id=%u;valid=%s;%s%sstates:%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;id=%u;valid=%s;states:%}");
-	static _pc_sz pc_sz_pat_r = _T("{name=%s;id=%u;valid=%s;states:%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;id=%u;valid=%s;%s%sstates:%s}");
+	static _pc_sz pc_sz_pat_r = _T("name=%s;id=%u;valid=%s;%s%sstates:%s");
 
-	CString cs_name  = this->m_name.IsEmpty() ? _T("#not_set") : this->Name();
-	CString cs_valid = TStringEx().Bool(this->Is_valid());
+	CString cs_name  = TBase::m_name.IsEmpty() ? _T("#not_set") : TBase::Name();
+	CString cs_valid = TStringEx().Bool(TBase::Is_valid());
 
 	CString cs_states;
 	for (size_t i_ = 0; i_ < this->States().size(); i_++) {
@@ -178,10 +187,10 @@ CString CElement::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) con
 		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_states);
 	}
 	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, (_pc_sz) cs_states/*, _p_sfx, _p_pfx*/);
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_states);
 	}
 	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
-		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, (_pc_sz) cs_states/*, _p_sfx, _p_pfx*/);
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_states);
 	}
 
 	if (cs_out.IsEmpty())
@@ -206,33 +215,207 @@ CElement& CElement::operator <<(const TThemeElement& _e_id) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+namespace ex_ui { namespace theme {
 
-CPart:: CPart (const TThemePart _part) : m_part_id(_part) {}
+CPalette:: CPalette (const TThemePalette _e_id) : m_pal_id(_e_id) {
+	this->m_name = TPrint::Out(_e_id);
+	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
+		if (false){}
+		else if (0 == i_) this->Parts().at(i_).Id(TThemePart::e_form   , true);
+		else if (1 == i_) this->Parts().at(i_).Id(TThemePart::e_panel  , true);
+		else if (2 == i_) this->Parts().at(i_).Id(TThemePart::e_edit   , true);
+		else if (3 == i_) this->Parts().at(i_).Id(TThemePart::e_label  , true);
+		else if (4 == i_) this->Parts().at(i_).Id(TThemePart::e_caption, true);
+		else if (5 == i_) this->Parts().at(i_).Id(TThemePart::e_button , true);
+	}
+}
+CPalette:: CPalette (const CPalette& _src) : CPalette() { *this = _src; }
+CPalette:: CPalette (CPalette&& _victim) : CPalette() { *this = _victim; }
+CPalette::~CPalette (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+const bool CPalette::Clear (void) {
+	bool b_changed = false;
+
+	if (TBase::Is_valid()) { TBase::Is_valid(false); b_changed = true; }
+	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) // clears all parts;
+			if (this->Parts().at(i_).Clear())
+				b_changed = true;
+	return b_changed;
+}
+
+const
+TRawParts& CPalette::Parts (void) const { return this->m_parts; }
+TRawParts& CPalette::Parts (void)       { return this->m_parts; }
+
+TThemePalette CPalette::Id (void) const { return this->m_pal_id;}
+const bool    CPalette::Id (const TThemePalette _e_id, const bool b_update_name) {
+	_e_id; b_update_name;
+	bool b_changed = this->Id() != _e_id;
+
+	if (b_changed) {
+		this->m_pal_id = _e_id;
+		if (b_update_name)
+			this->m_name = TPrint::Out(_e_id);
+		this->Clear();
+	}
+	return b_changed;
+}
+
+#if defined(_DEBUG)
+CString    CPalette::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;id=%u;valid=%s;parts=%s%s%s\t}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;id=%u;valid=%s;parts=%s%s%s\t}");
+	static _pc_sz pc_sz_pat_r = _T("name=%s;id=%u;valid=%s;parts=%s%s%s");
+
+	CString cs_name  = TBase::m_name.IsEmpty() ? _T("#not_set") : TBase::Name();
+	CString cs_valid = TStringEx().Bool(TBase::Is_valid());
+	CString cs_parts;
+
+	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
+		const CPart& part = this->Parts().at(i_);
+		cs_parts += _p_sfx;
+		cs_parts += _p_pfx;
+		cs_parts += TStringEx().Format(_T("part #%u: "), i_ + 1);
+		cs_parts += part.Print(e_print::e_req);
+		cs_parts += _p_sfx;
+	}
+	if (cs_parts.IsEmpty()) {
+		cs_parts += _p_sfx;
+		cs_parts += _p_pfx;
+		cs_parts += _T("#empty");
+		cs_parts += _p_sfx;
+	}
+	CString cs_out;
+
+	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_parts);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_parts);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_parts);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPalette&  CPalette::operator = (const CPalette& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id() << _src.Parts(); return *this; }
+CPalette&  CPalette::operator = (CPalette&& _victim) { *this = (const CPalette&)_victim; return *this; }
+
+CPalette&  CPalette::operator <<(const TRawParts& _parts) { this->Parts() = _parts; return *this; }
+CPalette&  CPalette::operator <<(const TThemePalette _e_id) { this->Id(_e_id, true); return *this; }
+
+}}
+/////////////////////////////////////////////////////////////////////////////
+
+CPart:: CPart (const TThemePart _part) : m_part_id(_part) {
+	this->m_name = TPrint::Out(_part);
+	for (size_t i_ = 0; i_ < this->Elements().size(); i_++) {
+		if (false){}
+		else if (0 == i_) this->Elements().at(i_).Id(TThemeElement::e_back, true);
+		else if (1 == i_) this->Elements().at(i_).Id(TThemeElement::e_fore, true);
+		else if (2 == i_) this->Elements().at(i_).Id(TThemeElement::e_border, true);
+		else
+			break;
+	}
+}
 CPart:: CPart (const CPart& _src) : CPart() { *this = _src; }
 CPart:: CPart (CPart&& _victim ) : CPart() { *this = _victim; }
 CPart::~CPart (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-TThemePart  CPart::Id (void) const { return this->m_part_id; }
-bool CPart::Id (const TThemePart _part) {
-	_part;
-	const bool b_changed = this->Id() != _part;
+const bool  CPart::Clear (void) {
+	bool b_changed = false;
 
-	if (b_changed)
-		this->m_part_id = _part;
+	if (TBase::Is_valid()) { TBase::Is_valid(false); b_changed = true; }
+	for (size_t i_ = 0; i_ < this->Elements().size(); i_++) // clears all elements;
+			if (this->Elements().at(i_).Clear())
+				b_changed = true;
 
 	return b_changed;
 }
 
-bool CPart::Is_valid (void) const {
-	return (this->Id() != TThemePart::e_none);
+const
+TRawElements& CPart::Elements (void) const { return this->m_elements; }
+TRawElements& CPart::Elements (void)       { return this->m_elements; }
+
+TThemePart  CPart::Id (void) const { return this->m_part_id; }
+const bool  CPart::Id (const TThemePart _part, const bool b_update_name) {
+	_part;
+	const bool b_changed = this->Id() != _part;
+
+	if (b_changed) {
+		this->m_part_id = _part;
+		if (b_update_name)
+			this->m_name = TPrint::Out(_part);
+		this->Clear();
+	}
+	return b_changed;
 }
+
+#if defined(_DEBUG)
+CString CPart::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {name=%s;id=%u;valid=%s;%s%selements:%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {name=%s;id=%u;valid=%s;%s%selements:%s}");
+	static _pc_sz pc_sz_pat_r = _T("name=%s;id=%u;valid=%s;%s%selements:%s");
+
+	CString cs_name  = TBase::m_name.IsEmpty() ? _T("#not_set") : TBase::Name();
+	CString cs_valid = TStringEx().Bool(TBase::Is_valid());
+
+	CString cs_elements;
+	for (size_t i_ = 0; i_ < this->Elements().size(); i_++) {
+		const CElement& element = this->Elements().at(i_);
+		cs_elements += _p_sfx;
+		cs_elements += _p_pfx;
+		cs_elements += TStringEx().Format(_T("el #%u: "), i_ + 1);
+		cs_elements += element.Print(e_print::e_req);
+		cs_elements += _p_sfx;
+	}
+	if (cs_elements.IsEmpty()) {
+		cs_elements += _p_sfx;
+		cs_elements += _p_pfx;
+		cs_elements += _T("#empty");
+		cs_elements += _p_sfx;
+	}
+
+	CString cs_out;
+
+	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_elements);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_elements);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
+		(_pc_sz) cs_name, this->Id(), (_pc_sz) cs_valid, _p_sfx, _p_pfx, (_pc_sz) cs_elements);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPart& CPart::operator = (const CPart& _src) { this->Id(_src.Id()); return *this; }
+CPart& CPart::operator = (const CPart& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id() << _src.Elements(); return *this; }
 CPart& CPart::operator = (CPart&& _victim) { *this = (const CPart&)_victim; return *this; }
+
+CPart& CPart::operator <<(const TThemePart _e_id) { this->Id(_e_id, true); return *this; }
+CPart& CPart::operator <<(const TRawElements& _elements) { this->Elements() = _elements; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

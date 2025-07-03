@@ -88,20 +88,21 @@ namespace ex_ui { namespace theme {
 		CHex    m_color;
 	};
 
-	typedef ::std::array<CState, 4> TRawStates;
+	typedef ::std::array<CState, 4> TRawStates; // 0: e_normal; 1: e_disabled; 2: e_hovered; 3: e_selected;
 
 	class CElement : public CBase { typedef CBase TBase;
 	public:
 		 CElement (const TThemeElement = TThemeElement::e_none); CElement (const CElement&); CElement (CElement&&);
 		~CElement (void);
 	public:
-		TThemeElement  Id (void) const;
-		const bool     Id (const TThemeElement, const bool b_update_name); // sets the element identifier and updates the name; clears its states;
+		const bool Clear (void); // resets all states to be invalid; sets 'validity' flag to false for this class object; 
+		TThemeElement Id (void) const;
+		const bool    Id (const TThemeElement, const bool b_update_name); // sets the element identifier and updates the name; clears its states;
 		const
-		TRawStates&  States (void) const;
-		TRawStates&  States (void) ;
+		TRawStates&   States (void) const;
+		TRawStates&   States (void) ;
 #if defined(_DEBUG)
-		CString   Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+		CString    Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 	public:
 		CElement& operator = (const CElement&);
@@ -115,26 +116,66 @@ namespace ex_ui { namespace theme {
 		TRawStates    m_states;
 	};
 
-	class CPart {
+	typedef ::std::array<CElement, 3> TRawElements;  // 0: e_back; 1: e_fore; 2: e_border;
+
+	class CPart : public CBase { typedef CBase TBase;
 	public:
 		 CPart (const TThemePart = TThemePart::e_none); CPart (const CPart&); CPart (CPart&&);
 		~CPart (void);
 
 	public:
-		TThemePart  Id (void) const;
-		bool Id (const TThemePart) ;
+		const bool    Clear (void);  // clears all elements and sets 'validity' flag of this class object to 'false';
+		const
+		TRawElements& Elements (void) const;
+		TRawElements& Elements (void) ;
 
-		bool Is_valid (void) const ;
+		TThemePart  Id (void) const;
+		const bool  Id (const TThemePart, const bool b_update_name);
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
 
 	public:
 		CPart& operator = (const CPart&);
 		CPart& operator = (CPart&&);
+		CPart& operator <<(const TThemePart _e_id);
+		CPart& operator <<(const TRawElements&);
 
 	private:
-		TThemePart  m_part_id;
+		TThemePart   m_part_id ;
+		TRawElements m_elements;
 	};
 
-	typedef ::std::vector<CPart> TRawParts;
+	typedef ::std::array<CPart, 6> TRawParts; // 0: e_form; 1: e_panel; 2: e_edit; 3: e_label; 4: e_caption; 5: e_button;
+
+	class CPalette : public CBase { typedef CBase TBase;
+	public:
+		 CPalette (const TThemePalette = TThemePalette::e_none); CPalette (const CPalette&); CPalette (CPalette&&);
+		~CPalette (void);
+
+	public:
+		const bool Clear (void);  // clears all elements and sets 'validity' flag of this class object to 'false';
+		const
+		TRawParts& Parts (void) const;
+		TRawParts& Parts (void) ;
+
+		TThemePalette Id (void) const;
+		const bool    Id (const TThemePalette, const bool b_update_name);
+
+#if defined(_DEBUG)
+		CString    Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
+	public:
+		CPalette&  operator = (const CPalette&);
+		CPalette&  operator = (CPalette&&);
+
+		CPalette&  operator <<(const TRawParts&);
+		CPalette&  operator <<(const TThemePalette _e_id);
+
+	private:
+		TThemePalette m_pal_id;
+		TRawParts     m_parts ;
+	};
 
 	class CNamed {
 	public:
