@@ -39,7 +39,7 @@ bool   CBase::Name (_pc_sz _p_name) {
 	if (nullptr == _p_name || 0 == ::_tcslen(_p_name))
 		return false;
 
-	const bool b_changed = 0 == this->m_name.CompareNoCase(_p_name);
+	const bool b_changed = !!this->m_name.CompareNoCase(_p_name); // non sensitive case comparison due to for registry key name the case is not important;
 	if (b_changed)
 		this->m_name = _p_name;
 
@@ -219,15 +219,6 @@ namespace ex_ui { namespace theme {
 
 CPalette:: CPalette (const TThemePalette _e_id) : m_pal_id(_e_id) {
 	this->m_name = TPrint::Out(_e_id);
-	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
-		if (false){}
-		else if (0 == i_) this->Parts().at(i_).Id(TThemePart::e_form   , true);
-		else if (1 == i_) this->Parts().at(i_).Id(TThemePart::e_panel  , true);
-		else if (2 == i_) this->Parts().at(i_).Id(TThemePart::e_edit   , true);
-		else if (3 == i_) this->Parts().at(i_).Id(TThemePart::e_label  , true);
-		else if (4 == i_) this->Parts().at(i_).Id(TThemePart::e_caption, true);
-		else if (5 == i_) this->Parts().at(i_).Id(TThemePart::e_button , true);
-	}
 }
 CPalette:: CPalette (const CPalette& _src) : CPalette() { *this = _src; }
 CPalette:: CPalette (CPalette&& _victim) : CPalette() { *this = _victim; }
@@ -239,15 +230,13 @@ const bool CPalette::Clear (void) {
 	bool b_changed = false;
 
 	if (TBase::Is_valid()) { TBase::Is_valid(false); b_changed = true; }
-	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) // clears all parts;
-			if (this->Parts().at(i_).Clear())
-				b_changed = true;
+	if (this->Themes().empty() == false) {
+		this->Themes().clear();
+
+		b_changed = true;
+	}
 	return b_changed;
 }
-
-const
-TRawParts& CPalette::Parts (void) const { return this->m_parts; }
-TRawParts& CPalette::Parts (void)       { return this->m_parts; }
 
 TThemePalette CPalette::Id (void) const { return this->m_pal_id;}
 const bool    CPalette::Id (const TThemePalette _e_id, const bool b_update_name) {
@@ -274,12 +263,12 @@ CString    CPalette::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 	CString cs_valid = TStringEx().Bool(TBase::Is_valid());
 	CString cs_parts;
 
-	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
-		const CPart& part = this->Parts().at(i_);
+	for (size_t i_ = 0; i_ < this->Themes().size(); i_++) {
+		const CNamed& theme = this->Themes().at(i_);
 		cs_parts += _p_sfx;
 		cs_parts += _p_pfx;
-		cs_parts += TStringEx().Format(_T("part #%u: "), i_ + 1);
-		cs_parts += part.Print(e_print::e_req);
+		cs_parts += TStringEx().Format(_T("Theme #%u: "), i_);
+		cs_parts += theme.Print(e_print::e_req);
 		cs_parts += _p_sfx;
 	}
 	if (cs_parts.IsEmpty()) {
@@ -307,12 +296,16 @@ CString    CPalette::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) 
 }
 #endif
 
+const
+TRawNamed& CPalette::Themes (void) const { return this->m_themes; }
+TRawNamed& CPalette::Themes (void)       { return this->m_themes; }
+
 /////////////////////////////////////////////////////////////////////////////
 
-CPalette&  CPalette::operator = (const CPalette& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id() << _src.Parts(); return *this; }
+CPalette&  CPalette::operator = (const CPalette& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id() << _src.Themes(); return *this; }
 CPalette&  CPalette::operator = (CPalette&& _victim) { *this = (const CPalette&)_victim; return *this; }
 
-CPalette&  CPalette::operator <<(const TRawParts& _parts) { this->Parts() = _parts; return *this; }
+CPalette&  CPalette::operator <<(const TRawNamed& _named) { this->Themes() = _named; return *this; }
 CPalette&  CPalette::operator <<(const TThemePalette _e_id) { this->Id(_e_id, true); return *this; }
 
 }}
@@ -504,7 +497,18 @@ namespace ex_ui { namespace theme {
 // otherwise the ambiguity of the names: ex_ui::color::rgb::CNamed;
 /////////////////////////////////////////////////////////////////////////////
 
-CNamed:: CNamed (const TThemePalette _palette) : m_palette(_palette) {} CNamed:: CNamed (const CNamed& _src) : CNamed() { *this = _src; }
+CNamed:: CNamed (void) {
+	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
+		if (false){}
+		else if (0 == i_) this->Parts().at(i_).Id(TThemePart::e_form   , true);
+		else if (1 == i_) this->Parts().at(i_).Id(TThemePart::e_panel  , true);
+		else if (2 == i_) this->Parts().at(i_).Id(TThemePart::e_edit   , true);
+		else if (3 == i_) this->Parts().at(i_).Id(TThemePart::e_label  , true);
+		else if (4 == i_) this->Parts().at(i_).Id(TThemePart::e_caption, true);
+		else if (5 == i_) this->Parts().at(i_).Id(TThemePart::e_button , true);
+	}
+}
+CNamed:: CNamed (const CNamed& _src) : CNamed() { *this = _src; }
 CNamed:: CNamed (CNamed&& _victim) : CNamed() { *this = (const CNamed&)_victim; } // does not care about move or swap operation;
 CNamed::~CNamed (void) {}
 
@@ -519,48 +523,65 @@ bool     CNamed::Desc (_pc_sz _p_desc) {
 	return b_changed;
 }
 
-_pc_sz   CNamed::Name (void) const { return (_pc_sz) this->m_name; }
-bool     CNamed::Name (_pc_sz _p_name) {
-	_p_name;
-	const bool b_changed = 0 != this->m_name.Compare(_p_name);
-	if (b_changed)
-		this->m_name = _p_name;
-	return b_changed;
+bool     CNamed::Is_valid (void) const {
+
+	if (TBase::Is_valid() == false)
+		return false;
+
+	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
+		if (this->Parts().at(i_).Is_valid())
+			return true;
+	}
+	return false;
 }
 
-bool CNamed::Is_valid(void) const { return this->Palette() != TThemePalette::e_none; }
+bool     CNamed::Is_valid (const bool _b_valid) {
+	const bool b_changed = TBase::Is_valid() != _b_valid;
 
-TThemePalette CNamed::Palette (void) const { return this->m_palette; }
-const bool    CNamed::Palette (const TThemePalette _e_palette) {
-	_e_palette;
-	const bool b_changed = this->Palette() != _e_palette;
 	if (b_changed)
-		this->m_palette = _e_palette;
+		TBase::Is_valid(_b_valid);
+
 	return b_changed;
 }
 
 #if defined(_DEBUG)
-CString  CNamed::Print (const e_print _e_opt) const {
-	_e_opt;
-	static _pc_sz pc_sz_pat_a = _T("csl::[%s::%s] >> {palette=%s;name=%s;desc=%s;valid=%s}");
-	static _pc_sz pc_sz_pat_n = _T("csl::[%s] >> {palette=%s;name=%s;desc=%s;valid=%s}");
-	static _pc_sz pc_sz_pat_r = _T("palette=%s;name=%s;desc=%s;valid=%s");
+CString  CNamed::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("csl::[%s::%s] >> {%s%sname=%s;desc=%s;valid=%s;parts=%s%s%s\t}");
+	static _pc_sz pc_sz_pat_n = _T("csl::[%s] >> {%s%sname=%s;desc=%s;valid=%s;parts=%s%s%s\t}");
+	static _pc_sz pc_sz_pat_r = _T("%s%sname=%s;desc=%s;valid=%s;parts=%s%s%s\t");
 
-	CString cs_palette = TPrint::Out(this->Palette());
 	CString cs_desc    = this->m_desc.IsEmpty() ? _T("#not_set") : this->Desc();
 	CString cs_name    = this->m_name.IsEmpty() ? _T("#not_set") : this->Name();
 	CString cs_valid   = TStringEx().Bool(this->Is_valid());
 
+	CString cs_parts;
+
+	for (size_t i_ = 0; i_ < this->Parts().size(); i_++) {
+		const CPart& part  = this->Parts().at(i_);
+		cs_parts += _p_sfx;
+		cs_parts += _p_pfx;
+		cs_parts += TStringEx().Format(_T("part #%u: "), i_ + 1);
+		cs_parts += part.Print(e_print::e_req);
+		cs_parts += _p_sfx;
+	}
+	if (cs_parts.IsEmpty()) {
+		cs_parts += _p_sfx;
+		cs_parts += _p_pfx;
+		cs_parts += _T("#empty");
+		cs_parts += _p_sfx;
+	}
+
 	CString cs_out;
 
 	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_palette, (_pc_sz) cs_name, (_pc_sz) cs_desc , (_pc_sz) cs_valid);
+		_p_sfx, _p_pfx, (_pc_sz) cs_name, (_pc_sz) cs_desc, (_pc_sz) cs_valid , _p_sfx, _p_pfx, (_pc_sz) cs_parts);
 	}
 	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
-		(_pc_sz) cs_palette, (_pc_sz) cs_name, (_pc_sz) cs_desc , (_pc_sz) cs_valid);
+		_p_sfx, _p_pfx, (_pc_sz) cs_name, (_pc_sz) cs_desc, (_pc_sz) cs_valid , _p_sfx, _p_pfx, (_pc_sz) cs_parts);
 	}
 	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r,
-		(_pc_sz) cs_palette, (_pc_sz) cs_name, (_pc_sz) cs_desc , (_pc_sz) cs_valid);
+		_p_sfx, _p_pfx, (_pc_sz) cs_name, (_pc_sz) cs_desc, (_pc_sz) cs_valid , _p_sfx, _p_pfx, (_pc_sz) cs_parts);
 	}
 
 	if (cs_out.IsEmpty())
@@ -575,14 +596,10 @@ TRawParts&  CNamed::Parts (void)       { return this->m_parts; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CNamed&  CNamed::operator = (const CNamed& _src) { *this << _src.Palette() << _src.Name() >> _src.Desc() << _src.Parts(); return *this; }
+CNamed&  CNamed::operator = (const CNamed& _src) { (TBase&)*this = (const TBase&)_src; *this >> _src.Desc() << _src.Parts(); return *this; }
 
-CNamed&  CNamed::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+CNamed&  CNamed::operator <<(_pc_sz _p_name) { TBase::Name(_p_name); return *this; }
 CNamed&  CNamed::operator >>(_pc_sz _p_desc) { this->Desc(_p_desc); return *this; }
-
-CNamed&  CNamed::operator <<(const TThemePalette _palette) {
-	this->Palette(_palette); return *this;
-}
 
 CNamed&  CNamed::operator <<(const TRawParts& _parts) {
 	this->Parts() = _parts; return *this;
@@ -590,7 +607,13 @@ CNamed&  CNamed::operator <<(const TRawParts& _parts) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CNamed_Enum:: CNamed_Enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CNamed_Enum:: CNamed_Enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;
+	for (size_t i_ = 0; i_ < this->Palettes().size(); i_++) {
+		if (false){}
+		else if (0 == i_) this->Palettes().at(i_).Id(TThemePalette::e_dark, true);
+		else if (1 == i_) this->Palettes().at(i_).Id(TThemePalette::e_light, true);
+	}
+}
 CNamed_Enum::~CNamed_Enum (void) {}
 
 TError&  CNamed_Enum::Error(void) const { return this->m_error; }
@@ -629,6 +652,18 @@ err_code CNamed_Enum::Load(void) {
 	return this->Error();
 }
 
+err_code CNamed_Enum::Load (const TThemePalette _palette_id) {
+	_palette_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	storage::CRegistry storage;
+
+	if (__failed(storage.Load(_palette_id, *this)))
+		this->m_error = storage.Error();
+
+	return this->Error();
+}
+
 #if defined(_DEBUG)
 CString  CNamed_Enum::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
@@ -636,24 +671,24 @@ CString  CNamed_Enum::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx)
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%s%s}");
 	static _pc_sz pc_sz_pat_r = _T("{%s%s%s}");
 
-	CString cs_themes;
-	for (size_t i_ = 0; i_ < this->Raw().size(); i_++) {
-		const CNamed& named = this->Raw().at(i_);
-		cs_themes += _p_sfx;
-		cs_themes += _p_pfx;
-		cs_themes += named.Print(e_print::e_req);
+	CString cs_palettes;
+	for (size_t i_ = 0; i_ < this->Palettes().size(); i_++) {
+		const CPalette& palette = this->Palettes().at(i_);
+		cs_palettes += _p_sfx;
+		cs_palettes += _p_pfx;
+		cs_palettes += palette.Print(e_print::e_req);
 	}
-	if (cs_themes.IsEmpty()) {
-		cs_themes += _p_sfx;
-		cs_themes += _p_pfx;
-		cs_themes += _T("#empty");
+	if (cs_palettes.IsEmpty()) {
+		cs_palettes += _p_sfx;
+		cs_palettes += _p_pfx;
+		cs_palettes += _T("#empty");
 	}
 
 	CString cs_out;
 
-	if (e_print::e_all   == _e_opt) { cs_out.Format ( pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_themes, _p_sfx, _p_pfx); }
-	if (e_print::e_no_ns == _e_opt) { cs_out.Format ( pc_sz_pat_n, (_pc_sz)__CLASS__  , (_pc_sz) cs_themes, _p_sfx, _p_pfx); }
-	if (e_print::e_req   == _e_opt) { cs_out.Format ( pc_sz_pat_r, (_pc_sz) cs_themes , _p_sfx, _p_pfx); }
+	if (e_print::e_all   == _e_opt) { cs_out.Format ( pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_palettes, _p_sfx, _p_pfx); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format ( pc_sz_pat_n, (_pc_sz)__CLASS__  , (_pc_sz) cs_palettes, _p_sfx, _p_pfx); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format ( pc_sz_pat_r, (_pc_sz) cs_palettes , _p_sfx, _p_pfx); }
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
@@ -663,7 +698,22 @@ CString  CNamed_Enum::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx)
 #endif
 
 const
-TRawNamed& CNamed_Enum::Raw (void) const { return this->m_themes; }
-TRawNamed& CNamed_Enum::Raw (void)       { return this->m_themes; }
+TRawPalettes& CNamed_Enum::Palettes (void) const { return this->m_palettes; }
+TRawPalettes& CNamed_Enum::Palettes (void)       { return this->m_palettes; }
+
+const
+CPalette&     CNamed_Enum::PaletteOf (const TThemePalette _plt_id) const {
+
+	for (size_t i_ = 0; i_ < this->Palettes().size(); i_++)
+		if (_plt_id == this->Palettes().at(i_).Id())
+			return this->Palettes().at(i_);
+
+	static CPalette inv_palette;
+	if (nullptr  == inv_palette.Name()) {
+		inv_palette.Name(_T("#inv_palette"));
+		inv_palette.Is_valid(false);
+	}
+	return inv_palette;
+}
 
 }}

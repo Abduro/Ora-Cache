@@ -19,17 +19,18 @@ namespace ex_ui { namespace theme {
 
 	public:
 		void      Default    (void) ;
-		uint32_t  ThemeIndex (void) const;
-		bool      ThemeIndex (const uint32_t);
+
+		uint32_t  ThemeIndex (void) const;     // gets currently selected theme index;
+		bool      ThemeIndex (const uint32_t); // sets selected theme index; in most cases it is used by registry storage;
 
 	public:
 		CCurrent& operator = (const CCurrent&);
 		CCurrent& operator = (CCurrent&&);
-
+		
 		CCurrent& operator <<(const uint32_t _ndx);
 
 	private:
-		uint32_t m_theme_ndx;
+		uint32_t   m_theme_ndx;
 	};
 
 	class CBase {
@@ -148,6 +149,39 @@ namespace ex_ui { namespace theme {
 
 	typedef ::std::array<CPart, 6> TRawParts; // 0: e_form; 1: e_panel; 2: e_edit; 3: e_label; 4: e_caption; 5: e_button;
 
+	class CNamed : public CBase { typedef CBase TBase;
+	public:
+		 CNamed (void); CNamed (const CNamed&); CNamed (CNamed&&);
+		~CNamed (void);
+
+	public:
+		_pc_sz  Desc (void) const;
+		bool    Desc (_pc_sz) ;
+
+		bool Is_valid(void) const; // returns 'true' if one of the parts is loaded successfully;
+		bool Is_valid(const bool);
+
+		const
+		TRawParts& Parts (void) const;
+		TRawParts& Parts (void) ;
+
+#if defined(_DEBUG)
+		CString Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
+	public:
+		CNamed& operator = (const CNamed&);
+		CNamed& operator = (CNamed&&) = delete;
+		CNamed& operator <<(_pc_sz _p_name);
+		CNamed& operator >>(_pc_sz _p_desc);
+		CNamed& operator <<(const TRawParts&);
+
+	private:
+		CString   m_desc ;
+		TRawParts m_parts;
+	};
+
+	typedef ::std::vector<CNamed> TRawNamed;
+
 	class CPalette : public CBase { typedef CBase TBase;
 	public:
 		 CPalette (const TThemePalette = TThemePalette::e_none); CPalette (const CPalette&); CPalette (CPalette&&);
@@ -156,8 +190,8 @@ namespace ex_ui { namespace theme {
 	public:
 		const bool Clear (void);  // clears all elements and sets 'validity' flag of this class object to 'false';
 		const
-		TRawParts& Parts (void) const;
-		TRawParts& Parts (void) ;
+		TRawNamed& Themes(void) const;
+		TRawNamed& Themes(void) ;
 
 		TThemePalette Id (void) const;
 		const bool    Id (const TThemePalette, const bool b_update_name);
@@ -169,54 +203,15 @@ namespace ex_ui { namespace theme {
 		CPalette&  operator = (const CPalette&);
 		CPalette&  operator = (CPalette&&);
 
-		CPalette&  operator <<(const TRawParts&);
+		CPalette&  operator <<(const TRawNamed&);
 		CPalette&  operator <<(const TThemePalette _e_id);
 
 	private:
 		TThemePalette m_pal_id;
-		TRawParts     m_parts ;
+		TRawNamed     m_themes;
 	};
 
-	class CNamed {
-	public:
-		 CNamed (const TThemePalette = TThemePalette::e_none); CNamed (const CNamed&); CNamed (CNamed&&);
-		~CNamed (void);
-
-	public:
-		_pc_sz  Desc (void) const;
-		bool    Desc (_pc_sz) ;
-		_pc_sz  Name (void) const;
-		bool    Name (_pc_sz) ;
-
-		bool Is_valid(void) const; // returns false is its palette set to e_none;
-
-		TThemePalette Palette (void) const;
-		const bool    Palette (const TThemePalette);
-
-		const
-		TRawParts&  Parts (void) const;
-		TRawParts&  Parts (void) ;
-
-#if defined(_DEBUG)
-		CString Print (const e_print = e_print::e_all) const;
-#endif
-
-	public:
-		CNamed& operator = (const CNamed&);
-		CNamed& operator = (CNamed&&) = delete;
-		CNamed& operator <<(const TThemePalette);
-		CNamed& operator <<(_pc_sz _p_name);
-		CNamed& operator >>(_pc_sz _p_desc);
-		CNamed& operator <<(const TRawParts&);
-
-	private:
-		CString m_desc;
-		CString m_name;
-		TThemePalette m_palette;
-		TRawParts m_parts;
-	};
-
-	typedef ::std::vector<CNamed> TRawNamed;
+	typedef ::std::array<CPalette, 2> TRawPalettes; // 0: e_dark; 1: e_light;
 
 	class CNamed_Enum {
 	public:
@@ -225,14 +220,18 @@ namespace ex_ui { namespace theme {
 
 	public:
 		TError& Error (void) const;
-		err_code Load (void);         // loads custom color themes from system registry;
+		err_code Load (const TThemePalette);  // loads custom color themes of specified palette only;
+		err_code Load (void);                 // loads custom color themes of all available palettes from system registry;
 
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 		const
-		TRawNamed& Raw (void) const;
-		TRawNamed& Raw (void) ;
+		TRawPalettes& Palettes (void) const;
+		TRawPalettes& Palettes (void) ;
+
+		const
+		CPalette&     PaletteOf (const TThemePalette) const;
 
 	public:
 		CNamed_Enum& operator = (const CNamed_Enum&) = delete;
@@ -240,7 +239,7 @@ namespace ex_ui { namespace theme {
 
 	private:
 		CError m_error;
-		TRawNamed m_themes;
+		TRawPalettes m_palettes;
 	};
 
 }}

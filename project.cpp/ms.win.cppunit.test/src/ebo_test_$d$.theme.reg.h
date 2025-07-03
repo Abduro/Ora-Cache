@@ -32,10 +32,12 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 		~CRegistry (void) = default;
 
 	public:
+		__method (Get_Current);   // loads data of currently selected theme;
 		__method (Get_Element);
 		__method (Get_Palette);
 		__method (Get_Part);
 		__method (Get_State);
+		__method (Get_Theme);
 
 	private:
 		bool      m_b_verb;

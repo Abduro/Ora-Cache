@@ -34,11 +34,13 @@ namespace ex_ui { namespace theme { namespace storage {
 		_pc_sz State   (void) ;                     // composes the path to the element state by using currently selected theme;
 		_pc_sz State   (const TThemePalette, const TThemePart, const TThemeElement, const TThemeState) const;
 
+		_pc_sz Theme   (void) ;                                          // returns the path to the theme of currently selected palette;
 		_pc_sz Theme   (const TThemePalette) const;                      // returns the path to currently selected theme node;
 		_pc_sz Theme   (const TThemePalette, const uint32_t _ndx) const; // returns the path of the theme node by specified index;
 
 		HKEY   Root    (void) const;
 		_pc_sz Themes  (void) const;                // this is the path to the root node of the named/custom themes; the entry point;
+		_pc_sz Current (void) const;                // this is the registry key name which contains the info of currently selected theme;
 
 	private:
 		CReg_router& operator = (const CReg_router&) = delete;
@@ -57,13 +59,23 @@ namespace ex_ui { namespace theme { namespace storage {
 
 	public:
 		TError&  Error (void) const;
+		err_code Load  (const TThemePalette, CNamed_Enum&); // loads custom themes of the palette specified;
 		err_code Load  (CNamed_Enum&);
+
+		err_code Load  (CCurrent&);                  // loads current theme data from the registry; the current theme is inteaned from router;
 
 		err_code Node  (_pc_sz _p_path, CElement&);
 		err_code Node  (TRawElements&);              // returns the error in case when no elements found for parent part node;
 
+		err_code Node  (_pc_sz _p_path, CNamed&);    // loads the custom theme by input reqistry key path;
+		err_code Node  (CNamed&);                    // loads the custom theme; the theme index is taken from currently selected theme;
+
+		err_code Node  (CPalette&);                  // loads palette that is currently selected for getting available themes;
 		err_code Node  (_pc_sz _p_path, CPalette&);
 		err_code Node  (_pc_sz _p_path, CPart&);
+
+		err_code Node  (TRawNamed&);                 // loads all registered custom themes for currently selected palette;
+		err_code Node  (TRawPalettes&);              // loads all available palettes that are stored in the registry;
 		err_code Node  (TRawParts&);                 // returns the error in case when no parts found for the parent palette node;
 
 		err_code Value (_pc_sz _p_path, CState&);    // it is supposed the state identifier is already set;

@@ -48,10 +48,30 @@ void CNamed_Enum::Load (void) {
 
 	_out() += TLog_Acc::e_new_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+#if (1)
+	_out() += TStringEx().Format(_T("Loading palette %s :"), (_pc_sz) TPrint::Out(TThemePalette::e_dark));
 
-	this->m_named_enum.Load();
+	if (__failed(this->m_named_enum.Load(TThemePalette::e_dark)))
+		_out() += this->m_named_enum.Error().Print(TError::e_print::e_req) ;
+	else {
+		const TPalette& palette = this->m_named_enum.PaletteOf(TThemePalette::e_dark);
+		_out() += palette.Print(e_print::e_all);
+	}
 
-	_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_named_enum.Print(e_print::e_all));
+	_out() += TStringEx().Format(_T("Loading palette %s :"), (_pc_sz) TPrint::Out(TThemePalette::e_light));
+
+	if (__failed(this->m_named_enum.Load(TThemePalette::e_light)))
+		_out() += this->m_named_enum.Error().Print(TError::e_print::e_req) ;
+	else {
+		const TPalette& palette = this->m_named_enum.PaletteOf(TThemePalette::e_light);
+		_out() += palette.Print(e_print::e_all);
+	}
+#else
+	if (__failed(this->m_named_enum.Load()))
+		_out() += this->m_named_enum.Error().Print(TError::e_print::e_req) ;
+	else
+		_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_named_enum.Print(e_print::e_all));
+#endif
 	_out()();
 
 }

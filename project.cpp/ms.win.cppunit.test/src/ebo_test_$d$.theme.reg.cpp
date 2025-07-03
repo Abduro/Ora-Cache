@@ -46,6 +46,24 @@ CRegistry:: CRegistry (const bool _b_verb) : m_b_verb(_b_verb) {
 	}
 }
 
+void CRegistry::Get_Current (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	TRouter& router = ex_ui::theme::storage::Get_router();
+	CCurrentTheme& current = router.CurrentTheme();
+
+	_out() += _T("Gets values of current theme:");
+	_out() += TStringEx().Format(_T("*before*: palette= %d (%s); theme index= %d;"), current.Palette(), (_pc_sz) TPrint::Out(current.Palette()), current.ThemeIndex());
+
+	if (__failed(this->m_storage.Load(current)))
+	_out() += this->m_storage.Error().Print(TError::e_print::e_req);
+	
+	_out() += TStringEx().Format(_T("*after *: palette= %d (%s); theme index= %d;"), current.Palette(), (_pc_sz) TPrint::Out(current.Palette()), current.ThemeIndex());
+	_out()();
+}
+
 void CRegistry::Get_Element (void) {
 
 	_out() += TLog_Acc::e_new_line;
@@ -100,7 +118,7 @@ void CRegistry::Get_Palette (void) {
 	TRouter& router = ex_ui::theme::storage::Get_router();
 	CCurrentTheme& theme = router.CurrentTheme();
 
-	TPallete target(theme.Palette());
+	TPalette target(theme.Palette());
 	CString cs_path = router.Palette();
 
 	_out() += _T("Gets value of one specific palette object:");
@@ -171,6 +189,26 @@ void CRegistry::Get_State (void) {
 			_out() += states.at(i_).Print(e_print::e_no_ns);
 		}
 	}
+
+	_out()();
+}
+
+void CRegistry::Get_Theme (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	TRouter& router = ex_ui::theme::storage::Get_router();
+	CCurrentTheme& theme = router.CurrentTheme(); theme;
+
+	TNamed target;
+	CString cs_path = router.Part(); // gets the part path that is based on currently selected theme;
+
+	_out() += _T("Gets value of selected theme object:");
+	if (__failed(this->m_storage.Node(target)))
+		_out() += this->m_storage.Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) target.Print(e_print::e_all));
 
 	_out()();
 }

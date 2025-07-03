@@ -83,6 +83,10 @@ _pc_sz CReg_router::State (const TThemePalette _palette, const TThemePart _part,
 	return cs_out.GetString();
 }
 
+_pc_sz CReg_router::Theme (void) {
+	return this->Theme(this->CurrentTheme().Palette());
+}
+
 _pc_sz CReg_router::Theme (const TThemePalette _palette) const {
 	return this->Theme(_palette, this->CurrentTheme().ThemeIndex());
 }
@@ -96,6 +100,11 @@ _pc_sz CReg_router::Theme (const TThemePalette _palette, const uint32_t _ndx) co
 _pc_sz CReg_router::Themes (void) const {
 	static _pc_sz pc_sz_root = _T("Software\\ebo::boo::renderer\\Themes");
 	return  pc_sz_root;
+}
+
+_pc_sz CReg_router::Current (void) const {
+	static CString cs_out; cs_out.Format(_T("%s\\%s"), this->Themes(), _T("Current"));
+	return cs_out.GetString();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -117,8 +126,9 @@ namespace _impl {
 
 	public:
 		TError&  Error (void) const { return this->m_error; }
+#if (0)
 		err_code Get (const HKEY _plt_key, const TThemePalette _palette, TRawNamed& _raw) {
-			_plt_key; _raw;
+			_plt_key; _raw; _palette;
 			this->m_error << __METHOD__ << __s_ok;
 
 			dword d_count = 0;
@@ -143,7 +153,7 @@ namespace _impl {
 				if (!!n_result) {
 					this->m_error = dword(n_result); break;
 				}
-				CNamed named(_palette);
+				CNamed named;
 
 				unsigned long n_chars = u_count;
 				n_result = theme_.QueryStringValue(_T("Name"), sz_buffer, &n_chars);
@@ -171,7 +181,7 @@ namespace _impl {
 			plt_key_.Detach();
 			return this->Error();
 		}
-
+#endif
 	private:
 		CTheme_enum& operator = (const CTheme_enum&) = delete;
 		CTheme_enum& operator = (CTheme_enum&&) = delete;
@@ -290,6 +300,53 @@ err_code CRegistry::Node  (_pc_sz _p_path, CElement& _element) {
 	return this->Error();
 }
 
+err_code CRegistry::Node  (ex_ui::theme::CNamed& _theme) {
+	_theme;
+	return this->Node (Get_router().Theme(), _theme);
+}
+
+err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CNamed& _theme) {
+	_theme;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
+		return this->m_error << __e_inv_arg;
+
+	CRegKey k_theme;
+	LSTATUS n_result = k_theme.Open(Get_router().Root(), _p_path);
+
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+	else
+		_theme.Is_valid(true);
+
+	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer); u_count;
+	unsigned long n_chars = u_count;
+
+	n_result = k_theme.QueryStringValue(_T("Name"), sz_buffer, &n_chars);
+	if (!!n_result) {
+		this->m_error = dword(n_result);
+	}
+	else
+		_theme.Name(sz_buffer);
+
+	n_chars  = u_count;
+	n_result = k_theme.QueryStringValue(_T("Description"), sz_buffer, &n_chars);
+	if (!!n_result) {
+		this->m_error = dword(n_result);
+	}
+	else
+		_theme.Desc(sz_buffer);
+
+	this->Node(_theme.Parts());
+
+	return this->Error();
+}
+
+err_code CRegistry::Node  (ex_ui::theme::CPalette& _palette) {
+	return this->Node(Get_router().Palette(), _palette);
+}
+
 err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CPalette& _palette) {
 	_p_path; _palette;
 	this->m_error << __METHOD__ << __s_ok;
@@ -298,15 +355,31 @@ err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CPalette& _palette) {
 		return this->m_error << __e_inv_arg;
 
 	CRegKey k_palette;
-	LSTATUS n_result = k_palette																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					.Open(Get_router().Root(), _p_path);
+	LSTATUS n_result = k_palette.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
 		return this->m_error = dword(n_result);
 	else
 		_palette.Is_valid(true);
 
-	this->Node(_palette.Parts());
+	dword d_count = 0;
+	n_result = k_palette.QueryDWORDValue(_T("Count"), d_count);
 
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+
+	CString cs_path;
+	for (dword i_ = 0; i_ < d_count; i_++) {
+		cs_path = Get_router().Theme(_palette.Id(), i_);
+		CNamed theme;
+		if (__failed(this->Node((_pc_sz) cs_path, theme)))
+			break;
+		else
+			_palette.Themes().push_back(theme);
+	}
+#if (0)
+	this->Node(_palette.Themes());
+#endif
 	return this->Error();
 }
 
@@ -355,6 +428,50 @@ err_code CRegistry::Node  (TRawElements& _elements) {
 	return this->Error();
 }
 
+err_code CRegistry::Node  (TRawNamed& _themes) {
+	_themes;
+	this->m_error << __METHOD__ << __s_ok;
+
+	const TThemePalette palette_id = Get_router().CurrentTheme().Palette();
+	
+	if (false){}
+	else if (palette_id == TThemePalette::e_dark) {}
+	else if (palette_id == TThemePalette::e_light) {}
+	else
+		return this->m_error << (err_code) TErrCodes::eData::eUnsupport = TStringEx().Format(_T("Unsupported palette ID: %d"), palette_id);
+
+	CString cs_path = Get_router().Palette();
+
+	return this->Error();
+}
+
+err_code CRegistry::Node  (TRawPalettes& _palettes) {
+	_palettes;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CString cs_path ;
+	bool b_at_least = false;                // is set to 'true' in case when at least one palette is loaded from the regestry;
+
+	for (size_t i_ = 0; i_ < _palettes.size(); i_++) {
+		CPalette& palette =  _palettes.at(i_);
+
+		if (TThemePalette::e_none == palette.Id()) {
+			this->m_error << (err_code)TErrCodes::eData::eInvalid = TStringEx().Format(_T("The input palette has invalid ID: %s"), (_pc_sz) TPrint::Out(palette.Id()));
+			continue;
+		}
+
+		Get_router().CurrentTheme().Palette() = palette.Id();
+		cs_path = Get_router().Palette();
+
+		if (__failed(this->Node((_pc_sz) cs_path, palette))) {
+		    continue;
+		}
+		else
+			b_at_least = true;
+	}
+	return this->Error();
+}
+
 err_code CRegistry::Node  (TRawParts& _parts) {
 	_parts;
 	this->m_error << __METHOD__ << __s_ok;
@@ -369,7 +486,7 @@ err_code CRegistry::Node  (TRawParts& _parts) {
 		cs_path = Get_router().Part();      // currently selected theme is used for composing the path required;
 
 		if (__failed(this->Node((_pc_sz) cs_path, part))) {
-			continue; // ignores the error returned;
+		    continue;
 		}
 		else
 			b_at_least = true;
@@ -441,7 +558,7 @@ err_code CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 	LSTATUS n_result = themes.Open(Get_router().Root(), Get_router().Themes());
 	if (!!n_result)
 		return this->m_error = dword(n_result);
-
+#if (0)
 	CTheme_enum theme_enum; TRawNamed& raw_themes = _enum.Raw();
 
 	CRegKey plt_dark;
@@ -457,6 +574,68 @@ err_code CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 	if (__s_ok == n_result) {
 		if (__failed(theme_enum.Get(plt_light, TThemePalette::e_light, raw_themes))) {
 			this->m_error = theme_enum.Error();
+		}
+	}
+#else
+	this->Node(_enum.Palettes());
+#endif
+	return this->Error();
+}
+
+err_code CRegistry::Load  (const TThemePalette _palette_id, ex_ui::theme::CNamed_Enum& _enum) {
+	_enum;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (_palette_id == TThemePalette::e_none) {
+		return this->m_error << __e_inv_arg = _T("Unsupported palette;");
+	}
+
+	Get_router().CurrentTheme().Palette() = _palette_id;
+
+	bool b_found = false;
+
+	for (size_t i_ = 0; i_ < _enum.Palettes().size(); i_++) {
+		CPalette& palette = _enum.Palettes().at(i_);
+		if (_palette_id == palette.Id()) {
+			this->Node (palette);
+			b_found = true; break;
+		}
+	}
+	if (false == b_found)
+		this->m_error << (err_code) TErrCodes::eData::eNotFound = TStringEx().Format(_T("Palette (id=%d) is not found;"), _palette_id);
+
+	return this->Error();
+}
+
+err_code CRegistry::Load  (CCurrent& _theme) {
+	_theme;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CRegKey current;
+	LSTATUS n_result = current.Open(Get_router().Root(), Get_router().Current());
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+
+	dword d_index = 0;
+	n_result = current.QueryDWORDValue(_T("ThemeIndex"), d_index);
+
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+	else {
+		Get_router().CurrentTheme().ThemeIndex(d_index); // the theme index value is not checked due to it is not necessary yet;
+	}
+
+	dword d_palette = 0;
+
+	n_result = current.QueryDWORDValue(_T("PaletteId"), d_palette);
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+	else {
+		if (false){}
+		else if (d_palette == (dword)TThemePalette::e_dark ) Get_router().CurrentTheme().Palette() = (TThemePalette)d_palette;
+		else if (d_palette == (dword)TThemePalette::e_light) Get_router().CurrentTheme().Palette() = (TThemePalette)d_palette;
+		else {
+			// it is possibly to set current palette identifier to 'e_none', but it is better to keep default settings;
 		}
 	}
 
