@@ -10,42 +10,50 @@ using namespace ex_ui::controls::sfx::tabbed::format;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CFormat::CBorder_Clrs:: CBorder_Clrs (void) {
-	try {
-		this->m_colors.insert(::std::make_pair(TStateValue::eNormal, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border)));
-		this->m_colors.insert(::std::make_pair(TStateValue::eSelected, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border, TThemeState::e_selected)));
-	} catch (const ::std::bad_alloc&){}
-}
-CFormat::CBorder_Clrs::~CBorder_Clrs (void) {}
+format::CBorder:: CBorder (void) {}
+format::CBorder::~CBorder (void) {}
+
+const
+CColor&  format::CBorder::Color (void) const { return this->m_color; }
+CColor&  format::CBorder::Color (void)       { return this->m_color; }
+
+CColor:: CColor (void) {}
+CColor::~CColor (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-rgb_color CFormat::CBorder_Clrs::Get (const TStateValue _state) const {
-	_state;
-	TVisualStateAssoc::const_iterator found_ = this->m_colors.find(_state);
-	if (found_ == this->m_colors.end()) {
-		static rgb_color the_emptiness = 0x0;
-		return the_emptiness;
+rgb_color CColor::Get (const TStateValue _e_state) const {
+	_e_state;
+	using namespace ex_ui::theme;
+	rgb_color clr = (rgb_color)0;
+
+	switch (_e_state) {
+	case TStateValue::eSelected : clr = Get_current().Form().Border().States().Selected().Color(); break;
+	case TStateValue::eNormal   : clr = Get_current().Form().Border().States().Normal().Color();
+	default:;
 	}
-	else
-		return found_->second;
+	return clr;
 }
 
+rgb_color CColor::Normal   (void) const { return this->Get(TStateValue::eNormal); }
+rgb_color CColor::Selected (void) const { return this->Get(TStateValue::eSelected); }
+
 /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 
 CFormat:: CFormat (CControl& _ctrl) : m_ctrl(_ctrl) { this->Default(); }
 CFormat::~CFormat (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 const
-CFormat::CBorder_Clrs& CFormat::Border_Clrs (void) const { return this->m_border; }
+format::CBorder&  CFormat::Border (void) const { return this->m_border; }
 
 void CFormat::Default (void) {
 
 	this->m_ctrl.Borders() << (uint8_t)1;
-	this->m_ctrl.Borders().Base() << TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border));
+	this->m_ctrl.Borders().Base() << TRgbQuad(this->Border().Color().Normal());
 
-	TBase::Bkgnd().Solid() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
+	TBase::Bkgnd().Solid() << ex_ui::theme::Get_current().Form().Bkgnd().States().Normal().Color();
 
 	static _pc_sz pc_sz_fnt_names[] = {
 		_T("Pirulen Rg"), _T("Verdana"), _T("Age Normal"), _T("Trebuchet MS")
@@ -53,7 +61,7 @@ void CFormat::Default (void) {
 	};
 
 	TBase::Font().Family(pc_sz_fnt_names[0]); // the exact name is very important, otherwise the other system font will be created (default for GUI);
-	TBase::Font().Fore() = this->Border_Clrs().Get(TStateValue::eSelected);
+	TBase::Font().Fore() = this->Border().Color().Selected();
 	TBase::Font().Size() = -12;
 	TBase::Font().Options() += TFontOpts::eExactSize;
 }

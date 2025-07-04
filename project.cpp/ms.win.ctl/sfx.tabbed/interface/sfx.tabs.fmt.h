@@ -17,44 +17,58 @@ namespace format {
 	typedef ::std::map<TStateValue, rgb_color> TVisualStateAssoc;
 	typedef TVisualStateAssoc TBorderAssoc;
 
+	class CColor {
+	public:
+		 CColor (void); CColor (const CColor&) = delete; CColor (CColor&&) = delete;
+		~CColor (void);
+
+	public:
+		rgb_color Get  (const TStateValue) const;
+		rgb_color Normal (void) const;
+		rgb_color Selected (void) const;
+
+	public:
+		CColor& operator = (const CColor&) = delete;
+		CColor& operator = (CColor&&) = delete;
+	};
+
+	class CBorder {
+	public:
+		 CBorder (void); CBorder (const CBorder&) = delete; CBorder (CBorder&&) = delete;
+		~CBorder (void);
+	public:
+		const
+		CColor&  Color (void) const;
+		CColor&  Color (void) ;
+
+	public:
+		CBorder& operator = (const CBorder&) = delete;
+		CBorder& operator = (CBorder&&) = delete;
+	private:
+		CColor m_color;
+	};
+
 }
 	using format::TBorderAssoc;
 
 	class CFormat : public TBase {
 	friend class  CControl;
-	public:
-		class CBorder_Clrs {
-		public:
-			 CBorder_Clrs (void); CBorder_Clrs (const CBorder_Clrs&) = delete; CBorder_Clrs (CBorder_Clrs&&) = delete;
-			~CBorder_Clrs (void);
-
-		public:
-			rgb_color Get (const TStateValue) const; // e_normal|e_selected are expected for this time only;
-
-		private:
-			CBorder_Clrs& operator = (const CBorder_Clrs&) = delete;
-			CBorder_Clrs& operator = (CBorder_Clrs&&) = delete;
-
-		private:
-			TBorderAssoc m_colors;
-		};
-
 	private:
 		 CFormat (CControl&); CFormat (void) = delete; CFormat (const CFormat&); CFormat (CFormat&&) = delete;
 		~CFormat (void);
 
 	public:
 		const
-		CBorder_Clrs& Border_Clrs (void) const;
-		void Default (void);
+		format::CBorder&  Border (void) const;
+		void      Default(void);
 	
 	private:
-		CFormat& operator = (const CFormat&) = delete;
-		CFormat& operator = (CFormat&&) = delete;
+		CFormat&  operator = (const CFormat&) = delete;
+		CFormat&  operator = (CFormat&&) = delete;
 
 	private:
-		CControl&    m_ctrl;
-		CBorder_Clrs m_border;
+		CControl& m_ctrl;
+		format::CBorder   m_border;
 	};
 
 }}}}

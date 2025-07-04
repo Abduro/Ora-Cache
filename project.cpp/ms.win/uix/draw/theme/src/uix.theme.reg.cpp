@@ -20,7 +20,7 @@ CCurrent&     CReg_router::CurrentTheme (void) const { return this->m_current; }
 CCurrent&     CReg_router::CurrentTheme (void)       { return this->m_current; }
 
 _pc_sz CReg_router::Element (void) const {
-	return this->Element(this->CurrentTheme().Palette(), this->CurrentTheme().Part(), this->CurrentTheme().Element());
+	return this->Element(this->CurrentTheme().Palette().Id(), this->CurrentTheme().Part(), this->CurrentTheme().Element());
 }
 
 _pc_sz CReg_router::Element (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element) const {
@@ -46,7 +46,7 @@ _pc_sz CReg_router::Marker (const TColorMarker& _marker) const {
 }
 
 _pc_sz CReg_router::Palette (void) const {
-	return this->Palette(this->CurrentTheme().Palette());
+	return this->Palette(this->CurrentTheme().Palette().Id());
 }
 
 _pc_sz CReg_router::Palette (const TThemePalette _palette) const {
@@ -58,7 +58,7 @@ _pc_sz CReg_router::Palette (const TThemePalette _palette) const {
 }
 
 _pc_sz CReg_router::Part (void) const {
-	return this->Part(this->CurrentTheme().Palette(), this->CurrentTheme().Part());
+	return this->Part(this->CurrentTheme().Palette().Id(), this->CurrentTheme().Part());
 }
 
 _pc_sz CReg_router::Part (const TThemePalette _palette, const TThemePart _part) const {
@@ -72,7 +72,7 @@ _pc_sz CReg_router::Part (const TThemePalette _palette, const TThemePart _part) 
 HKEY   CReg_router::Root (void) const { return this->m_root; }
 
 _pc_sz CReg_router::State (void) {
-	return this->State(this->CurrentTheme().Palette(), this->CurrentTheme().Part(), this->CurrentTheme().Element(), this->CurrentTheme().State());
+	return this->State(this->CurrentTheme().Palette().Id(), this->CurrentTheme().Part(), this->CurrentTheme().Element(), this->CurrentTheme().State());
 }
 
 _pc_sz CReg_router::State (const TThemePalette _palette, const TThemePart _part, const TThemeElement _element, const TThemeState _state) const {
@@ -84,7 +84,7 @@ _pc_sz CReg_router::State (const TThemePalette _palette, const TThemePart _part,
 }
 
 _pc_sz CReg_router::Theme (void) {
-	return this->Theme(this->CurrentTheme().Palette());
+	return this->Theme(this->CurrentTheme().Palette().Id());
 }
 
 _pc_sz CReg_router::Theme (const TThemePalette _palette) const {
@@ -432,7 +432,7 @@ err_code CRegistry::Node  (TRawNamed& _themes) {
 	_themes;
 	this->m_error << __METHOD__ << __s_ok;
 
-	const TThemePalette palette_id = Get_router().CurrentTheme().Palette();
+	const TThemePalette palette_id = Get_router().CurrentTheme().Palette().Id();
 	
 	if (false){}
 	else if (palette_id == TThemePalette::e_dark) {}
@@ -638,6 +638,12 @@ err_code CRegistry::Load  (CCurrent& _theme) {
 			// it is possibly to set current palette identifier to 'e_none', but it is better to keep default settings;
 		}
 	}
+
+	// loads selected palette for assigning it to the current theme;
+	CPalette palette((TThemePalette)d_palette);
+
+	if (__succeeded(this->Node (palette)))
+		_theme.Palette() = palette;
 
 	return this->Error();
 }

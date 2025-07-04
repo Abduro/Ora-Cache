@@ -32,7 +32,7 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 		HBRUSH brush = nullptr;
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
-		brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
+		brush = ::CreateSolidBrush(ex_ui::theme::Get_current().Form().Bkgnd().States().Normal().Color());
 	#if (0)
 		// if setting the background brash is made several times, returned brush handle must be destroyed?
 		brush = ::CreateSolidBrush(shared::Get_Theme().Get(TThemePart::e_caption, TThemeElement::e_back));
@@ -187,6 +187,8 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 
 	if (TBase::m_error == false)
 		TBase::m_error << this->Layout().Update(rc_client);
+	if (TBase::m_error == false)
+		::shared::Get_View().Draw(nullptr, rc_client); 
 #else
 	t_rect rc_surface = m_layout.DrawArea();
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;

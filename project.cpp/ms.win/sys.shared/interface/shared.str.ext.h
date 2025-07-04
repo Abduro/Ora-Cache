@@ -115,12 +115,14 @@ namespace shared { namespace common {
 	public:
 		_pc_sz   Before(t_char _lp_sz_sep = _T('\\'), _pc_sz _lp_sz_pfx = _T("..."), const bool _b_exc_sep = true);
 		_pc_sz   Format(_pc_sz _lp_sz_fmt, ...);
+
 		/*
-			this command throws the error: 0xC0000005: Access violation;
+			this command Format() throws the error: 0xC0000005: Access violation;
 			the reason is va_list is recognised as nullptr and this leads to failure of StringCchVPrintfEx() function;
 			the example that throws the error: _out() += TString().Format(_T("*removing* : at [%u]..."), 0);
 			ToDo: this must be fixed by replacing the usage of the existing function to another one;
 		*/
+
 		_pc_sz   Format(_pc_sz _lp_sz_fmt, va_list);
 		TParts   Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep = false) const;   // splits string by separator specified;
 

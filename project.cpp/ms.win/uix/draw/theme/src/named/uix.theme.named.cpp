@@ -100,6 +100,58 @@ void       CCurrent::Default (void) {
 
 	this->ThemeIndex(0);
 }
+const
+CPart&     CCurrent::Form (void) const {
+
+	const TRawParts&  parts = this->Theme().Parts();
+
+	for (size_t i_ = 0; i_ < parts.size(); i_++)
+		if (parts.at(i_).Id() == TThemePart::e_form)
+			return parts.at(i_);
+
+	static CPart inv_form;
+	return inv_form;
+}
+CPart&     CCurrent::Form (void) {
+
+	TRawParts&  parts = this->Theme().Parts();
+
+	for (size_t i_ = 0; i_ < parts.size(); i_++)
+		if (parts.at(i_).Id() == TThemePart::e_form)
+			return parts.at(i_);
+
+	static CPart inv_form;
+	return inv_form;
+}
+
+err_code   CCurrent::Load (void) {
+
+	using ex_ui::theme::storage::CRegistry;
+
+	CRegistry storage;
+	err_code n_result = storage.Load(*this);
+	return n_result;
+}
+
+const
+ex_ui::theme::CPalette&  CCurrent::Palette (void) const { return this->m_palette; }
+ex_ui::theme::CPalette&  CCurrent::Palette (void)       { return this->m_palette; }
+
+static ex_ui::theme::CNamed inv_theme;
+
+const
+ex_ui::theme::CNamed&  CCurrent::Theme (void) const {
+	if (this->ThemeIndex() >= this->Palette().Themes().size())
+		return inv_theme;
+	else
+		return this->Palette().Themes().at(this->ThemeIndex());
+}
+ex_ui::theme::CNamed&  CCurrent::Theme (void) {
+	if (this->ThemeIndex() >= this->Palette().Themes().size())
+		return inv_theme;
+	else
+		return this->Palette().Themes().at(this->ThemeIndex());
+}
 
 uint32_t   CCurrent::ThemeIndex (void) const { return this->m_theme_ndx; }
 bool       CCurrent::ThemeIndex (const uint32_t _ndx) {
@@ -122,8 +174,8 @@ CCurrent&  CCurrent::operator <<(const uint32_t _ndx) {
 
 CElement:: CElement (const TThemeElement _id) : m_el_id(_id) {
 	this->m_name = TPrint::Out(_id);
-	for (size_t i_ = 0; i_ < this->States().size(); i_++) {
-		CState& state = this->States().at(i_);
+	for (size_t i_ = 0; i_ < this->States().Raw().size(); i_++) {
+		CState& state = this->States().Raw().at(i_);
 		state.Id((TThemeState)i_, true);
 	}
 }
@@ -137,8 +189,8 @@ const bool CElement::Clear (void) {
 	bool b_changed = false;
 
 	if (TBase::Is_valid()) { TBase::Is_valid(false); b_changed = true; }
-	for (size_t i_ = 0; i_ < this->States().size(); i_++) // clears all states;
-			if (this->States().at(i_).Clear())
+	for (size_t i_ = 0; i_ < this->States().Raw().size(); i_++) // clears all states;
+			if (this->States().Raw().at(i_).Clear())
 				b_changed = true;
 
 	return b_changed;
@@ -169,8 +221,8 @@ CString CElement::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) con
 	CString cs_valid = TStringEx().Bool(TBase::Is_valid());
 
 	CString cs_states;
-	for (size_t i_ = 0; i_ < this->States().size(); i_++) {
-		const CState& state = this->States().at(i_);
+	for (size_t i_ = 0; i_ < this->States().Raw().size(); i_++) {
+		const CState& state = this->States().Raw().at(i_);
 		cs_states += _p_sfx;
 		cs_states += _p_pfx;
 		cs_states += state.Print(e_print::e_req);
@@ -200,15 +252,15 @@ CString CElement::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) con
 }
 #endif
 const
-TRawStates&  CElement::States (void) const { return this->m_states; }
-TRawStates&  CElement::States (void)       { return this->m_states; }
+CStates&  CElement::States (void) const { return this->m_states; }
+CStates&  CElement::States (void)       { return this->m_states; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CElement& CElement::operator = (const CElement& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id() << _src.States(); return *this; }
 CElement& CElement::operator = (CElement&& _victim) { *this = (const CElement&)_victim; return *this; }
 
-CElement& CElement::operator <<(const TRawStates& _states) { this->States() = _states; return *this; }
+CElement& CElement::operator <<(const CStates& _states) { this->States() = _states; return *this; }
 
 CElement& CElement::operator <<(const TThemeElement& _e_id) {
 	this->Id(_e_id, true); return *this;
@@ -327,6 +379,12 @@ CPart:: CPart (CPart&& _victim ) : CPart() { *this = _victim; }
 CPart::~CPart (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+const
+CElement&   CPart::Bkgnd (void) const { return this->Get (TThemeElement::e_back); }
+CElement&   CPart::Bkgnd (void)       { return this->Get (TThemeElement::e_back); }
+const
+CElement&   CPart::Border(void) const { return this->Get (TThemeElement::e_border); }
+CElement&   CPart::Border(void)       { return this->Get (TThemeElement::e_border); }
 
 const bool  CPart::Clear (void) {
 	bool b_changed = false;
@@ -338,10 +396,28 @@ const bool  CPart::Clear (void) {
 
 	return b_changed;
 }
-
 const
 TRawElements& CPart::Elements (void) const { return this->m_elements; }
 TRawElements& CPart::Elements (void)       { return this->m_elements; }
+const
+CElement&   CPart::Get (const TThemeElement _e_id) const {
+
+	for (size_t i_ = 0; i_ < this->Elements().size(); i_++)
+		if (_e_id == this->Elements().at(i_).Id())
+			return this->Elements().at(i_);
+
+	static CElement inv_el;
+	return inv_el;
+}
+CElement&   CPart::Get (const TThemeElement _e_id) {
+
+	for (size_t i_ = 0; i_ < this->Elements().size(); i_++)
+		if (_e_id == this->Elements().at(i_).Id())
+			return this->Elements().at(i_);
+
+	static CElement inv_el;
+	return inv_el;
+}
 
 TThemePart  CPart::Id (void) const { return this->m_part_id; }
 const bool  CPart::Id (const TThemePart _part, const bool b_update_name) {
@@ -490,6 +566,58 @@ CState& CState::operator = (CState&& _victim)   { *this = (const CState&)_victim
 
 CState& CState::operator <<(const TThemeState _e_id) { this->Id(_e_id, false); return *this; }
 CState& CState::operator <<(const rgb_color  _color) { this->Color(_color); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CStates:: CStates (void) {}
+CStates:: CStates (const CStates&_src) : CStates() { *this = _src; }
+CStates:: CStates (CStates&& _victim) : CStates() { *this = _victim; }
+CStates::~CStates (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+CState&   CStates::Disabled(void) const { return this->Get(TThemeState::e_disabled); }
+CState&   CStates::Disabled(void)       { return this->Get(TThemeState::e_disabled); }
+
+const
+CState&   CStates::Get (const TThemeState e_state_id) const {
+	e_state_id;
+	for (size_t i_ = 0; i_ < this->Raw().size(); i_++)
+		if (e_state_id == this->Raw().at(i_).Id())
+			return this->Raw().at(i_);
+
+	static CState inv_state; return inv_state;
+}
+CState&   CStates::Get (const TThemeState e_state_id){
+	e_state_id;
+	for (size_t i_ = 0; i_ < this->Raw().size(); i_++)
+		if (e_state_id == this->Raw().at(i_).Id())
+			return this->Raw().at(i_);
+
+	static CState inv_state; return inv_state;
+}
+
+const
+CState&   CStates::Normal(void) const { return this->Get(TThemeState::e_normal); }
+CState&   CStates::Normal(void)       { return this->Get(TThemeState::e_normal); }
+
+const
+TRawStates& CStates::Raw (void) const { return this->m_states; }
+TRawStates& CStates::Raw (void)       { return this->m_states; }
+
+const
+CState&   CStates::Selected (void) const { return this->Get(TThemeState::e_selected); }
+CState&   CStates::Selected (void)       { return this->Get(TThemeState::e_selected); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CStates& CStates::operator = (const CStates& _src) { *this << _src.Raw(); return *this; }
+CStates& CStates::operator = (CStates&& _victim) { *this = (const CStates&)_victim; return *this; }
+
+CStates& CStates::operator <<(const TRawStates& _raw) { this->Raw() = _raw; return *this; }
+
+CStates::operator const TRawStates& (void) const { return this->Raw(); }
+CStates::operator       TRawStates& (void) { return this->Raw(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -714,6 +842,12 @@ CPalette&     CNamed_Enum::PaletteOf (const TThemePalette _plt_id) const {
 		inv_palette.Is_valid(false);
 	}
 	return inv_palette;
+}
+
+
+CCurrent&  Get_current (void) {
+	using namespace ex_ui::theme::storage;
+	return Get_router().CurrentTheme();
 }
 
 }}

@@ -36,6 +36,7 @@
 #include "color.compl.h"
 #include "color.compl.predefs.h"
 #include "uix.theme.h"
+#include "uix.theme.named.h"
 #include "uix.gen.font.h"
 
 namespace ex_ui { namespace controls { namespace sfx {

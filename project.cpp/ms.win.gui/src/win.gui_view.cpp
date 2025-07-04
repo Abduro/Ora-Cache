@@ -73,6 +73,9 @@ err_code CView::Draw (const HDC _h_dc, const t_rect& _drw_area) {
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
 	n_result = this->Status().Refresh();
 #endif
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+	n_result = this->Tabbed().Refresh();
+#endif
 	return n_result;
 }
 

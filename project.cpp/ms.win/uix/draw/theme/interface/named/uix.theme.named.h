@@ -12,27 +12,6 @@ namespace ex_ui { namespace theme {
 	using namespace ex_ui::theme::colors;
 	using CHex = ex_ui::color::rgb::CHex;
 
-	class CCurrent : public TColorMarker { typedef TColorMarker TBase;
-	public:
-		 CCurrent (void); CCurrent (const CCurrent&); CCurrent (CCurrent&&);
-		~CCurrent (void);
-
-	public:
-		void      Default    (void) ;
-
-		uint32_t  ThemeIndex (void) const;     // gets currently selected theme index;
-		bool      ThemeIndex (const uint32_t); // sets selected theme index; in most cases it is used by registry storage;
-
-	public:
-		CCurrent& operator = (const CCurrent&);
-		CCurrent& operator = (CCurrent&&);
-		
-		CCurrent& operator <<(const uint32_t _ndx);
-
-	private:
-		uint32_t   m_theme_ndx;
-	};
-
 	class CBase {
 	public:
 		 CBase (void); CBase (_pc_sz _p_name, const bool _b_valid); CBase (const CBase&); CBase (CBase&&);
@@ -91,6 +70,41 @@ namespace ex_ui { namespace theme {
 
 	typedef ::std::array<CState, 4> TRawStates; // 0: e_normal; 1: e_disabled; 2: e_hovered; 3: e_selected;
 
+	class CStates {
+	public:
+		 CStates (void); CStates(const CStates&); CStates (CStates&&);
+		~CStates (void);
+
+	public:
+		const
+		CState&  Get (const TThemeState e_state_id) const;
+		CState&  Get (const TThemeState e_state_id);
+		const
+		CState&  Disabled (void) const;
+		CState&  Disabled (void) ;
+		const
+		CState&  Normal (void) const;
+		CState&  Normal (void) ;
+		const
+		TRawStates& Raw (void) const;
+		TRawStates& Raw (void) ;
+		const
+		CState&  Selected (void) const;
+		CState&  Selected (void) ;
+
+	public:
+		CStates& operator = (const CStates&);
+		CStates& operator = (CStates&&);
+
+		CStates& operator <<(const TRawStates&);
+
+		operator const TRawStates& (void) const;
+		operator       TRawStates& (void) ;
+
+	private:
+		TRawStates m_states;
+	};
+
 	class CElement : public CBase { typedef CBase TBase;
 	public:
 		 CElement (const TThemeElement = TThemeElement::e_none); CElement (const CElement&); CElement (CElement&&);
@@ -100,8 +114,8 @@ namespace ex_ui { namespace theme {
 		TThemeElement Id (void) const;
 		const bool    Id (const TThemeElement, const bool b_update_name); // sets the element identifier and updates the name; clears its states;
 		const
-		TRawStates&   States (void) const;
-		TRawStates&   States (void) ;
+		CStates&   States (void) const;
+		CStates&   States (void) ;
 #if defined(_DEBUG)
 		CString    Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
@@ -109,12 +123,12 @@ namespace ex_ui { namespace theme {
 		CElement& operator = (const CElement&);
 		CElement& operator = (CElement&&);
 
-		CElement& operator <<(const TRawStates&);
+		CElement& operator <<(const CStates&);
 		CElement& operator <<(const TThemeElement& _e_id);
 
 	private:
-		TThemeElement m_el_id;
-		TRawStates    m_states;
+		TThemeElement m_el_id ;
+		CStates       m_states;
 	};
 
 	typedef ::std::array<CElement, 3> TRawElements;  // 0: e_back; 1: e_fore; 2: e_border;
@@ -125,10 +139,20 @@ namespace ex_ui { namespace theme {
 		~CPart (void);
 
 	public:
-		const bool    Clear (void);  // clears all elements and sets 'validity' flag of this class object to 'false';
+		const
+		CElement&   Bkgnd (void) const;  // gets background element reference; (ro);
+		CElement&   Bkgnd (void) ;       // gets background element reference; (rw);
+		const
+		CElement&   Border(void) const;  // gets background element reference; (ro);
+		CElement&   Border(void) ;       // gets background element reference; (rw);
+
+		const bool  Clear (void) ;       // clears all elements and sets 'validity' flag of this class object to 'false';
 		const
 		TRawElements& Elements (void) const;
 		TRawElements& Elements (void) ;
+		const
+		CElement&   Get (const TThemeElement) const;
+		CElement&   Get (const TThemeElement) ;
 
 		TThemePart  Id (void) const;
 		const bool  Id (const TThemePart, const bool b_update_name);
@@ -241,6 +265,45 @@ namespace ex_ui { namespace theme {
 		CError m_error;
 		TRawPalettes m_palettes;
 	};
+
+	class CCurrent : public TColorMarker { typedef TColorMarker TBase;
+	public:
+		 CCurrent (void); CCurrent (const CCurrent&); CCurrent (CCurrent&&);
+		~CCurrent (void);
+
+	public:
+		void      Default (void) ;
+
+		const
+		CPart&    Form (void) const;
+		CPart&    Form (void) ;
+
+		err_code  Load (void) ;  // loads data from the registry;
+
+		const
+		CPalette& Palette (void) const;
+		CPalette& Palette (void) ;
+
+		const
+		CNamed&   Theme   (void) const;
+		CNamed&   Theme   (void) ;
+
+
+		uint32_t  ThemeIndex (void) const;     // gets currently selected theme index;
+		bool      ThemeIndex (const uint32_t); // sets selected theme index; in most cases it is used by registry storage;
+
+	public:
+		CCurrent& operator = (const CCurrent&);
+		CCurrent& operator = (CCurrent&&);
+		
+		CCurrent& operator <<(const uint32_t _ndx);
+
+	private:
+		uint32_t   m_theme_ndx;
+		CPalette   m_palette;
+	};
+
+	CCurrent& Get_current (void);
 
 }}
 

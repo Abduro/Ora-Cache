@@ -37,7 +37,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #if (1)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);  // perhaps the layout knows about available area better than the window itself;
-
+	ex_ui::draw::memory::CMode(_dev_ctx).Set(ex_ui::draw::memory::CMode::e_advanced);
 	CZBuffer z_buffer(_dev_ctx, rc_area);
 #if (0)
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
@@ -59,12 +59,12 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	}
 	// (3) draws active tab borders;
 	const TRawBorders& act_tab = this->m_ctrl.Layout().Tabs().Active().Raw();
-	const rgb_color act_clr = this->m_ctrl.Format().Border_Clrs().Get(TStateValue::eSelected);
-	const rgb_color nrm_clr = this->m_ctrl.Format().Border_Clrs().Get(TStateValue::eNormal);
+	const rgb_color clr_active = this->m_ctrl.Format().Border().Color().Selected();
+	const rgb_color clr_normal = this->m_ctrl.Format().Border().Color().Normal();
 
 	for (TRawBorders::const_iterator iter_ = act_tab.begin(); iter_ != act_tab.end(); ++iter_) {
 		const CBorder& border = iter_->second;
-		z_buffer.Draw( border, act_clr);
+		z_buffer.Draw( border, clr_active);
 	}
 
 	// (4) draws captions of the tabs; the color of the text depends on activity of the tab and the same as tab border color;
@@ -87,7 +87,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 			const CTab& tab_ = tabs.at(i_);
 
-			text << tab_.Caption() << tab_.Rect() << (i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr);
+			text << tab_.Caption() << tab_.Rect() << (i_ == this->m_ctrl.Tabs().Active() ? clr_active : clr_normal);
 
 			z_buffer.Draw(text, this->m_font.Handle());
 		}
@@ -109,7 +109,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #if (0)
 			z_buffer.Draw(tab_.Caption(), this->m_font_vert.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
 #else
-			((ex_ui::draw::text::CText_Base&)text) << tab_.Caption()  << (i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr);
+			((ex_ui::draw::text::CText_Base&)text) << tab_.Caption()  << (i_ == this->m_ctrl.Tabs().Active() ? clr_active : clr_normal);
 			text << tab_.Rect();
 			z_buffer.Draw(text, this->m_font_vert.Handle(), 0);
 #endif

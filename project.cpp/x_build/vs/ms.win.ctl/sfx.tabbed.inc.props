@@ -40,16 +40,17 @@
     <_a>$(Color)interface\named\</_a>
     <!--_b>$(MS-XML)interface\</_b>
     <_c>$(MS-XML)interface\data\</_c-->
-    <_d>$(Theme)interface\</_d>
-    <_e>$(Win-pop)interface\</_e>
-    <_f>$(Win-pop)interface\msg_handlers\</_f>
-    <_g>$(MS-WTL)include\</_g>
-    <_h>$(ZBuffer)interface\</_h>
-    <_i>$(CtlBase)interface\</_i>
+    <_b>$(Theme)interface\</_b>
+    <_c>$(Theme)interface\named\</_c>
+    <_d>$(Win-pop)interface\</_d>
+    <_e>$(Win-pop)interface\msg_handlers\</_e>
+    <_f>$(MS-WTL)include\</_f>
+    <_g>$(ZBuffer)interface\</_g>
+    <_h>$(CtlBase)interface\</_h>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

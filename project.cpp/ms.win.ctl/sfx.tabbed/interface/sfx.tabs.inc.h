@@ -34,6 +34,7 @@
 #pragma endregion
 
 #include "uix.theme.h"
+#include "uix.theme.named.h"
 
 namespace ex_ui { namespace controls { namespace sfx {
 

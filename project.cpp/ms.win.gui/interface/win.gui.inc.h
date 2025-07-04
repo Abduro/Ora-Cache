@@ -37,6 +37,7 @@
 
 #include "sys.shell.dwm.h"
 #include "uix.theme.h"
+#include "uix.theme.named.h"
 
 namespace ebo { namespace boo { namespace gui {
 

@@ -35,14 +35,13 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 #endif
-#if (1)
+
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(_dev_ctx, rc_area);
 #if (0)
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
-
 	z_buffer.Draw(rc_area, set_.Dark()/*_r_g_b(200, 200, 200)*/);
 #elif (1==0)
 	z_buffer.Draw(rc_area, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
@@ -50,15 +49,17 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb());
 #endif
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
+#define _use_shadow 1
+#if defined(_use_shadow) && (1 == _use_shadow)
+	CBorder shadow = this->m_ctrl.Borders().Top(); shadow.Color() << ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
+	CBorder top_   = this->m_ctrl.Borders().Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
+
+	if (shadow.Is_valid()) { z_buffer.Draw(shadow); }
+#else
 	const CBorder& top_ = this->m_ctrl.Borders().Top();
-#if (0)
-	CBorder border = top_;
-	border.Color().A(0);
 #endif
-	if (top_.Is_valid()) {
-		z_buffer.Draw(top_);
-	}
-#endif
+	if (top_.Is_valid()) { z_buffer.Draw(top_); }
+
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
 }

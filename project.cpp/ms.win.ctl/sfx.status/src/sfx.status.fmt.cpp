@@ -20,12 +20,14 @@ void CFormat::Default (void) {
 	CBorder& top = this->m_ctrl.Borders().Top();
 	top.Thickness(1);
 #if (1)
-	top.Color() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border, TThemeState::e_default);
+//	top.Color() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border, TThemeState::e_default);
+	top.Color() << ex_ui::theme::Get_current().Form().Border().States().Normal().Color();
 #else
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
 	top.Color() = TRgbQuad(set_.Light());
 #endif
-	TBase::Bkgnd().Solid() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
+//	TBase::Bkgnd().Solid() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
+	TBase::Bkgnd().Solid() << ex_ui::theme::Get_current().Form().Bkgnd().States().Normal().Color();
 }
 
 #if (0)

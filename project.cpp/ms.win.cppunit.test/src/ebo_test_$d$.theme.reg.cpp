@@ -55,12 +55,16 @@ void CRegistry::Get_Current (void) {
 	CCurrentTheme& current = router.CurrentTheme();
 
 	_out() += _T("Gets values of current theme:");
-	_out() += TStringEx().Format(_T("*before*: palette= %d (%s); theme index= %d;"), current.Palette(), (_pc_sz) TPrint::Out(current.Palette()), current.ThemeIndex());
+	_out() += TStringEx().Format(
+		_T("*before*: palette= %d (%s); theme index= %d;"), current.Palette().Id(), (_pc_sz) TPrint::Out(current.Palette().Id()), current.ThemeIndex()
+	);
 
 	if (__failed(this->m_storage.Load(current)))
 	_out() += this->m_storage.Error().Print(TError::e_print::e_req);
 	
-	_out() += TStringEx().Format(_T("*after *: palette= %d (%s); theme index= %d;"), current.Palette(), (_pc_sz) TPrint::Out(current.Palette()), current.ThemeIndex());
+	_out() += TStringEx().Format(
+		_T("*after *: palette= %d (%s); theme index= %d;"), current.Palette().Id(), (_pc_sz) TPrint::Out(current.Palette().Id()), current.ThemeIndex()
+	);
 	_out()();
 }
 
@@ -165,7 +169,7 @@ void CRegistry::Get_State (void) {
 #endif
 	TState target;
 
-	CString cs_path = TRouter().Element(theme.Palette(), theme.Part(), theme.Element());
+	CString cs_path = TRouter().Element(theme.Palette().Id(), theme.Part(), theme.Element());
 	_out() += _T("Gets value of one specific state object:");
 	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) target.Print(e_print::e_all));
 	_out() += TStringEx().Format(_T("Input: %spath: %s;%sstate:%s;"), _p_new_line, (_pc_sz) cs_path, _p_new_line, (_pc_sz) TPrint::Out(theme.State()));
