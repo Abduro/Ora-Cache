@@ -154,7 +154,11 @@ _pc_sz  CString_Ex::Var  (const _var&, _pc_sz _fmt/* = _T("type=%s;value=%s")*/)
 #if(1)
 #if defined WIN64
 _pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
-	_p_fun_or_obj_ptr;
+	return this->__address_of (_p_fun_or_obj_ptr, _T("0x%x"));
+}
+
+_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
+	_p_fun_or_obj_ptr; _p_format;
 
 	if (!_p_fun_or_obj_ptr) {
 		TBase::SetString(_T("#not_set"));
@@ -169,11 +173,19 @@ _pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
 	const
 	uint64_t* p_address = reinterpret_cast<const uint64_t*>(_p_fun_or_obj_ptr);
 //	uint64_t  n_address = (p_address ? *p_address : 0);
-	TBase::Format(_T("0x%x"), &p_address);
+	if (nullptr == _p_format)
+		TBase::Format(_T("0x%x"), &p_address);
+	else
+		TBase::Format(_p_format , &p_address);
+
 	return TBase::GetString();
 }
 #else
 _pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
+	return this->__address_of (_p_fun_or_obj_ptr, _T("0x%x"));
+}
+
+_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
 	_p_fun_or_obj_ptr;
 
 	if (!_p_fun_or_obj_ptr) {
@@ -189,7 +201,12 @@ _pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
 	const
 	uint32_t* p_address = reinterpret_cast<const uint32_t*>(_p_fun_or_obj_ptr);
 	uint32_t  n_address = (!!p_address ? *p_address : 0);
-	TBase::Format(_T("0x%x"), n_address);
+	
+	if (nullptr == _p_format)
+		TBase::Format(_T("0x%x"), n_address);
+	else
+		TBase::Format(_p_format , n_address);
+
 	return TBase::GetString();
 }
 #endif

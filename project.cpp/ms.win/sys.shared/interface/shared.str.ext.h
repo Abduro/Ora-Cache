@@ -98,9 +98,11 @@ namespace shared { namespace common {
 #endif
 		// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
 #if defined WIN64
-		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr) ;
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr);
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
 #else
-		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr) ;
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr);
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
 #endif
 		/*
 			Regarding the base class StringT::Format(...) method:
