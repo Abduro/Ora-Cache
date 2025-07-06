@@ -6,10 +6,75 @@
 	Adopted to v15 on 28-May-2018 at 10:56:51p, UTC+7, Phuket, Rawai, Monday;
 	Adopted to FakeGPS project on 24-Apr-2020 at 9:47:58p, UTC+7, Novosibirsk, Friday;
 */
-#include "uix.gdi.object.h"
+#include "uix.img.bitmap.h"
 
-using namespace ex_ui::draw::memory;
+using namespace ex_ui::draw::bitmaps;
 
+/////////////////////////////////////////////////////////////////////////////
+
+namespace ex_ui { namespace draw { namespace bitmaps { namespace _impl {
+#if defined(_DEBUG)
+	class CBmp_Spec {
+	public:
+		CBmp_Spec (void) = delete; CBmp_Spec (const CBmp_Spec&) = delete; CBmp_Spec (CBmp_Spec&&) = delete;
+		CBmp_Spec (const TBmpHeader& _header) : m_header(_header) {} ~CBmp_Spec (void) = default;
+
+	public:
+		// https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type ; deprecated;
+		// https://learn.microsoft.com/en-us/windows/win32/directshow/video-subtypes ;
+		// https://learn.microsoft.com/en-us/windows/win32/directshow/directx-video-acceleration-video-subtypes ;
+		_pc_sz Compress (void) {
+			switch (this->m_header.biCompression) {
+			case BI_BITFIELDS: this->cs_out = _T("bitfields"); break;
+			case BI_JPEG     : this->cs_out = _T("jpeg"); break;
+			case BI_PNG      : this->cs_out = _T("rgb" ); break;
+			case BI_RGB      : this->cs_out = _T("rgb" ); break;
+			case BI_RLE4     : this->cs_out = _T("rle4"); break;
+			case BI_RLE8     : this->cs_out = _T("rle8"); break;
+			default:
+				this->cs_out = _T("#video_4cc");
+			}
+			return this->cs_out.GetString();
+		}
+
+	private:
+		CBmp_Spec& operator = (const CBmp_Spec&) = delete;
+		CBmp_Spec& operator = (CBmp_Spec&&) = delete;
+
+	private:
+		const TBmpHeader& m_header;
+		CString cs_out;
+	};
+#endif
+}}}}
+
+using namespace ex_ui::draw::bitmaps::_impl;
+/////////////////////////////////////////////////////////////////////////////
+#if defined(_DEBUG)
+CString  CBmpHeader::Print (const TBmpHeader& _header, const e_print _e_opt) {
+	_header; _e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {bits=%d(bpp);format=%s;size=%s;res=%s;indices=%u}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {bits=%d(bpp);format=%s;size=%s;res=%s;indices=%u}");
+	static _pc_sz pc_sz_pat_r = _T("bits=%d(bpp);format=%s;size=%s;res=%s;indices=%u");
+
+	CString cs_res  = TStringEx().Format (_T("[horz|vert:%d|%d](px/m)"), _header.biXPelsPerMeter, _header.biYPelsPerMeter);
+	CString cs_size = TStringEx().Format (_T("[w|h:%d|%d](px)"), _header.biWidth, _header.biHeight);
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		_header.biBitCount, CBmp_Spec(_header).Compress(), (_pc_sz) cs_size, (_pc_sz) cs_res, _header.biClrUsed);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		_header.biBitCount, CBmp_Spec(_header).Compress(), (_pc_sz) cs_size, (_pc_sz) cs_res, _header.biClrUsed);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r,
+		_header.biBitCount, CBmp_Spec(_header).Compress(), (_pc_sz) cs_size, (_pc_sz) cs_res, _header.biClrUsed);
+	}
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 CBitmapInfo:: CBitmapInfo(void) { this->Reset(); }
@@ -136,7 +201,7 @@ err_code CDibSection::Create (const HDC hDC, const SIZE& sz) {
 	m_size = sz;
 
 	BITMAPINFO bi = {{sizeof(BITMAPINFOHEADER), sz.cx, sz.cy, 1, (WORD)32, BI_RGB, 0, 0, 0, 0, 0}, 0, 0, 0, 0};
-
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createdibsection ;
 	m_handle = ::CreateDIBSection(hDC, &bi, DIB_RGB_COLORS, (void**)(&m_pData), NULL, 0);
 	if (nullptr == m_handle) {
 		this->m_error.Last();
@@ -189,9 +254,40 @@ err_code CDibSection::Reset  (void) {
 
 PCBYTE  CDibSection::Bits   (void) const { return m_pData; }
 
+TError& CDibSection::Error  (void) const { return this->m_error; }
+
 HBITMAP CDibSection::Handle (void) const { return (this->Is() ? m_handle : NULL); }
 bool    CDibSection::Is     (void) const { return (m_handle && OBJ_BITMAP == ::GetObjectType(m_handle)); }
 SIZE    CDibSection::Size   (void) const { return  m_size; }
+
+#if defined(_DEBUG)
+CString CDibSection::Print  (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {handle=%s;size=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {handle=%s;size=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("handle=%s;size=%s;valid=%s");
+
+	CString cs_handle = TStringEx().__address_of(this->Handle(), _T("0x%08x"));
+	CString cs_size   = TStringEx().Format(_T("[w|h:%d|%d](px)"), this->Size().cx, this->Size().cy);
+	CString cs_valid  = TStringEx().Bool (this->Is());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format ( pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, 
+		(_pc_sz) cs_handle, (_pc_sz) cs_size, (_pc_sz) cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format ( pc_sz_pat_n, (_pc_sz)__CLASS__, 
+		(_pc_sz) cs_handle, (_pc_sz) cs_size, (_pc_sz) cs_valid);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format ( pc_sz_pat_r,
+		(_pc_sz) cs_handle, (_pc_sz) cs_size, (_pc_sz) cs_valid);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

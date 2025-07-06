@@ -4,7 +4,7 @@
 */
 #include "ebo_test_$d$.zbuf.shade.h"
 
-using namespace ebo::boo::test::draw;
+using namespace ebo::boo::test::shade;
 
 #pragma region __shade
 

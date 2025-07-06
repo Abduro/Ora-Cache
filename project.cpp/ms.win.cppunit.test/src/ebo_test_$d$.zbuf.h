@@ -10,11 +10,12 @@
 
 #include "uix.gdi.defs.h"
 #include "uix.gdi.blend.h"
-#include "uix.gdi.object.h"
+
 #include "uix.gdi.shade.h"
 #include "uix.gdi.text.h"
 #include "uix.gdi.zbuf.h"
 #include "uix.gen.font.h"
+#include "uix.img.bitmap.h"
 #include "uix.img.cache.h"
 
 namespace ebo { namespace boo { namespace test { namespace draw {

@@ -4,7 +4,7 @@
 */
 #include "ebo_test_$d$.zbuf.blend.h"
 
-using namespace ebo::boo::test::draw;
+using namespace ebo::boo::test::blend;
 
 CBlend_Wrap:: CBlend_Wrap (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {

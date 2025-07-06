@@ -8,9 +8,9 @@ using namespace ex_ui::draw::images;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CItem:: CItem (void) : m_size{0}, m_list(nullptr) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CItem:: CItem (const CItem& _src) : CItem() { *this = _src; }
-CItem::~CItem (void) {
+CList:: CList (void) : m_size{0}, m_list(nullptr) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CList:: CList (const CList& _src) : CList() { *this = _src; }
+CList::~CList (void) {
 
 	if (this->Is_valid())
 		this->Destroy();
@@ -18,11 +18,11 @@ CItem::~CItem (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CItem::Create (const t_size& _img_size, const uint16_t _n_count, const uint16_t _n_delta) {
+err_code  CList::Create (const t_size& _img_size, const uint16_t _n_count, const uint16_t _n_delta) {
 	return this->Create (_img_size.cx & 0xff, _img_size.cy & 0xff, _n_count, _n_delta);
 }
 
-err_code  CItem::Create (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count, const uint16_t _n_delta) {
+err_code  CList::Create (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count, const uint16_t _n_delta) {
 	_n_width; _n_height; _n_count; _n_delta;
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -50,7 +50,7 @@ err_code  CItem::Create (const uint16_t _n_width, const uint16_t _n_height, cons
 	return this->Error();
 }
 
-err_code  CItem::Destroy(void) {
+err_code  CList::Destroy(void) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (this->Is_valid() == false)
@@ -64,7 +64,7 @@ err_code  CItem::Destroy(void) {
 	return this->Error();
 }
 
-err_code  CItem::DuplicateTo (HImgList& _h_dest) const {
+err_code  CList::DuplicateTo (HImgList& _h_dest) const {
 	_h_dest;
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -81,7 +81,7 @@ err_code  CItem::DuplicateTo (HImgList& _h_dest) const {
 	return this->Error();
 }
 
-uint16_t  CItem::Count  (void) const {
+uint16_t  CList::Count  (void) const {
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount ;
 	if (this->Is_valid() == false)
 		return 0;
@@ -89,14 +89,14 @@ uint16_t  CItem::Count  (void) const {
 		return static_cast<uint16_t>(::ImageList_GetImageCount(this->Handle()));
 }
 
-TError&   CItem::Error  (void) const { return m_error; }
-bool      CItem::Is_valid (void) const { return !!this->Handle(); }
-dword     CItem::Id  (void) const { return this->m_list_id; }
+TError&   CList::Error  (void) const { return m_error; }
+bool      CList::Is_valid (void) const { return !!this->Handle(); }
+dword     CList::Id  (void) const { return this->m_list_id; }
 const
-HImgList& CItem::Handle (void) const { return this->m_list; }
-HImgList& CItem::Handle (void)       { return this->m_list; }
+HImgList& CList::Handle (void) const { return this->m_list; }
+HImgList& CList::Handle (void)       { return this->m_list; }
 #if defined(_DEBUG)
-CString   CItem::Print  (const e_print _e_opt) const {
+CString   CList::Print  (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {id=%u;handle=%s;count=%u;size=%s;valid=%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {id=%u;handle=%s;count=%u;size=%s;valid=%s}");
@@ -124,11 +124,11 @@ CString   CItem::Print  (const e_print _e_opt) const {
 }
 #endif
 const
-t_size&   CItem::Size (void) const { return this->m_size; }
+t_size&   CList::Size (void) const { return this->m_size; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CItem&    CItem::operator = (const CItem& _src) { _src; return *this; }
+CList&    CList::operator = (const CList& _src) { _src; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

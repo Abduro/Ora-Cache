@@ -181,8 +181,6 @@
     <ClInclude Include="$(_0)uix.gdi.blend.h" />
     <ClCompile Include="$(_1)uix.gdi.blend.cpp" />
     <ClInclude Include="$(_0)uix.gdi.defs.h" />
-    <ClInclude Include="$(_0)uix.gdi.object.h" />
-    <ClCompile Include="$(_1)uix.gdi.object.cpp" />
     <ClInclude Include="$(_0)uix.gdi.shade.h" />
     <ClCompile Include="$(_1)uix.gdi.shade.cpp" />
     <ClInclude Include="$(_0)uix.gdi.text.h" />
@@ -191,6 +189,8 @@
     <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" />
     <ClInclude Include="$(_0)uix.gen.font.h" />
     <ClCompile Include="$(_1)uix.gen.font.cpp" />
+    <ClInclude Include="$(_0)uix.img.bitmap.h" />
+    <ClCompile Include="$(_1)uix.img.bitmap.cpp" />
     <ClInclude Include="$(_0)uix.img.cache.h" />
     <ClCompile Include="$(_1)uix.img.cache.cpp" />
   </ItemGroup>

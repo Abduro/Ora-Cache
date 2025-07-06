@@ -10,7 +10,7 @@
 */
 #include "uix.gdi.defs.h"
 
-namespace ex_ui { namespace draw { namespace memory {
+namespace ex_ui { namespace draw { namespace bitmaps {
 
 	using namespace ex_ui::draw::defs;
 
@@ -19,6 +19,22 @@ namespace ex_ui { namespace draw { namespace memory {
 	// all images are expected to have 32-bit-color format, otherwise an error is returned;
 	// it is assumed a bitmap row of image pixels is rounded to 4 bytes value, that means a stride = 4-byte * bitmap width;
 	// but sometimes implement code does not check of color-bitness and it may lead to an error of memory access; this is must be checked;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader ;
+	using TBmpHeader = BITMAPINFOHEADER;
+	class CBmpHeader {
+	public:
+		 CBmpHeader (void) = default; CBmpHeader (const CBmpHeader&) = delete; CBmpHeader (CBmpHeader&&) = delete;
+		~CBmpHeader (void) = default;
+#if defined(_DEBUG)
+		static
+		CString    Print (const TBmpHeader&, const e_print = e_print::e_all);
+#endif
+
+	public:
+		CBmpHeader&  operator = (const CBmpHeader&) = delete;
+		CBmpHeader&  operator = (CBmpHeader&&) = delete;
+	};
 
 	// this class does not free/delete an object that is attached;
 	class CBitmapInfo : public BITMAP { typedef BITMAP TBase;
@@ -40,7 +56,9 @@ namespace ex_ui { namespace draw { namespace memory {
 		bool       Is     (void ) const;
 		BITMAPINFO Raw    (void ) const;
 		HRESULT    Size   (SIZE&) const;
-
+#if defined(_DEBUG)
+		CString    Print   (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CBitmapInfo& operator = (const CBitmapInfo&);
 		CBitmapInfo& operator <<(const UINT UID);
@@ -79,7 +97,9 @@ namespace ex_ui { namespace draw { namespace memory {
 		HBITMAP   Handle  (void) const;             // gets a bitmap handle if success, otherwise returns NULL;
 		bool      Is      (void) const;             // checks a validity of the encapsulated bitmap descriptor;
 		SIZE      Size    (void) const;             // returns a size of bitmap;
-
+#if defined(_DEBUG)
+		CString   Print   (const e_print = e_print::e_all) const;
+#endif
 	public:
 		CDibSection& operator = (const CDibSection&);
 		CDibSection& operator = (CDibSection&&) = delete;

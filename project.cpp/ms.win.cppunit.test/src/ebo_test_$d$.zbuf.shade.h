@@ -8,9 +8,9 @@
 */
 #include "ebo_test_$d$.zbuf.h"
 
-namespace ebo { namespace boo { namespace test { namespace draw {
+namespace ebo { namespace boo { namespace test { namespace shade {
 
-#pragma region __shade
+	using namespace ebo::boo::test::draw;
 
 	using TRectMesh = ex_ui::draw::shade::CRectMesh;
 
@@ -106,7 +106,6 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 		bool m_b_verb;
 		TVertex  m_vertex;
 	};
-#pragma endregion
 
 }}}}
 

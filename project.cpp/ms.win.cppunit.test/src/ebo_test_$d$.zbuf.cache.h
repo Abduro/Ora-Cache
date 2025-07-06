@@ -6,14 +6,16 @@
 */
 #include "ebo_test_$d$.zbuf.h"
 
-namespace ebo { namespace boo { namespace test { namespace draw {
+namespace ebo { namespace boo { namespace test { namespace cache {
 
-	using TCacheItem = ex_ui::draw::images::CItem;
+	using namespace ebo::boo::test::draw;
 
-	__class(CCacheItem) {
+	using TCacheList = ex_ui::draw::images::CList;
+
+	__class(CCacheList) {
 	public:
-		 CCacheItem (const bool _b_verb = false);
-		~CCacheItem (void) = default;
+		 CCacheList (const bool _b_verb = false);
+		~CCacheList (void) = default;
 
 	public:
 		__ctor (_ctor);
@@ -21,7 +23,7 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 
 	private:
 		bool      m_b_verb;
-		TCacheItem  m_item;
+		TCacheList  m_list;
 	};
 
 }}}}

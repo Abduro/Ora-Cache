@@ -5,7 +5,7 @@
 	This is Ebo Pack generic 32-bits image cache interface declaration file;
 */
 #include "uix.gdi.defs.h"
-#include "uix.gdi.object.h"
+#include "uix.img.bitmap.h"
 
 namespace ex_ui { namespace draw { namespace images {
 
@@ -23,10 +23,10 @@ namespace ex_ui { namespace draw { namespace images {
 	
 	using SImgInfo = IMAGEINFO;
 
-	class CItem {
+	class CList {
 	public:
-		 CItem (void); CItem (const CItem&); CItem (CItem&&) = delete;
-		~CItem (void);
+		 CList (void); CList (const CList&); CList (CList&&) = delete;
+		~CList (void);
 
 	public:
 #if (0)
@@ -54,8 +54,8 @@ namespace ex_ui { namespace draw { namespace images {
 		const
 		t_size&   Size  (void) const;            // the image list item size can be change in case of the list re-creation;
 	public:
-		CItem& operator = (const CItem&);
-		CItem& operator = (CItem&&) = delete;
+		CList& operator = (const CList&);
+		CList& operator = (CList&&) = delete;
 
 	protected:
 		mutable
@@ -65,7 +65,7 @@ namespace ex_ui { namespace draw { namespace images {
 		dword    m_list_id;
 	};
 
-	typedef ::std::map<dword, CItem> TRawItems;
+	typedef ::std::map<dword, CList> TRawLists;
 
 	class CCache {
 	public:
@@ -80,7 +80,8 @@ namespace ex_ui { namespace draw { namespace images {
 		CCache& operator = (CCache&&) = delete;
 
 	protected:
-		CError  m_error;
+		CError    m_error;
+		TRawLists m_items;
 	};
 
 }}}

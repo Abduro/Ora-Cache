@@ -8,10 +8,9 @@
 */
 #include "ebo_test_$d$.zbuf.h"
 
-namespace ebo { namespace boo { namespace test { namespace draw {
+namespace ebo { namespace boo { namespace test { namespace blend {
 
-#pragma region __blend
-
+	using namespace ebo::boo::test::draw;
 	using TBlend_Wrap = ex_ui::draw::blend::CBlend_Wrap;
 
 	__class(CBlend_Wrap) {
@@ -73,8 +72,6 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 		bool m_b_verb;
 		TBlender  m_blender;
 	};
-
-#pragma endregion
 
 }}}}
 
