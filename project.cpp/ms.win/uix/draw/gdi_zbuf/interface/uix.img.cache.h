@@ -10,10 +10,9 @@
 namespace ex_ui { namespace draw { namespace images {
 
 	using namespace ex_ui::draw;
+	using namespace ex_ui::draw::bitmaps;
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create ;
 	// https://learn.microsoft.com/en-us/windows/win32/controls/ilc-constants ;
-	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy ;
 	using HImgList = HIMAGELIST;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_copy ;
@@ -22,6 +21,34 @@ namespace ex_ui { namespace draw { namespace images {
 	// https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo ;
 	
 	using SImgInfo = IMAGEINFO;
+	/*
+		The image list control may be created and be used through the following:
+		(1) WTL CImagList class that is the wrapper over ImageList_xxx() functions of Win32 API;
+		(2) COM interface IImageList: https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/nn-commoncontrols-iimagelist ;
+		(3) User defined class or a set of classes, like it is made below;
+	*/
+	// a data provider class does *not* manage or control life cycle of the image list, but just deal with its handle for setting data;
+	class CDataProvider {
+	public:
+		 CDataProvider (const HImgList = nullptr) ;  CDataProvider (const CDataProvider&); CDataProvider (CDataProvider&&) ;
+		~CDataProvider (void);
+
+	public:
+		TError&  Error (void) const;
+		HImgList List  (void) const;
+		err_code List  (const HImgList&);
+
+	public:
+		CDataProvider&  operator = (const CDataProvider&);
+		CDataProvider&  operator = (CDataProvider&&);       // neither swap() nor move() method is used; just copying image list handle;
+
+		CDataProvider&  operator <<(const HImgList&);
+
+	private:
+		HImgList m_list;
+		CError   m_error;	
+	};
+
 
 	class CList {
 	public:
@@ -29,16 +56,16 @@ namespace ex_ui { namespace draw { namespace images {
 		~CList (void);
 
 	public:
-#if (0)
-		err_code  CopyTo  (HImgList&);           // copies this image list to the input handle of other image list;
-#endif
+		err_code  Append  (const HBitmap);    // bitmap handle, bits per pixel and size will be checked;
+		err_code  CopyTo  (HImgList&) const;  // copies this image list to the input handle of other image list;
+
 		err_code  Create  (const t_size& _img_size, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
 		err_code  Create  (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
 		err_code  Destroy (void);
 
-		err_code  DuplicateTo (HImgList&) const; // https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_duplicate ;
 
-		uint16_t  Count (void) const;            // returns the count number of how much images the image list has;
+
+		uint16_t  Count (void) const;         // returns the count number of how much images the image list has;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;

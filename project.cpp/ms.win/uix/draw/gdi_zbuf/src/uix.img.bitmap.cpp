@@ -50,6 +50,29 @@ namespace ex_ui { namespace draw { namespace bitmaps { namespace _impl {
 
 using namespace ex_ui::draw::bitmaps::_impl;
 /////////////////////////////////////////////////////////////////////////////
+#define hwnd_desctop HWND_DESKTOP
+err_code CBmpHeader::Get (const HBitmap& _from, TBmpHeader& _to) {
+	_from; _to;
+	err_code n_result = __s_ok;
+	if (nullptr == _from || false == CBitmapInfo::IsValid(_from))
+		return n_result = __e_inv_arg;
+
+	TBmpInfo bmp_info = {0};
+	bmp_info.bmiHeader.biSize = sizeof(TBmpHeader);
+
+	const HDC h_screen = ::GetDC(hwnd_desctop);
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdibits ;
+	if (false == !!::GetDIBits(h_screen, _from, 0, 1, nullptr, &bmp_info, DIB_RGB_COLORS))
+		n_result = __LastErrToHresult();
+	else { // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		n_result = ::memcpy_s(&_to, sizeof(TBmpHeader), &bmp_info.bmiHeader, sizeof(TBmpHeader));
+		if (!!n_result)
+			n_result = __e_no_memory;
+	}
+	::ReleaseDC(hwnd_desctop, h_screen);
+
+	return n_result;
+}
 #if defined(_DEBUG)
 CString  CBmpHeader::Print (const TBmpHeader& _header, const e_print _e_opt) {
 	_header; _e_opt;
@@ -84,27 +107,32 @@ CBitmapInfo::~CBitmapInfo(void) { }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT       CBitmapInfo::Attach (const HBITMAP hBitmap) { HRESULT hr_ = S_OK;
+err_code  CBitmapInfo::Attach (const HBitmap hBitmap) {
+	hBitmap;
+	err_code n_result = __s_ok;
 
 	if (CBitmapInfo::IsValid(hBitmap) == false)
-		return (hr_ = E_INVALIDARG);
+		return (n_result = __e_inv_arg);
 
-	hr_ = this->Reset();
+	n_result = this->Reset();
 
 	m_handle = hBitmap;
 	// https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobject
 	if (!::GetObject(hBitmap, sizeof(TBase), (LPVOID)(TBase*)this))
-		hr_ = __DwordToHresult(ERROR_INVALID_DATATYPE);
+		n_result = (err_code) TErrCodes::eData::eType;
 	
-	if (SUCCEEDED(hr_) && NULL == TBase::bmBits) {
-		hr_ = __DwordToHresult(ERROR_ACCESS_DENIED); // TODO: error code must be reviewed;
+	if (__succeeded(n_result) && NULL == TBase::bmBits) {
+		n_result = (err_code) TErrCodes::eAccess::eDenied; // TODO: error code must be reviewed;
 	}
-	return hr_;
+	return n_result;
 }
 
-HBITMAP       CBitmapInfo::Detach (void) { HBITMAP hTmp = m_handle; this->Reset(); return  hTmp; }
+HBitmap   CBitmapInfo::Detach (void) { HBitmap hTmp = m_handle; this->Reset(); return  hTmp; }
 
-HRESULT       CBitmapInfo::Reset  (void) { HRESULT hr_ = S_OK;
+err_code  CBitmapInfo::Reset  (void) {
+
+	err_code n_result = __s_ok;
+
 #if (0)
 	if (this->Is()) {
 		// https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject
@@ -121,38 +149,40 @@ HRESULT       CBitmapInfo::Reset  (void) { HRESULT hr_ = S_OK;
 		::memset((void*)static_cast<BITMAP*>(this), 0, sizeof(BITMAP));
 	}
 #else
-	m_UID    = 0   ;
-	m_handle = NULL;
-	::RtlZeroMemory((void*)static_cast<BITMAP*>(this), sizeof(BITMAP));
+	m_UID    = 0;
+	m_handle = nullptr;
+	::RtlZeroMemory((void*)static_cast<TBitmap*>(this), sizeof(TBitmap));
 #endif
-	return hr_;
+	return n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 const
-HBITMAP       CBitmapInfo::Handle(void) const { return m_handle; }
+HBitmap       CBitmapInfo::Handle(void) const { return m_handle; }
 UINT          CBitmapInfo::ID    (void) const { return m_UID; }
 bool          CBitmapInfo::Is    (void) const { return CBitmapInfo::IsValid(m_handle); }
-BITMAPINFO    CBitmapInfo::Raw   (void) const {
+TBmpInfo      CBitmapInfo::Raw   (void) const {
 
 	const DWORD n_size = static_cast<DWORD>(((TBase::bmWidth * TBase::bmBitsPixel + 31) / 32) * 4 * TBase::bmHeight);
 
-	BITMAPINFO bmp_info = {
-		{sizeof(BITMAPINFO), TBase::bmWidth, TBase::bmHeight, 1, TBase::bmBitsPixel, BI_RGB, n_size, 0, 0, 0, 0}, // header;
+	TBmpInfo bmp_info = {
+		{sizeof(TBmpInfo), TBase::bmWidth, TBase::bmHeight, 1, TBase::bmBitsPixel, BI_RGB, n_size, 0, 0, 0, 0}, // header;
 		0, 0, 0, 0 // quad;
 	};
 
 	return bmp_info;
 }
-HRESULT       CBitmapInfo::Size  (SIZE& size) const { HRESULT hr_ = S_OK;
+err_code      CBitmapInfo::Size  (SIZE& size) const {
+	size;
+	err_code n_result =  __s_ok;
 
 	if (this->Is() == false)
-		return (hr_ = __DwordToHresult(ERROR_INVALID_DATA));
+		return n_result = (err_code) TErrCodes::eData::eInvalid;
 
-	size.cx = ((BITMAP&)(*this)).bmWidth;
-	size.cy = ((BITMAP&)(*this)).bmHeight;
+	size.cx = ((TBitmap&)(*this)).bmWidth;
+	size.cy = ((TBitmap&)(*this)).bmHeight;
 
-	return hr_;
+	return n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -163,12 +193,12 @@ CBitmapInfo&  CBitmapInfo::operator <<(const HBITMAP _handle) { this->Attach(_ha
 
 /////////////////////////////////////////////////////////////////////////////
 
-CBitmapInfo::operator const HBITMAP  (void) const { return m_handle; }
-CBitmapInfo::operator const BITMAPINFO (void) const { return this->Raw(); }
+CBitmapInfo::operator const HBitmap  (void) const { return m_handle; }
+CBitmapInfo::operator const TBmpInfo (void) const { return this->Raw(); }
 
 /////////////////////////////////////////////////////////////////////////////
-
-bool CBitmapInfo::IsValid(const HBITMAP _handle) {  return(_handle != NULL && OBJ_BITMAP == ::GetObjectType((HGDIOBJ)_handle)); }
+// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobject ;
+bool CBitmapInfo::IsValid(const HBitmap _handle) {  return(_handle != NULL && OBJ_BITMAP == ::GetObjectType((HGDIOBJ)_handle)); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -231,7 +261,7 @@ err_code CDibSection::Destroy(void) {
 	return this->Error();
 }
 
-HBITMAP  CDibSection::Detach (void) { HBITMAP h_result = m_handle; this->Reset(); return h_result; }
+HBitmap  CDibSection::Detach (void) { HBITMAP h_result = m_handle; this->Reset(); return h_result; }
 
 err_code CDibSection::Reset  (void) {
 
@@ -252,13 +282,13 @@ err_code CDibSection::Reset  (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-PCBYTE  CDibSection::Bits   (void) const { return m_pData; }
+_pc_byte CDibSection::Bits   (void) const { return m_pData; }
 
-TError& CDibSection::Error  (void) const { return this->m_error; }
+TError&  CDibSection::Error  (void) const { return this->m_error; }
 
-HBITMAP CDibSection::Handle (void) const { return (this->Is() ? m_handle : NULL); }
-bool    CDibSection::Is     (void) const { return (m_handle && OBJ_BITMAP == ::GetObjectType(m_handle)); }
-SIZE    CDibSection::Size   (void) const { return  m_size; }
+HBitmap  CDibSection::Handle (void) const { return (this->Is() ? m_handle : nullptr); }
+bool     CDibSection::Is     (void) const { return (m_handle && OBJ_BITMAP == ::GetObjectType(m_handle)); }
+t_size   CDibSection::Size   (void) const { return  m_size; }
 
 #if defined(_DEBUG)
 CString CDibSection::Print  (const e_print _e_opt) const {
@@ -305,4 +335,4 @@ CDibSection&  CDibSection::operator = (const CDibSection& _ref) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDibSection::operator HBITMAP() const { return this->Handle(); }
+CDibSection::operator HBitmap() const { return this->Handle(); }

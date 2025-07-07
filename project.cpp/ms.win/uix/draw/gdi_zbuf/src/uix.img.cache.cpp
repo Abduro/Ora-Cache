@@ -8,6 +8,40 @@ using namespace ex_ui::draw::images;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CDataProvider:: CDataProvider (const HImgList _h_handle ) : m_list(_h_handle) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CDataProvider:: CDataProvider (const CDataProvider& _src) : CDataProvider() { *this = _src; }
+CDataProvider:: CDataProvider (CDataProvider&&  _victim ) : CDataProvider() { *this = _victim; }
+CDataProvider::~CDataProvider (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TError&  CDataProvider::Error (void) const { return this->m_error; }
+
+HImgList CDataProvider::List  (void) const { return this->m_list; }
+err_code CDataProvider::List  (const HImgList& _h_list) {
+	_h_list;
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _h_list) // ToDo: to find what kind of method to call on input handle in order to check its validity;
+		return m_error << (err_code) TErrCodes::eObject::eHandle;
+
+	if (nullptr != this->List() && this->List() == _h_list)
+		return m_error << (err_code) TErrCodes::eObject::eInited = _T("Input handle is already set");
+
+	this->m_list = _h_list;
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDataProvider&  CDataProvider::operator = (const CDataProvider& _src) { *this << _src.List(); return *this; }
+CDataProvider&  CDataProvider::operator = (CDataProvider&& _victim ) { *this = (const CDataProvider&)_victim; return *this; }
+
+CDataProvider&  CDataProvider::operator <<(const HImgList& _h_list) { this->List(_h_list); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CList:: CList (void) : m_size{0}, m_list(nullptr) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CList:: CList (const CList& _src) : CList() { *this = _src; }
 CList::~CList (void) {
@@ -17,6 +51,31 @@ CList::~CList (void) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+err_code  CList::Append  (const HBitmap _h_bitmap) {
+	_h_bitmap;
+	this->m_error << __METHOD__ << __s_ok;
+	if (nullptr == _h_bitmap || false == CBitmapInfo::IsValid(_h_bitmap))
+		return this->m_error << __e_inv_arg;
+
+	TBmpHeader bmp_head = {0};
+
+	this->m_error = CBmpHeader::Get(_h_bitmap, bmp_head);
+	if (this->Error().Is())
+		return this->Error();
+
+	if (32 != bmp_head.biBitCount)
+		return this->m_error << (err_code) TErrCodes::eData::eInvalid = _T("Bits per pixel value must be 32");
+
+	if (this->Size().cx != bmp_head.biWidth || this->Size().cy != bmp_head.biHeight)
+		return this->m_error << (err_code) TErrCodes::eExecute::eParameter = _T("Different sizes between the input bitmap and this list");
+	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add ;
+	const int n_index = ::ImageList_Add(this->Handle(), _h_bitmap, nullptr);
+	if (0 > n_index)
+		this->m_error << __e_not_expect = _T("The bitmap cannot be inserted");
+
+	return this->Error();
+}
 
 err_code  CList::Create (const t_size& _img_size, const uint16_t _n_count, const uint16_t _n_delta) {
 	return this->Create (_img_size.cx & 0xff, _img_size.cy & 0xff, _n_count, _n_delta);
@@ -64,7 +123,7 @@ err_code  CList::Destroy(void) {
 	return this->Error();
 }
 
-err_code  CList::DuplicateTo (HImgList& _h_dest) const {
+err_code  CList::CopyTo (HImgList& _h_dest) const {
 	_h_dest;
 	this->m_error << __METHOD__ << __s_ok;
 
