@@ -35,8 +35,11 @@ namespace ex_ui { namespace draw { namespace images {
 
 	public:
 		TError&  Error (void) const;
+		bool  Is_valid (void) const;  // checks a set value of the image list handle for nullptr, nothing specific;
 		HImgList List  (void) const;
 		err_code List  (const HImgList&);
+
+		err_code Load  (_pc_sz _p_file_path);
 
 	public:
 		CDataProvider&  operator = (const CDataProvider&);
@@ -48,7 +51,6 @@ namespace ex_ui { namespace draw { namespace images {
 		HImgList m_list;
 		CError   m_error;	
 	};
-
 
 	class CList {
 	public:
@@ -62,8 +64,6 @@ namespace ex_ui { namespace draw { namespace images {
 		err_code  Create  (const t_size& _img_size, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
 		err_code  Create  (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
 		err_code  Destroy (void);
-
-
 
 		uint16_t  Count (void) const;         // returns the count number of how much images the image list has;
 

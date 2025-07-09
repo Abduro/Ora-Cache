@@ -1,0 +1,46 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Current]
+"PaletteId"=dword:00000001
+"ThemeIndex"=dword:00000000
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark]
+"Count"=dword:00000001
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0]
+"Name"="Symantec"
+"Description"="This theme is very suitable for use on large monitors to make your daily hard work easier and save your eyes."
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\Parts]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\Parts\Form]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\Parts\Form\Back]
+@="#272727"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\Parts\Form\Border]
+@="#3d3d3d"
+"Selected"="#e5b742"
+"Disabled"="#181818"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\Parts\Form\Fore]
+@="#e6e6e6"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases\sta-bar]
+"app-ready"="sta-bar_app_ready_yel_24px_72_res.png"
+"path"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp\\x_build\\vs\\!test.resource\\images\\dark\\sta-bar\\"
+"wnd-sz-glyph"="sta-bar_wnd_size_yel_24px_72_res.png"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light]
+"Count"=dword:00000001
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0]
+"Name"="MS Word"
+"Description"="This theme is intended for use in cases where it is necessary to make good screenshots for use in an MS Word document."
+

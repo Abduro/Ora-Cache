@@ -73,6 +73,7 @@ err_code CBmpHeader::Get (const HBitmap& _from, TBmpHeader& _to) {
 
 	return n_result;
 }
+
 #if defined(_DEBUG)
 CString  CBmpHeader::Print (const TBmpHeader& _header, const e_print _e_opt) {
 	_header; _e_opt;
@@ -121,13 +122,13 @@ err_code  CBitmapInfo::Attach (const HBitmap hBitmap) {
 	if (!::GetObject(hBitmap, sizeof(TBase), (LPVOID)(TBase*)this))
 		n_result = (err_code) TErrCodes::eData::eType;
 	
-	if (__succeeded(n_result) && NULL == TBase::bmBits) {
+	if (__succeeded(n_result) && nullptr == TBase::bmBits) {
 		n_result = (err_code) TErrCodes::eAccess::eDenied; // TODO: error code must be reviewed;
 	}
 	return n_result;
 }
 
-HBitmap   CBitmapInfo::Detach (void) { HBitmap hTmp = m_handle; this->Reset(); return  hTmp; }
+HBitmap   CBitmapInfo::Detach (void) { HBitmap hTmp = m_handle; this->Reset(); return hTmp; }
 
 err_code  CBitmapInfo::Reset  (void) {
 
@@ -163,7 +164,7 @@ UINT          CBitmapInfo::ID    (void) const { return m_UID; }
 bool          CBitmapInfo::Is    (void) const { return CBitmapInfo::IsValid(m_handle); }
 TBmpInfo      CBitmapInfo::Raw   (void) const {
 
-	const DWORD n_size = static_cast<DWORD>(((TBase::bmWidth * TBase::bmBitsPixel + 31) / 32) * 4 * TBase::bmHeight);
+	const dword n_size = static_cast<dword>(((TBase::bmWidth * TBase::bmBitsPixel + 31) / 32) * 4 * TBase::bmHeight);
 
 	TBmpInfo bmp_info = {
 		{sizeof(TBmpInfo), TBase::bmWidth, TBase::bmHeight, 1, TBase::bmBitsPixel, BI_RGB, n_size, 0, 0, 0, 0}, // header;
@@ -172,7 +173,8 @@ TBmpInfo      CBitmapInfo::Raw   (void) const {
 
 	return bmp_info;
 }
-err_code      CBitmapInfo::Size  (SIZE& size) const {
+
+err_code      CBitmapInfo::Size  (t_size& size) const {
 	size;
 	err_code n_result =  __s_ok;
 
@@ -184,6 +186,31 @@ err_code      CBitmapInfo::Size  (SIZE& size) const {
 
 	return n_result;
 }
+
+#if defined(_DEBUG)
+CString  CBitmapInfo::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {bits=%d(bpp);size=%s;scan_line=%u(bytes)}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {bits=%d(bpp);size=%s;scan_line=%u(bytes)}");
+	static _pc_sz pc_sz_pat_r = _T("bits=%d(bpp);size=%s;scan_line=%u(bytes)");
+
+	CString cs_size = TStringEx().Format (_T("[w|h:%d|%d](px)"), TBase::bmWidth, TBase::bmHeight);
+	CString cs_out;
+
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		TBase::bmBitsPixel, (_pc_sz) cs_size, TBase::bmWidthBytes);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
+		TBase::bmBitsPixel, (_pc_sz) cs_size, TBase::bmWidthBytes);
+	}
+	if (e_print::e_req == _e_opt) { cs_out.Format(pc_sz_pat_r,
+		TBase::bmBitsPixel, (_pc_sz) cs_size, TBase::bmWidthBytes);
+	}
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	return  cs_out;
+}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

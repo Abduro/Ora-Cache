@@ -11,7 +11,6 @@
 namespace ex_ui { namespace theme { namespace colors {
 
 	using namespace ex_ui::color::rgb;
-	using namespace shared::sys_core::shell;
 
 	enum class CTheme_Palette : uint32_t { e_none  , e_dark, e_light };
 	enum class CTheme_Part    : uint32_t { e_none  , e_form, e_panel, e_edit, e_label, e_caption, e_button };

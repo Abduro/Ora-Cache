@@ -8,6 +8,105 @@ using namespace ex_ui::draw::images;
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ex_ui { namespace draw { namespace images { namespace _impl {
+	/*
+		This is the simplified version of the implementation of loading PNG picture from a file;
+	*/
+#include <olectl.h>
+
+	class CPicture {
+	public:
+		 CPicture (void) : m_hBitmap(nullptr) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+		 CPicture (const CPicture&) = delete; CPicture (CPicture&&) = delete;
+		~CPicture (void) { this->Delete(); }
+	public:
+		err_code Delete(void) {
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (nullptr == this->Handle())
+				return this->Error();
+			// the error may occur in case when the handle being deleted is selected by device context; but such case is not supposed to be;
+			::DeleteObject((HGDIOBJ)this->m_hBitmap);
+
+			this->m_hBitmap = nullptr;
+
+			return this->Error();
+		}
+
+		TError&  Error (void) const { return this->m_error; }
+
+		const HBITMAP  Handle (void) const { return this->m_hBitmap; }
+
+		err_code Load  (_pc_sz _p_file_path) {
+			_p_file_path;
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (nullptr == _p_file_path || 0 == ::_tcslen(_p_file_path))
+				return this->m_error << __e_inv_arg;
+
+			// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
+
+			if (false == ::PathFileExists((_pc_sz)_p_file_path))
+				this->m_error << (err_code) TErrCodes::ePath::eNoFile;
+
+			// https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicturefile ;
+			_variant_t v_path(_p_file_path);
+
+			CComPtr<IDispatch> pDisp;
+
+			this->m_error << ::OleLoadPictureFile(v_path, &pDisp);
+			if (this->Error().Is())
+				return this->Error();
+
+			this->m_error << pDisp->QueryInterface(IID_IPicture, (void**)&this->m_pPicture);
+			if (this->Error().Is())
+				return this->Error();
+
+			this->Delete();
+
+			OLE_XSIZE_HIMETRIC cx = 0; this->m_error << this->m_pPicture->get_Width(&cx) ; if (this->Error().Is()) return this->Error();
+			OLE_YSIZE_HIMETRIC cy = 0; this->m_error << this->m_pPicture->get_Height(&cy); if (this->Error().Is()) return this->Error();
+
+			HDC hdc_desktop = ::GetDC(HWND_DESKTOP);
+			const int ret_w = ::MulDiv(::GetDeviceCaps(hdc_desktop, LOGPIXELSX), (cx), 2540);
+			const int ret_h = ::MulDiv(::GetDeviceCaps(hdc_desktop, LOGPIXELSY), (cy), 2540);
+
+			HBITMAP hRezultBitmap = ::CreateCompatibleBitmap(hdc_desktop, ret_w, ret_h); // create compatible bitmap and DC ;
+			HDC hBitmapDC = ::CreateCompatibleDC(hdc_desktop);
+
+			if (hRezultBitmap && hBitmapDC) {
+				HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hBitmapDC, hRezultBitmap);
+				// https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render ;
+				this->m_error << this->m_pPicture->Render(hBitmapDC, 0, 0, ret_w, ret_h, 0, cy, cx, -cy, 0);
+
+				::SelectObject(hBitmapDC, hOldBitmap);
+				::ReleaseDC(HWND_DESKTOP, hBitmapDC );
+			}
+			else
+				this->m_error.Last();
+
+			::ReleaseDC(HWND_DESKTOP, hdc_desktop); hdc_desktop = nullptr;
+			if (this->Error().Is() == false) {
+				this->m_hBitmap = hRezultBitmap; hRezultBitmap = nullptr;
+			}
+			else if (!!hRezultBitmap) {
+				::DeleteObject((HGDIOBJ) hRezultBitmap); hRezultBitmap = nullptr; // tries to delete bitmap handle;
+			}
+
+			return this->Error();
+		}
+
+	private:
+		CPicture& operator = (const CPicture&) = delete; CPicture& operator = (CPicture&&) = delete;
+		CError m_error;
+		CComPtr<IPicture> m_pPicture;
+		HBITMAP m_hBitmap;  // the bitmap that is loaded from the file specified;
+	};
+
+}}}}
+using namespace ex_ui::draw::images::_impl;
+/////////////////////////////////////////////////////////////////////////////
+
 CDataProvider:: CDataProvider (const HImgList _h_handle ) : m_list(_h_handle) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CDataProvider:: CDataProvider (const CDataProvider& _src) : CDataProvider() { *this = _src; }
 CDataProvider:: CDataProvider (CDataProvider&&  _victim ) : CDataProvider() { *this = _victim; }
@@ -16,6 +115,8 @@ CDataProvider::~CDataProvider (void) {}
 /////////////////////////////////////////////////////////////////////////////
 
 TError&  CDataProvider::Error (void) const { return this->m_error; }
+
+bool     CDataProvider::Is_valid (void) const { return nullptr != this->List(); }
 
 HImgList CDataProvider::List  (void) const { return this->m_list; }
 err_code CDataProvider::List  (const HImgList& _h_list) {
@@ -33,6 +134,49 @@ err_code CDataProvider::List  (const HImgList& _h_list) {
 	return this->Error();
 }
 
+err_code CDataProvider::Load  (_pc_sz _p_file_path) {
+	_p_file_path;
+	this->m_error << __METHOD__ << __s_ok;
+#if (0)
+	// ImageList_Read() creates new image list, thus the image list variable must be empty(nullptr);
+	if (nullptr != this->List() || this->Is_valid())
+		return this->m_error << (err_code) TErrCodes::eObject::eInited = _T("Image list handle must equal to null");
+
+	if (nullptr == _p_file_path || 0 == ::_tcslen(_p_file_path))
+		return this->m_error << __e_inv_arg;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
+
+	if (false == ::PathFileExists((_pc_sz)_p_file_path))
+		this->m_error << (err_code) TErrCodes::ePath::eNoFile;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatestreamonfileex ;
+
+	ATL::CComPtr<IStream> stream;
+	// tries to open file for reading, not for creating or writing data;
+	this->m_error << ::SHCreateStreamOnFileEx(_p_file_path, STGM_READ, OPEN_EXISTING, false, nullptr, &stream);
+	if (this->m_error)
+		return this->Error();
+	
+	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_read ;
+	this->List(::ImageList_Read(stream));
+	if (this->Is_valid() == false)
+		this->m_error.Last();
+#else
+
+	if (this->Is_valid() == false)
+		return this->m_error << __e_not_inited;
+
+	CPicture picture;
+	if (__failed(picture.Load(_p_file_path)))
+		return this->m_error = picture.Error();
+
+
+
+#endif
+
+	return this->Error();
+}
 /////////////////////////////////////////////////////////////////////////////
 
 CDataProvider&  CDataProvider::operator = (const CDataProvider& _src) { *this << _src.List(); return *this; }
@@ -72,7 +216,7 @@ err_code  CList::Append  (const HBitmap _h_bitmap) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add ;
 	const int n_index = ::ImageList_Add(this->Handle(), _h_bitmap, nullptr);
 	if (0 > n_index)
-		this->m_error << __e_not_expect = _T("The bitmap cannot be inserted");
+		this->m_error << __e_not_expect = _T("The bitmap cannot be added");
 
 	return this->Error();
 }

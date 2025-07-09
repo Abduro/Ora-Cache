@@ -13,6 +13,20 @@ namespace ex_ui { namespace theme { namespace storage {
 
 	class CReg_router {
 	public:
+		class CTestCase {
+		public:
+			 CTestCase (const CReg_router&); CTestCase (void) = delete; CTestCase (const CTestCase&) = delete; CTestCase (CTestCase&&) = delete;
+			~CTestCase (void);
+		public:
+			CString Root (void) const;
+
+		private:
+			CTestCase& operator = (const CTestCase&) = delete; CTestCase& operator = (CTestCase&&) = delete;
+		private:
+			const CReg_router&  m_router;
+		};
+
+	public:
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
 		~CReg_router (void) ;
 
@@ -31,10 +45,10 @@ namespace ex_ui { namespace theme { namespace storage {
 		_pc_sz Part    (void) const;                // composes the path to the part by using currently selected theme;
 		_pc_sz Part    (const TThemePalette, const TThemePart) const;
 
-		_pc_sz State   (void) ;                     // composes the path to the element state by using currently selected theme;
+		_pc_sz State   (void) const ;               // composes the path to the element state by using currently selected theme;
 		_pc_sz State   (const TThemePalette, const TThemePart, const TThemeElement, const TThemeState) const;
 
-		_pc_sz Theme   (void) ;                                          // returns the path to the theme of currently selected palette;
+		_pc_sz Theme   (void) const;                                     // returns the path to the theme of currently selected palette;
 		_pc_sz Theme   (const TThemePalette) const;                      // returns the path to currently selected theme node;
 		_pc_sz Theme   (const TThemePalette, const uint32_t _ndx) const; // returns the path of the theme node by specified index;
 
@@ -42,12 +56,16 @@ namespace ex_ui { namespace theme { namespace storage {
 		_pc_sz Themes  (void) const;                // this is the path to the root node of the named/custom themes; the entry point;
 		_pc_sz Current (void) const;                // this is the registry key name which contains the info of currently selected theme;
 
+		const
+		CTestCase&   TestCase (void) const;
+
 	private:
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
 	private:
-		HKEY     m_root;
-		CCurrent m_current;  // the currently selected theme;
+		HKEY      m_root;
+		CCurrent  m_current;  // the currently selected theme;
+		CTestCase m_test;
 	};
 
 	CReg_router&  Get_router (void);  // returns the reference to the singleton of the router object;

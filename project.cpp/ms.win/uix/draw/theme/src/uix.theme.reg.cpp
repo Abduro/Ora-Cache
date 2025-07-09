@@ -11,7 +11,7 @@ using CRegKey = ::ATL::CRegKey;
 #define ThemeRoot HKEY_CURRENT_USER
 /////////////////////////////////////////////////////////////////////////////
 
-CReg_router:: CReg_router (void) : m_root(ThemeRoot) {}
+CReg_router:: CReg_router (void) : m_root(ThemeRoot), m_test(*this) {}
 CReg_router::~CReg_router (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ _pc_sz CReg_router::Part (const TThemePalette _palette, const TThemePart _part) 
 
 HKEY   CReg_router::Root (void) const { return this->m_root; }
 
-_pc_sz CReg_router::State (void) {
+_pc_sz CReg_router::State (void) const {
 	return this->State(this->CurrentTheme().Palette().Id(), this->CurrentTheme().Part(), this->CurrentTheme().Element(), this->CurrentTheme().State());
 }
 
@@ -83,7 +83,7 @@ _pc_sz CReg_router::State (const TThemePalette _palette, const TThemePart _part,
 	return cs_out.GetString();
 }
 
-_pc_sz CReg_router::Theme (void) {
+_pc_sz CReg_router::Theme (void) const {
 	return this->Theme(this->CurrentTheme().Palette().Id());
 }
 
@@ -106,6 +106,9 @@ _pc_sz CReg_router::Current (void) const {
 	static CString cs_out; cs_out.Format(_T("%s\\%s"), this->Themes(), _T("Current"));
 	return cs_out.GetString();
 }
+
+const
+CReg_router::CTestCase& CReg_router::TestCase (void) const { return this->m_test; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -647,3 +650,20 @@ err_code CRegistry::Load  (CCurrent& _theme) {
 
 	return this->Error();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CReg_router::CTestCase:: CTestCase (const CReg_router& _router) : m_router(_router) {}
+CReg_router::CTestCase::~CTestCase (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CString CReg_router::CTestCase::Root (void) const {
+
+	CString cs_root = this->m_router.Theme(); // the current theme must be already loaded by calling ex_ui::theme::Get_current().Load();
+	cs_root += _T("\\test.cases");
+
+	return cs_root;
+}
+
+/////////////////////////////////////////////////////////////////////////////

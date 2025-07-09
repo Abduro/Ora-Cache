@@ -5,6 +5,9 @@
 	Adopted to Ebo Pack custom color theme project on 07-Jun-2025 at 18:49:21.514, UTC+4, Batumi, Saturday;
 */
 #include "uix.theme.h"
+#include "sys.shell.dwm.h"
+
+using namespace shared::sys_core::shell;
 
 using namespace ex_ui::theme;
 using namespace ex_ui::theme::colors;

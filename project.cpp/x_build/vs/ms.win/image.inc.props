@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 09-Jul-2025 at 15:52:44.190, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack image wrapper project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <com_core Condition="'$(com_core)'==''">..\..\..\ms.win\sys.com.core\</com_core>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
+    <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\image\</ThisLib><!--This library is being compiled!-->
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Error)interface\</_3>
+    <_4>$(Memory)interface\</_4>
+    <_5>$(com_core)interface\</_5>
+    <_6>$(Theme)interface\</_6>
+    <_7>$(Theme)interface\named\</_7>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7)</Include_0_9>
+    <Include_abc></Include_abc>
+    <IncludePath>$(Include_0_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>                           	
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

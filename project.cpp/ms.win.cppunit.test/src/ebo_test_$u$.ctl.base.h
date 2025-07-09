@@ -7,6 +7,7 @@
 #include "_log.h"
 
 #include "sys.error.h"
+#include "color.compl.predefs.h"
 #include "uix.theme.h"       // this include requires the reference to the sys.shell project;
 
 #include "ctl.base.defs.h"

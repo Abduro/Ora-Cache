@@ -16,14 +16,9 @@
 #include "sys.err.codes.h"
 #include "sys.error.h"
 
-#include "sys.shell.dwm.h"
-
 #pragma region __colors
 #include "color.alpha.h"
-#include "color.gradient.h"
 #include "color.rgb.h"
-#include "color.compl.h"
-#include "color.compl.predefs.h"
 #include "color.named.h"
 #include "color.shade.h"
 #include "color.x11.h"

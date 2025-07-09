@@ -11,8 +11,9 @@ namespace ebo { namespace boo { namespace test { namespace cache {
 	using namespace ebo::boo::test::draw;
 
 	using TCacheList = ex_ui::draw::images::CList;
+	using TDataProvider = ex_ui::draw::images::CDataProvider;
 
-	__class(CCacheList) {
+	__class (CCacheList) {
 	public:
 		 CCacheList (const bool _b_verb = false);
 		~CCacheList (void) = default;
@@ -24,6 +25,19 @@ namespace ebo { namespace boo { namespace test { namespace cache {
 	private:
 		bool      m_b_verb;
 		TCacheList  m_list;
+	};
+
+	__class (CDataProvider) {
+	public:
+		 CDataProvider (const bool _b_verb = false);
+		~CDataProvider (void) = default;
+
+	public:
+		__method (LoadFile);
+
+	private:
+		bool      m_b_verb;
+		TDataProvider  m_prov;
 	};
 
 }}}}
