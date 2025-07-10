@@ -9,6 +9,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)uix.image.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)uix.image.defs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)uix.picture.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)uix.picture.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
