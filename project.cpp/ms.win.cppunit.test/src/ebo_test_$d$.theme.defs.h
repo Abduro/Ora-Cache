@@ -32,10 +32,6 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 
 	using CCurrentTheme = ex_ui::theme::CCurrent;
 
-	static _pc_sz _p_pfx = _T("\t\t");
-	static _pc_sz _p_sfx = _T("\n");
-	static _pc_sz _p_new_line = _T("\n\t\t");
-
 }}}}
 
 #pragma comment(lib, "theme_v15.lib")        // this one must be tested by this unit test project;

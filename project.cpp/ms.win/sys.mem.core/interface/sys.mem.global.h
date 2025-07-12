@@ -84,10 +84,7 @@ namespace shared { namespace memory {
 	public:
 		class CBuilder {
 		public:
-			 CBuilder (void) = delete;
-			 CBuilder (CSharedPsuedo&);
-			 CBuilder (const CBuilder&) = delete;
-			 CBuilder (CBuilder&&) = delete;
+			 CBuilder (CSharedPsuedo&); CBuilder (void) = delete; CBuilder (const CBuilder&) = delete; CBuilder (CBuilder&&) = delete;
 			~CBuilder (void);
 
 		public:
@@ -111,10 +108,7 @@ namespace shared { namespace memory {
 
 		class CContent {
 		public:
-			 CContent (void) = delete;
-			 CContent (const CContent&) = delete;
-			 CContent (CContent&&) = delete;
-			 CContent (CSharedPsuedo&);
+			 CContent (CSharedPsuedo&); CContent (void) = delete; CContent (const CContent&) = delete; CContent (CContent&&) = delete;
 			~CContent (void);
 
 		public:
@@ -140,9 +134,7 @@ namespace shared { namespace memory {
 		};
 
 	public:
-		CSharedPsuedo (void);
-		CSharedPsuedo (const CSharedPsuedo&) = delete;
-		CSharedPsuedo (CSharedPsuedo&&) = delete;
+		CSharedPsuedo (void); CSharedPsuedo (const CSharedPsuedo&) = delete; CSharedPsuedo (CSharedPsuedo&&) = delete;
 	   ~CSharedPsuedo (void);
 
 	public:
@@ -214,10 +206,7 @@ namespace shared { namespace memory {
 		*/
 		class CPage {
 		public:
-			 CPage (void) = delete;
-			 CPage (const CPage&) = delete;
-			 CPage (CPage&&) = delete;
-			 CPage (CSharedNamed&);
+			 CPage (CSharedNamed&); CPage (void) = delete; CPage (const CPage&) = delete; CPage (CPage&&) = delete;
 			~CPage (void);
 
 		public:
@@ -245,9 +234,7 @@ namespace shared { namespace memory {
 		// https://learn.microsoft.com/en-us/windows/win32/memory/creating-a-file-mapping-using-large-pages ;
 		class CSecurity {
 		public:
-			 CSecurity (void);
-			 CSecurity (const CSecurity&) = delete; // not required yet;
-			 CSecurity (CSecurity&&) = delete;
+			 CSecurity (void); CSecurity (const CSecurity&) = delete; CSecurity (CSecurity&&) = delete;
 			~CSecurity (void);
 
 		public:
@@ -258,10 +245,7 @@ namespace shared { namespace memory {
 		// https://learn.microsoft.com/en-us/windows/win32/debug/using-an-exception-handler ;
 		class CView {
 		public:
-			 CView (void) = delete;
-			 CView (const CView&) = delete;
-			 CView (CView&&) = delete;
-			 CView (CSharedNamed&);
+			 CView (CSharedNamed&); CView (void) = delete; CView (const CView&) = delete; CView (CView&&) = delete;
 			~CView (void);
 
 		public:
@@ -289,9 +273,7 @@ namespace shared { namespace memory {
 		};
 
 	public:
-		 CSharedNamed (void);
-		 CSharedNamed (const CSharedNamed&) = delete;
-		 CSharedNamed (CSharedNamed&&) = delete;
+		 CSharedNamed (void); CSharedNamed (const CSharedNamed&) = delete; CSharedNamed (CSharedNamed&&) = delete;
 		~CSharedNamed (void);
 
 	public:
@@ -344,7 +326,7 @@ namespace shared { namespace memory {
 typedef shared::memory::shared_flags           shared_flags;
 typedef shared::memory::shared_flags::e_flags  t_mem_flags ;
 
-typedef shared::memory::CSharedPsuedo TPsuedo;
+typedef shared::memory::CSharedPsuedo TPsuedo;  // uses the GlobalAlloc() and GlobalReAlloc() WinAPI functions;
 typedef shared::memory::CSharedPsuedo::CBuilder TPsuedoBuilder;
 typedef shared::memory::CSharedPsuedo::CContent TPsuedoContent;
 /*

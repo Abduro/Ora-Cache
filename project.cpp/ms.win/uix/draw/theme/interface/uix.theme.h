@@ -96,8 +96,6 @@ typedef ex_ui::theme::colors::CTheme_State      TThemeState;
 typedef ex_ui::theme::colors::CColor_Marker     TColorMarker;
 typedef ex_ui::theme::colors::CColor_Matrix     TColorMatrix;
 
-typedef ::std::array<rgb_color, 4> TRawStateClrs; // 0:e_normal|e_default;1:e_disabled;2:e_hovered;3:e_selected;
-
 namespace ex_ui { namespace theme {
 
 	using namespace ex_ui::color::rgb;

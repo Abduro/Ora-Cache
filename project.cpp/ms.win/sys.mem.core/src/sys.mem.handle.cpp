@@ -14,7 +14,7 @@ using namespace shared::memory;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace shared { namespace memory { namespace _impl {
-
+#if defined(_DEBUG)
 	_pc_sz Handle_2_str(const handle _handle) {
 
 		static CString cs_handle;
@@ -22,17 +22,17 @@ namespace shared { namespace memory { namespace _impl {
 		if (false){}
 		else if (nullptr == _handle) { cs_handle = _T("#nullptr"); }
 		else if (0 == _handle) { cs_handle = _T("#not_set"); }
-		else if (__inv_handle_val == _handle) { cs_handle = _T("#inv_val"); }
-		else { cs_handle.Format(_T("0x%8.8x"), _handle); }
+		else if (__inv_handle_val == _handle) { cs_handle = _T("#inv_handle"); }
+		else { cs_handle.Format(_T("0x%08x"), _handle); }
 
 		return cs_handle.GetString();
 	}
-
+#endif
 }}}
 using namespace shared::memory::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
-THandle:: CHandle (const handle _value, bool _b_managed) : m_value(_value), m_managed(_b_managed) { m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK; }
+THandle:: CHandle (const handle _value, bool _b_managed) : m_value(_value), m_managed(_b_managed) { m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 THandle:: CHandle (const CHandle& _ref) : CHandle() { *this = _ref; }
 THandle:: CHandle (THandle&& _victim) { *this = _victim; }
 THandle::~CHandle (void) { if (this->Is()) this->Close(); }
@@ -41,39 +41,37 @@ THandle::~CHandle (void) { if (this->Is()) this->Close(); }
 
 err_code  THandle::Attach(const handle _handle, bool _manage) {
 	_handle; _manage;
-	err_code e_result = TErrCodes::no_error;
-
 	if (this->Is())
-		e_result = this->Close();
-	// the this->Is() property may rewrite the error state if it is called before attaching to new handle;
-	m_error << __METHOD__ << S_OK;
+		this->Close();
+	else
+		this->m_error <<__METHOD__<<__s_ok; // this is required, otherwise, the error object is set in its initial state: the handle is invalid;
 
-	if (FAILED(THandle::Is(_handle)))
-		return e_result = E_INVALIDARG;
+	if (this->Error().Is()) // close operation may be unsuccessful;
+		return this->Error();
 
-	if (FAILED(e_result))
-		return e_result;
+	if (__failed(THandle::Is(_handle)))
+		return this->m_error <<__METHOD__<< (err_code) TErrCodes::eObject::eHandle;
 
 	this->m_value = _handle;
 	this->m_managed = _manage;
 
-	return e_result;
+	return this->m_error <<__METHOD__<<__s_ok;
 }
 
 handle    THandle::Detach(void) {
 
-	m_error << __METHOD__ << S_OK;
+	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == this->Is()) {
-		m_error << TErrCodes::eObject::eHandle;
+		this->m_error << (err_code) TErrCodes::eObject::eHandle;
 		return nullptr;
 	}
 
-	handle h_result = this->Value();
-	this->m_value = __inv_handle_val;
+	handle h_value  = this->Value();
+	this->m_value   = __inv_handle_val;
 	this->m_managed = false;
 
-	return h_result;
+	return h_value	;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -82,18 +80,19 @@ err_code  THandle::Clone (const handle _h_source) {
 	_h_source;
 	// the this->Is() property may rewrite the error state if it is called before cloning input handle;
 	if (this->Is()) {
-		const err_code e_result = this->Close();
-		if (FAILED(e_result))
-			return e_result; // the error object is alredy set to appropriate state;
+		const err_code n_result = this->Close();
+		if (__failed(n_result))
+			return n_result; // the error object is alredy set to appropriate state;
 	}
+	else
+		this->m_error <<__METHOD__ << __s_ok; // no close handle operation has occurred due this object handle is invalid; clears the error state;
 #if (0)
 	if (this->Error())       // it is not necessary to check error object here, because if the handle of this class is not set, there is no Close() operation called;
 		return this->Error();
 #endif
-	m_error <<__METHOD__ << TErrCodes::no_error;
 
-	if (FAILED(THandle::Is(_h_source)))
-		return m_error << E_INVALIDARG;
+	if (__failed(THandle::Is(_h_source)))
+		return m_error << __e_inv_arg = _T("Input handle is invalid.");
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle ;
 	if (!::DuplicateHandle(
@@ -107,14 +106,18 @@ err_code  THandle::Clone (const handle _h_source) {
 }
 
 err_code  THandle::Close (void) {
-	m_error << __METHOD__ << TErrCodes::no_error;
+	m_error << __METHOD__ << __s_ok;
+
 	if (false == this->Managed()) {
 		this->m_value = __inv_handle_val;
 	}
-	else if (TErrCodes::no_error == THandle::Close(this->m_value)) {
-		this->Managed(false); // the handle is closed, i.e. it is destroyed, so the management flag is set to false;
+	else {
+		this->m_error << THandle::Close(this->m_value);
 	}
-	return m_error;
+	if (this->Error().Is() == false)
+		this->Managed(false); // the handle is closed, i.e. it is destroyed, so the management flag is set to false;
+
+	return this->Error();
 }
 
 TError&   THandle::Error (void) const { return this->m_error; }
@@ -125,8 +128,8 @@ bool      THandle::Is (void) const {return !(m_error << __METHOD__ << THandle::I
 const bool THandle::Is (void) const {
 	this->m_error << __METHOD__ << TErrCodes::no_error;
 
-	const err_code e_result = THandle::Is(this->Value());
-	this->m_error << e_result;
+	const err_code n_result = THandle::Is(this->Value());
+	this->m_error << n_result;
 
 	return !this->Error();
 }
@@ -149,17 +152,25 @@ err_code  THandle::Value (const handle& _handle, bool _b_clone) {
 	return m_error << __METHOD__ << (_b_clone ? this->Clone(_handle) : this->Attach(_handle));
 }
 #if defined(_DEBUG)
-CString   THandle::Print (const bool _error) const {
+CString   THandle::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz p_sz_pat_a = _T("cls::[%s::%s] >> {handle=%s;valid=%s}");
+	static _pc_sz p_sz_pat_n = _T("cls::[%s] >> {handle=%s;valid=%s}");
+	static _pc_sz p_sz_pat_r = _T("handle=%s;valid=%s");
 
-	static _pc_sz lp_sz_pat_n = _T("cls::[%s]>>{handle=%s;valid=%s}");
-	static _pc_sz lp_sz_pat_e = _T("cls::[%s]>>{handle=%s;valid=%s;error=[%s]}");
+	CString cs_handle = Handle_2_str( this->Value());
+	CString cs_valid  = TStringEx().Bool(this->Is());
 
-	CString cs_handle; if (this->Value()) cs_handle.Format(_T("0x%8.8x"), this->Value()); else cs_handle = _T("#inv_handler");
+	CString cs_out;
 
-	CString cs_this;
-	if (!_error) cs_this.Format(lp_sz_pat_n, (_pc_sz)__CLASS__, Handle_2_str(this->Value()), TString().Bool(this->Is()));
-	if ( _error) cs_this.Format(lp_sz_pat_e, (_pc_sz)__CLASS__, Handle_2_str(this->Value()), TString().Bool(this->Is()), this->Error().Print(TError::e_req).GetString());
-	return  cs_this;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (p_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_handle, (_pc_sz) cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (p_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_handle, (_pc_sz) cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (p_sz_pat_r, (_pc_sz) cs_handle, (_pc_sz) cs_valid); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
@@ -192,31 +203,31 @@ THandle&  THandle::operator = (THandle&& _victim) {
 
 err_code THandle::Close (handle& _handle) {
 	_handle;
-	err_code e_result = THandle::Is(_handle);
-	if (TErrCodes::no_error != e_result)
-		return e_result;
+	err_code n_result = THandle::Is(_handle);
+	if (TErrCodes::no_error != n_result)
+		return n_result;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle ;
 	if (!::CloseHandle(_handle))
-		e_result = __LastErrToHresult();
+		n_result = __LastErrToHresult();
 	else
 		_handle = __inv_handle_val;
 
-	return e_result;
+	return n_result;
 }
 
 err_code THandle::Is (const handle _handle) {
 	_handle;
-	err_code e_result = TErrCodes::no_error;
+	err_code n_result = TErrCodes::no_error;
 
 	if (!_handle || __inv_handle_val == _handle)
-		return (e_result = TErrCodes::eObject::eHandle);
+		return (n_result = TErrCodes::eObject::eHandle);
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-gethandleinformation ;
 	dword dw_flags = 0;
 	if (!::GetHandleInformation(_handle, &dw_flags))
-		e_result = __LastErrToHresult();
+		n_result = __LastErrToHresult();
 
-	return e_result;
+	return n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////

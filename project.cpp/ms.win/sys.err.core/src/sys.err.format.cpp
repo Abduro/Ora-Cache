@@ -104,7 +104,7 @@ CErr_Details& CErr_Details::operator << (const dword    _err_code) {
 		this->normalize();
 	}
 	else {
-		m_desc = _T("#undef;");
+		m_desc = TStringEx().Format(_T("No desc for the error code: %d"), _err_code);// _T("#undef;");
 	}
 
 	return *this;
@@ -129,7 +129,7 @@ CErr_Details& CErr_Details::operator << (const err_code  _err_code) {
 		this->normalize();
 	}
 	else {
-		m_desc = _T("#undef;");
+		m_desc = TStringEx().Format(_T("No desc for the error code: 0x%x"), _err_code);// _T("#undef;");
 	}
 	return *this;
 }

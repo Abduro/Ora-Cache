@@ -5,7 +5,6 @@
 	This is Ebo Pack color theme project include header(s) declaration file;
 */
 #include <atlbase.h>
-#include <atlapp.h>
 #include <uxtheme.h>
 #include <array>
 
@@ -16,13 +15,7 @@
 #include "sys.err.codes.h"
 #include "sys.error.h"
 
-#pragma region __colors
-#include "color.alpha.h"
 #include "color.rgb.h"
-#include "color.named.h"
-#include "color.shade.h"
-#include "color.x11.h"
-#pragma endregion
 
 namespace ex_ui { namespace theme {
 

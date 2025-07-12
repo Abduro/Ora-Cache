@@ -182,7 +182,7 @@ void     CErr_State::Set (const err_code _err_code) {
 	TBase::m_code   = __HresultToDword(_err_code);
 	TBase::m_result =  _err_code;
 
-	if (SUCCEEDED(_err_code))
+	if (__succeeded(_err_code))
 		this->m_buffer  = _T("No error");
 	else
 		this->m_buffer  = CErr_Details() << this->m_result;
@@ -320,7 +320,7 @@ err_code  CError::Result(const err_code _new)
 	if (_new == (err_code)m_state)
 		return _new;
 
-	if (SUCCEEDED(_new)) {
+	if (__succeeded(_new)) {
 		m_state = false; return m_state;
 	}
 	Safe_Lock(m_state);
@@ -441,10 +441,10 @@ namespace shared { namespace sys_core {
 //
 // important: operator must return true in cases when error object does not provide success;
 //
-bool operator==(const bool _lhs, const CError& _rhs) { return (_lhs != SUCCEEDED(_rhs.Result())); }
-bool operator!=(const bool _lhs, const CError& _rhs) { return (_lhs == SUCCEEDED(_rhs.Result())); }
-bool operator==(const CError& _lhs, const bool _rhs) { return (SUCCEEDED(_lhs.Result()) != _rhs); }
-bool operator!=(const CError& _lhs, const bool _rhs) { return (SUCCEEDED(_lhs.Result()) == _rhs); }
+bool operator==(const bool _lhs, const CError& _rhs) { return (_lhs != __succeeded(_rhs.Result())); }
+bool operator!=(const bool _lhs, const CError& _rhs) { return (_lhs == __succeeded(_rhs.Result())); }
+bool operator==(const CError& _lhs, const bool _rhs) { return (__succeeded(_lhs.Result()) != _rhs); }
+bool operator!=(const CError& _lhs, const bool _rhs) { return (__succeeded(_lhs.Result()) == _rhs); }
 
 }}
 #if (1)

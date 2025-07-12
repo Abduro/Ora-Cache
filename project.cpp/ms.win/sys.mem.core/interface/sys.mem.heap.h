@@ -40,12 +40,13 @@ namespace shared { namespace memory
 	public:
 		CHeap (void) = delete; CHeap(const CHeap&) = delete; CHeap(CHeap&&) = delete; ~CHeap(void) = delete; // looks like a namespace this time;
 	public:
+#pragma region __refs_6
 		// https://learn.microsoft.com/en-us/previous-versions/ys6cfhhh(v=vs.140) >> one of the possible approaches; but it is not recommended to use this approach;
 		// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapvalidate >> no way;
 		// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapwalk >> maybe is this one;
 
 		// https://stackoverflow.com/questions/1576300/checking-if-a-pointer-is-allocated-memory-or-not >> has no deal;
-
+#pragma endregion
 		static bool Is_alloca (const void* const);
 		// https://www.codeproject.com/Messages/2467319/Re-Determine-Location-of-a-Variable >> this answer is right and works;
 		// https://www.codeproject.com/Members/Jeffrey-Walton >> thanks for the answer;
@@ -66,9 +67,7 @@ namespace shared { namespace memory
 	// raw buffer is just for storing data and is not intended for heap management, its copy and move constructors and operators are disabled;
 	class CRawBuffer {
 	protected:
-		 CRawBuffer (void);
-		 CRawBuffer (const CRawBuffer&) = delete;
-		 CRawBuffer (CRawBuffer&&) = delete;
+		 CRawBuffer (void); CRawBuffer (const CRawBuffer&) = delete; CRawBuffer (CRawBuffer&&) = delete;
 		~CRawBuffer (void);
 
 	public:
@@ -88,8 +87,7 @@ namespace shared { namespace memory
 	protected:
 		mutable CError m_error; // a mutability is required for methods or functions those do not change the state of this class object: IsValid()...;
 	};
-	class CRawData : public  CRawBuffer {
-	                 typedef CRawBuffer TBase;
+	class CRawData : public  CRawBuffer { typedef CRawBuffer TBase;
 	public:
 		 CRawData (void);
 		 CRawData (const CRawData&);
@@ -137,7 +135,7 @@ namespace shared { namespace memory
 		err_code  ToStringUtf16(CStringW& ) const;   // assumes the buffer contains unicode string;
 		err_code  ToStringUtf8 (CStringA& ) const;   // assumes the buffer contains ansi string;
 #if defined(_DEBUG)
-		CString   Print (void) const;
+		CString   Print (const e_print = e_print::e_all) const;
 #endif
 	public:
 		operator const bool  (void) const;  // returns a validity state of the object;

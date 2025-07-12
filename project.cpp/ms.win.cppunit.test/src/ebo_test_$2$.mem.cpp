@@ -4,6 +4,198 @@
 */
 #include "ebo_test_$2$.mem.h"
 
+using namespace ebo::boo::test::memory;
+
+/////////////////////////////////////////////////////////////////////////////
+
+CBuffer:: CBuffer (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CBuffer::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out() += TStringEx().Format(_T("ctor: %s"), (_pc_sz) this->m_buffer.Print(e_print::e_all));
+	_out()();
+}
+
+void CBuffer::Set (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_buffer.Print(e_print::e_all));
+
+	const uint32_t u_req_size = 1024;
+
+	_out() += TStringEx().Format(_T("Required size: %u (bytes)"), u_req_size);
+
+	if (__failed(this->m_buffer.Create(u_req_size))) // the using HeapValidate() throws the system error, that looks like the debug breakpoint;
+		_out() += this->m_buffer.Error().Print(TError::e_print::e_req);
+	else
+		_out() += TStringEx().Format(_T("*after *: %s"), (_pc_sz) this->m_buffer.Print(e_print::e_all));
+
+	_out()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+namespace ebo { namespace boo { namespace test { namespace memory { namespace _impl {
+
+	class CBuilder {
+	public:
+		 CBuilder (void) { this->m_error >> __CLASS__ << __METHOD__ << TErrCodes::no_error; }
+		 CBuilder (const CBuilder&) {}
+		 CBuilder (CBuilder&&) = delete;
+		~CBuilder (void) {}
+
+	public:
+		err_code Create (THandle& _h_file) { // creates a handle of a temporary file; it is just for testing the handle, but not the file;
+			_h_file;
+			this->m_error << __METHOD__ << TErrCodes::no_error;
+
+			if (_h_file.Is())
+				return this->m_error << (err_code)TErrCodes::eObject::eExists;
+
+			// giving the name to the temporary file: https://en.cppreference.com/w/cpp/language/string_literal ;
+			// and using solution directory macro: https://stackoverflow.com/questions/19969868/how-to-access-solutiondir-macro-from-c-code ;
+
+			// https://stackoverflow.com/questions/631664/accessing-environment-variables-in-c :: has the very good answer;
+			// https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros :: just for knowing that kind of macros;
+
+
+			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfile2 ; is very interesting and requires an example of its usage;
+			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea ;
+
+			
+			handle h_file = ::CreateFile(
+				this->Get_path(), /*FILE_ALL_ACCESS*/GENERIC_READ | GENERIC_WRITE , 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
+			);
+			if (__inv_handle_val == h_file) {
+				return this->m_error.Last();
+			}
+
+			_out() += TStringEx().Format (_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+			_out() += TStringEx().Format (_T("Target file %s%s is created;"), _p_new_line, (_pc_sz) this->Get_path()) ;
+
+			if (__failed(_h_file.Attach( h_file, true )))
+				return this->m_error = _h_file.Error();
+			
+			return this->Error();
+		}
+
+		TError&  Error (void) const { return this->m_error; }
+
+		_pc_sz   Get_path (void) {
+			// https://stackoverflow.com/questions/14888402/accessing-visual-studio-macros-from-source-code :: looks like what is needed and this works;
+#if defined(_Output) // must be defined anyway through preprocessor defs of this project settings;
+			this->m_path = _Output; this->m_path += _ProjId; this->m_path += _T(".test.log");
+#else
+			this->m_path = _T("#n/a");
+#endif
+			return this->m_path.GetString();
+		}
+
+	private:
+		CBuilder& operator = (const CBuilder&){}  // looks like very funny joke: no returning a value >> no compile and no linkage errors;
+		CBuilder& operator = (CBuilder&&) = delete;
+	private:
+		CError  m_error;
+		CString m_path ;   // this is the path to temporary file that is going to be created;
+	};
+
+}}}}}
+
+using namespace ebo::boo::test::memory::_impl;
+
+/////////////////////////////////////////////////////////////////////////////
+
+namespace ebo { namespace boo { namespace test { namespace memory {
+
+CHandle:: CHandle (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CHandle::_ctor (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out() += TStringEx().Format(_T("ctor: %s"), (_pc_sz) this->m_handle.Print(e_print::e_all));
+	_out()();
+}
+
+void CHandle::Clone (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_handle.Print(e_print::e_all));
+
+	THandle  source;
+	CBuilder builder;
+
+	_out() += _T("Creating a temporary file handle...");
+
+	if (__failed( builder.Create(source) )) {
+		_out() += builder.Error().Print(TError::e_print::e_req);
+		_out()(); return;
+	}
+
+	_out() +=  TStringEx().Format(_T("The file handle: %s"), (_pc_sz) source.Print(e_print::e_all));
+	_out() += _T("Trying to clone the file handle...");
+
+	if (__failed( this->m_handle.Clone(source) )) {
+		_out() += this->m_handle.Error().Print(TError::e_print::e_req);
+		_out()(); return;
+	}
+
+	_out() += TStringEx().Format(_T("*result*: %s"), (_pc_sz) this->m_handle.Print(e_print::e_all));
+	_out()();
+}
+
+}}}}
+
+CHeap:: CHeap (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CHeap::Is_alloca (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out()();
+}
+
+void CHeap::In_stack (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_out()();
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+
 namespace ebo { namespace boo { namespace test {
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -12,104 +204,7 @@ namespace ebo { namespace boo { namespace test {
 	using TString = TStringEx   ;
 
 	namespace memory {
-
-		__class(CBuffer) {
-			__ctor(_ctor) {
-
-				const uint32_t u_req_size = 1024;
-
-				TRawData buffered(u_req_size);
-
-				Assert::IsTrue (buffered.IsValid()); // the using HeapValidate() throws the system error, that looks like the debug breakpoint;
-				Assert::IsFalse(buffered.Error());
-
-				_out() += TLog_Acc::e_new_line;
-				_out().Cached() += buffered.Print();
-				_out().Cached()();
-			}
-		};
-
-		__class(CHandle) {
-
-			class CBuilder {
-			public:
-				 CBuilder (void) { this->m_error >> __CLASS__ << __METHOD__ << TErrCodes::no_error; }
-				 CBuilder (const CBuilder&) {}
-				 CBuilder (CBuilder&&) = delete;
-				~CBuilder (void) {}
-
-			public:
-				err_code Create (THandle& _h_file) { // creates a handle of a temporary file; it is just for testing the handle, but not the file;
-					_h_file;
-					this->m_error << __METHOD__ << TErrCodes::no_error;
-
-					if (_h_file.Is())
-						return this->m_error << (err_code)TErrCodes::eObject::eExists;
-
-					// giving the name to the temporary file: https://en.cppreference.com/w/cpp/language/string_literal ;
-					// and using solution directory macro: https://stackoverflow.com/questions/19969868/how-to-access-solutiondir-macro-from-c-code ;
-
-					// https://stackoverflow.com/questions/631664/accessing-environment-variables-in-c :: has the very good answer;
-					// https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros :: just for knowing that kind of macros;
-
-					// https://stackoverflow.com/questions/14888402/accessing-visual-studio-macros-from-source-code :: looks like what is needed and this works;
-
-#if defined(_Output) // must be defined anyway through preprocessor defs of this project settings;
-					CString cs_path = _Output; cs_path += _ProjId; cs_path += _T(".test.log");
-#else
-					CString cs_path = _T("#n/a");
-#endif
-					// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfile2 ; is very interesting and requires an example of its usage;
-					// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea ;
-					_h_file.Attach(
-						::CreateFile((_pc_sz)cs_path, FILE_ALL_ACCESS, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0), true
-					);
-					if (__inv_handle_val == _h_file)
-						this->m_error.Last();
-
-					return this->Error();
-				}
-
-				TError&  Error (void) const { return this->m_error; }
-			private:
-				CBuilder& operator = (const CBuilder&){}  // looks like very funny joke: no returning a value >> no compile and no linkage errors;
-				CBuilder& operator = (CBuilder&&) = delete;
-
-			private:
-				CError m_error;
-			};
-
-			__ctor(_ctor){
-				THandle handle;
-				_out() += TLog_Acc::e_new_line;
-				_out().Cached() += handle.Print();
-				_out().Cached()();
-			}
-
-			__method(Copy_in_better_words_Clone) {
-
-				THandle source;
-				THandle target;
-
-				CBuilder().Create(source);
-
-				_out() += TLog_Acc::e_new_line;
-				_out().Cached() += _T("source handle:");
-				_out().Cached() += source.Print();
-
-				if (source.Is()) {
-					target.Clone(source);
-				}
-				_out() += TLog_Acc::e_new_line;
-				_out().Cached() += _T("target handle:");
-				_out().Cached() += target.Print();
-
-				_out()();
-			}
-		};
-
-		using THeap = shared::memory::CHeap;
-
+#if (0)
 		__class(CHeap) {
 
 			class C_local {
@@ -175,7 +270,7 @@ namespace ebo { namespace boo { namespace test {
 				_out()();
 			}
 		};
-
+#endif
 		__class(CPsuedo) {
 			__method(Life_Cycle){
 				shared::memory::shared_flags flags; _out().Cached() += flags.Print();

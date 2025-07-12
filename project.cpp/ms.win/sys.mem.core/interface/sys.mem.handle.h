@@ -30,9 +30,11 @@ namespace shared { namespace memory
 	using TString = shared::common::CString_Ex;
 	// https://learn.microsoft.com/en-us/windows/win32/memory/memory-management-functions#bad-memory-functions ;
 	using namespace shared::types;
+#pragma region __refs_5
 	// https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-gethandleinformation ;
 	// https://stackoverflow.com/questions/5603625/how-to-check-if-a-handle-is-valid-or-not ;
+#pragma endregion
 	class CHandle { // in many case or even always, a handle is created or open for different system objects, it is the reason for absence of Open() method of this class; 
 	public:
 		 CHandle (const handle = __inv_handle_val, bool _b_managed = false); // if handle value is set, this class takes an ownership on its value if required;
@@ -54,7 +56,7 @@ namespace shared { namespace memory
 		const bool Managed (bool _yes_or_no);                 // turns off or on the control over life cycle of encapsulated handle value;
 
 #if defined(_DEBUG)
-		CString  Print (const bool _error  = true) const;
+		CString  Print (const e_print = e_print::e_all) const;
 #endif
 		const
 		handle&  Value (void) const;                          // gets a value of that is currently set to this class object;

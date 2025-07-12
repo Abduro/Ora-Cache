@@ -133,7 +133,10 @@ namespace ebo { namespace boo { namespace test {
 		CCache    m_cache;
 		CLog_Opts m_opts ;
 	};
-	
+
+	static _pc_sz _p_pfx = _T("\t\t");
+	static _pc_sz _p_sfx = _T("\n");
+	static _pc_sz _p_new_line = _T("\n\t\t");
 }}}
 
 typedef ebo::boo::test::CLog_Opts            TLog_Opts;

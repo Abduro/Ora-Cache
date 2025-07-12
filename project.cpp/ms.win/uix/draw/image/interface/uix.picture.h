@@ -1,7 +1,7 @@
 #ifndef _UIX_PICTURE_H_INCLUDED
 #define _UIX_PICTURE_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 14-Apt-2022 at 18:16:52.257, UTC+7, Novosibirsk, Thursday;
+	Created by Tech_dog (ebontrop@gmail.com) on 14-Apr-2022 at 18:16:52.257, UTC+7, Novosibirsk, Thursday;
 	This is a picture related interfaces' declaration file; [this declaration is made within 'Smart Diagram' project of ARQA Technologies]
 	-----------------------------------------------------------------------------
 	Adopted to Ebo Pack image wrappers' project on 09-Jul-2025 at 15:47:53.0155, UTC+4, Batumi, Wednesday;
@@ -25,13 +25,14 @@ namespace ex_ui { namespace draw { namespace images {
 		~CPicture (void);
 
 	public:
-		err_code  Delete(void) ;               // deletes the internal bitmap handle;
 		TError&   Error (void) const;
-		const
-		HBITMAP   Handle(void) const;
+		uint32_t  Height(void) const;
 
 		bool   Is_valid (void) const;
-
+		/*
+			OleLoadPictureFile() does not recognize the PNG, JPG and GIF image format;
+			Only a stream that is created on data of the image file may help for loading the image correctly;
+		*/
 		err_code  Load  (_pc_sz _p_file_path); // loads the image from the file by input path;
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
@@ -42,19 +43,21 @@ namespace ex_ui { namespace draw { namespace images {
 
 		t_size    Size (void) const;
 
-		err_code  ToBitmap(HBITMAP& _in_out) const;
+		err_code  ToBitmap (HBITMAP& _in_out) const;
+		uint32_t  Width (void) const;
 
 	public:
 		CPicture& operator = (const CPicture&);
 		CPicture& operator = (CPicture&&) = delete;
 
 		CPicture& operator <<(const TPicturePtr&) ;
+		const
+		CPicture& operator >>(HBITMAP&) const;
 
 	private:
 		mutable
 		CError  m_error;
-		TPicturePtr m_pPicture;                // ToDo: this interface may be hidden;
-		HBITMAP m_hBitmap;                     // the bitmap that is loaded from the file specified;
+		TPicturePtr m_pPicture;
 	};
 }}}
 

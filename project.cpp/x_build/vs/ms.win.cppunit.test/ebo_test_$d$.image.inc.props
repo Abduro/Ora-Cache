@@ -12,6 +12,7 @@
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <ComObj Condition="'$(ComObj)'==''">..\..\..\ms.win\sys.com.core\</ComObj>
     <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
+    <Color  Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
     <Image Condition="'$(Image)'==''">..\..\..\ms.win\uix\draw\image\</Image><!--This is the target being tested!-->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
@@ -26,14 +27,14 @@
     <_3>$(Error)interface\</_3>
     <_4>$(ComObj)interface\</_4>
     <_5>$(Memory)interface\</_5>
-    <_6>$(Theme)interface\</_6>
-    <_7>$(Theme)interface\named\</_7>
-    <_8>$(Image)interface\</_8><!--The interface of the library being tested!-->
-    <_9></_9>
+    <_6>$(Color)interface\</_6> <!--This interface is required by the theme!-->
+    <_7>$(Theme)interface\</_7>
+    <_8>$(Theme)interface\named\</_8>
+    <_9>$(Image)interface\</_9><!--The interface of the library being tested!-->
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8)</Include_0_9>
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
     <Include_abc></Include_abc>
     <IncludePath>$(Include_0_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>

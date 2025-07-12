@@ -31,11 +31,11 @@ Windows Registry Editor Version 5.00
 @="#e6e6e6"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases]
+"path"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp\\x_build\\vs\\!test.resource\\images\\dark\\"
 
-[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases\sta-bar]
-"app-ready"="sta-bar_app_ready_yel_24px_72_res.png"
-"path"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp\\x_build\\vs\\!test.resource\\images\\dark\\sta-bar\\"
-"wnd-sz-glyph"="sta-bar_wnd_size_yel_24px_72_res.png"
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases\control_0]
+"image_0"="sta-bar_app_ready_yel_24px_72_res.png"
+"image_1"="sta-bar_wnd_size_yel_24px_72_res.png"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light]
 "Count"=dword:00000001

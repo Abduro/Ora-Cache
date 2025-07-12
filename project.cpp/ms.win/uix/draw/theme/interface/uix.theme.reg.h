@@ -108,6 +108,47 @@ namespace ex_ui { namespace theme { namespace storage {
 		CError   m_error;
 	};
 
+	class CRegKey_Ex {
+	public:
+		class CValue {
+		public:
+			 CValue (CRegKey_Ex& _the_key); CValue (void) = delete; CValue (const CValue&) = delete; CValue (CValue&&) = delete;
+			~CValue (void) = default;
+		public:
+			CString GetString (_pc_sz _p_value_name); // it is assumed the key is already open; empty value name means (default);
+			CString GetString (_pc_sz _p_key_path, _pc_sz _p_value_name)/* const*/; // returns empty string in case of error;
+
+		private:
+			CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
+			CRegKey_Ex& m_the_key;
+		};
+
+	public:
+		 CRegKey_Ex (void); CRegKey_Ex (const CRegKey_Ex&) = delete; CRegKey_Ex (CRegKey_Ex&&) = delete;
+		~CRegKey_Ex (void);
+
+	public:
+		TError& Error (void) const;
+		const
+		CValue& Value (void) const;
+		CValue& Value (void) ;
+
+	public:
+		CRegKey_Ex& operator = (const CRegKey_Ex&) = delete;
+		CRegKey_Ex& operator = (CRegKey_Ex&&) = delete;
+
+		TError&  operator [](const long _not_used) const;
+		CError&  operator [](const long _not_used) ;
+
+		CRegKey& operator ()(void);
+
+	private:
+		mutable
+		CError  m_error;
+		CValue  m_value;
+		CRegKey m_key  ;
+		friend class CValue;
+	};
 }}}
 
 #endif/*_UIX_THEME_REG_H_INCLUDED*/

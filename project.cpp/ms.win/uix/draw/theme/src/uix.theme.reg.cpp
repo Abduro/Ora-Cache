@@ -541,9 +541,9 @@ err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _
 
 	unsigned long n_chars = u_count;
 
-	CString cs_value = TThemeState::e_default == _e_state ? _T("") : (_pc_sz) TPrint::Out(_e_state);
+	CString cs_name = TThemeState::e_default == _e_state ? _T("") : (_pc_sz) TPrint::Out(_e_state);
 
-	n_result = k_state.QueryStringValue((_pc_sz) cs_value, sz_buffer, &n_chars);
+	n_result = k_state.QueryStringValue((_pc_sz) cs_name, sz_buffer, &n_chars);
 	if (!!n_result) // there is no value with such name;
 		(this->m_error = dword(n_result)) = TStringEx().Format(_T("%s such state is not defined;"), (_pc_sz) TPrint::Out(_e_state));
 	else {
@@ -667,3 +667,62 @@ CString CReg_router::CTestCase::Root (void) const {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+CRegKey_Ex::CValue:: CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CString CRegKey_Ex::CValue::GetString (_pc_sz _p_value_name) {
+	_p_value_name;
+	if (nullptr == m_the_key()){
+		m_the_key.m_error <<__METHOD__<< __e_not_inited; return CString();
+	}
+
+	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
+
+	unsigned long n_chars = u_count;
+
+	LSTATUS n_result = m_the_key().QueryStringValue((_pc_sz) _p_value_name, sz_buffer, &n_chars);
+	if (!!n_result) {
+		(m_the_key.m_error = dword(n_result)) <<__METHOD__ = TStringEx().Format(_T("The value of name '%s' is not defined;"), _p_value_name);
+		return CString();
+	}
+	else
+		return CString(sz_buffer);
+}
+
+CString CRegKey_Ex::CValue::GetString (_pc_sz _p_key_path, _pc_sz _p_value_name) {
+	_p_key_path; _p_value_name;
+
+	m_the_key[0] <<__METHOD__<<__s_ok; // not readable assignment to error object;
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
+		m_the_key.m_error << __e_inv_arg = _T("Input registry key path/name is invalid"); return CString();
+	}
+
+	LSTATUS n_result = __s_ok;
+	if (nullptr == m_the_key()){
+		n_result = m_the_key().Open(Get_router().Root(), (_pc_sz) _p_key_path);
+		if (!!n_result) {
+			m_the_key.m_error = dword(n_result); return CString();
+		}
+	}
+	return this->GetString(_p_value_name);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CRegKey_Ex:: CRegKey_Ex (void) : m_value(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CRegKey_Ex::~CRegKey_Ex (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TError& CRegKey_Ex::Error (void) const { return this->m_error; }
+const
+CRegKey_Ex::CValue& CRegKey_Ex::Value (void) const { return this->m_value; }
+CRegKey_Ex::CValue& CRegKey_Ex::Value (void)       { return this->m_value; }
+
+
+TError&  CRegKey_Ex::operator [](const long _not_used) const { _not_used; return this->m_error; }
+CError&  CRegKey_Ex::operator [](const long _not_used)       { _not_used; return this->m_error; }
+
+CRegKey& CRegKey_Ex::operator ()(void) { return this->m_key; }
