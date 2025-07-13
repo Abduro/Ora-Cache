@@ -50,13 +50,25 @@ namespace ebo { namespace boo { namespace test { namespace memory {
 		~CHeap (void) = default;
 
 	public:
-		__method (Is_alloca);   // checks the input object pointer for allocation in the heap memory;
-		__method (In_stack );   // checks the input object pointer for allocation on stack;
+		__method (GetWhere);   // checks the input object pointer for allocation in the heap memory or on the stack;
 
 	private:
 		bool   m_b_verb;
 	};
 
+	__class (CMemAlloc) {
+	public:
+		 CMemAlloc (const bool _b_verb = false);
+		~CMemAlloc (void) = default;
+
+	public:
+		__method (Life_Cycle);
+		__method (Realloc);
+
+	private:
+		bool    m_b_verb;
+		TPsuedo m_alloca;
+	};
 }}}}
 
 #pragma comment(lib, "sys.shared_v15.lib")   // is already included in shared lib ebo_test_$$$ test project;

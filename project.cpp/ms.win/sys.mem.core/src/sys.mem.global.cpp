@@ -71,9 +71,9 @@ CString   shared_flags::Print(void) const {
 	if (this->Has(e_flags::e_movable) == false)
 		if (!cs_flags.IsEmpty()) { cs_flags += _T("|"); cs_flags += _T("e_fixed"); }
 
-	if (this->Has(e_flags::e_modify))  { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_modify"); }
+	if (this->Has(e_flags::e_modify )) { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_modify" ); }
 	if (this->Has(e_flags::e_movable)) { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_movable"); }
-	if (this->Has(e_flags::e_zeroed))  { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_zeroed"); }
+	if (this->Has(e_flags::e_to_zero)) { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_to_zero"); }
 
 	CString cs_this;
 	cs_this.Format(lp_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)cs_flags);
@@ -84,7 +84,7 @@ CString   shared_flags::Print(void) const {
 /////////////////////////////////////////////////////////////////////////////
 
 TPsuedoBuilder:: CBuilder (CSharedPsuedo& _psuedo) : m_psuedo(_psuedo) { m_error >> __CLASS__ << __METHOD__; }
-TPsuedoBuilder::~CBuilder (void) {}
+TPsuedoBuilder::~CBuilder (void) { this->Destroy(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -149,7 +149,7 @@ err_code TPsuedoBuilder::Update(const shared_data& _data) {
 	const bool b_size = this->m_psuedo.Data().n_size != _data.n_size;
 
 	const bool b_modify = this->m_psuedo.Flags().Has(shared_flags::e_modify);
-	const bool b_zeroed = this->m_psuedo.Flags().Has(shared_flags::e_zeroed);
+	const bool b_zeroed = this->m_psuedo.Flags().Has(shared_flags::e_to_zero);
 
 	if (b_modify) {
 		global p_new = ::GlobalReAlloc(this->m_psuedo.Handle(), 0, this->m_psuedo.Flags().m_is_set); // the new size is ignored;
@@ -161,7 +161,7 @@ err_code TPsuedoBuilder::Update(const shared_data& _data) {
 	}
 	else if (b_size) {  // reallocation must be made first regardless a part of existing content may be lost in case if new size is less than existing one;
 		if (!b_zeroed)
-			this->m_psuedo.Flags().m_is_set |= shared_flags::e_zeroed;
+			this->m_psuedo.Flags().m_is_set |= shared_flags::e_to_zero;
 
 		global p_new = ::GlobalReAlloc(this->m_psuedo.Handle(), _data.n_size, this->m_psuedo.Flags().m_is_set);
 		if (!p_new)

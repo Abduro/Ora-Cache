@@ -57,10 +57,10 @@ namespace shared { namespace memory {
 			e_fixed   = GMEM_FIXED   ,  // allocates fixed memory;
 			e_modify  = GMEM_MODIFY  ,  // modifies the attributes of an already-allocated block of memory; neither reallocation nor content change; 
 			e_movable = GMEM_MOVEABLE,  // memory blocks are never moved in physical memory, but they can be moved within the default heap ;
-			e_zeroed  = GMEM_ZEROINIT,  // initializes memory contents to zero ;
+			e_to_zero = GMEM_ZEROINIT,  // initializes memory contents to zero ;
 		};
 	public:
-		shared_flags (dword = e_movable | e_zeroed);
+		shared_flags (dword = e_movable | e_to_zero);
 
 	public:
 		err_code Get (const handle ) const; // gets flags that are set for memory block (to m_is_set), or GMEM_INVALID_HANDLE if an error occurs;

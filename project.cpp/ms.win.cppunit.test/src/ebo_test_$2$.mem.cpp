@@ -48,12 +48,88 @@ void CBuffer::Set (void) {
 
 namespace ebo { namespace boo { namespace test { namespace memory { namespace _impl {
 
-	class CBuilder {
+	static _pc_sz pc_sz_pat_crt = _T("Creating the memory block: %s;");
+	static _pc_sz pc_sz_pat_end = _T("Destroying the memory block: %s;");
+
+	class CAlloc {
 	public:
-		 CBuilder (void) { this->m_error >> __CLASS__ << __METHOD__ << TErrCodes::no_error; }
-		 CBuilder (const CBuilder&) {}
-		 CBuilder (CBuilder&&) = delete;
-		~CBuilder (void) {}
+		 CAlloc (TPsuedo& _alloc) : m_alloc(_alloc) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+		 CAlloc (void) = delete; CAlloc(const CAlloc&) = delete; CAlloc (CAlloc&&) = delete;
+		~CAlloc (void) {}
+
+	public:
+		err_code Create(void) {
+
+			_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+			this->m_error <<__METHOD__<<__s_ok;
+
+			err_code n_result = this->m_alloc.Builder().Create();
+			if (__failed(n_result)) {
+				_out() += TString().Format(pc_sz_pat_crt, (_pc_sz) this->m_alloc.Builder().Error().Print(TError::e_req));
+			}
+			else {
+				_out() += TString().Format(pc_sz_pat_crt, TString().Format(_T("success >> the size is %u (bytes)"), this->m_alloc.Size()));
+				_out() += TString().Format(_T("%s"), (_pc_sz) this->m_alloc.Print(TPsuedo::e_att));
+			}
+			return this->Error();
+		}
+
+		err_code Destroy (void) {
+			_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+			this->m_error <<__METHOD__<<__s_ok;
+
+			err_code n_result = this->m_alloc.Builder().Destroy();
+			if (__failed(n_result)) {
+				_out() += TString().Format(pc_sz_pat_end, (_pc_sz) this->m_alloc.Builder().Error().Print(TError::e_req));
+			}
+			else
+				_out() += TString().Format(pc_sz_pat_end, _T("success"));
+
+			return this->Error();
+		}
+
+		TError&  Error (void) const { return this->m_error; }
+
+		err_code Init  (_pc_sz _p_text) {
+
+			_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (nullptr == _p_text || 0 == ::_tcslen(_p_text)) {
+
+				this->m_error << __e_inv_arg = _T("Input text data is invalid");
+				_out() += this->Error().Print(TError::e_req);
+			}
+			else {
+				_out() += _T("Init params:");
+
+				shared::memory::shared_flags flags; _out().Cached() += flags.Print();
+				shared::memory::shared_data  data ;
+
+				data.p_data   = (void*) _p_text; 
+				data.n_size   = TString(_p_text).Bytes(); // terminate zero must be included;
+
+				_out() += data.Print();
+				this->m_alloc << data << flags;
+			}
+			return this->Error();
+		}
+
+	private: CAlloc& operator = (const CAlloc&) = delete; CAlloc& operator = (CAlloc&&) = delete;
+	private:
+		TPsuedo& m_alloc;
+		CError   m_error;
+	};
+
+	class CLog {
+	public:
+		 CLog (void) { this->m_error >> __CLASS__ << __METHOD__ << TErrCodes::no_error; }
+		 CLog (const CLog&) {}
+		 CLog (CLog&&) = delete;
+		~CLog (void) {}
 
 	public:
 		err_code Create (THandle& _h_file) { // creates a handle of a temporary file; it is just for testing the handle, but not the file;
@@ -62,18 +138,16 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 
 			if (_h_file.Is())
 				return this->m_error << (err_code)TErrCodes::eObject::eExists;
-
+#pragma region __refs_7
 			// giving the name to the temporary file: https://en.cppreference.com/w/cpp/language/string_literal ;
 			// and using solution directory macro: https://stackoverflow.com/questions/19969868/how-to-access-solutiondir-macro-from-c-code ;
 
 			// https://stackoverflow.com/questions/631664/accessing-environment-variables-in-c :: has the very good answer;
 			// https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros :: just for knowing that kind of macros;
 
-
 			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfile2 ; is very interesting and requires an example of its usage;
 			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea ;
-
-			
+#pragma endregion
 			handle h_file = ::CreateFile(
 				this->Get_path(), /*FILE_ALL_ACCESS*/GENERIC_READ | GENERIC_WRITE , 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
 			);
@@ -103,13 +177,12 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 		}
 
 	private:
-		CBuilder& operator = (const CBuilder&){}  // looks like very funny joke: no returning a value >> no compile and no linkage errors;
-		CBuilder& operator = (CBuilder&&) = delete;
+		CLog& operator = (const CLog&){}  // looks like very funny joke: no returning a value >> no compile and no linkage errors;
+		CLog& operator = (CLog&&) = delete;
 	private:
 		CError  m_error;
 		CString m_path ;   // this is the path to temporary file that is going to be created;
 	};
-
 }}}}}
 
 using namespace ebo::boo::test::memory::_impl;
@@ -143,7 +216,7 @@ void CHandle::Clone (void) {
 	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_handle.Print(e_print::e_all));
 
 	THandle  source;
-	CBuilder builder;
+	CLog builder;
 
 	_out() += _T("Creating a temporary file handle...");
 
@@ -166,6 +239,8 @@ void CHandle::Clone (void) {
 
 }}}}
 
+/////////////////////////////////////////////////////////////////////////////
+
 CHeap:: CHeap (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
@@ -174,25 +249,137 @@ CHeap:: CHeap (const bool _b_verb) : m_b_verb(_b_verb) {
 	}
 }
 
-void CHeap::Is_alloca (void) {
+void CHeap::GetWhere (void) {
+
+	class CLocal {
+	public:
+		CLocal (void) { m_data = 0; } CLocal (const CLocal&) = delete; CLocal (CLocal&&) = delete; ~CLocal (void) {}
+
+	public:
+		uint32_t Data (void) const { return this->m_data; }
+		bool     Data (const uint32_t _value) {
+			const bool b_changed = (this->Data() != _value);
+			if (b_changed)
+				this->m_data = _value;
+			return b_changed;
+		}
+	private: CLocal& operator = (const CLocal&) = delete; CLocal& operator = (CLocal&&) = delete;
+	private:
+		uint32_t m_data;
+	};
 
 	_out() += TLog_Acc::e_new_line;
-	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	bool b_is_alloca = THeap::Is_alloca(this);
+	bool b_on_stack  = THeap::Is_stack (this);
+
+	_out() += TString().Format(_T("Checks where the 'this' pointer resides: %son_heap=%s;on_stack=%s;"),
+		_p_new_line, TString().Bool(b_is_alloca), TString().Bool(b_on_stack));
+
+	CLocal cls_loc;
+
+	b_is_alloca = THeap::Is_alloca(&cls_loc);
+	b_on_stack  = THeap::Is_stack (&cls_loc);
+
+	_out() += TString().Format(_T("Checks where the variable of method scope resides: %son_heap=%s;on_stack=%s;"),
+		_p_new_line, TString().Bool(b_is_alloca), TString().Bool(b_on_stack));
+
+	CLocal* p_local = new CLocal;
+
+	b_is_alloca = THeap::Is_alloca(p_local);
+	b_on_stack  = THeap::Is_stack (p_local);
+
+	_out() += TString().Format(_T("Checks where the dynamically created object resides: %son_heap=%s;on_stack=%s;"),
+		_p_new_line, TString().Bool(b_is_alloca), TString().Bool(b_on_stack));
+
+	delete p_local; p_local = nullptr;
 
 	_out()();
 }
-
-void CHeap::In_stack (void) {
-
-	_out() += TLog_Acc::e_new_line;
-	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	_out()();
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 
+CMemAlloc:: CMemAlloc (const bool _b_verb) : m_b_verb(_b_verb) {
+	if (this->m_b_verb) {
+		_out() += TLog_Acc::e_new_line;
+		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out()();
+	}
+}
+
+void CMemAlloc:: Life_Cycle (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CAlloc alloc(this->m_alloca);
+
+	if (__failed(alloc.Init(_T("text data;")))) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	if (__failed(alloc.Create())) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+#if (0)
+	TString cs_exceed (_T("0|1|2|3|4|5|6|7|8|9|a|b|c|d|f"));
+
+	_out() += TStringEx().Format(_T("Writing the data with exceeded size:%s%s (%d bytes)"), _p_new_line, (_pc_sz) cs_exceed, cs_exceed.Bytes());
+
+	n_result = this->m_alloca.Content().Write((_pc_sz)cs_exceed);
+	if (__failed(n_result)) {
+		_out() += this->m_alloca.Content().Error().Print(TError::e_req);
+	}
+	else {
+		_out() += _T("Reading data from memory block:");
+
+		TString cs_get = this->m_alloca.Content().Read();
+
+		if (this->m_alloca.Content().Error().Is())
+			_out() += this->m_alloca.Content().Error().Print(TError::e_req);
+		else
+			_out() += TString().Format(_T("%s (%u bytes)"), (_pc_sz) cs_get, cs_get.Bytes() - sizeof(t_char)); // the string got zero terminate byte automatically;
+	}
+#endif
+	alloc.Destroy();
+	_out()();
+}
+
+void CMemAlloc:: Realloc (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	_pc_sz p_text = _T("Test text");
+
+	shared::memory::shared_flags flags;
+	shared::memory::shared_data  data ;
+
+	data.p_data = (void*) p_text; 
+	data.n_size = (dword)(::_tcslen(p_text) + 1) * sizeof(t_char); // terminated zero must be included;
+
+	this->m_alloca << data << flags;
+	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_alloca.Print(TPsuedo::e_att));
+
+	err_code n_result = this->m_alloca.Builder().Create();
+	if (__failed(n_result)) {
+		_out() += TString().Format(pc_sz_pat_crt, (_pc_sz) this->m_alloca.Builder().Error().Print(TError::e_req));
+		_out()(); return;
+	}
+
+	_out() += TString().Format(pc_sz_pat_crt, TString().Format(_T("success >> the size is %u (bytes)"), this->m_alloca.Size()));
+
+	TString cs_data = this->m_alloca.Content().Read();
+
+	if (this->m_alloca.Content().Error().Is())
+		_out() += this->m_alloca.Content().Error().Print(TError::e_req);
+	else
+		_out() += TString().Format(_T("Data: '%s' (%u bytes)"), (_pc_sz) cs_data, cs_data.Bytes() - sizeof(t_char));
+
+	_out()();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -205,130 +392,8 @@ namespace ebo { namespace boo { namespace test {
 
 	namespace memory {
 #if (0)
-		__class(CHeap) {
-
-			class C_local {
-			public:
-				C_local (void) { m_data = 0; } C_local(const C_local&) = delete; C_local(C_local&&) = delete; ~C_local (void) {}
-
-			public:
-				uint32_t Data (void) const { return this->m_data; }
-				bool     Data (const uint32_t _value) {
-					const bool b_changed = (this->Data() != _value);
-					if (b_changed)
-						this->m_data = _value;
-					return b_changed;
-				}
-
-			CString  Print (void) const {
-
-				static _pc_sz pc_sz_pat = _T("cls::[%s].%s()>>{data=%u}");
-
-				CString cs_out; cs_out.Format(pc_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, this->Data());
-				return  cs_out;
-			}
-
-			private:
-				uint32_t m_data;
-			};
-
-			__method(Is_alloca) {
-
-				C_local cls_loc; cls_loc.Data(5);
-
-				bool b_is_alloca = THeap::Is_alloca(this);
-				bool b_on_stack  = THeap::Is_stack (this);
-
-				static _pc_sz pc_sz_pat_a = _T("cls::[%s].%s()>>{is_alloca=%s;on_stack=%s};");
-				static _pc_sz pc_sz_pat_l = _T("%s>>{is_alloca=%s;on_stack=%s};");
-				
-				_out().Opts() += TLog_Acc::e_new_line;
-				_out() += TString().Format(pc_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, TString().Bool(b_is_alloca), TString().Bool(b_on_stack));
-
-				b_is_alloca = THeap::Is_alloca(&cls_loc);
-				b_on_stack  = THeap::Is_stack (&cls_loc);
-
-				_out() += TString().Format(pc_sz_pat_l, (_pc_sz) cls_loc.Print(), TString().Bool(b_is_alloca), TString().Bool(b_on_stack));
-				_out()();
-
-			}
-
-			__method(In_stack) {
-
-				C_local cls_loc; cls_loc.Data(3);
-
-				bool b_is_on = THeap::Is_stack(this);
-
-				static _pc_sz pc_sz_pat = _T("cls::[%s].%s()>>{on_stack=%s};");
-				
-				_out().Opts() += TLog_Acc::e_new_line;
-				_out() += TString().Format(pc_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, TString().Bool(b_is_on));
-
-				b_is_on = THeap::Is_stack(&cls_loc);
-
-				_out() += TString().Format(_T("%s>>{on_stack=%s}"), (_pc_sz) cls_loc.Print(), TString().Bool(b_is_on));
-				_out()();
-			}
-		};
-#endif
 		__class(CPsuedo) {
-			__method(Life_Cycle){
-				shared::memory::shared_flags flags; _out().Cached() += flags.Print();
-				shared::memory::shared_data data;
-
-				_pc_sz p_text = _T("text data;");
-				data.p_data = (PVOID)p_text; 
-				data.n_size = TString(p_text).Bytes(); // terminate zero must be included;
-
-				_out() += TLog_Acc::e_new_line;
-				_out().Cached() += data.Print();
-				_out().Cached() += _T(" ");
-				
-				TPsuedo psuedo;
-				psuedo << data << flags;
-				_out().Cached() += psuedo.Print(TPsuedo::e_att);
-
-				if (__succeeded(psuedo.Builder().Create())) {
-					_out().Cached() += psuedo.Builder().Print();
-					_out().Cached() += TString().Format(_T("Memory block size: %u (bytes)"), psuedo.Size());
-					_out().Cached() += _T(" ");
-
-					_pc_sz p_exceed = _T("0|1|2|3|4|5|6|7|8|9|a|b|c|d|f");
-
-					psuedo.Content().Write(p_exceed);
-					_out().Cached() += TString().Format(
-						_T("Writing text '%s' to memory block; result: %s"), p_exceed, psuedo.Content().Error().Print(TError::e_req).GetString()
-					);
-					if (!psuedo.Content().Error()) {
-						CString cs_get = psuedo.Content().Read();
-						_out().Cached() += TString().Format(
-							_T("Reading a text to memory block; result: %s;text='%s'"), psuedo.Content().Error().Print(TError::e_req).GetString(), (LPCTSTR)cs_get 
-						);
-						_out().Cached() += _T(" ");
-					}
-					_out().Cached() += psuedo.Content().Error().Print(TError::e_req);
-				}
-				
-				psuedo.Builder().Destroy(); _out().Cached() += psuedo.Builder().Print();
-
-				_out().Cached()();
-			}
-
 			__method(Realloc) {
-
-				_pc_sz p_text = _T("Text data");
-
-				shared::memory::shared_flags flags;
-				shared::memory::shared_data  data ;
-
-				data.p_data = (PVOID)p_text; 
-				data.n_size = (DWORD)(::_tcslen(p_text) + 1) * sizeof(t_char); // terminated zero must be included;
-
-				TPsuedo psuedo;
-				psuedo << data << flags;
-
-				_out() += TLog_Acc::e_new_line;
-				_out().Cached() += psuedo.Print(TPsuedo::e_att);
 
 				CString cs_cnt;
 
@@ -365,7 +430,7 @@ namespace ebo { namespace boo { namespace test {
 				_out().Cached()();
 			}
 		};
-
+#endif
 		__class(CNamed) {
 			__ctor(_ctor) {
 
