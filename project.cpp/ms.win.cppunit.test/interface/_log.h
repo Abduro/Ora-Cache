@@ -113,12 +113,14 @@ namespace ebo { namespace boo { namespace test {
 
 		const CLogger& operator <<(const CString&) const;
 		const CLogger& operator <<(_pc_sz _lp_sz_text) const;
-
+		/*
+			the following two operators work for output by this class only, cached messages' object does not know anything of the output options; :(
+		*/
 		CLogger& operator +=(const CLog_Opts::_accepted _opt); // sets the input option; this is for direct call the CLog_Opts::Set(..., true );
 		CLogger& operator -=(const CLog_Opts::_accepted _opt); // remove the input option from the options' set; the CLog_Opts::Set(..., false);
 
-		CLogger& operator +=(const CString& cs_out) ;     // appends the input string object to the cache; [for simpicity of input];
-		CLogger& operator +=(_pc_sz _p_sz_out) ;          // appends the raw text to the cache; [for simpicity of input];
+		CLogger& operator +=(const CString& cs_out) ;     // appends the input string object to the cache; [for simplicity of input];
+		CLogger& operator +=(_pc_sz _p_sz_out) ;          // appends the raw text to the cache; [for simplicity of input];
 
 	public:
 		CLogger& operator >>(_pc_sz _lp_sz_pat); // sets the pattern string;

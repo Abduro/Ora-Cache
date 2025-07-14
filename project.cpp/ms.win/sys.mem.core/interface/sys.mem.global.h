@@ -217,7 +217,7 @@ namespace shared { namespace memory {
 			const handle Handle (void) const; // returns a handle to the created memory mapped page;
 			const bool   Is (void) const;
 #if defined(_DEBUG)
-			CString  Print (void) const;
+			CString   Print (void) const;
 #endif
 		public:
 			CPage& operator = (const CPage&) = delete;

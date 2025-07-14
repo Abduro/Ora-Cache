@@ -23,7 +23,7 @@ bool shared_data::operator == (const shared_data& _data) const { return !(*this 
 #if defined(_DEBUG)
 CString   shared_data::Print(void) const {
 
-	static _pc_sz lp_sz_pat = _T("struct::[%s]>>{p_data=%s;n_size=%u}");
+	static _pc_sz lp_sz_pat = _T("struct::[%s]>>{p_data=%s;n_size=%u (byte(s))}");
 
 	CString cs_this;
 	cs_this.Format(lp_sz_pat, (_pc_sz)__CLASS__, TString().__address_of(this->p_data), this->n_size);

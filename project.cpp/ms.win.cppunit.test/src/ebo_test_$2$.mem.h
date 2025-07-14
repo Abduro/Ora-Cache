@@ -42,7 +42,7 @@ namespace ebo { namespace boo { namespace test { namespace memory {
 		THandle  m_handle;
 	};
 
-	using THeap = shared::memory::CHeap; // the heap class has static methods only, thus no its object can be created;
+	using THeap = shared::memory::CHeap;     // the heap class has static methods only, thus no its object can be created;
 
 	__class (CHeap) {
 	public:
@@ -64,11 +64,23 @@ namespace ebo { namespace boo { namespace test { namespace memory {
 	public:
 		__method (Life_Cycle);
 		__method (Realloc);
+		__method (Truncate);
 
 	private:
 		bool    m_b_verb;
 		TPsuedo m_alloca;
 	};
+
+	__class (CNamed) { // it seems to be useless; :( 
+	public:
+		__ctor(_ctor);
+	};
+
+	__class (CPage) {
+	public:
+		__method (Life_Cycle);
+	};
+
 }}}}
 
 #pragma comment(lib, "sys.shared_v15.lib")   // is already included in shared lib ebo_test_$$$ test project;

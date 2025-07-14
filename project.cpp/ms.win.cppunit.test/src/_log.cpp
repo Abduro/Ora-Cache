@@ -95,8 +95,14 @@ void CLog_Opts::Set (_accepted _opt, bool _b_set) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLog_Opts& CLog_Opts::operator +=(const CLog_Opts::_accepted _opt) { this->Set(_opt, true ); return *this; }
-CLog_Opts& CLog_Opts::operator -=(const CLog_Opts::_accepted _opt) { this->Set(_opt, false); return *this; }
+CLog_Opts& CLog_Opts::operator +=(const CLog_Opts::_accepted _opt) {
+	this->Set(_opt, true );
+	return *this;
+}
+CLog_Opts& CLog_Opts::operator -=(const CLog_Opts::_accepted _opt) {
+	this->Set(_opt, false);
+	return *this;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -118,9 +124,14 @@ void CLogger::Out (_pc_sz _lp_sz_text) const {
 		ms_logger::WriteMessage(cs_out.GetString());
 	}
 	else {
-		if (this->Opts().Get(CLog_Opts::e_new_line)) {
+		if (false) {}
+		else if (this->Opts().Get(CLog_Opts::e_new_line)) {
 			CString cs_out(_T("\n")); cs_out += _lp_sz_text;
 			ms_logger::WriteMessage((_pc_sz)cs_out);
+		}
+		else if (this->Opts().Get(CLog_Opts::e_emp_line)) {
+			ms_logger::WriteMessage(_T(""));
+			ms_logger::WriteMessage(_lp_sz_text);
 		}
 		else
 		ms_logger::WriteMessage(_lp_sz_text);
@@ -135,7 +146,11 @@ CLog_Opts& CLogger::Opts(void)       { return this->m_opts; }
 const CLogger& CLogger::operator << (const CString& _str) const { this->Out(_str); return *this; }
 const CLogger& CLogger::operator << (_pc_sz  _lp_sz_text) const { this->Out(_lp_sz_text); return *this; }
 
-CLogger& CLogger::operator +=(const CLog_Opts::_accepted _opt)  { this->Opts() += _opt; return *this; }
+CLogger& CLogger::operator +=(const CLog_Opts::_accepted _opt)  {
+	// adds new empty string to the cached maeesages' object;
+	this->Cached() += _T("");
+	this->Opts() += _opt;return *this;
+}
 CLogger& CLogger::operator -=(const CLog_Opts::_accepted _opt)  { this->Opts() -= _opt; return *this; }
 
 CLogger& CLogger::operator +=(const CString& cs_out) { this->Cached() += cs_out; return *this; }

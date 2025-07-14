@@ -58,8 +58,8 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 		~CAlloc (void) {}
 
 	public:
-		err_code Create(void) {
-
+		err_code Create (void) {
+			_out() += TLog_Acc::e_emp_line; // stupid approach; must be fixed;
 			_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 			this->m_error <<__METHOD__<<__s_ok;
@@ -70,12 +70,14 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 			}
 			else {
 				_out() += TString().Format(pc_sz_pat_crt, TString().Format(_T("success >> the size is %u (bytes)"), this->m_alloc.Size()));
+				_out() += _T(""); 
 				_out() += TString().Format(_T("%s"), (_pc_sz) this->m_alloc.Print(TPsuedo::e_att));
 			}
 			return this->Error();
 		}
 
 		err_code Destroy (void) {
+			_out() += _T("");
 			_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 			this->m_error <<__METHOD__<<__s_ok;
@@ -92,7 +94,7 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 
 		TError&  Error (void) const { return this->m_error; }
 
-		err_code Init  (_pc_sz _p_text) {
+		err_code Init (_pc_sz _p_text) {
 
 			_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -323,17 +325,91 @@ void CMemAlloc:: Life_Cycle (void) {
 		_out()(); return;
 	}
 
-#if (0)
-	TString cs_exceed (_T("0|1|2|3|4|5|6|7|8|9|a|b|c|d|f"));
+	alloc.Destroy();
+	_out()();
+}
 
+void CMemAlloc:: Realloc (void) {
+
+	_out() += TLog_Acc::e_emp_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CAlloc alloc(this->m_alloca);
+
+	if (__failed(alloc.Init(_T("Input text data;")))) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	if (__failed(alloc.Create())) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	TString cs_data = this->m_alloca.Content().Read();
+
+	if (this->m_alloca.Content().Error().Is())
+		_out() += this->m_alloca.Content().Error().Print(TError::e_req);
+	else {
+		_out() += _T(""); // just for adding the empty line in the output window;
+		_out() += TString().Format(_T("Content data: '%s' (%u bytes)"), (_pc_sz) cs_data, /*cs_data.Bytes()*/this->m_alloca.Size());
+	}
+	_pc_sz p_text_ex = _T("New text data plus a couple of chars");
+	uint32_t n_size  = static_cast<uint32_t>((::_tcslen(p_text_ex) + 1) * sizeof(t_char)); // 0-terminator is included;
+
+#if (0) // this test case is not passed! the access violation occurs! [fixed: when this flag is set, no data change is accepted;]
+	flags += t_mem_flags::e_modify;
+	psuedo << flags;
+#elif (1)
+	_out().Cached() += _T("")/*_T("The modify flag is not set;")*/;
+#else
+	_out().Cached() += _T("");
+	_out().Cached() += _T("[#error]: modifying buffer size and its content does not pass the test!");
+	_out().Cached() += _T("");
+#endif
+
+	_out() += _T("Setting new data for a reallocation of the memory:");
+	_out() +=  TString().Format (_T("data: %s (%u byte(s))"), p_text_ex, n_size) ;
+
+	shared::memory::shared_data data;
+
+	data.p_data = (void*) p_text_ex;
+	data.n_size = n_size;
+
+	if (__failed( this->m_alloca.Builder().Update(data) ))
+		_out() += this->m_alloca.Builder().Error().Print(TError::e_req);
+	else {
+		cs_data << (_pc_sz) this->m_alloca.Content().Read();
+		_out() += _T("");
+		_out() += TString().Format (_T("*result*: the data in the content: '%s' (%u byte(s))"), (_pc_sz) cs_data, cs_data.Bytes()) ;
+	}
+
+	alloc.Destroy();
+	_out()();
+}
+
+void CMemAlloc:: Truncate (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CAlloc alloc(this->m_alloca);
+
+	if (__failed(alloc.Init(_T("text data;")))) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	if (__failed(alloc.Create())) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	TString cs_exceed (_T("0|1|2|3|4|5|6|7|8|9|a|b|c|d|f"));
 	_out() += TStringEx().Format(_T("Writing the data with exceeded size:%s%s (%d bytes)"), _p_new_line, (_pc_sz) cs_exceed, cs_exceed.Bytes());
 
-	n_result = this->m_alloca.Content().Write((_pc_sz)cs_exceed);
+	err_code n_result = this->m_alloca.Content().Write((_pc_sz)cs_exceed);
 	if (__failed(n_result)) {
 		_out() += this->m_alloca.Content().Error().Print(TError::e_req);
 	}
 	else {
-		_out() += _T("Reading data from memory block:");
+		_out() += _T("Reading truncated data from memory block:");
 
 		TString cs_get = this->m_alloca.Content().Read();
 
@@ -342,162 +418,69 @@ void CMemAlloc:: Life_Cycle (void) {
 		else
 			_out() += TString().Format(_T("%s (%u bytes)"), (_pc_sz) cs_get, cs_get.Bytes() - sizeof(t_char)); // the string got zero terminate byte automatically;
 	}
-#endif
 	alloc.Destroy();
-	_out()();
-}
-
-void CMemAlloc:: Realloc (void) {
-
-	_out() += TLog_Acc::e_new_line;
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	_pc_sz p_text = _T("Test text");
-
-	shared::memory::shared_flags flags;
-	shared::memory::shared_data  data ;
-
-	data.p_data = (void*) p_text; 
-	data.n_size = (dword)(::_tcslen(p_text) + 1) * sizeof(t_char); // terminated zero must be included;
-
-	this->m_alloca << data << flags;
-	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_alloca.Print(TPsuedo::e_att));
-
-	err_code n_result = this->m_alloca.Builder().Create();
-	if (__failed(n_result)) {
-		_out() += TString().Format(pc_sz_pat_crt, (_pc_sz) this->m_alloca.Builder().Error().Print(TError::e_req));
-		_out()(); return;
-	}
-
-	_out() += TString().Format(pc_sz_pat_crt, TString().Format(_T("success >> the size is %u (bytes)"), this->m_alloca.Size()));
-
-	TString cs_data = this->m_alloca.Content().Read();
-
-	if (this->m_alloca.Content().Error().Is())
-		_out() += this->m_alloca.Content().Error().Print(TError::e_req);
-	else
-		_out() += TString().Format(_T("Data: '%s' (%u bytes)"), (_pc_sz) cs_data, cs_data.Bytes() - sizeof(t_char));
-
 	_out()();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ebo { namespace boo { namespace test {
+void CNamed::_ctor (void) {
 
-	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-	using CError  = shared::sys_core::CError;
-	using TError  = const CError;
-	using TString = TStringEx   ;
+	TSection section;
+	TPage& page = section.Page();
 
-	namespace memory {
-#if (0)
-		__class(CPsuedo) {
-			__method(Realloc) {
+	_out().Cached() += section.Print();
+	_out().Cached() += page.Print();
+	_out().Cached()();
+}
 
-				CString cs_cnt;
+/////////////////////////////////////////////////////////////////////////////
 
-				psuedo.Builder().Create();
-				_out().Cached() += psuedo.Builder().Print();
-				_out().Cached() += TString().Format(_T("Memory block size: %u (bytes)"), psuedo.Size());
+void CPage:: Life_Cycle (void) {
+	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-				cs_cnt = psuedo.Content().Read();
-				_out().Cached() += TString().Format(_T("Memory block content: '%s'"), (_pc_sz)cs_cnt);
+	TSection section;
 
-				_pc_sz p_text_ex = _T("New text data plus a couple of chars");
-#if (0) // this test case is not passed! the access violation occurs! [fixed: when this flag is set, no data change is accepted;]
-				flags += t_mem_flags::e_modify;
-				psuedo << flags;
-#elif (1)
-				_out().Cached() += _T("The modify flag is not set;");
-#else
-				_out().Cached() += _T(" ");
-				_out().Cached() += _T("[#error]: modifying buffer size and its content does not pass the test!");
-				_out().Cached() += _T(" ");
-#endif
-				data.p_data  = (void*)p_text_ex; 
-				data.n_size  = static_cast<DWORD>(::_tcslen(p_text_ex)) * sizeof(t_char); // if specified size is less than required, a truncation occurs;
+	TPage& page = section.Page(); _out() += page.Print();
+	TView& view = section.View(); _out() += view.Print();
 
-				psuedo.Builder().Update(data);
-				_out().Cached() += psuedo.Builder().Print();
-				_out().Cached() += TString().Format(_T("Memory block size: %u (bytes)"), psuedo.Size());
+	shared::memory::shared_data data;
 
-				cs_cnt = psuedo.Content().Read();
-				_out().Cached() += TString().Format(_T("Memory block content: '%s'"), (_pc_sz)cs_cnt);
+	_pc_sz p_text = _T("<root desc=""stupid""/>");
+	data.p_data   = (void*) p_text; 
+	data.n_size   = TString(p_text).Bytes();
 
-				psuedo.Builder().Destroy(); _out().Cached() += psuedo.Builder().Print();
+	/* the data of section is used:
+		(1) TPage::Create() << data.n_size;
+		(2) TView::Open()   << data.n_size;
+		(3) TView::Read()   << data.n_size;
+		(4) TView::Write()  << data.n_size << data.p_data;
+		(5) TView::Write(str);
+	*/
+	// the section must be initialized first by its name and data, otherwise the page object won't be created;
 
-				_out().Cached()();
-			}
-		};
-#endif
-		__class(CNamed) {
-			__ctor(_ctor) {
-
-				TSection section;
-				TPage& page = section.Page();
-
-				_out().Cached() += section.Print();
-				_out().Cached() += page.Print();
-				_out().Cached()();
-			}
-		};
-
-		__class(CPage) {
-			__method(Life_Cycle) {
-
-				TSection section;
-				TPage& page = section.Page(); _out() += page.Print();
-				TView& view = section.View(); _out() += view.Print();
-
-				shared::memory::shared_data data;
-
-				_pc_sz p_text = _T("<root desc=""stupid""/>");
-				data.p_data   = (void*) p_text; 
-				data.n_size   = TString(p_text).Bytes();
-
-				/* the data of section is used:
-					(1) TPage::Create() << data.n_size;
-					(2) TView::Open()   << data.n_size;
-					(3) TView::Read()   << data.n_size;
-					(4) TView::Write()  << data.n_size << data.p_data;
-					(5) TView::Write(str);
-				*/
-				section.Data(data);
-
-				// the section must be initialized first by its name and data, otherwise the page object won't be created;
-				section.Name(_T("section#1"));
-
-				page.Create();  _out() += page.Print();
-				view.Open();    _out() += view.Print();
-				
-				_out() += _T("");
-				_out() += TString().Format(_T("Writing cached data: %s;"), p_text);
-
-				view.Write();
-
-				_out() += TString().Format(_T("Read data: %s"), (_pc_sz)view.Read());
-				_out() += view.Error().Print();
-				_out() += _T("");
-
-				_pc_sz p_trunc = _T("This is the text that will be truncated: the error object will show that;");
-
-				_out() += _T("Writing input data:");
-				_out() += p_trunc;
-				_out() += _T("");
-
-				view.Write(p_trunc);
-
-				_out() += TString().Format(_T("Read data: %s"), (_pc_sz)view.Read());
-				_out() += view.Error().Print();
-				_out() += _T("");
-
-				view.Close();   _out() += view.Print();
-				page.Destroy(); _out() += page.Print();
-
-				_out()();
-			}
-		};
-
+	section.Data(data);
+	if (__failed(section.Name(_T("section#1")))) {
+		_out() += section.Error().Print(TError::e_req);
+		_out()(); return;
 	}
-}}}
+
+	if (__failed(page.Create())) {
+		_out() += page.Error().Print(TError::e_req);
+		_out()(); return;
+	}
+	
+	_out() += page.Print();
+	view.Open();   _out() += view.Print();
+
+	_out() += _T("");
+	_out() += TString().Format(_T("Writing cached data: %s;"), p_text);
+
+	if (__failed(view.Write())) {
+		_out() += view.Error().Print(TError::e_req);
+	}
+	else {
+		_out() += TString().Format(_T("Read data: %s"), (_pc_sz)view.Read());
+	}
+	_out()();
+}
