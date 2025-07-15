@@ -10,18 +10,40 @@
 
 namespace ex_ui { namespace draw { namespace images {
 
+	using CAlloc = shared::memory::CAllocator;
+
+	typedef ::ATL::CComPtr<IStream> TStreamPtr;
+	// https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream ;
+	/*
+		https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-createstreamonhglobal ;
+		the excerpt from above article:
+		CreateStreamOnHGlobal will accept a memory handle allocated with GMEM_FIXED, but this usage is not recommended.
+		the above statement is taken into account and CAllocator prohibits of using fixed size memory block;
+	*/
 	class CStream {
 	public:
 		 CStream (void); CStream (const CStream&) = delete; CStream (CStream&&) = delete;
 		~CStream (void);
 	public:
-		err_code  Create (_pc_sz _p_file_path);
-
+		err_code  Create (const CAlloc&);        // creates a stream from the input global memory block;
+		err_code  Create (_pc_sz _p_file_path);  // this method requires to save global memory block till this stream object will be unused;
+		err_code  Destroy(void) ;
 		TError&   Error  (void) const;
+
+		bool    Is_valid (void) const;
+
+#if defined(_DEBUG)
+		CString   Print  (const e_print = e_print::e_all) const;
+#endif
+		const
+		TStreamPtr&  Ptr (void) const;
+		TStreamPtr&  Ptr (void) ;
 
 	private: CStream& operator = (const CStream&) = delete; CStream& operator = (CStream&&) = delete;
 	private:
-		CError  m_error;
+		CAlloc m_alloc;  // used for temporarily implementation;
+		CError m_error;
+		TStreamPtr m_p_stream;
 	};
 }}}
 

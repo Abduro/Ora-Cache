@@ -72,14 +72,14 @@ namespace ebo { namespace boo { namespace test { namespace memory {
 		TPsuedo m_alloca;
 	};
 
-	__class (CNamed) { // it seems to be useless; :( 
+	__class (CNamed) { // it seems to be useless for the time being; :( but it is going to be changed very soon;
 	public:
 		__ctor(_ctor);
 	};
 
 	__class (CPage) {
 	public:
-		__method (Life_Cycle);
+		__method (Life_Cycle); // actually this unit test must belong to CNamed class that is above; will be reviewed soon;
 	};
 
 }}}}

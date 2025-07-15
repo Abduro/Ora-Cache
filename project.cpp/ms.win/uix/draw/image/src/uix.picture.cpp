@@ -5,12 +5,11 @@
 	Adopted to Ebo Pack image wrappers' project on 09-Jul-2025 at 13:30:43.876, UTC+4, Batumi, Wednesday;
 */
 #include "uix.picture.h"
+#include "uix.image.stream.h"
 
 using namespace ex_ui::draw::images;
 
 namespace ex_ui { namespace draw { namespace images { namespace _impl { /*void __warning_lnk_4221 (void) {}*/
-
-
 }}}}
 
 using namespace ex_ui::draw::images::_impl;
@@ -34,7 +33,7 @@ uint32_t   CPicture::Height (void) const {
 	else {
 		// https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height ;
 		OLE_YSIZE_HIMETRIC n_height = 0;
-		this->m_error << this->m_pPicture->get_Height(&n_height);
+		this->m_error << this->m_picture->get_Height(&n_height);
 		return static_cast<uint32_t>(::abs(n_height));
 	}
 }
@@ -55,23 +54,40 @@ err_code   CPicture::Load (_pc_sz _p_file_path) {
 
 	if (false == ::PathFileExists((_pc_sz)_p_file_path))
 		this->m_error << (err_code) TErrCodes::ePath::eNoFile;
-
+#if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicturefile ;
 	_variant_t v_path(_p_file_path);
 
 	CComPtr<IDispatch> p_disp;
 
-	this->m_error << ::OleLoadPictureFile(v_path, &p_disp);
+	this->m_error << ::OleLoadPictureFile(v_path, &p_disp); // *important*: it does not recognize neither 'jpeg' nor 'png' image files;
 	if (this->Error().Is()) {
 		this->m_error  = _T("Invalid picture (CTL_E_INVALIDPICTURE)");
 		return this->Error();
 	}
 
 	this->m_error << p_disp->QueryInterface(IID_IPicture, (void**)&this->m_pPicture);
-	
+#else
+	CStream stream;
+
+	if (__failed(stream.Create(_p_file_path)))
+		return this->m_error = stream.Error();
+	// https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture ;
+	err_code n_result = ::OleLoadPicture (stream.Ptr(), 0, true, IID_IPicture, (void**)&m_picture);
+	if (__failed(n_result))
+		this->m_error << n_result;
+#endif
 	return this->Error();
 }
+#if (0)
+err_code CPicture::Load  (const CStream& _stream) {
+	_stream;
+	this->m_error <<__METHOD__<<__s_ok;
 
+
+	return this->Error();
+}
+#endif
 #if defined(_DEBUG)
 CString  CPicture::Print (const e_print _e_opt) const {
 	_e_opt;
@@ -101,8 +117,8 @@ CString  CPicture::Print (const e_print _e_opt) const {
 #endif
 
 const
-TPicturePtr&  CPicture::Ptr (void) const { return this->m_pPicture; }
-TPicturePtr&  CPicture::Ptr (void)       { return this->m_pPicture; }
+TPicturePtr&  CPicture::Ptr (void) const { return this->m_picture; }
+TPicturePtr&  CPicture::Ptr (void)       { return this->m_picture; }
 
 t_size     CPicture::Size (void) const {
 	return t_size{static_cast<long>(this->Width()), static_cast<long>(this->Height())};
@@ -131,7 +147,7 @@ err_code   CPicture::ToBitmap (HBITMAP& _in_out) const {
 	if (h_dsk_bmp && h_dsk_dev_ctx) {
 		HBITMAP h_prev_bmp = (HBITMAP)::SelectObject(h_dsk_dev_ctx, h_dsk_bmp);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render ;
-		this->m_error << this->m_pPicture->Render(h_dsk_dev_ctx, 0, 0, ret_w, ret_h, 0, 0,  n_width, n_height, nullptr);
+		this->m_error << this->m_picture->Render(h_dsk_dev_ctx, 0, 0, ret_w, ret_h, 0, 0,  n_width, n_height, nullptr);
 
 		::SelectObject(h_dsk_dev_ctx, h_prev_bmp);
 		::ReleaseDC(HWND_DESKTOP , h_dsk_dev_ctx);
@@ -160,7 +176,7 @@ uint32_t   CPicture::Width (void) const {
 	else {
 		// https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width ;
 		OLE_XSIZE_HIMETRIC n_width = 0;
-		this->m_error << this->m_pPicture->get_Width(&n_width);
+		this->m_error << this->m_picture->get_Width(&n_width);
 		return static_cast<uint32_t>(::abs(n_width));
 	}
 }
@@ -171,105 +187,3 @@ CPicture&  CPicture::operator = (const CPicture& _src) { *this << _src.Ptr(); re
 CPicture&  CPicture::operator <<(const TPicturePtr& _ptr) { this->Ptr() = _ptr; return *this; }
 const
 CPicture&  CPicture::operator >>(HBITMAP& _in_out) const { this->ToBitmap(_in_out); return *this; }
-
-#if (0)
-HRESULT    CPicture::Create  (const LPSTREAM _stream)
-{
-	HRESULT hr_ = S_OK;
-
-	if (NULL == _stream)
-		return (hr_ = E_POINTER);
-
-
-	if (this->IsValid())
-		return (hr_ = __DwordToHresult(ERROR_ALREADY_INITIALIZED));
-
-	// https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture
-	hr_ = ::OleLoadPicture(_stream, 0, TRUE, IID_IPicture, (void**)&m_picture);
-	if (FAILED(hr_))
-		return hr_;
-
-	if (false == this->IsValid())
-		hr_ = __DwordToHresult(ERROR_UNSUPPORTED_TYPE);
-
-	return  hr_;
-}
-
-HRESULT    CPicture::Create  (LPCTSTR _lp_sz_path)
-{
-	CGlobal_Alloca alloca_;
-	CFile file_;
-
-	HRESULT hr_ = file_.Open(_lp_sz_path);
-
-	if (FAILED(hr_))
-		return hr_;
-
-	hr_ = alloca_.Allocate(file_.Size());
-	if (FAILED(hr_))
-		return hr_;
-
-	hr_ = alloca_.Lock();
-	if (FAILED(hr_))
-		return hr_;
-
-	hr_ = file_.Read(alloca_);
-	if (FAILED(hr_))
-		return hr_;
-
-	hr_ = alloca_.Unlock(); // alloca_.Ptr() is not valid now; do not check for error code this time;
-
-	CStream stream_;
-	hr_  =  stream_.Create(alloca_);
-	if (FAILED(hr_))
-		return hr_;
-
-	hr_ = this->Create(stream_);
-
-	return  hr_;
-}
-
-HRESULT    CPicture::ToBitmap(HBITMAP& _in_out) const
-{
-	OLE_XSIZE_HIMETRIC cx = 0;
-	OLE_YSIZE_HIMETRIC cy = 0;
-
-	hr_ = m_picture->get_Width(&cx) ; if (FAILED(hr_)) return hr_;
-	hr_ = m_picture->get_Height(&cy); if (FAILED(hr_)) return hr_;
-
-	HDC hdc_desktop = ::GetDC(HWND_DESKTOP);
-
-	const WORD ret_w = ::MulDiv(::GetDeviceCaps(hdc_desktop, LOGPIXELSX), (cx), 2540);
-	const WORD ret_h = ::MulDiv(::GetDeviceCaps(hdc_desktop, LOGPIXELSY), (cy), 2540);
-
-	// create compatible bitmap and DC
-	HBITMAP hRezultBitmap = ::CreateCompatibleBitmap(hdc_desktop, ret_w, ret_h);
-	HDC hBitmapDC = ::CreateCompatibleDC(hdc_desktop);
-
-	if (hRezultBitmap && hBitmapDC)
-	{
-		HBITMAP hOldBitmap = (HBITMAP)SelectObject(hBitmapDC, hRezultBitmap);
-		// https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render
-		hr_ = m_picture->Render(hBitmapDC, 0, 0, ret_w, ret_h, 0, cy, cx, -cy, 0);
-
-		::SelectObject(hBitmapDC, hOldBitmap);
-		::ReleaseDC(HWND_DESKTOP, hBitmapDC);
-	}
-	else
-		hr_ = E_FAIL;
-
-	::ReleaseDC(HWND_DESKTOP, hdc_desktop); hdc_desktop = NULL;
-
-	if (SUCCEEDED(hr_))
-		_in_out = hRezultBitmap;
-
-	return  hr_;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-
-CPicture&  CPicture::operator <<(const LPSTREAM _stream) { this->Create(_stream); return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
-#endif

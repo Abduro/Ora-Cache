@@ -34,6 +34,7 @@ namespace ex_ui { namespace draw { namespace images {
 			Only a stream that is created on data of the image file may help for loading the image correctly;
 		*/
 		err_code  Load  (_pc_sz _p_file_path); // loads the image from the file by input path;
+//		err_code  Load  (const CStream&);      // loads the image from the input stream;
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
 #endif
@@ -57,7 +58,7 @@ namespace ex_ui { namespace draw { namespace images {
 	private:
 		mutable
 		CError  m_error;
-		TPicturePtr m_pPicture;
+		TPicturePtr m_picture;
 	};
 }}}
 

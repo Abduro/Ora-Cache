@@ -111,8 +111,8 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 				shared::memory::shared_flags flags; _out().Cached() += flags.Print();
 				shared::memory::shared_data  data ;
 
-				data.p_data   = (void*) _p_text; 
-				data.n_size   = TString(_p_text).Bytes(); // terminate zero must be included;
+				data.p_data = (void*) _p_text; 
+				data.n_size = TString(_p_text).Bytes(); // terminate zero must be included;
 
 				_out() += data.Print();
 				this->m_alloc << data << flags;

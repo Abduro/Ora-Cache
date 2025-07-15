@@ -6,7 +6,6 @@
 */
 #include "sys.err.codes.h"
 #include "sys.error.h"
-#include "sys.seh.except.h" // for system level exception handling, like 'Access violation';
 
 #include "shared.string.h"
 #include "shared.random.h"  // for guid generation; no reference to sys.com.core is required;
@@ -25,9 +24,6 @@ namespace shared { namespace memory {
 	using TString = TStringEx;
 
 	using cbool   = const bool;
-
-	using TSehTrans  = shared::sys_core::seh::CTranslator;
-	using TSehExcept = shared::sys_core::seh::CException ;
 	
 	struct shared_data { // this structure does not control the input data life cycle nether check its validity;
 	public:
@@ -245,7 +241,7 @@ namespace shared { namespace memory {
 			const handle Handle (void) const; // returns a handle to the created memory mapped page;
 			const bool   Is (void) const;
 #if defined(_DEBUG)
-			CString   Print (void) const;
+			CString   Print (const e_print = e_print::e_all) const;
 #endif
 		public:
 			CPage& operator = (const CPage&) = delete;
@@ -283,7 +279,7 @@ namespace shared { namespace memory {
 			const bool Is  (void) const; // returns true in case when an access to data is open, otherwise false; no read/write is checked;
 
 #if defined(_DEBUG)
-			CString  Print (void) const;
+			CString  Print (const e_print = e_print::e_all) const;
 #endif
 			CString  Read  (void) ; // treats data buffer as a sequence of the characters;
 			err_code Write (void) ; // tries to write data that is stored in parent named object, but not written to view memory block;

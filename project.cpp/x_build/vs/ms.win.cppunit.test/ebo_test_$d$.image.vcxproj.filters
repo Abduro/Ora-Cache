@@ -9,8 +9,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_1)ebo_test_$d$.image.defs.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)ebo_test_$d$.image.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.img.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.img.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.img.stream.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.img.stream.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.picture.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.picture.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

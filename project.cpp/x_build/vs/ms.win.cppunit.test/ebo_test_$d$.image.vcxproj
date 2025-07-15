@@ -202,8 +202,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_1)ebo_test_$d$.image.defs.h" />
-    <ClCompile Include="$(_1)ebo_test_$d$.image.defs.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.img.defs.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.img.defs.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.img.stream.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.img.stream.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.picture.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.picture.cpp" />
   </ItemGroup>

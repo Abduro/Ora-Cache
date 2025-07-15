@@ -11,6 +11,7 @@
 #include "shared.props.h"
 #include "shared.types.h"
 #include "sys.error.h"
+#include "sys.mem.global.h"
 
 #include "shared.preproc.h"
 #include "shared.string.h"
@@ -21,6 +22,8 @@ namespace ex_ui { namespace draw { namespace images {
 	using CError  = shared::sys_core::CError;
 	using TError  = const CError;
 	using TString = TStringEx;
+
+	using namespace shared::memory;
 
 }}}
 

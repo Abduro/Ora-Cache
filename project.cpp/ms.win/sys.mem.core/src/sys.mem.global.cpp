@@ -3,8 +3,12 @@
 	This is Ebo Pack shared global memory allocator interface implementation file;
 */
 #include "sys.mem.global.h"
+#include "sys.seh.except.h" // for system level exception handling, like 'Access violation'
 
 using namespace shared::memory;
+
+using TSehTrans  = shared::sys_core::seh::CTranslator;
+using TSehExcept = shared::sys_core::seh::CException ;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -609,12 +613,23 @@ const bool TPage::Is (void) const { return TErrCodes::no_error == THandle::Is(th
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString TPage::Print (void) const {
+CString TPage::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz p_sz_pat_a = _T("cls::[%s::%s]>>{handle=%s;valid=%s}");
+	static _pc_sz p_sz_pat_n = _T("cls::[%s]>>{handle=%s;valid=%s}");
+	static _pc_sz p_sz_pat_r = _T("handle=%s;valid=%s");
 
-	static _pc_sz p_sz_pat = _T("cls::[%s]>>{error=[%s];valid=%s}");
+	CString cs_handle = TString().__address_of(this->Handle());
+	CString cs_valid  = TString().Bool(this->Is());
 
 	CString cs_out;
-	cs_out.Format(p_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)this->Error().Print(CError::e_req), TString().Bool(this->Is()));
+	if (e_print::e_all   == _e_opt) { cs_out.Format (p_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_handle, (_pc_sz) cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (p_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_handle, (_pc_sz) cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (p_sz_pat_r, (_pc_sz) cs_handle, (_pc_sz) cs_valid); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
 	return  cs_out;
 }
 #endif
@@ -680,12 +695,23 @@ err_code TView::Open (void) {
 }
 
 #if defined(_DEBUG)
-CString  TView::Print (void) const {
+CString  TView::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz p_sz_pat_a = _T("cls::[%s::%s]>>{p_data=%s;valid=%s}");
+	static _pc_sz p_sz_pat_n = _T("cls::[%s]>>{p_data=%s;valid=%s}");
+	static _pc_sz p_sz_pat_r = _T("p_data=%s;valid=%s");
 
-	static _pc_sz p_sz_pat = _T("cls::[%s]>>{error=[%s];valid=%s}");
+	CString cs_data  = TString().__address_of(this->m_p_data);
+	CString cs_valid = TString().Bool(this->Is());
 
 	CString cs_out;
-	cs_out.Format(p_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)this->Error().Print(CError::e_req), TString().Bool(this->Is()));
+	if (e_print::e_all   == _e_opt) { cs_out.Format (p_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_data, (_pc_sz) cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (p_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_data, (_pc_sz) cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (p_sz_pat_r, (_pc_sz) cs_data, (_pc_sz) cs_valid); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
 	return  cs_out;
 }
 #endif

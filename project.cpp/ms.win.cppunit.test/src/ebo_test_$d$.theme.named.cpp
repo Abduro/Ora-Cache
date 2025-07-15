@@ -109,14 +109,15 @@ void CState::Set (void) {
 
 	_out() += TStringEx().Format(
 		_T("Input:"
-		"\n\t\tmarker/ID: %u;"
-		"\n\t\tname: %s;"
-		"\n\t\tcolor: %s;"), e_state, (_pc_sz) cs_name, (_pc_sz) cs_color
+		"%smarker/ID: %u;"
+		"%sname: %s;"
+		"%scolor: %s;"), _p_new_line, e_state, _p_new_line,(_pc_sz) cs_name, _p_new_line, (_pc_sz) cs_color
 	);
 
 	this->m_state.Id(e_state, false);
 	this->m_state.Name((_pc_sz)cs_name);
 	this->m_state.Color(color_);
+	this->m_state.Is_valid(true);
 
 	_out() += TStringEx().Format(_T("*after *: %s"), (_pc_sz) this->m_state.Print(e_print::e_all));
 

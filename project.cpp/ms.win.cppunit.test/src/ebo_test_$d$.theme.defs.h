@@ -14,6 +14,7 @@ namespace ebo { namespace boo { namespace test { namespace theme {
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 	using namespace shared::types;
+	using namespace ebo::boo::test;
 
 	using TPercent = TPct_Flt;
 	using clr_type = ex_ui::color::rgb::clr_type;
