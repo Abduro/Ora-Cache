@@ -71,7 +71,7 @@ namespace ebo { namespace boo { namespace test { namespace memory { namespace _i
 			else {
 				_out() += TString().Format(pc_sz_pat_crt, TString().Format(_T("success >> the size is %u (bytes)"), this->m_alloc.Size()));
 				_out() += _T(""); 
-				_out() += TString().Format(_T("%s"), (_pc_sz) this->m_alloc.Print(TPsuedo::e_att));
+				_out() += TString().Format(_T("%s"), (_pc_sz) this->m_alloc.Print());
 			}
 			return this->Error();
 		}
@@ -329,6 +329,44 @@ void CMemAlloc:: Life_Cycle (void) {
 	_out()();
 }
 
+void CMemAlloc:: Locker (void) {
+
+	_out() += TLog_Acc::e_new_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CAlloc alloc(this->m_alloca);
+
+	if (__failed(alloc.Init(_T("text data;")))) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	if (__failed(alloc.Create())) { // all prints is made by CAlloc class itself;
+		_out()(); return;
+	}
+
+	if (__failed(this->m_alloca.Locker().Lock())) {
+		_out() += this->m_alloca.Locker().Error().Print(TError::e_req);
+	}
+	else
+		_out() += _T("The memory block has been *locked* successfully;");
+
+	if (__failed(this->m_alloca.Locker().Unlock())) {
+		_out() += this->m_alloca.Locker().Error().Print(TError::e_req);
+	}
+	else
+		_out() += _T("The memory block has been *unlocked* successfully;");
+
+	_out() += _T("Intentionally producing the error by unlocking twice:");
+	if (__failed(this->m_alloca.Locker().Unlock())) {
+		_out() += this->m_alloca.Locker().Error().Print(TError::e_req);
+	}
+	else
+		_out() += _T("The memory block has been *unlocked* successfully;");
+
+	alloc.Destroy();
+	_out()();
+}
+
 void CMemAlloc:: Realloc (void) {
 
 	_out() += TLog_Acc::e_emp_line;
@@ -471,7 +509,8 @@ void CPage:: Life_Cycle (void) {
 	}
 	
 	_out() += page.Print();
-	view.Open();   _out() += view.Print();
+	view.Open();
+	_out() += view.Print();
 
 	_out() += _T("");
 	_out() += TString().Format(_T("Writing cached data: %s;"), p_text);

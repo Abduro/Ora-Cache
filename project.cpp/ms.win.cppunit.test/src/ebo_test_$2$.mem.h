@@ -63,6 +63,7 @@ namespace ebo { namespace boo { namespace test { namespace memory {
 
 	public:
 		__method (Life_Cycle);
+		__method (Locker);
 		__method (Realloc);
 		__method (Truncate);
 

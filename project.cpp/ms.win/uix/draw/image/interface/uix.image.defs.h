@@ -6,6 +6,7 @@
 */
 #include <atlbase.h>
 #include <atlcomcli.h>
+#include <atlfile.h>
 
 #include "shared.props.h"
 #include "shared.types.h"
@@ -17,8 +18,9 @@
 namespace ex_ui { namespace draw { namespace images {
 
 	using namespace shared::types;
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
+	using CError  = shared::sys_core::CError;
+	using TError  = const CError;
+	using TString = TStringEx;
 
 }}}
 

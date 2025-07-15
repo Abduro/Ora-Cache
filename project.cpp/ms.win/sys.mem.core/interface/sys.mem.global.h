@@ -47,7 +47,7 @@ namespace shared { namespace memory {
 		bool operator != (const shared_data&) const;
 		bool operator == (const shared_data&) const;
 #if defined(_DEBUG)
-		CString Print(void) const;
+		CString Print (const e_print = e_print::e_all) const;
 #endif
 	};
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags ;
@@ -66,7 +66,7 @@ namespace shared { namespace memory {
 		err_code Get (const handle ) const; // gets flags that are set for memory block (to m_is_set), or GMEM_INVALID_HANDLE if an error occurs;
 		bool     Has (const e_flags) const; // checks input flag in the set of assigned flags (m_is_set);
 #if defined(_DEBUG)
-		CString Print(void) const;
+		CString  Print(const e_print = e_print::e_all) const;
 #endif
 	public:
 		mutable  dword m_is_set; // the flags that is set for creating a global memory block or those retrieved by calling Get() for handle provided;
@@ -77,14 +77,16 @@ namespace shared { namespace memory {
 		shared_flags& operator +=(const e_flags);
 		shared_flags& operator -=(const e_flags);
 	};
+#pragma region __refs_7
 	// https://learn.microsoft.com/en-us/windows/win32/memory/global-and-local-functions  ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc ; not recommended and for compatibility only ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc ;
-	class CSharedPsuedo {
+#pragma endregion
+	class CAllocator { // ToDo: Lock() and UnLock() operations are not implemented yet; (done)
 	public:
 		class CBuilder {
 		public:
-			 CBuilder (CSharedPsuedo&); CBuilder (void) = delete; CBuilder (const CBuilder&) = delete; CBuilder (CBuilder&&) = delete;
+			 CBuilder (CAllocator&); CBuilder (void) = delete; CBuilder (const CBuilder&) = delete; CBuilder (CBuilder&&) = delete;
 			~CBuilder (void);
 
 		public:
@@ -102,20 +104,20 @@ namespace shared { namespace memory {
 			CBuilder& operator = (CBuilder&&) = delete;
 
 		private:
-			CSharedPsuedo& m_psuedo;
+			CAllocator& m_alloc;
 			CError  m_error;
 		};
 
 		class CContent {
 		public:
-			 CContent (CSharedPsuedo&); CContent (void) = delete; CContent (const CContent&) = delete; CContent (CContent&&) = delete;
+			 CContent (CAllocator&); CContent (void) = delete; CContent (const CContent&) = delete; CContent (CContent&&) = delete;
 			~CContent (void);
 
 		public:
 			TError&    Error (void) const;
 			const bool Is (void) const;            // checks memory data for data pointer assignment, data size and memory buffer validity;
 #if defined(_DEBUG)
-			CString    Print (void) const;
+			CString    Print (const e_print = e_print::e_all) const;
 #endif
 			CString    Read  (void) const;         // reads content data from memory block; treating bytes as character sequence is not checked;
 			err_code   Write (const shared_data&);
@@ -127,15 +129,45 @@ namespace shared { namespace memory {
 			CContent& operator = (CContent&&) = delete;
 
 		private:
-			CSharedPsuedo& m_psuedo;
-			mutable CError m_error ;
+			CAllocator&    m_alloc;
+			mutable CError m_error;
 
 			friend class   CBuilder;
 		};
+		// lock method requires the memory must have the 'moveable' flag because CreateStreamOnHGlobal() requires moveable;
+		/*
+		*Important* : if access to data is not correct, i.e. when memory block is movable, but data of block is accessed directly, but not through
+		              ::GlobalLock(), destroying this memory by GlobalFree() will throw system error 347 that means 'Invalid Handle';
+		*/
+		class CLocker {
+		public:
+			 CLocker (CAllocator&); CLocker (void) = delete; CLocker (const CLocker&) = delete; CLocker (CLocker&&) = delete;
+			~CLocker (void) ;
 
+		public:
+			TError&  Error (void) const;
+			err_code Lock  (void) ;      // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock ;
+			err_code Unlock(void) ;      // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock ;
+
+			bool Is_locked (void) const; // actually, it is enough to check the pointer value to the memory block been locked;
+#if defined(_DEBUG)
+			CString  Print (const e_print = e_print::e_all) const;
+#endif
+			const
+			void*    Ptr (void) const;   // gets the pointer to memory block that is retrieved by calling Lock() function;
+
+		public: const void* operator () (void) const;
+		        operator const bool (void) const;
+
+		private: CLocker& operator = (const CLocker&) = delete; CLocker& operator = (CLocker&&) = delete;
+		private:
+			CError m_error;
+			CAllocator& m_alloc;
+			void*  m_memory;     // the pointer to global memory itself; this pointer can be obtained by calling Lock() function;
+		};
 	public:
-		CSharedPsuedo (void); CSharedPsuedo (const CSharedPsuedo&) = delete; CSharedPsuedo (CSharedPsuedo&&) = delete;
-	   ~CSharedPsuedo (void);
+		CAllocator (void); CAllocator (const CAllocator&) = delete; CAllocator (CAllocator&&) = delete;
+	   ~CAllocator (void);
 
 	public:
 		const
@@ -150,6 +182,9 @@ namespace shared { namespace memory {
 		
 		bool Data  (const shared_data&) ; // sets shared data before creating the memory block; in case of modifying existing block, Update() must be called; 
 		bool Flags (const shared_flags&); // returns true in case flags are changed;
+		const
+		CLocker&  Locker (void) const;
+		CLocker&  Locker (void) ;
 
 		const handle Handle (void) const; // returns a handle to global memory block that is created by this class object;		
 		const bool   Is (void) const;     // just checks global memory block handle and nothing more; checking as regular handle is not applicable;
@@ -157,22 +192,14 @@ namespace shared { namespace memory {
 		// https://english.stackexchange.com/questions/611086/refresh-vs-update ;
 		TError&  Error (void) const;
 		dword    Size  (void) const;      // returns the actual size of memory block in bytes;
-
+		
 #if defined(_DEBUG)
-		enum e_print {
-			e_all  = 0,   // prints all: complete info of build and content objects, error object is included;
-			e_att  = 1,   // prints info of attributes of this class object: shared data and flags;
-			e_comp = 2,   // prints info of components only: build and content, no error state;
-			e_err  = 3,   // prints error state and info of validity this object, i.e. the global memory block is creetaed and is okay;
-		};
-		CString Print (const CSharedPsuedo::e_print = CSharedPsuedo::e_print::e_all) const;
+		CString Print (const e_print = e_print::e_all) const;
 #endif
 	public:
-		CSharedPsuedo& operator = (const CSharedPsuedo&) = delete;
-		CSharedPsuedo& operator = (CSharedPsuedo&&) = delete;
-		CSharedPsuedo& operator <<(const shared_data&);  // sets shared data values, Builder().Update() must be called afterwards;
-		CSharedPsuedo& operator <<(const shared_flags&); // looks useful before creating global memory block;
-
+		CAllocator& operator <<(const shared_data& );  // sets shared data values, Builder().Update() must be called afterwards;
+		CAllocator& operator <<(const shared_flags&);  // looks useful before creating global memory block;
+	private: CAllocator& operator = (const CAllocator&) = delete;
 	private:
 		mutable
 		CError  m_error ;
@@ -183,9 +210,10 @@ namespace shared { namespace memory {
 
 		CBuilder m_builder;
 		CContent m_content;
+		CLocker  m_locker ;
 
-		friend class CSharedPsuedo::CBuilder;
-	//	friend class CSharedPsuedo::CContent;
+		friend class CAllocator::CBuilder;
+	//	friend class CAllocator::CContent;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/memory/file-mapping ;
@@ -323,12 +351,12 @@ namespace shared { namespace memory {
 	};
 }}
 
-typedef shared::memory::shared_flags           shared_flags;
-typedef shared::memory::shared_flags::e_flags  t_mem_flags ;
+typedef shared::memory::shared_flags          shared_flags;
+typedef shared::memory::shared_flags::e_flags t_mem_flags ;
 
-typedef shared::memory::CSharedPsuedo TPsuedo;  // uses the GlobalAlloc() and GlobalReAlloc() WinAPI functions;
-typedef shared::memory::CSharedPsuedo::CBuilder TPsuedoBuilder;
-typedef shared::memory::CSharedPsuedo::CContent TPsuedoContent;
+typedef shared::memory::CAllocator TPsuedo;  // uses the GlobalAlloc() and GlobalReAlloc() WinAPI functions;
+typedef shared::memory::CAllocator::CBuilder TMemBuilder;
+typedef shared::memory::CAllocator::CContent TMemContent;
 /*
 	the excerpt from https://learn.microsoft.com/en-us/windows/win32/memory/file-mapping :
 	'The system creates a file mapping object (also known as a section object)...'

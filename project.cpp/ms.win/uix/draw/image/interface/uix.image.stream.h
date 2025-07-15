@@ -9,6 +9,20 @@
 #include "uix.image.defs.h"
 
 namespace ex_ui { namespace draw { namespace images {
+
+	class CStream {
+	public:
+		 CStream (void); CStream (const CStream&) = delete; CStream (CStream&&) = delete;
+		~CStream (void);
+	public:
+		err_code  Create (_pc_sz _p_file_path);
+
+		TError&   Error  (void) const;
+
+	private: CStream& operator = (const CStream&) = delete; CStream& operator = (CStream&&) = delete;
+	private:
+		CError  m_error;
+	};
 }}}
 
 #endif/*_UIX_IMAGE_STREAM_H_INCLUDED*/

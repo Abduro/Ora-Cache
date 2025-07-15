@@ -21,14 +21,23 @@ bool shared_data::operator != (const shared_data& _data) const { return (this->n
 bool shared_data::operator == (const shared_data& _data) const { return !(*this != _data); }
 
 #if defined(_DEBUG)
-CString   shared_data::Print(void) const {
+CString   shared_data::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz lp_sz_pat_a = _T("struct::[%s::%s] >> {ptr=%s;size=%u (byte(s))}");
+	static _pc_sz lp_sz_pat_n = _T("struct::[%s] >> {ptr=%s;size=%u (byte(s))}");
+	static _pc_sz lp_sz_pat_r = _T("ptr=%s;size=%u (byte(s))");
 
-	static _pc_sz lp_sz_pat = _T("struct::[%s]>>{p_data=%s;n_size=%u (byte(s))}");
+	CString cs_data = TString().__address_of(this->p_data);
 
-	CString cs_this;
-	cs_this.Format(lp_sz_pat, (_pc_sz)__CLASS__, TString().__address_of(this->p_data), this->n_size);
-	return  cs_this;
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (lp_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_data, this->n_size); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (lp_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_data, this->n_size); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (lp_sz_pat_r, (_pc_sz) cs_data, this->n_size); }
 
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
 }
 #endif
 
@@ -62,9 +71,11 @@ shared_flags& shared_flags::operator+= (const e_flags _flag) { this->m_is_set |=
 shared_flags& shared_flags::operator-= (const e_flags _flag) { this->m_is_set &=~_flag; return *this; }
 
 #if defined(_DEBUG)
-CString   shared_flags::Print(void) const {
-
-	static _pc_sz lp_sz_pat = _T("struct::[%s]>>{flags=%s}");
+CString   shared_flags::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz lp_sz_pat_a = _T("struct::[%s::%s]>>{flags=%s}");
+	static _pc_sz lp_sz_pat_n = _T("struct::[%s]>>{flags=%s}");
+	static _pc_sz lp_sz_pat_r = _T("flags=%s");
 
 	CString cs_flags;
 	if (false) cs_flags = _T("#not_set");
@@ -75,116 +86,126 @@ CString   shared_flags::Print(void) const {
 	if (this->Has(e_flags::e_movable)) { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_movable"); }
 	if (this->Has(e_flags::e_to_zero)) { if (!cs_flags.IsEmpty()) cs_flags += _T("|"); cs_flags += _T("e_to_zero"); }
 
-	CString cs_this;
-	cs_this.Format(lp_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)cs_flags);
-	return  cs_this;
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (lp_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_flags); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (lp_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_flags); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (lp_sz_pat_r, (_pc_sz) cs_flags); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
 }
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-TPsuedoBuilder:: CBuilder (CSharedPsuedo& _psuedo) : m_psuedo(_psuedo) { m_error >> __CLASS__ << __METHOD__; }
-TPsuedoBuilder::~CBuilder (void) { this->Destroy(); }
+CAllocator::CBuilder:: CBuilder (CAllocator& _psuedo) : m_alloc(_psuedo) { m_error >> __CLASS__ << __METHOD__; }
+CAllocator::CBuilder::~CBuilder (void) { this->Destroy(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code TPsuedoBuilder::Create (void) {
+err_code CAllocator::CBuilder::Create (void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
-	if (this->m_psuedo.Is()) {
+	if (this->m_alloc.Is()) {
 		return (m_error << (err_code) TErrCodes::eObject::eExists);
 	}
 	//  https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc ;
-	this->m_psuedo.m_handle = ::GlobalAlloc(this->m_psuedo.Flags(), this->m_psuedo.Data().n_size);
-	if (!this->m_psuedo.Handle()) {
+	this->m_alloc.m_handle = ::GlobalAlloc(this->m_alloc.Flags(), this->m_alloc.Data().n_size);
+	if (!this->m_alloc.Handle()) {
 		m_error.Last();
 	}
-	else if (OLE_E_BLANK == this->m_psuedo.Content().Error().Result()) {
-		this->m_psuedo.Content().m_error << TErrCodes::no_error; // ToDo: stupid approach, but it temporarily is kept;
+	else if (__e_not_inited == this->m_alloc.Content().Error().Result()) {
+		this->m_alloc.Content().m_error << TErrCodes::no_error; // ToDo: stupid approach, but it temporarily is kept;
 	}
 
-	if (this->m_psuedo.Data().p_data && !this->Error()) {
-		m_error = this->m_psuedo.Content().Write(this->m_psuedo.Data());
+	if (this->m_alloc.Data().p_data && !this->Error()) {
+		m_error = this->m_alloc.Content().Write(this->m_alloc.Data());
 	}
 
 	return this->Error();
 }
 
-err_code TPsuedoBuilder::Destroy (void) {
+err_code CAllocator::CBuilder::Destroy (void) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
-	if (false == this->m_psuedo.Is())
+	if (false == this->m_alloc.Is())
 		return m_error << (err_code) TErrCodes::eExecute::eState;
 
-	global h_result = ::GlobalFree(m_psuedo.m_handle);
+	if (this->m_alloc.Locker()) this->m_alloc.Locker().Unlock(); // ToDo: hopefully the unlocking the memory is okay, no checking an error yet;
+
+	global h_result = ::GlobalFree(m_alloc.m_handle);
 	if (h_result)
 		this->m_error.Last();
 	else
-		this->m_psuedo.m_handle = NULL;
+		this->m_alloc.m_handle = nullptr;
 
 	return this->Error();
 }
 
-TError&  TPsuedoBuilder::Error (void) const { return this->m_error; }
+TError&  CAllocator::CBuilder::Error (void) const { return this->m_error; }
 
-err_code TPsuedoBuilder::Update(const shared_data& _data) {
+err_code CAllocator::CBuilder::Update(const shared_data& _data) {
 	_data;
 	m_error << __METHOD__ << TErrCodes::no_error;
 
-	if (this->m_psuedo.Is() == false) { // not created yet;
-		this->m_psuedo.Data(_data);
+	if (this->m_alloc.Is() == false) { // not created yet;
+		this->m_alloc.Data(_data);
 		return this->Create();
 	}
 #if (0)
 	else {
 		this->Destroy();
-		this->m_psuedo.Data(_data);
+		this->m_alloc.Data(_data);
 		return this->Create();
 	}
 #else
-	if (this->m_psuedo.Data() == _data) // nothing to change;
+	if (this->m_alloc.Data() == _data) // nothing to change;
 		return this->Error();
 
-	const bool b_data = this->m_psuedo.Data().p_data != _data.p_data;
-	const bool b_size = this->m_psuedo.Data().n_size != _data.n_size;
+	const bool b_data = this->m_alloc.Data().p_data != _data.p_data;
+	const bool b_size = this->m_alloc.Data().n_size != _data.n_size;
 
-	const bool b_modify = this->m_psuedo.Flags().Has(shared_flags::e_modify);
-	const bool b_zeroed = this->m_psuedo.Flags().Has(shared_flags::e_to_zero);
+	const bool b_modify = this->m_alloc.Flags().Has(shared_flags::e_modify);
+	const bool b_zeroed = this->m_alloc.Flags().Has(shared_flags::e_to_zero);
+
+	if (this->m_alloc.Locker()) this->m_alloc.Locker().Unlock(); // ToDo: no check for error yet;
 
 	if (b_modify) {
-		global p_new = ::GlobalReAlloc(this->m_psuedo.Handle(), 0, this->m_psuedo.Flags().m_is_set); // the new size is ignored;
+		global p_new = ::GlobalReAlloc(this->m_alloc.Handle(), 0, this->m_alloc.Flags().m_is_set); // the new size is ignored;
 		if (!p_new)
 			this->m_error.Last();
 		else {
-			this->m_psuedo.m_handle = p_new;
+			this->m_alloc.m_handle = p_new;
 		}
 	}
 	else if (b_size) {  // reallocation must be made first regardless a part of existing content may be lost in case if new size is less than existing one;
 		if (!b_zeroed)
-			this->m_psuedo.Flags().m_is_set |= shared_flags::e_to_zero;
+			this->m_alloc.Flags().m_is_set |= shared_flags::e_to_zero;
 
-		global p_new = ::GlobalReAlloc(this->m_psuedo.Handle(), _data.n_size, this->m_psuedo.Flags().m_is_set);
+		global p_new = ::GlobalReAlloc(this->m_alloc.Handle(), _data.n_size, this->m_alloc.Flags().m_is_set);
 		if (!p_new)
 			this->m_error.Last();
 		else {
-			this->m_psuedo.m_handle = p_new;
-			this->m_psuedo.m_data.n_size = _data.n_size;
+			this->m_alloc.m_handle = p_new;
+			this->m_alloc.m_data.n_size = _data.n_size;
 		}
 	}
 
 	if (b_data && !b_modify) { // content data cannot be changed when memory block attribute(s) modified;
-		this->m_error = this->m_psuedo.Content().Write(_data);
+		this->m_error = this->m_alloc.Content().Write(_data);
 	}
 
 	return this->Error();
 #endif
 }
 
-err_code TPsuedoBuilder::Update(const shared_flags& _flags) {
+err_code CAllocator::CBuilder::Update(const shared_flags& _flags) {
 	_flags;
 	m_error <<__METHOD__ << TErrCodes::no_error;
 
-	if (this->m_psuedo.Flags(_flags))
+	if (this->m_alloc.Flags(_flags))
 		m_error = _T("Current flag set is changed;");
 
 	return this->Error();
@@ -192,7 +213,7 @@ err_code TPsuedoBuilder::Update(const shared_flags& _flags) {
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-	CString TPsuedoBuilder::Print (void) const {
+	CString CAllocator::CBuilder::Print (void) const {
 
 		static _pc_sz lp_sz_pat = _T("cls::[%s]>>{error=%s}");
 		
@@ -202,105 +223,131 @@ err_code TPsuedoBuilder::Update(const shared_flags& _flags) {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-TPsuedoContent:: CContent (CSharedPsuedo& _psuedo) : m_psuedo(_psuedo) { m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK; }
-TPsuedoContent::~CContent (void) {}
+CAllocator::CContent:: CContent (CAllocator& _psuedo) : m_alloc(_psuedo) { m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK; }
+CAllocator::CContent::~CContent (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-TError&  TPsuedoContent::Error (void) const { return this->m_error; }
-cbool    TPsuedoContent::Is  (void) const { return !!m_psuedo.Data().n_size && !!m_psuedo.Data().p_data && m_psuedo.Is(); }
+TError&  CAllocator::CContent::Error (void) const { return this->m_error; }
+cbool    CAllocator::CContent::Is (void) const { return !!m_alloc.Data().n_size && !!m_alloc.Data().p_data && m_alloc.Is(); }
 
-CString  TPsuedoContent::Read (void) const {
+CString  CAllocator::CContent::Read (void) const {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	CString cs_out;
 
-	if (m_psuedo.Is() == false) {
+	if (m_alloc.Is() == false) {
 		m_error << (err_code) TErrCodes::eObject::eHandle;
 		return cs_out;
 	}
-
-	const bool b_movable = this->m_psuedo.Flags().Has(shared_flags::e_movable);
-
-	PVOID p_data = nullptr;
-
+	const
+	bool  b_movable = this->m_alloc.Flags().Has(shared_flags::e_movable);
+	void* p_data = nullptr;
+#if (0)
 	if (b_movable) {
-		p_data = ::GlobalLock(this->m_psuedo.Handle());
+		p_data = ::GlobalLock(this->m_alloc.Handle());
 		if ( !p_data ) {
 			this->m_error.Last();
 			return cs_out;
 		}
 	}
 	else
-		p_data = this->m_psuedo.Handle();
+		p_data = this->m_alloc.Handle();
+#else
+	if (__failed(this->m_alloc.Locker().Lock())) {
+		p_data = this->m_alloc.Handle();
 
-	cs_out.Append(static_cast<_pc_sz>(p_data), this->m_psuedo.Data().n_size); // ToDo: it very looks like this operation requires catching possible error;
-
+		this->m_error = this->m_alloc.Locker().Error();
+	}
+	else
+		p_data = const_cast<void*>(this->m_alloc.Locker().Ptr());
+#endif
+	if (p_data == nullptr) {
+		cs_out.Append(_T("#nullptr"));
+	}
+	else
 	if (b_movable) {
-		if (0 == ::GlobalUnlock(this->m_psuedo.Handle()))
+		cs_out.Append(static_cast<_pc_sz>(p_data), this->m_alloc.Data().n_size); // ToDo: it very looks like this operation requires catching possible error;
+		if (__failed(this->m_alloc.Locker().Unlock()))
+			this->m_error = this->m_alloc.Locker().Error();
+	}
+	else {
+		cs_out.Append(_T("#bin_data")); // not good approach but at least to avoid possibly binary data conversion;
+	}
+#if (0)
+	if (b_movable) {
+		if (0 == ::GlobalUnlock(this->m_alloc.Handle()))
 			this->m_error.Last();
 	}
-
+#endif
 	return cs_out;
 }
 
-err_code TPsuedoContent::Write(const shared_data& _data) {
+err_code CAllocator::CContent::Write(const shared_data& _data) {
 	_data;
 	this->m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (!_data.p_data) return m_error << E_POINTER;
 	if (!_data.n_size) return m_error << (err_code) TErrCodes::eData::eInvalid = _T("Target data size cannot be zero;");
 #if (0)
-	if ( _data.p_data == this->m_psuedo.Data().p_data) return m_error << E_INVALIDARG =_T("Unable to copy data from the pointer to itself;");
+	if ( _data.p_data == this->m_alloc.Data().p_data) return m_error << E_INVALIDARG =_T("Unable to copy data from the pointer to itself;");
 #endif
-	if (!m_psuedo.Is())
+	if (!m_alloc.Is())
 		return m_error << (err_code) TErrCodes::eObject::eHandle;
 
-	const bool b_data = this->m_psuedo.Data().p_data != _data.p_data;
-	const bool b_movable = this->m_psuedo.Flags().Has(shared_flags::e_movable);
+	const bool b_data = this->m_alloc.Data().p_data != _data.p_data;
+	const bool b_movable = this->m_alloc.Flags().Has(shared_flags::e_movable);
 
 	if (false == b_data || true) { // data pointers are still the same, but data content may change;
 	}
 
-	PVOID p_data = nullptr;
-	/*
-		*Important* : if access to data is not correct, i.e. when memory block is movable, but data of block is accessed directly, but not through
-		              GlobalLock(), destroying this memory by GlobalFree() will throw system error 347 that means 'Invalid Handle';
-	*/
+	void* p_data = nullptr;
+#if (0)
 	if (b_movable) {
-		p_data = ::GlobalLock(this->m_psuedo.Handle()); // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock ;
+		p_data = ::GlobalLock(this->m_alloc.Handle()); // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock ;
 		if ( !p_data )
 			return this->m_error.Last();
 	}
 	else
-		p_data = this->m_psuedo.Handle();
+		p_data = this->m_alloc.Handle();
+#else
+	if (__succeeded(this->m_alloc.Locker().Lock()))
+		p_data = const_cast<void*>(this->m_alloc.Locker()());
+	else
+		p_data = this->m_alloc.Handle(); // see above note;
+#endif
 
-	const errno_t t_result = ::memcpy_s(p_data, this->m_psuedo.Data().n_size, _data.p_data, _data.n_size);
+	const errno_t t_result = ::memcpy_s(p_data, this->m_alloc.Data().n_size, _data.p_data, _data.n_size);
 	if (TErrCodes::no_error != t_result)
 		this->m_error << (err_code) TErrCodes::eData::eBuffer;
+#if (0)
 	// a possible error of unlock operation will overwrite the previous one, i.e. the error above;
 	if (b_movable) {
-		if (0 == ::GlobalUnlock(this->m_psuedo.Handle())) // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock ;
+		if (0 == ::GlobalUnlock(this->m_alloc.Handle())) // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock ;
 			this->m_error.Last(); // if reference count equals to zero (unlocked) the last error returns TErrCodes::no_error;
 	}
-
+#else
+	if (b_movable)
+	if (__failed(this->m_alloc.Locker().Unlock()))
+		this->m_error = this->m_alloc.Locker().Error();
+#endif
 	return this->Error();
 }
 
-err_code TPsuedoContent::Write(_pc_sz _p_sz_str ) {
+err_code CAllocator::CContent::Write(_pc_sz _p_sz_str ) {
 	_p_sz_str;
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (!_p_sz_str || 0 == ::_tcslen(_p_sz_str))
 		return m_error << E_INVALIDARG;
 
-	if (m_psuedo.Is() == false)
+	if (m_alloc.Is() == false)
 		return m_error << (err_code) TErrCodes::eObject::eHandle;
 
 	DWORD n_req = TString(_p_sz_str).Bytes();
 
-	if (n_req > this->m_psuedo.Data().n_size) {
-		n_req = this->m_psuedo.Data().n_size;
+	if (n_req > this->m_alloc.Data().n_size) {
+		n_req = this->m_alloc.Data().n_size;
 		m_error = _T("[truncated]"); // overwritten by this->Write(const shared_data& _data);
 	}
 
@@ -313,33 +360,115 @@ err_code TPsuedoContent::Write(_pc_sz _p_sz_str ) {
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString  TPsuedoContent::Print (void) const {
+CString  CAllocator::CContent::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz lp_sz_pat_a = _T("cls::[%s::%s] >> {created=%s}");
+	static _pc_sz lp_sz_pat_n = _T("cls::[%s] >> {created=%s}");
+	static _pc_sz lp_sz_pat_r = _T("created=%s");
 
-	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{valid=%s}");
+	CString cs_valid = TString().Bool(this->Is());
 
-	CString cs_this;
-	cs_this.Format(lp_sz_pat, (_pc_sz)__CLASS__, TString().Bool(this->Is()));
-	return  cs_this;
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (lp_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_valid); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (lp_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_valid); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (lp_sz_pat_r, (_pc_sz) cs_valid); }
 
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-CSharedPsuedo:: CSharedPsuedo (void) : m_handle(0), m_builder(*this), m_content(*this) { m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK; }
-CSharedPsuedo::~CSharedPsuedo (void) {}
+CAllocator::CLocker:: CLocker(CAllocator& _alloc) : m_alloc(_alloc), m_memory(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CAllocator::CLocker::~CLocker(void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TError&  CAllocator::CLocker::Error (void) const { return this->m_error; }
+
+bool CAllocator::CLocker::Is_locked (void) const { return nullptr != this->Ptr(); }
+
+err_code CAllocator::CLocker::Lock (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_alloc.Is() == false) return this->m_error << __e_not_inited;
+	if (this->Ptr() != nullptr) return this->m_error << (err_code) TErrCodes::eAccess::eLocked/* = _T("Memory is already locked")*/;
+
+	const bool b_movable = this->m_alloc.Flags().Has(shared_flags::e_movable);
+	if (false == b_movable)
+		return this->m_error << (err_code) TErrCodes::eAccess::eInvalid = _T("The memory block must be moveable");
+
+	// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock ;
+	this->m_memory = ::GlobalLock(this->m_alloc.Handle());
+	if (nullptr == this->m_memory)
+		this->m_error.Last();
+
+	return this->Error();
+}
+
+err_code CAllocator::CLocker::Unlock(void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_alloc.Is() == false) return this->m_error << __e_not_inited;
+	if (this->Ptr() == nullptr) return this->m_error << (err_code) TErrCodes::eAccess::eNotLocked/* = _T("Memory is already unlocked")*/;
+
+	if (!!::GlobalUnlock(this->m_alloc.Handle()))
+		this->m_error.Last();
+	else {
+		this->m_memory = nullptr;
+	}
+
+	return this->Error();
+}
+
+#if defined(_DEBUG)
+CString  CAllocator::CLocker::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz lp_sz_pat_a = _T("cls::[%s::%s] >> {ptr=%s;locked=%s}");
+	static _pc_sz lp_sz_pat_n = _T("cls::[%s] >> {ptr=%s;locked=%s}");
+	static _pc_sz lp_sz_pat_r = _T("ptr=%s;locked=%s)");
+
+	CString cs_ptr = TString().__address_of(this->Ptr());
+	CString cs_lock = TString().Bool(this->Is_locked());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (lp_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_ptr, (_pc_sz) cs_lock); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (lp_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_ptr, (_pc_sz) cs_lock); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (lp_sz_pat_r, (_pc_sz) cs_ptr, (_pc_sz) cs_lock); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+const void* CAllocator::CLocker::Ptr (void) const { return this->m_memory; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+const void* CAllocator::CLocker::operator () (void) const { return this->Ptr(); }
+CAllocator::CLocker::operator const bool (void) const { return this->Is_locked(); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAllocator:: CAllocator (void) : m_handle(0), m_builder(*this), m_content(*this), m_locker(*this) { m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK; }
+CAllocator::~CAllocator (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 const
-TPsuedoBuilder& CSharedPsuedo::Builder (void) const { return this->m_builder; }
-TPsuedoBuilder& CSharedPsuedo::Builder (void)       { return this->m_builder; }
+CAllocator::CBuilder& CAllocator::Builder (void) const { return this->m_builder; }
+CAllocator::CBuilder& CAllocator::Builder (void)       { return this->m_builder; }
 const
-TPsuedoContent& CSharedPsuedo::Content (void) const { return this->m_content; }
-TPsuedoContent& CSharedPsuedo::Content (void)       { return this->m_content; }
+CAllocator::CContent& CAllocator::Content (void) const { return this->m_content; }
+CAllocator::CContent& CAllocator::Content (void)       { return this->m_content; }
 
-const shared_data&  CSharedPsuedo::Data (void) const { return this->m_data; }
-const shared_flags& CSharedPsuedo::Flags(void) const { return this->m_flags; }
+const shared_data&  CAllocator::Data (void) const { return this->m_data; }
+const shared_flags& CAllocator::Flags(void) const { return this->m_flags; }
 
-bool  CSharedPsuedo::Data (const shared_data& _data) {
+bool  CAllocator::Data (const shared_data& _data) {
 	_data;
 	bool b_changed = this->Data() != _data;
 	if ( b_changed )
@@ -348,7 +477,7 @@ bool  CSharedPsuedo::Data (const shared_data& _data) {
 	return b_changed;
 }
 
-bool  CSharedPsuedo::Flags (const shared_flags& _flags) {
+bool  CAllocator::Flags (const shared_flags& _flags) {
 	_flags;
 	bool b_changed = _flags.m_is_set != this->Flags().m_is_set;
 	if ( b_changed )
@@ -356,9 +485,13 @@ bool  CSharedPsuedo::Flags (const shared_flags& _flags) {
 	return b_changed;
 }
 
-TError& CSharedPsuedo::Error (void) const { return this->m_error; }
+TError& CAllocator::Error (void) const { return this->m_error; }
 
-DWORD   CSharedPsuedo::Size  (void) const {
+const
+CAllocator::CLocker&  CAllocator::Locker (void) const { return this->m_locker; }
+CAllocator::CLocker&  CAllocator::Locker (void)       { return this->m_locker; }
+
+DWORD   CAllocator::Size  (void) const {
 
 	m_error << __METHOD__ << TErrCodes::no_error;
 
@@ -376,9 +509,9 @@ DWORD   CSharedPsuedo::Size  (void) const {
 	return n_size;
 }
 
-const global CSharedPsuedo::Handle (void) const { return this->m_handle; }
+const global CAllocator::Handle (void) const { return this->m_handle; }
 
-const bool CSharedPsuedo::Is (void) const {
+const bool CAllocator::Is (void) const {
 
 	m_error << __METHOD__ << TErrCodes::no_error;
 
@@ -390,33 +523,42 @@ const bool CSharedPsuedo::Is (void) const {
 		m_error.Last();
 	return !this->Error();
 }
+
 /////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
-CString  CSharedPsuedo::Print (const e_print e_opt) const {
+CString  CAllocator::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz lp_sz_pat_a = _T("cls::[%s::%s]>>{data={%s};flags={%s};content={%s};valid=%s;locked=%s}");
+	static _pc_sz lp_sz_pat_n = _T("cls::[%s]>>{data=%s;flags=%s;content=%s;valid=%s;locked=%s}");
+	static _pc_sz lp_sz_pat_r = _T("data=%s;flags=%s;content=%s;valid=%s;locked=%s");
 
-	static _pc_sz lp_sz_pat_a = _T("cls::[%s]>>{build=%s;content=%s;error=[%s]}");
-	static _pc_sz lp_sz_pat_c = _T("cls::[%s]>>{build=%s;content=%s}");
-	static _pc_sz lp_sz_pat_e = _T("cls::[%s]>>{error=[%s];state=%s}");
-	static _pc_sz lp_sz_pat_d = _T("cls::[%s]>>{data=%s;flags=%s}");
+	CString cs_data    = this->Data().Print(e_print::e_req);
+	CString cs_flags   = this->Flags().Print(e_print::e_req);
+	CString cs_content = this->Content().Print(e_print::e_req);
+	CString cs_valid   = TString().Bool(this->Is());
+	CString cs_locked  = TString().Bool(this->Locker().Is_locked());
 
 	CString cs_out;
-	if (e_print::e_all ==e_opt) cs_out.Format(lp_sz_pat_a, (_pc_sz)__CLASS__, 
-		(_pc_sz)this->Builder().Print(), (_pc_sz)this->Content().Print(), (_pc_sz)this->Error().Print(CError::e_req)
+	if (e_print::e_all == _e_opt) cs_out.Format(lp_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, 
+		(_pc_sz) cs_data, (_pc_sz) cs_flags, (_pc_sz) cs_content, (_pc_sz) cs_valid, (_pc_sz) cs_locked
 	);
-	if (e_print::e_att ==e_opt) cs_out.Format(lp_sz_pat_d, (_pc_sz)__CLASS__, (_pc_sz)this->Data().Print()   , (_pc_sz)this->Flags().Print());
-	if (e_print::e_comp==e_opt) cs_out.Format(lp_sz_pat_c, (_pc_sz)__CLASS__, (_pc_sz)this->Builder().Print(), (_pc_sz)this->Content().Print());
-	if (e_print::e_err ==e_opt) cs_out.Format(lp_sz_pat_e, (_pc_sz)__CLASS__, (_pc_sz)this->Error().Print(CError::e_req), TString().Bool(this->Is()));
+	if (e_print::e_no_ns == _e_opt) cs_out.Format(lp_sz_pat_n,  (_pc_sz)__CLASS__,
+		(_pc_sz) cs_data, (_pc_sz) cs_flags, (_pc_sz) cs_content, (_pc_sz) cs_valid, (_pc_sz) cs_locked
+	);
+	if (e_print::e_req == _e_opt) cs_out.Format(lp_sz_pat_r, 
+		(_pc_sz) cs_data, (_pc_sz) cs_flags, (_pc_sz) cs_content, (_pc_sz) cs_valid, (_pc_sz) cs_locked
+	);
 
 	if (cs_out.IsEmpty())
-		cs_out.Format(_T("cls::[%s]>>{state=#undef}"), (_pc_sz)__CLASS__);
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
 
 	return  cs_out;
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-CSharedPsuedo& CSharedPsuedo::operator <<(const shared_data& _data) { this->Data(_data); return *this; }
-CSharedPsuedo& CSharedPsuedo::operator <<(const shared_flags& _flags) { this->Flags(_flags); return *this; }
+CAllocator& CAllocator::operator <<(const shared_data& _data) { this->Data(_data); return *this; }
+CAllocator& CAllocator::operator <<(const shared_flags& _flags) { this->Flags(_flags); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
