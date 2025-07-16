@@ -41,46 +41,13 @@ err_code  CStream::Create(_pc_sz _p_file_path) {
 	if (nullptr == _p_file_path || 0 == ::_tcslen(_p_file_path))
 		return this->m_error << __e_inv_arg;
 
-	::ATL::CAtlFile file_;
-	err_code n_result = file_.Create(_p_file_path, FILE_READ_DATA, FILE_SHARE_READ, OPEN_EXISTING);
-	if (__failed(n_result))
-		return this->m_error << n_result;
+	if (this->Is_valid())
+		return this->m_error << (err_code) TErrCodes::eObject::eInited;
 
-	shared::memory::shared_flags flags;
-	shared::memory::shared_data  data ;
-
-	ULONGLONG u_size = 0;
-	n_result = file_.Seek(0, FILE_BEGIN); if (__failed(n_result)) return this->m_error << n_result;
-	n_result = file_.GetSize(u_size); if (__failed(n_result)) return this->m_error << n_result;
-
-	data.n_size = (u_size & 0x0000ffff);
-	// the file must be read first to shared data structure, otherwise the allocator buffer will be empty;
-
-	if (this->m_alloc.Is())
-		if (__failed(this->m_alloc.Builder().Destroy()))
-			return this->m_error = this->m_alloc.Builder().Error();
-
-	this->m_alloc << flags << data;
-
-	if (__failed(this->m_alloc.Builder().Create()))
-		return this->m_error = this->m_alloc.Builder().Error();
-
-	if (__failed(this->m_alloc.Locker().Lock()))
-		return this->m_error = this->m_alloc.Locker().Error();
-
-	void* p_data = const_cast<void*>(this->m_alloc.Locker().Ptr());
-
-	n_result = file_.Read(p_data, data.n_size);
+	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatestreamonfileex ;
+	err_code n_result = ::SHCreateStreamOnFileEx(_p_file_path, STGM_READ, OPEN_EXISTING, false, nullptr,  &m_p_stream);
 	if (__failed(n_result))
 		this->m_error << n_result;
-
-	if (__failed(this->m_alloc.Locker().Unlock()))
-		this->m_error = this->m_alloc.Locker().Error();  // this case will overwrite the above error state, it's necessary to make a review;
-
-	if (this->Error())
-		return this->Error();
-
-	this->Create(this->m_alloc);	
 
 	return this->Error();
 }

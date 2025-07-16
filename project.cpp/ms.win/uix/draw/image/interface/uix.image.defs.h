@@ -8,13 +8,18 @@
 #include <atlcomcli.h>
 #include <atlfile.h>
 
+#include <commctrl.h>
+#include <coml2api.h>
+
+#pragma comment (lib, "Comctl32.lib")
+
 #include "shared.props.h"
 #include "shared.types.h"
-#include "sys.error.h"
-#include "sys.mem.global.h"
-
 #include "shared.preproc.h"
 #include "shared.string.h"
+
+#include "sys.error.h"
+#include "sys.mem.global.h"
 
 namespace ex_ui { namespace draw { namespace images {
 

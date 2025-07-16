@@ -1,5 +1,5 @@
-#ifndef _UIXDRAWGDIOBJECT_H_INCLUDED
-#define _UIXDRAWGDIOBJECT_H_INCLUDED
+#ifndef _UIX_BITMAP_H_INCLUDED
+#define _UIX_BITMAP_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Oct-2010 at 1:02:30am, GMT+3, Rostov-on-Don, Tuesday;
 	This is Sfx Pack project shared UIX draw library GDI wrapper interface declaration file.
@@ -8,11 +8,11 @@
 	Adopted to v15 on 28-May-2018 at 11:08:13p, UTC+7, Phuket, Rawai, Monday;
 	Adopted to FakeGPS project on 19-Apr-2020 at 3:09:08a, UTC+7, Novosibirsk, Sunday;
 */
-#include "uix.gdi.defs.h"
+#include "uix.image.defs.h"
 
 namespace ex_ui { namespace draw { namespace bitmaps {
 
-	using namespace ex_ui::draw::defs;
+	using namespace ex_ui::draw::images;
 	using HBitmap = HBITMAP;
 
 	// https://www.grammarly.com/blog/know-your-latin-i-e-vs-e-g/
@@ -124,4 +124,4 @@ namespace ex_ui { namespace draw { namespace bitmaps {
 	};
 }}}
 
-#endif/*_UIXDRAWGDIOBJECT_H_INCLUDED*/
+#endif/*_UIX_BITMAP_H_INCLUDED*/

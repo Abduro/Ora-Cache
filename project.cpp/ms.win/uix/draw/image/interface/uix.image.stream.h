@@ -26,7 +26,7 @@ namespace ex_ui { namespace draw { namespace images {
 		~CStream (void);
 	public:
 		err_code  Create (const CAlloc&);        // creates a stream from the input global memory block;
-		err_code  Create (_pc_sz _p_file_path);  // this method requires to save global memory block till this stream object will be unused;
+		err_code  Create (_pc_sz _p_file_path);  // created a stream from the file specified; the file is opened for read access and the file must exist;
 		err_code  Destroy(void) ;
 		TError&   Error  (void) const;
 
@@ -41,7 +41,6 @@ namespace ex_ui { namespace draw { namespace images {
 
 	private: CStream& operator = (const CStream&) = delete; CStream& operator = (CStream&&) = delete;
 	private:
-		CAlloc m_alloc;  // used for temporarily implementation;
 		CError m_error;
 		TStreamPtr m_p_stream;
 	};

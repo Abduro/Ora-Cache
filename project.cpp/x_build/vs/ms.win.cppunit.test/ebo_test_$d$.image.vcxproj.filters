@@ -9,11 +9,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_1)ebo_test_$d$.bitmap.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.bitmap.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.img.cache.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.img.cache.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.img.defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.img.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$d$.img.prov.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.img.prov.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.img.stream.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.img.stream.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_1)ebo_test_$d$.picture.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)ebo_test_$d$.picture.cpp"><Filter>src</Filter></ClCompile>
+ <!--ClInclude Include="$(_1)ebo_test_$d$.picture.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$d$.picture.cpp"><Filter>src</Filter></ClCompile-->
   </ItemGroup>
 </Project>

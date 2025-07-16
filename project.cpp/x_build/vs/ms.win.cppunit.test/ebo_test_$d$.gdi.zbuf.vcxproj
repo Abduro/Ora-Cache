@@ -204,12 +204,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cpp" />
-    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.bitmap.h" />
-    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.bitmap.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.blend.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.blend.cpp" />
-    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.cache.h" />
-    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cache.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.font.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.font.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h" />

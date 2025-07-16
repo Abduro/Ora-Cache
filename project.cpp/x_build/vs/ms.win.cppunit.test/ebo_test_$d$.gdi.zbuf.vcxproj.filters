@@ -11,12 +11,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.bitmap.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.bitmap.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.blend.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.blend.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_1)ebo_test_$d$.zbuf.cache.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)ebo_test_$d$.zbuf.cache.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.font.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$d$.zbuf.font.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$d$.zbuf.shade.h"><Filter>interface</Filter></ClInclude>

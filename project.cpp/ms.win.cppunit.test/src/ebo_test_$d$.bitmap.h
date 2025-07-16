@@ -1,14 +1,14 @@
-#ifndef _EBO_TEST_$D$_ZBUF_OBJECT_H_INCLUDED
-#define _EBO_TEST_$D$_ZBUF_OBJECT_H_INCLUDED
+#ifndef _EBO_TEST_$D$_BITMAP_H_INCLUDED
+#define _EBO_TEST_$D$_BITMAP_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Jul-2025 at 00:23:57.297, UTC+4, Batumi, Sunday;
-	This is Ebo Pack WinAPI GDI in-memory bitmap wrappers unit test interface declaration file;
+	This is Ebo Pack WinAPI GDI bitmap image wrappers unit test interface declaration file;
 */
-#include "ebo_test_$d$.zbuf.h"
+#include "ebo_test_$d$.img.defs.h"
 
-namespace ebo { namespace boo { namespace test { namespace bitmap {
+namespace ebo { namespace boo { namespace test { namespace bitmaps {
 
-	using namespace ebo::boo::test::draw;
+	using namespace ebo::boo::test::images;
 
 	using TDibSection = ex_ui::draw::bitmaps::CDibSection;
 
@@ -28,4 +28,4 @@ namespace ebo { namespace boo { namespace test { namespace bitmap {
 
 }}}}
 
-#endif/*_EBO_TEST_$D$_ZBUF_OBJECT_H_INCLUDED*/
+#endif/*_EBO_TEST_$D$_BITMAP_H_INCLUDED*/

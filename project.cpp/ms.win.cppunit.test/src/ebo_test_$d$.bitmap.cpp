@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Jul-2025 at 07:41:12.248, UTC+4, Batumi, Sunday;
-	This is Ebo Pack WinAPI GDI in-memory bitmap wrappers unit test interface implementation file;
+	This is Ebo Pack WinAPI GDI image bitmap wrappers unit test interface implementation file;
 */
-#include "ebo_test_$d$.zbuf.bitmap.h"
+#include "ebo_test_$d$.bitmap.h"
 
-using namespace ebo::boo::test::bitmap;
+using namespace ebo::boo::test::bitmaps;
 
 CDibSection:: CDibSection (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
@@ -31,7 +31,7 @@ void CDibSection::Create (void) {
 	CString cs_hdc = TStringEx().__address_of(h_screen, _T("0x%08x"));
 	CString cs_size = TStringEx().Format(_T("w|h:%d|%d (px)"), size.cx, size.cy);
 
-	_out() += TStringEx().Format(_T("Input params:%sh_scr=%s%ssize=%s"), _p_new, (_pc_sz) cs_hdc, _p_new, (_pc_sz) cs_size);
+	_out() += TStringEx().Format(_T("Input params:%sh_scr=%s%ssize=%s"), _p_new_line, (_pc_sz) cs_hdc, _p_new_line, (_pc_sz) cs_size);
 
 	if (__failed(this->m_dib.Create(h_screen, size)))
 		_out() += this->m_dib.Error().Print(TError::e_print::e_req);

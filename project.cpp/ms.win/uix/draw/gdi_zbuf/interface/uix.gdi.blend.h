@@ -5,7 +5,6 @@
 	This is Ebo Pack WinAPI blend function wrapper interface declaration file;
 */
 #include "uix.gdi.defs.h"
-#include "uix.img.bitmap.h"
 
 namespace ex_ui { namespace draw { namespace blend {
 

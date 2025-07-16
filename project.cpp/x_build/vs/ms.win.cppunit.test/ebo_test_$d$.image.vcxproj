@@ -202,12 +202,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_1)ebo_test_$d$.bitmap.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.bitmap.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.img.cache.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.img.cache.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.img.defs.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.img.defs.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$d$.img.prov.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.img.prov.cpp" />
     <ClInclude Include="$(_1)ebo_test_$d$.img.stream.h" />
     <ClCompile Include="$(_1)ebo_test_$d$.img.stream.cpp" />
-    <ClInclude Include="$(_1)ebo_test_$d$.picture.h" />
-    <ClCompile Include="$(_1)ebo_test_$d$.picture.cpp" />
+ <!--ClInclude Include="$(_1)ebo_test_$d$.picture.h" />
+    <ClCompile Include="$(_1)ebo_test_$d$.picture.cpp" /-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

@@ -20,10 +20,11 @@
 namespace shared { namespace sys_core { namespace com {
 
 	using namespace shared::types;
-
+#pragma region __refs_8
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-progidfromclsid ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogid ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogidex ; (not used here due to auto-install-proc);
+#pragma endregion
 	// ToDo: frankly speaking the classes below shouldn't be declared in this file because, for example, 'CGuid' cannot be used here;
 	class CClsId { // this class works as GUID data type wrapper and nothing more :( ;
 	public:

@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 04-Jul-2025 at 23:39:10.451, (UTC+4), Batumi, Friday;
 	This is Ebo Pack generic 32-bits image cache interface implementation file;
 */
-#include "uix.img.cache.h"
+#include "uix.image.cache.h"
 
 using namespace ex_ui::draw::images;
 
@@ -105,84 +105,6 @@ namespace ex_ui { namespace draw { namespace images { namespace _impl {
 
 }}}}
 using namespace ex_ui::draw::images::_impl;
-/////////////////////////////////////////////////////////////////////////////
-
-CDataProvider:: CDataProvider (const HImgList _h_handle ) : m_list(_h_handle) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CDataProvider:: CDataProvider (const CDataProvider& _src) : CDataProvider() { *this = _src; }
-CDataProvider:: CDataProvider (CDataProvider&&  _victim ) : CDataProvider() { *this = _victim; }
-CDataProvider::~CDataProvider (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-
-TError&  CDataProvider::Error (void) const { return this->m_error; }
-
-bool     CDataProvider::Is_valid (void) const { return nullptr != this->List(); }
-
-HImgList CDataProvider::List  (void) const { return this->m_list; }
-err_code CDataProvider::List  (const HImgList& _h_list) {
-	_h_list;
-	this->m_error << __METHOD__ << __s_ok;
-
-	if (nullptr == _h_list) // ToDo: to find what kind of method to call on input handle in order to check its validity;
-		return m_error << (err_code) TErrCodes::eObject::eHandle;
-
-	if (nullptr != this->List() && this->List() == _h_list)
-		return m_error << (err_code) TErrCodes::eObject::eInited = _T("Input handle is already set");
-
-	this->m_list = _h_list;
-
-	return this->Error();
-}
-
-err_code CDataProvider::Load  (_pc_sz _p_file_path) {
-	_p_file_path;
-	this->m_error << __METHOD__ << __s_ok;
-#if (0)
-	// ImageList_Read() creates new image list, thus the image list variable must be empty(nullptr);
-	if (nullptr != this->List() || this->Is_valid())
-		return this->m_error << (err_code) TErrCodes::eObject::eInited = _T("Image list handle must equal to null");
-
-	if (nullptr == _p_file_path || 0 == ::_tcslen(_p_file_path))
-		return this->m_error << __e_inv_arg;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
-
-	if (false == ::PathFileExists((_pc_sz)_p_file_path))
-		this->m_error << (err_code) TErrCodes::ePath::eNoFile;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatestreamonfileex ;
-
-	ATL::CComPtr<IStream> stream;
-	// tries to open file for reading, not for creating or writing data;
-	this->m_error << ::SHCreateStreamOnFileEx(_p_file_path, STGM_READ, OPEN_EXISTING, false, nullptr, &stream);
-	if (this->m_error)
-		return this->Error();
-	
-	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_read ;
-	this->List(::ImageList_Read(stream));
-	if (this->Is_valid() == false)
-		this->m_error.Last();
-#else
-
-	if (this->Is_valid() == false)
-		return this->m_error << __e_not_inited;
-
-	CPicture picture;
-	if (__failed(picture.Load(_p_file_path)))
-		return this->m_error = picture.Error();
-
-
-
-#endif
-
-	return this->Error();
-}
-/////////////////////////////////////////////////////////////////////////////
-
-CDataProvider&  CDataProvider::operator = (const CDataProvider& _src) { *this << _src.List(); return *this; }
-CDataProvider&  CDataProvider::operator = (CDataProvider&& _victim ) { *this = (const CDataProvider&)_victim; return *this; }
-
-CDataProvider&  CDataProvider::operator <<(const HImgList& _h_list) { this->List(_h_list); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

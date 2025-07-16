@@ -50,7 +50,7 @@ void CStream::Load_image (void) {
 	}
 
 	_out() += _T("Creating the stream from the file...");
-	_out() += TStringEx().Format(_T("The path to image file: %s%s"), _p_new_line, (_pc_sz) cs_image_0);
+	_out() += TString().Format(_T("The path to image file: %s%s"), _p_new_line, (_pc_sz) cs_image_0);
 
 	if (__failed(this->m_stream.Create((_pc_sz) cs_image_0))) {
 		_out() += this->m_stream.Error().Print(TError::e_print::e_req);

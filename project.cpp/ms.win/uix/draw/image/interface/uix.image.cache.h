@@ -4,8 +4,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 04-Jul-2025 at 23:35:28.326, (UTC+4), Batumi, Friday;
 	This is Ebo Pack generic 32-bits image cache interface declaration file;
 */
-#include "uix.gdi.defs.h"
-#include "uix.img.bitmap.h"
+#include "uix.image.defs.h"
+#include "uix.bitmap.h"
 
 namespace ex_ui { namespace draw { namespace images {
 
@@ -27,30 +27,6 @@ namespace ex_ui { namespace draw { namespace images {
 		(2) COM interface IImageList: https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/nn-commoncontrols-iimagelist ;
 		(3) User defined class or a set of classes, like it is made below;
 	*/
-	// a data provider class does *not* manage or control life cycle of the image list, but just deal with its handle for setting data;
-	class CDataProvider {
-	public:
-		 CDataProvider (const HImgList = nullptr) ;  CDataProvider (const CDataProvider&); CDataProvider (CDataProvider&&) ;
-		~CDataProvider (void);
-
-	public:
-		TError&  Error (void) const;
-		bool  Is_valid (void) const;  // checks a set value of the image list handle for nullptr, nothing specific;
-		HImgList List  (void) const;
-		err_code List  (const HImgList&);
-
-		err_code Load  (_pc_sz _p_file_path);
-
-	public:
-		CDataProvider&  operator = (const CDataProvider&);
-		CDataProvider&  operator = (CDataProvider&&);       // neither swap() nor move() method is used; just copying image list handle;
-
-		CDataProvider&  operator <<(const HImgList&);
-
-	private:
-		HImgList m_list;
-		CError   m_error;	
-	};
 
 	class CList {
 	public:

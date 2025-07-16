@@ -1,8 +1,10 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 07-Jul-2025 at 10:51:48.442, UTC+4, Batumi, Saturday;
-	This is Ebo Pack WinAPI GDI in-memory image cache unit test interface declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 17-Jul-2025 at 01:07:50.261, UTC+4, Batumi, Thursday;
+	This is Ebo Pack WinAPI GDI image cache data provider unit test interface implementation file;
 */
-#include "ebo_test_$d$.zbuf.cache.h"
+#include "ebo_test_$d$.img.prov.h"
+#include "ebo_test_$d$.img.stream.h"
+
 #include "uix.theme.named.h"
 #include "uix.theme.reg.h"
 
@@ -14,7 +16,7 @@ using namespace ex_ui::theme::storage;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ebo { namespace boo { namespace test { namespace cache { namespace _impl {
-
+#if (0)
 	class CTestCase {
 	public:
 		 CTestCase (void) { this->m_error >> __CLASS__ << __METHOD__ << __s_ok; }
@@ -85,46 +87,9 @@ namespace ebo { namespace boo { namespace test { namespace cache { namespace _im
 		CString  m_path ;      // the path to test image location for the currently selected theme;
 		CString  m_app_ready;
 	};
-
+#endif
 }}}}}
 using namespace ebo::boo::test::cache::_impl;
-/////////////////////////////////////////////////////////////////////////////
-
-CCacheList:: CCacheList (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
-		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
-}
-
-void CCacheList::_ctor (void) {
-
-	_out() += TStringEx().Format(_T("*result*:%s"), (_pc_sz) this->m_list.Print(e_print::e_all));
-	_out()();
-}
-
-void CCacheList::Create (void) {
-	_out() += TLog_Acc::e_new_line;
-	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TStringEx().Format(_T("*before*: %s"), (_pc_sz) this->m_list.Print(e_print::e_all));
-
-	const t_size size{16,16};
-	const uint16_t n_count = 2;
-	const uint16_t n_delta = 2;
-
-	_out() += TStringEx().Format (
-		_T("Input args:%ssize=[w:%u|h:%u](px)%scount=%d%sdelta=%d"), _p_new, size.cx, size.cy, _p_new, n_count, _p_new, n_delta
-	);
-
-	if (__failed(this->m_list.Create(size, n_count, n_delta)))
-		_out() += this->m_list.Error().Print(TError::e_print::e_req);
-	else
-		_out() += TStringEx().Format(_T("*after* : %s"), (_pc_sz) this->m_list.Print(e_print::e_all));
-
-	_out()();
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 CDataProvider:: CDataProvider (const bool _b_verb) : m_b_verb(_b_verb) {
@@ -140,30 +105,24 @@ void CDataProvider::LoadFile (void) {
 	_out() += TLog_Acc::e_new_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CTestCase test_case;
+	CTestCase_0 case_0;
 
 	_out() += _T("Receiving path to test images...");
-	if (__failed(test_case.Set_path())) {
-		_out() += test_case.Error().Print(TError::e_print::e_req);
+	if (__failed(case_0.Set_path())) {
+		_out() += case_0.Error().Print(TError::e_print::e_req);
 		_out()(); return;
 	}
-	else {
-		_out() += TStringEx().Format (_T("The path is set to:%s%s"), _p_new, test_case.Get_path());
-	}
 
-	_out() += _T("Receiving path to app-ready image...");
-	if (__failed(test_case.SetApp_ready())) {
-		_out() += test_case.Error().Print(TError::e_print::e_req);
-		_out()(); return;
-	}
-	else {
-		_out() += TStringEx().Format (_T("The path is set to:%s%s"), _p_new, test_case.GetApp_ready());
-	}
+	CString cs_image_0 = case_0.Get_path(CTestCase_0::e_images::e_no_0);
 
-	if (__failed(this->m_prov.Load(test_case.GetApp_ready())))
+	_out() += TString().Format(_T("The path to the image file: %s%s"), _p_new_line, (_pc_sz) cs_image_0);
+
+	if (__failed(this->m_prov.Load((_pc_sz) cs_image_0)))
 		_out() += this->m_prov.Error().Print(TError::e_print::e_req);
-	else
-		_out() += _T("*result*: the image loaded successfully;");
+	else {
+		_out() += _T("*result*: the bitmap is created successfully;");
+		_out() += this->m_prov.Result().Print(e_print::e_all);
+	}
 
 	_out()();
 }

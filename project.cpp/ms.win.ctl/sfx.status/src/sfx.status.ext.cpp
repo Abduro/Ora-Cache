@@ -3,6 +3,9 @@
 	This is Ebo Pack shared status bar control panel interface implementation file.
 */
 #include "sfx.status.ext.h"
+
+namespace ex_ui { namespace controls { namespace sfx { namespace _impl { void __warning_lnk_4221 (void) {}}}}}
+
 #if (0)
 using namespace ST_Ctrls;
 

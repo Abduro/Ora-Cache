@@ -158,12 +158,12 @@ typedef shared::sys_core::com::CCoModel TCoModel;
 typedef shared::sys_core::com::CCoModel::_cfg_4 TCoModelCfg; typedef TCoModelCfg TCo_Cfg; // just making name shorter;
 
 namespace shared { namespace sys_core { namespace com {
-
+#pragma region __refs_9
 	// https://stackoverflow.com/questions/17884290/cappmodule-vs-catlexemodulet-getting-the-application-message-loop;
 	// https://learn.microsoft.com/en-us/cpp/atl/catlservicemodulet-servicemain-function ;
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlservicemodulet ;
 	// possibly it would be better to use ATL::CAtlExeModuleT::InitializeCom(); but for the sake of keeping things simple, this class is declared ;
-	
+#pragma endregion	
 	class CCoGuard {
 	public:
 		 CCoGuard (bool _b_dbg = true); // creates this class object, no co-init operation is performed; for debug purpose only;

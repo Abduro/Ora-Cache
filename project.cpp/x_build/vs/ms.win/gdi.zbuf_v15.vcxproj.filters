@@ -20,10 +20,6 @@
     <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)uix.gen.font.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)uix.gen.font.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)uix.img.bitmap.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)uix.img.bitmap.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)uix.img.cache.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)uix.img.cache.cpp" ><Filter>src</Filter></ClCompile>
 
   </ItemGroup>
 </Project>

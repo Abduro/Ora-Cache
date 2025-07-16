@@ -6,7 +6,7 @@
 	Adopted to v15 on 28-May-2018 at 10:56:51p, UTC+7, Phuket, Rawai, Monday;
 	Adopted to FakeGPS project on 24-Apr-2020 at 9:47:58p, UTC+7, Novosibirsk, Friday;
 */
-#include "uix.img.bitmap.h"
+#include "uix.bitmap.h"
 
 using namespace ex_ui::draw::bitmaps;
 

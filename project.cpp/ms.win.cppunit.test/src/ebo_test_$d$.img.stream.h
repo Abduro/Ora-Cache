@@ -29,7 +29,7 @@ namespace ebo { namespace boo { namespace test { namespace images {
 	public:
 		enum e_images : uint32_t {
 		     e_no_0 = 0,
-		     e_no_1,
+		     e_no_1 = 1,
 		};
 	public:
 		 CTestCase_0 (void);

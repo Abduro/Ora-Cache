@@ -6,9 +6,11 @@
 */
 #include "_log.h"
 
+#include "uix.bitmap.h"
+#include "uix.image.cache.h"
 #include "uix.image.defs.h"
+#include "uix.image.prov.h"
 #include "uix.image.stream.h"
-#include "uix.picture.h"
 
 namespace ebo { namespace boo { namespace test { namespace images {
 

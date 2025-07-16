@@ -190,12 +190,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)uix.bitmap.h"/>
+    <ClCompile Include="$(_1)uix.bitmap.cpp"/>
+    <ClInclude Include="$(_0)uix.image.cache.h"/>
+    <ClCompile Include="$(_1)uix.image.cache.cpp"/>
     <ClInclude Include="$(_0)uix.image.defs.h"/>
     <ClCompile Include="$(_1)uix.image.defs.cpp"/>
+    <ClInclude Include="$(_0)uix.image.prov.h"/>
+    <ClCompile Include="$(_1)uix.image.prov.cpp"/>
     <ClInclude Include="$(_0)uix.image.stream.h"/>
     <ClCompile Include="$(_1)uix.image.stream.cpp"/>
-    <ClInclude Include="$(_0)uix.picture.h"/>
-    <ClCompile Include="$(_1)uix.picture.cpp"/>
+ <!--ClInclude Include="$(_0)uix.picture.h"/>
+    <ClCompile Include="$(_1)uix.picture.cpp"/-->
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

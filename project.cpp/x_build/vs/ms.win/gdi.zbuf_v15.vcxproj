@@ -189,10 +189,6 @@
     <ClCompile Include="$(_1)uix.gdi.zbuf.cpp" />
     <ClInclude Include="$(_0)uix.gen.font.h" />
     <ClCompile Include="$(_1)uix.gen.font.cpp" />
-    <ClInclude Include="$(_0)uix.img.bitmap.h" />
-    <ClCompile Include="$(_1)uix.img.bitmap.cpp" />
-    <ClInclude Include="$(_0)uix.img.cache.h" />
-    <ClCompile Include="$(_1)uix.img.cache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">
