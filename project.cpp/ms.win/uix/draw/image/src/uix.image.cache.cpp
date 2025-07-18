@@ -9,8 +9,11 @@ using namespace ex_ui::draw::images;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ex_ui { namespace draw { namespace images { namespace _impl {
+
+#if (0)
 	/*
 		This is the simplified version of the implementation of loading PNG picture from a file;
+		*important*: OleLoadPictureFile() does not work with png, jpeg and other format image types;
 	*/
 #include <olectl.h>
 
@@ -102,7 +105,7 @@ namespace ex_ui { namespace draw { namespace images { namespace _impl {
 		CComPtr<IPicture> m_pPicture;
 		HBITMAP m_hBitmap;  // the bitmap that is loaded from the file specified;
 	};
-
+#endif
 }}}}
 using namespace ex_ui::draw::images::_impl;
 

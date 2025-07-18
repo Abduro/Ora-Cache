@@ -178,6 +178,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shell.fs.folder.h" />
+    <ClCompile Include="$(_1)shell.fs.folder.cpp" />
     <ClInclude Include="$(_0)sys.procs.list.h" />
     <ClCompile Include="$(_1)sys.procs.list.cpp" />
     <ClInclude Include="$(_0)sys.shell.dwm.h" />

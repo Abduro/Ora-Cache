@@ -53,7 +53,7 @@ namespace shared { namespace sys_core { namespace shell {
 		const
 		TFntInstalled&  Raw (void) const;
 #else
-		bool     Has  (_pc_sz _p_name) const; // returns 'true' in case of installed font set containse the font of the input name;
+		bool     Has  (_pc_sz _p_name) const; // returns 'true' in case of installed font set contains the font of the input name;
 		const
 		TFntList List (void) const;
 #endif

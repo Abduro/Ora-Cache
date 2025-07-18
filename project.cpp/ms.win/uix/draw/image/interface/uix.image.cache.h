@@ -65,7 +65,7 @@ namespace ex_ui { namespace draw { namespace images {
 		CError   m_error;
 		t_size   m_size ;
 		HImgList m_list ;
-		dword    m_list_id;
+		dword    m_list_id; // (static_cast<dword>(_n_width) << 16) | static_cast<dword>(_n_height);
 	};
 
 	typedef ::std::map<dword, CList> TRawLists;
@@ -76,7 +76,8 @@ namespace ex_ui { namespace draw { namespace images {
 		~CCache (void);
 
 	public:
-		TError& Error (void) const;
+	//	err_code Add (void); 
+		TError&  Error (void) const;
 
 	public:
 		CCache& operator = (const CCache&);

@@ -310,6 +310,7 @@ err_code CDibSection::Reset  (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 _pc_byte CDibSection::Bits   (void) const { return m_pData; }
+_byte*   CDibSection::Bits   (void)       { return m_pData; }
 
 TError&  CDibSection::Error  (void) const { return this->m_error; }
 

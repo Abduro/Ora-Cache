@@ -9,6 +9,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shell.fs.folder.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shell.fs.folder.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.procs.list.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.procs.list.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.shell.inc.h" ><Filter>interface</Filter></ClInclude>
