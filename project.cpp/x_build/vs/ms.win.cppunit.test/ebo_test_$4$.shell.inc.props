@@ -13,6 +13,8 @@
     <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
     <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell><!--This is the target for testing!-->
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color><!--This project is required for custom/named theme;-->
+    <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme><!--This project is required for finding theme related test images;-->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.cppunit.test\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
@@ -27,12 +29,17 @@
     <_5>$(Memory)interface\</_5><!--This interface is being tested!-->
     <_6>$(ComCore)interface\</_6>
     <_7>$(Shell)interface\</_7>
-    <_8></_8>
-    <_9></_9>
-    <_a></_a>
+    <_8>$(Color)interface\</_8>
+    <_9>$(Color)interface\compl\</_9>
+    <_a>$(Color)interface\named\</_a>
+    <_b>$(Theme)interface\</_b>
+    <_c>$(Theme)interface\named\</_c>
+    <_d></_d>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
+    <Include_abc>$(_a);$(_b);$(_c)</Include_abc>
+    <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

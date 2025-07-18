@@ -15,8 +15,6 @@
 #include "sys.err.codes.h"
 #include "sys.error.h"
 
-#include "color.rgb.h"
-
 namespace ex_ui { namespace theme {
 
 	using namespace shared::types;

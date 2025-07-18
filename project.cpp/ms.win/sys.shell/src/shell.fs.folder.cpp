@@ -149,11 +149,11 @@ err_code  CFolder::Path  (_pc_sz _p_path) {
 #if defined(_DEBUG)
 CString   CFolder::Print (const e_print _e_opt, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
 	_e_opt; _p_pfx; _p_sfx;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%spath=%s;valid=%s;%s%sfiles=%s;%s%ssubdirs=%s%s%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%spath=%s;valid=%s;%s%sfiles=%s;%s%ssubdirs=%s%s%s}");
-	static _pc_sz pc_sz_pat_r = _T("{%s%spath=%s;valid=%s;%s%sfiles=%s;%s%ssubdirs=%s%s%s}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%spath=%s;valid=%s;%s%sfiles:%s;%s%ssubdirs:%s%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%spath=%s;valid=%s;%s%sfiles:%s;%s%ssubdirs:%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%spath=%s;valid=%s;%s%sfiles:%s;%s%ssubdirs:%s%s%s}");
 
-	CString cs_path = this->Path();
+	CString cs_path  = this->m_path.IsEmpty() ? _T("#not_set") : this->Path();
 	CString cs_valid = TStringEx().Bool(this->Is_valid());
 
 	CString cs_files;
@@ -165,7 +165,7 @@ CString   CFolder::Print (const e_print _e_opt, _pc_sz _p_pfx/* = _T("\t\t")*/, 
 	if (cs_files.IsEmpty()) {
 		cs_files += _p_sfx;
 		cs_files += _p_pfx;
-		cs_files += _T("no files;");
+		cs_files += _T("no files");
 	}
 
 	CString cs_dirs;

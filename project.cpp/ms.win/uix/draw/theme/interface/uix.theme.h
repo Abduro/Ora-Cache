@@ -7,6 +7,7 @@
 	Adopted to Ebo Pack custom color theme project on 07-Jun-2025 at 18:18:15.069, UTC+4, Batumi, Saturday;
 */
 #include "uix.theme.inc.h"
+#include "color.rgb.h"
 
 namespace ex_ui { namespace theme { namespace colors {
 

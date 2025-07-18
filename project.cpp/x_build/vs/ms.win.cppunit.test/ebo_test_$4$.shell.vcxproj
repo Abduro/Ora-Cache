@@ -203,9 +203,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(_1)ebo_test_$4$.shell.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="$(_1)ebo_test_$4$.shell.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$4$.shell.dirs.h" />
+    <ClCompile Include="$(_1)ebo_test_$4$.shell.dirs.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$4$.shell.font.h" />
+    <ClCompile Include="$(_1)ebo_test_$4$.shell.font.cpp" />
+    <ClInclude Include="$(_1)ebo_test_$4$.shell.proc.h" />
+    <ClCompile Include="$(_1)ebo_test_$4$.shell.proc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
@@ -219,6 +223,9 @@
     </ProjectReference>
     <ProjectReference Include="..\ms.win\sys.shell_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000000D}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ms.win\theme_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000023}</Project>
     </ProjectReference>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>

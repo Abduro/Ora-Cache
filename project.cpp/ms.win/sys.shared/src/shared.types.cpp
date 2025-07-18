@@ -21,4 +21,4 @@ namespace shared { namespace types {
 	}
 }}
 #endif
-void __warning_lnk_4221 (void) {}
+namespace shared { namespace types { namespace _impl { void __warning_lnk_4221 (void) {}}}}
