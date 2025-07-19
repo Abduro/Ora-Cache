@@ -47,8 +47,8 @@ CFolder::~CFolder (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CFolder::EnumItems (void) {
-
+err_code  CFolder::EnumItems (_pc_sz _p_ext/* = _T("*")*/) {
+	_p_ext;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (this->Is_valid() == false)
@@ -60,10 +60,15 @@ err_code  CFolder::EnumItems (void) {
 	if (this->m_subdirs.empty() == false)
 		this->m_subdirs.clear();
 
+	CString cs_query;
+	cs_query.Format(_T("%s\\%s"), this->Path(), _T("*")); // selects all files for enumerating, the extention of the each file will be checked below;
+
+	CString cs_ext(_p_ext);
+
 	// https://learn.microsoft.com/en-us/windows/win32/fileio/listing-the-files-in-a-directory ;
 
 	TFindData data_ = {0};
-	HANDLE h_found  = ::FindFirstFile(this->Path(), &data_); // https://learn.microsoft.com/en-us/windows/win32/api/FileAPI/nf-fileapi-findfirstfilea ;
+	HANDLE h_found  = ::FindFirstFile((_pc_sz) cs_query, &data_); // https://learn.microsoft.com/en-us/windows/win32/api/FileAPI/nf-fileapi-findfirstfilea ;
 
 	if (__inv_handle_val == h_found) {
 		this->m_error.Last();
@@ -88,7 +93,7 @@ err_code  CFolder::EnumItems (void) {
 				if (__failed(sub_dir.Path((_pc_sz) cs_folder))) {
 					this->m_error = sub_dir.Error(); break;
 				}
-				if (__failed(sub_dir.EnumItems())) {
+				if (__failed(sub_dir.EnumItems(_p_ext))) {
 					this->m_error = sub_dir.Error(); break;
 				}
 
@@ -102,7 +107,11 @@ err_code  CFolder::EnumItems (void) {
 		}
 		else {
 			try {
-				this->m_files.push_back(cs_name);
+				if (_p_ext && 0 == cs_ext.CompareNoCase(cs_name.Right(static_cast<int>(::_tcslen(_p_ext))))) {
+					this->m_files.push_back(cs_name);
+				}
+				else if (nullptr == _p_ext)
+					this->m_files.push_back(cs_name);
 			}
 			catch (const ::std::bad_alloc&) {
 				this->m_error << __e_no_memory; break;
@@ -149,9 +158,9 @@ err_code  CFolder::Path  (_pc_sz _p_path) {
 #if defined(_DEBUG)
 CString   CFolder::Print (const e_print _e_opt, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
 	_e_opt; _p_pfx; _p_sfx;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%spath=%s;valid=%s;%s%sfiles:%s;%s%ssubdirs:%s%s%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%spath=%s;valid=%s;%s%sfiles:%s;%s%ssubdirs:%s%s%s}");
-	static _pc_sz pc_sz_pat_r = _T("{%s%spath=%s;valid=%s;%s%sfiles:%s;%s%ssubdirs:%s%s%s}");
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%spath=%s;valid=%s;%s%sfiles:%s%s%ssubdirs:%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%spath=%s;valid=%s;%s%sfiles:%s%s%ssubdirs:%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%spath=%s;valid=%s;%s%sfiles:%s%s%ssubdirs:%s}");
 
 	CString cs_path  = this->m_path.IsEmpty() ? _T("#not_set") : this->Path();
 	CString cs_valid = TStringEx().Bool(this->Is_valid());
@@ -165,7 +174,7 @@ CString   CFolder::Print (const e_print _e_opt, _pc_sz _p_pfx/* = _T("\t\t")*/, 
 	if (cs_files.IsEmpty()) {
 		cs_files += _p_sfx;
 		cs_files += _p_pfx;
-		cs_files += _T("no files");
+		cs_files += _T("no files;");
 	}
 
 	CString cs_dirs;
@@ -178,6 +187,8 @@ CString   CFolder::Print (const e_print _e_opt, _pc_sz _p_pfx/* = _T("\t\t")*/, 
 		cs_dirs += _p_sfx;
 		cs_dirs += _p_pfx;
 		cs_dirs += _T("no sub-dirs;");
+		cs_dirs += _p_sfx;
+		cs_dirs += _p_pfx;
 	}
 
 	CString cs_out;
@@ -185,17 +196,17 @@ CString   CFolder::Print (const e_print _e_opt, _pc_sz _p_pfx/* = _T("\t\t")*/, 
 	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
 		_p_sfx, _p_pfx, (_pc_sz) cs_path , (_pc_sz) cs_valid,
 		_p_sfx, _p_pfx, (_pc_sz) cs_files,
-		_p_sfx, _p_pfx, (_pc_sz) cs_dirs , _p_sfx, _p_pfx);
+		_p_sfx, _p_pfx, (_pc_sz) cs_dirs );
 	}
 	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__,
 		_p_sfx, _p_pfx, (_pc_sz) cs_path , (_pc_sz) cs_valid,
 		_p_sfx, _p_pfx, (_pc_sz) cs_files,
-		_p_sfx, _p_pfx, (_pc_sz) cs_dirs , _p_sfx, _p_pfx);
+		_p_sfx, _p_pfx, (_pc_sz) cs_dirs );
 	}
 	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r,
 		_p_sfx, _p_pfx, (_pc_sz) cs_path , (_pc_sz) cs_valid,
 		_p_sfx, _p_pfx, (_pc_sz) cs_files,
-		_p_sfx, _p_pfx, (_pc_sz) cs_dirs , _p_sfx, _p_pfx);
+		_p_sfx, _p_pfx, (_pc_sz) cs_dirs );
 	}
 
 	if (cs_out.IsEmpty())

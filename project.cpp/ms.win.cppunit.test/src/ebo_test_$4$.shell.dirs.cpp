@@ -29,8 +29,8 @@ CFolder:: CFolder (const bool _b_verb) : m_b_verb(_b_verb) {
 
 void CFolder::_ctor (void) {
 
-	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_folder.Print(e_print::e_all));
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("%s"), (_pc_sz) this->m_folder.Print(e_print::e_all));
 	_out()();
 
 }
@@ -38,8 +38,37 @@ void CFolder::_ctor (void) {
 void CFolder::EnumItems (void) {
 
 	_out() += TLog_Acc::e_emp_line;
-	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TStringEx().Format(_T("%s"), (_pc_sz) this->m_folder.Print(e_print::e_all));
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("*before*: %s"), (_pc_sz) this->m_folder.Print(e_print::e_all));
+
+	CBase case_bs;
+
+	_out() += _T("Reading the test cases root folder path:");
+
+	if (__failed(case_bs.Root().Set())) {
+		_out() += case_bs.Root().Error().Print(TError::e_print::e_req);
+		_out()(); return;
+	}
+	CString cs_root = case_bs.Root().Get();
+
+	_out() += cs_root;
+
+	_out() += _T("Setting the test cases root folder path:");
+
+	if (__failed(this->m_folder.Path(cs_root))) {
+		_out() += this->m_folder.Error().Print(TError::e_print::e_req);
+		_out()(); return;
+	}
+
+	_out() += _T("Enumerating the test cases image files...");
+
+	if (__failed(this->m_folder.EnumItems(_T("png")))) {
+		_out() += this->m_folder.Error().Print(TError::e_print::e_req);
+		_out()(); return;
+	}
+
+	_out() += TString().Format(_T("*after *: %s"), (_pc_sz) this->m_folder.Print(e_print::e_all));
+
 	_out()();
 
 }

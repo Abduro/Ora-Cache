@@ -56,7 +56,7 @@ namespace shared { namespace user_32 { namespace ntfs {
 		~CFolder (void);
 
 	public:
-		err_code  EnumItems (void);    // enumerates files and sub-folders;
+		err_code  EnumItems (_pc_sz _p_ext = _T("*"));  // enumerates files and sub-folders by applying the input mask to filter the result by file extension;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;  // it returns 'true' in case if the path is set and nothing more specific;

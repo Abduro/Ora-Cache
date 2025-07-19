@@ -10,6 +10,38 @@ namespace ebo { namespace boo { namespace test { namespace cases {
 
 	using namespace ebo::boo::test;
 
+	class CBase {
+	public:
+		class CRoot { // this class takes into account the currently selected custom/named theme;
+		public:
+			 CRoot (void); CRoot (const CRoot&) = delete; CRoot (CRoot&&) = delete;
+			~CRoot (void);
+		public:
+			_pc_sz   Get (void) const;    // gets the path to the root folder of the theme test cases;
+			err_code Set (void);          // sets, strickly speaking, reads the path to the theme test cases from the registry;
+
+			TError&  Error (void) const;
+			bool  Is_valid (void) const;  // returns 'true' in case if the path to the root folder of the theme test cases is already set, i.e. not empty;
+
+		private:
+			CRoot& operator = (const CRoot&) = delete; CRoot& operator = (CRoot&&) = delete;
+			CError  m_error;
+			CString m_path ;
+		};
+	public:
+		 CBase (void);
+		 CBase (const CBase&) = delete; CBase (CBase&&) = delete;
+		~CBase (void);
+	public:
+		const
+		CRoot& Root (void) const;
+		CRoot& Root (void) ;
+
+	private:
+		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
+		CRoot  m_root;
+	};
+
 	class CTestCase {
 	public:
 		 CTestCase (void);

@@ -13,6 +13,60 @@ using namespace ex_ui::theme;
 using namespace ex_ui::theme::storage;
 
 /////////////////////////////////////////////////////////////////////////////
+namespace ebo { namespace boo { namespace test { namespace cases {
+
+CBase::CRoot:: CRoot (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CBase::CRoot::~CRoot (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+_pc_sz   CBase::CRoot::Get (void) const { return (_pc_sz) this->m_path; }
+
+TError&  CBase::CRoot::Error (void) const { return this->m_error; }
+
+bool     CBase::CRoot::Is_valid (void) const { return false == this->m_path.IsEmpty(); }
+
+err_code CBase::CRoot::Set (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	
+	err_code n_error = ex_ui::theme::Get_current().Load(); // this is required for setting the current theme;
+
+	if (__failed(n_error))
+		return this->m_error << n_error;
+
+	CString cs_root = Get_router().TestCase().Root();  // gets the path to the root key;
+
+	CRegKey root_key;
+	LSTATUS n_result = root_key.Open(Get_router().Root(), (_pc_sz) cs_root);
+	if (!!n_result)
+		return this->m_error = dword(n_result);
+
+	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
+
+	unsigned long n_chars = u_count;
+
+	n_result = root_key.QueryStringValue(_T("path"), sz_buffer, &n_chars);
+	if (!!n_result)
+		(this->m_error = dword(n_result)) = _T("Path to test cases is not specified;");
+	else
+		this->m_path = sz_buffer;
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CBase:: CBase (void) {}
+CBase::~CBase (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+const
+CBase::CRoot& CBase::Root (void) const { return this->m_root; }
+CBase::CRoot& CBase::Root (void)       { return this->m_root; }
+
+}}}}
+/////////////////////////////////////////////////////////////////////////////
 #if (0)
 CTestCase_Root:: CTestCase_Root (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
