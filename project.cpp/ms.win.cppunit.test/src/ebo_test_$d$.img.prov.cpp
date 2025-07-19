@@ -8,7 +8,10 @@
 #include "uix.theme.named.h"
 #include "uix.theme.reg.h"
 
+#include "ebo_test_$d$.theme.case.h"
+
 using namespace ebo::boo::test::cache;
+using namespace ebo::boo::test::cases;
 
 using namespace ex_ui::theme;
 using namespace ex_ui::theme::storage;

@@ -23,22 +23,23 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
-    <_2>$(Shared)interface\</_2>
-    <_3>$(Error)interface\</_3>
-    <_4>$(Error)interface\seh\</_4>
-    <_5>$(Memory)interface\</_5><!--This interface is being tested!-->
-    <_6>$(ComCore)interface\</_6>
-    <_7>$(Shell)interface\</_7>
-    <_8>$(Color)interface\</_8>
-    <_9>$(Color)interface\compl\</_9>
-    <_a>$(Color)interface\named\</_a>
-    <_b>$(Theme)interface\</_b>
-    <_c>$(Theme)interface\named\</_c>
-    <_d></_d>
+    <_2>$(Root)src\test.cases\</_2><!--This folder contains test cases' interface for loading images for theme;-->
+    <_3>$(Shared)interface\</_3>
+    <_4>$(Error)interface\</_4>
+    <_5>$(Error)interface\seh\</_5>
+    <_6>$(Memory)interface\</_6><!--This interface is being tested!-->
+    <_7>$(ComCore)interface\</_7>
+    <_8>$(Shell)interface\</_8>
+    <_9>$(Color)interface\</_9>
+    <_a>$(Color)interface\compl\</_a>
+    <_b>$(Color)interface\named\</_b>
+    <_c>$(Theme)interface\</_c>
+    <_d>$(Theme)interface\named\</_d>
+    <_e></_e>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

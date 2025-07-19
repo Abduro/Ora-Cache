@@ -24,6 +24,8 @@
 
 namespace ebo { namespace boo { namespace test {
 
+	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
 	// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
 #if defined WIN64
 	uint64_t __address_of (const void* const _p_fun_ptr) ;
