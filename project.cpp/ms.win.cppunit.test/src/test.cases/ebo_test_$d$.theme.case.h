@@ -105,9 +105,11 @@ namespace ebo { namespace boo { namespace test { namespace cases {
 	CString   Get_path (const e_images) const; // returns the path to the image file; in case of error the empty string is returned;
 	err_code  Set_path (void) ;                // composes the path specific for images of the status bar control;
 
+	_pc_sz    Get_root (void) const;  // gets the folder of test images for this test case;
+
 	private:
 		mutable
-		CError m_error;
+		CError  m_error ;
 		CString m_folder; // this is the path to images' folder;
 	};
 

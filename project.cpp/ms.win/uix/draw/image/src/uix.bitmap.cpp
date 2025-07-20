@@ -225,7 +225,14 @@ CBitmapInfo::operator const TBmpInfo (void) const { return this->Raw(); }
 
 /////////////////////////////////////////////////////////////////////////////
 // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobject ;
-bool CBitmapInfo::IsValid(const HBitmap _handle) {  return(_handle != NULL && OBJ_BITMAP == ::GetObjectType((HGDIOBJ)_handle)); }
+bool CBitmapInfo::IsValid(const HBitmap _handle) { 
+	bool b_valid = false;
+	if (nullptr == _handle)
+		return b_valid;
+	if (OBJ_BITMAP != ::GetObjectType((HGDIOBJ)_handle))
+		return b_valid;
+	return b_valid = true;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -288,16 +295,20 @@ err_code CDibSection::Destroy(void) {
 	return this->Error();
 }
 
-HBitmap  CDibSection::Detach (void) { HBITMAP h_result = m_handle; this->Reset(); return h_result; }
+HBitmap  CDibSection::Detach (void) {
+	HBitmap h_result = m_handle;
+	this->Reset();
+	return h_result;
+}
 
 err_code CDibSection::Reset  (void) {
 
 	this->m_error << __METHOD__ << __s_ok;
-
-	if (this->Is()) {
+#if (0)
+	if (this->Is()) { // this is not the case when bitmap handle is being detached;
 		return this->m_error << (err_code) TErrCodes::eExecute::eState; // object still exists; cannot clean the variables;
 	}
-
+#endif
 	m_pData   = nullptr;
 	m_handle  = nullptr;
 	m_size.cx = m_size.cy = 0;

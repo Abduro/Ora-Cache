@@ -242,3 +242,5 @@ err_code CTestCase_0::Set_path (void) {
 
 	return __s_ok;
 }
+
+_pc_sz   CTestCase_0::Get_root (void) const { return (_pc_sz) this->m_folder; }

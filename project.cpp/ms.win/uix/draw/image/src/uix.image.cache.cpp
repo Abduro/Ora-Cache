@@ -3,8 +3,13 @@
 	This is Ebo Pack generic 32-bits image cache interface implementation file;
 */
 #include "uix.image.cache.h"
+#include "uix.image.prov.h"
 
 using namespace ex_ui::draw::images;
+
+#include "shell.fs.folder.h"
+
+using namespace shared::user_32::ntfs;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -164,10 +169,10 @@ err_code  CList::Create (const uint16_t _n_width, const uint16_t _n_height, cons
 	if (nullptr == this->m_list)
 		this->m_error.Last();
 	else {
-		this->m_list_id = (static_cast<dword>(_n_width) << 16) | static_cast<dword>(_n_height);
 		this->m_size = {_n_width, _n_height};
+		this->m_list_id = CListId::ToDword(this->m_size);
 #if defined (_DEBUG)
-		t_size sz_test = { this->m_list_id >> 16, this->m_list_id & 0xff };
+		t_size sz_test  = CListId::ToSize (this->m_list_id);
 		if (!!sz_test.cx && !!sz_test.cy) {
 			const bool b_result = false;
 			b_result != b_result;
@@ -256,7 +261,22 @@ t_size&   CList::Size (void) const { return this->m_size; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CList&    CList::operator = (const CList& _src) { _src; return *this; }
+CList&    CList::operator = (const CList& _src) {
+	if (this->Is_valid())
+		this->Destroy();
+
+	err_code n_result = __e_not_inited;
+
+	if (_src.Is_valid())
+		n_result = _src.CopyTo(this->Handle());
+
+	this->m_error << n_result;
+
+	this->m_list_id = _src.Id();
+	this->m_size = _src.Size();
+
+	return *this;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +286,104 @@ CCache::~CCache (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+err_code CCache::Append (_pc_sz _p_file_dir, const TImgFmt _e_format) {
+	_p_file_dir; _e_format;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CFolder target;
+
+	if (__failed(target.Path(_p_file_dir)))
+		return this->m_error = target.Error();
+
+	if (__failed(target.EnumItems(TImgType().Ext(_e_format))))
+		return this->m_error = target.Error();
+
+	CDataProvider prov_;
+
+	TFileList files = target.Files();
+	TSubDirs  subdirs = target.SubDirs();
+
+	for (size_t i_ = 0; i_ < files.size(); i_++) {
+		// this is some sort of 'normalizing' paths of image files, must be reviewed;
+		CString& cs_file = files.at(i_);
+		cs_file = TString().Format(_T("%s%s"), target.Path(), (_pc_sz) cs_file);
+
+		if (__failed(prov_.Load((_pc_sz) cs_file, _e_format))) {
+			this->m_error = prov_.Error(); break;
+		}
+
+		const CResult& result = prov_.Result();
+		TRawLists::iterator found_ = this->m_lists.find(CListId::ToDword(result.Size()));
+
+		if (this->m_lists.end() == found_) {
+			CList list_;
+			if (__failed(list_.Create(result.Size()))) {
+				return this->m_error = list_.Error();
+			}
+			else
+				this->m_lists.insert(::std::make_pair(CListId::ToDword(result.Size()), list_));
+
+			found_ = this->m_lists.find(CListId::ToDword(result.Size())); // once again; it is not good approach, but is okay for the time being;
+		}
+		if (this->m_lists.end() == found_) {
+			return this->m_error << __e_not_expect;
+		}
+
+		if (__failed(found_->second.Append(result.Handle()))) { // the image list makes a copy of the image being inserted;
+			return this->m_error = found_->second.Error();
+		}
+	}
+	// no subfolders this time; this must be done by CFolder class itself;
+	for (size_t i_ = 0; i_ < subdirs.size(); i_++) {
+	}
+
+	return this->Error();
+}
+
 TError&  CCache::Error (void) const { return this->m_error; }
+
+#if defined(_DEBUG)
+CString  CCache::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%slists:%s%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {lists=%s}");
+	static _pc_sz pc_sz_pat_r = _T("lists=%s");
+
+	CString cs_lists;
+
+	for (TRawLists::const_iterator iter_ = this->m_lists.begin(); iter_ != this->m_lists.end(); ++iter_) {
+		const CList& list_ = iter_->second;
+		cs_lists += _p_sfx;
+		cs_lists += _p_pfx;
+		cs_lists += list_.Print(e_print::e_req);
+	}
+	if (cs_lists.IsEmpty() == true) {
+		cs_lists += _p_sfx;
+		cs_lists += _p_pfx;
+		cs_lists += _T("#no_list");
+	}
+	
+	CString cs_out;
+
+#if (1)
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		_p_sfx, _p_pfx, (_pc_sz) cs_lists, _p_sfx, _p_pfx);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n,(_pc_sz)__CLASS__,
+		(_pc_sz) cs_lists);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r,
+		(_pc_sz) cs_lists);
+	}
+#endif
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -11,15 +11,12 @@ namespace ex_ui { namespace draw { namespace images {
 
 	using namespace ex_ui::draw;
 	using namespace ex_ui::draw::bitmaps;
-
-	// https://learn.microsoft.com/en-us/windows/win32/controls/ilc-constants ;
-	using HImgList = HIMAGELIST;
-
+#pragma region __refs_a
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_copy ;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimageinfo ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo ;
-	
+#pragma endregion
 	using SImgInfo = IMAGEINFO;
 	/*
 		The image list control may be created and be used through the following:
@@ -76,8 +73,11 @@ namespace ex_ui { namespace draw { namespace images {
 		~CCache (void);
 
 	public:
-	//	err_code Add (void); 
+		err_code Append (_pc_sz _p_file_dir, const TImgFmt); // appends files with specific extension from specified directory ;
 		TError&  Error (void) const;
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
+#endif
 
 	public:
 		CCache& operator = (const CCache&);
@@ -85,7 +85,7 @@ namespace ex_ui { namespace draw { namespace images {
 
 	protected:
 		CError    m_error;
-		TRawLists m_items;
+		TRawLists m_lists;
 	};
 
 }}}

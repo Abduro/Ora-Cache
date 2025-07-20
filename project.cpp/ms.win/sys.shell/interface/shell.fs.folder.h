@@ -1,5 +1,5 @@
-#ifndef _SHAREDFILESYSTEM_H_42494520_2884_4ba8_9BBD_450E6620FC22_INCLUDED
-#define _SHAREDFILESYSTEM_H_42494520_2884_4ba8_9BBD_450E6620FC22_INCLUDED
+#ifndef _SHELL_FS_FOLDER_H_INCLUDED
+#define _SHELL_FS_FOLDER_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jun-2016 at 1:11:46p, GMT+7, Phuket, Rawai, Saturday;
 	This is shared NTFS library generic folder class(es) declaration file; (thefileguardian.com)
@@ -16,6 +16,8 @@ namespace shared { namespace shell { namespace ntfs {
 
 	typedef ::std::vector<CString> TFileList  ;         // just file names collection of the files for concret directory/folder;
 	typedef ::std::map<CString, TFileList> TFolderList; // the element key is the folder path, the value is the list of files there;
+
+	// https://stackoverflow.com/questions/78981718/how-to-enumerate-files-on-a-specific-folder-using-windows-shell-apis >> good example;
 
 	class CFolder {
 	public:
@@ -42,10 +44,7 @@ namespace shared { namespace user_32 { namespace ntfs {
 
 	using namespace shared::sys_core::shell;
 
-	using TFindData = WIN32_FIND_DATA;
-
 	typedef ::std::vector<CString> TFileList  ;         // just file names collection of the files for concret directory/folder;
-	typedef ::std::map<CString, TFileList> TFolderList; // the element key is the folder path, the value is the list of files there;
 
 	class CFolder;
 	typedef ::std::vector<CFolder> TSubDirs;
@@ -90,4 +89,4 @@ namespace shared { namespace user_32 { namespace ntfs {
 	};
 }}}
 
-#endif/*_SHAREDFILESYSTEM_H_42494520_2884_4ba8_9BBD_450E6620FC22_INCLUDED*/
+#endif/*_SHELL_FS_FOLDER_H_INCLUDED*/

@@ -59,7 +59,7 @@ void CFolder::EnumItems (void) {
 		_out() += this->m_folder.Error().Print(TError::e_print::e_req);
 		_out()(); return;
 	}
-
+	_out() += _T("The path is set successfully;");
 	_out() += _T("Enumerating the test cases image files...");
 
 	if (__failed(this->m_folder.EnumItems(_T("png")))) {

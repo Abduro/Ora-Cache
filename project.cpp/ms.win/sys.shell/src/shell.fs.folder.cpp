@@ -7,6 +7,7 @@
 */
 #include "shell.fs.folder.h"
 
+using TFindData = WIN32_FIND_DATA;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace shared { namespace shell { namespace ntfs {

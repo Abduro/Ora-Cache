@@ -218,6 +218,9 @@
     <ProjectReference Include="sys.com.core_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000A301}</Project>
     </ProjectReference>
+    <ProjectReference Include="sys.shell_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000D}</Project>
+    </ProjectReference>
     <ProjectReference Include="theme_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-000000000023}</Project>
     </ProjectReference>

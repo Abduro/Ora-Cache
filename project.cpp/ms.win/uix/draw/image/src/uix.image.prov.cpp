@@ -8,6 +8,7 @@
 #include "uix.bitmap.h"
 
 using namespace ex_ui::draw::images;
+using namespace ex_ui::draw::bitmaps;
 
 #include <wincodec.h>
 #pragma comment (lib, "Windowscodecs.lib")
@@ -19,30 +20,26 @@ CResult::~CResult (void) { this->Reset(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CResult::Attach (HBITMAP& _h_src) {
+err_code  CResult::Attach (HBitmap& _h_src) {
 	_h_src;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr == _h_src || OBJ_BITMAP != ::GetObjectType((HGDIOBJ)_h_src))
 		return this->m_error <<(err_code) TErrCodes::eObject::eHandle;
 
-	if (this->m_bmp) {
-		if (!::DeleteObject((HGDIOBJ)this->m_bmp))
-			return this->m_error.Last();
-		else
-			this->m_bmp = nullptr;
-	}
+	if (this->Is_valid())
+		return this->m_error <<(err_code) TErrCodes::eObject::eExists;
 
 	this->m_bmp = _h_src; _h_src = nullptr;
 
 	return this->Error();
 }
 
-HBITMAP   CResult::Detach (void) {
+HBitmap   CResult::Detach (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
-	HBITMAP h_bmp = this->m_bmp;
+	HBitmap h_bmp = this->m_bmp;
 	this->m_bmp = nullptr;
 
 	return h_bmp;
@@ -50,7 +47,7 @@ HBITMAP   CResult::Detach (void) {
 
 TError&   CResult::Error  (void) const { return this->m_error; }
 const
-HBITMAP&  CResult::Handle (void) const { return this->m_bmp; }
+HBitmap&  CResult::Handle (void) const { return this->m_bmp; }
 
 bool      CResult::Is_valid (void) const {
 	return (nullptr != this->Handle() && OBJ_BITMAP == ::GetObjectType((HGDIOBJ)this->Handle())); // no size check this time;
@@ -92,7 +89,7 @@ err_code  CResult::Reset (void) {
 			return this->m_error.Last();
 
 	this->Size().cx = this->Size().cy = 0;
-	return this->Error();
+	return __s_ok;
 }
 
 const
@@ -112,7 +109,7 @@ TError&  CDataProvider::Error (void) const { return this->m_error; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code CDataProvider::Load  (_pc_sz _p_file_path, const e_image_fmt _e_type) {
+err_code CDataProvider::Load  (_pc_sz _p_file_path, const TImgFmt _e_type) {
 	_p_file_path; _e_type;
 
 	this->m_error << __METHOD__ << __s_ok;
@@ -164,9 +161,10 @@ err_code CDataProvider::Load  (_pc_sz _p_file_path, const e_image_fmt _e_type) {
 	GUID guid_dec = __guid_null;
 
 	switch (_e_type) {
-	case e_image_fmt::e_bmp : guid_dec = CLSID_WICBmpDecoder ; break;
-	case e_image_fmt::e_jpeg: guid_dec = CLSID_WICJpegDecoder; break;
-	case e_image_fmt::e_png : guid_dec = CLSID_WICPngDecoder ; break;
+	case TImgFmt::e_bmp : guid_dec = CLSID_WICBmpDecoder ; break;
+	case TImgFmt::e_jpg : guid_dec = CLSID_WICJpegDecoder; break;
+	case TImgFmt::e_jpeg: guid_dec = CLSID_WICJpegDecoder; break;
+	case TImgFmt::e_png : guid_dec = CLSID_WICPngDecoder ; break;
 	default:
 		return this->m_error << (err_code) TErrCodes::eData::eUnsupport;
 	}
@@ -219,7 +217,7 @@ err_code CDataProvider::Load  (_pc_sz _p_file_path, const e_image_fmt _e_type) {
 		return this->m_error << n_result;
 
 	byte* p_bits = const_cast<byte*>(dib_sec.Bits());
-	HBITMAP h_target  = dib_sec.Detach(); 
+	HBitmap h_target  = dib_sec.Detach(); 
 
 	if (p_bits && h_target) {
 		const UINT cbStride = u_width * 4;

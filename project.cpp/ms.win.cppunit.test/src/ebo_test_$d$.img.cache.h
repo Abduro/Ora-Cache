@@ -10,20 +10,38 @@ namespace ebo { namespace boo { namespace test { namespace cache {
 
 	using namespace ebo::boo::test::images;
 
-	using TCacheList = ex_ui::draw::images::CList;
+	using TCache   = ex_ui::draw::images::CCache;
+	using TImgType = ex_ui::draw::images::TImgType;
+	using TImgFmt  = ex_ui::draw::images::TImgFmt;
 
-	__class (CCacheList) {
+	__class (CCache) {
 	public:
-		 CCacheList (const bool _b_verb = false);
-		~CCacheList (void) = default;
+		 CCache (const bool _b_verb = false);
+		~CCache (void) = default;
+
+	public:
+		__ctor (_ctor);
+		__method (Append);
+
+	private:
+		bool   m_b_verb;
+		TCache m_cache ;
+	};
+
+	using TList = ex_ui::draw::images::CList;
+
+	__class (CList) {
+	public:
+		 CList (const bool _b_verb = false);
+		~CList (void) = default;
 
 	public:
 		__ctor (_ctor);
 		__method (Create);
 
 	private:
-		bool      m_b_verb;
-		TCacheList  m_list;
+		bool   m_b_verb;
+		TList  m_list;
 	};
 
 }}}}
