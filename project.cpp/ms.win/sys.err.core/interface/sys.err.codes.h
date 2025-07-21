@@ -18,6 +18,9 @@
 #ifndef __e_fail
 #define __e_fail E_FAIL
 #endif
+#ifndef __e_index
+#define __e_index DISP_E_BADINDEX
+#endif
 #ifndef __e_invalid_arg
 #define __e_invalid_arg E_INVALIDARG
 #define __e_inv_arg   __e_invalid_arg

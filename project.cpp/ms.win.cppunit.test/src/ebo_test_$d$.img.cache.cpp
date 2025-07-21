@@ -58,6 +58,59 @@ void CCache::Append (void) {
 	_out()();
 }
 
+void CCache::Has (void) {
+	_out() += TLog_Acc::e_emp_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	const t_size size_ = {24, 24};
+	const dword n_id_ = ex_ui::draw::images::CListId::ToDword(size_);
+
+	_out() += TString().Format(_T("Trying to find the list of image size= %dx%d (px):"), size_.cx, size_.cy);
+	_out() += TString().Format(_T("*result*: %s"), TString().Bool(this->m_cache.Has(size_)));
+
+	_out() += TString().Format(_T("Trying to create new image list with size= %dx%d (px) and append it to the cache:"), size_.cx, size_.cy);
+	if (__failed(this->m_cache.Append(size_))) {
+		_out() += this->m_cache.Error().Print(TError::e_req); _out()(); return;
+	}
+	_out() += _T("*result*: success;");
+
+	_out() += TString().Format(_T("Trying again to find the list of image size= %dx%d (px):"), size_.cx, size_.cy);
+	_out() += TString().Format(_T("*result*: %s"), TString().Bool(this->m_cache.Has(size_)));
+
+	_out()();
+}
+
+void CCache::List (void) {
+	_out() += TLog_Acc::e_emp_line;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	const t_size size_ = {24, 24};
+	const dword n_id_ = ex_ui::draw::images::CListId::ToDword(size_);
+
+	_out() += TString().Format(_T("Trying to get the reference to the list of image size= %dx%d (px):"), size_.cx, size_.cy);
+
+	const TList& lst_ref = this->m_cache.List(size_); lst_ref;
+	if (this->m_cache.Error().Is()) {
+		_out() += TString().Format(_T("*result*: the fake list; %s"), (_pc_sz) this->m_cache.Error().Print(TError::e_req)); 
+	}
+
+	_out() += TString().Format(_T("Trying to create new image list with size= %dx%d (px) and append it to the cache:"), size_.cx, size_.cy);
+	if (__failed(this->m_cache.Append(size_))) {
+		_out() += this->m_cache.Error().Print(TError::e_req); _out()(); return;
+	}
+	_out() += _T("*result*: success;");
+	_out() += _T("Trying to get the reference again:");
+
+	const TList& lst_ref_2 = this->m_cache.List(size_);
+	if (this->m_cache.Error().Is()) {
+		_out() += TString().Format(_T("*result*: the fake list; %s"), (_pc_sz) this->m_cache.Error().Print(TError::e_req)); 
+	}
+	else
+		_out() += TString().Format(_T("*result*: %s"), (_pc_sz) lst_ref_2.Print(e_print::e_all));
+
+	_out()();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 }}}}

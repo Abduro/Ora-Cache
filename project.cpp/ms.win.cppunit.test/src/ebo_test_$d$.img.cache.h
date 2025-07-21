@@ -21,7 +21,9 @@ namespace ebo { namespace boo { namespace test { namespace cache {
 
 	public:
 		__ctor (_ctor);
-		__method (Append);
+		__method (Append); // appends all images from specified directory; the directory is read from registry for theme test cases;
+		__method (Has);    // checks an existance of the image list of particular image size; if not found, new list is created in the cache;
+		__method (List);   // tries to get the reference to the image list; if not found the reference to fake list returned; it is checked by the error state;
 
 	private:
 		bool   m_b_verb;

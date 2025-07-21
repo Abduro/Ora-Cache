@@ -111,6 +111,10 @@ namespace ex_ui { namespace draw { namespace images { namespace _impl {
 		HBITMAP m_hBitmap;  // the bitmap that is loaded from the file specified;
 	};
 #endif
+
+	CList&  GetFakeList (void) {
+		static CList fake_lst; return fake_lst;
+	}
 }}}}
 using namespace ex_ui::draw::images::_impl;
 
@@ -195,6 +199,21 @@ err_code  CList::Destroy(void) {
 		this->Handle() = nullptr;
 
 	return this->Error();
+}
+
+err_code  CList::Draw (const uint16_t _n_index, const HDC _h_dc, const int16_t _n_x, const int16_t _n_y, const uint32_t _u_mode) {
+	_n_index; _h_dc; _n_x; _n_y; _u_mode;
+	err_code n_result = __s_ok;
+
+	if (_n_index >= this->Count()) return n_result = this->m_error <<__METHOD__<< __e_index;
+	if (this->Is_valid() == false) return n_result = this->m_error <<__METHOD__<<__e_not_inited;
+	if (0 == _h_dc) return n_result = this->m_error <<__METHOD__<< (err_code) TErrCodes::eObject::eHandle;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw ;
+	if (false == !!::ImageList_Draw(this->Handle(), _n_index, _h_dc, _n_x, _n_y, _u_mode))
+		n_result = (this->m_error <<__METHOD__).Last();
+
+	return n_result;
 }
 
 err_code  CList::CopyTo (HImgList& _h_dest) const {
@@ -321,7 +340,7 @@ err_code CCache::Append (_pc_sz _p_file_dir, const TImgFmt _e_format) {
 				return this->m_error = list_.Error();
 			}
 			else
-				this->m_lists.insert(::std::make_pair(CListId::ToDword(result.Size()), list_));
+				this->m_lists.insert(::std::make_pair(/*CListId::ToDword(result.Size())*/list_.Id(), list_));
 
 			found_ = this->m_lists.find(CListId::ToDword(result.Size())); // once again; it is not good approach, but is okay for the time being;
 		}
@@ -340,7 +359,62 @@ err_code CCache::Append (_pc_sz _p_file_dir, const TImgFmt _e_format) {
 	return this->Error();
 }
 
+err_code CCache::Append(const t_size& _size, const uint16_t _n_count, const uint16_t _n_delta) {
+	_size;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Has(_size))
+		return this->m_error << (err_code) TErrCodes::eObject::eExists;
+
+	CList list;
+	if (__failed(list.Create(_size, _n_count, _n_delta)))
+		return this->m_error = list.Error();
+	try {
+		this->m_lists.insert(::std::make_pair(/*CListId::ToDword(_size)*/list.Id(), list));
+	}
+	catch (const ::std::bad_alloc&) {
+		this->m_error << __e_no_memory;
+	}
+
+	return this->Error();
+}
+
 TError&  CCache::Error (void) const { return this->m_error; }
+// https://en.cppreference.com/w/cpp/container/map/contains.html ;
+const bool CCache::Has (const dword _n_id) const { return (!!_n_id && this->m_lists.find(_n_id) != this->m_lists.end()); }
+const bool CCache::Has (const t_size& _size) const { return this->Has(CListId::ToDword(_size)); }
+const
+CList&  CCache::List (const dword _n_id) const {
+	_n_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TRawLists::const_iterator found_ = this->m_lists.find(_n_id);
+	if (found_ == this->m_lists.end()) {
+		this->m_error << (err_code) TErrCodes::eObject::eNotFound;
+		return GetFakeList();
+	}
+	else {
+		return found_->second;
+	}
+}
+
+CList&  CCache::List (const dword _n_id) {
+	_n_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TRawLists::iterator found_ = this->m_lists.find(_n_id);
+	if (found_ == this->m_lists.end()) {
+		this->m_error << (err_code) TErrCodes::eObject::eNotFound;
+		return GetFakeList();
+	}
+	else {
+		return found_->second;
+	}
+}
+
+const
+CList&  CCache::List (const t_size& _size) const { return this->List(CListId::ToDword(_size)); }
+CList&  CCache::List (const t_size& _size)       { return this->List(CListId::ToDword(_size)); }
 
 #if defined(_DEBUG)
 CString  CCache::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
@@ -382,7 +456,6 @@ CString  CCache::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx
 
 	return  cs_out;
 }
-
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

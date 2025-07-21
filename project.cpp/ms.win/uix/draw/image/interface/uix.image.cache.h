@@ -37,6 +37,8 @@ namespace ex_ui { namespace draw { namespace images {
 		err_code  Create  (const t_size& _img_size, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
 		err_code  Create  (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
 		err_code  Destroy (void);
+		// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw ;
+		err_code  Draw  (const uint16_t _n_index, const HDC, const int16_t _n_x, const int16_t _n_y, const uint32_t _u_mode = ILD_NORMAL);
 
 		uint16_t  Count (void) const;         // returns the count number of how much images the image list has;
 
@@ -52,7 +54,7 @@ namespace ex_ui { namespace draw { namespace images {
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
 		const
-		t_size&   Size  (void) const;            // the image list item size can be change in case of the list re-creation;
+		t_size&   Size  (void) const;            // the image list item size can be changed in case of the list re-creation;
 	public:
 		CList& operator = (const CList&);
 		CList& operator = (CList&&) = delete;
@@ -73,8 +75,20 @@ namespace ex_ui { namespace draw { namespace images {
 		~CCache (void);
 
 	public:
-		err_code Append (_pc_sz _p_file_dir, const TImgFmt); // appends files with specific extension from specified directory ;
+		err_code Append(_pc_sz _p_file_dir, const TImgFmt); // appends files with specific extension from specified directory ;
+		err_code Append(const t_size&, const uint16_t _n_count = 0, const uint16_t _n_delta = 0);
+
 		TError&  Error (void) const;
+
+		const bool Has (const dword _n_id) const; // returns 'true' in case if the list of input identifier exists;
+		const bool Has (const t_size&) const;     // returns 'true' in case if the list of input size of the image exists;
+		const
+		CList&   List  (const dword _n_id) const; // gets the list by the identifier; if not found the reference to fake list returned;
+		CList&   List  (const dword _n_id) ;      // gets the list by the identifier; if not found the reference to fake list returned;
+		const
+		CList&   List  (const t_size&) const;  // gets the list by the required size of its images; if not found the reference to fake list returned;
+		CList&   List  (const t_size&) ;       // gets the list by the required size of its images; if not found the reference to fake list returned;
+
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
@@ -84,6 +98,7 @@ namespace ex_ui { namespace draw { namespace images {
 		CCache& operator = (CCache&&) = delete;
 
 	protected:
+		mutable
 		CError    m_error;
 		TRawLists m_lists;
 	};
