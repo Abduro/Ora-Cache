@@ -18,19 +18,7 @@
 
 namespace ebo { namespace boo { namespace test { namespace draw {
 
-	static _pc_sz _p_pfx = _T("\t\t");    // the indentation at the start of the line;
-	static _pc_sz _p_sfx = _T("\n");      // new line only;
-	static _pc_sz _p_new = _T("\n\t\t");  // new line with indentation;
-
-	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
-	// https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp ;
-
-	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-	using namespace shared::types;
-
-	using CError  = shared::sys_core::CError;
-	using TError  = const CError;
-	using TString = TStringEx   ;
+	using namespace ebo::boo::test;
 
 	using CWindow = ::ATL::CWindow;
 	// this is the same class of message-only window that is taken from the renderer test cases' project; copy-paste is okay for now;

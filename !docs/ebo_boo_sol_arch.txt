@@ -42,7 +42,7 @@
 			console.ext_v15 : {00000C13-EEEE-BBBB-6667-E00000000020} << console extension project;
 
 		uix.ctl : {00000C13-EEEE-BBBB-6667-100000001400} << the node of custom control projects;
-			ctl.base_v15 : {00000C13-EEEE-BBBB-6667-00000000000C} << user control base project;
+			ctl.base_v15   : {00000C13-EEEE-BBBB-6667-00000000000C} << user control base project;
 			sfx.status_v15 : {00000C13-EEEE-BBBB-6667-00000003000A} << status bar control project;
 			sfx.tabbed_v15 : {00000C13-EEEE-BBBB-6667-00000003000B} << tabbed control project;
 
@@ -84,6 +84,7 @@
 		ebo_test_$s$.log   : {00000C13-EEEE-BBBB-6667-000000060003} << test cases for generic events' logger project;		
 		ebo_test_$7$.run   : {00000C13-EEEE-BBBB-6667-000000060007} << test cases for system thread pool project;
 		ebo_test_$9$.msxml : {00000C13-EEEE-BBBB-6667-000000060009} << test cases for MSXML wrapper project;
+		ebo_test_$$t.case.draw       : {00000C13-EEEE-BBBB-6667-C0000006000B} << theme test cases lib project;
 		ebo_test_$$t.case.theme      : {00000C13-EEEE-BBBB-6667-C00000060023} << theme test cases lib project;
 
 *all test cases projects are dynamic link libraries that are loaded by testhost.exe;

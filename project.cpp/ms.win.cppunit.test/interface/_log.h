@@ -10,6 +10,12 @@ namespace ebo { namespace boo { namespace test {
 
 	using namespace shared::types;
 
+	static _pc_sz _p_pfx = _T("\t\t");      // the indentation at the start of the line;
+	static _pc_sz _p_sfx = _T("\n");        // new line only;
+	static _pc_sz _p_new_line = _T("\n\t\t");  // new line with indentation;
+
+	static _pc_sz _p_new_ln = _T("\n\t\t"); // just playing with names;
+
 	using TParts  = shared::common::TParts; // text lines actually; 
 	using TCached = shared::common::TParts; // buffered text for cache output;
 
@@ -136,9 +142,6 @@ namespace ebo { namespace boo { namespace test {
 		CLog_Opts m_opts ;
 	};
 
-	static _pc_sz _p_pfx = _T("\t\t");
-	static _pc_sz _p_sfx = _T("\n");
-	static _pc_sz _p_new_line = _T("\n\t\t");
 }}}
 
 typedef ebo::boo::test::CLog_Opts            TLog_Opts;

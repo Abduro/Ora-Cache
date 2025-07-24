@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 24-Jul-2025 at 21:36:01.570, UTC+7, Novosibirsk, Thursday;
+	This is Ebo pack custom draw helpers' include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <!--Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color-->
+    <!--Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme--><!--For this project test cases are created; -->
+    <Tests Condition="'$(Tests)'==''">..\..\..\ms.win.cppunit.test\</Tests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(Tests)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Root)src\test.cases\</_2><!--This directory contains the project header and source files; -->
+    <_3>$(Shared)interface\</_3>
+    <_4>$(Error)interface\</_4>
+    <!--_5>$(Color)interface\</_5-->
+    <!--_6>$(Color)interface\compl\</_6-->
+    <!--_7>$(Color)interface\named\</_7-->
+    <!--_8>$(Theme)interface\</_8-->
+    <!--_9>$(Theme)interface\named\</_9-->
+    <_a></_a>
+    <_b></_b>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4)<!--;$(_5);$(_6);$(_7);$(_8);$(_9)--></Include_0_9>
+    <Include_abc></Include_abc>
+    <IncludePath>$(Include_0_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

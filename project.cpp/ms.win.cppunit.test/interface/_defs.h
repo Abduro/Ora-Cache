@@ -24,6 +24,9 @@
 
 namespace ebo { namespace boo { namespace test {
 
+	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
+	// https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp ;
+
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 	// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
