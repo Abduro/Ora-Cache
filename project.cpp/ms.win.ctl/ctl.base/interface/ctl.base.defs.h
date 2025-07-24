@@ -33,6 +33,7 @@
 #include "uix.gen.font.h"
 
 #include "wnd.base.h"
+#include "wnd.layout.h"
 
 namespace ex_ui { namespace controls {
 

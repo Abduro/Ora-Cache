@@ -13,8 +13,12 @@
     <ClCompile Include="$(_1)ebo_test_$u$.ctl.base.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$u$.ctl.format.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$u$.ctl.format.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$u$.ctl.image.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$u$.ctl.image.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$u$.ctl.layout.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$u$.ctl.layout.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)ebo_test_$u$.ctl.pane.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)ebo_test_$u$.ctl.pane.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)ebo_test_$u$.ctl.props.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)ebo_test_$u$.ctl.props.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

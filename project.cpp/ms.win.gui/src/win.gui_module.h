@@ -14,6 +14,7 @@
 #pragma comment(lib, "ctl.base_v15.lib")       // user control base;
 #pragma comment(lib, "gdi.zbuf_v15.lib")       // in-memory device context for GUI elements;
 #pragma comment(lib, "geometry.2D_v15.lib")    // generic shapes;
+#pragma comment(lib, "image_v15.lib")          // image cache ;
 #pragma comment(lib, "render_v15.lib")         // graphic render;
 #pragma comment(lib, "sfx.status_v15.lib")     // status bar user common control;
 #pragma comment(lib, "sfx.tabbed_v15.lib")     // tabbed control common control;

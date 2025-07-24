@@ -133,6 +133,10 @@ CList::~CList (void) {
 err_code  CList::Append  (const HBitmap _h_bitmap) {
 	_h_bitmap;
 	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid() == false)
+		return this->m_error << __e_not_inited;
+
 	if (nullptr == _h_bitmap || false == CBitmapInfo::IsValid(_h_bitmap))
 		return this->m_error << __e_inv_arg;
 

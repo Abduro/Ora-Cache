@@ -8,6 +8,9 @@
 using namespace ex_ui::controls::sfx::status;
 using namespace ex_ui::controls::sfx::status::format;
 
+#include "uix.theme.h"
+#include "uix.theme.named.h"
+
 /////////////////////////////////////////////////////////////////////////////
 
 CFormat:: CFormat (CControl& _ctrl) : m_ctrl(_ctrl) { this->Default(); }
@@ -17,7 +20,7 @@ CFormat::~CFormat (void) {}
 
 void CFormat::Default (void) {
 
-	CBorder& top = this->m_ctrl.Borders().Top();
+	CBorder& top = TBase::Borders().Top();
 	top.Thickness(1);
 #if (1)
 //	top.Color() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border, TThemeState::e_default);

@@ -25,6 +25,7 @@ CControl::~CControl (void) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#if (0)
 const
 CBorders& CControl::Borders (void) const {
 	return m_borders;
@@ -32,7 +33,7 @@ CBorders& CControl::Borders (void) const {
 CBorders& CControl::Borders (void)       {
 	return m_borders;
 }
-
+#endif
 err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	hParent; _ctrl_id;
 	this->m_error << __METHOD__ << __s_ok;
@@ -80,9 +81,18 @@ TError&   CControl::Error  (void) const { return this->m_error; }
 const
 CFormat&  CControl::Format (void) const { return this->m_format; }
 CFormat&  CControl::Format (void)       { return this->m_format; }
+
+const
+CImages&  CControl::Images (void) const { return this->m_images; }
+CImages&  CControl::Images (void)       { return this->m_images; }
+
 const
 CLayout&  CControl::Layout (void) const { return this->m_layout; }
 CLayout&  CControl::Layout (void)       { return this->m_layout; }
+
+const
+CPanes&   CControl::Panes  (void) const { return this->m_panes;  }
+CPanes&   CControl::Panes  (void)       { return this->m_panes;  }
 
 err_code  CControl::Refresh(void) {
 
@@ -112,13 +122,6 @@ CStatusBar:: CStatusBar(IStatusEvents& _snk) : m_wnd_ptr(NULL), m_evt_snk(_snk),
 
 /////////////////////////////////////////////////////////////////////////////
 
-const
-TStatusFmt&  CStatusBar::Format  (void) const { return StatusBar_Format(); }
-TStatusFmt&  CStatusBar::Format  (void)       { return StatusBar_Format(); }
-
-const
-CPanels&     CStatusBar::Panels  (void) const { return m_panels; }
-CPanels&     CStatusBar::Panels  (void)       { return m_panels; }
 HRESULT      CStatusBar::Renderer(IRenderer*  const _renderer) {
 	if (NULL == m_wnd_ptr)
 		return OLE_E_BLANK;

@@ -9,22 +9,83 @@ using CFormat = CPane::CFormat;
 using CLayout = CPane::CLayout;
 /////////////////////////////////////////////////////////////////////////////
 
-CFormat:: CFormat (CPane& _pane) : m_pane(_pane) {}
+CFormat:: CFormat (CPane& _pane) : CFmtBase(), m_pane(_pane) {}
+CFormat:: CFormat (const CFormat& _src) : CFormat (const_cast<CPane&>(_src.Pane())) { *this = _src; }
+
+int32_t   CFormat::Image_Ndx (void) const { return this->m_img_ndx; }
+bool      CFormat::Image_Ndx (const int32_t _n_ndx) {
+	const bool b_changed = this->Image_Ndx() != _n_ndx; if (b_changed) this->m_img_ndx = _n_ndx; return b_changed;
+}
 
 const
-TRgbQuad& CFormat::Bkgnd (void) const { return this->m_bkgnd; }
-TRgbQuad& CFormat::Bkgnd (void)       { return this->m_bkgnd; }
+CPane&    CFormat::Pane (void) const { return this->m_pane; }
+CPane&    CFormat::Pane (void)       { return this->m_pane; }
+#if defined(_DEBUG)
+CString   CFormat::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {img_ndx=%s;%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {img_ndx=%s;%s}");
+	static _pc_sz pc_sz_pat_r = _T("img_ndx=%s;%s");
+
+	CString cs_base = CFmtBase::Print(e_print::e_req, _p_pfx, _p_sfx);
+	CString cs_ndx  = 0 > this->Image_Ndx() ? _T("#not_set") : TStringEx().Long(this->Image_Ndx());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_ndx, (_pc_sz) cs_base); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_ndx, (_pc_sz) cs_base); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_ndx, (_pc_sz) cs_base); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return cs_out;
+}
+#endif
+CFormat&  CFormat::operator = (const CFormat& _src) { (CFmtBase&)*this = (const CFmtBase&)_src; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CLayout:: CLayout (CPane& _pane) : m_pane(_pane) {}
+CLayout:: CLayout (const CLayout& _src) : CLayout(const_cast<CPane&>(_src.Pane())) { *this = _src; }
+
+const
+CAlign&   CLayout::Align  (void) const { return m_align; }
+CAlign&   CLayout::Align  (void)       { return m_align; }
+
+const
+CPane&    CLayout::Pane (void) const { return this->m_pane; }
+CPane&    CLayout::Pane (void)       { return this->m_pane; }
+
+const
+CPosition& CLayout::Pos (void) const { return this->Position(); }
+CPosition& CLayout::Pos (void)       { return this->Position(); }
 
 const
 CPosition& CLayout::Position (void) const { return this->m_position; }
 CPosition& CLayout::Position (void)       { return this->m_position; }
+#if defined(_DEBUG)
+CString   CLayout::Print(const e_print _e_opt/*= e_print::e_all*/) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {align=%s;pos=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {align=%s;pos=%s}");
+	static _pc_sz pc_sz_pat_r = _T("align=%s;pos=%s");
 
+	CString cs_align = this->Align().Print(e_print::e_req);
+	CString cs_pos = this->Position().Print(e_print::e_req);
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_align, (_pc_sz) cs_pos); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_align, (_pc_sz) cs_pos); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_align, (_pc_sz) cs_pos); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
 bool CLayout::Update (void) {
-	return this->m_pane.Borders().Set(this->Position());
+	return this->m_pane.Format().Borders().Set(this->Position());
 }
 
 bool CLayout::Update (const t_rect& _rect_of_place) {
@@ -32,16 +93,23 @@ bool CLayout::Update (const t_rect& _rect_of_place) {
 	return this->Update();
 }
 
+CLayout&  CLayout::operator = (const CLayout& _src) { *this << _src.Align() << _src.Position(); return *this; }
+
+CLayout&  CLayout::operator <<(const CAlign& _align) { this->Align() = _align; return *this; }
+CLayout&  CLayout::operator <<(const CPosition& _pos) { this->Pos() = _pos; return *this; }
+
 /////////////////////////////////////////////////////////////////////////////
 
-CPane:: CPane (void) : m_format(*this), m_layout(*this)  {}
+CPane:: CPane (void) : m_format(*this), m_layout(*this)  {} CPane:: CPane (CPane&& _victim) : CPane() { *this = _victim; }
+CPane:: CPane (const CPane& _src) : CPane() { *this = _src; }
 CPane::~CPane (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if (0)
 const
 CBorders& CPane::Borders (void) const { return this->m_borders; }
 CBorders& CPane::Borders (void)       { return this->m_borders; }
+#endif
 const
 CFormat&  CPane::Format  (void) const { return this->m_format ; }
 CFormat&  CPane::Format  (void)       { return this->m_format ; }
@@ -61,7 +129,7 @@ err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
 		return (n_result = z_buffer.Error());
 
 	// (1) draws the background first;
-	const TRgbQuad& bkg_ = this->Format().Bkgnd();
+	const TRgbQuad& bkg_ = this->Format().Bkgnd().Solid();
 	if (bkg_.Is() && bkg_.A() != 0) { // alpha value must be checked too;
 		n_result = z_buffer.Draw(drw_area, bkg_);
 	}
@@ -71,7 +139,7 @@ err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
 
 	for (int16_t i_ = 0; i_ <= e_sides::e_bottom; i_++) { // border set for rectangular area is expected, but nevertheless;
 
-		const CBorder& border = this->Borders().Get(static_cast<e_sides>(i_));
+		const CBorder& border = this->Format().Borders().Get(static_cast<e_sides>(i_));
 
 		if (border.IsClear())
 			continue;
@@ -83,3 +151,45 @@ err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
 
 	return  n_result;
 }
+
+#if defined(_DEBUG)
+CString   CPane::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
+	_e_opt; _p_pfx; _p_sfx;
+#if (0)
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%sborders:%s;%s%sformat:%s%s%s;%s%slayout:%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {borders=%s;format=%s;layout=%s}");
+	static _pc_sz pc_sz_pat_r = _T("borders=%s;format=%s;layout=%s");
+
+	CString cs_borders = this->Borders().Print(e_print::e_req, _p_pfx, _p_sfx);
+#else
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%sformat:%s;%s%slayout:%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {format:%s;layout:%s}");
+	static _pc_sz pc_sz_pat_r = _T("format:%s;layout:%s");
+#endif
+	CString cs_format  = this->Format().Print(e_print::e_no_ns, _p_pfx, _p_sfx);
+	CString cs_layout  = this->Layout().Print(e_print::e_req);
+
+	CString cs_out;
+	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		_p_sfx, _p_pfx, (_pc_sz) cs_format , // moves the format info section to the new line with the indent;
+		_p_sfx, _p_pfx, (_pc_sz) cs_layout);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_format, (_pc_sz) cs_layout); }
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_format, (_pc_sz) cs_layout); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPane&  CPane::operator = (const CPane& _src) { *this << /*_src.Borders() <<*/ _src.Format() << _src.Layout(); return *this; }
+CPane&  CPane::operator = (CPane&& _victim) { *this = (const CPane&)_victim; return *this; }
+#if (0)
+CPane&  CPane::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
+#endif
+CPane&  CPane::operator <<(const CFormat& _format) { this->Format() = _format; return *this; }
+CPane&  CPane::operator <<(const CLayout& _layout) { this->Layout() = _layout; return *this; }

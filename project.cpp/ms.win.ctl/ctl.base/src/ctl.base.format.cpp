@@ -201,7 +201,7 @@ CString     CBase::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) co
 	_e_opt; _p_pfx; _p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
-	static _pc_sz pc_sz_pat_r = _T("{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s");
 
 	CString cs_bkgnd   = this->Bkgnd().Print(e_print::e_req);
 	CString cs_borders = this->Borders().Print(e_print::e_req);

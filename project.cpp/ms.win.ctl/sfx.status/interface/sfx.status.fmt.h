@@ -1,5 +1,5 @@
-#ifndef _SFXSTAFMT_H_8DB0C153_79F8_4665_A032_5E862025B372_INCLUDED
-#define _SFXSTAFMT_H_8DB0C153_79F8_4665_A032_5E862025B372_INCLUDED
+#ifndef _SFX_STATUS_FMT_H_INCLUDED
+#define _SFX_STATUS_FMT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Aug-2020 at 12:52:41p, UTC+7, Novosibirsk, Saturday;
 	This is Ebo Pack Sfx status bar control format interface declaration file.
@@ -12,8 +12,27 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 	using TBase = ex_ui::controls::format::CBase;
 
 namespace format {
-}
+#if (0)
+	class CPane {
+	public:
+		 CPane (void);
+		 CPane (const CPane&); CPane (CPane&&) = delete;
+		~CPane (void);
 
+	public:
+		const
+		CBorder&   Border (void) const;
+		CBorder&   Border (void)      ;
+
+	public:
+		CPane& operator = (const CPane&);
+		CPane& operator <<(const CBorder&); CPane& operator = (CPane&&) = delete;
+
+	protected:
+		CBorder    m_border; // the right or the left side border;
+	};
+#endif
+}
 	class CFormat : public TBase {
 	friend class  CControl;
 	private:
@@ -38,25 +57,6 @@ namespace format {
 namespace ST_Ctrls { namespace format {
 
 	using ex_ui::controls::format::CBase;
-
-	class CPane {
-	protected:
-		CBorder    m_border;   // right side border;
-
-	public:
-		 CPane (void);
-		 CPane (const CPane&);
-		~CPane (void);
-
-	public:
-		const
-		CBorder&   Border (void) const;
-		CBorder&   Border (void)      ;
-
-	public:
-		CPane& operator = (const CPane&);
-		CPane& operator <<(const CBorder&);
-	};
 
 	class CPanes {
 	protected:
@@ -116,4 +116,4 @@ namespace ST_Ctrls { namespace format {
 
 typedef ST_Ctrls::format::CStatus  TStatusFmt;
 #endif
-#endif/*_SFXSTAFMT_H_8DB0C153_79F8_4665_A032_5E862025B372_INCLUDED*/
+#endif/*_SFX_STATUS_FMT_H_INCLUDED*/

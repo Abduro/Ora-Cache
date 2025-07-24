@@ -117,9 +117,16 @@ namespace ex_ui { namespace controls { namespace format {
 		~CBase (void);
 
 	public:
+		/*
+			a background is an element of the visual presentation of the control; that means, it is a format element; 
+		*/
 		const
 		CBkgnd&     Bkgnd (void) const;
 		CBkgnd&     Bkgnd (void) ;
+		/*
+			a set of borders is also a part of visual representation of the control, so it may exist withing format context only,
+			the definition of a control border position is a care of the layout class;
+		*/
 		const
 		CBorders&   Borders (void) const;
 		CBorders&   Borders (void) ;

@@ -293,3 +293,11 @@ bool CGaps_of_rect::Set (const int16_t _left, const int16_t _top, const int16_t 
 /////////////////////////////////////////////////////////////////////////////
 
 CGaps_of_rect&  CGaps_of_rect::operator = (const CGaps_of_rect& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+namespace ex_ui { namespace controls { namespace layout {
+
+using CMargins = CMargins_of_rect;
+
+}}}

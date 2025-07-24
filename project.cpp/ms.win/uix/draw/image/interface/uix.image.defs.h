@@ -19,17 +19,18 @@
 #include "shared.string.h"
 
 #include "sys.error.h"
+#if (0)
 #include "sys.mem.global.h"
-
+#endif
 namespace ex_ui { namespace draw { namespace images {
 
 	using namespace shared::types;
 	using CError  = shared::sys_core::CError;
 	using TError  = const CError;
 	using TString = TStringEx;
-
+#if (0)
 	using namespace shared::memory;
-
+#endif
 	// https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types ;
 	// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/advanced/types-of-bitmaps ;
 

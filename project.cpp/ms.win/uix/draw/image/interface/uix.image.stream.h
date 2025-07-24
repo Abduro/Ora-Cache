@@ -7,6 +7,7 @@
 	Adopted to Ebo Pack image wrappers' project on 11-Jul-2025 at 22:01:56.684, UTC+4, Batumi, Friday;
 */
 #include "uix.image.defs.h"
+#include "sys.mem.global.h"
 
 namespace ex_ui { namespace draw { namespace images {
 

@@ -10,6 +10,26 @@ using namespace ex_ui::controls::sfx::status::layout;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CStyle:: CStyle (void) : m_e_stick(e_stick::e_left), m_e_width(e_width::e_fixed) {}
+CStyle:: CStyle (const CStyle& _src) : CStyle() { *this = _src; }
+CStyle::~CStyle (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+const
+CStyle::e_stick  CStyle::Stick (void) const { return m_e_stick; }
+CStyle::e_stick& CStyle::Stick (void)       { return m_e_stick; }
+const
+CStyle::e_width  CStyle::Width (void) const { return m_e_width; }
+CStyle::e_width& CStyle::Width (void)       { return m_e_width; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CStyle&   CStyle::operator = (const CStyle& _src) { *this << _src.Stick() << _src.Width(); return *this; }
+CStyle&   CStyle::operator <<(const e_stick _style) { this->Stick() = _style; return *this; }
+CStyle&   CStyle::operator <<(const e_width _style) { this->Width() = _style; return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_height(28) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
 CLayout::~CLayout (void) {}
 
@@ -45,7 +65,7 @@ err_code CLayout::Update (void) {
 	}
 
 	// (1) updates border position(s);
-	CBorder& top_ = this->m_ctrl.Borders().Top();
+	CBorder& top_ = this->m_ctrl.Format().Borders().Top();
 	top_.Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
 
 	return n_result;

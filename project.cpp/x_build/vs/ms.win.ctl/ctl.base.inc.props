@@ -10,10 +10,11 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory>
+    <!--Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory-->
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
     <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
     <Popup Condition="'$(Popup)'==''">..\..\..\ms.win\uix\popup\</Popup>
+    <Image Condition="'$(Image)'==''">..\..\..\ms.win\uix\draw\image\</Image><!--For this control pane elements' image set; -->
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL> <!--it is required for including the references to z-buffer, unfortunately; -->
     <!--MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML-->
     <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
@@ -27,7 +28,8 @@
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <_4>$(Memory)interface\</_4>
+    <!--_4>$(Memory)interface\</_4-->
+    <_4>$(Image)interface\</_4>
     <_5>$(Color)interface\</_5>
     <_6>$(Color)interface\compl\</_6>
     <_7>$(Color)interface\named\</_7>

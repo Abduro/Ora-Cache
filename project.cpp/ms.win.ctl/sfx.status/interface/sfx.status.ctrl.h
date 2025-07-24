@@ -9,13 +9,14 @@
 #include "sfx.status.fmt.h"
 #include "sfx.status.inc.h"
 #include "sfx.status.lay.h"
-#if (0)
-
 #include "sfx.status.ext.h"
-#endif
+
+#include "ctl.base.image.h"
+
 namespace ex_ui { namespace controls { namespace sfx { namespace status {
 
 	using namespace ex_ui::controls::sfx;
+	using CImages = ex_ui::controls::CImages;
 
 	class CControl {
 	public:
@@ -23,10 +24,15 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		~CControl (void);
 
 	public:
+		/*
+			A border is the line that already has such attributes or fields as: a color, a thickness and a position;
+			that means this class has all required attributes for format, thus this control format class may to take care of formating all borders;
+		*/
+#if (0)
 		const
 		CBorders& Borders(void) const;
 		CBorders& Borders(void) ;
-
+#endif
 		err_code  Create (const HWND hParent, const uint32_t _ctrl_id);
 		err_code  Destroy(void) ;
 		TError&   Error  (void) const;
@@ -36,8 +42,16 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		CFormat&  Format (void)      ;
 
 		const
+		CImages&  Images (void) const;
+		CImages&  Images (void) ;
+
+		const
 		CLayout&  Layout (void) const;
 		CLayout&  Layout (void) ;
+
+		const
+		CPanes&   Panes  (void) const;
+		CPanes&   Panes  (void)      ;
 
 		err_code  Refresh(void) ;
 		CWindow   Window (void) const; // returns status bar control internal window handle;
@@ -47,10 +61,14 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		CControl& operator = (CControl&&) = delete;
 
 	protected:
+#if (0)
 		CBorders m_borders;
+#endif
 		CFormat  m_format ;
 		CError   m_error  ;
+		CImages  m_images ; // ToDo: this field may be put inside this control window class;
 		CLayout  m_layout ;
+		CPanes   m_panes  ;
 		HANDLE   m_wnd_ptr;
 		uint32_t m_ctrl_id;
 	};
@@ -70,14 +88,8 @@ namespace ST_Ctrls {
 	class CStatusBar : public IStatusEvents {
 	protected:
 		IStatusEvents& m_evt_snk;
-		CPanels        m_panels ;
-
 	public:
 		
-		
-		const
-		CPanels&     Panels  (void) const;
-		CPanels&     Panels  (void)      ;
 		HRESULT      Renderer(IRenderer*  const _p_parent_renderer);
 	public:
 		ex_ui::controls::IControlEvent&  MouseEvtSink(void);
