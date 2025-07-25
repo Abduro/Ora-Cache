@@ -194,6 +194,8 @@
     <ClInclude Include="$(_0)shared.str.var.h" />
     <ClCompile Include="$(_1)shared.str.var.cpp" />
     <ClInclude Include="$(_0)shared.string.h" />
+    <ClInclude Include="$(_0)shared.timer.h" />
+    <ClCompile Include="$(_1)shared.timer.cpp" />
     <ClInclude Include="$(_0)shared.types.h" />
     <ClCompile Include="$(_1)shared.types.cpp" />
     <ClInclude Include="$(_0)sys.gen.time.h" />

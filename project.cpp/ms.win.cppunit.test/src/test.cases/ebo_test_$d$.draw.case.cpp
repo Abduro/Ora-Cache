@@ -10,7 +10,7 @@ using namespace ebo::boo::test::cases;
 
 CFake_Wnd:: CFake_Wnd (const bool _b_verb) : m_verb(_b_verb), m_h_dc(nullptr) {
 	if (this->m_verb) {
-		_out() += TLog_Acc::e_new_line;
+		_out() += TLog_Acc::e_emp_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	}
 	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
@@ -26,11 +26,14 @@ CFake_Wnd:: CFake_Wnd (const bool _b_verb) : m_verb(_b_verb), m_h_dc(nullptr) {
 		this->m_h_dc = TBase::GetDC(); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc ;
 		// https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-with-the-mouse :-D
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc >> is not necessary yet;
-	_out()();
+
+//	_out()(); it is supposed to be included in real test case so output here is not necessary;
 }
 
 CFake_Wnd::~CFake_Wnd (void) {
-	_out() += TLog_Acc::e_new_line;
+
+	_out().Cached().Clear();
+	_out() += TLog_Acc::e_emp_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	if (nullptr != this->m_h_dc) {
@@ -40,7 +43,7 @@ CFake_Wnd::~CFake_Wnd (void) {
 
 	if (TBase::IsWindow())
 		TBase::DestroyWindow();
-	_out()();
+//	_out()(); it is supposed to be included in real test case so output here is not necessary;
 }
 
 /////////////////////////////////////////////////////////////////////////////

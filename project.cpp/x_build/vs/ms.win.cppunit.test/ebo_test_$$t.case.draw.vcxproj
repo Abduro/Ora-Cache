@@ -181,6 +181,8 @@
   <ItemGroup>
     <ClInclude Include="$(_2)ebo_test_$d$.draw.case.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.draw.case.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.image.case.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.image.case.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">
@@ -188,6 +190,9 @@
     </ProjectReference>
     <ProjectReference Include="..\ms.win\sys.err.core_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000A101}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ms.win\image_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000019}</Project>
     </ProjectReference>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>

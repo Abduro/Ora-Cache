@@ -8,6 +8,8 @@
 #include "win.gui.res.h"
 #include "win.gui_wnd.h"
 
+#include "shared.timer.h"
+
 namespace ebo { namespace boo { namespace gui {
 
 	using CError = shared::sys_core::CError;
@@ -19,7 +21,12 @@ namespace ebo { namespace boo { namespace gui {
 	using CAtom = ex_ui::popup::CAtom;
 	using CWnd  = ebo::boo::gui::CWnd;
 
-	class CFrame {
+	using IWaitable_Events = shared::common::IWaitable_Events;
+	using CStdTimer = shared::common::CStdTimer;
+
+	using TString = TStringEx;
+
+	class CFrame : public IWaitable_Events {
 	public:
 		class CIcon : public ex_ui::resource::CIcon { typedef ex_ui::resource::CIcon TBase;
 		public:
@@ -62,10 +69,14 @@ namespace ebo { namespace boo { namespace gui {
 		CFrame&  operator = (const CFrame&) = delete;
 		CFrame&  operator = (CFrame&&) = delete;
 
+		virtual void IWaitable_OnComplete(void) override final;
+
 	private:
 		CError   m_error;
 		CIcon    m_icon ;
 		CWnd     m_wnd  ;
+
+		CStdTimer m_wait;
 	};
 
 }}}

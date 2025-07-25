@@ -10,7 +10,6 @@ using namespace ebo::boo::gui;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ebo { namespace boo { namespace gui { namespace _impl {
-
 }}}}
 using namespace ebo::boo::gui::_impl;
 
@@ -41,7 +40,9 @@ err_code TIcon::Set (const uint16_t _u_res_id) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CFrame:: CFrame (void) : m_icon(*this), m_wnd(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__)) {this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CFrame:: CFrame (void) : m_icon(*this), m_wnd(TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__)), m_wait(*this) {
+	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
+}
 CFrame::~CFrame (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -96,7 +97,10 @@ err_code CFrame::Create (void) {
 		if (__failed(n_result))
 			this->m_error = this->m_icon.Error(); // just for debug purpose;
 
-		m_wnd.ShowWindow(SW_SHOW);
+		if (true || __failed(this->m_wait.Create(555)))
+			m_wnd.ShowWindow(SW_SHOW);
+		else
+			m_wnd.ShowWindow(SW_SHOW|SW_MINIMIZE);
 	}
 	
 	return this->Error();
@@ -123,3 +127,12 @@ CWnd& CFrame::Window (void) const { return this->m_wnd; }
 CWnd& CFrame::Window (void)       { return this->m_wnd; }
 
 /////////////////////////////////////////////////////////////////////////////
+
+void  CFrame::IWaitable_OnComplete (void) {
+
+	this->m_wait.Destroy();   // no error is checked;
+
+	WINDOWPLACEMENT wps = {0}; wps.length = sizeof(WINDOWPLACEMENT);
+	this->m_wnd.GetWindowPlacement(&wps); wps.showCmd = SW_RESTORE|SW_NORMAL;
+	this->m_wnd.SetWindowPlacement(&wps);
+}

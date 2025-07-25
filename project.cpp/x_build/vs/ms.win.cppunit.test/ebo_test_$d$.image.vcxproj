@@ -231,6 +231,9 @@
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>
+    <ProjectReference Include="ebo_test_$$t.case.draw.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-C0000006000B}</Project>
+    </ProjectReference>
     <ProjectReference Include="ebo_test_$$t.case.theme.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060023}</Project>
     </ProjectReference>

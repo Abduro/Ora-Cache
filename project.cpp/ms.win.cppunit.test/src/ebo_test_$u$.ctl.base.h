@@ -28,7 +28,8 @@ namespace base {}
 #pragma comment(lib, "ctl.base_v15.lib")     // this one must be tested by this unit test project;
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
-#pragma comment(lib, "ebo_test_$$t.case.theme.lib") // test cases for theme project of loading images from disk file;
+#pragma comment(lib, "ebo_test_$$t.case.draw.lib")  // test cases of draw helpers: loading image and fake window for example;
+#pragma comment(lib, "ebo_test_$$t.case.theme.lib") // test cases for theme project of getting the path to image files;
 
 #pragma comment(lib, "geometry.2d_v15.lib")  // this is for user control placement;
 #pragma comment(lib, "image_v15.lib")        // image cache for user controls;

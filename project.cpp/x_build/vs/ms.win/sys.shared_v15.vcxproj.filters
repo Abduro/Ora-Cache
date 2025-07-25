@@ -20,6 +20,8 @@
     <ClInclude Include="$(_0)shared.str.var.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.str.var.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.string.h"><Filter>interface</Filter></ClInclude>
+    <ClInclude Include="$(_0)shared.timer.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.timer.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.types.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.types.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.gen.time.h"><Filter>interface</Filter></ClInclude>

@@ -241,8 +241,10 @@ uint16_t  CList::Count  (void) const {
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount ;
 	if (this->Is_valid() == false)
 		return 0;
-	else
-		return static_cast<uint16_t>(::ImageList_GetImageCount(this->Handle()));
+	else {
+		int32_t n_count =  ::ImageList_GetImageCount(this->Handle());
+		return  n_count < 0 ? 0 : static_cast<uint16_t>(n_count);
+	}
 }
 
 TError&   CList::Error  (void) const { return m_error; }

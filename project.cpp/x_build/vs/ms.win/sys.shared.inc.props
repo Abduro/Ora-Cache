@@ -9,6 +9,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error> <!--This is for reference to error codes header file; -->
     <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\sys.shared\</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
@@ -17,7 +18,7 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
-    <_2></_2>
+    <_2>$(Error)interface\</_2>
     <_3></_3>
     <_4></_4>
     <_5></_5>
@@ -28,7 +29,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

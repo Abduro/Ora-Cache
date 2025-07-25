@@ -11,7 +11,8 @@
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
     <!--Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color-->
-    <!--Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme--><!--For this project test cases are created; -->
+    <!--Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme-->
+    <Image Condition="'$(Image)'==''">..\..\..\ms.win\uix\draw\image\</Image>
     <Tests Condition="'$(Tests)'==''">..\..\..\ms.win.cppunit.test\</Tests>
   </PropertyGroup>
   <PropertyGroup>
@@ -28,13 +29,13 @@
     <!--_7>$(Color)interface\named\</_7-->
     <!--_8>$(Theme)interface\</_8-->
     <!--_9>$(Theme)interface\named\</_9-->
-    <_a></_a>
+    <_a>$(Image)interface\</_a>
     <_b></_b>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4)<!--;$(_5);$(_6);$(_7);$(_8);$(_9)--></Include_0_9>
-    <Include_abc></Include_abc>
-    <IncludePath>$(Include_0_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <Include_abc>$(_a)</Include_abc>
+    <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

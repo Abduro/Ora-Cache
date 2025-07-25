@@ -96,6 +96,20 @@ const
 t_size&   CResult::Size  (void) const { return this->m_size; }
 t_size&   CResult::Size  (void)       { return this->m_size; }
 
+CResult&  CResult::operator = (CResult&& _victim) {
+	_victim;
+	if (__is_okay(this->Reset())) {
+
+		HBitmap bmp_ = _victim.Detach();
+	
+		this->Attach(bmp_);
+		this->Size() = _victim.Size();
+	
+	}
+
+	return *this;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CDataProvider:: CDataProvider (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }

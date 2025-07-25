@@ -23,7 +23,7 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
-    <_2>$(Root)src\test.cases\</_2><!--This folder contains test cases for loading theme images;-->
+    <_2>$(Root)src\test.cases\</_2><!--This folder contains test cases for loading theme images and fake window for getting HDC; -->
     <_3>$(Shared)interface\</_3>
     <_4>$(Error)interface\</_4>
     <_5>$(ComObj)interface\</_5>

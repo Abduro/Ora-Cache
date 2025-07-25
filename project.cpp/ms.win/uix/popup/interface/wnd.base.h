@@ -60,8 +60,15 @@ namespace ex_ui { namespace popup {
 		~CWndBase (void);
 
 	public:
+#if (0)
 		DECLARE_WND_CLASS(__CLASS__);
-
+#elif (true == true)
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw ;
+		static const dword u_style = CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS;
+		DECLARE_WND_CLASS_EX(__CLASS__, u_style, COLOR_ACTIVECAPTION); // does not work; window background still be as default and flashes on window create;
+#else
+		static ATL::CWndClassInfo& GetWndClassInfo(void);
+#endif
 		BEGIN_MSG_MAP(CWndBase)
 			CHAIN_MSG_MAP_MEMBER(m_handlers);
 		END_MSG_MAP()

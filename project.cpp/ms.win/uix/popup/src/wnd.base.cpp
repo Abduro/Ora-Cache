@@ -109,6 +109,13 @@ CWndBase:: CWndBase (_pc_sz _lp_sz_cls_name){
 
 CWndBase::~CWndBase (void) {}
 
+#if (0)
+ATL::CWndClassInfo& CWndBase::GetWndClassInfo (void) {
+	static ATL::CWndClassInfo wc = {
+		0
+	};
+}
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #if (0)
 /////////////////////////////////////////////////////////////////////////////

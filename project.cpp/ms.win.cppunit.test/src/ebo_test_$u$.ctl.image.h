@@ -16,7 +16,9 @@ namespace ebo { namespace boo { namespace test { namespace ctl {
 		~CImages (void) = default;
 
 	public:
-		__method (Set);
+		__method (Create); // creates the image list of specified size of the image frame (24x24(px));
+		__method (Draw);   // loads the specified image and tries to draw the image to device context of the fake window;
+		__method (Set);    // loads the specified image from the file and adds it to the image list;
 
 	private:
 		bool  m_b_verb;

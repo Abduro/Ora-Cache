@@ -9,8 +9,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <!--files reside in root of interface folder!-->
+    <!--files reside in cpp.unit.test\src\test.cases\ !-->
     <ClInclude Include="$(_2)ebo_test_$d$.draw.case.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.draw.case.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.image.case.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.image.case.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

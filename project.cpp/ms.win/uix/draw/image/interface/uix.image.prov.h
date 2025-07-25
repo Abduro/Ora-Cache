@@ -14,7 +14,7 @@ namespace ex_ui { namespace draw { namespace images {
 		~CResult (void);
 	public:
 		err_code  Attach (HBitmap&);       // attaches the input handle, input handle is set to nullptr, there is not handle duplication;
-		HBitmap   Detach (void);           // returns encupsulated bitmap handle and set to zero of this class field;
+		HBitmap   Detach (void);           // returns encapsulated bitmap handle and set to zero of this class field;
 		TError&   Error  (void) const;
 		const
 		HBitmap&  Handle (void) const;     // just returns a reference to the bitmap handle;
@@ -29,7 +29,7 @@ namespace ex_ui { namespace draw { namespace images {
 		t_size&   Size   (void) ;
 
 	public:
-		CResult&  operator = (const CResult&) = delete; CResult& operator = (CResult&&) = delete;
+		CResult&  operator = (const CResult&) = delete; CResult& operator = (CResult&&);
 
 	private:
 		HBitmap   m_bmp ;   // the bitmap pointer or handle that is loaded the last;
@@ -47,7 +47,7 @@ namespace ex_ui { namespace draw { namespace images {
 		TError&  Error (void) const;
 		err_code Load  (_pc_sz _p_file_path, const TImgFmt = TImgFmt::e_png);
 		const
-		CResult& Result(void) const;
+		CResult& Result(void) const; // ToDo: Detach() is not acceptable due to 'const' reference;
 
 	public:
 		CDataProvider&  operator = (const CDataProvider&);

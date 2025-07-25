@@ -102,6 +102,15 @@ void CTestCase_Root::Open (void) {
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
+CNot_copyable:: CNot_copyable (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CNot_copyable::~CNot_copyable (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
+TError&  CNot_copyable::Error (void) const { return this->m_error; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CTestCase:: CTestCase (void) {
 	this->m_error >> __CLASS__ << __METHOD__ << __s_ok;
 	// current theme *must* be loaded first; otherwise the theme related registry keys are not available;
@@ -204,9 +213,8 @@ CTestCase_0::CTestCase_0 (void) {
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		_out()();
 	}
+	TBase::m_error >>__CLASS__;
 }
-
-TError&  CTestCase_0::Error (void) const { return this->m_error; }
 
 CString  CTestCase_0::Get_path (const e_images _e_image) const {
 	_e_image;

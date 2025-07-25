@@ -89,8 +89,25 @@ namespace ebo { namespace boo { namespace test { namespace cases {
 	};
 #endif
 
-	// the class below is inteanded to load status bar control images;
-	class CTestCase_0 {
+	class CNot_copyable {
+	protected:
+		 CNot_copyable (void); CNot_copyable (const CNot_copyable&) = delete; CNot_copyable (CNot_copyable&&) = delete;
+		~CNot_copyable (void);
+
+	public:
+		TError&  Error (void) const;
+
+	private:
+		CNot_copyable& operator = (const CNot_copyable&) = delete;
+		CNot_copyable& operator = (CNot_copyable&&) = delete;
+
+	protected:
+		mutable
+		CError  m_error;
+	};
+
+	// the class below is inteanded to get path to status bar control images;
+	class CTestCase_0 : public CNot_copyable { typedef CNot_copyable TBase;
 	public:
 		enum e_images : uint32_t {
 		     e_no_0 = 0,
@@ -100,16 +117,12 @@ namespace ebo { namespace boo { namespace test { namespace cases {
 		 CTestCase_0 (void);
 		~CTestCase_0 (void) = default;
 
-	TError&   Error  (void) const;
-
 	CString   Get_path (const e_images) const; // returns the path to the image file; in case of error the empty string is returned;
 	err_code  Set_path (void) ;                // composes the path specific for images of the status bar control;
 
 	_pc_sz    Get_root (void) const;  // gets the folder of test images for this test case;
 
 	private:
-		mutable
-		CError  m_error ;
 		CString m_folder; // this is the path to images' folder;
 	};
 
