@@ -18,7 +18,8 @@ namespace ex_ui { namespace theme { namespace storage {
 			 CTestCase (const CReg_router&); CTestCase (void) = delete; CTestCase (const CTestCase&) = delete; CTestCase (CTestCase&&) = delete;
 			~CTestCase (void);
 		public:
-			CString Root (void) const;
+			CString Control (const uint32_t _ndx) const; // returns the registry key path for test cases of particular user control;
+			CString Root (void) const; // ex_ui::theme::Get_current().Load() must be called before as least once; ToDo: light theme must be set by default;
 
 		private:
 			CTestCase& operator = (const CTestCase&) = delete; CTestCase& operator = (CTestCase&&) = delete;
@@ -110,17 +111,46 @@ namespace ex_ui { namespace theme { namespace storage {
 
 	class CRegKey_Ex {
 	public:
+		class CCache {
+		public:
+			CCache (_pc_sz _p_path = 0, _pc_sz _name = 0) ; CCache (const CCache&) = delete; CCache (CCache&&) = delete; ~CCache (void) = default;
+			bool   Is   (void) const; // returns 'true' in case if trimmed registry key is not null or empty;
+			_pc_sz Name (void) const;
+			_pc_sz Path (void) const;
+			bool   Name (_pc_sz);     // returns 'true' in case of name value change; the input value is trimmed; null or empty name is accepted;
+			bool   Path (_pc_sz);     // returns 'true' in case of key path change; the input value is trimmed; neither null nor emptiness is accepted;
+			bool   Set  (_pc_sz _p_key_path, _pc_sz _p_value_name); // returns 'true' in case if value name or key path is changed;
+			CCache& operator << (_pc_sz _p_path); // calls this->Path(_p_name);
+			CCache& operator >> (_pc_sz _p_name); // calls this->Name(_p_name);
+			CCache& operator =  (const CCache& ) = delete; CCache& operator = (CCache&&) = delete;
+			operator bool (void) const; // returns result of this->Is();
+		private:
+			CString  m_name; // a name of the key value; empty string is accepted;
+			CString  m_path; // a path to the registry key; empty string is not accepted;
+		};
 		class CValue {
 		public:
 			 CValue (CRegKey_Ex& _the_key); CValue (void) = delete; CValue (const CValue&) = delete; CValue (CValue&&) = delete;
 			~CValue (void) = default;
 		public:
-			CString GetString (_pc_sz _p_value_name); // it is assumed the key is already open; empty value name means (default);
-			CString GetString (_pc_sz _p_key_path, _pc_sz _p_value_name)/* const*/; // returns empty string in case of error;
+			const
+			CCache& Cache (void) const;
+			CCache& Cache (void) ;
+
+			CString GetString (_pc_sz _p_name); // it is assumed the key is already open; empty value name means (default);
+			CString GetString (_pc_sz _p_key_path, _pc_sz _p_name)/* const*/; // returns empty string in case of error;
+
+		public:
+			CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
+			const
+			CCache& operator ()(void) const;   // gets the reference to cache field value; (ro)
+			CCache& operator ()(void);         // gets the reference to cache field value; (rw)
+
+			operator _pc_sz  (void) /*const*/; // gets registry value by cached key path and value name; if error occurs, empty string is returned;
 
 		private:
-			CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
 			CRegKey_Ex& m_the_key;
+			CCache  m_cache;
 		};
 
 	public:
@@ -137,10 +167,14 @@ namespace ex_ui { namespace theme { namespace storage {
 		CRegKey_Ex& operator = (const CRegKey_Ex&) = delete;
 		CRegKey_Ex& operator = (CRegKey_Ex&&) = delete;
 
-		TError&  operator [](const long _not_used) const;
-		CError&  operator [](const long _not_used) ;
+		TError&  operator [](const long _not_used) const; // returns the reference to the error object of this class; (ro)
+		CError&  operator [](const long _not_used) ;      // returns the reference to the error object of this class; (rw)
 
-		CRegKey& operator ()(void);
+		CRegKey& operator ()(void); // returns the reference to the CRegKey member of this class;
+
+		const
+		CValue&  operator [](_pc_sz _not_used) const;
+		CValue&  operator [](_pc_sz _not_used) ;
 
 	private:
 		mutable
@@ -150,5 +184,9 @@ namespace ex_ui { namespace theme { namespace storage {
 		friend class CValue;
 	};
 }}}
+
+typedef ex_ui::theme::storage::CRegKey_Ex TRegKeyEx;
+typedef TRegKeyEx::CCache TKeyCache;
+typedef TRegKeyEx::CValue TKeyValue;
 
 #endif/*_UIX_THEME_REG_H_INCLUDED*/

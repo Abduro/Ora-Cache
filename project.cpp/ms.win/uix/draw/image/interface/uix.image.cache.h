@@ -31,12 +31,17 @@ namespace ex_ui { namespace draw { namespace images {
 		~CList (void);
 
 	public:
-		err_code  Append  (const HBitmap);    // bitmap handle, bits per pixel and size will be checked;
-		err_code  CopyTo  (HImgList&) const;  // copies this image list to the input handle of other image list;
+		/* regarding Append() methods:
+		   if this list is not created yet it will be created automatically with frame size equals to image size of the bitmap being appended;
+		*/
+		err_code  Append (const HBitmap);    // bitmap handle, bits per pixel and size will be checked;
+		err_code  Append (_pc_sz _p_path, const TImgFmt); // calls the data provider for trying to load the image of the type specified;
 
-		err_code  Create  (const t_size& _img_size, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
-		err_code  Create  (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
-		err_code  Destroy (void);
+		err_code  CopyTo (HImgList&) const;  // copies this image list to the input handle of other image list;
+
+		err_code  Create (const t_size& _img_size, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
+		err_code  Create (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
+		err_code  Destroy(void);
 		// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw ;
 		err_code  Draw  (const uint16_t _n_index, const HDC, const int16_t _n_x, const int16_t _n_y, const uint32_t _u_mode = ILD_NORMAL);
 

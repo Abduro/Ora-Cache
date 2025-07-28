@@ -18,7 +18,7 @@ namespace ex_ui { namespace controls {
 
 	class CImages {
 	public:
-		 CImages (void); CImages (const CImages&) = delete; CImages (CImages&&) = delete;
+		 CImages (void); CImages (const CImages&); CImages (CImages&&) = delete;
 		~CImages (void);
 
 	public:

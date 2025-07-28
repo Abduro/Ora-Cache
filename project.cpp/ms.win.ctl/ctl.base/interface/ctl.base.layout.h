@@ -12,7 +12,7 @@ namespace ex_ui { namespace controls { namespace layout {
 
 	// https://www.abbreviations.com/abbreviation/layout ;
 	// https://erik-engheim.medium.com/understanding-visual-layout-in-gui-design-2fa91792edef ;
-
+	
 	/*
 		https://medium.com/@uiuxzee/ultimate-spacing-guide-for-ui-designers-342f4c61bd70 : (excerpt)
 		Gaps, also known as whitespace or padding, create visual separation, making the interface easier to understand and navigate ; 
@@ -183,8 +183,33 @@ namespace ex_ui { namespace controls { namespace layout {
 		CGaps_of_rect&  operator = (CGaps_of_rect&&) = delete;
 	};
 
-	typedef CGaps_of_rect CMargins_of_rect;
+	typedef CGaps_of_rect CMargins_of_rect; using CMargins = CMargins_of_rect;
 	typedef CGaps_of_rect CPadding_of_rect;
+
+	class CImage {
+	public:
+		 CImage (void); CImage (const CImage&); CImage (CImage&&) = delete;
+		~CImage (void) = default;
+
+		const bool Is_valid(void) const ; // returns 'true' if size exists, i.e. cx and cy are not equal to zero (0); otherwise, false;
+		const bool IsSquare(void) const ; // returns 'true' if size is set (valid) and cx == cy;
+		const
+		CMargins&  Margins (void) const ;
+		CMargins&  Margins (void)       ;
+		const
+		t_size&    Size    (void) const ;
+		t_size&    Size    (void)       ;
+		err_code   Size    (const HIMAGELIST);
+
+	public:
+		CImage& operator = (const CImage&); CImage& operator = (CImage&&) = delete;
+		CImage& operator <<(const CMargins&);
+		CImage& operator <<(const t_size&);
+
+	private:
+		CMargins   m_margins ; // image rectangle magins; is used for creating a gap between an image and item text;
+		t_size     m_size    ; // image size; by default it's calculated by means of image list control, but can be set manually;
+	};
 }}}
 
 #endif/*_CTL_BASE_LYT_H_INCLUDED*/

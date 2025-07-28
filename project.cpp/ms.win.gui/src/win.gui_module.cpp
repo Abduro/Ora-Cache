@@ -6,6 +6,7 @@
 	Adopted to Ebo Pack draw renderer test app 30-Mar-2025 at 16:28:15.839, UTC+4, Batumi, Sunday;
 */
 #include "win.gui_module.h"
+#include "com.svc.base.h"
 
 using namespace shared::sys_core;
 using namespace ebo::boo::gui;
@@ -32,7 +33,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	hInstance; hPrevInstance; lpstrCmdLine; nCmdShow;
 
 	using CError = shared::sys_core::CError;
+	using CCoGuard = shared::sys_core::com::CCoGuard;
 
+	CCoGuard guard(TCo_Cfg::e_fast);
 	CError error;
 	error >> __CLASS__ << __METHOD__ << __e_not_inited;
 
@@ -44,7 +47,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	*/
 	_Module.m_libid  = LIBID_ATLLib;
 	int32_t n_result = __s_ok;
-	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
+	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(NULL, 0, 0, 0L);
 
 	ex_ui::theme::Get_current().Load();  // no returned error code is concerned here yet;

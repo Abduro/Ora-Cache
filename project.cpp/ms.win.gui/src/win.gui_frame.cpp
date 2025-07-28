@@ -129,7 +129,13 @@ CWnd& CFrame::Window (void)       { return this->m_wnd; }
 /////////////////////////////////////////////////////////////////////////////
 
 void  CFrame::IWaitable_OnComplete (void) {
-
+#pragma region __refs_a
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchtothiswindow ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow ;
+	// https://stackoverflow.com/questions/71437203/proper-way-of-activating-a-window-using-winapi ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowplacement ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement ;
+#pragma endregion
 	this->m_wait.Destroy();   // no error is checked;
 
 	WINDOWPLACEMENT wps = {0}; wps.length = sizeof(WINDOWPLACEMENT);

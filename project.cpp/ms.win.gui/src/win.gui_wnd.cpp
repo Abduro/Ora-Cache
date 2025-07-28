@@ -64,7 +64,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 #endif
 #if (1)
 	CPaintDC dc_(*this);
-	shared::Get_View().Draw(dc_.m_hDC, dc_.m_ps.rcPaint); // *important*: the rectangle being sent is entire window client area!
+	shared::Get_View().OnDraw(dc_.m_hDC, dc_.m_ps.rcPaint); // *important*: the rectangle being sent is entire window client area!
 
 	err_code n_result = __s_ok;  // this message is handled;
 	return   n_result;
@@ -102,7 +102,13 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
 	::shared::Get_View().Parent() = *this;
-	::shared::Get_View().Status().Create(*this, 0xA); // no error handling is made yet;
+#if (0)
+	::shared::Get_View().Footer().Get().Create(*this, 0xA); // no error handling is made yet;
+#els(1==0)
+	::shared::Get_View().Footer().OnCreate();
+#else
+	::shared::Get_View().OnCreate();
+#endif
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 	::shared::Get_View().Tabbed().Create(*this, 0xB);
@@ -136,7 +142,7 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 	::shared::Get_View().Tabbed().Destroy();
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
-	::shared::Get_View().Status().Destroy(); // no error handling is made yet;
+	::shared::Get_View().Footer().Get().Destroy(); // no error handling is made yet;
 #endif
 	return   n_result;
 }
@@ -188,7 +194,7 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	if (TBase::m_error == false)
 		TBase::m_error << this->Layout().Update(rc_client);
 	if (TBase::m_error == false)
-		::shared::Get_View().Draw(nullptr, rc_client); 
+		::shared::Get_View().OnDraw(nullptr, rc_client); 
 #else
 	t_rect rc_surface = m_layout.DrawArea();
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;

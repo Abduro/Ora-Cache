@@ -10,16 +10,32 @@
 #include "direct_x.surface.h"
 #include "direct_x.wrap.h"
 
-#include "ebo.sha.gui.theme.h"
-
 namespace ebo { namespace boo { namespace gui {
 
-	using namespace ebo::sha::theme;
-
-	using CPane    = ex_ui::controls::CPane;    // this is the pane control class that is not windowed yet;
-	using CStatus  = ex_ui::controls::sfx::status::CControl;
+	using CPane    = ex_ui::controls::sfx::status::CPane;
+	using CSta_bar = ex_ui::controls::sfx::status::CControl;
 	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
+
 	using CSurface = ebo::boo::gui::render::CSurface;
+
+	class CFooter {
+	public:
+		 CFooter (void); CFooter (const CFooter&) = delete; CFooter (CFooter&&) = delete;
+		~CFooter (void);
+
+	public:
+		TError&   Error (void) const;
+		const
+		CSta_bar& Get (void) const;
+		CSta_bar& Get (void) ;
+
+		err_code  OnCreate  (void) ;
+
+	private:
+		CFooter& operator = (const CFooter&) = delete; CFooter& operator = (CFooter&&) = delete;
+		CError   m_error;
+		CSta_bar m_bar;
+	};
 
 	// this is the view of the main window;
 	class CView {
@@ -29,19 +45,26 @@ namespace ebo { namespace boo { namespace gui {
 
 	public:
 
-		err_code  Draw (const HDC, const t_rect& _drw_area);
-
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 		const
-		CPane&    Pane (void) const;
-		CPane&    Pane (void) ;
+		ex_ui::controls::sfx::CPane&    Pane (void) const;
+		ex_ui::controls::sfx::CPane&    Pane (void) ;
 #endif
 		const
-		CWindow&  Parent (void) const;
-		CWindow&  Parent (void) ;
+		CFooter&  Footer (void) const;
+		CFooter&  Footer (void) ;
+
+		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;  
+		err_code  OnDraw (const HDC, const t_rect& _drw_area);
+
+		const
+		CWindow&  Parent (void) const; // this is main window handle actually; (ro)
+		CWindow&  Parent (void) ;      // this is main window handle actually; (rw)
+#if (0)
 		const
 		CStatus&  Status (void) const;
 		CStatus&  Status (void) ;
+#endif
 		const
 		CSurface& Surface(void) const;
 		CSurface& Surface(void) ;
@@ -56,11 +79,14 @@ namespace ebo { namespace boo { namespace gui {
 
 	private:
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
-		CPane   m_pane;
+		ex_ui::controls::sfx::CPane m_pane;
 #endif
+		CFooter  m_footer ;
 		CWindow  m_parent ;  // this is the main window of this app;
 		CSurface m_surface;
+#if (0)
 		CStatus  m_status ;
+#endif
 		CTabbed  m_tabbed ;
 	};
 
@@ -69,6 +95,6 @@ namespace ebo { namespace boo { namespace gui {
 typedef ebo::boo::gui::CView TView;
 
 namespace shared {
-	TView&  Get_View (void);
+	TView&  Get_View (void); // all references to the target/this view are requested from main thread, that means sync access is acceptable;
 }
 #endif/*_WIN_GUI_VIEW_H_INCLUDED*/

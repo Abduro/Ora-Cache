@@ -7,6 +7,40 @@
 using namespace ex_ui::controls::layout;
 
 /////////////////////////////////////////////////////////////////////////////
+namespace ex_ui { namespace controls { namespace layout {
+
+CImage:: CImage (void) : m_size{0} {}
+CImage:: CImage (const CImage& _src) : CImage() { *this = _src; }
+
+const bool CImage::Is_valid(void) const { return (m_size.cx > 0 && m_size.cy > 0); }
+const bool CImage::IsSquare(void) const { return (this->Is_valid() && m_size.cx == m_size.cy); }
+const
+CMargins&  CImage::Margins (void) const { return m_margins; }
+CMargins&  CImage::Margins (void)       { return m_margins; }
+const
+t_size&    CImage::Size    (void) const { return m_size; }
+t_size&    CImage::Size    (void)       { return m_size; }
+
+err_code   CImage::Size    (const HIMAGELIST _list) {
+	_list;
+	err_code n_result = __s_ok;
+
+	if (nullptr == _list)
+	return (n_result = __e_inv_arg);
+	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize;
+	const bool b_result = !!::ImageList_GetIconSize(_list, reinterpret_cast<PINT>(&m_size.cx), reinterpret_cast<PINT>(&m_size.cy));
+	if (false == b_result)
+		n_result = __e_fail;
+
+	return n_result;
+}
+
+CImage&    CImage::operator = (const CImage& _src) { *this << _src.Margins() << _src.Size(); return *this; }
+CImage&    CImage::operator <<(const CMargins& _margins) { this->Margins() = _margins; return *this; }
+CImage&    CImage::operator <<(const t_size&  _size) { this->Size() = _size; return *this; }
+
+}}}
+/////////////////////////////////////////////////////////////////////////////
 
 CGap:: CGap (const int16_t _n_id, const int16_t _n_value) : m_id(_n_id), m_value(_n_value) {}
 CGap:: CGap (const CGap& _src) : CGap() { *this = _src; }

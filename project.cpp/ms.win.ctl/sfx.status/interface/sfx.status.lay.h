@@ -11,6 +11,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 	using namespace ex_ui::controls::sfx;
 
 namespace layout {
+
 	class CStyle {
 	public:
 		enum e_stick {

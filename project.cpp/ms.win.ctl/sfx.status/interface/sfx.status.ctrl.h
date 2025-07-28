@@ -33,7 +33,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		CBorders& Borders(void) const;
 		CBorders& Borders(void) ;
 #endif
-		err_code  Create (const HWND hParent, const uint32_t _ctrl_id);
+		err_code  Create (const HWND hParent, const uint32_t _ctrl_id); // returns the error code, if this control window is already created;
 		err_code  Destroy(void) ;
 		TError&   Error  (void) const;
 
@@ -44,6 +44,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		const
 		CImages&  Images (void) const;
 		CImages&  Images (void) ;
+
+		bool    Is_valid (void) const;  // checks for: (1) window pointer; (2) this control window handle validity;
 
 		const
 		CLayout&  Layout (void) const;

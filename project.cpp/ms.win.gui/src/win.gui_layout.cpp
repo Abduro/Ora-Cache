@@ -124,8 +124,8 @@ err_code  CLayout::Update (const t_rect& _rect) {
 	shared::Get_View().Pane().Layout().Update(rect_pane);
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
-	::shared::Get_View().Status().Layout().Update(_rect);
-	this->m_draw_area.bottom -= ::shared::Get_View().Status().Layout().Height();
+	::shared::Get_View().Footer().Get().Layout().Update(_rect);
+	this->m_draw_area.bottom -= ::shared::Get_View().Footer().Get().Layout().Height();
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)

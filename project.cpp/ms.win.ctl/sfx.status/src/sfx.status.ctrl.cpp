@@ -38,8 +38,9 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	hParent; _ctrl_id;
 	this->m_error << __METHOD__ << __s_ok;
 
-	if (false == ::IsWindow(hParent)) return this->m_error << __e_hwnd = _T("Invalid parent window handle;");
-	if (nullptr == m_wnd_ptr)         return this->m_error << __e_not_inited;
+	if (false == ::IsWindow(hParent))   return this->m_error << __e_hwnd = _T("Invalid parent window handle;");
+	if (nullptr == m_wnd_ptr)           return this->m_error << __e_not_inited;
+	if (_wnd_ref(m_wnd_ptr).IsWindow()) return this->m_error << (err_code) TErrCodes::eObject::eInited;
 
 	this->m_ctrl_id = _ctrl_id;
 	t_rect  rc_area = {0};
@@ -48,9 +49,11 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 		return this->m_error.Last();
 	}
 
+	const dword u_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	t_rect rc_ = (this->Layout() = rc_area);
+
 	_wnd_ref(m_wnd_ptr).Create(
-		hParent, rc_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS, 0, _ctrl_id
+		hParent, rc_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), u_style, 0, _ctrl_id
 	);
 
 	if (false == _wnd_ref(m_wnd_ptr).IsWindow())
@@ -85,6 +88,10 @@ CFormat&  CControl::Format (void)       { return this->m_format; }
 const
 CImages&  CControl::Images (void) const { return this->m_images; }
 CImages&  CControl::Images (void)       { return this->m_images; }
+
+bool      CControl::Is_valid (void) const {
+	return nullptr != m_wnd_ptr && true == !!_wnd_ref(m_wnd_ptr).IsWindow();
+}
 
 const
 CLayout&  CControl::Layout (void) const { return this->m_layout; }

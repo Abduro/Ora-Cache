@@ -33,7 +33,7 @@ err_code CBase::CRoot::Set (void) {
 
 	if (__failed(n_error))
 		return this->m_error << n_error;
-
+#if (0)
 	CString cs_root = Get_router().TestCase().Root();  // gets the path to the root key;
 
 	CRegKey root_key;
@@ -50,7 +50,13 @@ err_code CBase::CRoot::Set (void) {
 		(this->m_error = dword(n_result)) = _T("Path to test cases is not specified;");
 	else
 		this->m_path = sz_buffer;
+#else
+	TRegKeyEx the_key;    (the_key[(_pc_sz)_T("")])() << (_pc_sz) Get_router().TestCase().Root() >> _T("path");
+	this->m_path = (_pc_sz)the_key[(_pc_sz)_T("")];
 
+	if (this->m_path.IsEmpty())
+		this->m_error = the_key[(long)0] = _T("Path to test cases is not specified;");
+#endif
 	return this->Error();
 }
 

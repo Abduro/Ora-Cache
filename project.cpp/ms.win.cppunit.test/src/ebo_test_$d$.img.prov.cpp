@@ -97,7 +97,7 @@ using namespace ebo::boo::test::cache::_impl;
 
 CDataProvider:: CDataProvider (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
+		_out() += TLog_Acc::e_emp_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		_out()();
 	}
@@ -105,7 +105,7 @@ CDataProvider:: CDataProvider (const bool _b_verb) : m_b_verb(_b_verb) {
 }
 
 void CDataProvider::LoadFile (void) {
-	_out() += TLog_Acc::e_new_line;
+	_out() += TLog_Acc::e_emp_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CTestCase_0 case_0;

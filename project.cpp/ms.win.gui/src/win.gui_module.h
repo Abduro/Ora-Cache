@@ -8,7 +8,6 @@
 #include "win.gui.inc.h"
 #include "win.gui_frame.h"
 #include "direct_x.wrap.h"
-#include "ebo.sha.gui.theme.h"
 
 #pragma comment(lib, "color_v15.lib")          // complementary colors;
 #pragma comment(lib, "ctl.base_v15.lib")       // user control base;
@@ -16,13 +15,20 @@
 #pragma comment(lib, "geometry.2D_v15.lib")    // generic shapes;
 #pragma comment(lib, "image_v15.lib")          // image cache ;
 #pragma comment(lib, "render_v15.lib")         // graphic render;
+
 #pragma comment(lib, "sfx.status_v15.lib")     // status bar user common control;
 #pragma comment(lib, "sfx.tabbed_v15.lib")     // tabbed control common control;
+
+#pragma comment(lib, "sys.com.core_v15.lib")   // component object model wrapper;
 #pragma comment(lib, "sys.err.core_v15.lib")   // system error handling;
 #pragma comment(lib, "sys.shared_v15.lib")     // shared macros for debug info output;
+
 #pragma comment(lib, "theme_v15.lib")          // color theme support;
 #pragma comment(lib, "win.popup_v15.lib")      // window message handlers;
-
+#if (0)
+#pragma comment(lib, "ebo_test_$$t.case.draw.lib")  // test cases of draw helpers, such as, loading image files and adding them to the image list;
+#pragma comment(lib, "ebo_test_$$t.case.theme.lib") // test cases of theme lib that allow to get path to theme images' files;
+#endif
 namespace ebo { namespace boo { namespace gui {
 
 	using CError = shared::sys_core::CError;

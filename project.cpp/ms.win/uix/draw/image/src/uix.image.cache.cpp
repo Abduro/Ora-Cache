@@ -130,13 +130,13 @@ CList::~CList (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CList::Append  (const HBitmap _h_bitmap) {
+err_code  CList::Append (const HBitmap _h_bitmap) {
 	_h_bitmap;
 	this->m_error << __METHOD__ << __s_ok;
-
+#if (0)
 	if (this->Is_valid() == false)
 		return this->m_error << __e_not_inited;
-
+#endif
 	if (nullptr == _h_bitmap || false == CBitmapInfo::IsValid(_h_bitmap))
 		return this->m_error << __e_inv_arg;
 
@@ -149,12 +149,37 @@ err_code  CList::Append  (const HBitmap _h_bitmap) {
 	if (32 != bmp_head.biBitCount)
 		return this->m_error << (err_code) TErrCodes::eData::eInvalid = _T("Bits per pixel value must be 32");
 
+	if (this->Is_valid() == false) {
+		if (__failed(this->Create(static_cast<uint16_t>(bmp_head.biWidth), static_cast<uint16_t>(bmp_head.biHeight))))
+			return this->Error();
+	}
+
 	if (this->Size().cx != bmp_head.biWidth || this->Size().cy != bmp_head.biHeight)
 		return this->m_error << (err_code) TErrCodes::eExecute::eParameter = _T("Different sizes between the input bitmap and this list");
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add ;
 	const int n_index = ::ImageList_Add(this->Handle(), _h_bitmap, nullptr);
 	if (0 > n_index)
 		this->m_error << __e_not_expect = _T("The bitmap cannot be added");
+
+	return this->Error();
+}
+
+err_code  CList::Append (_pc_sz _p_path, const TImgFmt _e_format) {
+	_p_path; _e_format;
+	this->m_error << __METHOD__ << __s_ok;
+
+	CDataProvider prov_;
+
+	if (__failed(prov_.Load(_p_path, _e_format))) {
+		return this->m_error = prov_.Error();
+	}
+
+	if (this->Is_valid() == false) {
+		if (__failed(this->Create(prov_.Result().Size())))
+			return this->Error();
+	}
+
+	this->Append (prov_.Result().Handle());
 
 	return this->Error();
 }

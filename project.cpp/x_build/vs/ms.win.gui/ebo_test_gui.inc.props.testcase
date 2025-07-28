@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 16-Nov-2024 at 19:28:17.017, UTC+4, Batumi, Sunday;
+	This is Ebo Pack GUI components' test app project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore>
+    <Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory><!--It is required for shell project;-->
+    <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
+    <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
+    <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
+    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
+    <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
+    <Image Condition="'$(Image)'==''">..\..\..\ms.win\uix\draw\image\</Image><!--For user control elements' image set; -->
+    <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
+    <SfxStatus Condition="'$(SfxStatus)'==''">..\..\..\ms.win.ctl\sfx.status\</SfxStatus> <!--Sfx::Status::CControl >> statusbar ctrl!-->
+    <SfxTabbed Condition="'$(SfxTabbed)'==''">..\..\..\ms.win.ctl\sfx.tabbed\</SfxTabbed> <!--Sfx::Tabbed::CControl >> tabbed set ctrl!-->
+    <ThisExe Condition="'$(ThisExe)'==''">..\..\..\ms.win.gui\</ThisExe>
+    <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
+    <Tests Condition="'$(Tests)'==''">..\..\..\ms.win.cppunit.test\</Tests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisExe)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Root)src\resources\</_2>
+    <_3>$(Root)src\render\</_3> <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
+    <_4>$(Root)src\themes\</_4>
+    <_5>$(Root)src\resources\icons\</_5>
+    <_6>$(Shared)interface\</_6>
+    <_7>$(Error)interface\</_7>
+    <!--_8>$(Error)interface\seh\</_8-->
+    <_9>$(Memory)interface\</_9><!--it is required for using shell project;-->
+    <_a>$(ComCore)interface\</_a>
+    <_b>$(Shell)interface\</_b>
+    <_c>$(Geo-2d)interface\</_c>
+    <_d>$(Color)interface\</_d>
+    <_e>$(Color)interface\compl\</_e>
+    <_f>$(Color)interface\named\</_f>
+    <_g>$(Theme)interface\</_g>
+    <_h>$(Theme)interface\named\</_h>
+    <_i>$(MS-WTL)include\</_i>
+    <_j>$(Win-pop)interface\</_j>
+    <_k>$(Win-pop)interface\msg_handlers\</_k>
+    <_l>$(Render)interface\</_l>
+    <_m>$(Render)interface\direct_x\</_m>
+    <_n>$(ZBuffer)interface\</_n>
+    <_o>$(CtlBase)interface\</_o>
+    <_p>$(SfxStatus)interface\</_p>
+    <_q>$(SfxTabbed)interface\</_q>
+    <_r>$(Image)interface\</_r>
+    <_s>$(Tests)interface\</_s>
+    <_t>$(Tests)src\test.cases\</_t>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7)<!--;$(_8)-->;$(_9)</Include_0_9>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q);$(_r);$(_s);$(_t)</Include_abc>
+    <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

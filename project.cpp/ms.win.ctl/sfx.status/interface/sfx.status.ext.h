@@ -19,7 +19,15 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		~CPane (void);
 
 	public:
+		_pc_sz  Text (void) const;
+		bool    Text (_pc_sz)    ;
+
+	public:
 		CPane&  operator = (const CPane&); CPane& operator = (CPane&&) = delete;
+		CPane&  operator <<(_pc_sz _p_text);
+
+	private:
+		CString m_text;
 	};
 
 	typedef ::std::vector<CPane> TRawPanes;
@@ -30,9 +38,15 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		~CPanes (void);
 
 	public:
+		err_code   Add (_pc_sz _p_text = nullptr);
 		err_code   Add (const CPane&) ; // no check for the added panel; if such a panel is already added, it is present twice;
 
+		uint16_t   Count (void) const ;
+
 		TError&    Error (void) const ;
+		const
+		CPane&     Pane (const uint16_t _ndx) const; // returns the reference to the pane by index; if out of range the reference to the fake pane is returned; (ro)
+		CPane&     Pane (const uint16_t _ndx) ;      // returns the reference to the pane by index; if out of range the reference to the fake pane is returned; (rw)
 		const
 		TRawPanes& Raw (void) const;
 		TRawPanes& Raw (void) ;
@@ -41,6 +55,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		CPanes&  operator = (const CPanes&) = delete; CPanes& operator = (CPanes&&) = delete;
 
 	private:
+		mutable
 		CError    m_error;
 		TRawPanes m_panes;
 	};

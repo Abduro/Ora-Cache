@@ -18,7 +18,7 @@ CRouter:: CRouter (const bool _b_verb) : m_b_verb(_b_verb) {
 
 void CRouter:: Get_paths (void) {
 
-	_out() += TLog_Acc::e_new_line;
+	_out() += TLog_Acc::e_emp_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	const TThemePalette palette = TThemePalette::e_dark;
