@@ -191,11 +191,19 @@ namespace ex_ui { namespace controls { namespace layout {
 		 CImage (void); CImage (const CImage&); CImage (CImage&&) = delete;
 		~CImage (void) = default;
 
+		const
+		t_point&   Anchor  (void) const ; // this is the anchor point which is used to draw the image by image list;
+		t_point&   Anchor  (void)       ;
+		bool       Anchor  (const int32_t _n_x, const int32_t _n_y); // returns 'true' in case of change value of either 'x' or 'y';
+
 		const bool Is_valid(void) const ; // returns 'true' if size exists, i.e. cx and cy are not equal to zero (0); otherwise, false;
 		const bool IsSquare(void) const ; // returns 'true' if size is set (valid) and cx == cy;
 		const
 		CMargins&  Margins (void) const ;
 		CMargins&  Margins (void)       ;
+#if defined(_DEBUG)
+		CString    Print (const e_print = e_print::e_all) const;
+#endif
 		const
 		t_size&    Size    (void) const ;
 		t_size&    Size    (void)       ;
@@ -204,10 +212,12 @@ namespace ex_ui { namespace controls { namespace layout {
 	public:
 		CImage& operator = (const CImage&); CImage& operator = (CImage&&) = delete;
 		CImage& operator <<(const CMargins&);
-		CImage& operator <<(const t_size&);
+		CImage& operator <<(const t_point&);    // the point of the anchor;
+		CImage& operator <<(const t_size&);     // the image size;
 
 	private:
 		CMargins   m_margins ; // image rectangle magins; is used for creating a gap between an image and item text;
+		t_point    m_anchor  ; // this is the point of the anchor for drawing the image by image list;
 		t_size     m_size    ; // image size; by default it's calculated by means of image list control, but can be set manually;
 	};
 }}}

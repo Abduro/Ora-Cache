@@ -124,7 +124,7 @@ namespace ex_ui { namespace controls { namespace borders {
 
 		const CBorder& Bottom (void) const; const CBorder&  Left (void) const; const CBorder& Right (void) const; const CBorder& Top (void) const;
 		      CBorder& Bottom (void)      ;       CBorder&  Left (void) ;            CBorder& Right (void)      ;       CBorder& Top (void) ;
-
+		// ToDo: 'Set' method needs to have input parameter of the mode of the currently used device context in;
 		bool  Set (const t_rect&); // sets borders' points of all sides; empty rectangle is applicable; returns true in case if at least on side coords is changed;
 
 	public:

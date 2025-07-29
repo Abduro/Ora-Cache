@@ -76,96 +76,19 @@ namespace pane {
 		t_rect   m_rect ; // this is entire area of the pane;
 	};
 }
+	using CFormat = ex_ui::controls::pane::CFormat;
+	using CLayout = ex_ui::controls::pane::CLayout;
+
 	// https://en.wikipedia.org/wiki/Paned_window_(computing) ;
 	// http://ptitben2000.chez.com/info/lookandfeel/higk.htm ;
 	// https://ux.stackexchange.com/questions/124588/whats-the-difference-between-a-panel-and-pane ;
 
 	class CPane {
 	public:
-		class CFormat : public CFmtBase {
-		private:
-			CFormat (void) = delete;
-			CFormat (CPane&); CFormat (const CFormat&); CFormat (CFormat&&) = delete; ~CFormat (void) = default;
-
-			const
-			CPane&  Pane (void) const;   // it is just for copy constructor of this class;
-			CPane&  Pane (void) ;	     // it is just for copy constructor of this class;
-
-		public:
-			int32_t  Image_Ndx (void) const;     // returns image index; if not set -1;
-			bool     Image_Ndx (const int32_t);  // sets image index value; returns 'true' in case of change;
-#if defined(_DEBUG)
-		CString Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
-#endif
-		public:
-			CFormat& operator = (const CFormat&);
-			CFormat& operator = (CFormat&&) = delete;
-		private:
-			CPane&    m_pane ;
-			int32_t   m_img_ndx;
-			friend class CPane;		
-		};
-
-		class CLayout {
-			friend class CPane;
-		private:
-			CLayout (void) = delete;
-			CLayout (CPane&); CLayout (const CLayout&); CLayout (CLayout&&) = delete; ~CLayout (void) = default;
-
-		public:
-			const
-			CAlign& Align (void) const;  // the font spec has already the alignment, but for the text only; this alignment is for entire pane;
-			CAlign& Align (void) ;
-			const
-			CImage& Image (void) const;  // if this pane does not have an image the image layout indicates 'false';
-			CImage& Image (void) ;	     // if this pane does not have an image the image layout indicates 'false';
-			const
-			CPane&  Pane  (void) const;  // it is just for copy constructor of this class;
-			CPane&  Pane  (void) ;	     // it is just for copy constructor of this class;
-#if (0)
-			const
-			CPos& Pos (void) const;      // the shortcut for Position(); (ro)
-			CPos& Pos (void) ;           // the shortcut for Position(); (rw)
-			const
-			CPos& Position (void) const; // gets a reference to current position of the pane; (ro)
-			CPos& Position (void) ;      // gets a reference to current position of the pane; (rw)
-#endif
-#if defined(_DEBUG)
-			CString Print(const e_print = e_print::e_all) const;
-#endif
-			const
-		    t_rect& Rect (void) const;
-		    t_rect& Rect (void);
-			bool  Update (void);                         // updates the sizes and points of components of the pane; a placement of the pane is calculated;
-			bool  Update (const t_rect& _rect_of_place); // updates the sizes and points of components of the pane; a placement is set by input rect;
-
-		public:
-			CLayout& operator = (const CLayout&);
-			CLayout& operator = (CLayout&&) = delete;
-
-			CLayout& operator <<(const CAlign&);
-		//	CLayout& operator <<(const CPosition&);
-
-		private:
-			CAlign    m_align; // this pane elements' alignment;
-			CImage    m_image; // an image layout if any image is assigned to this panel;
-			CPane&    m_pane ;
-#if (0)
-			CPosition m_position;
-#endif
-			t_rect    m_rect ; // this is entire area of this pane;
-		};
-
-	public:
 		 CPane (void); CPane (const CPane&); CPane (CPane&&);
 		~CPane (void);
 
 	public:
-#if (0)
-		const
-		CBorders& Borders (void) const;
-		CBorders& Borders (void) ;
-#endif
 		const
 		CFormat&  Format  (void) const;
 		CFormat&  Format  (void) ;
@@ -180,14 +103,11 @@ namespace pane {
 	public:
 		CPane& operator = (const CPane&);
 		CPane& operator = (CPane&&);      // just copying fields' data, neither move() nor swap() operation is applied;
-#if (0)
-		CPane& operator <<(const CBorders&);
-#endif
+
 		CPane& operator <<(const CFormat&);
 		CPane& operator <<(const CLayout&);
 
 	protected:
-		CBorders  m_borders;
 		CFormat   m_format;
 		CLayout   m_layout;
 	};

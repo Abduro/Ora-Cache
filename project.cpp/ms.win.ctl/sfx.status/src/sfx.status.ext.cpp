@@ -26,6 +26,13 @@ CPane::~CPane (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
+const
+ex_ui::controls::pane::CFormat& CPane::Format (void) const { return this->m_format; }
+ex_ui::controls::pane::CFormat& CPane::Format (void)       { return this->m_format; }
+const
+ex_ui::controls::pane::CLayout& CPane::Layout (void) const { return this->m_layout; }
+ex_ui::controls::pane::CLayout& CPane::Layout (void)       { return this->m_layout; }
+
 _pc_sz  CPane::Text (void) const { return (_pc_sz) this->m_text; }
 bool    CPane::Text (_pc_sz _p_text) {
 	_p_text;
@@ -36,9 +43,11 @@ bool    CPane::Text (_pc_sz _p_text) {
 	return b_changed;
 }
 
-CPane&  CPane::operator = (const CPane& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Text(); return *this; }
+CPane&  CPane::operator = (const CPane& _src) { *this << _src.Format() << _src.Layout() << _src.Text(); return *this; }
 
 CPane&  CPane::operator <<(_pc_sz _p_text) { this->Text (_p_text); return *this; }
+CPane&  CPane::operator <<(const ex_ui::controls::pane::CFormat& _fmt) { this->Format() = _fmt; return *this; }
+CPane&  CPane::operator <<(const ex_ui::controls::pane::CLayout& _lay) { this->Layout() = _lay; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

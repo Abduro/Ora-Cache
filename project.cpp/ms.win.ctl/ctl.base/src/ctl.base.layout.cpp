@@ -9,14 +9,57 @@ using namespace ex_ui::controls::layout;
 /////////////////////////////////////////////////////////////////////////////
 namespace ex_ui { namespace controls { namespace layout {
 
-CImage:: CImage (void) : m_size{0} {}
+CImage:: CImage (void) : m_size{0}, m_anchor{0} {}
 CImage:: CImage (const CImage& _src) : CImage() { *this = _src; }
+
+const
+t_point&   CImage::Anchor  (void) const { return this->m_anchor; }
+t_point&   CImage::Anchor  (void)       { return this->m_anchor; }
+bool       CImage::Anchor  (const int32_t _n_x, const int32_t _n_y) {
+	_n_x; _n_y;
+	const bool b_changed = this->Anchor().x != _n_x || this->Anchor().y != _n_y;
+
+	if (b_changed) {
+		this->Anchor().x = _n_x; this->Anchor().y = _n_y;
+	}
+
+	return b_changed;
+}
 
 const bool CImage::Is_valid(void) const { return (m_size.cx > 0 && m_size.cy > 0); }
 const bool CImage::IsSquare(void) const { return (this->Is_valid() && m_size.cx == m_size.cy); }
 const
 CMargins&  CImage::Margins (void) const { return m_margins; }
 CMargins&  CImage::Margins (void)       { return m_margins; }
+#if defined(_DEBUG)
+CString    CImage::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {anchor=%s;margins=%s;size=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {anchor=%s;margins=%s;size=%s;valid=%s}");
+	static _pc_sz pc_sz_pat_r = _T("anchor=%s;margins=%s;size=%s;valid=%s");
+
+	CString cs_anchor = TString().Format (_T("[w:%s|h:%d]"), this->Anchor().x, this->Anchor().y);
+	CString cs_margins = this->Margins().Print(e_print::e_req);
+	CString cs_size = TString().Format(_T("[cx:%d|cy:%d]"), this->Size().cx, this->Size().cy);
+	CString cs_valid = TString().Bool(this->Is_valid());
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a , (_pc_sz)__SP_NAME__,  (_pc_sz)__CLASS__,
+		(_pc_sz) cs_anchor, (_pc_sz) cs_margins, (_pc_sz) cs_size, (_pc_sz) cs_valid);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n , (_pc_sz)__CLASS__,
+		(_pc_sz) cs_anchor, (_pc_sz) cs_margins, (_pc_sz) cs_size, (_pc_sz) cs_valid);
+	}
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r ,
+		(_pc_sz) cs_anchor, (_pc_sz) cs_margins, (_pc_sz) cs_size, (_pc_sz) cs_valid);
+	}
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+#endif
 const
 t_size&    CImage::Size    (void) const { return m_size; }
 t_size&    CImage::Size    (void)       { return m_size; }
@@ -37,6 +80,7 @@ err_code   CImage::Size    (const HIMAGELIST _list) {
 
 CImage&    CImage::operator = (const CImage& _src) { *this << _src.Margins() << _src.Size(); return *this; }
 CImage&    CImage::operator <<(const CMargins& _margins) { this->Margins() = _margins; return *this; }
+CImage&    CImage::operator <<(const t_point& _anchor) { this->Anchor() = _anchor; return *this; }
 CImage&    CImage::operator <<(const t_size&  _size) { this->Size() = _size; return *this; }
 
 }}}

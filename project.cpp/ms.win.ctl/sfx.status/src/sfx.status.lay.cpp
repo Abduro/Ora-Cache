@@ -55,7 +55,7 @@ err_code CLayout::Update (void) {
 	CWindow wnd_ = this->m_ctrl.Window();
 
 	if (false == wnd_.IsWindow()) {
-		return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
+		return this->m_error << __METHOD__ << __e_hwnd = _T("The control window is not valid");
 	}
 
 	t_rect rc_area = {0};
@@ -64,10 +64,20 @@ err_code CLayout::Update (void) {
 		return (this->m_error << __METHOD__).Last();
 	}
 
-	// (1) updates border position(s);
+	// (1) updates border position(s); the border thickness is not important, because the renderer takes into account it;
+#if (1)
+	CBorders& borders = this->m_ctrl.Format().Borders();
+	n_result = borders.Set(rc_area); // advanced mode of the device context being used is not considered yet;
+#else
 	CBorder& top_ = this->m_ctrl.Format().Borders().Top();
 	top_.Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
-
+#endif
+	// (2) recalculates each pane of the status bar;
+	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
+		CPane&  pane = this->m_ctrl.Panes().Pane(i_);
+		if (pane.Format().Image_Ndx() > -1) {
+		}
+	} 
 	return n_result;
 }
 

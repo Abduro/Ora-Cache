@@ -40,8 +40,9 @@ namespace ex_ui { namespace controls {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawframecontrol << drawing system parts of GUI;
 
 	using namespace shared::types;
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
+	using CError  = shared::sys_core::CError;
+	using TError  = const CError;
+	using TString = TStringEx;
 
 	using CZBuffer = ex_ui::draw::memory::CZBuffer;
 	using ex_ui::draw::CFont;

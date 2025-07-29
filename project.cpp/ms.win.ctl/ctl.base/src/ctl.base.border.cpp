@@ -266,6 +266,9 @@ bool  CSet_for_rect::Set (const t_rect& _rect) {
 #elif u_use_case == 2
 	using CPoint = geometry::_2D::base::CPoint;
 	/*
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode >> the excerpt from the article:
+		   If the default GM_COMPATIBLE graphics mode is set, the system excludes bottom and rightmost edges when it draws rectangles;
+
 		(A)— —(D) left->B::A; top->A::D; right->D::C; bottom->C::B; thus, the direction is clockwise;
 		 |     |
 		 |     |
