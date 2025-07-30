@@ -181,6 +181,7 @@
     <ClInclude Include="$(_0)sfx.status.fmt.h" />
     <ClCompile Include="$(_1)sfx.status.fmt.cpp" />
     <ClInclude Include="$(_0)sfx.status.inc.h" />
+    <ClCompile Include="$(_1)sfx.status.inc.cpp" />
     <ClInclude Include="$(_0)sfx.status.lay.h" />
     <ClCompile Include="$(_1)sfx.status.lay.cpp" />
     <ClInclude Include="$(_1)sfx.status.wnd.h" />

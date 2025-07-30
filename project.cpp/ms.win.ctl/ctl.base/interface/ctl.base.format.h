@@ -123,6 +123,7 @@ namespace ex_ui { namespace controls { namespace format {
 		const
 		CBkgnd&     Bkgnd (void) const;
 		CBkgnd&     Bkgnd (void) ;
+#if (0)
 		/*
 			a set of borders is also a part of visual representation of the control, so it may exist withing format context only,
 			the definition of a control border position is a care of the layout class;
@@ -130,6 +131,7 @@ namespace ex_ui { namespace controls { namespace format {
 		const
 		CBorders&   Borders (void) const;
 		CBorders&   Borders (void) ;
+#endif
 		const
 		CFontSpec&  Font (void) const;
 		CFontSpec&  Font (void) ;
@@ -140,7 +142,9 @@ namespace ex_ui { namespace controls { namespace format {
 		CBase&  operator = (const CBase& );
 		CBase&  operator = (CBase&&) = delete;
 		CBase&  operator <<(const CBkgnd&);
+#if (0)
 		CBase&  operator <<(const CBorders&);
+#endif
 		CBase&  operator <<(const CFontSpec&);
 
 	protected:

@@ -189,9 +189,11 @@ CBase::~CBase (void) {}
 const
 CBkgnd& CBase::Bkgnd (void) const { return m_bkgnd; }
 CBkgnd& CBase::Bkgnd (void)       { return m_bkgnd; }
+#if (0)
 const
 CBorders& CBase::Borders (void) const { return m_borders; }
 CBorders& CBase::Borders (void)       { return m_borders; }
+#endif
 const
 CFontSpec&  CBase::Font  (void) const { return m_spec; }
 CFontSpec&  CBase::Font  (void)       { return m_spec; }
@@ -199,30 +201,36 @@ CFontSpec&  CBase::Font  (void)       { return m_spec; }
 #if defined(_DEBUG)
 CString     CBase::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
+#if (0)
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s}");
 	static _pc_sz pc_sz_pat_r = _T("%s%sbkgnd=%s;%s%sborders=%s;%s%sfont=%s%s%s");
 
-	CString cs_bkgnd   = this->Bkgnd().Print(e_print::e_req);
 	CString cs_borders = this->Borders().Print(e_print::e_req);
+#else
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{%s%sbkgnd=%s;%s%sfont=%s%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{%s%sbkgnd=%s;%s%sfont=%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("%s%sbkgnd=%s;%s%sfont=%s%s%s");
+#endif
+	CString cs_bkgnd   = this->Bkgnd().Print(e_print::e_req);
 	CString cs_font    = this->Font().Print(e_print::e_req);
 
 	CString cs_out;
 	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
 		_p_sfx, _p_pfx, (_pc_sz) cs_bkgnd,
-		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
+	//	_p_sfx, _p_pfx, (_pc_sz) cs_borders,
 		_p_sfx, _p_pfx, (_pc_sz) cs_font,
 		_p_sfx, _p_pfx  );
 	}
 	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__,
 		_p_sfx, _p_pfx, (_pc_sz) cs_bkgnd,
-		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
+	//	_p_sfx, _p_pfx, (_pc_sz) cs_borders,
 		_p_sfx, _p_pfx, (_pc_sz) cs_font,
 		_p_sfx, _p_pfx  );
 	}
 	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r,
 		_p_sfx, _p_pfx, (_pc_sz) cs_bkgnd,
-		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
+	//	_p_sfx, _p_pfx, (_pc_sz) cs_borders,
 		_p_sfx, _p_pfx, (_pc_sz) cs_font,
 		_p_sfx, _p_pfx  );
 	}
@@ -236,7 +244,9 @@ CString     CBase::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) co
 
 /////////////////////////////////////////////////////////////////////////////
 
-CBase&  CBase::operator = (const CBase&  _ref) { *this << _ref.Bkgnd() << _ref.Font() << _ref.Borders(); return *this; }
+CBase&  CBase::operator = (const CBase&  _ref) { *this << _ref.Bkgnd() << _ref.Font()/* << _ref.Borders()*/; return *this; }
 CBase&  CBase::operator <<(const CBkgnd& _bkg) { this->Bkgnd() = _bkg ; return *this; }
+#if (0)
 CBase&  CBase::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
+#endif
 CBase&  CBase::operator <<(const CFontSpec& _spec) { this->Font() = _spec; return *this; }

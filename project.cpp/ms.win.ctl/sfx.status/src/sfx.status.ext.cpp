@@ -18,6 +18,31 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { namesp
 
 }}}}}
 using namespace ex_ui::controls::sfx::status::_impl;
+
+namespace ex_ui { namespace controls { namespace sfx { namespace status { namespace pane {
+
+CLayout:: CLayout (void) : TBase(), m_fixed(0) {}
+CLayout:: CLayout (const CLayout& _src) : CLayout() { (TBase&)*this = (const TBase&)_src; }
+CLayout:: CLayout (CLayout&& _victim) : CLayout() { (TBase&)*this = (const TBase&)_victim; }
+
+uint32_t  CLayout::Fixed (void) const { return this->m_fixed; }
+bool      CLayout::Fixed (const uint32_t _n_value) {
+	_n_value;
+	const bool b_changed = this->Fixed() != _n_value;
+	if (b_changed)
+		this->m_fixed = _n_value;
+	return b_changed;
+}
+
+const
+CLay_Style&  CLayout::Style (void) const { return this->m_style; }
+CLay_Style&  CLayout::Style (void)       { return this->m_style; }
+
+CLayout&  CLayout::operator = (const CLayout& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Fixed(); return *this; }
+CLayout&  CLayout::operator <<(const uint32_t _n_fixed) { this->Fixed(_n_fixed); return *this; }
+
+}}}}}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CPane:: CPane (void) {}
@@ -30,8 +55,8 @@ const
 ex_ui::controls::pane::CFormat& CPane::Format (void) const { return this->m_format; }
 ex_ui::controls::pane::CFormat& CPane::Format (void)       { return this->m_format; }
 const
-ex_ui::controls::pane::CLayout& CPane::Layout (void) const { return this->m_layout; }
-ex_ui::controls::pane::CLayout& CPane::Layout (void)       { return this->m_layout; }
+TPn_Lay& CPane::Layout (void) const { return this->m_layout; }
+TPn_Lay& CPane::Layout (void)       { return this->m_layout; }
 
 _pc_sz  CPane::Text (void) const { return (_pc_sz) this->m_text; }
 bool    CPane::Text (_pc_sz _p_text) {
@@ -47,7 +72,7 @@ CPane&  CPane::operator = (const CPane& _src) { *this << _src.Format() << _src.L
 
 CPane&  CPane::operator <<(_pc_sz _p_text) { this->Text (_p_text); return *this; }
 CPane&  CPane::operator <<(const ex_ui::controls::pane::CFormat& _fmt) { this->Format() = _fmt; return *this; }
-CPane&  CPane::operator <<(const ex_ui::controls::pane::CLayout& _lay) { this->Layout() = _lay; return *this; }
+CPane&  CPane::operator <<(const TPn_Lay& _lay) { this->Layout() = _lay; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

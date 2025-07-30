@@ -11,12 +11,14 @@
 #include "sfx.status.lay.h"
 #include "sfx.status.ext.h"
 
+#include "ctl.base.border.h"
 #include "ctl.base.image.h"
 
 namespace ex_ui { namespace controls { namespace sfx { namespace status {
 
-	using namespace ex_ui::controls::sfx;
-	using CImages = ex_ui::controls::CImages;
+	using namespace  ex_ui::controls::sfx;
+	using CImages  = ex_ui::controls::CImages;
+	using CBorders = ex_ui::controls::borders::CBorders_for_rect;
 
 	class CControl {
 	public:
@@ -24,15 +26,10 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		~CControl (void);
 
 	public:
-		/*
-			A border is the line that already has such attributes or fields as: a color, a thickness and a position;
-			that means this class has all required attributes for format, thus this control format class may to take care of formating all borders;
-		*/
-#if (0)
 		const
 		CBorders& Borders(void) const;
 		CBorders& Borders(void) ;
-#endif
+
 		err_code  Create (const HWND hParent, const uint32_t _ctrl_id); // returns the error code, if this control window is already created;
 		err_code  Destroy(void) ;
 		TError&   Error  (void) const;
@@ -63,9 +60,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 		CControl& operator = (CControl&&) = delete;
 
 	protected:
-#if (0)
 		CBorders m_borders;
-#endif
 		CFormat  m_format ;
 		CError   m_error  ;
 		CImages  m_images ; // ToDo: this field may be put inside this control window class;

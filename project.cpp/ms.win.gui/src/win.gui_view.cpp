@@ -68,6 +68,11 @@ err_code  CFooter::OnCreate (void) {
 	pane_0.Format().Image_Ndx(0);    // it is supposed to be an image 'ready' status by default;
 
 	ex_ui::controls::pane::CFormat& fmt_0 = pane_0.Format(); fmt_0;
+	ex_ui::controls::sfx::status::TPn_Lay& out_0 = pane_0.Layout(); out_0;
+
+	using CLay_Style = ex_ui::controls::sfx::status::layout::CStyle;
+
+	out_0.Style().Width() << CLay_Style::CWidth::e_fixed;
 
 	return this->Error();
 }

@@ -92,7 +92,15 @@ t_rect&   CLayout::Rect (void) const { return m_rect ; }
 t_rect&   CLayout::Rect (void)       { return m_rect ; }
 
 bool CLayout::Update (void) { return false; }
-bool CLayout::Update (const t_rect& _rect_of_place) { _rect_of_place; return false; }
+
+bool CLayout::Update (CBorders& _borders) {
+	return _borders.Set(this->Rect());
+}
+
+bool CLayout::Update (const t_rect& _rect_of_place) {
+	this->Rect() = _rect_of_place;
+	return false;
+}
 
 CLayout&  CLayout::operator = (const CLayout& _src) { *this << _src.Align() << _src.Image() << _src.Rect(); return *this; }
 
@@ -109,6 +117,9 @@ CPane:: CPane (const CPane& _src) : CPane() { *this = _src; }
 CPane::~CPane (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+const
+CBorders& CPane::Borders (void) const { return this->m_borders; }
+CBorders& CPane::Borders (void)       { return this->m_borders; }
 const
 CFormat&  CPane::Format  (void) const { return this->m_format ; }
 CFormat&  CPane::Format  (void)       { return this->m_format ; }
@@ -138,7 +149,7 @@ err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
 
 	for (int16_t i_ = 0; i_ <= e_sides::e_bottom; i_++) { // border set for rectangular area is expected, but nevertheless;
 
-		const CBorder& border = this->Format().Borders().Get(static_cast<e_sides>(i_));
+		const CBorder& border = this->Borders().Get(static_cast<e_sides>(i_));
 
 		if (border.IsClear())
 			continue;
@@ -154,7 +165,7 @@ err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
 #if defined(_DEBUG)
 CString   CPane::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
 	_e_opt; _p_pfx; _p_sfx;
-#if (0)
+#if (1)
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%sborders:%s;%s%sformat:%s%s%s;%s%slayout:%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {borders=%s;format=%s;layout=%s}");
 	static _pc_sz pc_sz_pat_r = _T("borders=%s;format=%s;layout=%s");
@@ -170,11 +181,12 @@ CString   CPane::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/
 
 	CString cs_out;
 	if (e_print::e_all == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__,
+		_p_sfx, _p_pfx, (_pc_sz) cs_borders,
 		_p_sfx, _p_pfx, (_pc_sz) cs_format , // moves the format info section to the new line with the indent;
 		_p_sfx, _p_pfx, (_pc_sz) cs_layout);
 	}
-	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_format, (_pc_sz) cs_layout); }
-	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_format, (_pc_sz) cs_layout); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_borders, (_pc_sz) cs_format, (_pc_sz) cs_layout); }
+	if (e_print::e_req == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_borders, (_pc_sz) cs_format, (_pc_sz) cs_layout); }
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
@@ -185,10 +197,9 @@ CString   CPane::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPane&  CPane::operator = (const CPane& _src) { *this << /*_src.Borders() <<*/ _src.Format() << _src.Layout(); return *this; }
+CPane&  CPane::operator = (const CPane& _src) { *this << _src.Borders() << _src.Format() << _src.Layout(); return *this; }
 CPane&  CPane::operator = (CPane&& _victim) { *this = (const CPane&)_victim; return *this; }
-#if (0)
+
 CPane&  CPane::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
-#endif
-CPane&  CPane::operator <<(const CFormat& _format) { this->Format() = _format; return *this; }
-CPane&  CPane::operator <<(const CLayout& _layout) { this->Layout() = _layout; return *this; }
+CPane&  CPane::operator <<(const CFormat&  _format ) { this->Format()  = _format ; return *this; }
+CPane&  CPane::operator <<(const CLayout&  _layout ) { this->Layout()  = _layout ; return *this; }

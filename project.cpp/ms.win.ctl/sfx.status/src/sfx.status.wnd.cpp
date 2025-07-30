@@ -53,8 +53,8 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
 #define _use_shadow 1
 #if defined(_use_shadow) && (1 == _use_shadow)
-	CBorder shadow = this->m_ctrl.Format().Borders().Top(); shadow.Color() << ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
-	CBorder top_   = this->m_ctrl.Format().Borders().Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
+	CBorder shadow = this->m_ctrl.Borders().Top(); shadow.Color() << ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
+	CBorder top_   = this->m_ctrl.Borders().Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
 
 	if (shadow.Is_valid()) { z_buffer.Draw(shadow); }
 #else

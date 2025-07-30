@@ -12,26 +12,6 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 	using TBase = ex_ui::controls::format::CBase;
 
 namespace format {
-#if (0)
-	class CPane {
-	public:
-		 CPane (void);
-		 CPane (const CPane&); CPane (CPane&&) = delete;
-		~CPane (void);
-
-	public:
-		const
-		CBorder&   Border (void) const;
-		CBorder&   Border (void)      ;
-
-	public:
-		CPane& operator = (const CPane&);
-		CPane& operator <<(const CBorder&); CPane& operator = (CPane&&) = delete;
-
-	protected:
-		CBorder    m_border; // the right or the left side border;
-	};
-#endif
 }
 	class CFormat : public TBase {
 	friend class  CControl;

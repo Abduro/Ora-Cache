@@ -15,7 +15,7 @@ namespace ex_ui { namespace controls {
 	using CMargins = ex_ui::controls::layout::CMargins_of_rect;
 	using HImgList = HIMAGELIST;
 	using CImgList = ex_ui::draw::images::CList;
-
+	// this class is a kind of adapter between the image list wrapper and the base control panel class, especially;
 	class CImages {
 	public:
 		 CImages (void); CImages (const CImages&); CImages (CImages&&) = delete;
@@ -28,6 +28,10 @@ namespace ex_ui { namespace controls {
 
 	public:
 		CImages&  operator = (const CImages&) = delete; CImages& operator = (CImages&&) = delete;
+		const
+		CImgList& operator ()(void) const;
+		CImgList& operator ()(void) ;
+
 	private:
 		CImgList  m_list;
 	};

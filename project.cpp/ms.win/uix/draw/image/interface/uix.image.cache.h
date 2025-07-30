@@ -45,7 +45,7 @@ namespace ex_ui { namespace draw { namespace images {
 		// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw ;
 		err_code  Draw  (const uint16_t _n_index, const HDC, const int16_t _n_x, const int16_t _n_y, const uint32_t _u_mode = ILD_NORMAL);
 
-		uint16_t  Count (void) const;         // returns the count number of how much images the image list has;
+		uint16_t  Count (void) const;        // returns the count number of how much images the image list has;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
@@ -59,7 +59,7 @@ namespace ex_ui { namespace draw { namespace images {
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
 		const
-		t_size&   Size  (void) const;            // the image list item size can be changed in case of the list re-creation;
+		t_size&   Size  (void) const;        // the image list item size can be changed in case of the list re-creation;
 	public:
 		CList& operator = (const CList&);
 		CList& operator = (CList&&) = delete;
@@ -67,7 +67,7 @@ namespace ex_ui { namespace draw { namespace images {
 	protected:
 		mutable
 		CError   m_error;
-		t_size   m_size ;
+		t_size   m_size ;   // learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize >> maybe would be better;
 		HImgList m_list ;
 		dword    m_list_id; // (static_cast<dword>(_n_width) << 16) | static_cast<dword>(_n_height);
 	};

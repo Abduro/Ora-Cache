@@ -14,3 +14,7 @@ CImages::~CImages (void) {}
 const
 CImgList& CImages::List (void) const { return this->m_list; }
 CImgList& CImages::List (void)       { return this->m_list; }
+
+const
+CImgList& CImages::operator ()(void) const { return this->List(); }
+CImgList& CImages::operator ()(void)       { return this->List(); }

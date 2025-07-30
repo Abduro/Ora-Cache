@@ -6,6 +6,7 @@
 */
 #include "ctl.base.defs.h"
 #include "ctl.base.format.h"
+#include "ctl.base.border.h"
 
 namespace ex_ui { namespace controls {
 
@@ -16,6 +17,7 @@ namespace ex_ui { namespace controls {
 	using namespace ex_ui::controls::format;
 
 	using CImage = ex_ui::controls::layout::CImage;
+	using CBorders = ex_ui::controls::borders::CBorders_for_rect;
 
 namespace pane {
 
@@ -43,7 +45,7 @@ namespace pane {
 		int32_t  m_img_ndx;
 	};
 
-	class CLayout {
+	class CLayout { // ToDo: how does this layout know of the format that is applied to the pane which it belongs to? 
 	public:
 		 CLayout (void); CLayout (const CLayout&); CLayout (CLayout&&) = delete; // is not required yet;
 		~CLayout (void) = default;    // there's nothig to free;
@@ -60,9 +62,10 @@ namespace pane {
 		const
 		t_rect&  Rect  (void) const;
 		t_rect&  Rect  (void);
-
-		bool  Update (void);          // updates the sizes and points of components of the pane; a position of the pane is calculated;
-		bool  Update (const t_rect&); // updates the sizes and points of components of the pane; a position is set by input rect;
+		// ToDo: Update() methods are useless due to there is no information of pane object;
+		bool  Update (void);          // a position of the pane is calculated;
+		bool  Update (CBorders&);     // updates a borders position; it is supposed the rectangle of the pane is already set;
+		bool  Update (const t_rect&); // a position is set by input rect;
 
 	public:
 		CLayout& operator = (const CLayout&); CLayout& operator = (CLayout&&) = delete; // is not required yet;
@@ -90,6 +93,9 @@ namespace pane {
 
 	public:
 		const
+		CBorders& Borders (void) const;
+		CBorders& Borders (void) ;
+		const
 		CFormat&  Format  (void) const;
 		CFormat&  Format  (void) ;
 		const
@@ -104,10 +110,12 @@ namespace pane {
 		CPane& operator = (const CPane&);
 		CPane& operator = (CPane&&);      // just copying fields' data, neither move() nor swap() operation is applied;
 
+		CPane& operator <<(const CBorders&);
 		CPane& operator <<(const CFormat&);
 		CPane& operator <<(const CLayout&);
 
 	protected:
+		CBorders  m_borders;
 		CFormat   m_format;
 		CLayout   m_layout;
 	};

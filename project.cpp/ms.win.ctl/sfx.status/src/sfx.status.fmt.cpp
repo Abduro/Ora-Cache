@@ -20,7 +20,7 @@ CFormat::~CFormat (void) {}
 
 void CFormat::Default (void) {
 
-	CBorder& top = TBase::Borders().Top();
+	CBorder& top = this->m_ctrl.Borders().Top();
 	top.Thickness(1);
 #if (1)
 //	top.Color() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_border, TThemeState::e_default);

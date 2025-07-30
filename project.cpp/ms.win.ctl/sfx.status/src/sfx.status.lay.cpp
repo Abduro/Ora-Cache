@@ -10,26 +10,6 @@ using namespace ex_ui::controls::sfx::status::layout;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CStyle:: CStyle (void) : m_e_stick(e_stick::e_left), m_e_width(e_width::e_fixed) {}
-CStyle:: CStyle (const CStyle& _src) : CStyle() { *this = _src; }
-CStyle::~CStyle (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-const
-CStyle::e_stick  CStyle::Stick (void) const { return m_e_stick; }
-CStyle::e_stick& CStyle::Stick (void)       { return m_e_stick; }
-const
-CStyle::e_width  CStyle::Width (void) const { return m_e_width; }
-CStyle::e_width& CStyle::Width (void)       { return m_e_width; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CStyle&   CStyle::operator = (const CStyle& _src) { *this << _src.Stick() << _src.Width(); return *this; }
-CStyle&   CStyle::operator <<(const e_stick _style) { this->Stick() = _style; return *this; }
-CStyle&   CStyle::operator <<(const e_width _style) { this->Width() = _style; return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
-
 CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_height(28) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
 CLayout::~CLayout (void) {}
 
@@ -66,16 +46,28 @@ err_code CLayout::Update (void) {
 
 	// (1) updates border position(s); the border thickness is not important, because the renderer takes into account it;
 #if (1)
-	CBorders& borders = this->m_ctrl.Format().Borders();
+	CBorders& borders = this->m_ctrl.Borders();
 	n_result = borders.Set(rc_area); // advanced mode of the device context being used is not considered yet;
 #else
 	CBorder& top_ = this->m_ctrl.Format().Borders().Top();
 	top_.Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
 #endif
+
+	using ex_ui::controls::pane::CFormat;
+	using ex_ui::controls::pane::CLayout;
+
+	const t_size& img_size = this->m_ctrl.Images()().Size(); img_size;
+	const bool img_valid = this->m_ctrl.Images()().Is_valid(); img_valid;
+
 	// (2) recalculates each pane of the status bar;
 	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
 		CPane&  pane = this->m_ctrl.Panes().Pane(i_);
+
+		CFormat& fmt = pane.Format(); fmt;
+		TPn_Lay& lay = pane.Layout(); lay;
+
 		if (pane.Format().Image_Ndx() > -1) {
+
 		}
 	} 
 	return n_result;

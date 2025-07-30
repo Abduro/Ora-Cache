@@ -25,15 +25,10 @@ CControl::~CControl (void) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#if (0)
 const
-CBorders& CControl::Borders (void) const {
-	return m_borders;
-}
-CBorders& CControl::Borders (void)       {
-	return m_borders;
-}
-#endif
+CBorders& CControl::Borders (void) const { return this->m_borders; }
+CBorders& CControl::Borders (void)       { return this->m_borders; }
+
 err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	hParent; _ctrl_id;
 	this->m_error << __METHOD__ << __s_ok;
@@ -64,6 +59,7 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 
 	return this->Error();
 }
+
 err_code  CControl::Destroy(void) {
 
 	this->m_error << __METHOD__ << __s_ok;
