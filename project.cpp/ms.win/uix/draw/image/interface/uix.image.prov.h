@@ -24,6 +24,8 @@ namespace ex_ui { namespace draw { namespace images {
 #if defined(_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
+		// the height of the size is always positive for defining a height of the GUI component or creating an image list,
+		// but for creating DIB section it must be negative in the most cases, data provider takes care over it;
 		const
 		t_size&   Size   (void) const;
 		t_size&   Size   (void) ;

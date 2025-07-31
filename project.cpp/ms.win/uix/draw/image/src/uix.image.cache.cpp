@@ -150,7 +150,11 @@ err_code  CList::Append (const HBitmap _h_bitmap) {
 		return this->m_error << (err_code) TErrCodes::eData::eInvalid = _T("Bits per pixel value must be 32");
 
 	if (this->Is_valid() == false) {
-		if (__failed(this->Create(static_cast<uint16_t>(bmp_head.biWidth), static_cast<uint16_t>(bmp_head.biHeight))))
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader ;
+		// *important*: the heigh of the bitmap may be negative, thus absolute value must be taken;
+		//  excerpt:... If biHeight is negative, the bitmap is a top-down DIB with the origin at the upper left corner;
+		//              For YUV bitmaps, the bitmap is always top-down, regardless of the sign of biHeight ...
+		if (__failed(this->Create(static_cast<uint32_t>(bmp_head.biWidth), static_cast<uint32_t>(abs(bmp_head.biHeight)))))
 			return this->Error();
 	}
 
@@ -184,11 +188,11 @@ err_code  CList::Append (_pc_sz _p_path, const TImgFmt _e_format) {
 	return this->Error();
 }
 
-err_code  CList::Create (const t_size& _img_size, const uint16_t _n_count, const uint16_t _n_delta) {
+err_code  CList::Create (const t_size& _img_size, const uint32_t _n_count, const uint32_t _n_delta) {
 	return this->Create (_img_size.cx & 0xff, _img_size.cy & 0xff, _n_count, _n_delta);
 }
 
-err_code  CList::Create (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count, const uint16_t _n_delta) {
+err_code  CList::Create (const uint32_t _n_width, const uint32_t _n_height, const uint32_t _n_count, const uint32_t _n_delta) {
 	_n_width; _n_height; _n_count; _n_delta;
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -202,7 +206,8 @@ err_code  CList::Create (const uint16_t _n_width, const uint16_t _n_height, cons
 	if (nullptr == this->m_list)
 		this->m_error.Last();
 	else {
-		this->m_size = {_n_width, _n_height};
+	// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/compiler-error-c2397 ;
+		this->m_size = {static_cast<int32_t>(_n_width), static_cast<int32_t>(_n_height)};
 		this->m_list_id = CListId::ToDword(this->m_size);
 #if defined (_DEBUG)
 		t_size sz_test  = CListId::ToSize (this->m_list_id);
@@ -230,7 +235,7 @@ err_code  CList::Destroy(void) {
 	return this->Error();
 }
 
-err_code  CList::Draw (const uint16_t _n_index, const HDC _h_dc, const int16_t _n_x, const int16_t _n_y, const uint32_t _u_mode) {
+err_code  CList::Draw (const uint32_t _n_index, const HDC _h_dc, const int32_t _n_x, const int32_t _n_y, const uint32_t _u_mode) {
 	_n_index; _h_dc; _n_x; _n_y; _u_mode;
 	err_code n_result = __s_ok;
 
@@ -262,13 +267,13 @@ err_code  CList::CopyTo (HImgList& _h_dest) const {
 	return this->Error();
 }
 
-uint16_t  CList::Count  (void) const {
+uint32_t  CList::Count  (void) const {
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount ;
 	if (this->Is_valid() == false)
 		return 0;
 	else {
 		int32_t n_count =  ::ImageList_GetImageCount(this->Handle());
-		return  n_count < 0 ? 0 : static_cast<uint16_t>(n_count);
+		return  n_count < 0 ? 0 : static_cast<uint32_t>(n_count);
 	}
 }
 
@@ -390,7 +395,7 @@ err_code CCache::Append (_pc_sz _p_file_dir, const TImgFmt _e_format) {
 	return this->Error();
 }
 
-err_code CCache::Append(const t_size& _size, const uint16_t _n_count, const uint16_t _n_delta) {
+err_code CCache::Append(const t_size& _size, const uint32_t _n_count, const uint32_t _n_delta) {
 	_size;
 	this->m_error <<__METHOD__<<__s_ok;
 

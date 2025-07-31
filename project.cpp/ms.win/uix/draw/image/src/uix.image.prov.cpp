@@ -223,8 +223,10 @@ err_code CDataProvider::Load  (_pc_sz _p_file_path, const TImgFmt _e_type) {
 
 	HDC hdcScreen = GetDC(0);
 
+	const t_size dib_size = {this->m_result.Size().cx, -this->m_result.Size().cy}; // specifies the negative value for indicating top-down bitmap;
+
 	CDibSection dib_sec;
-	n_result  = dib_sec.Create(hdcScreen, this->m_result.Size());
+	n_result  = dib_sec.Create(hdcScreen, /*this->m_result.Size()*/dib_size);
 	::ReleaseDC(0, hdcScreen);
 
 	if (__failed(n_result))

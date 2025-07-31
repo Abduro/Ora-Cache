@@ -11,7 +11,7 @@ namespace ex_ui { namespace draw { namespace images {
 
 	using namespace ex_ui::draw;
 	using namespace ex_ui::draw::bitmaps;
-#pragma region __refs_a
+#pragma region __refs_4
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_copy ;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimageinfo ;
@@ -24,7 +24,9 @@ namespace ex_ui { namespace draw { namespace images {
 		(2) COM interface IImageList: https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/nn-commoncontrols-iimagelist ;
 		(3) User defined class or a set of classes, like it is made below;
 	*/
-
+	// https://learn.microsoft.com/en-us/cpp/cpp/data-type-ranges ;
+	// image list api uses long data type of parameters; perhaps the int16_t needs to be replaced;
+	// from the other hand, long data type has wide range acceptable values that is very often superfluous;
 	class CList {
 	public:
 		 CList (void); CList (const CList&); CList (CList&&) = delete;
@@ -39,13 +41,13 @@ namespace ex_ui { namespace draw { namespace images {
 
 		err_code  CopyTo (HImgList&) const;  // copies this image list to the input handle of other image list;
 
-		err_code  Create (const t_size& _img_size, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
-		err_code  Create (const uint16_t _n_width, const uint16_t _n_height, const uint16_t _n_count = 1, const uint16_t _n_delta = 1);
+		err_code  Create (const t_size& _img_size, const uint32_t _n_count = 1, const uint32_t _n_delta = 1);
+		err_code  Create (const uint32_t _n_width, const uint32_t _n_height, const uint32_t _n_count = 1, const uint32_t _n_delta = 1);
 		err_code  Destroy(void);
 		// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw ;
-		err_code  Draw  (const uint16_t _n_index, const HDC, const int16_t _n_x, const int16_t _n_y, const uint32_t _u_mode = ILD_NORMAL);
+		err_code  Draw  (const uint32_t _n_index, const HDC, const int32_t _n_x, const int32_t _n_y, const uint32_t _u_mode = ILD_NORMAL);
 
-		uint16_t  Count (void) const;        // returns the count number of how much images the image list has;
+		uint32_t  Count (void) const;        // returns the count number of how much images the image list has;
 
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
@@ -81,7 +83,7 @@ namespace ex_ui { namespace draw { namespace images {
 
 	public:
 		err_code Append(_pc_sz _p_file_dir, const TImgFmt); // appends files with specific extension from specified directory ;
-		err_code Append(const t_size&, const uint16_t _n_count = 0, const uint16_t _n_delta = 0);
+		err_code Append(const t_size&, const uint32_t _n_count = 0, const uint32_t _n_delta = 0);
 
 		TError&  Error (void) const;
 

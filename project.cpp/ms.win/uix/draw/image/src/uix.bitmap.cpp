@@ -252,8 +252,8 @@ err_code CDibSection::Create (const HDC hDC, const SIZE& sz) {
 
 	if (nullptr == hDC)
 		return this->m_error << (err_code) TErrCodes::eObject::eHandle;
-
-	if (1 > sz.cx || 1 > sz.cy)
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader ;
+	if (1 > sz.cx || 0 == sz.cy) // *important*: the height value may be negative for top-down DIB;
 		return this->m_error << __e_inv_arg;
 
 	if (this->Is())

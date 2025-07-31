@@ -41,11 +41,11 @@ namespace ex_ui { namespace controls { namespace sfx {
 	using CWindow = ::ATL::CWindow;
 
 namespace status { namespace layout {
-
+#pragma region __refs_b
 	// https://stackoverflow.com/questions/43230907/per-monitor-dpi-aware-windows-system-image-list ;
 	// https://www.themathdoctors.org/what-are-length-and-width/ ;
 	// https://www.quora.com/Whats-the-difference-between-length-width-height-and-depth ; so 'width' is still be used;
-
+#pragma endregion
 	class CStyle {
 	public:
 		class CStick {

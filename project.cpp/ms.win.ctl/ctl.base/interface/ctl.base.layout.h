@@ -115,13 +115,10 @@ namespace ex_ui { namespace controls { namespace layout {
 
 	class CGaps_of_rect : public CGapSet { typedef CGapSet TBase;
 	public:
-		class CSides {
+		class CSides { // it is not good to use class declaration inside of other one, because the 'container' class looks like a namespace very often;
 		public:
 			enum _part : int16_t {
-				e_left   = 0x0,
-				e_top    = 0x1, // by default;
-				e_right  = 0x2,
-				e_bottom = 0x3,
+				e_left = 0x0,  e_top = 0x1, e_right = 0x2, e_bottom = 0x3, e_default = e_top
 			};
 			static const int16_t n_count = 4;
 		public:
@@ -176,8 +173,24 @@ namespace ex_ui { namespace controls { namespace layout {
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
+		bool  Set (const int16_t _all);     // sets input value to all margin sides; returns 'true' in case when at least one side margin is changed;
 		bool  Set (const int16_t _left, const int16_t _top, const int16_t _right, const int16_t _bottom); // returns 'true' if at least one of the gaps is changed;
 
+#pragma region __try_to_get_things_easy
+
+		int16_t Bottom (void) const;
+		bool    Bottom (const int16_t);
+
+		int16_t Left (void) const;
+		bool    Left (const int16_t);
+
+		int16_t Right (void) const;
+		bool    Right (const int16_t);
+
+		int16_t Top (void) const;
+		bool    Top (const int16_t);
+
+#pragma endregion
 	public:
 		CGaps_of_rect&  operator = (const CGaps_of_rect&);
 		CGaps_of_rect&  operator = (CGaps_of_rect&&) = delete;

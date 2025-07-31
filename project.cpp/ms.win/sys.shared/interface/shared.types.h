@@ -24,6 +24,7 @@ namespace shared { namespace types {
 #endif
 #if (1)
 	// these data types and structures are based on WinAPI, because the current implementation of Ebo Pack is intended for running under Windows OS;
+	// https://learn.microsoft.com/en-us/cpp/cpp/data-type-ranges ;
 
 	typedef _GUID     _guid ;   // https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid ;
 	typedef BOOL      _bool ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;

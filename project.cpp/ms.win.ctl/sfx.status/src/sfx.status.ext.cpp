@@ -76,6 +76,11 @@ CPane&  CPane::operator <<(const TPn_Lay& _lay) { this->Layout() = _lay; return 
 
 /////////////////////////////////////////////////////////////////////////////
 
+CGlyph:: CGlyph (void) : TBase() {}
+CGlyph::~CGlyph (void) {}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CPanes:: CPanes (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CPanes::~CPanes (void) {}
 
@@ -100,10 +105,13 @@ err_code CPanes::Add (const CPane& _pane) {
 uint16_t CPanes::Count(void) const {
 	return static_cast<uint16_t>(this->Raw().size());
 }
-
-TError&  CPanes::Error(void) const { return this->m_error; }
 const
-CPane&   CPanes::Pane (const uint16_t _ndx) const {
+CGlyph&  CPanes::Glyph (void) const { return this->m_glyph; }
+CGlyph&  CPanes::Glyph (void)       { return this->m_glyph; }
+
+TError&  CPanes::Error (void) const { return this->m_error; }
+const
+CPane&   CPanes::Pane  (const uint16_t _ndx) const {
 	_ndx;
 	this->m_error <<__METHOD__<<__s_ok;
 	if (_ndx >= this->Count()) {
@@ -114,7 +122,7 @@ CPane&   CPanes::Pane (const uint16_t _ndx) const {
 		return this->Raw().at(_ndx);
 }
 
-CPane&   CPanes::Pane (const uint16_t _ndx) {
+CPane&   CPanes::Pane  (const uint16_t _ndx) {
 	_ndx;
 	this->m_error <<__METHOD__<<__s_ok;
 	if (_ndx >= this->Count()) {

@@ -61,13 +61,22 @@ namespace pane {
 		CPane&  operator <<(const ex_ui::controls::pane::CFormat&);
 		CPane&  operator <<(const TPn_Lay&);
 
-	private:
+	protected:
 		CString m_text  ;
 		ex_ui::controls::pane::CFormat m_format;
 		TPn_Lay m_layout;
 	};
 
 	typedef ::std::vector<CPane> TRawPanes;
+
+	class CGlyph : public CPane { typedef CPane TBase;
+	public:
+		 CGlyph (void); CGlyph (const CGlyph&) = delete; CGlyph (CGlyph&&) = delete; // this class is not put into container so there is no 'copy' and 'move' constructors nor operators;
+		~CGlyph (void);
+
+	private:
+		CGlyph& operator = (const CGlyph&) = delete; CGlyph& operator = (CGlyph&&) = delete;
+	};
 
 	class CPanes {
 	public:
@@ -82,6 +91,9 @@ namespace pane {
 
 		TError&    Error(void) const ;
 		const
+		CGlyph&    Glyph(void) const;
+		CGlyph&    Glyph(void) ;
+		const
 		CPane&     Pane (const uint16_t _ndx) const; // returns the reference to the pane by index; if out of range the reference to the fake pane is returned; (ro)
 		CPane&     Pane (const uint16_t _ndx) ;      // returns the reference to the pane by index; if out of range the reference to the fake pane is returned; (rw)
 		const
@@ -95,6 +107,7 @@ namespace pane {
 		mutable
 		CError    m_error;
 		TRawPanes m_panes;
+		CGlyph    m_glyph;
 	};
 
 }}}}

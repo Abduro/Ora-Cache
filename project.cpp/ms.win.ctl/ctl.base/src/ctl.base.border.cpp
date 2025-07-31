@@ -244,6 +244,19 @@ const
 CBorder& CSet_for_rect::Top (void) const { return this->Get(e_sides::e_top); }
 CBorder& CSet_for_rect::Top (void)       { return this->Get(e_sides::e_top); }
 
+bool  CSet_for_rect::Reduce (t_rect& _rc_what) const {
+	_rc_what;
+
+	bool b_changed = false;
+
+	_rc_what.left   += this->Left().Thickness()  ; if (!!this->Left().Thickness()) b_changed = true;
+	_rc_what.top    += this->Top().Thickness()   ; if (!!this->Top().Thickness()) b_changed = true;
+	_rc_what.right  -= this->Right().Thickness() ; if (!!this->Right().Thickness()) b_changed = true;
+	_rc_what.bottom -= this->Bottom().Thickness(); if (!!this->Bottom().Thickness()) b_changed = true;
+
+	return b_changed;
+}
+
 bool  CSet_for_rect::Set (const t_rect& _rect) {
 	_rect;
 	bool b_changed = false;

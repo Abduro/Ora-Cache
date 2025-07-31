@@ -73,6 +73,9 @@ err_code  CFooter::OnCreate (void) {
 	using CLay_Style = ex_ui::controls::sfx::status::layout::CStyle;
 
 	out_0.Style().Width() << CLay_Style::CWidth::e_fixed;
+	out_0.Image().Margins().Set(0x2);   // sets 2px for margins of all sides in order to have some gap between the pane image and pane boundaries;
+	out_0.Image().Margins().Left(0x10); // just for testing of the left side indentation ;
+	out_0.Fixed(sta_bar.Layout().Height());
 
 	return this->Error();
 }

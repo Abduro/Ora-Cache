@@ -355,6 +355,10 @@ CString  CGaps_of_rect::Print (const e_print _e_opt) const {
 }
 #endif
 
+bool CGaps_of_rect::Set (const int16_t _all) {
+	return this->Set(_all, _all, _all, _all);
+}
+
 bool CGaps_of_rect::Set (const int16_t _left, const int16_t _top, const int16_t _right, const int16_t _bottom) {
 	_left; _top; _right; _bottom;
 
@@ -367,6 +371,18 @@ bool CGaps_of_rect::Set (const int16_t _left, const int16_t _top, const int16_t 
 
 	return b_changed;
 }
+
+int16_t CGaps_of_rect::Bottom (void) const { return this->Get(e_sides::e_bottom).Value(); }
+bool    CGaps_of_rect::Bottom (const int16_t _value) { return this->Get(e_sides::e_bottom).Value(_value); }
+
+int16_t CGaps_of_rect::Left (void) const { return this->Get(e_sides::e_left).Value(); }
+bool    CGaps_of_rect::Left (const int16_t _value) { return this->Get(e_sides::e_left).Value(_value); }
+
+int16_t CGaps_of_rect::Right (void) const { return this->Get(e_sides::e_right).Value(); }
+bool    CGaps_of_rect::Right (const int16_t _value) { return this->Get(e_sides::e_right).Value(_value); }
+
+int16_t CGaps_of_rect::Top (void) const { return this->Get(e_sides::e_top).Value(); }
+bool    CGaps_of_rect::Top (const int16_t _value) { return this->Get(e_sides::e_top).Value(_value); }
 
 /////////////////////////////////////////////////////////////////////////////
 

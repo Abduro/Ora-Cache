@@ -8,6 +8,10 @@
 using namespace ex_ui::controls::sfx::status;
 using namespace ex_ui::controls::sfx::status::layout;
 
+#ifndef __W
+#define __W(rect) (rect.right - rect.left)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_height(28) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
@@ -39,7 +43,8 @@ err_code CLayout::Update (void) {
 	}
 
 	t_rect rc_area = {0};
-
+	// it is possible to get the same rectangle as it was in the previous call of this method;
+	// it looks like there's no reason to recalculate this status bar control layout, but some settings may be changed, so no options;
 	if (false == wnd_.GetClientRect(&rc_area)) {
 		return (this->m_error << __METHOD__).Last();
 	}
@@ -56,18 +61,76 @@ err_code CLayout::Update (void) {
 	using ex_ui::controls::pane::CFormat;
 	using ex_ui::controls::pane::CLayout;
 
-	const t_size& img_size = this->m_ctrl.Images()().Size(); img_size;
-	const bool img_valid = this->m_ctrl.Images()().Is_valid(); img_valid;
+	const t_size& frm_sz = this->m_ctrl.Images()().Size(); frm_sz;      // image list frame size;
+	const bool b_valid   = this->m_ctrl.Images()().Is_valid(); b_valid; // image list validity, perhaps is not necessary: the size may exist after destroying somehow the list;
 
-	// (2) recalculates each pane of the status bar;
+	// ToDo: the sticking that is applied has default side left; no sticking to right side is considered yet; 
+	// (2) reducing the status bar available rectangle by removing borders thickness from its area;
+	bool b_applied = borders.Reduce(rc_area); b_applied;
+
+	long n_left  = rc_area.left ; // left side start point;
+	long n_right = rc_area.right; // right side of the available area for panes, it is necessary for glyph;
+
+	// (3) sets glyph's position;
+	CGlyph& glyph = this->m_ctrl.Panes().Glyph();
+	// it is assumed the glyph always has the fixed width;
+	{
+		TPn_Lay& lay = glyph.Layout();
+		t_rect& rect = glyph.Layout().Rect(); rect = rc_area; rect.left = rect.right - lay.Fixed(); // takes into account fixed width;
+
+		// calculates the required length of the glyph pane; no borders are taken into account, it is supposed there is no border;
+		const int32_t req_width = lay.Image().Margins().Left() + lay.Image().Margins().Right() + frm_sz.cx;
+
+		// checks the fixed size against image area, if the image has the width greater than fixed once, it is necessary to take into account;
+		if (req_width > __W(rect)) {
+			rect.left = rect.right - req_width; // decreases the value of the left side; 
+		}
+
+		// takes into account the image margins; left side of the pane rectangle is already set above;
+		t_point pt_image = {
+			n_left + lay.Image().Margins().Left(), rc_area.top + lay.Image().Margins().Top()
+		};
+
+		lay.Image().Anchor(pt_image.x, pt_image.y); // sets the image anchor point for image list draw function;
+		lay.Image().Size() = frm_sz;
+
+		n_right = rect.left; // limits the right side of the available area;
+	}
+
+	// (4) recalculates each pane of the status bar;
 	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
 		CPane&  pane = this->m_ctrl.Panes().Pane(i_);
 
 		CFormat& fmt = pane.Format(); fmt;
 		TPn_Lay& lay = pane.Layout(); lay;
 
+		t_rect& rect = pane.Layout().Rect(); rect = rc_area; rect.left = n_left; // sets the left side of the pane rect;
+
+		// ToDo: no alignment setting is taken into account, just set the image output point to left-top corner;
 		if (pane.Format().Image_Ndx() > -1) {
 
+			// takes into account the image margins;
+			t_point pt_image = {
+				n_left + lay.Image().Margins().Left(), rc_area.top + lay.Image().Margins().Top()
+			};
+
+			lay.Image().Anchor(pt_image.x, pt_image.y); // sets the image anchor point for image list draw function;
+			lay.Image().Size() = frm_sz;
+
+			// calculates the required length of the glyph pane; no borders are taken into account, it is supposed there is no one;
+			const int32_t req_width = lay.Image().Margins().Left() + lay.Image().Margins().Right() + frm_sz.cx;
+
+			n_left += (frm_sz.cx + lay.Image().Margins().Right()); // takes into account an image width;
+
+			rect.right = n_left; // ToDo: no consideration regarding pane width style option yet;
+
+			if (__W(rect) < static_cast<int32_t>(lay.Fixed()))
+				rect.right += lay.Fixed() - __W(rect);
+		}
+		else { // there is no image; just fixed width is applied;
+			rect.right = rect.left + lay.Fixed();
+
+			n_left = rect.right;
 		}
 	} 
 	return n_result;

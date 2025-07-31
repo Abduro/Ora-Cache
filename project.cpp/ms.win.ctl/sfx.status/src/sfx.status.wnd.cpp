@@ -62,6 +62,16 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #endif
 	if (top_.Is_valid()) { z_buffer.Draw(top_); }
 
+	// (2) draws panes;
+	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
+		const CPane& pane = this->m_ctrl.Panes().Pane(i_);
+		if (pane.Format().Image_Ndx() > -1) {
+			this->m_ctrl.Images()().Draw(
+				pane.Format().Image_Ndx(), z_buffer, pane.Layout().Image().Anchor().x, pane.Layout().Image().Anchor().y
+			);
+		}
+	}
+
 	err_code n_result = __s_false;  // this message is handled;
 	return   n_result;
 }

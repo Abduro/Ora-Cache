@@ -121,6 +121,9 @@ namespace ex_ui { namespace controls { namespace borders {
 		const
 		CBorder& Get (const e_sides) const;
 		CBorder& Get (const e_sides) ;
+		// reduces the input rectangle area by removing the thickness of the borders from it; the borders' thickness may be different;
+		// no check for input rect emptiness or its normalization;
+		bool  Reduce (t_rect& _what) const;
 
 		const CBorder& Bottom (void) const; const CBorder&  Left (void) const; const CBorder& Right (void) const; const CBorder& Top (void) const;
 		      CBorder& Bottom (void)      ;       CBorder&  Left (void) ;            CBorder& Right (void)      ;       CBorder& Top (void) ;
