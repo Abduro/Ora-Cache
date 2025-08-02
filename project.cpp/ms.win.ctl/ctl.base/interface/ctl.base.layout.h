@@ -218,9 +218,11 @@ namespace ex_ui { namespace controls { namespace layout {
 		CString    Print (const e_print = e_print::e_all) const;
 #endif
 		const
-		t_size&    Size    (void) const ;
-		t_size&    Size    (void)       ;
-		err_code   Size    (const HIMAGELIST);
+		t_size&    Size  (void) const ;
+		t_size&    Size  (void)       ;
+		err_code   Size  (const HIMAGELIST);
+		// https://www.quora.com/What-are-the-differences-between-whole-total-full-and-entire ;
+		t_size     Total (void) const ; // gets entire size of the image area including image frame size and margins around it;
 
 	public:
 		CImage& operator = (const CImage&); CImage& operator = (CImage&&) = delete;

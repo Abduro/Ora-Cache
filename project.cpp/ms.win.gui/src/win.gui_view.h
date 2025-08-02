@@ -24,12 +24,13 @@ namespace ebo { namespace boo { namespace gui {
 		~CFooter (void);
 
 	public:
+		err_code  At_1st(void) ;     // this is just *before* creating status bar control window: all sections/panes must be defined;
 		TError&   Error (void) const;
 		const
 		CSta_bar& Get (void) const;
 		CSta_bar& Get (void) ;
 
-		err_code  OnCreate  (void) ;
+		err_code  OnCreate  (void) ; // this method must be called from main window on 'create' event handler; *status bar* must be ready;
 
 		void  SetText(_pc_sz _p_text, const uint16_t _pane_ndx = 1);
 

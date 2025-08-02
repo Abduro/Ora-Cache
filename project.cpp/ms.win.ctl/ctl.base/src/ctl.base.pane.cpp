@@ -7,33 +7,30 @@
 using namespace ex_ui::controls;
 
 namespace ex_ui { namespace controls { namespace pane {
-/////////////////////////////////////////////////////////////////////////////
 
-CFormat:: CFormat (void) : CFmtBase(), m_img_ndx(-1) {}
-CFormat:: CFormat (const CFormat& _src) : CFormat () { *this = _src; }
+CFormat::CImage:: CImage (void) : m_index(CFormat::CImage::not_set) {}
+CFormat::CImage:: CImage (const CFormat::CImage& _src) : CImage() { *this = _src; }
 
-/////////////////////////////////////////////////////////////////////////////
-
-int32_t   CFormat::Image_Ndx (void) const { return this->m_img_ndx; }
-bool      CFormat::Image_Ndx (const int32_t _n_ndx) {
-	_n_ndx;
-	const bool b_changed = this->Image_Ndx() != _n_ndx; if (b_changed) this->m_img_ndx = _n_ndx; return b_changed;
+int32_t CFormat::CImage::Index (void) const { return this->m_index; }
+bool    CFormat::CImage::Index (const int32_t _n_ndx) {
+	const bool b_changed = this->Index() != _n_ndx; if (b_changed) this->m_index = _n_ndx; return b_changed;
 }
 
-#if defined(_DEBUG)
-CString   CFormat::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
-	_e_opt; _p_pfx; _p_sfx;
-	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {img_ndx=%s;%s}");
-	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {img_ndx=%s;%s}");
-	static _pc_sz pc_sz_pat_r = _T("img_ndx=%s;%s");
+bool    CFormat::CImage::Is_set(void) const { return this->Index() > CFormat::CImage::not_set; }
 
-	CString cs_base = CFmtBase::Print(e_print::e_req, _p_pfx, _p_sfx);
-	CString cs_ndx  = 0 > this->Image_Ndx() ? _T("#not_set") : TStringEx().Long(this->Image_Ndx());
+#if defined(_DEBUG)
+CString CFormat::CImage::Print(const e_print _e_opt/* = e_print::e_all*/) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {index=%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {index=%s}");
+	static _pc_sz pc_sz_pat_r = _T("{index=%s}");
+
+	CString cs_ndx  = false == this->Is_set() ? _T("#not_set") : TStringEx().Long(this->Index());
 
 	CString cs_out;
-	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_ndx, (_pc_sz) cs_base); }
-	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_ndx, (_pc_sz) cs_base); }
-	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_ndx, (_pc_sz) cs_base); }
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_ndx); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_ndx); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_ndx); }
 
 	if (cs_out.IsEmpty())
 		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
@@ -42,13 +39,48 @@ CString   CFormat::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pf
 }
 #endif
 
-CFormat&  CFormat::operator = (const CFormat& _src) { (*this)() = _src(); *this << _src.Image_Ndx(); return *this; }
-CFormat&  CFormat::operator <<(const int32_t _img_ndx) { this->Image_Ndx(_img_ndx); return *this; }
+CFormat::CImage& CFormat::CImage::operator = (const CFormat::CImage& _src) { *this << _src.Index(); return *this; }
+CFormat::CImage& CFormat::CImage::operator <<(const int32_t _n_ndx) { this->Index(_n_ndx); return *this; }
+
+CFormat::CImage::operator const int32_t (void) const { return this->Index(); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CFormat:: CFormat (void) : CFmtBase() {}
+CFormat:: CFormat (const CFormat& _src) : CFormat () { *this = _src; }
+
+/////////////////////////////////////////////////////////////////////////////
+const
+CFormat::CImage& CFormat::Image (void) const { return this->m_image; }
+CFormat::CImage& CFormat::Image (void)       { return this->m_image; }
+
+#if defined(_DEBUG)
+CString   CFormat::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {image=%s;%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {image=%s;%s}");
+	static _pc_sz pc_sz_pat_r = _T("image=%s;%s");
+
+	CString cs_base  = CFmtBase::Print(e_print::e_req, _p_pfx, _p_sfx);
+	CString cs_image = this->Image().Print(e_print::e_req);
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz) cs_image, (_pc_sz) cs_base); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, (_pc_sz) cs_image, (_pc_sz) cs_base); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, (_pc_sz) cs_image, (_pc_sz) cs_base); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return cs_out;
+}
+#endif
+
+CFormat&  CFormat::operator = (const CFormat& _src) { (*this)() = _src(); *this << _src.Image(); return *this; }
+CFormat&  CFormat::operator <<(const CFormat::CImage& _image) { this->Image() = _image; return *this; }
 const
 CFmtBase& CFormat::operator ()(void) const { return (const CFmtBase&)*this; }
 CFmtBase& CFormat::operator ()(void)       { return (      CFmtBase&)*this; }
-
-CFormat::operator const int32_t (void) const { return this->Image_Ndx(); }
 
 /////////////////////////////////////////////////////////////////////////////
 

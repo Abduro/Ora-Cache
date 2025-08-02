@@ -52,9 +52,9 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #endif
 	// (1) draws the glyph;
 	CGlyph& glyph = this->m_ctrl.Panes().Glyph();
-	if (glyph.Format().Image_Ndx() > -1) {
+	if (glyph.Format().Image().Is_set()) {
 		this->m_ctrl.Images()().Draw(
-				glyph.Format().Image_Ndx(), z_buffer, glyph.Layout().Image().Anchor().x, glyph.Layout().Image().Anchor().y
+				glyph.Format().Image().Index(), z_buffer, glyph.Layout().Image().Anchor().x, glyph.Layout().Image().Anchor().y
 			);
 	}
 
@@ -87,9 +87,9 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 
 	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
 		const CPane& pane = this->m_ctrl.Panes().Pane(i_);
-		if (pane.Format().Image_Ndx() > -1) {
+		if (pane.Format().Image().Is_set()) {
 			this->m_ctrl.Images()().Draw(
-				pane.Format().Image_Ndx(), z_buffer, pane.Layout().Image().Anchor().x, pane.Layout().Image().Anchor().y
+				pane.Format().Image().Index(), z_buffer, pane.Layout().Image().Anchor()
 			);
 		}
 		if (pane.Text() && 0 != ::_tcslen(pane.Text())) {

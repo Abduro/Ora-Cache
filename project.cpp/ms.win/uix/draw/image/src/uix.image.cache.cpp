@@ -235,6 +235,10 @@ err_code  CList::Destroy(void) {
 	return this->Error();
 }
 
+err_code  CList::Draw (const uint32_t _n_index, const HDC _h_dc, const t_point& _pt_anchor, const uint32_t _u_mode/* = ILD_NORMAL*/) {
+	return this->Draw (_n_index, _h_dc, _pt_anchor.x, _pt_anchor.y, _u_mode);
+}
+
 err_code  CList::Draw (const uint32_t _n_index, const HDC _h_dc, const int32_t _n_x, const int32_t _n_y, const uint32_t _u_mode) {
 	_n_index; _h_dc; _n_x; _n_y; _u_mode;
 	err_code n_result = __s_ok;

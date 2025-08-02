@@ -45,6 +45,7 @@ namespace ex_ui { namespace draw { namespace images {
 		err_code  Create (const uint32_t _n_width, const uint32_t _n_height, const uint32_t _n_count = 1, const uint32_t _n_delta = 1);
 		err_code  Destroy(void);
 		// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw ;
+		err_code  Draw  (const uint32_t _n_index, const HDC, const t_point&, const uint32_t _u_mode = ILD_NORMAL);
 		err_code  Draw  (const uint32_t _n_index, const HDC, const int32_t _n_x, const int32_t _n_y, const uint32_t _u_mode = ILD_NORMAL);
 
 		uint32_t  Count (void) const;        // returns the count number of how much images the image list has;

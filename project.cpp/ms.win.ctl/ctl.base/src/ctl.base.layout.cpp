@@ -61,10 +61,10 @@ CString    CImage::Print (const e_print _e_opt) const {
 }
 #endif
 const
-t_size&    CImage::Size    (void) const { return m_size; }
-t_size&    CImage::Size    (void)       { return m_size; }
+t_size&    CImage::Size  (void) const { return m_size; }
+t_size&    CImage::Size  (void)       { return m_size; }
 
-err_code   CImage::Size    (const HIMAGELIST _list) {
+err_code   CImage::Size  (const HIMAGELIST _list) {
 	_list;
 	err_code n_result = __s_ok;
 
@@ -76,6 +76,13 @@ err_code   CImage::Size    (const HIMAGELIST _list) {
 		n_result = __e_fail;
 
 	return n_result;
+}
+
+t_size     CImage::Total (void) const {
+	return {
+		this->Size().cx + this->Margins().Left() + this->Margins().Right(),
+		this->Size().cy + this->Margins().Top () + this->Margins().Bottom()
+	};
 }
 
 CImage&    CImage::operator = (const CImage& _src) { *this << _src.Margins() << _src.Size(); return *this; }

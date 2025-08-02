@@ -104,9 +104,8 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	::shared::Get_View().Parent() = *this;
 #if (0)
 	::shared::Get_View().Footer().Get().Create(*this, 0xA); // no error handling is made yet;
-#els(1==0)
-	::shared::Get_View().Footer().OnCreate();
 #else
+	::shared::Get_View().Footer().At_1st();
 	::shared::Get_View().OnCreate();
 #endif
 #endif
@@ -171,7 +170,19 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 	err_code n_result = __s_false;
 
 	switch (_e_state) {
-	case eState::eRestored: {} break;
+	case eState::eRestored :
+	case eState::eMaximized: {
+		bool b_break = false;
+		if (!b_break)
+			 b_break = true ;
+
+		t_rect rect = {0};
+		this->GetClientRect(&rect);
+		// ToDo: does not work properly yet, needs to be checked;
+		this->Layout().Update(rect);
+		::shared::Get_View().OnDraw(nullptr, rect); // calling the draw function for specific client area rectangle must be reviewed;
+
+	} break;
 	}
 
 	return   n_result;
@@ -194,7 +205,7 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	if (TBase::m_error == false)
 		TBase::m_error << this->Layout().Update(rc_client);
 	if (TBase::m_error == false)
-		::shared::Get_View().OnDraw(nullptr, rc_client); 
+		::shared::Get_View().OnDraw(nullptr, rc_client);
 #else
 	t_rect rc_surface = m_layout.DrawArea();
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
@@ -210,8 +221,9 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	::shared::Get_View().Status().Layout().Update(rc_client);
 
 #endif
-	shared::Get_View().Footer().SetText(TStringEx().Dword(rc_client.right));
-
+#if (0)
+	shared::Get_View().Footer().SetText(TStringEx().Dword(rc_client.right)); // this was made for testing of dynamic update of the status pane text; (passed)
+#endif
 	err_code n_result = __s_false;
 	return   n_result;
 }

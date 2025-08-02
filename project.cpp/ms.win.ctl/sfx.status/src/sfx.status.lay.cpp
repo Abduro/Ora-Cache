@@ -12,6 +12,16 @@ using namespace ex_ui::controls::sfx::status::layout;
 #define __W(rect) (rect.right - rect.left)
 #endif
 
+namespace ex_ui { namespace controls { namespace sfx { namespace status { namespace _impl {
+
+	class CLay_Helper {
+	public:
+		 CLay_Helper (void) {}
+		~CLay_Helper (void) {}
+	};
+
+}}}}}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_height(28) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
@@ -58,6 +68,9 @@ err_code CLayout::Update (void) {
 	top_.Set(CPoint(rc_area.left, rc_area.top), CPoint(rc_area.right, rc_area.top));
 #endif
 
+	// (2) reducing the status bar available rectangle by removing borders thickness from its area;
+	bool b_applied = borders.Reduce(rc_area); b_applied;
+
 	using ex_ui::controls::pane::CFormat;
 	using ex_ui::controls::pane::CLayout;
 	using CLay_Style = ex_ui::controls::sfx::status::layout::CStyle;
@@ -65,20 +78,18 @@ err_code CLayout::Update (void) {
 	const t_size& frm_sz = this->m_ctrl.Images()().Size(); frm_sz;      // image list frame size;
 	const bool b_valid   = this->m_ctrl.Images()().Is_valid(); b_valid; // image list validity, perhaps is not necessary: the size may exist after destroying somehow the list;
 
-	// ToDo: the sticking that is applied has default side left; no sticking to right side is considered yet; 
-	// (2) reducing the status bar available rectangle by removing borders thickness from its area;
-	bool b_applied = borders.Reduce(rc_area); b_applied;
-
 	// (3) sets glyph's position;
 	CGlyph& glyph = this->m_ctrl.Panes().Glyph();
 	// it is assumed the glyph always has the fixed width;
-	if (glyph.Format().Image_Ndx() > -1) { // because this function may be called on create window of this control, settings mey be not applied yet;
+	if (glyph.Format().Image().Is_set()) { // because this function may be called on create window of this control, settings mey be not applied yet;
 
 		TPn_Lay& lay = glyph.Layout();
 		t_rect& rect = glyph.Layout().Rect(); rect = rc_area; rect.left = rect.right - lay.Fixed(); // takes into account fixed width;
 
+		lay.Image().Size() = frm_sz;
+
 		// calculates the required length of the glyph pane; no borders are taken into account, it is supposed there is no border;
-		const int32_t req_width = lay.Image().Margins().Left() + lay.Image().Margins().Right() + frm_sz.cx;
+		const int32_t req_width = lay.Image().Total().cx;
 
 		// checks the fixed size against image area, if the image has the width greater than fixed once, it is necessary to take into account;
 		if (req_width > __W(rect)) {
@@ -91,10 +102,11 @@ err_code CLayout::Update (void) {
 		};
 
 		lay.Image().Anchor(pt_image.x, pt_image.y); // sets the image anchor point for image list draw function;
-		lay.Image().Size() = frm_sz;
-
 		rc_area.right = rect.left; // limits the right side of the available area;
 	}
+
+	if (0 == this->m_ctrl.Panes().Count())
+		return n_result;
 
 	// (4) recalculates each pane of the status bar;
 	// what should be done in case when one of the pane has auto size mode turned on?
@@ -105,35 +117,43 @@ err_code CLayout::Update (void) {
 		TPn_Lay& lay = pane.Layout(); lay;
 
 		t_rect& rect = pane.Layout().Rect(); rect = rc_area;
+#if (1)
+		if (fmt.Image().Is_set()) { // may be it is not necessary and image size is already set, but nevertheless;
+			lay.Image().Size() = frm_sz;
+		}
+#endif
+		// pane padding relates an internal area of the pane and it is not included;
+		// in some cases the padding may be set incorrectly, but draw renderer takes care of it;
+		int32_t req_width = fmt.Image().Is_set() ? lay.Image().Total().cx : 0;
 
-		// ToDo: no alignment setting is taken into account, just set the image output point of the left-top corner;
-		if (pane.Format().Image_Ndx() > -1) {
+		if (lay.Style().Width().Is_fixed() && static_cast<int32_t>(lay.Fixed()) > req_width) {
+			req_width = lay.Fixed();
+		}
 
-			// takes into account the image margins;
+		if (false) {}
+		else if (lay.Style().Stick().Is_left()) {
+			rect.right = rect.left + req_width; rc_area.left = rect.right;
+		}
+		else if (lay.Style().Stick().Is_right()) {
+			rect.left = rect.right - req_width; rc_area.right = rect.left;
+		}
+		else
+			continue;
+
+		// ToDo: *no* alignment setting is taken into account, just set the image draw point to the left-top corner;
+		if (pane.Format().Image().Is_set()) {
+
+			// takes into account the image margins; this is the time to use padding of the pane;
 			t_point pt_image = {
-				rect.left + lay.Image().Margins().Left(), rect.top + lay.Image().Margins().Top()
+				rect.left + lay.Image().Margins().Left() + lay.Padding().Left(), rect.top + lay.Image().Margins().Top() + lay.Padding().Top()
 			};
 
 			lay.Image().Anchor(pt_image.x, pt_image.y); // sets the image anchor point for image list draw function;
-			lay.Image().Size() = frm_sz;
-
-			// calculates the required length of the glyph pane; no borders are taken into account, it is supposed there is no one;
-			const int32_t req_width = lay.Image().Margins().Left() + frm_sz.cx + lay.Image().Margins().Right();
-
-			rect.right = rect.left + req_width; // applies the required width of the pane;
-
-			if (__W(rect) < static_cast<int32_t>(lay.Fixed())) rect.right += lay.Fixed() - __W(rect);
-			rc_area.left = rect.right; // updates the available area rectangle;
 		}
 
 		if (pane.Layout().Style().Width().Is_auto()) {
-
+			// it is not satisfactory approach but it is okay for now;
 			rect.right = rc_area.right;
-			rc_area.left = rect.right;
-		}
-		else if (rect.right < rect.left + static_cast<int32_t>(lay.Fixed())) {
-
-			rect.right = rect.left + lay.Fixed();
 			rc_area.left = rect.right;
 		}
 	} 

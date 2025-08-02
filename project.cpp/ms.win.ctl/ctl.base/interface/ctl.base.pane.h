@@ -17,7 +17,6 @@ namespace ex_ui { namespace controls {
 
 	using namespace ex_ui::controls::format;
 
-	using CImage = ex_ui::controls::layout::CImage;
 	using CBorders = ex_ui::controls::borders::CBorders_for_rect;
 	using CPadding = ex_ui::controls::layout::CPadding_of_rect;
 
@@ -25,27 +24,50 @@ namespace pane {
 
 	class CFormat : public CFmtBase {
 	public:
+		class CImage {
+		public: static const int32_t not_set = -1;
+		public:
+			 CImage (void); CImage (const CImage&); CImage (CImage&&) = delete;
+			~CImage (void) = default;
+		public:
+			int32_t Index (void) const;    // returns image index; if not set -1 or other negative value; uint32_t would be better possibly, but image list uses int;
+			bool    Index (const int32_t); // sets image index value; returns 'true' in case of change; setting negative value means 'not set';
+			bool    Is_set(void) const;
+#if defined(_DEBUG)
+		CString  Print (const e_print = e_print::e_all) const;
+#endif
+		public:
+			CImage& operator = (const CImage&); CImage& operator = (CImage&&) = delete;
+			CImage& operator <<(const int32_t _n_ndx);
+
+			operator const int32_t (void) const; // returns image index;
+		private:
+			int32_t m_index;
+		};
+	public:
 		 CFormat (void); CFormat (const CFormat&); CFormat (CFormat&&) = delete; // is not required yet;
 		~CFormat (void) = default;
 
 	public:
-		int32_t  Image_Ndx (void) const;     // returns image index; if not set -1 or other negative value; uint32_t would be better possibly, but image list uses int;
-		bool     Image_Ndx (const int32_t);  // sets image index value; returns 'true' in case of change; setting negative value means 'not set';
+		const
+		CFormat::CImage& Image (void) const;
+		CFormat::CImage& Image (void) ;
+
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif
 	public:
 		CFormat& operator = (const CFormat&); CFormat& operator = (CFormat&&) = delete;
-		CFormat& operator <<(const int32_t _img_ndx);
+		CFormat& operator <<(const CFormat::CImage&);
 		const
 		CFmtBase& operator ()(void) const;
 		CFmtBase& operator ()(void) ;
 
-		operator const int32_t (void) const; // returns image index;
-
 	private:
-		int32_t  m_img_ndx;
+		CFormat::CImage m_image;
 	};
+
+	using CImage = ex_ui::controls::layout::CImage;
 	/*
 		*Note*:
 		TThe image margins are the surrounding area of the image;

@@ -76,7 +76,7 @@ bool    CPane::SetSink (const IPaneEvents* _p_snk) {
 _pc_sz  CPane::Text (void) const { return (_pc_sz) this->m_text; }
 bool    CPane::Text (_pc_sz _p_text) {
 	_p_text;
-	const bool b_changed = !!this->m_text.CompareNoCase(_p_text);
+	const bool b_changed = !!this->m_text.CompareNoCase(nullptr == _p_text ? _T("") : _p_text);
 	if (b_changed) {
 		this->m_text = _p_text;
 
