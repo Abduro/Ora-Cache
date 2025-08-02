@@ -19,6 +19,7 @@ bool      CFormat::Image_Ndx (const int32_t _n_ndx) {
 	_n_ndx;
 	const bool b_changed = this->Image_Ndx() != _n_ndx; if (b_changed) this->m_img_ndx = _n_ndx; return b_changed;
 }
+
 #if defined(_DEBUG)
 CString   CFormat::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("\t\t")*/, _pc_sz _p_sfx/* = _T("\n")*/) const {
 	_e_opt; _p_pfx; _p_sfx;
@@ -51,25 +52,19 @@ CFormat::operator const int32_t (void) const { return this->Image_Ndx(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout:: CLayout (void) : m_rect{0}, m_fixed(0) {}
+CLayout:: CLayout (void) : m_rect{0} {}
 CLayout:: CLayout (const CLayout& _src) : CLayout() { *this = _src; }
 
 const
 CAlign&   CLayout::Align  (void) const { return this->m_align; }
 CAlign&   CLayout::Align  (void)       { return this->m_align; }
 
-dword     CLayout::Fixed  (void) const { return this->m_fixed; }
-bool      CLayout::Fixed  (const dword _n_value) {
-	_n_value;
-	const bool b_changed = this->Fixed() != _n_value;
-	if (b_changed)
-		this->m_fixed = _n_value;
-	return b_changed;
-}
-
 const
 ex_ui::controls::layout::CImage&   CLayout::Image  (void) const { return this->m_image; }
 ex_ui::controls::layout::CImage&   CLayout::Image  (void)       { return this->m_image; }
+const
+CPadding& CLayout::Padding (void) const { return this->m_padding; }
+CPadding& CLayout::Padding (void)       { return this->m_padding; }
 
 #if defined(_DEBUG)
 CString   CLayout::Print(const e_print _e_opt/*= e_print::e_all*/) const {
@@ -111,12 +106,12 @@ bool CLayout::Update (const t_rect& _rect_of_place) {
 	return false;
 }
 
-CLayout&  CLayout::operator = (const CLayout& _src) { *this << _src.Align() << _src.Image() << _src.Rect() << _src.Fixed(); return *this; }
+CLayout&  CLayout::operator = (const CLayout& _src) { *this << _src.Align() << _src.Image() << _src.Rect(); return *this; }
 
 CLayout&  CLayout::operator <<(const CAlign& _align) { this->Align() = _align; return *this; }
 CLayout&  CLayout::operator <<(const ex_ui::controls::layout::CImage& _image) { this->Image() = _image; return *this; }
-CLayout&  CLayout::operator <<(const dword  _fixed) { this->Fixed(_fixed); return *this; }
 CLayout&  CLayout::operator <<(const t_rect& _rect) { this->Rect() = _rect; return *this; }
+CLayout&  CLayout::operator <<(const CPadding& _padding) { this->Padding() = _padding; return *this; }
 
 }}}
 

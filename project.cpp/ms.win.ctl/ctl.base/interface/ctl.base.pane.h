@@ -7,6 +7,7 @@
 #include "ctl.base.defs.h"
 #include "ctl.base.format.h"
 #include "ctl.base.border.h"
+#include "ctl.base.layout.h"
 
 namespace ex_ui { namespace controls {
 
@@ -18,6 +19,7 @@ namespace ex_ui { namespace controls {
 
 	using CImage = ex_ui::controls::layout::CImage;
 	using CBorders = ex_ui::controls::borders::CBorders_for_rect;
+	using CPadding = ex_ui::controls::layout::CPadding_of_rect;
 
 namespace pane {
 
@@ -44,7 +46,11 @@ namespace pane {
 	private:
 		int32_t  m_img_ndx;
 	};
-
+	/*
+		*Note*:
+		TThe image margins are the surrounding area of the image;
+		Pane padding is the space between the pane context and its borders;
+	*/
 	class CLayout { // ToDo: how does this layout know of the format that is applied to the pane which it belongs to? 
 	public:
 		 CLayout (void); CLayout (const CLayout&); CLayout (CLayout&&) = delete; // is not required yet;
@@ -53,11 +59,15 @@ namespace pane {
 		const
 		CAlign&  Align (void) const;  // the font spec has already the alignment, but for the text only; this alignment is for entire pane;
 		CAlign&  Align (void) ;
-		dword    Fixed (void) const;  // gets fixed size of the width;
-		bool     Fixed (const dword); // sets fixed size of the width; returns 'true' in case of its value change;
+
 		const
 		CImage&  Image (void) const;  // if the pane does not have an image the image layout indicates 'false';
 		CImage&  Image (void) ;	      // if the pane does not have an image the image layout indicates 'false';
+
+		const
+		CPadding& Padding (void) const;
+		CPadding& Padding (void) ;
+
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const; // ToDo: not updated yet;
 #endif
@@ -73,14 +83,14 @@ namespace pane {
 		CLayout& operator = (const CLayout&); CLayout& operator = (CLayout&&) = delete; // is not required yet;
 		CLayout& operator <<(const CAlign& );     // sets the alignment of the pane;
 		CLayout& operator <<(const CImage& );     // makes a copy of the input image layout;
-		CLayout& operator <<(const dword _fixed); // sets fixed width;
 		CLayout& operator <<(const t_rect& );     // calls Update(rect);
+		CLayout& operator <<(const CPadding&);
 
 	private:
 		CAlign   m_align; // this is a pane elements' alignment;
 		CImage   m_image; // an image layout if any image is assigned to the pane;
 		t_rect   m_rect ; // this is entire area of the pane;
-		dword    m_fixed; // a fixed width;
+		CPadding m_padding;
 	};
 }
 	using CFormat = ex_ui::controls::pane::CFormat;

@@ -38,7 +38,7 @@ err_code  CFooter::OnCreate (void) {
 		return this->m_error = __e_hwnd;
 
 	CSta_bar& sta_bar = this->Get();
-
+	// (1) creates status bar user control;
 	if (__failed(sta_bar.Create(shared::Get_View().Parent(), 0xA)))
 		return this->m_error = this->Get().Error();
 
@@ -50,34 +50,64 @@ err_code  CFooter::OnCreate (void) {
 
 	using CPaths = ebo::sha::theme::paths::CStatus;
 	CPaths paths;
-
+	// (2) gets path to the folder of the test images;
 	if (__failed(paths.Set())) {
 		return this->m_error = paths.Error();
 	}
+	// (3) loads images and appends them to the status bar image list;
+	if (__failed(images.List().Append((_pc_sz) paths.Get(0), TImgFmt::e_png))) return this->m_error = images.List().Error();
+	if (__failed(images.List().Append((_pc_sz) paths.Get(1), TImgFmt::e_png))) return this->m_error = images.List().Error();
 
-	if (__failed(images.List().Append((_pc_sz) paths.Get(0), TImgFmt::e_png)))
-		return this->m_error = images.List().Error();
+	// (4) adds panes to status bar:
+	if (__failed(this->Get().Panes().Add(_T("")))) return this->m_error = this->Get().Panes().Error(); // (4.1) the status icon pane, no text is intended for it;
+	if (__failed(this->Get().Panes().Add(_T("")))) return this->m_error = this->Get().Panes().Error(); // (4.2) text message pane;
 
-	if (__failed(this->Get().Panes().Add(_T("")))) // adds the status icon pane, no text is intended for this pane;
-		return this->m_error = this->Get().Panes().Error();
-
-	CPane&  pane_0 = this->Get().Panes().Pane(0);
-	if (this->Get().Panes().Error()) // actually it should not occur due to error handling above, but nevertheless;
-		return this->m_error = this->Get().Panes().Error();
-
-	pane_0.Format().Image_Ndx(0);    // it is supposed to be an image 'ready' status by default;
-
-	ex_ui::controls::pane::CFormat& fmt_0 = pane_0.Format(); fmt_0;
-	ex_ui::controls::sfx::status::TPn_Lay& out_0 = pane_0.Layout(); out_0;
+	// (5) sets properties of the panes;
+	CPane&  pane_0 = this->Get().Panes().Pane(0); if (this->Get().Panes().Error()) return this->m_error = this->Get().Panes().Error();
+	CPane&  pane_1 = this->Get().Panes().Pane(1); if (this->Get().Panes().Error()) return this->m_error = this->Get().Panes().Error();
 
 	using CLay_Style = ex_ui::controls::sfx::status::layout::CStyle;
 
-	out_0.Style().Width() << CLay_Style::CWidth::e_fixed;
-	out_0.Image().Margins().Set(0x2);   // sets 2px for margins of all sides in order to have some gap between the pane image and pane boundaries;
-	out_0.Image().Margins().Left(0x10); // just for testing of the left side indentation ;
-	out_0.Fixed(sta_bar.Layout().Height());
+#pragma region pane_no_0
+{
+	pane_0.Format().Image_Ndx(0);    // it is supposed to be an image 'ready' status by default;
+
+	ex_ui::controls::pane::CFormat& fmt_ = pane_0.Format(); fmt_;
+	ex_ui::controls::sfx::status::TPn_Lay& out_ = pane_0.Layout(); out_;
+
+	out_.Style().Width() << CLay_Style::CWidth::e_fixed;
+	out_.Image().Margins().Set(0x2);   // sets 2px for margins of all sides in order to have some gap between the pane image and pane boundaries;
+	out_.Image().Margins().Left(0x9);  // just for testing of the left side indentation ; the value is in accordance with the image being used;
+
+	out_.Fixed(sta_bar.Layout().Height());
+}
+#pragma endregion
+#pragma region pane_no_1
+{
+	ex_ui::controls::pane::CFormat& fmt_ = pane_1.Format(); fmt_;
+	ex_ui::controls::sfx::status::TPn_Lay& out_ = pane_1.Layout(); out_;
+
+	out_.Style().Width() << CLay_Style::CWidth::e_auto;
+	out_.Image().Margins().Left(0x20);
+	out_.Fixed(0x100); // just for test now;
+
+	out_.Padding().Left(0x5);
+
+	pane_1.Text(_T("Ready"));
+}
+#pragma endregion
+	CGlyph& glyph = this->Get().Panes().Glyph();
+
+	glyph.Format().Image_Ndx(1);
+	glyph.Layout().Style().Width() << CLay_Style::CWidth::e_fixed;
+	glyph.Layout().Fixed(sta_bar.Layout().Height());
 
 	return this->Error();
+}
+
+void  CFooter::SetText(_pc_sz _p_text, const uint16_t _pane_ndx/* = 1*/) {
+	_p_text; _pane_ndx;
+	this->Get().Panes().Pane(_pane_ndx).Text(_p_text);
 }
 
 /////////////////////////////////////////////////////////////////////////////

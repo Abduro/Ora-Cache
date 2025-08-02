@@ -143,8 +143,11 @@ namespace ex_ui { namespace theme {
 		CElement&   Bkgnd (void) const;  // gets background element reference; (ro);
 		CElement&   Bkgnd (void) ;       // gets background element reference; (rw);
 		const
-		CElement&   Border(void) const;  // gets background element reference; (ro);
-		CElement&   Border(void) ;       // gets background element reference; (rw);
+		CElement&   Border(void) const;  // gets border element reference; (ro);
+		CElement&   Border(void) ;       // gets border element reference; (rw);
+		const
+		CElement&   Fore  (void) const;  // gets foreground color element reference; (ro);
+		CElement&   Fore  (void) ;       // gets foreground color element reference; (rw);
 
 		const bool  Clear (void) ;       // clears all elements and sets 'validity' flag of this class object to 'false';
 		const

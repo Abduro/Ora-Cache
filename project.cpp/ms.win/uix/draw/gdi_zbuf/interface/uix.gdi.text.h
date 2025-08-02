@@ -249,6 +249,7 @@ namespace format {
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext ;
+	// DrawText is supposed to be used in case drawing a text horizontally;
 
 	class CDrawText : public CText_Base { typedef CText_Base TBase;
 	using CFormat = ex_ui::draw::text::format::CFormat;
@@ -354,6 +355,7 @@ namespace output {
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textouta ;
 	// https://stackoverflow.com/questions/2250437/how-to-draw-vertical-text-in-windows-gui << the question;
 	// https://stackoverflow.com/a/2250840/4325555 << the answer;
+	// TextOut is supposed to be used in case drawing a text vertically;
 
 	class CTextOut : public CText_Base { typedef CText_Base TBase;
 	using CAlign = ex_ui::draw::text::output::CAlign;

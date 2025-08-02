@@ -6,7 +6,7 @@
 */
 #include "sfx.status.inc.h"
 
-namespace ex_ui { namespace controls { namespace sfx { namespace status {
+namespace ex_ui { namespace controls { namespace sfx { namespace status { class CControl;
 
 	using namespace ex_ui::controls::sfx;
 
@@ -35,9 +35,12 @@ namespace pane {
 		uint32_t   m_fixed;  // it is used in case if the layout style is set in appropriate value;
 		CLay_Style m_style;
 	};
-
 }
 	typedef pane::CLayout TPn_Lay;
+
+	interface IPaneEvents {
+		virtual void  OnTextChanged(const int32_t _pane_id, _pc_sz _p_text = nullptr) const { _pane_id; _p_text; }
+	};
 
 	class CPane {
 	public:
@@ -48,23 +51,37 @@ namespace pane {
 		const
 		ex_ui::controls::pane::CFormat& Format (void) const;
 		ex_ui::controls::pane::CFormat& Format (void) ;
+
+		uint16_t Id (void) const;     // returns this pane identifie;
+		bool     Id (const uint16_t); // sets pane identifier, returns 'true' if text is changed in comparison with previous one;
+
 		const
 		TPn_Lay& Layout (void) const;
 		TPn_Lay& Layout (void) ;
+		
+		bool    SetSink (const IPaneEvents*); // for events' notifications; it is assumed all notifications are in the main thread of the GUI, thus it is not thread safe;
 
-		_pc_sz  Text (void) const;
-		bool    Text (_pc_sz)    ;
+		_pc_sz  Text (void) const; // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow ; it should work on text change;
+		bool    Text (_pc_sz)    ; // what should be taken if the text has been just changed? how to call refreshing of the pane?
 
 	public:
 		CPane&  operator = (const CPane&); CPane& operator = (CPane&&) = delete;
 		CPane&  operator <<(_pc_sz _p_text);
 		CPane&  operator <<(const ex_ui::controls::pane::CFormat&);
 		CPane&  operator <<(const TPn_Lay&);
+		CPane&  operator <<(const uint16_t _id);
 
 	protected:
-		CString m_text  ;
+		const
+		IPaneEvents* GetSink (void) const;
+		CPane&  operator <<(const IPaneEvents*);
+
+	protected:
 		ex_ui::controls::pane::CFormat m_format;
-		TPn_Lay m_layout;
+		const IPaneEvents*  m_evt_sink;
+		TPn_Lay  m_layout;
+		uint16_t m_pane_id;
+		CString  m_text;
 	};
 
 	typedef ::std::vector<CPane> TRawPanes;
@@ -78,9 +95,9 @@ namespace pane {
 		CGlyph& operator = (const CGlyph&) = delete; CGlyph& operator = (CGlyph&&) = delete;
 	};
 
-	class CPanes {
+	class CPanes : public IPaneEvents {
 	public:
-		 CPanes (void); CPanes (const CPanes&) = delete; CPanes (CPanes&&) = delete;
+		 CPanes (CControl&); CPanes (void) = delete; CPanes (const CPanes&) = delete; CPanes (CPanes&&) = delete;
 		~CPanes (void);
 
 	public:
@@ -98,14 +115,18 @@ namespace pane {
 		CPane&     Pane (const uint16_t _ndx) ;      // returns the reference to the pane by index; if out of range the reference to the fake pane is returned; (rw)
 		const
 		TRawPanes& Raw (void) const;
-		TRawPanes& Raw (void) ;
+		TRawPanes& Raw (void) ;        // no remove is assumed, otherwise pane indices must be reset;
 
 	public:
 		CPanes&  operator = (const CPanes&) = delete; CPanes& operator = (CPanes&&) = delete;
 
 	private:
+		void  OnTextChanged (const int32_t _pane_id, _pc_sz _p_text) const;
+
+	private:
 		mutable
 		CError    m_error;
+		CControl& m_ctrl ;
 		TRawPanes m_panes;
 		CGlyph    m_glyph;
 	};

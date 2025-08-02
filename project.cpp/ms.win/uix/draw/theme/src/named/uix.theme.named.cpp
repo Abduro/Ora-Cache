@@ -396,6 +396,11 @@ const bool  CPart::Clear (void) {
 
 	return b_changed;
 }
+
+const
+CElement&   CPart::Fore (void) const { return this->Get (TThemeElement::e_fore); }
+CElement&   CPart::Fore (void)       { return this->Get (TThemeElement::e_fore); }
+
 const
 TRawElements& CPart::Elements (void) const { return this->m_elements; }
 TRawElements& CPart::Elements (void)       { return this->m_elements; }

@@ -71,39 +71,4 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status {
 	};
 
 }}}}
-#if (0)
-namespace ST_Ctrls {
-
-	using ex_ui::draw::defs::IRenderer;
-
-	interface IStatusEvents : public ex_ui::controls::IControlEvent {
-		virtual HRESULT  IStatusEvt_OnAppend (const CPanel& _added) PURE;
-		virtual HRESULT  IStatusEvt_OnFormat (const TStatusFmt&) PURE;
-		virtual HRESULT  IStatusEvt_OnRemove (const DWORD _panel_ndx) PURE;
-	};
-
-	class CStatusBar : public IStatusEvents {
-	protected:
-		IStatusEvents& m_evt_snk;
-	public:
-		
-		HRESULT      Renderer(IRenderer*  const _p_parent_renderer);
-	public:
-		ex_ui::controls::IControlEvent&  MouseEvtSink(void);
-
-	private: // IStatusEvents;
-#pragma warning(disable: 4481)
-		virtual HRESULT  IStatusEvt_OnAppend (const CPanel& _added) override sealed;
-		virtual HRESULT  IStatusEvt_OnFormat (const TStatusFmt&) override sealed;
-		virtual HRESULT  IStatusEvt_OnRemove (const DWORD _panel_ndx) override sealed;
-#pragma warning(default: 4481)
-	private: // non-copyable;
-		CStatusBar (const CStatusBar&);
-		CStatusBar&  operator = (const CStatusBar&);
-	};
-}
-#endif
-#if (0)
-typedef ST_Ctrls::CStatusBar  TStatusCtrl;
-#endif
 #endif/*_SFXSTATUSCTRL_H_1BAC705D_DCAB_4BCA_99E0_6ADCC0305970_INCLUDED*/

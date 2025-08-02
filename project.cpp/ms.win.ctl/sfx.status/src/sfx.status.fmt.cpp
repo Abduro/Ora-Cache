@@ -31,6 +31,11 @@ void CFormat::Default (void) {
 #endif
 //	TBase::Bkgnd().Solid() << shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back);
 	TBase::Bkgnd().Solid() << ex_ui::theme::Get_current().Form().Bkgnd().States().Normal().Color();
+
+	TBase::Font().Family(_T("Verdana"));
+	TBase::Font().Fore() = ex_ui::theme::Get_current().Form().Fore().States().Normal().Color();
+	TBase::Font().Size() = -12;
+	TBase::Font().Options() += TFontOpts::eExactSize;
 }
 
 #if (0)

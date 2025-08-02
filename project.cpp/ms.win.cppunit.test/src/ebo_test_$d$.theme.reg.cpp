@@ -39,16 +39,21 @@ void CRouter:: Get_paths (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 CRegistry:: CRegistry (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb) {
-		_out() += TLog_Acc::e_new_line;
+	if (this->m_b_verb || true) {
+		_out() += TLog_Acc::e_emp_line;
 		_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
 	}
+	TRouter& router = ex_ui::theme::storage::Get_router();
+	CCurrentTheme& current = router.CurrentTheme();
+
+	if (__failed(this->m_storage.Load(current)))
+	_out() += this->m_storage.Error().Print(TError::e_print::e_req);
+
 }
 
 void CRegistry::Get_Current (void) {
 
-	_out() += TLog_Acc::e_new_line;
+	_out() += TLog_Acc::e_emp_line;
 	_out() += TStringEx().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	TRouter& router = ex_ui::theme::storage::Get_router();

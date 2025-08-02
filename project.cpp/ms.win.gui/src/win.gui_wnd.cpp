@@ -210,6 +210,8 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	::shared::Get_View().Status().Layout().Update(rc_client);
 
 #endif
+	shared::Get_View().Footer().SetText(TStringEx().Dword(rc_client.right));
+
 	err_code n_result = __s_false;
 	return   n_result;
 }

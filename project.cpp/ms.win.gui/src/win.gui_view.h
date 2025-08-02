@@ -31,6 +31,8 @@ namespace ebo { namespace boo { namespace gui {
 
 		err_code  OnCreate  (void) ;
 
+		void  SetText(_pc_sz _p_text, const uint16_t _pane_ndx = 1);
+
 	private:
 		CFooter& operator = (const CFooter&) = delete; CFooter& operator = (CFooter&&) = delete;
 		CError   m_error;

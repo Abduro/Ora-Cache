@@ -197,7 +197,7 @@ namespace ex_ui { namespace controls { namespace layout {
 	};
 
 	typedef CGaps_of_rect CMargins_of_rect; using CMargins = CMargins_of_rect;
-	typedef CGaps_of_rect CPadding_of_rect;
+	typedef CGaps_of_rect CPadding_of_rect; using CPadding = CPadding_of_rect;
 
 	class CImage {
 	public:
