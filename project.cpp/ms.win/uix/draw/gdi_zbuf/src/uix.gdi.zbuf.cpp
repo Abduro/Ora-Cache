@@ -195,7 +195,8 @@ err_code   CSurface::Create (const HDC _h_origin, const t_rect& _rc_draw) {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createdibsection ;
 	if (nullptr == this->New()) {
-
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader ;
+		// taking into account the fact of creating DIB section for drawing by the device context, the height can be *positive* always;
 		BITMAPINFO info_ = { {sizeof( BITMAPINFO ), __W(_rc_draw), __H(_rc_draw), 1, 32, BI_RGB, 0, 0, 0, 0, 0}, {0, 0, 0}};
 		this->New() = ::CreateDIBSection(_h_origin, &info_, DIB_RGB_COLORS, NULL, NULL, 0);
 		if (nullptr == this->New())
@@ -217,7 +218,7 @@ err_code   CSurface::Destroy (void) {
 	if (this->New()) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject ;
 		if (false == !!::DeleteObject(this->New())) {
-			return this->m_error << __e_fail << _T("The bitmap is selected in the device context"); // there is no way to get exact error;
+			return this->m_error << __e_fail = _T("The bitmap is selected in the device context"); // there is no way to get exact error;
 		}
 	}
 	this->New() = nullptr;

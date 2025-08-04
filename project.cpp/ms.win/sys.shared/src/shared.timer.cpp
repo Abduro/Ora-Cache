@@ -50,8 +50,11 @@ namespace shared { namespace common { namespace details {
 		static
 		void __stdcall _timer_proc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime) {
 			hWnd; uMsg; idEvent; dwTime;
-			TStdTimers::const_iterator it_ = CWaitable_StdRef().find(idEvent);
-			if (it_ != CWaitable_StdRef().end() &&
+			TStdTimers& tms_ = CWaitable_StdRef();
+			if (tms_.empty())
+				return;
+			TStdTimers::const_iterator it_ = tms_.find(idEvent);
+			if (it_ != tms_.end() &&
 			    it_->second != nullptr)
 				it_->second->IWaitable_OnComplete();
 		}
@@ -192,10 +195,11 @@ err_code CStdTimer::Destroy(void) {
 		n_result = __LastErrToHresult();
 	else {
 		TStdTimers& tms_ = CWaitable_StdRef();
-		TStdTimers::const_iterator it_ = tms_.find(m_tm_id);
-		if (it_ != tms_.end())
-			tms_.erase(it_);
-
+		if (tms_.empty() == false) { // it is required for safe exit from the app that creates this timer, otherwise access violation error occurs;
+			TStdTimers::const_iterator it_ = tms_.find(m_tm_id);
+			if (it_ != tms_.end())
+				tms_.erase(it_);
+		}
 		m_tm_id  = 0;
 	}
 	return n_result;

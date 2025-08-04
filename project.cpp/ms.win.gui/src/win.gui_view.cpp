@@ -16,12 +16,40 @@ using namespace ebo::sha::theme::paths;
 using namespace ebo::boo::test::cases;
 #endif
 
+namespace ebo { namespace boo { namespace gui { namespace _impl {
+
+	CString Get_entry_point (void) {
+	
+		static bool b_1st_time = false;
+		static shared::sys_core::CSystemTime time;
+
+		if (b_1st_time == false) {
+			b_1st_time = true;
+
+			time.Offset().Get()._hours = -12;
+			time.Offset().Get()._mins  =  34;
+
+			time.Offset().Alias(_T("The Moon"));
+		}
+		time.Current();
+		CString cs_out = time.To_string(shared::sys_core::CDateTimeFmt::iso_8601::e_time_complete);
+		cs_out += TStringEx().Format (_T(" (%s)"), time.Offset().Alias());
+
+		return cs_out;
+	}
+
+
+}}}}
+
+using namespace ebo::boo::gui::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
-CFooter:: CFooter (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-CFooter::~CFooter (void) {}
+CFooter:: CFooter (void) : m_timer(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CFooter::~CFooter (void) { if (m_timer.IsValid()) m_timer.Destroy(); }
 
 /////////////////////////////////////////////////////////////////////////////
+
+#define pane_borders_thick 1
 
 err_code  CFooter::At_1st(void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -96,11 +124,25 @@ err_code  CFooter::At_1st(void) {
 
 	out_.Style().Stick() << CLay_Style::CStick::e_right;
 	out_.Style().Width() << CLay_Style::CWidth::e_fixed;
-	out_.Fixed(0x70); // ToDo: needs to have some calculation of the width from expected string pattern length;
+	out_.Fixed(0x100); // ToDo: needs to have some calculation of the width from expected string pattern length;
 
-	out_.Padding().Left(0x5);
+	out_.Padding().Left(0x3);
 
 	pane_2.Text(_T("00:00:00:000"));
+#if defined(pane_borders_thick) && (pane_borders_thick != 0)
+//	pane_2.Borders().Left()  << pane_borders_thick; the border class operator '<<' sets its ID and not the thickness of its base class 'line';
+//	pane_2.Borders().Right() << pane_borders_thick; the same as above;
+	pane_2.Borders().Left().Thickness(pane_borders_thick);
+	pane_2.Borders().Right().Thickness(pane_borders_thick);
+#if defined(_DEBUG)
+	for (ex_ui::controls::borders::TRawBorders::const_iterator it_ = pane_2.Borders().Raw().begin(); it_ != pane_2.Borders().Raw().end(); ++it_) {
+		const CBorder& border = it_->second;
+		if (border.Is_valid() && !!border.Thickness()) {
+			bool b_is_valid = false; b_is_valid = !b_is_valid;
+		}
+	}
+#endif
+#endif
 }
 #pragma endregion
 
@@ -131,13 +173,19 @@ err_code  CFooter::OnCreate (void) {
 	// (1) creates status bar user control;
 	if (__failed(sta_bar.Create(shared::Get_View().Parent(), 0xA)))
 		return this->m_error = this->Get().Error();
-	else
-		return this->Error();
+
+	this->m_error << this->m_timer.Create(100);
+	return this->Error();
 }
 
 void  CFooter::SetText(_pc_sz _p_text, const uint16_t _pane_ndx/* = 1*/) {
 	_p_text; _pane_ndx;
 	this->Get().Panes().Pane(_pane_ndx).Text(_p_text);
+}
+
+void  CFooter::IWaitable_OnComplete (void) {
+
+	this->Get().Panes().Pane(2).Text((_pc_sz) Get_entry_point());
 }
 
 /////////////////////////////////////////////////////////////////////////////

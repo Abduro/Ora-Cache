@@ -7,7 +7,7 @@
 #include "ebo_test_$u$.ctl.base.h"
 
 namespace ebo { namespace boo { namespace test { namespace ctl { namespace base {
-
+#if (0)
 	using TPane = ex_ui::controls::CPane;
 
 	__class (CPane) {
@@ -22,5 +22,6 @@ namespace ebo { namespace boo { namespace test { namespace ctl { namespace base 
 		bool  m_b_verb;
 		TPane m_pane;
 	};
+#endif
 }}}}}
 #endif/*_EBO_TEST_$U$_CTL_PANE_H_INCLUDED*/

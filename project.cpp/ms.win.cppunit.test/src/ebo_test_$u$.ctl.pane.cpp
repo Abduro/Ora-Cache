@@ -7,7 +7,7 @@
 using namespace ebo::boo::test::ctl::base;
 
 /////////////////////////////////////////////////////////////////////////////
-
+#if (0)
 CPane:: CPane (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TLog_Acc::e_new_line;
@@ -25,3 +25,4 @@ void CPane::_ctor (void) {
 	_out()();
 
 }
+#endif

@@ -10,6 +10,9 @@
 #include "direct_x.surface.h"
 #include "direct_x.wrap.h"
 
+#include "shared.timer.h"
+#include "sys.gen.time.h"
+
 namespace ebo { namespace boo { namespace gui {
 
 	using CPane    = ex_ui::controls::sfx::status::CPane;
@@ -18,7 +21,7 @@ namespace ebo { namespace boo { namespace gui {
 
 	using CSurface = ebo::boo::gui::render::CSurface;
 
-	class CFooter {
+	class CFooter : private shared::common::IWaitable_Events {
 	public:
 		 CFooter (void); CFooter (const CFooter&) = delete; CFooter (CFooter&&) = delete;
 		~CFooter (void);
@@ -35,9 +38,13 @@ namespace ebo { namespace boo { namespace gui {
 		void  SetText(_pc_sz _p_text, const uint16_t _pane_ndx = 1);
 
 	private:
+		void IWaitable_OnComplete (void) override final;
+
+	private:
 		CFooter& operator = (const CFooter&) = delete; CFooter& operator = (CFooter&&) = delete;
 		CError   m_error;
-		CSta_bar m_bar;
+		CSta_bar m_bar  ;
+		shared::common::CStdTimer m_timer;
 	};
 
 	// this is the view of the main window;

@@ -23,7 +23,6 @@ namespace ex_ui { namespace controls { namespace format {
 	using CVAling  = ex_ui::controls::properties::CAlign_Vert;
 
 	using CProperty = ex_ui::controls::properties::CProperty ;
-	using CBorders  = ex_ui::controls::borders::CBorders_for_rect;
 
 	class CBkgnd
 	{
@@ -69,6 +68,24 @@ namespace ex_ui { namespace controls { namespace format {
 		CMargins    m_margins  ; // a control must provide margins for its background and all components;
 		CPadding    m_padding  ;
 	};
+
+	class CBorders { // this class is just for colors of the light different intensity to borders of a control element;
+	public:
+		CBorders (void); CBorders (const CBorders&) = delete; CBorders (CBorders&&) = delete; ~CBorders (void) = default;
+
+		rgb_color Dark   (void) const;
+		bool      Dark   (const rgb_color);
+
+		rgb_color Light  (void) const;
+		bool      Light  (const rgb_color);
+
+		rgb_color Normal (void) const;
+		bool      Normal (const rgb_color);
+
+	private:
+		CBorders& operator = (const CBorders&) = delete; CBorders& operator = (CBorders&&) = delete;
+		TRgbQuad m_quads[3];  // 0:normal;1:light;2:dark;
+	}; 
 
 	class CFontSpec {
 	public:
@@ -149,7 +166,6 @@ namespace ex_ui { namespace controls { namespace format {
 
 	protected:
 		CBkgnd      m_bkgnd  ;
-		CBorders    m_borders;
 		CFontSpec   m_spec   ;
 	};
 }}}

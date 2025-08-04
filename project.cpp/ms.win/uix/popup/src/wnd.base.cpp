@@ -111,9 +111,11 @@ CWndBase::~CWndBase (void) {}
 
 #if (0)
 ATL::CWndClassInfo& CWndBase::GetWndClassInfo (void) {
-	static ATL::CWndClassInfo wc = {
-		0
+	static ATL::CWndClassInfo wc = {{
+		sizeof( WNDCLASSEX ), CS_DBLCLKS, StartWindowProc, 0, 0, 0, 0, 0, (HBRUSH)(COLOR_ACTIVECAPTION + 1), NULL, __CLASS__, 0 },
+		0, 0, IDC_ARROW, TRUE, 0, _T("")
 	};
+	return wc;
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////

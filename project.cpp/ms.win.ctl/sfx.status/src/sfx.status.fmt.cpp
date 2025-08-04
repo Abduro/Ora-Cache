@@ -13,10 +13,30 @@ using namespace ex_ui::controls::sfx::status::format;
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ex_ui { namespace controls { namespace sfx { namespace status { namespace format {
+
+CBorders:: CBorders (void) : TBase() {}
+
+err_code  CBorders::Set (void) {
+
+	err_code n_result = __s_ok;
+	// ToDo: the colors need to be reviewed and perhaps be corrected;
+	TBase::Dark  (ex_ui::theme::Get_current().Form().Border().States().Disabled().Color());
+	TBase::Light (ex_ui::theme::Get_current().Form().Border().States().Selected().Color());
+	TBase::Normal(ex_ui::theme::Get_current().Form().Border().States().Normal().Color());
+
+	return n_result;
+}
+
+}}}}}
+
 CFormat:: CFormat (CControl& _ctrl) : m_ctrl(_ctrl) { this->Default(); }
 CFormat::~CFormat (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
+const
+format::CBorders&  CFormat::Borders (void) const { return this->m_borders; }
+format::CBorders&  CFormat::Borders (void)       { return this->m_borders; }
 
 void CFormat::Default (void) {
 
@@ -36,6 +56,8 @@ void CFormat::Default (void) {
 	TBase::Font().Fore() = ex_ui::theme::Get_current().Form().Fore().States().Normal().Color();
 	TBase::Font().Size() = -12;
 	TBase::Font().Options() += TFontOpts::eExactSize;
+
+	this->Borders().Set();
 }
 
 #if (0)

@@ -10,40 +10,108 @@
 using namespace shared::sys_core;
 /////////////////////////////////////////////////////////////////////////////
 
-CDateBias::CDateBias(void) : m_bias_hr(0), m_bias_mn(0), m_bias(0) {}
+CString CDateTimeFmt::GetPattern (const CDateTimeFmt::iso_8601 _e_pat) {
+	_e_pat;
+	static _pc_sz pc_sz_fmt_d   = _T("%04d-%02d-%02d");                 // yyyy-mm-dd ;
+	static _pc_sz pc_sz_fmt_t   = _T("%02d:%02d:%02dZ");                // hh:mm:ssZ  ;
+	static _pc_sz pc_sz_fmt_o   = _T("%02d:%02d:%02d%+02d:%02d");       // hh:mm:ss+/-hh:mm ;
+	static _pc_sz pc_sz_fmt_c   = _T("%02d:%02d:%02d.%03d%+02d:%02d");  // hh:mm:ss.sss+/-hh:mm ;
+	static _pc_sz pc_sz_fmt_d_t = _T("%04d:%02d:%02dT%02d:%02d:%02dZ"); // yyyy-mm-ddThh:mm:ssZ ;
+	static _pc_sz pc_sz_fmt_dto = _T("%04d:%02d:%02dT%02d:%02d:%02d%+02d:%02d"); // yyyy-mm-ddThh:mm:ss+/-hh:mm ;
 
-/////////////////////////////////////////////////////////////////////////////
+	static _pc_sz pc_sz_fmt_spl_n = _T("%02d:%02d:%02d.%03d%02d:%02d");     // hh:mm:ss-hh:mm ; minus of negative value is output automaticallyl
+	static _pc_sz pc_sz_fmt_spl_p = _T("%02d:%02d:%02d.%03d+%02d:%02d");    // hh:mm:ss+hh:mm ;
 
-HRESULT    CDateBias::Initialize(void)
-{
-	HRESULT hr_ = S_OK;
-	TIME_ZONE_INFORMATION tzi = {0};
-	const DWORD dwType = ::GetTimeZoneInformation(&tzi);
+	CString cs_out;
+	switch (_e_pat) {
+	case CDateTimeFmt::iso_8601::e_date: cs_out = pc_sz_fmt_d; break;
+	case CDateTimeFmt::iso_8601::e_time: cs_out = pc_sz_fmt_t; break;
+	case CDateTimeFmt::iso_8601::e_time_n_offset: cs_out = pc_sz_fmt_o; break;
+	case CDateTimeFmt::iso_8601::e_time_complete: cs_out = pc_sz_fmt_c; break;
+	case CDateTimeFmt::iso_8601::e_date_n_time: cs_out = pc_sz_fmt_d_t; break;
+	case CDateTimeFmt::iso_8601::e_date_n_time_offset: cs_out = pc_sz_fmt_dto; break;
 
-	switch (dwType)
-	{
-	case TIME_ZONE_ID_UNKNOWN : // no daylight;
-	case TIME_ZONE_ID_STANDARD: // no daylight;
-	case TIME_ZONE_ID_DAYLIGHT:
-		break;
-	default:
-		hr_ = HRESULT_FROM_WIN32(::GetLastError());
-		return hr_;
+	case CDateTimeFmt::iso_8601::e_time_spl_n: cs_out = pc_sz_fmt_spl_n; break;
+	case CDateTimeFmt::iso_8601::e_time_spl_p: cs_out = pc_sz_fmt_spl_p; break;
+	default:;
+		// the empty string is returned; the caller must check it before applying to format function;
 	}
 
-	m_bias = tzi.Bias;
-
-	m_bias_hr = abs(m_bias) / 60;
-	m_bias_mn = abs(m_bias) % 60;
-	return  hr_;
+	return  cs_out;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-const LONG CDateBias::Bias (void)const { return m_bias; }
-const LONG CDateBias::Hours(void)const { return m_bias_hr; }
-const bool CDateBias::IsBeforeUtc(void)const { return (0 < m_bias); }
-const LONG CDateBias::Minutes(void)const     { return  m_bias_mn; }
+CTimeOffset:: CTimeOffset(void) : m_bias{0} {}
+
+_pc_sz  CTimeOffset::Alias (void) const { return (_pc_sz) this->m_alias; }
+bool    CTimeOffset::Alias (_pc_sz _p_alias) {
+	const bool b_changed = 0 != this->m_alias.CompareNoCase(_p_alias);
+	if (b_changed) {
+		this->m_alias = _p_alias; this->m_alias.Trim();
+	}
+	return b_changed;
+}
+
+const
+CTimeOffset::s_offset&  CTimeOffset::Get (void) const { return this->m_bias; }
+CTimeOffset::s_offset&  CTimeOffset::Get (void)       { return this->m_bias; }
+
+err_code CTimeOffset::Set (const int16_t _hours, const int16_t _mins, _pc_sz _p_alias/* = nullptr*/) {
+	_hours; _mins; _p_alias;
+	err_code n_result = __s_ok;
+
+	if (CTimeOffset::_hr_min < _hours || CTimeOffset::_hr_max < _hours)
+		return n_result = __e_inv_arg;
+
+	if (CTimeOffset::_mins_min > _mins || CTimeOffset::_mins_max < _mins)
+		return n_result = __e_inv_arg;
+
+	this->m_bias._hours = _hours;
+	this->m_bias._mins  = _mins ;
+
+	this->Alias(_p_alias);
+
+	return n_result;
+}
+
+err_code CTimeOffset::Set (void) {
+
+	err_code n_result = __s_ok;
+	// https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information ;
+	TIME_ZONE_INFORMATION tz_info = {0};
+	const uint32_t dwType = ::GetTimeZoneInformation(&tz_info);
+	switch (dwType)
+	{
+	case TIME_ZONE_ID_UNKNOWN : this->Alias(tz_info.StandardName);  break; // no daylight;
+	case TIME_ZONE_ID_STANDARD: this->Alias(tz_info.StandardName);  break; // no daylight;
+	case TIME_ZONE_ID_DAYLIGHT: this->Alias(tz_info.DaylightName);  break; // for example, "PDT";
+	default:
+		return n_result = __LastErrToHresult();
+	}
+	m_bias._hours = static_cast<int16_t>(tz_info.Bias / 60);
+	m_bias._mins  = static_cast<int16_t>(tz_info.Bias % 60);
+
+	return n_result;
+}
+
+CString  CTimeOffset::To_string (void) const {
+
+	static _pc_sz pc_sz_pat_all = _T("%02d:%02d (%s)");
+	static _pc_sz pc_sz_pat_no_alias = _T("%02d:%02d");
+
+	CString cs_out;
+
+	if (this->m_alias.GetLength()) {
+		cs_out.Format (pc_sz_pat_all, this->Get()._hours, this->Get()._mins, this->Alias());
+	}
+	else {
+		cs_out.Format (pc_sz_pat_all, this->Get()._hours, this->Get()._mins);
+	}
+
+	return  cs_out;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CTimeBase::CTimeBase(const bool bTimezone) : m_b_is_tz(bTimezone) {}
@@ -114,45 +182,32 @@ namespace shared { namespace sys_core { namespace _impl
 using namespace shared::sys_core::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
-CSystemTime::CSystemTime(const bool bTimezone) : CTimeBase(bTimezone) {
+CSystemTime::CSystemTime (const bool bTimezone) : CTimeBase(bTimezone) {
 	::memset((SYSTEMTIME*)this, 0, sizeof(SYSTEMTIME)); // TODO: it's obviously to use this->Clear();
 }
 
-CSystemTime::CSystemTime(const FILETIME& _ft)     : CTimeBase(true) { *this = _ft;  }
-CSystemTime::CSystemTime(const LARGE_INTEGER& _li): CTimeBase(true) { *this = _li;  }
-CSystemTime::CSystemTime(const SYSTEMTIME& _tm)   : CTimeBase(true) { *this = _tm;  }
-CSystemTime::CSystemTime(const time_t& _tm)       : CTimeBase(true) { *this = _tm;  }
+CSystemTime::CSystemTime (const FILETIME& _ft)     : CTimeBase(true) { *this = _ft;  }
+CSystemTime::CSystemTime (const LARGE_INTEGER& _li): CTimeBase(true) { *this = _li;  }
+CSystemTime::CSystemTime (const SYSTEMTIME& _tm)   : CTimeBase(true) { *this = _tm;  }
+CSystemTime::CSystemTime (const time_t& _tm)       : CTimeBase(true) { *this = _tm;  }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void     CSystemTime::Clear  (void) { ::memset((SYSTEMTIME*)this, 0, sizeof(SYSTEMTIME)); m_b_is_tz = false; }
+void CSystemTime::Clear (void) { ::memset((SYSTEMTIME*)this, 0, sizeof(SYSTEMTIME)); m_b_is_tz = false; }
 
-INT      CSystemTime::Compare(const CSystemTime& _sys, const WORD _msec_threshold) const
-{
+int  CSystemTime::Compare (const CSystemTime& _sys, const uint16_t _msec_threshold) const {
 	return (CSystemTime_LeftAfterRight(*this, _sys, _msec_threshold));
 }
 
-HRESULT  CSystemTime::Current(void) {
+err_code CSystemTime::Current (void) {
 	if (CTimeBase::IsLocal())
 		::GetLocalTime(this);
 	else
 		::GetSystemTime(this);
-
-	HRESULT hr_ = S_OK;
-	return  hr_;
+	return __s_ok;
 }
 
-CString  CSystemTime::DefaultFormatValue(void)const {
-
-	CString result_;
-	result_.Format(
-		CSystemTime::GetDefaultFormat(false, CDateTimeStyle::eUnspecified) ,
-		(*this).wYear, (*this).wMonth, (*this).wDay, (*this).wHour, (*this).wMinute, (*this).wSecond, (*this).wMilliseconds
-	);
-	return result_;
-}
-
-bool     CSystemTime::IsValid(void)const {
+bool     CSystemTime::IsValid (void) const {
 	
 	const bool isLeapYear  = (TBase::wYear % 4 == 0 && (TBase::wYear % 100 != 0 || TBase::wYear % 400 == 0));
 
@@ -164,106 +219,144 @@ bool     CSystemTime::IsValid(void)const {
 	return b_valid;
 }
 
-HRESULT  CSystemTime::Random (void) {
+const
+CTimeOffset& CSystemTime::Offset (void) const { return this->m_offset; }
+CTimeOffset& CSystemTime::Offset (void)       { return this->m_offset; }
+
+
+err_code CSystemTime::Random (void) {
+
 	::memset(this, 0, sizeof(SYSTEMTIME));
-	this->wYear    = CSystemTime_RandomWord(1990, 2035);
-	this->wMonth   = CSystemTime_RandomWord(   1,   12);
-	this->wDay     = CSystemTime_RandomWord(   1,   31);  // TODO: this value must be in accordance with month and leap year;
+
+	TBase::wYear   = CSystemTime_RandomWord(1990, 2035);
+	TBase::wMonth  = CSystemTime_RandomWord(   1,   12);
+
+	uint16_t w_days = 1;
+
+	switch (this->wMonth ) {
+	case 1: case 3: case 5: case 7: case 8: case 10: case 12: w_days = 31; break;
+	case 2: {
+		const bool isLeapYear = (TBase::wYear % 4 == 0 && (TBase::wYear % 100 != 0 || TBase::wYear % 400 == 0));
+		w_days = isLeapYear ? 29 : 28; }
+		break;
+	default: w_days = 30;
+	}
+
+	this->wDay     = CSystemTime_RandomWord(   1,   w_days);
 	this->wHour    = CSystemTime_RandomWord(   0,   23);
 	this->wMinute  = CSystemTime_RandomWord(   0,   59);
 	this->wSecond  = CSystemTime_RandomWord(   0,   59);
 	this->wMilliseconds
 	               = CSystemTime_RandomWord(   0,  999);
-	HRESULT hr_ = S_OK;
-	return  hr_;
+	return __s_ok;
 }
 
-HRESULT  CSystemTime::ToString(CString& _result, const DWORD _style) const
-{
-	HRESULT hr_ = S_OK;
+CString  CSystemTime::To_string (const CDateTimeFmt::iso_8601 _fmt) const {
+	_fmt;
+#if (0)
 	// YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45+01:00)
 	// http://www.w3.org/TR/NOTE-datetime
-	static LPCTSTR p_date_0 = _T("%04d-%02d-%02dT%02d:%02d:%02d.%02d%s%02d:%02d");
-	static LPCTSTR p_date_1 = _T("%04d-%02d-%02dT%02d:%02d:%02dZ");
+	static _pc_sz p_date_0 = _T("%04d-%02d-%02dT%02d:%02d:%02d.%02d%s%02d:%02d");
+	static _pc_sz p_date_1 = _T("%04d-%02d-%02dT%02d:%02d:%02dZ");
+#endif
+	CString cs_pat = CDateTimeFmt::GetPattern(_fmt);
+	if (cs_pat.IsEmpty()) {
+		cs_pat.Format (_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _fmt);
+		return cs_pat;
+	}
+	CString cs_out;
 
-	if (CDateTimeStyle::eNoMillisecs & _style)
-	{
-		_result.Format(
-			p_date_1, (*this).wYear, (*this).wMonth, (*this).wDay, (*this).wHour, (*this).wMinute, (*this).wSecond
+	switch (_fmt) {
+	case CDateTimeFmt::iso_8601::e_date: cs_out.Format ((_pc_sz) cs_pat, TBase::wYear, TBase::wMonth, TBase::wDay); break;
+	case CDateTimeFmt::iso_8601::e_time: cs_out.Format ((_pc_sz) cs_pat, TBase::wHour, TBase::wMinute, TBase::wSecond); break;
+	case CDateTimeFmt::iso_8601::e_time_n_offset: {
+		cs_out.Format (
+			(_pc_sz) cs_pat, TBase::wHour, TBase::wMinute, TBase::wSecond, this->Offset().Get()._hours, this->Offset().Get()._mins
+		);} break;
+	case CDateTimeFmt::iso_8601::e_time_complete: {
+		CString cs_pattern;
+		if (false) {}
+		else if (this->Offset().Get()._hours < 0) {
+			cs_pattern =  CDateTimeFmt::GetPattern(CDateTimeFmt::iso_8601::e_time_spl_n);
+		}
+		else if (this->Offset().Get()._hours >-1) {
+			cs_pattern =  CDateTimeFmt::GetPattern(CDateTimeFmt::iso_8601::e_time_spl_p);
+		}
+		else break;
+		cs_out.Format (
+			(_pc_sz) cs_pattern, TBase::wHour, TBase::wMinute, TBase::wSecond, TBase::wMilliseconds, this->Offset().Get()._hours, this->Offset().Get()._mins
 		);
-		return hr_;
+	} break;
+	case CDateTimeFmt::iso_8601::e_date_n_time: {
+			cs_out.Format (
+			(_pc_sz) cs_pat, TBase::wYear, TBase::wMonth, TBase::wDay, TBase::wHour, TBase::wMinute, TBase::wSecond
+		);} break;
+	case CDateTimeFmt::iso_8601::e_date_n_time_offset: {
+			cs_out.Format (
+			(_pc_sz) cs_pat, TBase::wYear, TBase::wMonth, TBase::wDay, TBase::wHour, TBase::wMinute, TBase::wSecond, this->Offset().Get()._hours, this->Offset().Get()._mins
+		);} break;
+	default: cs_out.Format (_T("cls::[%s::%s].%s(#inv_arg=%u);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _fmt);
 	}
 
-	CDateBias bias_;
-	hr_ = bias_.Initialize();
-	if (FAILED(hr_))
-		return hr_;
-
-	_result.Format(
-			p_date_0, (*this).wYear, (*this).wMonth, (*this).wDay, (*this).wHour, (*this).wMinute, (*this).wSecond,
-			static_cast<WORD>((*this).wMilliseconds / 10) , // needs only two digits, not three ones
-			bias_.IsBeforeUtc() ? _T("+") : _T("-"),        // UTC = local time + bias, i.e. for time zones after GMT the bias is negative; 
-			bias_.Hours(),
-			bias_.Minutes()
-		);
-	return hr_;
+	return cs_out;
 }
 
-HRESULT  CSystemTime::ToValue(LPCTSTR _lp_sz_value) {
-
-	HRESULT hr_ = S_OK;
-	if (NULL == _lp_sz_value || 0==::lstrlenW(_lp_sz_value))
-		return (hr_ = E_INVALIDARG);
+err_code CSystemTime::ToValue (_pc_sz _p_value) {
+	_p_value;
+	err_code n_result = __s_ok;
+	if (nullptr == _p_value || 0 == ::_tcslen(_p_value))
+		return n_result = __e_inv_arg;
 	
-	static LPCTSTR lp_sz_fmt = _T("%d/%d/%d %d:%d:%d.%d"); // yyyy/MM/dd hh:mm:ss.mss
+	static _pc_sz lp_sz_fmt = _T("%d/%d/%d %d:%d:%d.%d"); // yyyy/MM/dd hh:mm:ss.mss
 #if(0)
 	// Error: Stack around the variable 'string' was corrupted; this error is caused by overflowing WORD type members by INT type;
 	::_stscanf_s(
-		_lp_sz_value, lp_sz_fmt,
+		_p_value, lp_sz_fmt,
 		&TBase::wYear, &TBase::wMonth, &TBase::wDay, &TBase::wHour, &TBase::wMinute, &TBase::wSecond, &TBase::wMilliseconds
 	);
 #endif
 	enum _ndx {
-		e_year    = 0x0,
-		e_month   = 0x1,
-		e_day     = 0x2,
-		e_hour    = 0x3,
-		e_min     = 0x4,
-		e_sec     = 0x5,
-		e_msec    = 0x6,
+		e_year  = 0x0,
+		e_month = 0x1,
+		e_day   = 0x2,
+		e_hour  = 0x3,
+		e_min   = 0x4,
+		e_sec   = 0x5,
+		e_msec  = 0x6,
 	};
 	LONG val_[e_msec + 1] = {0};
 
 	::_stscanf_s(
-		_lp_sz_value, lp_sz_fmt,
+		_p_value, lp_sz_fmt,
 		&val_[e_year], &val_[e_month], &val_[e_day], &val_[e_hour], &val_[e_min], &val_[e_sec], &val_[e_msec]
 	);
 
-	TBase::wDay          = static_cast<WORD>(val_[e_day]);
-	TBase::wHour         = static_cast<WORD>(val_[e_hour]);
-	TBase::wMilliseconds = static_cast<WORD>(val_[e_msec]);
-	TBase::wMinute       = static_cast<WORD>(val_[e_min]);
-	TBase::wMonth        = static_cast<WORD>(val_[e_month]);
-	TBase::wSecond       = static_cast<WORD>(val_[e_sec]);
-	TBase::wYear         = static_cast<WORD>(val_[e_year]);
+	TBase::wDay          = static_cast<uint16_t>(val_[e_day]);
+	TBase::wHour         = static_cast<uint16_t>(val_[e_hour]);
+	TBase::wMilliseconds = static_cast<uint16_t>(val_[e_msec]);
+	TBase::wMinute       = static_cast<uint16_t>(val_[e_min]);
+	TBase::wMonth        = static_cast<uint16_t>(val_[e_month]);
+	TBase::wSecond       = static_cast<uint16_t>(val_[e_sec]);
+	TBase::wYear         = static_cast<uint16_t>(val_[e_year]);
 
 	if (TBase::wHour > 12)
 		this->m_b_is_tz = true;
 
-	return  hr_;
+	return  n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSystemTime&  CSystemTime::operator=(const DATE _date) {
+CSystemTime&  CSystemTime::operator = (const DATE _date) {
 	::VariantTimeToSystemTime(_date, this);
 	return *this;
 }
 			  
-CSystemTime&  CSystemTime::operator=(const FILETIME& _ft)
+CSystemTime&  CSystemTime::operator = (const FILETIME& _ft)
 {
-	if (!_ft.dwHighDateTime || !_ft.dwLowDateTime)
+	if (!_ft.dwHighDateTime || !_ft.dwLowDateTime) {
 		::memset((SYSTEMTIME*)this, 0, sizeof(SYSTEMTIME));
+	}
 	else if (CTimeBase::IsLocal()){
 		FILETIME ft_ = {0};
 		FileTimeToLocalFileTime(&_ft, &ft_);
@@ -276,7 +369,7 @@ CSystemTime&  CSystemTime::operator=(const FILETIME& _ft)
 	return *this;
 }
 			  
-CSystemTime&  CSystemTime::operator=(const LARGE_INTEGER& _li)
+CSystemTime&  CSystemTime::operator = (const LARGE_INTEGER& _li)
 {
 	if (CTimeBase::IsLocal()) {
 		*this = *((PFILETIME)&_li);
@@ -290,7 +383,7 @@ CSystemTime&  CSystemTime::operator=(const LARGE_INTEGER& _li)
 	return *this;
 }
 			  
-CSystemTime&  CSystemTime::operator=(const LPCTSTR lpszData) {
+CSystemTime&  CSystemTime::operator = (const _pc_sz lpszData) {
 #if(0)
 	if (NULL == lpszData || ::lstrlenW(lpszData) < 1)
 		return *this;
@@ -304,14 +397,14 @@ CSystemTime&  CSystemTime::operator=(const LPCTSTR lpszData) {
 		CSystemTime::GetDefaultFormat(true), &TBase::wYear, &TBase::wMonth, &TBase::wDay, &TBase::wHour, &TBase::wMinute, &TBase::wSecond
 		);
 #else
-	this->ToValue(lpszData);
+	this->ToValue (lpszData);
 #endif
 	return *this;
 }
 			  
-CSystemTime&  CSystemTime::operator=(const SYSTEMTIME& _time)
+CSystemTime&  CSystemTime::operator = (const SYSTEMTIME& _time)
 {
-	const DWORD size_ = sizeof(SYSTEMTIME);
+	const uint32_t size_ = sizeof(SYSTEMTIME);
 	::memcpy_s(
 			this  ,
 			size_ ,
@@ -321,7 +414,7 @@ CSystemTime&  CSystemTime::operator=(const SYSTEMTIME& _time)
 	return *this;
 }
 			  
-CSystemTime&  CSystemTime::operator=(const time_t& _time)
+CSystemTime&  CSystemTime::operator = (const time_t& _time)
 {
 	::memset(this, 0, sizeof(SYSTEMTIME));
 	//
@@ -338,30 +431,16 @@ CSystemTime&  CSystemTime::operator=(const time_t& _time)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-CSystemTime::operator const  DATE       (void)const {
-	DOUBLE dt_ = 0.0f;
+CSystemTime::operator const  DATE (void) const {
+	double dt_ = 0.0f;
 	::SystemTimeToVariantTime((LPSYSTEMTIME)this, &dt_);
 	return dt_;
 }
-CSystemTime::operator const  SYSTEMTIME&(void)const { return *this; }
-CSystemTime::operator        SYSTEMTIME&(void)      { return *this; }
-CSystemTime::operator const LPSYSTEMTIME(void)      { return  this; }
-CSystemTime::operator       LPSYSTEMTIME(void)      { return  this; }
 
-/////////////////////////////////////////////////////////////////////////////
-
-LPCTSTR  CSystemTime::GetDefaultFormat(const bool bScanPattern, const DWORD _style) {
-	if (bScanPattern) {
-		static LPCTSTR lpsz_ = _T("%d-%d-%d %d:%d:%d"); return lpsz_;
-	}
-	else
-	if (CDateTimeStyle::eNoMillisecs & _style) {
-		static LPCTSTR lpsz_ = _T("%04d-%02d-%02d %02d:%02d:%02d"); return lpsz_;
-	}
-	else {
-		static LPCTSTR lpsz_ = _T("%04d-%02d-%02d %02d:%02d:%02d.%03d"); return lpsz_;
-	}
-}
+CSystemTime::operator const  SYSTEMTIME&(void)const { return (const TBase&) *this; }
+CSystemTime::operator        SYSTEMTIME&(void)      { return (TBase&) *this; }
+CSystemTime::operator const LPSYSTEMTIME(void)      { return (TBase* const) this; }
+CSystemTime::operator       LPSYSTEMTIME(void)      { return (TBase*)  this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -445,7 +524,7 @@ CString    CDateTime::GetUnixEpoch (void) const {
 }
 
 CString    CDateTime::GetTime(void) const {
-	static LPCTSTR lp_sz_pat = _T("%02d:%02d:%02d.%02d");
+	static LPCTSTR lp_sz_pat = _T("%02d:%02d:%02d.%03d");
 	CString cs_time;
 	cs_time.Format(
 			lp_sz_pat, m_time.wHour, m_time.wMinute, m_time.wSecond, m_time.wMilliseconds
@@ -616,13 +695,11 @@ INT     CFileTime::Compare(const FILETIME& _ft, const WORD _msec_threshold)
 	return result_;
 }
 
-HRESULT CFileTime::ToString(CString& _result) const
+CString CFileTime::To_string (const CDateTimeFmt::iso_8601 _fmt) const
 {
 	CSystemTime sys_(TBase::IsLocal());
 	sys_ = m_ftime;
-
-	HRESULT hr_ = sys_.ToString(_result);
-	return  hr_;
+	return sys_.To_string(_fmt);
 }
 
 }}
@@ -752,13 +829,15 @@ CUnixTime&   CUnixTime::operator=(const SYSTEMTIME& _sys) {
 		// does not	work as expected:	
 		// https://stackoverflow.com/questions/28696211/conversion-from-systemtime-to-time-t-gives-out-time-in-utc-gmt
 
-		CDateBias bias_;
-		bias_.Initialize();
+		CTimeOffset bias_;
+		bias_.Set();
 
-		i_sec = bias_.Hours() * 3600 + bias_.Minutes() * 60;
-		if (bias_.IsBeforeUtc() == false)
-			i_sec = -i_sec;
+		const bool b_before_utc = bias_.Get()._hours < 0;
 
+		i_sec = abs(bias_.Get()._hours * 3600) + bias_.Get()._mins * 60;
+		if (b_before_utc)
+			i_sec *= -1;
+		
 #define _n_sec_per_hour (3600)
 #define _n_hrs_per_day  (24)
 #define _n_sec_per_day  (_n_sec_per_hour * _n_hrs_per_day)
@@ -774,8 +853,8 @@ CUnixTime&   CUnixTime::operator=(const SYSTEMTIME& _sys) {
 	//  this code is not provided via web site; but it still remains crucial;
 	//  it calculates properly a base of time value for local zone;
 	//
-		time_.tm_hour = time_.tm_hour + (bias_.IsBeforeUtc() ? -bias_.Hours()   : +bias_.Hours());
-		time_.tm_min  = time_.tm_min  + (bias_.IsBeforeUtc() ? -bias_.Minutes() : +bias_.Minutes());
+		time_.tm_hour = time_.tm_hour + (b_before_utc ? -bias_.Get()._hours: +bias_.Get()._hours);
+		time_.tm_min  = time_.tm_min  + (b_before_utc ? -bias_.Get()._mins : +bias_.Get()._mins);
 	}
 	m_time  = ::std::mktime(&time_);
 	m_time += i_sec;

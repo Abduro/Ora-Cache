@@ -98,7 +98,7 @@ namespace pane {
 		t_rect&  Rect  (void);
 		// ToDo: Update() methods are useless due to there is no information of pane object;
 		bool  Update (void);          // a position of the pane is calculated;
-		bool  Update (CBorders&);     // updates a borders position; it is supposed the rectangle of the pane is already set;
+		bool  Update (ex_ui::controls::borders::CBorders&); // updates a borders position; it is supposed the rectangle of the pane is already set;
 		bool  Update (const t_rect&); // a position is set by input rect;
 
 	public:
@@ -115,14 +115,36 @@ namespace pane {
 		CPadding m_padding;
 	};
 }
-	using CFormat = ex_ui::controls::pane::CFormat;
-	using CLayout = ex_ui::controls::pane::CLayout;
-
 	// https://en.wikipedia.org/wiki/Paned_window_(computing) ;
 	// http://ptitben2000.chez.com/info/lookandfeel/higk.htm ;
 	// https://ux.stackexchange.com/questions/124588/whats-the-difference-between-a-panel-and-pane ;
 
 	class CPane {
+	using CBorders = ex_ui::controls::borders::CBorders_for_rect;
+	public:
+		 CPane (void); CPane (const CPane&); CPane (CPane&&);
+		~CPane (void);
+
+	public:
+		const
+		ex_ui::controls::borders::CBorders_for_rect& Borders (void) const;
+		ex_ui::controls::borders::CBorders_for_rect& Borders (void) ;
+
+	public:
+		CPane& operator = (const CPane&);
+		CPane& operator = (CPane&&);      // just copying fields' data, neither move() nor swap() operation is applied;
+
+		CPane& operator <<(const ex_ui::controls::borders::CBorders_for_rect&);
+
+	protected:
+		ex_ui::controls::borders::CBorders_for_rect  m_borders;
+	};
+
+#if (0)
+	using CFormat = ex_ui::controls::pane::CFormat;
+	using CLayout = ex_ui::controls::pane::CLayout;
+
+	class CPane { // ToDo: this class must be the parent one for pane of the status bar and tabbed controls at least, otherwise it is useless;
 	public:
 		 CPane (void); CPane (const CPane&); CPane (CPane&&);
 		~CPane (void);
@@ -155,6 +177,7 @@ namespace pane {
 		CFormat   m_format;
 		CLayout   m_layout;
 	};
+#endif
 }}
 
 

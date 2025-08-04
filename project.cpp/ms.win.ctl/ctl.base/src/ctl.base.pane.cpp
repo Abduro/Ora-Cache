@@ -129,7 +129,7 @@ t_rect&   CLayout::Rect (void)       { return this->m_rect ; }
 
 bool CLayout::Update (void) { return false; }
 
-bool CLayout::Update (CBorders& _borders) {
+bool CLayout::Update (ex_ui::controls::borders::CBorders_for_rect& _borders) {
 	return _borders.Set(this->Rect());
 }
 
@@ -147,6 +147,22 @@ CLayout&  CLayout::operator <<(const CPadding& _padding) { this->Padding() = _pa
 
 }}}
 
+/////////////////////////////////////////////////////////////////////////////
+
+CPane:: CPane (void) {} CPane:: CPane (CPane&& _victim) : CPane() { *this = _victim; }
+CPane:: CPane (const CPane& _src) : CPane() { *this = _src; }
+CPane::~CPane (void) {}
+
+const
+ex_ui::controls::borders::CBorders_for_rect& CPane::Borders (void) const { return this->m_borders; }
+ex_ui::controls::borders::CBorders_for_rect& CPane::Borders (void)       { return this->m_borders; }
+
+CPane&  CPane::operator = (const CPane& _src) { *this << _src.Borders(); return *this; }
+CPane&  CPane::operator = (CPane&& _victim) { *this = (const CPane&)_victim; return *this; }
+
+CPane&  CPane::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
+
+#if (0)
 /////////////////////////////////////////////////////////////////////////////
 
 CPane:: CPane (void) {} CPane:: CPane (CPane&& _victim) : CPane() { *this = _victim; }
@@ -240,3 +256,4 @@ CPane&  CPane::operator = (CPane&& _victim) { *this = (const CPane&)_victim; ret
 CPane&  CPane::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
 CPane&  CPane::operator <<(const CFormat&  _format ) { this->Format()  = _format ; return *this; }
 CPane&  CPane::operator <<(const CLayout&  _layout ) { this->Layout()  = _layout ; return *this; }
+#endif

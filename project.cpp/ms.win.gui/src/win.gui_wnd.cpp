@@ -43,6 +43,11 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 		b_fst_time = true;
 	}
+#if (0)
+	t_rect rc_draw = {0};
+	this->GetClientRect(&rc_draw);
+	shared::Get_View().OnDraw(_dev_ctx, rc_draw);
+#endif
 	err_code n_result = __s_ok;  // do not hold this message, otherwise child windows will not be able to draw anything on this one;
 	return   n_result;
 #else
@@ -68,7 +73,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 
 	err_code n_result = __s_ok;  // this message is handled;
 	return   n_result;
-#else
+#elif (true == false)
 	CPaintDC dc_(*this);
 	WTL::CBrush brush;
 
@@ -76,9 +81,8 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	uint32_t clr_1  = _r_g_b_a(0, 0, 255, 0);  clr_1;
 	brush.CreateSolidBrush(clr_0);
 	::FillRect(dc_.m_hDC, &dc_.m_ps.rcPaint, brush.m_hBrush);
-
-	return __s_ok;
 #endif
+	return __s_ok;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -165,7 +169,7 @@ err_code CWnd::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
 
-err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
+err_code CWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
 
 	err_code n_result = __s_false;
 

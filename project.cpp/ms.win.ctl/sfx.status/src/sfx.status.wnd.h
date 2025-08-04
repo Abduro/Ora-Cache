@@ -23,7 +23,9 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 
 #ifndef __WND_CLS_CHILD__
 #define __WND_CLS_CHILD__
-	//	DECLARE_WND_SUPERCLASS(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), _T("CWndBase"));
+#if (0)
+		DECLARE_WND_SUPERCLASS(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), _T("CWndBase"));
+#endif
 #endif
 
 #pragma region __msg_handler_callbacks__

@@ -21,7 +21,7 @@ CWnd::~CWnd(void) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
+// https://stackoverflow.com/questions/5213952/erase-window-background-win32api ;
 err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
 	/*
@@ -40,8 +40,18 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdaterect ;
+	t_rect rc_update = {0};
+	if (false == !!TWindow::GetUpdateRect(&rc_update)) {
+		bool b_break = false;
+		b_break = !b_break;
+	}
 
-	CZBuffer z_buffer(_dev_ctx, rc_area);
+	HDC h_local = nullptr;
+	if (_dev_ctx == nullptr)
+		h_local = TWindow::GetDC();
+
+	CZBuffer z_buffer(_dev_ctx == nullptr ? h_local : _dev_ctx, rc_area);
 #if (0)
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
 	z_buffer.Draw(rc_area, set_.Dark()/*_r_g_b(200, 200, 200)*/);
@@ -83,7 +93,8 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		TFlags_Horz::e_left | TFlags_Vert::e_middle | TCut_Flags::e_end | TOpt_Flags::e_no_clip | TOpt_Flags::e_single | TAlt_Flags::e_no_prefix
 	);
 
-	const rgb_color clr_normal = this->m_ctrl.Format().Font().Fore();
+	const rgb_color clr_fnt_norm = this->m_ctrl.Format().Font().Fore();
+	const rgb_color clr_brd_norm = this->m_ctrl.Format().Borders().Normal();
 
 	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
 		const CPane& pane = this->m_ctrl.Panes().Pane(i_);
@@ -92,15 +103,33 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 				pane.Format().Image().Index(), z_buffer, pane.Layout().Image().Anchor()
 			);
 		}
+		// each border validity control may be made by draw renderer, but it can be made here too;
+		const CBorders& borders = pane.Borders();
+
+		const CBorder& brd_left = borders.Left();
+		const CBorder& brd_right = borders.Right();
+
+		if (brd_left.Is_valid() && !!brd_left.Thickness())
+			z_buffer.Draw(brd_left, clr_brd_norm);
+		if (brd_right.Is_valid() && !!brd_right.Thickness())
+			z_buffer.Draw(brd_right, clr_brd_norm);
+
 		if (pane.Text() && 0 != ::_tcslen(pane.Text())) {
 
 			t_rect rect = pane.Layout().Rect();
-			pane.Layout().Padding().ApplyTo(rect); // this must be done not here;
 
-			text << pane.Text() << rect << clr_normal;
+			rect.left += pane.Layout().Padding().Left();
+
+			pane.Layout().Padding().ApplyTo(rect); // this must be done not here, but there :-D ;
+
+			text << pane.Text() << rect << clr_fnt_norm;
 
 			z_buffer.Draw(text, this->m_font.Handle());
 		}
+	}
+
+	if (nullptr != h_local) {
+		TWindow::ReleaseDC(h_local); h_local = nullptr;
 	}
 
 	err_code n_result = __s_false;  // this message is handled;

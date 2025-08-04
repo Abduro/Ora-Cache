@@ -42,7 +42,7 @@ namespace pane {
 		virtual void  OnTextChanged(const int32_t _pane_id, _pc_sz _p_text = nullptr) const { _pane_id; _p_text; }
 	};
 
-	class CPane {
+	class CPane : public ex_ui::controls::CPane { typedef ex_ui::controls::CPane TBase;
 	public:
 		 CPane (void); CPane (const CPane&); CPane (CPane&&); // this 'move' constructor is just for copying data; 'move' operator is not defined;
 		~CPane (void);
@@ -63,6 +63,8 @@ namespace pane {
 
 		_pc_sz  Text (void) const; // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow ; it should work on text change;
 		bool    Text (_pc_sz)    ; // what should be taken if the text has been just changed? how to call refreshing of the pane?
+
+		bool    Update (void) ;    // applies layout to the pane components;
 
 	public:
 		CPane&  operator = (const CPane&); CPane& operator = (CPane&&) = delete;

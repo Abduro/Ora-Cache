@@ -48,7 +48,7 @@ namespace ex_ui { namespace controls { namespace borders {
 #if (0)
 		COne& operator <<(const CMargin&);
 #else
-		COne& operator <<(const uint32_t _n_id);
+		COne& operator <<(const uint32_t _n_id); // ToDo: this operator overloads the operator of the base class 'line::thickness'; must be reviewed;
 #endif
 	private:
 		uint32_t m_Id;

@@ -12,6 +12,15 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 	using TBase = ex_ui::controls::format::CBase;
 
 namespace format {
+	class CBorders : public ex_ui::controls::format::CBorders { typedef ex_ui::controls::format::CBorders TBase;
+	public:
+		CBorders (void); CBorders (const CBorders&) = delete; CBorders (CBorders&&) = delete; ~CBorders (void) = default;
+
+		err_code  Set (void); // sets color quads' values from currently selected theme;
+
+	private:
+		CBorders& operator = (const CBorders&) = delete; CBorders& operator = (CBorders&&) = delete;
+	};
 }
 	class CFormat : public TBase {
 	friend class  CControl;
@@ -20,6 +29,10 @@ namespace format {
 		~CFormat (void);
 
 	public:
+		const
+		format::CBorders&  Borders (void) const;
+		format::CBorders&  Borders (void) ;
+
 		void Default (void);
 	
 	private:
@@ -28,6 +41,7 @@ namespace format {
 
 	private:
 		CControl&  m_ctrl;
+		format::CBorders  m_borders; // the color of the pane borders; it looks like the name needs to be changed;
 	};
 
 }}}}

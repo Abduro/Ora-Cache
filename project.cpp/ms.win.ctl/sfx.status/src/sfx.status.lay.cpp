@@ -156,6 +156,8 @@ err_code CLayout::Update (void) {
 			rect.right = rc_area.right;
 			rc_area.left = rect.right;
 		}
+
+		pane.Update();
 	} 
 	return n_result;
 }

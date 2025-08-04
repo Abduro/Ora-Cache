@@ -46,7 +46,7 @@ CLayout&  CLayout::operator <<(const uint32_t _n_fixed) { this->Fixed(_n_fixed);
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPane:: CPane (void) : m_pane_id(0), m_evt_sink(0) {}
+CPane:: CPane (void) : TBase(), m_pane_id(0), m_evt_sink(0) {}
 CPane:: CPane (const CPane& _src) : CPane() { *this = _src; } CPane:: CPane (CPane&& _victim) : CPane () { *this = (const CPane&)_victim; }
 CPane::~CPane (void) {}
 
@@ -87,7 +87,11 @@ bool    CPane::Text (_pc_sz _p_text) {
 	return b_changed;
 }
 
-CPane&  CPane::operator = (const CPane& _src) {
+bool    CPane::Update (void) {
+	return this->Borders().Set(this->Layout().Rect());
+}
+
+CPane&  CPane::operator = (const CPane& _src) { (TBase&)*this = (const TBase&)_src;
 	*this << _src.Format() << _src.Layout() << _src.Text() << _src.GetSink() << _src.Id(); return *this;
 }
 
@@ -171,6 +175,7 @@ void  CPanes::OnTextChanged (const int32_t _pane_id, _pc_sz _p_text) const {
 	for (size_t i_ = 0; i_ < this->Raw().size(); i_++) {
 		if (this->Raw().at(i_).Id() == _pane_id) {
 			if (this->m_ctrl.Window().IsWindow()) {
+				// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-physicaltologicalpoint ;
 				// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow ;
 				this->m_ctrl.Window().RedrawWindow(&this->Raw().at(i_).Layout().Rect(), 0, RDW_ERASE|RDW_INVALIDATE);
 				break;

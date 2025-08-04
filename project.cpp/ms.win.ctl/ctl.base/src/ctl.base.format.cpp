@@ -99,6 +99,21 @@ CBkgnd&  CBkgnd::operator <<(const TRgbQuad& _color)    { this->Solid() = _color
 
 /////////////////////////////////////////////////////////////////////////////
 
+namespace ex_ui { namespace controls { namespace format {
+
+CBorders:: CBorders (void) {}
+
+rgb_color CBorders::Dark   (void) const { return this->m_quads[2]; }
+bool      CBorders::Dark   (const rgb_color _clr) { return this->m_quads[2].Set(_clr); }
+
+rgb_color CBorders::Light  (void) const { return this->m_quads[1]; }
+bool      CBorders::Light  (const rgb_color _clr) { return this->m_quads[1].Set(_clr); }
+
+rgb_color CBorders::Normal (void) const { return this->m_quads[0]; }
+bool      CBorders::Normal (const rgb_color _clr) { return this->m_quads[0].Set(_clr); }
+
+}}}
+
 CFontSpec:: CFontSpec (void) : m_fore(::GetSysColor(COLOR_WINDOWTEXT)), m_name(_T("Verdana")), m_size(10) {}
 CFontSpec:: CFontSpec (const CFontSpec& _spec) : CFontSpec() { *this = _spec; }
 CFontSpec::~CFontSpec (void) {}
