@@ -6,6 +6,14 @@
 
 using namespace ebo::boo::gui;
 
+#ifndef __H
+#define __H(rect) (rect.bottom - rect.top)
+#endif
+
+#ifndef __W
+#define __W(rect) (rect.right - rect.left)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ebo { namespace boo { namespace gui { namespace _impl {
@@ -225,8 +233,9 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	::shared::Get_View().Status().Layout().Update(rc_client);
 
 #endif
-#if (0)
-	shared::Get_View().Footer().SetText(TStringEx().Dword(rc_client.right)); // this was made for testing of dynamic update of the status pane text; (passed)
+#if (1)
+	// this was made for testing of dynamic update of the status pane text; (passed)
+	shared::Get_View().Footer().SetText(TStringEx().Format(_T("Ready [%dx%d]"), __W(rc_client), __H(rc_client)));
 #endif
 	err_code n_result = __s_false;
 	return   n_result;

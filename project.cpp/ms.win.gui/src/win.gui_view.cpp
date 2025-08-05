@@ -124,7 +124,7 @@ err_code  CFooter::At_1st(void) {
 
 	out_.Style().Stick() << CLay_Style::CStick::e_right;
 	out_.Style().Width() << CLay_Style::CWidth::e_fixed;
-	out_.Fixed(0x100); // ToDo: needs to have some calculation of the width from expected string pattern length;
+	out_.Fixed(215); // ToDo: needs to have some calculation of the width from expected string pattern length;
 
 	out_.Padding().Left(0x3);
 
