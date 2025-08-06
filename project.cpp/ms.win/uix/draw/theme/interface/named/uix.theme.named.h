@@ -222,6 +222,9 @@ namespace ex_ui { namespace theme {
 
 		TThemePalette Id (void) const;
 		const bool    Id (const TThemePalette, const bool b_update_name);
+		// actually, it is not good approach because it makes the response is dependable on palette identifier;
+		const bool Is_dark (void) const;
+		const bool Is_light(void) const;
 
 #if defined(_DEBUG)
 		CString    Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;

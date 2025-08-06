@@ -660,13 +660,15 @@ CReg_router::CTestCase::~CTestCase (void) {}
 
 CString CReg_router::CTestCase::Control (const uint32_t _ndx) const {
 	_ndx;
-	return CString(TStringEx().Format(_T("%s\\control_%u"), (_pc_sz) this->Root(), _ndx));
+	CString cs_root = this->Root();
+	CString cs_out  = TStringEx().Format(_T("%s\\control_%u"), (_pc_sz) cs_root, _ndx); // removine code 'in one line' is made for debug purposes;
+	return  cs_out;
 }
 
 CString CReg_router::CTestCase::Root (void) const {
 
 	CString cs_root = this->m_router.Theme(); // the current theme must be already loaded by calling ex_ui::theme::Get_current().Load();
-	cs_root += _T("\\test.cases");
+	cs_root += _T("\\Parts\\test.cases");
 
 	return cs_root;
 }

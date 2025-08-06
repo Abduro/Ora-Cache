@@ -109,8 +109,6 @@ err_code  CFooter::At_1st(void) {
 	ex_ui::controls::sfx::status::TPn_Lay& out_ = pane_1.Layout(); out_;
 
 	out_.Style().Width() << CLay_Style::CWidth::e_auto;
-	out_.Image().Margins().Left(0x40);
-
 	out_.Padding().Left(0x5);
 
 	pane_1.Text(_T("Ready"));

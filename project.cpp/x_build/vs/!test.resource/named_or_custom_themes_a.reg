@@ -5,7 +5,7 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Current]
-"PaletteId"=dword:00000001
+"PaletteId"=dword:00000002
 "ThemeIndex"=dword:00000000
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark]
@@ -28,14 +28,14 @@ Windows Registry Editor Version 5.00
 "Disabled"="#181818"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\Parts\Form\Fore]
-@="#e6e6e6"
+@="#aaaaaa"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases]
 "path"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp\\x_build\\vs\\!test.resource\\images\\dark\\"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Dark\Theme#0\test.cases\control_0]
-"image_0"="sta-bar_app_ready_yel_24px_72_res.png"
-"image_1"="sta-bar_wnd_size_yel_24px_72_res.png"
+"image_0"="sta-bar_app_ready_yel_24px_3h_res.png"
+"image_1"="sta-bar_wnd_size_yel_24px_2h_res.png"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light]
 "Count"=dword:00000001
@@ -43,4 +43,26 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0]
 "Name"="MS Word"
 "Description"="This theme is intended for use in cases where it is necessary to make good screenshots for use in an MS Word document."
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts\Form]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts\Form\Back]
+@="#ffffff"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts\Form\Border]
+@="#a3a3a3"
+"Disabled"="#737373"
+"Selected"="#007acc"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts\Form\Fore]
+@="#555555"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts\test.cases]
+"path"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp\\x_build\\vs\\!test.resource\\images\\lite\\"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::boo::renderer\Themes\Light\Theme#0\Parts\test.cases\control_0]
+"image_0"="sta-bar-info-rect-blue-24px-2h.png"
+"image_1"="sta-bar_glyph_blue_24px_2h_res.png"
 

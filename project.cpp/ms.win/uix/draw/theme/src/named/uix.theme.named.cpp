@@ -304,6 +304,9 @@ const bool    CPalette::Id (const TThemePalette _e_id, const bool b_update_name)
 	return b_changed;
 }
 
+const bool CPalette::Is_dark (void) const { return this->Id() == TThemePalette::e_dark ; }
+const bool CPalette::Is_light(void) const { return this->Id() == TThemePalette::e_light; }
+
 #if defined(_DEBUG)
 CString    CPalette::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;

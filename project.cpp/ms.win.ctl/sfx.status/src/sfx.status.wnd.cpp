@@ -5,6 +5,7 @@
 #include "sfx.status.wnd.h"
 #include "sfx.status.ctrl.h"
 
+#include "uix.theme.h"
 #include "uix.theme.named.h"
 
 using namespace ex_ui::controls::sfx::status;
@@ -69,16 +70,21 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	}
 
 	// (2) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
-#define _use_shadow 1
-#if defined(_use_shadow) && (1 == _use_shadow)
-	CBorder shadow = this->m_ctrl.Borders().Top(); shadow.Color() << ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
-	CBorder top_   = this->m_ctrl.Borders().Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
 
-	if (shadow.Is_valid()) { z_buffer.Draw(shadow); }
-#else
-	const CBorder& top_ = this->m_ctrl.Borders().Top();
-#endif
-	if (top_.Is_valid()) { z_buffer.Draw(top_); }
+	if (ex_ui::theme::Get_current().Palette().Is_dark()) {
+
+		const rgb_color clr_shadow = ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
+
+		CBorder shadow = this->m_ctrl.Borders().Top(); shadow.Color() << clr_shadow;
+		CBorder top_   = this->m_ctrl.Borders().Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
+
+		if (shadow.Is_valid()) { z_buffer.Draw(shadow); }
+		if (top_.Is_valid())   { z_buffer.Draw(top_); }
+	}
+	else {
+		const CBorder& top_ = this->m_ctrl.Borders().Top();
+		if (top_.Is_valid())   { z_buffer.Draw(top_); }
+	}
 
 	// (3) draws panes;
 	using TFlags_Horz = ex_ui::draw::text::format::CAlign_Horz::e_value;
@@ -109,10 +115,8 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		const CBorder& brd_left = borders.Left();
 		const CBorder& brd_right = borders.Right();
 
-		if (brd_left.Is_valid() && !!brd_left.Thickness())
-			z_buffer.Draw(brd_left, clr_brd_norm);
-		if (brd_right.Is_valid() && !!brd_right.Thickness())
-			z_buffer.Draw(brd_right, clr_brd_norm);
+		if (brd_left.Is_valid() && !!brd_left.Thickness()) z_buffer.Draw(brd_left, clr_brd_norm);
+		if (brd_right.Is_valid() && !!brd_right.Thickness()) z_buffer.Draw(brd_right, clr_brd_norm);
 
 		if (pane.Text() && 0 != ::_tcslen(pane.Text())) {
 
