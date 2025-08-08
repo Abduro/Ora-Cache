@@ -5,13 +5,13 @@
 	This is Ebo Pack DirectX factory wrapper base interface declaration file;
 */
 #include "direct_x._iface.h"
-#include "direct_x.adapter.h"
-#include "direct_x.device.1.h"
-#include "direct_x.device.2.h"
 #include "direct_x.queue.h"
-#include "direct_x.swap.h"
-#include "direct_x.swap.1.h"
-#include "direct_x.swap.2.h"
+#include "adapter\direct_x.adapter.h"
+#include "device\direct_x.device.1.h"
+#include "device\direct_x.device.2.h"
+#include "swap\direct_x.swap.h"
+#include "swap\direct_x.swap.1.h"
+#include "swap\direct_x.swap.2.h"
 
 namespace ex_ui { namespace draw { namespace direct_x {
 	// https://www.abbreviations.com/abbreviation/factory ;

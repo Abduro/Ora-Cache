@@ -28,7 +28,7 @@
 				theme_v15   : {00000C13-EEEE-BBBB-6667-000000000023} << draw color theme project;
 				gdi.plus_v15: {00000C13-EEEE-BBBB-6667-00000000000A} << GDI+ wrapper project;
 				gdi.zbuf_v15: {00000C13-EEEE-BBBB-6667-00000000000B} << regular GDI memory wrapper project;
-				render_v15  : {00000C13-EEEE-BBBB-6667-000000000044} << 2d/3d renderer project;
+				render_v15  : {00000C13-EEEE-BBBB-6667-000000000044} << 2d/3d renderer project;  (excluded from the build)
 
 			geometry : {00000C13-EEEE-BBBB-6667-100000001220} << this is draw shape geometry node;
 				2D : {00000C13-EEEE-BBBB-6667-100000001221} << 2D geometry node;
@@ -37,6 +37,9 @@
 					geometry.3d_v15 : {00000C13-EEEE-BBBB-6667-000000000034} << 3D space geometry project;
 			popup : {00000C13-EEEE-BBBB-6667-100000001230} << window popup project node;
 				win.popup_v15 : {00000C13-EEEE-BBBB-6667-000000000025} << window popup project;
+
+			rendering : {00000C13-EEEE-BBBB-6667-100000001240} << rendering libs node;
+				rnd.direct.x_v15 : {00000C13-EEEE-BBBB-6667-000000000043} << directX wrapper draw renderer lib; 
 
 		uix.con : {00000C13-EEEE-BBBB-6667-100000001300} << console related projects' node;
 			console.ext_v15 : {00000C13-EEEE-BBBB-6667-E00000000020} << console extension project;

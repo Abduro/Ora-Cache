@@ -2,6 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 02-Apr-2025 at 04:41:06.363, UTC+4, Batumi, Wednesday;
 	This is Ebo Pack 2D/3D draw renderer lib unit test interface implementation file; 
 */
+#include "ebo_test_$d$.render.impl.h"
 #include "ebo_test_$d$.render.h"
 
 using namespace ebo::boo::test::draw;

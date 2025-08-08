@@ -5,8 +5,9 @@
 	This is Ebo Pack DirectX 11 device base wrapper interface declaration file;
 */
 #include "direct_x.device.h"
-#include "direct_x.swap.1.h"
 #include "direct_x.texture.h"
+#include "adapter\direct_x.adapter.1.h"
+#include "swap\direct_x.swap.1.h"
 
 namespace ex_ui { namespace draw { namespace direct_x { namespace _11 {
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 08-Aug-2025 at 13:46:35.877, UTC+4, Batumi, Friday;
+	This is Ebo Pack DirectX renderer project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
+    <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\rnd.direct.x\</ThisLib><!--This project is being compiled; -->
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0><!--*important*::like a VS does, an every path must end up with backslash!-->
+    <_1>$(Root)src\</_1>
+    <_2>$(_0)adapter\</_2>
+    <_3>$(_1)adapter\</_3>
+    <_4>$(_0)buffer\</_4>
+    <_5>$(_1)buffer\</_5>
+    <_6>$(_0)device\</_6>
+    <_7>$(_1)device\</_7>
+    <_8>$(_0)factory\</_8>
+    <_9>$(_1)factory\</_9>
+    <_a>$(_0)swap\</_a>
+    <_b>$(_1)swap\</_b>
+    <_c>$(_0)view\</_c>
+    <_d>$(_1)view\</_d>
+    <_e>$(Shared)interface\</_e>
+    <_f>$(Error)interface\</_f>
+    <_g>$(Color)interface\</_g>
+    <_h>$(Geo-2D)interface\</_h>
+    <_i>$(Render)interface\</_i>
+    <_j></_j>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i)</Include_abc>
+    <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

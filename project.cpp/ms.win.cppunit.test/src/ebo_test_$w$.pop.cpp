@@ -6,13 +6,6 @@
 
 namespace ebo { namespace boo { namespace test {
 
-	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-	using namespace shared::types;
-
-	using CError  = shared::sys_core::CError;
-	using TError  = const CError;
-	using TString = TStringEx   ;
-
 	namespace window {
 	
 		using TPopup = ex_ui::popup::CWndBase;

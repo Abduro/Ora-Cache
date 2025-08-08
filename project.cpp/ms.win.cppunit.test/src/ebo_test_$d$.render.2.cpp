@@ -506,7 +506,7 @@ namespace ebo { namespace boo { namespace test { namespace _impl {
 	};
 
 }}}}
-
+using namespace ebo::boo::test::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
 CSwapDesc:: CSwapDesc (const bool _b_verb) : m_b_verb(_b_verb) {

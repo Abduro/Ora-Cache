@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\adapter">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\adapter">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\buffers">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\buffers">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\device">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\device">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000437}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\factory">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\factory">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\swap">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000043a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\swap">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000043b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\views">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000043c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\views">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-00000000043d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+    <!--_0>$(Root)interface\</_0-->
+    <!--_1>$(Root)src\</_1-->
+    <!--_2>$(_0)adapter\</_2-->
+    <!--_3>$(_1)adapter\</_3-->
+    <!--_4>$(_0)buffer\</_4-->
+    <!--_5>$(_1)buffer\</_5-->
+    <!--_6>$(_0)device\</_6-->
+    <!--_7>$(_1)device\</_7-->
+    <!--_8>$(_0)factory\</_8-->
+    <!--_9>$(_1)factory\</_9-->
+    <!--_a>$(_0)swap\</_a-->
+    <!--_b>$(_1)swap\</_b-->
+    <!--_c>$(_0)view\</_c-->
+    <!--_d>$(_1)view\</_d-->
+  <ItemGroup>
+    <ClInclude Include="$(_0)direct_x._iface.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x._iface.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.h" ><Filter>interface\adapter</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.cpp" ><Filter>src\adapter</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.1.h" ><Filter>interface\adapter</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.1.cpp" ><Filter>src\adapter</Filter></ClCompile>
+    <ClInclude Include="$(_2)direct_x.adapter.2.h" ><Filter>interface\adapter</Filter></ClInclude>
+    <ClCompile Include="$(_3)direct_x.adapter.2.cpp" ><Filter>src\adapter</Filter></ClCompile>
+    <ClInclude Include="$(_6)direct_x.device.h" ><Filter>interface\device</Filter></ClInclude>
+    <ClCompile Include="$(_7)direct_x.device.cpp" ><Filter>src\device</Filter></ClCompile>
+    <ClInclude Include="$(_6)direct_x.device.1.h" ><Filter>interface\device</Filter></ClInclude>
+    <ClCompile Include="$(_7)direct_x.device.1.cpp" ><Filter>src\device</Filter></ClCompile>
+    <ClInclude Include="$(_6)direct_x.device.2.h" ><Filter>interface\device</Filter></ClInclude>
+    <ClCompile Include="$(_7)direct_x.device.2.cpp" ><Filter>src\device</Filter></ClCompile>
+    <ClInclude Include="$(_8)direct_x.factory.h" ><Filter>interface\factory</Filter></ClInclude>
+    <ClCompile Include="$(_9)direct_x.factory.cpp" ><Filter>src\factory</Filter></ClCompile>
+    <ClInclude Include="$(_8)direct_x.factory.1.h" ><Filter>interface\factory</Filter></ClInclude>
+    <ClCompile Include="$(_9)direct_x.factory.1.cpp" ><Filter>src\factory</Filter></ClCompile>
+    <ClInclude Include="$(_8)direct_x.factory.2.h" ><Filter>interface\factory</Filter></ClInclude>
+    <ClCompile Include="$(_9)direct_x.factory.2.cpp" ><Filter>src\factory</Filter></ClCompile>
+    <ClInclude Include="$(_0)direct_x.feature.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x.feature.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)direct_x.format.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x.format.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)direct_x.output.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x.output.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)direct_x.queue.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x.queue.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_a)direct_x.swap.h" ><Filter>interface\swap</Filter></ClInclude>
+    <ClCompile Include="$(_b)direct_x.swap.cpp" ><Filter>src\swap</Filter></ClCompile>
+    <ClInclude Include="$(_a)direct_x.swap.1.h" ><Filter>interface\swap</Filter></ClInclude>
+    <ClCompile Include="$(_b)direct_x.swap.1.cpp" ><Filter>src\swap</Filter></ClCompile>
+    <ClInclude Include="$(_a)direct_x.swap.2.h" ><Filter>interface\swap</Filter></ClInclude>
+    <ClCompile Include="$(_b)direct_x.swap.2.cpp" ><Filter>src\swap</Filter></ClCompile>
+    <ClInclude Include="$(_0)direct_x.texture.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x.texture.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_4)direct_x.buffer.h" ><Filter>interface\buffers</Filter></ClInclude>
+    <ClCompile Include="$(_5)direct_x.buffer.cpp" ><Filter>src\buffers</Filter></ClCompile>
+    <ClInclude Include="$(_4)direct_x.buf.vertex.h" ><Filter>interface\buffers</Filter></ClInclude>
+    <ClCompile Include="$(_5)direct_x.buf.vertex.cpp" ><Filter>src\buffers</Filter></ClCompile>
+    <ClInclude Include="$(_0)direct_x.res.flag.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)direct_x.res.flag.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_c)direct_x.view.h" ><Filter>interface\views</Filter></ClInclude>
+    <ClCompile Include="$(_d)direct_x.view.cpp" ><Filter>src\views</Filter></ClCompile>
+    <ClInclude Include="$(_c)direct_x.view.stencil.h" ><Filter>interface\views</Filter></ClInclude>
+    <ClCompile Include="$(_d)direct_x.view.stencil.cpp" ><Filter>src\views</Filter></ClCompile>
+    <ClInclude Include="$(_c)direct_x.view.target.h" ><Filter>interface\views</Filter></ClInclude>
+    <ClCompile Include="$(_d)direct_x.view.target.cpp" ><Filter>src\views</Filter></ClCompile>
+  </ItemGroup>
+</Project>

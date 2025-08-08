@@ -8,8 +8,6 @@
 
 namespace ebo { namespace boo { namespace test {
 
-	using namespace shared::types;
-
 	static _pc_sz _p_pfx = _T("\t\t");         // the indentation at the start of the line;
 	static _pc_sz _p_sfx = _T("\n");           // new line only;
 	static _pc_sz _p_new_line = _T("\n\t\t");  // new line with indentation;

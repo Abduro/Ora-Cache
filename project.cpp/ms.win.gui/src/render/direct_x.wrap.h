@@ -7,9 +7,10 @@
 #include "win.gui.inc.h"
 #include "handlers.h"
 
-#include "direct_x.device.1.h"
-#include "direct_x.view.target.h"
 #include "direct_x.texture.h"
+#include "device\direct_x.device.1.h"
+#include "view\direct_x.view.target.h"
+
 
 namespace ebo { namespace boo { namespace gui { namespace render {
 

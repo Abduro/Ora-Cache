@@ -8,53 +8,44 @@
 */
 #include "_log.h"
 
-#include "sys.error.h"
 #include "direct_x._iface.h"
 
-#include "direct_x.adapter.h"
-#include "direct_x.adapter.1.h"
-#include "direct_x.adapter.2.h"
+#include ".\adapter\direct_x.adapter.h"    // without specifying '.\' the compiler cannot find the file being included;
+#include ".\adapter\direct_x.adapter.1.h"
+#include ".\adapter\direct_x.adapter.2.h"
 
-#include "direct_x.device.h"
-#include "direct_x.device.1.h"
-#include "direct_x.device.2.h"
-
-#include "direct_x.factory.h"
-#include "direct_x.factory.1.h"
-#include "direct_x.factory.2.h"
-
+#include ".\device\direct_x.device.h"
+#include ".\device\direct_x.device.1.h"
+#include ".\device\direct_x.device.2.h"
+#if (0) // included in ebo_test_$d$.render.impl.h ;
+#include ".\factory\direct_x.factory.h"
+#include ".\factory\direct_x.factory.1.h"
+#include ".\factory\direct_x.factory.2.h"
+#endif
 #include "direct_x.queue.h"
-
-#include "direct_x.swap.h"
-#include "direct_x.swap.1.h"
-#include "direct_x.swap.2.h"
-
-#include "direct_x.view.h"
-#include "direct_x.view.stencil.h"
-#include "direct_x.view.target.h"
+#if (0) // included in ebo_test_$d$.render.impl.h ;
+#include ".\swap\direct_x.swap.h"
+#include ".\swap\direct_x.swap.1.h"
+#include ".\swap\direct_x.swap.2.h"
+#endif
+#include ".\view\direct_x.view.h"
+#include ".\view\direct_x.view.stencil.h"
+#include ".\view\direct_x.view.target.h"
 
 #include "render.base.h"
 #include "ebo_test_$d$.render.impl.h"
 
 namespace ebo { namespace boo { namespace test { namespace draw {
 
-	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
-	// https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp ;
-
-	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-	using namespace shared::types;
-
-	using namespace ebo::boo::test::_impl;
-
-	using CError  = shared::sys_core::CError;
-	using TError  = const CError;
-	using TString = TStringEx   ;
+	using namespace ebo::boo::test;
 
 	using TDrv_type = ex_ui::draw::direct_x::CDrv_Type::e_type;
 
 	using IBufferSink = ex_ui::draw::direct_x::IBuffer_Sync;
 	using TBuffer = ex_ui::draw::direct_x::CBuffer;
 	using TUsage = ex_ui::draw::direct_x::CBuff_Usage::e_usage;
+
+	using CBuff_Sync = ebo::boo::test::_impl::CBuff_Sync;
 
 	__class(CBuffer) {
 	public:
@@ -91,6 +82,8 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 	using ISample_Sync = ex_ui::draw::direct_x::ISample_Sync;
 	using TSample = ex_ui::draw::direct_x::CSample;
 
+	using CSample_Sync = ebo::boo::test::_impl::CSample_Sync;
+
 	__class(CSample) {
 	public:
 		 CSample (const bool _b_verb = false);
@@ -108,7 +101,7 @@ namespace ebo { namespace boo { namespace test { namespace draw {
 }}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
-#pragma comment(lib, "render_v15.lib")       // this one must be tested by this unit test project;
+#pragma comment(lib, "rnd.direct.x_v15.lib") // this one must be tested by this unit test project; actually, new test cases for direct x must be created;
 #pragma comment(lib, "sys.err.core_v15.lib") // for using error object;
 #pragma comment(lib, "sys.shared_v15.lib")   // this is the shared base;
 

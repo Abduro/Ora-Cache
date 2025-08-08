@@ -14,7 +14,7 @@
 #pragma comment(lib, "gdi.zbuf_v15.lib")       // in-memory device context for GUI elements;
 #pragma comment(lib, "geometry.2D_v15.lib")    // generic shapes;
 #pragma comment(lib, "image_v15.lib")          // image cache ;
-#pragma comment(lib, "render_v15.lib")         // graphic render;
+#pragma comment(lib, "rnd.direct.x_v15.lib")   // DirectX graphic render;
 
 #pragma comment(lib, "sfx.status_v15.lib")     // status bar user common control;
 #pragma comment(lib, "sfx.tabbed_v15.lib")     // tabbed control common control;
@@ -25,7 +25,7 @@
 
 #pragma comment(lib, "theme_v15.lib")          // color theme support;
 #pragma comment(lib, "win.popup_v15.lib")      // window message handlers;
-#if (0)
+#if (0) // it is required to remove the output to the 'test output' panel that uses test framework reference;
 #pragma comment(lib, "ebo_test_$$t.case.draw.lib")  // test cases of draw helpers, such as, loading image files and adding them to the image list;
 #pragma comment(lib, "ebo_test_$$t.case.theme.lib") // test cases of theme lib that allow to get path to theme images' files;
 #endif

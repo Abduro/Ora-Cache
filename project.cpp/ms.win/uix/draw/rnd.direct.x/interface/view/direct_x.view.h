@@ -5,9 +5,9 @@
 	This is Ebo Pack DirectX generic view interface declaration file;
 */
 #include "direct_x._iface.h"
-#include "direct_x.device.1.h"  // this is what that creates a view;
-#include "direct_x.format.h"    // this is what that defines a color format;
-#include "direct_x.texture.h"   // this is what that is draw surface;
+#include "direct_x.format.h"           // this is what that defines a color format;
+#include "direct_x.texture.h"          // this is what that is draw surface;
+#include "device\direct_x.device.1.h"  // this is what that creates a view;
 
 namespace ex_ui { namespace draw { namespace direct_x { namespace views {
 

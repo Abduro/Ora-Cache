@@ -7,19 +7,19 @@
 	*Important* : this project must refer to the same Windows SDK version as render project does (10.0.18362.0);
 */
 #include "_log.h"
-#include "direct_x.device.h"
-#include "direct_x.factory.h"
-#include "direct_x.factory.1.h"
-#include "direct_x.factory.2.h"
-#include "direct_x.swap.h"
-#include "direct_x.swap.1.h"
-#include "direct_x.swap.2.h"
+#include ".\device\direct_x.device.h"
+#include ".\factory\direct_x.factory.h"
+#include ".\factory\direct_x.factory.1.h"
+#include ".\factory\direct_x.factory.2.h"
+#include ".\swap\direct_x.swap.h"
+#include ".\swap\direct_x.swap.1.h"
+#include ".\swap\direct_x.swap.2.h"
 
 namespace ebo { namespace boo { namespace test { namespace _impl {
 
+	using namespace ebo::boo::test;
+
 	using CWindow = ::ATL::CWindow;
-	using CError  = shared::sys_core::CError;
-	using TError  = const CError;
 
 	using IBufferSink = ex_ui::draw::direct_x::IBuffer_Sync;
 

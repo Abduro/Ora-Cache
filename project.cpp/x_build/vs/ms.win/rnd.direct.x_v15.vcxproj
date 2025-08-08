@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000044}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000043}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="rnd.direct.x.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="rnd.direct.x.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="rnd.direct.x.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="render.inc.props" />
+    <Import Project="rnd.direct.x.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -177,9 +177,69 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+    <!--_0>$(Root)interface\</_0-->
+    <!--_1>$(Root)src\</_1-->
+    <!--_2>$(_0)adapter\</_2-->
+    <!--_3>$(_1)adapter\</_3-->
+    <!--_4>$(_0)buffer\</_4-->
+    <!--_5>$(_1)buffer\</_5-->
+    <!--_6>$(_0)device\</_6-->
+    <!--_7>$(_1)device\</_7-->
+    <!--_8>$(_0)factory\</_8-->
+    <!--_9>$(_1)factory\</_9-->
+    <!--_a>$(_0)swap\</_a-->
+    <!--_b>$(_1)swap\</_b-->
+    <!--_c>$(_0)view\</_c-->
+    <!--_d>$(_1)view\</_d-->
   <ItemGroup>
-    <ClInclude Include="$(_0)render.base.h" />
-    <ClCompile Include="$(_1)render.base.cpp" />
+    <ClInclude Include="$(_0)direct_x._iface.h" />
+    <ClCompile Include="$(_1)direct_x._iface.cpp" />
+    <ClInclude Include="$(_2)direct_x.adapter.h" />
+    <ClCompile Include="$(_3)direct_x.adapter.cpp" />
+    <ClInclude Include="$(_2)direct_x.adapter.1.h" />
+    <ClCompile Include="$(_3)direct_x.adapter.1.cpp" />
+    <ClInclude Include="$(_2)direct_x.adapter.2.h" />
+    <ClCompile Include="$(_3)direct_x.adapter.2.cpp" />
+    <ClInclude Include="$(_6)direct_x.device.h" />
+    <ClCompile Include="$(_7)direct_x.device.cpp" />
+    <ClInclude Include="$(_6)direct_x.device.1.h" />
+    <ClCompile Include="$(_7)direct_x.device.1.cpp" />
+    <ClInclude Include="$(_6)direct_x.device.2.h" />
+    <ClCompile Include="$(_7)direct_x.device.2.cpp" />
+    <ClInclude Include="$(_8)direct_x.factory.h" />
+    <ClCompile Include="$(_9)direct_x.factory.cpp" />
+    <ClInclude Include="$(_8)direct_x.factory.1.h" />
+    <ClCompile Include="$(_9)direct_x.factory.1.cpp" />
+    <ClInclude Include="$(_8)direct_x.factory.2.h" />
+    <ClCompile Include="$(_9)direct_x.factory.2.cpp" />
+    <ClInclude Include="$(_0)direct_x.feature.h" />
+    <ClCompile Include="$(_1)direct_x.feature.cpp" />
+    <ClInclude Include="$(_0)direct_x.format.h" />
+    <ClCompile Include="$(_1)direct_x.format.cpp" />
+    <ClInclude Include="$(_0)direct_x.output.h" />
+    <ClCompile Include="$(_1)direct_x.output.cpp" />
+    <ClInclude Include="$(_0)direct_x.queue.h" />
+    <ClCompile Include="$(_1)direct_x.queue.cpp" />
+    <ClInclude Include="$(_a)direct_x.swap.h" />
+    <ClCompile Include="$(_b)direct_x.swap.cpp" />
+    <ClInclude Include="$(_a)direct_x.swap.1.h" />
+    <ClCompile Include="$(_b)direct_x.swap.1.cpp" />
+    <ClInclude Include="$(_a)direct_x.swap.2.h" />
+    <ClCompile Include="$(_b)direct_x.swap.2.cpp" />
+    <ClInclude Include="$(_0)direct_x.texture.h" />
+    <ClCompile Include="$(_1)direct_x.texture.cpp" />
+    <ClInclude Include="$(_4)direct_x.buffer.h" />
+    <ClCompile Include="$(_5)direct_x.buffer.cpp" />
+    <ClInclude Include="$(_4)direct_x.buf.vertex.h" />
+    <ClCompile Include="$(_5)direct_x.buf.vertex.cpp" />
+    <ClInclude Include="$(_0)direct_x.res.flag.h" />
+    <ClCompile Include="$(_1)direct_x.res.flag.cpp" />
+    <ClInclude Include="$(_c)direct_x.view.h" />
+    <ClCompile Include="$(_d)direct_x.view.cpp" />
+    <ClInclude Include="$(_c)direct_x.view.stencil.h" />
+    <ClCompile Include="$(_d)direct_x.view.stencil.cpp" />
+    <ClInclude Include="$(_c)direct_x.view.target.h" />
+    <ClCompile Include="$(_d)direct_x.view.target.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

@@ -15,6 +15,7 @@
     <Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell>
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d>
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <DirectX Condition="'$(DirectX)'==''">..\..\..\ms.win\uix\draw\rnd.direct.x\</DirectX>
     <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
     <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop>
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL>
@@ -52,7 +53,7 @@
     <_j>$(Win-pop)interface\</_j>
     <_k>$(Win-pop)interface\msg_handlers\</_k>
     <_l>$(Render)interface\</_l>
-    <_m>$(Render)interface\direct_x\</_m>
+    <_m>$(DirectX)interface\</_m>
     <_n>$(ZBuffer)interface\</_n>
     <_o>$(CtlBase)interface\</_o>
     <_p>$(SfxStatus)interface\</_p>
