@@ -34,6 +34,7 @@ namespace ebo { namespace boo { namespace gui {
 		CSta_bar& Get (void) ;
 
 		err_code  OnCreate  (void) ; // this method must be called from main window on 'create' event handler; *status bar* must be ready;
+		err_code  OnDestroy (void) ;
 
 		void  SetText(_pc_sz _p_text, const uint16_t _pane_ndx = 1);
 
@@ -45,6 +46,27 @@ namespace ebo { namespace boo { namespace gui {
 		CError   m_error;
 		CSta_bar m_bar  ;
 		shared::common::CStdTimer m_timer;
+	};
+
+	class CPages {
+	public:
+		 CPages (void); CPages (const CPages&) = delete; CPages (CPages&&) = delete;
+		~CPages (void);
+
+	public:
+		err_code  At_1st(void) ;     // this is just *before* creating tabbed control window: all tabs and their pages must be formatted and added;
+		TError&   Error (void) const;
+		const
+		CTabbed&  Get (void) const;
+		CTabbed&  Get (void) ;
+
+		err_code  OnCreate (void) ;
+		err_code  OnDestroy(void) ;
+
+	private:
+		CPages& operator = (const CPages&) = delete; CPages& operator = (CPages&&) = delete;
+		CError   m_error ;
+		CTabbed  m_tabbed;
 	};
 
 	// this is the view of the main window;
@@ -64,9 +86,12 @@ namespace ebo { namespace boo { namespace gui {
 		CFooter&  Footer (void) const;
 		CFooter&  Footer (void) ;
 
-		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;  
+		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;
+		err_code  OnDestroy(void);     // it suould be called from main window destroy event handler;
 		err_code  OnDraw (const HDC, const t_rect& _drw_area);
-
+		const
+		CPages&   Pages (void) const;
+		CPages&   Pages (void) ;
 		const
 		CWindow&  Parent (void) const; // this is main window handle actually; (ro)
 		CWindow&  Parent (void) ;      // this is main window handle actually; (rw)
@@ -78,11 +103,11 @@ namespace ebo { namespace boo { namespace gui {
 		const
 		CSurface& Surface(void) const;
 		CSurface& Surface(void) ;
-
+#if (0)
 		const
 		CTabbed&  Tabbed (void) const;
 		CTabbed&  Tabbed (void) ;
-
+#endif
 	public:
 		CView& operator = (const CView&) = delete;
 		CView& operator = (CView&&) = delete;
@@ -96,8 +121,9 @@ namespace ebo { namespace boo { namespace gui {
 		CSurface m_surface;
 #if (0)
 		CStatus  m_status ;
-#endif
 		CTabbed  m_tabbed ;
+#endif
+		CPages   m_pages  ;
 	};
 
 }}}

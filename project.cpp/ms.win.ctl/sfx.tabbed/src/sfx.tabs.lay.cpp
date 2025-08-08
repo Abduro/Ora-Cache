@@ -316,7 +316,7 @@ err_code CActiveTab::Set (const t_rect& _rect) {
 			CPoint g_(f_.X(), d_.Y());
 			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
 
-			CPoint h_(g_.X(), a_.Y()); // possible the 'h' point may coincident with the 'g' point if the active tab index equals to '0'; 
+			CPoint h_(a_.X(), g_.Y()); // possible the 'h' point may coincident with the 'g' point if the active tab index equals to '0'; 
 			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // this border may have '0' length;
 
 			CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;

@@ -101,6 +101,8 @@ err_code CWnd::IEvtLife_OnClose  (const w_param, const l_param) {
 	return   n_result;
 }
 
+#define _not_used 1
+
 err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 
 	err_code n_result = __s_false;
@@ -114,20 +116,16 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
 	::shared::Get_View().Parent() = *this;
-#if (0)
-	::shared::Get_View().Footer().Get().Create(*this, 0xA); // no error handling is made yet;
-#else
-	::shared::Get_View().Footer().At_1st();
-	::shared::Get_View().OnCreate();
 #endif
-#endif
-#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2) && !defined(_not_used)
 	::shared::Get_View().Tabbed().Create(*this, 0xB);
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 3)
 	t_rect rc_surface = m_layout.DrawArea();
 	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
 #endif
+
+	::shared::Get_View().OnCreate();
 
 	t_rect rc_client = {0};
 	this->GetClientRect(&rc_client);
@@ -149,13 +147,10 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 	if (shared::Get_View().Surface())
 		shared::Get_View().Surface().DestroyWindow();
 #endif
-#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
-	::shared::Get_View().Tabbed().Destroy();
-#endif
-#if defined(_test_case_lvl) && (_test_case_lvl >= 1)
-	::shared::Get_View().Footer().Get().Destroy(); // no error handling is made yet;
-#endif
-	return   n_result;
+
+	::shared::Get_View().OnDestroy();
+
+	return n_result;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -13,12 +13,15 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 
 	using CFont = ex_ui::draw::CFont;
 
+	using IBtnsEvtSink = ex_ui::message::handlers::mouse::buttons::IBtnEventSink;
 	using IDrawEvtSink = ex_ui::message::handlers::draw::IDrawEventSink;
 	using IFormEvtSink = ex_ui::message::handlers::frame::IFrameEventSink;
 	using ILifeEvtSink = ex_ui::message::handlers::life::ILifeEvtSink;
-	using ex_ui::popup::CWndBase;
 
-	class CWnd : public CWndBase, IDrawEvtSink, ILifeEvtSink, IFormEvtSink { typedef CWndBase TWindow;
+	using ex_ui::popup::CWndBase;
+	using CEvent = ex_ui::message::handlers::mouse::buttons::CEvent;
+
+	class CWnd : public CWndBase, IDrawEvtSink, ILifeEvtSink, IFormEvtSink, IBtnsEvtSink { typedef CWndBase TWindow;
 	public:
 		 CWnd (CControl&) ; CWnd (void) = delete; CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;
 		~CWnd (void) ;
@@ -33,13 +36,17 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		err_code IEvtDraw_OnErase   (const HDC _dev_ctx) override final;
 		err_code IEvtDraw_OnPaint   (const w_param, const l_param) override final;
 
+	private: // IFormEvtSink override(s); 
+		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, t_rect*) override final;
+
+	private: // IBtnsEvtSink override;
+		err_code IEvtButton_OnReceive(const CEvent&) override final;
+
 	private:  // ILifeEvtSink override(s);
 		err_code IEvtLife_OnCreate  (const w_param, const l_param) override final;
 		err_code IEvtLife_OnDestroy (const w_param, const l_param) override final;
 
-	private: // IFormEvtSink override(s); 
-		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
-		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, t_rect*) override final;
 #pragma endregion
 	private:
 		CWnd& operator = (const CWnd&) = delete;

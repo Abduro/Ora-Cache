@@ -75,6 +75,11 @@ TError&   CControl::Error  (void) const { return this->m_error ; }
 const
 CFormat&  CControl::Format (void) const { return this->m_format; }
 CFormat&  CControl::Format (void)       { return this->m_format; }
+
+bool      CControl::Is_valid (void) const {
+	return nullptr != m_wnd_ptr && true == !!_wnd_ref(m_wnd_ptr).IsWindow();
+}
+
 const
 CLayout&  CControl::Layout (void) const { return this->m_layout; }
 CLayout&  CControl::Layout (void)       { return this->m_layout; }

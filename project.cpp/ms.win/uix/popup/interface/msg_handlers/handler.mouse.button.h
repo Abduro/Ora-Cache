@@ -192,7 +192,10 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 	*/
 
 	interface IBtnEventSink {
-		virtual err_code IEvtButton_OnReceive(const CEvent&);
+		virtual err_code IEvtButton_OnReceive(const CEvent&) {
+			// returned result is __s_ok (0) if the message is handled, __s_false if not handled, otherwise the error code;
+			return __s_false; 
+		}
 	};
 
 	class CHandler : public CBase { typedef CBase TBase;

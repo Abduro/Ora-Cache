@@ -176,6 +176,17 @@ err_code  CFooter::OnCreate (void) {
 	return this->Error();
 }
 
+err_code CFooter::OnDestroy (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CSta_bar& sta_bar = this->Get();
+
+	if (__failed(sta_bar.Destroy()))
+		this->m_error = sta_bar.Error();
+
+	return this->Error();
+}
+
 void  CFooter::SetText(_pc_sz _p_text, const uint16_t _pane_ndx/* = 1*/) {
 	_p_text; _pane_ndx;
 	this->Get().Panes().Pane(_pane_ndx).Text(_p_text);
@@ -184,6 +195,62 @@ void  CFooter::SetText(_pc_sz _p_text, const uint16_t _pane_ndx/* = 1*/) {
 void  CFooter::IWaitable_OnComplete (void) {
 
 	this->Get().Panes().Pane(2).Text((_pc_sz) Get_entry_point());
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPages:: CPages (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CPages::~CPages (void) {}
+
+err_code CPages::At_1st(void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CTabbed& tabbed = this->Get(); tabbed;
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+
+	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
+
+	tabbed.Layout().Tabs().Side(TSide::e_top);
+	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
+
+	tabbed.Tabs().Append(1, _T("DirectX"));
+	tabbed.Tabs().Append(2, _T("OpenGL"));
+
+#endif
+	return this->Error();
+}
+
+TError&  CPages::Error (void) const { return this->m_error; }
+const
+CTabbed& CPages::Get (void) const { return this->m_tabbed; }
+CTabbed& CPages::Get (void)       { return this->m_tabbed; }
+
+err_code CPages::OnCreate (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Get().Is_valid())
+		return this->m_error = (err_code) TErrCodes::eObject::eExists;
+
+	if (!shared::Get_View().Parent())
+		return this->m_error = __e_hwnd;
+
+	CTabbed& tabbed = this->Get();
+	// (1) creates tabbed user control;
+	if (__failed(tabbed.Create(shared::Get_View().Parent(), 0xB)))
+		return this->m_error = tabbed.Error();
+
+	return this->Error();
+}
+
+err_code CPages::OnDestroy(void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CTabbed& tabbed = this->Get();
+
+	if (__failed(tabbed.Destroy()))
+		this->m_error = tabbed.Error();
+
+	return this->Error();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -201,7 +268,7 @@ CView:: CView (void) {
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
-#define _use_case 0
+#define _use_case -1 // this set of unit tests is no longer used;
 
 #if defined(_use_case) && (_use_case == 0)   // sets tabs layout on the top side and the horizontal align from the left side;
 	this->Tabbed().Layout().Tabs().Side(TSide::e_top);
@@ -231,7 +298,6 @@ CView:: CView (void) {
 	this->Tabbed().Layout().Tabs().Side(TSide::e_bottom);
 	this->Tabbed().Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
 #endif
- 	this->Tabbed().Tabs().Append(1, _T("DirectX"));
 	/*
 		the exact name is very important and can be seen in the system font viewer:
 		Control Panel >> Appearance and Personalization >> Fonts >> double click on 'Pirulen Regular' item;
@@ -251,7 +317,20 @@ err_code CView::OnCreate (void) {
 
 	err_code n_result = __s_ok;
 
-	n_result = this->Footer().OnCreate();
+	n_result = this->Footer().At_1st();
+	n_result = this->Pages().At_1st();
+
+	n_result = this->Footer().OnCreate(); if (__failed(n_result)) return n_result;
+	n_result = this->Pages().OnCreate(); if (__failed(n_result)) return n_result; // it is very discussable to exit on error throw;
+
+	return n_result;
+}
+
+err_code CView::OnDestroy (void) {
+	err_code n_result = __s_ok;
+
+	this->Footer().OnDestroy(); // no error handling is made yet;
+	this->Pages().OnDestroy();
 
 	return n_result;
 }
@@ -266,7 +345,7 @@ err_code CView::OnDraw (const HDC _h_dc, const t_rect& _drw_area) {
 	n_result = this->Footer().Get().Refresh();
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
-	n_result = this->Tabbed().Refresh();
+	n_result = this->Pages().Get().Refresh();
 #endif
 	return n_result;
 }
@@ -279,6 +358,9 @@ ex_ui::controls::sfx::CPane&    CView::Pane (void)       { return this->m_pane; 
 const
 CWindow&  CView::Parent (void) const { return this->m_parent; }
 CWindow&  CView::Parent (void)       { return this->m_parent; }
+const
+CPages&   CView::Pages (void) const { return this->m_pages; }
+CPages&   CView::Pages (void)       { return this->m_pages; }
 #if (0)
 const
 CStatus&  CView::Status (void) const { return this->m_status; }
@@ -287,11 +369,11 @@ CStatus&  CView::Status (void)       { return this->m_status; }
 const
 CSurface& CView::Surface(void) const { return this->m_surface; }
 CSurface& CView::Surface(void)       { return this->m_surface; }
-
+#if (0)
 const
 CTabbed&  CView::Tabbed (void) const { return this->m_tabbed; }
 CTabbed&  CView::Tabbed (void)       { return this->m_tabbed; }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 namespace shared {

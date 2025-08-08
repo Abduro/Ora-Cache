@@ -129,7 +129,7 @@ err_code  CLayout::Update (const t_rect& _rect) {
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
-	::shared::Get_View().Tabbed().Layout().Update(this->m_draw_area);
+	::shared::Get_View().Pages().Get().Layout().Update(this->m_draw_area);
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 3)
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
