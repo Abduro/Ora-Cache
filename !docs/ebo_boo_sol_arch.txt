@@ -39,7 +39,8 @@
 				win.popup_v15 : {00000C13-EEEE-BBBB-6667-000000000025} << window popup project;
 
 			rendering : {00000C13-EEEE-BBBB-6667-100000001240} << rendering libs node;
-				rnd.direct.x_v15 : {00000C13-EEEE-BBBB-6667-000000000043} << directX wrapper draw renderer lib; 
+				rnd.direct.x_v15 : {00000C13-EEEE-BBBB-6667-000000000043} << DirectX wrapper draw renderer lib;
+				rnd.open.gl_v15  : {00000C13-EEEE-BBBB-6667-000000000042} << OpenGL wrapper draw renderer lib;
 
 		uix.con : {00000C13-EEEE-BBBB-6667-100000001300} << console related projects' node;
 			console.ext_v15 : {00000C13-EEEE-BBBB-6667-E00000000020} << console extension project;

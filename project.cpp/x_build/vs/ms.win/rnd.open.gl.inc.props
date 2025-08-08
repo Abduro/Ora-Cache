@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 08-Aug-2025 at 23:59:59.766, UTC+4, Batumi, Friday;
+	This is Ebo Pack DirectX renderer project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <!--*important*::like a VS does, an every path must end up with backslash!-->
+    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
+    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
+    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
+    <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
+    <Render Condition="'$(Render)'==''">..\..\..\ms.win\uix\draw\render\</Render>
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win\uix\draw\rnd.open.gl\</ThisLib><!--This project is being compiled; -->
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!--this nodes must be specified directly in paths of project files!-->
+    <_0>$(Root)interface\</_0>
+    <_1>$(Root)src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Error)interface\</_3>
+    <_4>$(Color)interface\</_4>
+    <_5>$(Geo-2D)interface\</_5>
+    <_6>$(Render)interface\</_6>
+    <_j></_j>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6)</Include_0_9>
+    <Include_abc></Include_abc>
+    <IncludePath>$(Include_0_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>
