@@ -24,6 +24,7 @@
     <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
     <SfxStatus Condition="'$(SfxStatus)'==''">..\..\..\ms.win.ctl\sfx.status\</SfxStatus> <!--Sfx::Status::CControl >> statusbar ctrl!-->
     <SfxTabbed Condition="'$(SfxTabbed)'==''">..\..\..\ms.win.ctl\sfx.tabbed\</SfxTabbed> <!--Sfx::Tabbed::CControl >> tabbed set ctrl!-->
+    <SfxTrack Condition="'$(SfxTrack)'==''">..\..\..\ms.win.ctl\sfx.trkball\</SfxTrack> <!--Sfx::Track::CControl >> trackball ctrl!-->
     <ThisExe Condition="'$(ThisExe)'==''">..\..\..\ms.win.gui\</ThisExe>
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
   </PropertyGroup>
@@ -59,10 +60,11 @@
     <_p>$(SfxStatus)interface\</_p>
     <_q>$(SfxTabbed)interface\</_q>
     <_r>$(Image)interface\</_r>
+    <_s>$(SfxTrack)interface\</_s>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q);$(_r)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q);$(_r);$(_s)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />

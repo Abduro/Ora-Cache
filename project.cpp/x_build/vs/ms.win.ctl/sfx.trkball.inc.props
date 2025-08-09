@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 04-Jun-2025 at 16:54:54.404, UTC+4, Batumi, Wednesday;
-	This is Ebo Pack status bar user control project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 09-Aug-2025 at 11:22:45.870, UTC+4, Batumi, Saturday;
+	This is Ebo Pack trackball user control project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -10,19 +10,15 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
     <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <!--ComCore Condition="'$(ComCore)'==''">..\..\..\ms.win\sys.com.core\</ComCore-->
-    <!--Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory-->
-    <!--Shell Condition="'$(Shell)'==''">..\..\..\ms.win\sys.shell\</Shell-->
     <Geo-2d Condition="'$(Geo-2d)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2d><!--For this control elements' layout; -->
     <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color><!--For this control draw by using rgba color; -->
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme><!--For this control draw in accordance with current theme; -->
     <Win-pop Condition="'$(Win-pop)'==''">..\..\..\ms.win\uix\popup\</Win-pop><!--For creating this control window; -->
     <Image Condition="'$(Image)'==''">..\..\..\ms.win\uix\draw\image\</Image><!--For this control pane elements' image set; -->
     <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL><!--This is required by z-buffer renderer; -->
-    <!--MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML-->
     <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer><!--For drawing this control elements or primitives; -->
     <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\sfx.status\</ThisLib> <!--This project is being built!-->
+    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\sfx.g.track\</ThisLib> <!--This project is being built!-->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
@@ -32,9 +28,9 @@
     <_1>$(Root)src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Error)interface\</_3>
-    <!--_4>$(Memory)interface\</_4-->
-    <!--_5>$(ComCore)interface\</_5-->
-    <!--_6>$(Shell)interface\</_6-->
+    <_4></_4>
+    <_5></_5>
+    <_6></_6>
     <_7>$(Geo-2d)interface\</_7>
     <_8>$(Color)interface\</_8>
     <_9>$(Color)interface\compl\</_9>
@@ -43,8 +39,8 @@
     <_c>$(Win-pop)interface\msg_handlers\</_c>
     <_d>$(MS-WTL)include\</_d>
     <_e>$(ZBuffer)interface\</_e>
-    <!--_f>$(MS-XML)interface\</_f-->
-    <!--_g>$(MS-XML)interface\data\</_g-->
+    <_f></_f>
+    <_g></_g>
     <_f>$(Theme)interface\</_f>
     <_g>$(Theme)interface\named\</_g>
     <_h>$(CtlBase)interface\</_h>
@@ -52,7 +48,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);<!--$(_4);$(_5);$(_6);-->$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);<!--$(_f);$(_g);-->$(_h);$(_i)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
