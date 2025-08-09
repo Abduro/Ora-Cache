@@ -43,13 +43,25 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 		return this->m_error.Last();
 	}
 #if (1)
+	const uint32_t n_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	t_rect rc_ = (this->Layout() = rc_area);
 	_wnd_ref(m_wnd_ptr).Create(
-		hParent, rc_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS, 0, _ctrl_id
+		hParent, rc_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), n_style, 0, _ctrl_id
 	);
 
 	if (false == _wnd_ref(m_wnd_ptr).IsWindow())
 		return this->m_error.Last();
+
+	// looks through the tabs that were added *before* this control window creation and tries to create internal window of each tab page;
+	for (int16_t i_ = 0; i_ < this->Tabs().Count(); i_++) {
+		CTab& tab = this->Tabs().Tab(i_);
+		if (tab.Page().Is_valid())
+			continue;
+		const err_code n_result = tab.Page().Create(_wnd_ref(m_wnd_ptr), rc_, false, i_);
+		if (__failed(n_result)) {
+			this->m_error = n_result; break;
+		}
+	}
 
 	if (__failed(this->Layout().Update()))
 		this->m_error = this->Layout().Error();
@@ -65,6 +77,16 @@ err_code  CControl::Destroy(void) {
 
 	if (false == _wnd_ref(m_wnd_ptr).IsWindow())
 		return this->m_error << __e_hwnd;
+
+	// before destroying the main window of this tabbed control it is necessary to destroy internal window of each tab page;
+	for (int16_t i_ = 0; i_ < this->Tabs().Count(); i_++) {
+		CTab& tab = this->Tabs().Tab(i_);
+		if (tab.Page().Is_valid() == false)
+			continue;
+		const err_code n_result = tab.Page().Destroy();
+		if (__failed(n_result)) { // nothing to do on error throw, just for debug purposes;
+		}
+	}
 
 	_wnd_ref(m_wnd_ptr).SendMessage(WM_CLOSE); // ToDo: perhaps the calling ::DestroyWindow() would be better and faster?
 

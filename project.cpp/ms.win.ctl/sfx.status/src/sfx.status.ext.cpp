@@ -46,7 +46,7 @@ CLayout&  CLayout::operator <<(const uint32_t _n_fixed) { this->Fixed(_n_fixed);
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPane:: CPane (void) : TBase(), m_pane_id(0), m_evt_sink(0) {}
+CPane:: CPane (void) : TBase(), m_evt_sink(0) {}
 CPane:: CPane (const CPane& _src) : CPane() { *this = _src; } CPane:: CPane (CPane&& _victim) : CPane () { *this = (const CPane&)_victim; }
 CPane::~CPane (void) {}
 
@@ -55,12 +55,6 @@ CPane::~CPane (void) {}
 const
 ex_ui::controls::pane::CFormat& CPane::Format (void) const { return this->m_format; }
 ex_ui::controls::pane::CFormat& CPane::Format (void)       { return this->m_format; }
-
-uint16_t CPane::Id (void) const { return this->m_pane_id; }
-bool     CPane::Id (const uint16_t _n_id) {
-	_n_id;
-	const bool b_changed = this->Id() != _n_id; if (b_changed) this->m_pane_id = _n_id; return b_changed;
-}
 
 const
 TPn_Lay& CPane::Layout (void) const { return this->m_layout; }
@@ -92,7 +86,7 @@ bool    CPane::Update (void) {
 }
 
 CPane&  CPane::operator = (const CPane& _src) { (TBase&)*this = (const TBase&)_src;
-	*this << _src.Format() << _src.Layout() << _src.Text() << _src.GetSink() << _src.Id(); return *this;
+	*this << _src.Format() << _src.Layout() << _src.Text() << _src.GetSink(); return *this;
 }
 
 CPane&  CPane::operator <<(_pc_sz _p_text) { this->Text (_p_text); return *this; }
@@ -100,7 +94,6 @@ CPane&  CPane::operator <<(const ex_ui::controls::pane::CFormat& _fmt) { this->F
 CPane&  CPane::operator <<(const TPn_Lay& _lay) { this->Layout() = _lay; return *this; }
 
 CPane&  CPane::operator <<(const IPaneEvents* _p_snk) { this->SetSink(_p_snk); return *this; }
-CPane&  CPane::operator <<(const uint16_t _id ) { this->Id(_id); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -170,9 +163,10 @@ const
 TRawPanes& CPanes::Raw (void) const { return this->m_panes; }
 TRawPanes& CPanes::Raw (void)       { return this->m_panes; }
 
-void  CPanes::OnTextChanged (const int32_t _pane_id, _pc_sz _p_text) const {
+void  CPanes::OnTextChanged (const uint32_t _pane_id, _pc_sz _p_text) const {
 	_pane_id; _p_text;
 	for (size_t i_ = 0; i_ < this->Raw().size(); i_++) {
+
 		if (this->Raw().at(i_).Id() == _pane_id) {
 			if (this->m_ctrl.Window().IsWindow()) {
 				// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-physicaltologicalpoint ;

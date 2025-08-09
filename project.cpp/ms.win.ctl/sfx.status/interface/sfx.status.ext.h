@@ -39,7 +39,7 @@ namespace pane {
 	typedef pane::CLayout TPn_Lay;
 
 	interface IPaneEvents {
-		virtual void  OnTextChanged(const int32_t _pane_id, _pc_sz _p_text = nullptr) const { _pane_id; _p_text; }
+		virtual void  OnTextChanged(const uint32_t _pane_id, _pc_sz _p_text = nullptr) const { _pane_id; _p_text; }
 	};
 
 	class CPane : public ex_ui::controls::CPane { typedef ex_ui::controls::CPane TBase;
@@ -51,9 +51,6 @@ namespace pane {
 		const
 		ex_ui::controls::pane::CFormat& Format (void) const;
 		ex_ui::controls::pane::CFormat& Format (void) ;
-
-		uint16_t Id (void) const;     // returns this pane identifie;
-		bool     Id (const uint16_t); // sets pane identifier, returns 'true' if text is changed in comparison with previous one;
 
 		const
 		TPn_Lay& Layout (void) const;
@@ -71,7 +68,6 @@ namespace pane {
 		CPane&  operator <<(_pc_sz _p_text);
 		CPane&  operator <<(const ex_ui::controls::pane::CFormat&);
 		CPane&  operator <<(const TPn_Lay&);
-		CPane&  operator <<(const uint16_t _id);
 
 	protected:
 		const
@@ -82,7 +78,6 @@ namespace pane {
 		ex_ui::controls::pane::CFormat m_format;
 		const IPaneEvents*  m_evt_sink;
 		TPn_Lay  m_layout;
-		uint16_t m_pane_id;
 		CString  m_text;
 	};
 
@@ -123,7 +118,7 @@ namespace pane {
 		CPanes&  operator = (const CPanes&) = delete; CPanes& operator = (CPanes&&) = delete;
 
 	private:
-		void  OnTextChanged (const int32_t _pane_id, _pc_sz _p_text) const;
+		void  OnTextChanged (const uint32_t _pane_id, _pc_sz _p_text) const;
 
 	private:
 		mutable

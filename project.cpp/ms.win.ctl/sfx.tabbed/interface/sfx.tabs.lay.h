@@ -68,24 +68,6 @@ namespace layout {
 
 	using Selected = CActiveTab;
 
-	class CPage {
-	public:
-		 CPage (CControl&); CPage (void) = delete; CPage (const CPage&) = delete; CPage (CPage&&) = delete;
-		~CPage (void);
-
-	public:
-		const
-		t_rect&  Get (void) const;             // gets tab page rectangle that is available for page window;
-		err_code Set (const t_rect& _rc_from);
-
-	private:
-		CPage&  operator = (const CPage&) = delete;
-		CPage&  operator = (CPage&&) = delete;
-
-	private:
-		t_rect  m_rc_page;
-		CControl&  m_ctrl;
-	};
 	// for this version of the implementation, all tabs have fixed value width and height, the text of tab is trimmed by '...' if necessary;
 	class CTabs { friend class ex_ui::controls::sfx::tabbed::CLayout;
 	public :
@@ -102,16 +84,10 @@ namespace layout {
 		TAlign&   Align (void) ;          // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (rw);
 
 		uint32_t  Gap (void) const;
-		uint32_t& Gap (void)      ;
 		bool      Gap (const uint32_t _u_value);
 
 		uint32_t  Height(void) const;
-		uint32_t& Height(void)      ;     // sets a height of all tabs;
 		bool      Height(const uint32_t); // sets a height of all tabs; returns 'true' in case if the height value is changed;
-
-		uint32_t  Ledge (void) const;
-		uint32_t& Ledge (void)      ;
-		bool      Ledge (const uint32_t);
 		const
 		t_rect&   Rect  (void) const;     // gets a rectangle of tabs area;
 		err_code  Rect  (const t_rect& _rc_client); // calculates a rectangle for tabs for available client area rectangle;
@@ -137,14 +113,12 @@ namespace layout {
 		t_size     m_size  ;   // a size of each tab;
 		t_rect     m_rect  ;   // entire area of tabs, including free space of the background that is inline with tabs;
 		uint32_t   m_gap   ;   // a gap between tabs;
-		uint32_t   m_ledge ;   // extra part of tabs which resides out of tab area; this part of tabs overlaps parent window area; by default is 3;
 		CControl&  m_ctrl  ;
 		Selected   m_active;
 		TAlign     m_align ;
 	};
 }
 	class CLayout {
-	using  CPage = layout::CPage;
 	using  CTabs = layout::CTabs;
 	friend class  CControl;
 	private:
@@ -156,10 +130,6 @@ namespace layout {
 		const
 		CPadding& Padding(void) const;
 		CPadding& Padding(void) ;
-
-		const
-		CPage&    Page (void) const;
-		CPage&    Page (void) ;
 		const
 		t_rect&   Rect (void) const;                 // returns the cashed rectangle of the tabbed control;
 
@@ -182,7 +152,6 @@ namespace layout {
 		CError    m_error ;
 		CControl& m_ctrl  ;
 		CPadding  m_padding;
-		CPage     m_page  ;
 		CTabs     m_tabs  ;
 		t_rect    m_rect  ;  // cached client area rectangle;
 	};

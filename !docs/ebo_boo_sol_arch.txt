@@ -49,6 +49,7 @@
 			ctl.base_v15   : {00000C13-EEEE-BBBB-6667-00000000000C} << user control base project;
 			sfx.status_v15 : {00000C13-EEEE-BBBB-6667-00000003000A} << status bar control project;
 			sfx.tabbed_v15 : {00000C13-EEEE-BBBB-6667-00000003000B} << tabbed control project;
+			sfx.trkball_v15: {00000C13-EEEE-BBBB-6667-00000003000C}
 
 		logger_v15   : {00000C13-EEEE-BBBB-6667-000000000003} << generic events' logger;
 		runnable_v15 : {00000C13-EEEE-BBBB-6667-000000000007} << system thread pool wrapper;

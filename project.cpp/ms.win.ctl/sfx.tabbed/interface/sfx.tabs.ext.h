@@ -15,6 +15,29 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 	};
 
 	using TLayersEx = CLayersEx;
+	using ex_ui::popup::CWndBase;
+
+	class CPage : public ex_ui::controls::CPane, private CWndBase {
+		typedef CWndBase TWindow;
+		typedef ex_ui::controls::CPane TPane;
+	public:
+		 CPage (void); CPage (const CPage&) = delete; CPage (CPage&&) = delete;
+		~CPage (void);
+
+	public:
+		err_code Create (const HWND hParent, const t_rect&, const bool _b_visible, const uint32_t _page_id = 0);
+		err_code Destroy(void);
+		const
+		HWND     Handle (void) const;
+		bool   Is_valid (void) const;
+		const
+		ex_ui::controls::pane::CLayout& Layout (void) const;
+		ex_ui::controls::pane::CLayout& Layout (void) ;
+
+	private:
+		CPage& operator = (const CPage&) = delete; CPage& operator = (CPage&&) = delete;
+		ex_ui::controls::pane::CLayout m_layout;
+	};
 
 	class CTab {
 	public:
@@ -32,6 +55,10 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		const
 		TLayersEx& Layers (void) const;
 		TLayersEx& Layers (void)      ;
+
+		const
+		CPage&  Page (void) const;
+		CPage&  Page (void) ;
 
 		const
 		t_rect&    Rect (void) const;
@@ -57,6 +84,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		t_rect     m_rect  ;  // the tab rectangle that does not include the tab page rectangle;
 		TState     m_state ;  // the tab current state: either selected or not;
 		CString    m_cap   ;  // the tab caption;
+		CPage      m_page  ;
 	};
 
 	typedef ::std::vector<CTab> TTabArray;

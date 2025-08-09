@@ -127,29 +127,27 @@ const
 t_rect&   CLayout::Rect (void) const { return this->m_rect ; }
 t_rect&   CLayout::Rect (void)       { return this->m_rect ; }
 
-bool CLayout::Update (void) { return false; }
+bool      CLayout::Rect (const t_rect& _rect) {
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setrect ;
+	const bool b_changed = this->Rect().left != _rect.left || this->Rect().top != _rect.top || this->Rect().right != _rect.right || this->Rect().bottom != _rect.bottom;
+	if (b_changed)
+		this->m_rect = _rect;
 
-bool CLayout::Update (ex_ui::controls::borders::CBorders_for_rect& _borders) {
-	return _borders.Set(this->Rect());
-}
-
-bool CLayout::Update (const t_rect& _rect_of_place) {
-	this->Rect() = _rect_of_place;
-	return false;
+	return b_changed;
 }
 
 CLayout&  CLayout::operator = (const CLayout& _src) { *this << _src.Align() << _src.Image() << _src.Rect(); return *this; }
 
 CLayout&  CLayout::operator <<(const CAlign& _align) { this->Align() = _align; return *this; }
 CLayout&  CLayout::operator <<(const ex_ui::controls::layout::CImage& _image) { this->Image() = _image; return *this; }
-CLayout&  CLayout::operator <<(const t_rect& _rect) { this->Rect() = _rect; return *this; }
+CLayout&  CLayout::operator <<(const t_rect& _rect) { this->Rect(_rect); return *this; }
 CLayout&  CLayout::operator <<(const CPadding& _padding) { this->Padding() = _padding; return *this; }
 
 }}}
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPane:: CPane (void) {} CPane:: CPane (CPane&& _victim) : CPane() { *this = _victim; }
+CPane:: CPane (void) : m_pane_id(0) {} CPane:: CPane (CPane&& _victim) : CPane() { *this = _victim; }
 CPane:: CPane (const CPane& _src) : CPane() { *this = _src; }
 CPane::~CPane (void) {}
 
@@ -157,10 +155,17 @@ const
 ex_ui::controls::borders::CBorders_for_rect& CPane::Borders (void) const { return this->m_borders; }
 ex_ui::controls::borders::CBorders_for_rect& CPane::Borders (void)       { return this->m_borders; }
 
-CPane&  CPane::operator = (const CPane& _src) { *this << _src.Borders(); return *this; }
+uint32_t CPane::Id (void) const { return this->m_pane_id; }
+bool     CPane::Id (const uint32_t _n_id) {
+	_n_id;
+	const bool b_changed = this->Id() != _n_id; if (b_changed) this->m_pane_id = _n_id; return b_changed;
+}
+
+CPane&  CPane::operator = (const CPane& _src) { *this << _src.Borders() << _src.Id(); return *this; }
 CPane&  CPane::operator = (CPane&& _victim) { *this = (const CPane&)_victim; return *this; }
 
 CPane&  CPane::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
+CPane&  CPane::operator <<(const uint32_t _id ) { this->Id(_id); return *this; }
 
 #if (0)
 /////////////////////////////////////////////////////////////////////////////
@@ -170,9 +175,6 @@ CPane:: CPane (const CPane& _src) : CPane() { *this = _src; }
 CPane::~CPane (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
-const
-CBorders& CPane::Borders (void) const { return this->m_borders; }
-CBorders& CPane::Borders (void)       { return this->m_borders; }
 const
 CFormat&  CPane::Format  (void) const { return this->m_format ; }
 CFormat&  CPane::Format  (void)       { return this->m_format ; }
@@ -250,10 +252,9 @@ CString   CPane::Print(const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPane&  CPane::operator = (const CPane& _src) { *this << _src.Borders() << _src.Format() << _src.Layout(); return *this; }
+CPane&  CPane::operator = (const CPane& _src) { *this << _src.Format() << _src.Layout(); return *this; }
 CPane&  CPane::operator = (CPane&& _victim) { *this = (const CPane&)_victim; return *this; }
 
-CPane&  CPane::operator <<(const CBorders& _borders) { this->Borders() = _borders; return *this; }
 CPane&  CPane::operator <<(const CFormat&  _format ) { this->Format()  = _format ; return *this; }
 CPane&  CPane::operator <<(const CLayout&  _layout ) { this->Layout()  = _layout ; return *this; }
 #endif

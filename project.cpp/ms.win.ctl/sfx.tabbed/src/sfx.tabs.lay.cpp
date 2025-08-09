@@ -356,43 +356,9 @@ err_code CActiveTab::Set (const t_rect& _rect) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-CPage:: CPage (CControl& _ctrl) : m_ctrl(_ctrl), m_rc_page{0} {}
-CPage::~CPage (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
-const
-t_rect&  CPage::Get (void) const { return this->m_rc_page; }
-err_code CPage::Set (const t_rect& _rc_from) {
-	_rc_from;
-	err_code n_result = __s_ok;
-
-	if (::IsRectEmpty(&_rc_from))
-		return n_result = __e_rect;
-
-	this->m_rc_page = _rc_from; // preliminary assigning the page rectangle to input one is not good approach, due to possible succeeded errors;
-
-	const t_rect& rc_tabs = this->m_ctrl.Layout().Tabs().Rect();
-	const CPadding& pads  = this->m_ctrl.Layout().Padding();
-
-	switch (this->m_ctrl.Layout().Tabs().Side()) {
-	case TSide::e_bottom: { this->m_rc_page.bottom -= __H(rc_tabs); } break;
-	case TSide::e_left  : { this->m_rc_page.left   += __W(rc_tabs); } break;
-	case TSide::e_right : { this->m_rc_page.right  -= __W(rc_tabs); } break;
-	case TSide::e_top   : { this->m_rc_page.top    += __H(rc_tabs); } break;
-	default:
-		return n_result = (err_code) TErrCodes::eExecute::eParameter;
-	}
-
-	n_result = pads.ApplyTo(this->m_rc_page) ? __s_ok : __s_false;
-
-	return n_result;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { namespace layout {
 
-CTabs:: CTabs (CControl& _ctrl) : m_ledge(3), m_rect{0}, m_size{0}, m_gap(0), m_ctrl(_ctrl), m_active(_ctrl) {
+CTabs:: CTabs (CControl& _ctrl) : m_rect{0}, m_size{0}, m_gap(0), m_ctrl(_ctrl), m_active(_ctrl) {
 	this->m_size.cy = 31;
 	this->m_size.cx = this->m_size.cy * 5; this->m_gap = this->m_size.cy / 2;
 }
@@ -408,7 +374,6 @@ TAlign&   CTabs::Align (void) const { return this->m_align; }
 TAlign&   CTabs::Align (void)       { return this->m_align; }
 
 uint32_t  CTabs::Gap (void) const { return m_gap; }
-uint32_t& CTabs::Gap (void)       { return m_gap; }
 bool      CTabs::Gap (const uint32_t _n_value) {
 	_n_value;
 	const bool b_changed = this->Gap() != _n_value;
@@ -419,7 +384,6 @@ bool      CTabs::Gap (const uint32_t _n_value) {
 }
 
 uint32_t  CTabs::Height (void) const { return (uint32_t )m_size.cy; }
-uint32_t& CTabs::Height (void)       { return (uint32_t&)m_size.cy; }
 bool      CTabs::Height (const uint32_t _n_value) {
 	_n_value;
 	const bool b_changed = this->Height() != _n_value;
@@ -429,16 +393,6 @@ bool      CTabs::Height (const uint32_t _n_value) {
 	return b_changed;
 }
 
-uint32_t  CTabs::Ledge (void) const { return m_ledge; }
-uint32_t& CTabs::Ledge (void)       { return m_ledge; }
-bool      CTabs::Ledge (const uint32_t _n_value) {
-	_n_value;
-	const bool b_changed = this->Ledge() != _n_value;
-	if (b_changed)
-		this->m_ledge = _n_value;
-
-	return b_changed;
-}
 const
 t_rect&   CTabs::Rect  (void) const { return m_rect ; }
 err_code  CTabs::Rect  (const t_rect& _rc_area) {
@@ -459,7 +413,7 @@ err_code  CTabs::Rect  (const t_rect& _rc_area) {
 		return n_result = (err_code) TErrCodes::eExecute::eParameter;
 	}
 
-	// ToDo:: no gaps between tabs are applied yet;
+	// ToDo:: no gaps between tabs are applied yet; this option is deprecated for this version of the implementation;
 
 	if (this->m_sides.IsHorz()) { // tabs reside in horizontal line;
 		if (THorzAlign::eLeft == this->Align().Horz().Value())
@@ -471,7 +425,7 @@ err_code  CTabs::Rect  (const t_rect& _rc_area) {
 				this->m_ctrl.Tabs().Tab(i_).Rect().right = n_left;
 			}
 		}
-		else { // the 'center' alignment is ignored by this version of this user control implementation;
+		else { // the 'center' alignment is ignored by this version of the user control implementation;
 			_long n_right = this->m_rect.right;
 			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
 				this->m_ctrl.Tabs().Tab(i_).Rect() = this->m_rect;
@@ -528,7 +482,7 @@ uint32_t& CTabs::Width (void)       { return (uint32_t&)m_size.cx; }
 }}}}}
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_rect{0}, m_page(_ctrl), m_tabs(_ctrl) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
+CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_rect{0}, m_tabs(_ctrl) { m_error >> __CLASS__ << __METHOD__ << __s_ok; }
 CLayout::~CLayout (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -539,9 +493,6 @@ const
 CPadding& CLayout::Padding(void) const { return this->m_padding; }
 CPadding& CLayout::Padding(void)       { return this->m_padding; }
 
-const
-CPage&    CLayout::Page (void) const { return this->m_page; }
-CPage&    CLayout::Page (void)       { return this->m_page; }
 const
 t_rect&   CLayout::Rect (void) const { return this->m_rect; }
 
@@ -569,8 +520,6 @@ err_code  CLayout::Update (void) {
 	this->m_ctrl.Borders() << rc_area;
 	// (3) updates active tab borders;
 	this->m_tabs.Active().Set(rc_area);
-	// (4) updates page rectangle;
-	this->Page().Set(rc_area);
 
 	return n_result;
 }

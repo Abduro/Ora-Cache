@@ -95,11 +95,8 @@ namespace pane {
 #endif
 		const
 		t_rect&  Rect  (void) const;
-		t_rect&  Rect  (void);
-		// ToDo: Update() methods are useless due to there is no information of pane object;
-		bool  Update (void);          // a position of the pane is calculated;
-		bool  Update (ex_ui::controls::borders::CBorders&); // updates a borders position; it is supposed the rectangle of the pane is already set;
-		bool  Update (const t_rect&); // a position is set by input rect;
+		t_rect&  Rect  (void) ;           // direct access to pane rectangle;
+		bool     Rect  (const t_rect&);
 
 	public:
 		CLayout& operator = (const CLayout&); CLayout& operator = (CLayout&&) = delete; // is not required yet;
@@ -130,14 +127,19 @@ namespace pane {
 		ex_ui::controls::borders::CBorders_for_rect& Borders (void) const;
 		ex_ui::controls::borders::CBorders_for_rect& Borders (void) ;
 
+		uint32_t Id (void) const;     // returns this pane identifier;
+		bool     Id (const uint32_t); // sets pane identifier, returns 'true' if text is changed in comparison with previous one;
+
 	public:
 		CPane& operator = (const CPane&);
 		CPane& operator = (CPane&&);      // just copying fields' data, neither move() nor swap() operation is applied;
 
 		CPane& operator <<(const ex_ui::controls::borders::CBorders_for_rect&);
+		CPane& operator <<(const uint32_t _id);
 
 	protected:
 		ex_ui::controls::borders::CBorders_for_rect  m_borders;
+		uint32_t m_pane_id;
 	};
 
 #if (0)
@@ -150,9 +152,6 @@ namespace pane {
 		~CPane (void);
 
 	public:
-		const
-		CBorders& Borders (void) const;
-		CBorders& Borders (void) ;
 		const
 		CFormat&  Format  (void) const;
 		CFormat&  Format  (void) ;
@@ -168,12 +167,10 @@ namespace pane {
 		CPane& operator = (const CPane&);
 		CPane& operator = (CPane&&);      // just copying fields' data, neither move() nor swap() operation is applied;
 
-		CPane& operator <<(const CBorders&);
 		CPane& operator <<(const CFormat&);
 		CPane& operator <<(const CLayout&);
 
 	protected:
-		CBorders  m_borders;
 		CFormat   m_format;
 		CLayout   m_layout;
 	};

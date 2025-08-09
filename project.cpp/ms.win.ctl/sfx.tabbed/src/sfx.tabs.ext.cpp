@@ -9,6 +9,62 @@ using namespace ex_ui::controls::sfx::tabbed;
 
 /////////////////////////////////////////////////////////////////////////////
 
+CPage:: CPage (void) {}
+CPage::~CPage (void) {}
+
+err_code CPage::Create (const HWND hParent, const t_rect& _rect, const bool _b_visible, const uint32_t _page_id) {
+	hParent; _rect; _b_visible; _page_id;
+	err_code n_result = __s_ok;
+
+	if (nullptr == hParent || false == !!::IsWindow(hParent))
+		return n_result = __e_hwnd;
+
+	if (this->Is_valid())
+		return n_result = (err_code) TErrCodes::eObject::eExists;
+
+	const uint32_t n_style = WS_CHILD|(_b_visible ? WS_VISIBLE : 0)|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
+
+	t_rect rect_ = _rect;
+	
+	TWindow::Create(
+		hParent, rect_, TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), n_style, 0, _page_id
+	);
+
+	if (this->Is_valid() == false)
+		n_result = __LastErrToHresult();
+	else {
+		TPane::Id(_page_id);
+		this->Layout().Rect() = _rect;
+		TPane::Borders().Set(_rect);
+	}
+
+	return n_result;
+}
+
+err_code CPage::Destroy(void) {
+
+	err_code n_result = __s_ok;
+
+	if (this->Is_valid() == false)
+		return n_result;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
+	if (0 == TWindow::DestroyWindow())
+		n_result = __LastErrToHresult();
+
+	return  n_result;
+}
+
+const
+HWND     CPage::Handle (void) const { return TWindow::m_hWnd; }
+
+bool     CPage::Is_valid (void) const { return !!TWindow::IsWindow(); }
+
+const
+ex_ui::controls::pane::CLayout& CPage::Layout (void) const { return this->m_layout; }
+ex_ui::controls::pane::CLayout& CPage::Layout (void)       { return this->m_layout; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_rect{0} { *this << _lp_sz_cap << _id; }
 CTab:: CTab (const CTab& _tab) : CTab() { *this = _tab; }
 CTab:: CTab (CTab&& _victim) : CTab() { *this = _victim; }
@@ -25,6 +81,10 @@ uint16_t&  CTab::Id (void)       { return this->m_id; }
 const
 TLayersEx& CTab::Layers (void) const { return this->m_layers; }
 TLayersEx& CTab::Layers (void)       { return this->m_layers; }
+
+const
+CPage&     CTab::Page (void) const { return this->m_page; }
+CPage&     CTab::Page (void)       { return this->m_page; }
 
 const
 t_rect&    CTab::Rect (void) const { return this->m_rect; }

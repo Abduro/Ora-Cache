@@ -21,7 +21,7 @@ theme_v15   : {00000C13-EEEE-BBBB-6667-000000000023}        ebo_test_$d$.theme :
 gdi.plus_v15: {00000C13-EEEE-BBBB-6667-00000000000A}
 gdi.zbuf_v15: {00000C13-EEEE-BBBB-6667-00000000000B}        ebo_test_$d$.gdi.zbuf : {00000C13-EEEE-BBBB-6667-00000006000B}
 
-// needs to reviewed;
+// needs to be reviewed;
 render_v15  : {00000C13-EEEE-BBBB-6667-000000000044}        ebo_test_$d$.render   : {00000C13-EEEE-BBBB-6667-000000060044}
 rnd.direct.x_v15: {00000C13-EEEE-BBBB-6667-000000000043}
 rnd.open.gl_v15 : {00000C13-EEEE-BBBB-6667-000000000042}
@@ -41,6 +41,7 @@ uix::ctl:
 ctl.base_v15   : {00000C13-EEEE-BBBB-6667-00000000000C}     ebo_test_$u$_ctl.base : {00000C13-EEEE-BBBB-6667-00000006000C}
 sfx.status_v15 : {00000C13-EEEE-BBBB-6667-00000003000A}
 sfx.tabbed_v15 : {00000C13-EEEE-BBBB-6667-00000003000B}
+sfx.trkball_v15: {00000C13-EEEE-BBBB-6667-00000003000C}
 
 generic:
 
