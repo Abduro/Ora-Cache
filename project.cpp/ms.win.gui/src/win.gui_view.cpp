@@ -210,7 +210,7 @@ err_code CPages::At_1st(void) {
 
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
-	tabbed.Layout().Tabs().Side(TSide::e_top);
+	tabbed.Layout().Tabs().LocatedOn(TSide::e_top);
 	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
 
 	tabbed.Tabs().Append(1, _T("DirectX"));

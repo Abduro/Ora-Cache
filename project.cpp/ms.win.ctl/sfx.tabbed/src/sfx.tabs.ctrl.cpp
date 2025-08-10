@@ -57,8 +57,9 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 		CTab& tab = this->Tabs().Tab(i_);
 		if (tab.Page().Is_valid())
 			continue;
-		const err_code n_result = tab.Page().Create(_wnd_ref(m_wnd_ptr), rc_, false, i_);
+		const err_code n_result = tab.Page().Create(_wnd_ref(m_wnd_ptr), rc_, this->Tabs().Active() == i_, i_);
 		if (__failed(n_result)) {
+			ATLASSERT(false==true);
 			this->m_error = n_result; break;
 		}
 	}
@@ -85,6 +86,7 @@ err_code  CControl::Destroy(void) {
 			continue;
 		const err_code n_result = tab.Page().Destroy();
 		if (__failed(n_result)) { // nothing to do on error throw, just for debug purposes;
+			ATLASSERT(false==true);
 		}
 	}
 

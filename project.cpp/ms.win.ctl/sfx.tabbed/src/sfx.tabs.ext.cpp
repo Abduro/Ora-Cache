@@ -63,6 +63,21 @@ const
 ex_ui::controls::pane::CLayout& CPage::Layout (void) const { return this->m_layout; }
 ex_ui::controls::pane::CLayout& CPage::Layout (void)       { return this->m_layout; }
 
+err_code CPage::Is_visible (const bool _state) {
+	_state;
+	err_code n_result = __s_ok;
+
+	if (false == this->Is_valid())
+		return n_result = __e_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-animatewindow ;
+
+	CWindow(this->Handle()).ShowWindow(_state ? SW_SHOW : SW_HIDE);
+
+	return n_result;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_rect{0} { *this << _lp_sz_cap << _id; }
@@ -146,6 +161,7 @@ err_code CTabs::Active (const int16_t _ndx) {
 		CTab& tab_ = m_tabs.at(i_);
 
 		tab_.State().Modify(TState::eSelected, i_ == _ndx );
+		tab_.Page().Is_visible(i_ == _ndx);
 	}
 	((ITabEvents&)this->m_ctrl).ITabEvent_OnSelect(this->Active());
 	return this->Error();

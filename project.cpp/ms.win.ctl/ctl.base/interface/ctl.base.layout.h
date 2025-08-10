@@ -153,6 +153,7 @@ namespace ex_ui { namespace controls { namespace layout {
 		
 	public:
 		 CGaps_of_rect (void); CGaps_of_rect (const CGaps_of_rect&); CGaps_of_rect (CGaps_of_rect&&) = delete;
+		 CGaps_of_rect (const int16_t _left, const int16_t _top, const int16_t _right, const int16_t _bottom);
 		~CGaps_of_rect (void);
 
 	public:

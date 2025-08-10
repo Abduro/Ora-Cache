@@ -29,7 +29,9 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		err_code Destroy(void);
 		const
 		HWND     Handle (void) const;
-		bool   Is_valid (void) const;
+		bool     Is_valid (void) const;
+		err_code Is_visible (const bool _state);
+
 		const
 		ex_ui::controls::pane::CLayout& Layout (void) const;
 		ex_ui::controls::pane::CLayout& Layout (void) ;

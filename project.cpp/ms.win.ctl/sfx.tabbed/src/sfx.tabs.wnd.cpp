@@ -164,9 +164,9 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	);
 	// ToDo: it must be made in format class of this tabbed control;
 	//       also, taking into account a user may change the tab position side, it should be dynamically updated;
-	if (this->m_ctrl.Layout().Tabs().Side() == TSide::e_left)
+	if (this->m_ctrl.Layout().Tabs().LocatedOn() == TSide::e_left)
 		m_font_vert.Angle(90);
-	else if (this->m_ctrl.Layout().Tabs().Side() == TSide::e_right)
+	else if (this->m_ctrl.Layout().Tabs().LocatedOn() == TSide::e_right)
 		m_font_vert.Angle(270);
 
 	TWindow::m_error << m_font_vert.Create(

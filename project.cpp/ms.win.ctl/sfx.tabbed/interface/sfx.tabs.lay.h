@@ -86,22 +86,25 @@ namespace layout {
 		uint32_t  Gap (void) const;
 		bool      Gap (const uint32_t _u_value);
 
-		uint32_t  Height(void) const;
-		bool      Height(const uint32_t); // sets a height of all tabs; returns 'true' in case if the height value is changed;
+		uint32_t  Height (void) const;
+		bool      Height (const uint32_t);// sets a height of all tabs; returns 'true' in case if the height value is changed;
 		const
-		t_rect&   Rect  (void) const;     // gets a rectangle of tabs area;
-		err_code  Rect  (const t_rect& _rc_client); // calculates a rectangle for tabs for available client area rectangle;
+		t_rect&   Ribbon (void) const;               // gets a rectangle of tabs area; in other words, it is tabs' ribbon or bookmarks' band;
+		err_code  Ribbon (const t_rect& _rc_client); // calculates a rectangle for tabs for available client area rectangle;
 
-		TSide     Side  (void) const;     // gets a side where all tabs reside;
-		TSide&    Side  (void)      ;     // sets a side where all tabs reside;
+		TSide     LocatedOn(void) const ; // gets a side where all tabs reside;
+		bool      LocatedOn(const TSide); // sets the side of the control on which the tabs will be located;
 		const
 		CSides&   Sides (void) const;     // gets a reference to all sides collection; (ro);
 		CSides&   Sides (void) ;          // gets a reference to all sides collection; (rw);
-		bool      Side  (const TSide);
+		
 		// ToDo: t_size must be replaced to geometry::_2D::base::CSize_U;
 		const
 		t_size&   Size  (void) const;     // gets a size of each tab; TODO: needs to be reviewed;
-		uint32_t& Width (void)      ;     // sets a width of each tab;
+
+		void      Update(void) ;          // updates pages' window position especially;
+
+		uint32_t& Width (void) ;          // sets a width of each tab;
 		bool      Width (const uint32_t&);
 
 	private:
@@ -111,7 +114,7 @@ namespace layout {
 	private:
 		CSides     m_sides ;   // sides of tab control where tabs can be located; the top side is default;
 		t_size     m_size  ;   // a size of each tab;
-		t_rect     m_rect  ;   // entire area of tabs, including free space of the background that is inline with tabs;
+		t_rect     m_ribbon;   // entire area of tabs, including free space of the background that is inline with tabs;
 		uint32_t   m_gap   ;   // a gap between tabs;
 		CControl&  m_ctrl  ;
 		Selected   m_active;
@@ -134,7 +137,7 @@ namespace layout {
 		t_rect&   Rect (void) const;                 // returns the cashed rectangle of the tabbed control;
 
 		err_code  Update (void) ;                    // updates the internal components' layout by using this control window client area;
-		err_code  Update (const t_rect& _rc_area);   // updates tabbed control window position into an area provided;
+		err_code  Update (const t_rect& _rc_area);   // updates tabbed control window *position* into an area provided;
 		const
 		CTabs&    Tabs (void) const;
 		CTabs&    Tabs (void) ;

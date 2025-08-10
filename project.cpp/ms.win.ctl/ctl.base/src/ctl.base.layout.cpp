@@ -295,6 +295,10 @@ CGaps_of_rect:: CGaps_of_rect (void) : TBase() {
 
 }
 
+CGaps_of_rect:: CGaps_of_rect (const int16_t _left, const int16_t _top, const int16_t _right, const int16_t _bottom) : CGaps_of_rect() {
+	this->Set(_left, _top, _right, _bottom);
+}
+
 CGaps_of_rect:: CGaps_of_rect (const CGaps_of_rect& _src)/* : CGaps_of_rect()*/ { *this = _src; }
 CGaps_of_rect::~CGaps_of_rect (void) {}
 
