@@ -7,10 +7,107 @@
 
 using namespace ex_ui::controls::sfx::tabbed;
 
+namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { namespace _impl {
+#if (0)
+#include "sys.sync_obj.h"
+
+shared::sys_core::CSyncObject sync_ob;
+
+#define Safe_Guard Safe_Lock(sync_ob)
+#endif
+}}}}}
+using namespace ex_ui::controls::sfx::tabbed;
 /////////////////////////////////////////////////////////////////////////////
 
-CPage:: CPage (void) {}
-CPage::~CPage (void) {}
+CPage:: CPage (void) : m_p_ctrl(0) {
+	TWindow::Handlers().Draw().Subscribe (this);
+	TWindow::Handlers().Live().Subscribe (this); TWindow::Handlers().Frame().Subscribe(this);
+}
+CPage::~CPage (void) {
+	TWindow::Handlers().Draw().Unsubscribe (this);
+	TWindow::Handlers().Live().Unsubscribe (this); TWindow::Handlers().Frame().Unsubscribe(this);
+
+	if (this->Is_valid())
+		this->Destroy();
+}
+
+#pragma region __msg_handler_callbacks__
+
+err_code CPage::IEvtDraw_OnErase (const HDC _dev_ctx) {
+	_dev_ctx;
+	err_code n_result = __s_false;
+
+	if (this->Get_ptr() == nullptr)
+		return n_result;
+
+	const ex_ui::controls::sfx::tabbed::CControl& ctrl_ref = *(this->Get_ptr());
+
+	t_rect rc_area = {0};
+	TWindow::GetClientRect(&rc_area);
+
+	ex_ui::draw::memory::CMode(_dev_ctx).Set(ex_ui::draw::memory::CMode::e_advanced);
+	CZBuffer z_buffer(_dev_ctx, rc_area);
+
+	z_buffer.Draw(rc_area, ctrl_ref.Format().Bkgnd().Solid().ToRgb());
+
+	const rgb_color clr_border = ctrl_ref.Format().Border().Color().Normal();
+
+	using ex_ui::controls::borders::TRawBorders;
+
+	for (TRawBorders::const_iterator iter_ = TPane::Borders().Raw().begin(); iter_ != TPane::Borders().Raw().end(); ++iter_) {
+		const CBorder& border = iter_->second;
+		z_buffer.Draw( border, clr_border);
+	}
+	
+	return n_result;
+}
+
+err_code CPage::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
+
+	using WTL::CPaintDC;
+
+	CPaintDC dc_(*this);
+	err_code n_result = __s_false;  // this message is handled;
+	return   n_result;
+}
+
+err_code CPage::IEvtLife_OnCreate  (const w_param, const l_param) {
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+err_code CPage::IEvtLife_OnDestroy (const w_param, const l_param) {
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+using eState = IFormEvtSink::eState;
+using eEdges = IFormEvtSink::eEdges;
+
+err_code CPage::IEvtFrame_OnSize   (const eState _e_state, const t_size _rect) {
+	_e_state;
+
+	t_rect rc_area = {0, 0, _rect.cx, _rect.cy};
+
+	TPane::Borders() << rc_area;
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+err_code CPage::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
+	_edges; _p_rect;
+
+	if (_p_rect)
+		TPane::Borders() << *_p_rect;
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+#pragma endregion
 
 err_code CPage::Create (const HWND hParent, const t_rect& _rect, const bool _b_visible, const uint32_t _page_id) {
 	hParent; _rect; _b_visible; _page_id;
@@ -78,9 +175,20 @@ err_code CPage::Is_visible (const bool _state) {
 	return n_result;
 }
 
+TCtrlPtr CPage::Get_ptr (void) const { return this->m_p_ctrl; }
+bool  CPage::Set_ptr (TCtrlPtr _ptr) {
+	_ptr;
+	const bool b_changed = this->Get_ptr() != _ptr;
+	if (b_changed)
+		this->m_p_ctrl = _ptr;
+	return b_changed;
+}
+
+CPage&   CPage::operator <<(TCtrlPtr _ptr) { this->Set_ptr(_ptr); return *this; }
+
 /////////////////////////////////////////////////////////////////////////////
 
-CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_rect{0} { *this << _lp_sz_cap << _id; }
+CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_strip{0} {*this << _lp_sz_cap << _id; }
 CTab:: CTab (const CTab& _tab) : CTab() { *this = _tab; }
 CTab:: CTab (CTab&& _victim) : CTab() { *this = _victim; }
 CTab::~CTab (void) {}
@@ -102,16 +210,17 @@ CPage&     CTab::Page (void) const { return this->m_page; }
 CPage&     CTab::Page (void)       { return this->m_page; }
 
 const
-t_rect&    CTab::Rect (void) const { return this->m_rect; }
-t_rect&    CTab::Rect (void)       { return this->m_rect; }
-const bool CTab::Rect (const _long _left, const _long _top, const _long _right, const _long _bottom) {
+t_rect&    CTab::Strip (void) const { return this->m_strip; }
+t_rect&    CTab::Strip (void)       { return this->m_strip; }
+
+const bool CTab::Strip (const _long _left, const _long _top, const _long _right, const _long _bottom) {
 	_left; _top; _right; _bottom;
 	bool b_changed = false;
 
-	if (_bottom != this->m_rect.bottom) { this->m_rect.bottom = _bottom; b_changed = true; }
-	if (_left   != this->m_rect.left)   { this->m_rect.left = _left; b_changed = true; }
-	if (_right  != this->m_rect.right)  { this->m_rect.right = _right; b_changed = true; }
-	if (_top    != this->m_rect.top)    { this->m_rect.top = _top; b_changed = true; }
+	if (_bottom != this->m_strip.bottom) { this->m_strip.bottom = _bottom; b_changed = true; }
+	if (_left   != this->m_strip.left)   { this->m_strip.left = _left; b_changed = true; }
+	if (_right  != this->m_strip.right)  { this->m_strip.right = _right; b_changed = true; }
+	if (_top    != this->m_strip.top)    { this->m_strip.top = _top; b_changed = true; }
 
 	return b_changed;
 }
@@ -122,7 +231,10 @@ TState& CTab::State  (void)       { return this->m_state; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CTab&   CTab::operator =  (const CTab& _tab) { *this << _tab.Caption() << _tab.Id() << _tab.State(); return *this; }
+CTab&   CTab::operator =  (const CTab& _tab) {
+	this->Page() << _tab.Page().Get_ptr(); // the page is not copyable due to window messages' handlers, just copying the control pointer;
+	*this << _tab.Caption() << _tab.Id() << _tab.State(); return *this;
+}
 CTab&   CTab::operator =  (CTab&& _victim) { *this = (const CTab&)_victim; return *this; }
 
 CTab&   CTab::operator << (_pc_sz _lp_sz_cap) { this->Caption() = _lp_sz_cap; return *this; }
@@ -177,10 +289,9 @@ err_code CTabs::Append (const CTab& _tab) {
 		m_tabs.push_back(_tab);
 		if (this->Active() == -1)
 			this->Active(this->Count() - 1);
-#if (0)
-		if (m_sink)
-			m_sink->ITabEvent_OnAppend(_tab);
-#endif
+
+		m_tabs.at(m_tabs.size() - 1).Page().Set_ptr(&this->m_ctrl);
+
 		((ITabEvents&)this->m_ctrl).ITabEvent_OnAppend(_tab);
 	}
 	catch (const ::std::bad_alloc&) { m_error << __e_no_memory; }
@@ -203,7 +314,7 @@ int16_t  CTabs::Has (const t_point& _pt) const {
 	for (size_t i_ = 0; i_ < m_tabs.size(); i_++) {
 
 		const CTab&  tab_ = m_tabs.at(i_);
-		const t_rect& rc_ = tab_.Rect();
+		const t_rect& rc_ = tab_.Strip();
 
 		if (::PtInRect(&rc_, _pt)) {
 			return static_cast<int16_t>(i_);

@@ -37,9 +37,12 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 #endif
-#if (1)
+#if (0)
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);  // perhaps the layout knows about available area better than the window itself;
+#else
+	t_rect rc_area = this->m_ctrl.Layout().Rect();
+#endif
 	ex_ui::draw::memory::CMode(_dev_ctx).Set(ex_ui::draw::memory::CMode::e_advanced);
 	CZBuffer z_buffer(_dev_ctx, rc_area);
 #if (0)
@@ -90,7 +93,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 			const CTab& tab_ = tabs.at(i_);
 
-			text << tab_.Caption() << tab_.Rect() << (i_ == this->m_ctrl.Tabs().Active() ? clr_active : clr_normal);
+			text << tab_.Caption() << tab_.Strip() << (i_ == this->m_ctrl.Tabs().Active() ? clr_active : clr_normal);
 
 			z_buffer.Draw(text, this->m_font.Handle());
 		}
@@ -113,7 +116,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 			z_buffer.Draw(tab_.Caption(), this->m_font_vert.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
 #else
 			((ex_ui::draw::text::CText_Base&)text) << tab_.Caption()  << (i_ == this->m_ctrl.Tabs().Active() ? clr_active : clr_normal);
-			text << tab_.Rect();
+			text << tab_.Strip();
 			z_buffer.Draw(text, this->m_font_vert.Handle(), 0);
 #endif
 		}
@@ -122,7 +125,6 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #endif
 	}
 
-#endif
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd ;
 	// this message is handled; the handlers of the most windows messages returns 0 to indicate the message is handled,
 	// but erase background requires not zero value for doing that;

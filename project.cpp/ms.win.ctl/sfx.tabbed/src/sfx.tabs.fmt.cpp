@@ -28,13 +28,15 @@ rgb_color CColor::Get (const TStateValue _e_state) const {
 	rgb_color clr = (rgb_color)0;
 
 	switch (_e_state) {
+	case TStateValue::eDisabled : clr = Get_current().Form().Border().States().Disabled().Color(); break;
+	case TStateValue::eNormal   : clr = Get_current().Form().Border().States().Normal().Color();   break;
 	case TStateValue::eSelected : clr = Get_current().Form().Border().States().Selected().Color(); break;
-	case TStateValue::eNormal   : clr = Get_current().Form().Border().States().Normal().Color();
 	default:;
 	}
 	return clr;
 }
 
+rgb_color CColor::Disabled (void) const { return this->Get(TStateValue::eDisabled); }
 rgb_color CColor::Normal   (void) const { return this->Get(TStateValue::eNormal); }
 rgb_color CColor::Selected (void) const { return this->Get(TStateValue::eSelected); }
 

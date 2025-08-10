@@ -216,6 +216,9 @@ err_code CPages::At_1st(void) {
 	tabbed.Tabs().Append(1, _T("DirectX"));
 	tabbed.Tabs().Append(2, _T("OpenGL"));
 
+	tabbed.Tabs().Tab(0).Page().Borders().Thickness(1);
+	tabbed.Tabs().Tab(1).Page().Borders().Thickness(1);
+
 #endif
 	return this->Error();
 }

@@ -17,6 +17,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 
 namespace layout {
 
+	// https://en.wikipedia.org/wiki/Tab_(interface) ;
+	// https://www.w3.org/WAI/ARIA/apg/patterns/tabs/ ;
 	// https://learn.microsoft.com/en-us/previous-versions/visualstudio/aa228484(v=vs.60)?redirectedfrom=MSDN&source=docs ;
 
 	using namespace ex_ui::controls::sfx::tabbed;

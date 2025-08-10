@@ -21,5 +21,6 @@
     <ClCompile Include="$(_1)sfx.tabs.lay.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_1)sfx.tabs.wnd.h"  ><Filter>src</Filter></ClInclude>
     <ClCompile Include="$(_1)sfx.tabs.wnd.cpp"><Filter>src</Filter></ClCompile>
+    <!--ClInclude Include="$(_1)sfx.ctrl.cache.h"><Filter>src</Filter></ClInclude-->
   </ItemGroup>
 </Project>

@@ -420,17 +420,17 @@ err_code  CTabs::Ribbon (const t_rect& _rc_area) {
 		{
 			_long n_left = this->m_ribbon.left;
 			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
-				this->m_ctrl.Tabs().Tab(i_).Rect() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Rect().left  = n_left; n_left += this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Rect().right = n_left;
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
+				this->m_ctrl.Tabs().Tab(i_).Strip().left  = n_left; n_left += this->Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().right = n_left;
 			}
 		}
 		else { // the 'center' alignment is ignored by this version of the user control implementation;
 			_long n_right = this->m_ribbon.right;
 			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
-				this->m_ctrl.Tabs().Tab(i_).Rect() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Rect().right  = n_right; n_right -= this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Rect().left   = n_right;
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
+				this->m_ctrl.Tabs().Tab(i_).Strip().right  = n_right; n_right -= this->Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().left   = n_right;
 			}
 		}
 	}
@@ -439,17 +439,17 @@ err_code  CTabs::Ribbon (const t_rect& _rc_area) {
 		if (TVertAlign::eBottom == this->Align().Vert().Value()) {
 			_long n_bottom = this->m_ribbon.bottom;
 			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
-				this->m_ctrl.Tabs().Tab(i_).Rect() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Rect().bottom = n_bottom; n_bottom -= this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Rect().top = n_bottom;
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
+				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_bottom; n_bottom -= this->Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
 			}
 		}
 		else { // the 'middle' alignment is ignored by this version of this user control implementation;
 			_long n_top = this->m_ribbon.top;
 			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
-				this->m_ctrl.Tabs().Tab(i_).Rect() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Rect().top = n_top; n_top += this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Rect().bottom = n_top;
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
+				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_top; n_top += this->Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_top;
 			}
 		}
 	}

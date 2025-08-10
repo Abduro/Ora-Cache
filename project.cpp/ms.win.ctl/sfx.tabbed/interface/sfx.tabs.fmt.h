@@ -22,9 +22,11 @@ namespace format {
 		 CColor (void); CColor (const CColor&) = delete; CColor (CColor&&) = delete;
 		~CColor (void);
 
-	public:
 		rgb_color Get  (const TStateValue) const;
-		rgb_color Normal (void) const;
+
+	public:
+		rgb_color Disabled (void) const;
+		rgb_color Normal   (void) const;
 		rgb_color Selected (void) const;
 
 	public:
