@@ -1,17 +1,14 @@
-#ifndef _SFXTABSWND_H_INCLUDED
-#define _SFXTABSWND_H_INCLUDED
+#ifndef _SFX_TRKBALL_WND_H_INCLUDED
+#define _SFX_TRKBALL_WND_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 12-Jul-2020 at 8:57:30p, UTC+7, Novosibirsk, Sunday;
-	This is Ebo Pack Sfx tab control window interface declaration file.
+	Created by Tech_dog (ebontrop@gmail.com) on 11-Aug-2025 at 21:38:59.386, UTC+4, Batumi, Monday;
+	This is Ebo Pack thackball control window interface deckaration file;
 */
-#include "sfx.tabs.inc.h"
-
-namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class CControl;
+#include "sfx.trkball.inc.h"
+namespace ex_ui { namespace controls { namespace sfx { namespace track { class CControl;
 
 	using namespace ex_ui::controls::sfx;
 	using namespace ex_ui::message::handlers;
-
-	using CFont = ex_ui::draw::CFont;
 
 	using IBtnsEvtSink = ex_ui::message::handlers::mouse::buttons::IBtnEventSink;
 	using IDrawEvtSink = ex_ui::message::handlers::draw::IDrawEventSink;
@@ -25,11 +22,6 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 	public:
 		 CWnd (CControl&) ; CWnd (void) = delete; CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;
 		~CWnd (void) ;
-
-#ifndef __WND_CLS_CHILD__
-#define __WND_CLS_CHILD__
-	//	DECLARE_WND_SUPERCLASS(TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), _T("CWndBase"));
-#endif
 
 #pragma region __msg_handler_callbacks__
 	private:  // IDrawEvtSink override(s);
@@ -52,10 +44,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		CWnd& operator = (CWnd&&) = delete;
 	private:
 		CControl& m_ctrl;
-		CFont     m_font;
-		CFont     m_font_vert;  // ToDo: it would be better to re-create the one font if the tabs' orientation is changed;
 	};
 
 }}}}
 
-#endif/*_SFXTABSWND_H_F2EE9082_4F3E_4968_B138_F7D2D87695C1_INCLUDED*/
+#endif/*_SFX_TRKBALL_WND_H_INCLUDED*/

@@ -11,5 +11,13 @@
   <ItemGroup>
     <ClInclude Include="$(_0)sfx.trkball.ctrl.h"  ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sfx.trkball.ctrl.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sfx.trkball.fmt.h"  ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sfx.trkball.fmt.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sfx.trkball.inc.h"  ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sfx.trkball.inc.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sfx.trkball.lay.h"  ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sfx.trkball.lay.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_1)sfx.trkball.wnd.h"  ><Filter>src</Filter></ClInclude>
+    <ClCompile Include="$(_1)sfx.trkball.wnd.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

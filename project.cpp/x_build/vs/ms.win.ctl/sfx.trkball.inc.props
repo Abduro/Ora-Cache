@@ -39,8 +39,6 @@
     <_c>$(Win-pop)interface\msg_handlers\</_c>
     <_d>$(MS-WTL)include\</_d>
     <_e>$(ZBuffer)interface\</_e>
-    <_f></_f>
-    <_g></_g>
     <_f>$(Theme)interface\</_f>
     <_g>$(Theme)interface\named\</_g>
     <_h>$(CtlBase)interface\</_h>
@@ -48,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);<!--$(_4);$(_5);$(_6);-->$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);<!--$(_f);$(_g);-->$(_h);$(_i)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
