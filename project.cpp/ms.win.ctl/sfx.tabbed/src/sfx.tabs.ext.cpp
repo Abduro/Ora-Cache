@@ -36,7 +36,7 @@ CPage::~CPage (void) {
 err_code CPage::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
 	err_code n_result = __s_false;
-
+#if (0) // trying to remove incorrect drawing the borders on handling window size message, when the window size is decreased;
 	if (this->Get_ptr() == nullptr)
 		return n_result;
 
@@ -58,16 +58,40 @@ err_code CPage::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		const CBorder& border = iter_->second;
 		z_buffer.Draw( border, clr_border);
 	}
-	
+#endif	
 	return n_result;
 }
-
+// https://learn.microsoft.com/en-us/windows/win32/gdi/the-wm-paint-message
+// https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ;
 err_code CPage::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
 
-	using WTL::CPaintDC;
-
-	CPaintDC dc_(*this);
 	err_code n_result = __s_false;  // this message is handled;
+
+	if (this->Get_ptr() == nullptr)
+		return n_result;
+
+	const ex_ui::controls::sfx::tabbed::CControl& ctrl_ref = *(this->Get_ptr());
+	// using BeginPaint() and EndPaint() solves the problem of incorrect draw of borders that takes a place on handling erase background message;
+	using WTL::CPaintDC;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct ;
+	CPaintDC dc_(*this);
+
+	t_rect& rc_paint = dc_.m_ps.rcPaint;
+
+	ex_ui::draw::memory::CMode(dc_).Set(ex_ui::draw::memory::CMode::e_advanced);
+	CZBuffer z_buffer(dc_, rc_paint);
+
+	z_buffer.Draw(rc_paint, ctrl_ref.Format().Bkgnd().Solid().ToRgb());
+
+	const rgb_color clr_border = ctrl_ref.Format().Border().Color().Normal();
+
+	using ex_ui::controls::borders::TRawBorders;
+
+	for (TRawBorders::const_iterator iter_ = TPane::Borders().Raw().begin(); iter_ != TPane::Borders().Raw().end(); ++iter_) {
+		const CBorder& border = iter_->second;
+		z_buffer.Draw( border, clr_border);
+	}
+
 	return   n_result;
 }
 
@@ -97,11 +121,15 @@ err_code CPage::IEvtFrame_OnSize   (const eState _e_state, const t_size _rect) {
 	return   n_result;
 }
 
-err_code CPage::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
+err_code CPage::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) { // it looks like the child window cannot be sizing by the pointing device, e.g. a mouse;
 	_edges; _p_rect;
 
 	if (_p_rect)
 		TPane::Borders() << *_p_rect;
+	else {
+		bool b_break_point = false;
+		b_break_point = !b_break_point;
+	}
 
 	err_code n_result = __s_false;
 	return   n_result;

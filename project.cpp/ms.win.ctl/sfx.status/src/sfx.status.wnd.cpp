@@ -10,6 +10,116 @@
 
 using namespace ex_ui::controls::sfx::status;
 
+namespace ex_ui { namespace controls { namespace sfx { namespace status { namespace _impl {
+
+	class CFlags {
+
+	using TFlags_Horz = ex_ui::draw::text::format::CAlign_Horz::e_value;
+	using TFlags_Vert = ex_ui::draw::text::format::CAlign_Vert::e_value;
+	using TAlt_Flags  = ex_ui::draw::text::format::CAlterer::e_value;
+	using TCut_Flags  = ex_ui::draw::text::format::CCutter::e_value;
+	using TOpt_Flags  = ex_ui::draw::text::format::COptimizer::e_value;
+
+	public:
+		static uint32_t Get (void) {
+			return TFlags_Horz::e_left | TFlags_Vert::e_middle | TCut_Flags::e_end | TOpt_Flags::e_no_clip | TOpt_Flags::e_single | TAlt_Flags::e_no_prefix ;
+		}
+	};
+
+	class CRenderer {
+
+	using CBorders = ex_ui::controls::sfx::status::CBorders;
+	using CControl = ex_ui::controls::sfx::status::CControl;
+	using CPanes   = ex_ui::controls::sfx::status::CPanes;
+
+	public:
+		 CRenderer (CControl& _ctrl_ref, CZBuffer& _z_buffer) : m_ctrl_ref(_ctrl_ref), m_z_buffer(_z_buffer) {}
+		 CRenderer (void) = delete ; CRenderer (const CRenderer&) = delete; CRenderer (CRenderer&&) = delete;
+		~CRenderer (void) = default;
+	public:
+
+		err_code Draw (const CBorders& _borders) {
+			_borders;
+			err_code n_result = __s_ok;
+
+			if (ex_ui::theme::Get_current().Palette().Is_dark()) {
+
+				const rgb_color clr_shadow = ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
+
+				CBorder shadow = _borders.Top(); shadow.Color() << clr_shadow; // ToDo: it would be better to use CColor for applying one of the color effect;
+				CBorder top_   = _borders.Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
+
+				if (shadow.Is_valid()) { this->m_z_buffer.Draw(shadow); }
+				if (top_.Is_valid())   { this->m_z_buffer.Draw(top_);   }
+			}
+			else {
+				const CBorder& top_ = this->m_ctrl_ref.Borders().Top();
+				if (top_.Is_valid()){ this->m_z_buffer.Draw(top_); }
+			}
+			return n_result;
+		}
+
+		err_code Draw (const CGlyph& _glyph) {
+			_glyph;
+			err_code n_result = __s_ok;
+
+			if (_glyph.Format().Image().Is_set()) {
+				n_result = this->m_ctrl_ref.Images()().Draw(
+						_glyph.Format().Image().Index(), this->m_z_buffer, _glyph.Layout().Image().Anchor()
+					);
+			}
+			return n_result;
+		}
+
+		err_code Draw (const CPanes& _panes, HFONT _h_font) {
+			_panes;
+			err_code n_result = __s_ok;
+
+			ex_ui::draw::text::CDrawText text;
+			text.Format().Set( CFlags::Get());
+
+			const rgb_color clr_fnt_norm = this->m_ctrl_ref.Format().Font().Fore();
+			const rgb_color clr_brd_norm = this->m_ctrl_ref.Format().Borders().Normal();
+
+			for (uint16_t i_ = 0; i_ < _panes.Count(); i_++) {
+
+				const CPane& pane = _panes.Pane(i_);
+
+				if (pane.Format().Image().Is_set()) {
+					this->m_ctrl_ref.Images()().Draw(
+						pane.Format().Image().Index(), this->m_z_buffer, pane.Layout().Image().Anchor()
+					);
+				}
+				// each border validity control may be made by draw renderer, but it can be made here too;
+				const CBorders& borders = pane.Borders();
+				const CBorder& brd_left = borders.Left();
+				const CBorder& brd_right= borders.Right();
+
+				if (brd_left.Is_valid() && !!brd_left.Thickness()) this->m_z_buffer.Draw(brd_left, clr_brd_norm);
+				if (brd_right.Is_valid() && !!brd_right.Thickness()) this->m_z_buffer.Draw(brd_right, clr_brd_norm);
+
+				if (pane.Text() && 0 != ::_tcslen(pane.Text())) {
+
+					t_rect rect = pane.Layout().Rect();
+					rect.left  += pane.Layout().Padding().Left();
+
+					pane.Layout().Padding().ApplyTo(rect); // this must be done not here, but there :-D ;
+
+					text << pane.Text() << rect << clr_fnt_norm;
+					this->m_z_buffer.Draw(text, _h_font);
+				}
+			}
+			return n_result;
+		}
+
+	private:
+		 CRenderer&  operator = (const CRenderer&) = delete;  CRenderer& operator = (CRenderer&&) = delete;
+		 CControl&   m_ctrl_ref;
+		 CZBuffer&   m_z_buffer;
+	};
+
+}}}}}
+using namespace ex_ui::controls::sfx::status::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
 CWnd:: CWnd(CControl& _ctrl) : TWindow(), m_ctrl(_ctrl) {
@@ -25,6 +135,7 @@ CWnd::~CWnd(void) {
 // https://stackoverflow.com/questions/5213952/erase-window-background-win32api ;
 err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
+	err_code n_result = __s_false;  // this message is handled;
 	/*
 		this is the really issue: the main window of the test app and this control window have the same window class;
 		that means any manipulating with class pointer as it is made below, will affect all windows of such class;
@@ -38,7 +149,6 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 #endif
-
 	t_rect rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdaterect ;
@@ -55,126 +165,54 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	CZBuffer z_buffer(_dev_ctx == nullptr ? h_local : _dev_ctx, rc_area);
 #if (0)
 	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow); set_;
-	z_buffer.Draw(rc_area, set_.Dark()/*_r_g_b(200, 200, 200)*/);
+	z_buffer.Draw(rc_area, set_.Dark());
 #elif (1==0)
 	z_buffer.Draw(rc_area, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
-#else
-	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb());
 #endif
+	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb());
+#if (0)
+	CRenderer renderer(this->m_ctrl, z_buffer);
 	// (1) draws the glyph;
-	CGlyph& glyph = this->m_ctrl.Panes().Glyph();
-	if (glyph.Format().Image().Is_set()) {
-		this->m_ctrl.Images()().Draw(
-				glyph.Format().Image().Index(), z_buffer, glyph.Layout().Image().Anchor().x, glyph.Layout().Image().Anchor().y
-			);
-	}
+	n_result = renderer.Draw(this->m_ctrl.Panes().Glyph()); if (__succeeded(n_result)) n_result = __s_false;
 
 	// (2) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
-
-	if (ex_ui::theme::Get_current().Palette().Is_dark()) {
-
-		const rgb_color clr_shadow = ex_ui::theme::Get_current().Form().Border().States().Disabled().Color();
-
-		CBorder shadow = this->m_ctrl.Borders().Top(); shadow.Color() << clr_shadow;
-		CBorder top_   = this->m_ctrl.Borders().Top(); top_.Begin() >> top_.Begin().Y() + 1; top_.End() >> top_.End().Y() + 1;
-
-		if (shadow.Is_valid()) { z_buffer.Draw(shadow); }
-		if (top_.Is_valid())   { z_buffer.Draw(top_); }
-	}
-	else {
-		const CBorder& top_ = this->m_ctrl.Borders().Top();
-		if (top_.Is_valid())   { z_buffer.Draw(top_); }
-	}
-
+	n_result = renderer.Draw(this->m_ctrl.Borders());  if (__succeeded(n_result)) n_result = __s_false;
+	
 	// (3) draws panes;
-	using TFlags_Horz = ex_ui::draw::text::format::CAlign_Horz::e_value;
-	using TFlags_Vert = ex_ui::draw::text::format::CAlign_Vert::e_value;
-	using TAlt_Flags  = ex_ui::draw::text::format::CAlterer::e_value;
-	using TCut_Flags  = ex_ui::draw::text::format::CCutter::e_value;
-	using TOpt_Flags  = ex_ui::draw::text::format::COptimizer::e_value;
-
-	ex_ui::draw::text::CDrawText text;
-
-	text.Format().Set(
-		TFlags_Horz::e_left | TFlags_Vert::e_middle | TCut_Flags::e_end | TOpt_Flags::e_no_clip | TOpt_Flags::e_single | TAlt_Flags::e_no_prefix
-	);
-
-	const rgb_color clr_fnt_norm = this->m_ctrl.Format().Font().Fore();
-	const rgb_color clr_brd_norm = this->m_ctrl.Format().Borders().Normal();
-
-	for (uint16_t i_ = 0; i_ < this->m_ctrl.Panes().Count(); i_++) {
-		const CPane& pane = this->m_ctrl.Panes().Pane(i_);
-		if (pane.Format().Image().Is_set()) {
-			this->m_ctrl.Images()().Draw(
-				pane.Format().Image().Index(), z_buffer, pane.Layout().Image().Anchor()
-			);
-		}
-		// each border validity control may be made by draw renderer, but it can be made here too;
-		const CBorders& borders = pane.Borders();
-
-		const CBorder& brd_left = borders.Left();
-		const CBorder& brd_right = borders.Right();
-
-		if (brd_left.Is_valid() && !!brd_left.Thickness()) z_buffer.Draw(brd_left, clr_brd_norm);
-		if (brd_right.Is_valid() && !!brd_right.Thickness()) z_buffer.Draw(brd_right, clr_brd_norm);
-
-		if (pane.Text() && 0 != ::_tcslen(pane.Text())) {
-
-			t_rect rect = pane.Layout().Rect();
-
-			rect.left += pane.Layout().Padding().Left();
-
-			pane.Layout().Padding().ApplyTo(rect); // this must be done not here, but there :-D ;
-
-			text << pane.Text() << rect << clr_fnt_norm;
-
-			z_buffer.Draw(text, this->m_font.Handle());
-		}
-	}
-
+	n_result = renderer.Draw(this->m_ctrl.Panes(), this->m_font.Handle());  if (__succeeded(n_result)) n_result = __s_false;
+#endif
 	if (nullptr != h_local) {
 		TWindow::ReleaseDC(h_local); h_local = nullptr;
 	}
-
-	err_code n_result = __s_false;  // this message is handled;
-	return   n_result;
+	return n_result;
 }
 
 err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
+
+	err_code n_result = __s_ok;  // this message is handled;
 
 	using WTL::CPaintDC;
 	
 	CPaintDC dc_(*this);
 
-#if (0)
+#if (1)
+	const t_rect& rc_paint = dc_.m_ps.rcPaint;
 
-	CZBuffer z_buffer(dc_.m_hDC, dc_.m_ps.rcPaint);
+	CZBuffer z_buffer(dc_, rc_paint);
 
-	z_buffer.Draw(dc_.m_ps.rcPaint, TRgbQuad(shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back)));
+	z_buffer.Draw(rc_paint, this->m_ctrl.Format().Bkgnd().Solid().ToRgb());
 
-	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
-	const CBorder& top_ = this->m_ctrl.Borders().Top();
+	CRenderer renderer(this->m_ctrl, z_buffer);
+	// (1) draws the glyph;
+	n_result = renderer.Draw(this->m_ctrl.Panes().Glyph());
 
-	if (top_.Is_valid()) {
-		z_buffer.Draw(top_);
-	}
-#elif (0==1)
-
-	dc_.SetBkMode(TRANSPARENT);
-
-	CZBuffer z_buffer(dc_.m_hDC, dc_.m_ps.rcPaint);
-
-	const CComplSet& set_ = shared::ThemeTriplets().Get(TClrPredefined::e_Red_n_Navy_n_Yellow);
-	z_buffer.Draw(dc_.m_ps.rcPaint, set_.Dark());
-
-	// (1) status bar top border if specified; // TODO: other borders are not considered yet, but such approach is okay for now;
-	const CBorder& top_ = this->m_ctrl.Borders().Top();
-	if (top_.Is_valid()) {
-		z_buffer.Draw(top_);
-	}
+	// (2) status bar top border if specified; // ToDo: other borders are not considered yet, but such approach is okay for now;
+	n_result = renderer.Draw(this->m_ctrl.Borders());
 	
+	// (3) draws panes;
+	n_result = renderer.Draw(this->m_ctrl.Panes(), this->m_font.Handle());
+
 #endif
-	err_code n_result = __s_ok;  // this message is handled;
 	return   n_result;
 }
 
