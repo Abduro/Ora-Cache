@@ -17,7 +17,8 @@
 #pragma comment(lib, "rnd.direct.x_v15.lib")   // DirectX graphic render;
 
 #pragma comment(lib, "sfx.status_v15.lib")     // status bar user common control;
-#pragma comment(lib, "sfx.tabbed_v15.lib")     // tabbed control common control;
+#pragma comment(lib, "sfx.tabbed_v15.lib")     // tabbed pages common control;
+#pragma comment(lib, "sfx.trkball_v15.lib")    // trackball user control;
 
 #pragma comment(lib, "sys.com.core_v15.lib")   // component object model wrapper;
 #pragma comment(lib, "sys.err.core_v15.lib")   // system error handling;

@@ -33,6 +33,7 @@
 #include "ctl.base.pane.h"
 #include "sfx.status.ctrl.h"
 #include "sfx.tabs.ctrl.h"
+#include "sfx.trkball.ctrl.h"
 #pragma endregion
 
 #include "sys.shell.dwm.h"

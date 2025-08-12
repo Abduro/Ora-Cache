@@ -130,7 +130,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		err_code Append (const CTab&);
 		err_code Append (const uint16_t _id, _pc_sz _lp_sz_cap);
 
-		int16_t  Count  (void) const;
+		uint16_t Count  (void) const;
 
 		TError&  Error  (void) const;
 

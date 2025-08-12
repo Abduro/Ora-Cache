@@ -29,8 +29,8 @@ namespace layout {}
 		CPadding& Padding(void) const;
 		CPadding& Padding(void) ;
 		const
-		t_size&   Req_Sz (void) const;    // gets required size of this control;
-		bool      Req_Sz (const t_size&); // sets required size of this control; no check for input size values' validity;
+		t_size&   Pref_Sz(void) const;    // gets preferable size of this control; by default is 64x64px;
+		err_code  Pref_Sz(const t_size&); // sets preferable size of this control; the rule: must be a square and each size not less than 64px;
 
 	private:
 		CLayout&  operator = (const CLayout&) = delete;
@@ -41,7 +41,7 @@ namespace layout {}
 		CError    m_error ;
 		CControl& m_ctrl  ;
 		CPadding  m_padding;
-		t_size    m_req_sz;
+		t_size    m_pref_sz;
 	};
 
 }}}}

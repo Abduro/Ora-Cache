@@ -54,10 +54,31 @@ err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	return this->Error();
 }
 
+err_code  CControl::Destroy(void) {
+
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == m_wnd_ptr)
+		return this->m_error << __e_pointer;
+
+	if (false == _wnd_ref(m_wnd_ptr).IsWindow())
+		return this->m_error << __e_hwnd;
+
+	_wnd_ref(m_wnd_ptr).SendMessage(WM_CLOSE); // ToDo: perhaps the calling ::DestroyWindow() would be better and faster?
+
+	return this->Error();
+}
+
 TError&    CControl::Error   (void) const { return this->m_error ; }
 const
 CFormat&   CControl::Format (void) const { return this->m_format; }
 CFormat&   CControl::Format (void)       { return this->m_format; }
+
+uint32_t   CControl::Id (void) const { return this->m_ctrl_id; }
+bool       CControl::Id (const uint32_t _u_id) {
+	_u_id;
+	const bool b_changed = this->Id() != _u_id; if (b_changed) this->m_ctrl_id = _u_id; return b_changed;
+}
 
 bool       CControl::Is_valid (void) const {
 	return nullptr != m_wnd_ptr && true == !!_wnd_ref(m_wnd_ptr).IsWindow();

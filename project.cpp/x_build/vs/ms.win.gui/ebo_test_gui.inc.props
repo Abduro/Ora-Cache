@@ -24,7 +24,7 @@
     <CtlBase Condition="'$(CtlBase)'==''">..\..\..\ms.win.ctl\ctl.base\</CtlBase>
     <SfxStatus Condition="'$(SfxStatus)'==''">..\..\..\ms.win.ctl\sfx.status\</SfxStatus> <!--Sfx::Status::CControl >> statusbar ctrl!-->
     <SfxTabbed Condition="'$(SfxTabbed)'==''">..\..\..\ms.win.ctl\sfx.tabbed\</SfxTabbed> <!--Sfx::Tabbed::CControl >> tabbed set ctrl!-->
-    <SfxTrack Condition="'$(SfxTrack)'==''">..\..\..\ms.win.ctl\sfx.trkball\</SfxTrack> <!--Sfx::Track::CControl >> trackball ctrl!-->
+    <SfxTrack Condition="'$(SfxTrack)'==''">..\..\..\ms.win.ctl\sfx.g.track\</SfxTrack> <!--Sfx::Track::CControl >> trackball ctrl!-->
     <ThisExe Condition="'$(ThisExe)'==''">..\..\..\ms.win.gui\</ThisExe>
     <Theme Condition="'$(Theme)'==''">..\..\..\ms.win\uix\draw\theme\</Theme>
   </PropertyGroup>

@@ -24,7 +24,7 @@ namespace ebo { namespace boo { namespace gui { namespace _impl {
 			 CPane (void) {} CPane (const CPane&) = delete; CPane (CPane&&) = delete;
 			~CPane (void) {}
 		public:
-			uint32_t Height (void) const { return 35; }
+			uint32_t Height (void) const { return 35; } // this is the default height of the status bar control;
 		private:
 			CPane& operator = (const CPane&) = delete;
 			CPane& operator = (CPane&&) = delete;
@@ -36,7 +36,7 @@ namespace ebo { namespace boo { namespace gui { namespace _impl {
 
 	public:
 		const
-		CPadding& Padding(void) const { return this->m_padding; }
+		CPadding& Padding(void) const { return this->m_padding; } // this is the padding that is applied to the main window client area;
 		const
 		CPane&  Pane (void) const { return this->m_pane; }
 

@@ -327,7 +327,7 @@ err_code CTabs::Append (const CTab& _tab) {
 	return this->Error();
 }
 
-int16_t  CTabs::Count (void) const { return static_cast<int16_t>(this->m_tabs.size()); }
+uint16_t CTabs::Count (void) const { return static_cast<uint16_t>(this->m_tabs.size()); }
 
 TError&  CTabs::Error (void) const { return this->m_error; }
 

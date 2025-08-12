@@ -38,7 +38,6 @@ namespace ebo { namespace boo { namespace gui { namespace _impl {
 		return cs_out;
 	}
 
-
 }}}}
 
 using namespace ebo::boo::gui::_impl;
@@ -176,7 +175,7 @@ err_code  CFooter::OnCreate (void) {
 	return this->Error();
 }
 
-err_code CFooter::OnDestroy (void) {
+err_code  CFooter::OnDestroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	CSta_bar& sta_bar = this->Get();
@@ -213,11 +212,17 @@ err_code CPages::At_1st(void) {
 	tabbed.Layout().Tabs().LocatedOn(TSide::e_top);
 	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
 
-	tabbed.Tabs().Append(1, _T("DirectX"));
-	tabbed.Tabs().Append(2, _T("OpenGL"));
+	this->m_error << tabbed.Tabs().Append(1, _T("DirectX")); if (this->Error()) { return this->Error(); } // the tab page #0;
+	this->m_error << tabbed.Tabs().Append(2, _T("OpenGL"));  if (this->Error()) { return this->Error(); } // the tab page #1; the total == CPages::n_count;
 
 	tabbed.Tabs().Tab(0).Page().Borders().Thickness(1);
 	tabbed.Tabs().Tab(1).Page().Borders().Thickness(1);
+
+	for (uint16_t i_ = 0; i_ < CPages::n_count; i_++) {
+		if (__failed(this->m_trackers[i_].At_1st())) {
+			this->m_error = this->m_trackers[i_].Error(); break; // the all trackers has the same settings, so if it's somethig wrong, break;
+		}
+	}
 
 #endif
 	return this->Error();
@@ -227,6 +232,24 @@ TError&  CPages::Error (void) const { return this->m_error; }
 const
 CTabbed& CPages::Get (void) const { return this->m_tabbed; }
 CTabbed& CPages::Get (void)       { return this->m_tabbed; }
+
+bool CPages::Is_valid (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	const CTabbed& tabbed = this->Get();
+	const int16_t n_pages = static_cast<int16_t>(tabbed.Tabs().Count());
+
+	if (0 == n_pages)
+		return false == (this->m_error << __e_not_inited = _T("The tabbed control has no pages")).Is();
+
+	for (int16_t i_ = 0; i_ < n_pages; i_++) {
+		if (tabbed.Tabs().Tab(i_).Page().Is_valid() == false) {
+			this->m_error << __e_hwnd = TString().Format(_T("The tab#%d has invalid page window"), i_); break;
+		}
+	}
+
+	return false == this->Error();
+}
 
 err_code CPages::OnCreate (void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -242,6 +265,12 @@ err_code CPages::OnCreate (void) {
 	if (__failed(tabbed.Create(shared::Get_View().Parent(), 0xB)))
 		return this->m_error = tabbed.Error();
 
+	for (uint16_t i_ = 0; i_ < CPages::n_count; i_++) {
+		const HWND h_page = tabbed.Tabs().Tab(i_).Page().Handle();
+		if (__failed(this->m_trackers[i_].OnCreate(h_page))) {
+			this->m_error = this->m_trackers[i_].Error(); break;
+		}
+	}
 	return this->Error();
 }
 
@@ -252,9 +281,43 @@ err_code CPages::OnDestroy(void) {
 
 	if (__failed(tabbed.Destroy()))
 		this->m_error = tabbed.Error();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
+	// all trackers' windows are destroyed automatically because the page window is the parent;
 
 	return this->Error();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CTracker:: CTracker (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CTracker::~CTracker (void) {}
+
+err_code  CTracker::At_1st(void) {
+	this->m_error <<__METHOD__<<__s_ok;
+#if defined(_test_case_lvl) && (_test_case_lvl >= 2)
+	CTrkball& tracker = this->Get(); tracker;
+#endif
+	return this->Error();
+}
+
+TError&   CTracker::Error (void) const { return this->m_error; }
+const
+CTrkball& CTracker::Get (void) const { return this->m_tracker; }
+CTrkball& CTracker::Get (void)       { return this->m_tracker; }
+
+err_code  CTracker::OnCreate (const HWND _h_page) {
+	_h_page;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Get().Is_valid())
+		return this->m_error = (err_code) TErrCodes::eObject::eExists;
+
+	if (nullptr == _h_page || !::IsWindow(_h_page))
+		return this->m_error << __e_hwnd = _T("Invalid parent window handle");
+	
+	return this->Error();
+}
+err_code  CTracker::OnDestroy(void) { return this->Error(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -334,6 +397,7 @@ err_code CView::OnDestroy (void) {
 
 	this->Footer().OnDestroy(); // no error handling is made yet;
 	this->Pages().OnDestroy();
+	this->Tracker().OnDestroy();
 
 	return n_result;
 }
@@ -362,21 +426,15 @@ const
 CWindow&  CView::Parent (void) const { return this->m_parent; }
 CWindow&  CView::Parent (void)       { return this->m_parent; }
 const
-CPages&   CView::Pages (void) const { return this->m_pages; }
-CPages&   CView::Pages (void)       { return this->m_pages; }
-#if (0)
-const
-CStatus&  CView::Status (void) const { return this->m_status; }
-CStatus&  CView::Status (void)       { return this->m_status; }
-#endif
+CPages&   CView::Pages  (void) const { return this->m_pages; }
+CPages&   CView::Pages  (void)       { return this->m_pages; }
 const
 CSurface& CView::Surface(void) const { return this->m_surface; }
 CSurface& CView::Surface(void)       { return this->m_surface; }
-#if (0)
 const
-CTabbed&  CView::Tabbed (void) const { return this->m_tabbed; }
-CTabbed&  CView::Tabbed (void)       { return this->m_tabbed; }
-#endif
+CTracker& CView::Tracker(void) const { return this->m_tracker; }
+CTracker& CView::Tracker(void)       { return this->m_tracker; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 namespace shared {

@@ -28,6 +28,9 @@ namespace ex_ui { namespace controls { namespace sfx { namespace track {
 		CFormat&  Format (void) const;
 		CFormat&  Format (void)      ;
 
+		uint32_t  Id (void) const;
+		bool      Id (const uint32_t);
+
 		bool    Is_valid (void) const;  // checks for: (1) window pointer; (2) this control window handle validity;
 		const
 		CLayout&  Layout (void) const;
