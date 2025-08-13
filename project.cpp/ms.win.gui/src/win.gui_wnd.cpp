@@ -3,6 +3,7 @@
 	This is Ebo Pack draw renderer test app main window interface implementation file;
 */
 #include "win.gui_wnd.h"
+#include "win.gui_layout.h"
 
 using namespace ebo::boo::gui;
 
@@ -130,8 +131,8 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	t_rect rc_client = {0};
 	this->GetClientRect(&rc_client);
 
-	m_layout.Window() = *this;     // ATL::CWindow operator is applied here;
-	m_layout.Update(rc_client);
+	::shared::Get_Layout().Window() = *this;     // ATL::CWindow operator is applied here;
+	::shared::Get_Layout().Update(rc_client);
 
 	TBase::m_error << __METHOD__ << __s_ok;
 
@@ -186,7 +187,7 @@ err_code CWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
 		t_rect rect = {0};
 		this->GetClientRect(&rect);
 		// ToDo: does not work properly yet, needs to be checked;
-		this->Layout().Update(rect);
+		::shared::Get_Layout().Update(rect);
 		::shared::Get_View().OnDraw(nullptr, rect); // calling the draw function for specific client area rectangle must be reviewed;
 
 	} break;
@@ -210,7 +211,7 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 			(TBase::m_error << __METHOD__).Last();
 
 	if (TBase::m_error == false)
-		TBase::m_error << this->Layout().Update(rc_client);
+		TBase::m_error << ::shared::Get_Layout().Update(rc_client);
 	if (TBase::m_error == false)
 		::shared::Get_View().OnDraw(nullptr, rc_client);
 #else
@@ -235,9 +236,3 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	err_code n_result = __s_false;
 	return   n_result;
 }
-
-/////////////////////////////////////////////////////////////////////////////
-
-const
-CLayout& CWnd::Layout (void) const { return this->m_layout; }
-CLayout& CWnd::Layout (void)       { return this->m_layout; }

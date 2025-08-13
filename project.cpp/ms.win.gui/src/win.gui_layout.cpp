@@ -52,6 +52,30 @@ namespace ebo { namespace boo { namespace gui { namespace _impl {
 using namespace ebo::boo::gui::_impl;
 /////////////////////////////////////////////////////////////////////////////
 
+layout::CPage:: CPage (void) { this->m_error >>__CLASS__ << __METHOD__ << __s_ok; }
+
+TError& layout::CPage::Error (void) const { return this->m_error; }
+
+t_rect  layout::CPage::GetTrackerPos (void) const {
+	this->m_error << __METHOD__ << __s_ok;
+
+	t_rect rect_track = {0};
+
+	CTabbed& tabbed = shared::Get_View().Pages().Get();
+
+	if (0 == tabbed.Tabs().Count()) {
+		this->m_error << __e_not_inited = _T("Tabbed control has no pages");
+		return rect_track;
+	}
+	// it is suppossed the tabbed control always has selected or active tab page;
+	if (tabbed.Tabs().Current().Is_fake()) {
+		this->m_error << __e_not_inited = _T("Tabbed control has no active tab");
+		return rect_track;
+	}
+
+	return rect_track;
+}
+
 CLayout:: CLayout (void) : m_draw_area{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -85,6 +109,10 @@ bool      CLayout::Is_valid (void) const { return !!this->m_main; }
 const
 CPadding& CLayout::Padding (void) const { return this->m_padding; }
 CPadding& CLayout::Padding (void)       { return this->m_padding; }
+
+const
+layout::CPage&    CLayout::Page (void) const { return this->m_page; }
+layout::CPage&    CLayout::Page (void)       { return this->m_page; }
 
 err_code  CLayout::Update (void) {
 	
@@ -144,3 +172,11 @@ err_code  CLayout::Update (const t_rect& _rect) {
 const
 CWindow&  CLayout::Window (void) const { return this->m_main; }
 CWindow&  CLayout::Window (void)       { return this->m_main; }
+
+namespace shared {
+	TLayout&  Get_Layout (void) {
+		static
+		TLayout cs_layout;
+		return  cs_layout;
+	}
+}

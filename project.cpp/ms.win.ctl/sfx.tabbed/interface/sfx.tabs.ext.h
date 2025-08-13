@@ -64,7 +64,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		TCtrlPtr m_p_ctrl;
 	};
 
-	class CTab {
+	class CTab { friend class CTabs;
 	public:
 		 CTab (const uint16_t _id = 0, _pc_sz _lp_sz_cap = nullptr); CTab (CTab&&);
 		 CTab (const CTab&);
@@ -76,6 +76,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 
 		uint16_t   Id (void) const;
 		uint16_t&  Id (void)      ;
+
+		const bool Is_fake (void) const; // returns true in case if it is fake object that is returned ,for example, as active tab but there is none of them;
 
 		const
 		TLayersEx& Layers (void) const;
@@ -104,6 +106,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		CTab& operator <<(_pc_sz _lp_sz_cap);
 
 	private:
+		bool       m_fake  ;  // indicates that this tab object is not valid, even does not exist in the tab set of this control;
 		uint16_t   m_id    ;  // the tab identifier;
 		TLayersEx  m_layers;  // for layered draw; not used yet;
 		t_rect     m_strip ;  // the tab rectangle that does not include the tab page rectangle; it is just the visible element of tab panel/document/page;
@@ -115,22 +118,27 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 	typedef ::std::vector<CTab> TTabArray;
 
 	interface ITabEvents;
-
-	class CTabs {
-	friend class  CControl;
+	// https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-tabctrl_getcursel ;
+	class CTabs { friend class CControl;
 	private:
 		 CTabs (CControl&);    CTabs (void) = delete; 
 		 CTabs (const CTabs&); CTabs (CTabs&&);
 		~CTabs (void);
 
 	public:
-		int16_t  Active (void) const;            // returns an index of tab that has state selected, otherwise e_na (-1);
-		err_code Active (const int16_t _ndx);    // no tab cannot be active, otherwise, it does not have a sense; updated: out of tab range makes no active tab;
+		static const int16_t not_avbl = -1;       // not available, i.e. there is no available tab for the method being invoked;
+		// ToDo: it would be better to call the method below as 'SelectedIndex' or 'CurSelIndex', or TabCtrl_GetCurSel() as in common controls;
+		int16_t  Active (void) const;             // returns an index of tab that has state selected, otherwise e_na (-1);
+		err_code Active (const int16_t _ndx);     // no tab cannot be active, otherwise, it does not have a sense; updated: out of tab range makes no active tab;
 
 		err_code Append (const CTab&);
 		err_code Append (const uint16_t _id, _pc_sz _lp_sz_cap);
 
 		uint16_t Count  (void) const;
+		// if there's no active or currently selected tab in the tab control the reference to the fake tab object is returned: Is_fake() == true;
+		const
+		CTab&    Current(void) const;             // returns the reference to the currently selected tab or the currently active tab; (ro)
+		CTab&    Current(void) ;                  // returns the reference to the currently selected tab or the currently active tab; (rw)
 
 		TError&  Error  (void) const;
 

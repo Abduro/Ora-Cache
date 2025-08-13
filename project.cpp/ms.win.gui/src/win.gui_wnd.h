@@ -5,7 +5,6 @@
 	This is Ebo Pack draw renderer test app main window interface declaration file;
 */
 #include "win.gui.inc.h"
-#include "win.gui_layout.h"
 
 #include "direct_x.surface.h"
 #include "direct_x.wrap.h"
@@ -55,17 +54,10 @@ namespace ebo { namespace boo { namespace gui {
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final;
 		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
 #pragma endregion
-	public:
-		const
-		CLayout&  Layout (void) const;
-		CLayout&  Layout (void) ;
-
+	
 	private:
 		CWnd& operator = (const CWnd&) = delete;
 		CWnd& operator = (CWnd&&) = delete;
-
-	private:
-		CLayout   m_layout ;
 	};
 
 }}}

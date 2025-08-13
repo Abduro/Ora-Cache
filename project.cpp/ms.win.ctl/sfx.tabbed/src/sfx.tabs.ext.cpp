@@ -15,6 +15,7 @@ shared::sys_core::CSyncObject sync_ob;
 
 #define Safe_Guard Safe_Lock(sync_ob)
 #endif
+
 }}}}}
 using namespace ex_ui::controls::sfx::tabbed;
 /////////////////////////////////////////////////////////////////////////////
@@ -216,7 +217,7 @@ CPage&   CPage::operator <<(TCtrlPtr _ptr) { this->Set_ptr(_ptr); return *this; 
 
 /////////////////////////////////////////////////////////////////////////////
 
-CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_strip{0} {*this << _lp_sz_cap << _id; }
+CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_strip{0}, m_fake(false) {*this << _lp_sz_cap << _id; }
 CTab:: CTab (const CTab& _tab) : CTab() { *this = _tab; }
 CTab:: CTab (CTab&& _victim) : CTab() { *this = _victim; }
 CTab::~CTab (void) {}
@@ -229,6 +230,7 @@ CString&   CTab::Caption (void)       { return this->m_cap; }
 uint16_t   CTab::Id (void) const { return this->m_id; }
 uint16_t&  CTab::Id (void)       { return this->m_id; }
 
+const bool CTab::Is_fake(void) const { return this->m_fake; } // this can be set by 
 const
 TLayersEx& CTab::Layers (void) const { return this->m_layers; }
 TLayersEx& CTab::Layers (void)       { return this->m_layers; }
@@ -272,7 +274,9 @@ CTab&   CTab::operator << (const TState& _state) { this->State() = _state; retur
 
 /////////////////////////////////////////////////////////////////////////////
 
-CTabs:: CTabs (CControl& _ctrl) : m_ctrl(_ctrl),  m_sink(nullptr) { m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CTab&  Get_fake_tab (void) { static CTab fake; return fake; }
+
+CTabs:: CTabs (CControl& _ctrl) : m_ctrl(_ctrl),  m_sink(nullptr) { m_error >> __CLASS__ << __METHOD__ << __e_not_inited; Get_fake_tab().m_fake = true; }
 CTabs:: CTabs (const CTabs& _src) : CTabs(_src.m_ctrl) { *this = _src; }
 CTabs::~CTabs (void) {}
 
@@ -286,7 +290,7 @@ int16_t  CTabs::Active (void) const {
 		if (tab_.State().IsSelected())
 			return i_;
 	}
-	return -1;
+	return CTabs::not_avbl;
 }
 
 err_code CTabs::Active (const int16_t _ndx) {
@@ -315,7 +319,7 @@ err_code CTabs::Append (const CTab& _tab) {
 
 	try {
 		m_tabs.push_back(_tab);
-		if (this->Active() == -1)
+		if (this->Active() == CTabs::not_avbl)
 			this->Active(this->Count() - 1);
 
 		m_tabs.at(m_tabs.size() - 1).Page().Set_ptr(&this->m_ctrl);
@@ -328,6 +332,10 @@ err_code CTabs::Append (const CTab& _tab) {
 }
 
 uint16_t CTabs::Count (void) const { return static_cast<uint16_t>(this->m_tabs.size()); }
+
+const
+CTab&    CTabs::Current(void) const { if (CTabs::not_avbl == this->Active()) return Get_fake_tab(); else return this->Tab(this->Active()); }
+CTab&    CTabs::Current(void)       { if (CTabs::not_avbl == this->Active()) return Get_fake_tab(); else return this->Tab(this->Active()); }
 
 TError&  CTabs::Error (void) const { return this->m_error; }
 
@@ -348,13 +356,13 @@ int16_t  CTabs::Has (const t_point& _pt) const {
 			return static_cast<int16_t>(i_);
 		}
 	}
-	return -1;
+	return CTabs::not_avbl;
 }
 
 const
 CTab&    CTabs::Tab (const int16_t _ndx) const {
 	if (_ndx < 0 || _ndx >= static_cast<INT>(m_tabs.size())) {
-		static CTab inv_tab; return inv_tab;
+		return Get_fake_tab();
 	}
 	else
 		return m_tabs[_ndx];
@@ -362,7 +370,7 @@ CTab&    CTabs::Tab (const int16_t _ndx) const {
 
 CTab&    CTabs::Tab (const int16_t _ndx) {
 	if (_ndx < 0 || _ndx >= static_cast<INT>(m_tabs.size())) {
-		static CTab inv_tab; return inv_tab;
+		return Get_fake_tab();
 	}
 	else
 		return m_tabs[_ndx];

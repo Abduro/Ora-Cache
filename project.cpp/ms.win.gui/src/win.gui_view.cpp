@@ -282,7 +282,7 @@ err_code CPages::OnDestroy(void) {
 	if (__failed(tabbed.Destroy()))
 		this->m_error = tabbed.Error();
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
-	// all trackers' windows are destroyed automatically because the page window is the parent;
+	// all trackers' windows are destroyed automatically because the page window is the parent one been destroyed first;
 
 	return this->Error();
 }

@@ -25,6 +25,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
 
 	// https://learn.microsoft.com/en-us/windows/win32/controls/create-a-tabbed-dialog-box ;
 	// https://learn.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/aa228545(v=vs.60)?redirectedfrom=MSDN ;
+	// https://learn.microsoft.com/en-us/windows/win32/controls/tab-controls ;
 
 	class CControl : public ITabEvents { // ITabEvents interface is used as a callback internally between different parts of this control;
 	public:
