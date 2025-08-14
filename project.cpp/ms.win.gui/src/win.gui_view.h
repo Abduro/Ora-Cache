@@ -13,91 +13,19 @@
 #include "shared.timer.h"
 #include "sys.gen.time.h"
 
+#include "ctl.status.h"
+#include "ctl.tabbed.h"
+
 namespace ebo { namespace boo { namespace gui {
 
+	using namespace ebo::boo::gui::ctl;
+
 	using CPane    = ex_ui::controls::sfx::status::CPane;
-	using CSta_bar = ex_ui::controls::sfx::status::CControl;
-	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
-	using CTrkball = ex_ui::controls::sfx::track::CControl;
-
 	using CSurface = ebo::boo::gui::render::CSurface;
-
-	class CFooter : private shared::common::IWaitable_Events {
-	public:
-		 CFooter (void); CFooter (const CFooter&) = delete; CFooter (CFooter&&) = delete;
-		~CFooter (void);
-
-	public:
-		err_code  At_1st(void) ;     // this is just *before* creating status bar control window: all sections/panes must be defined;
-		TError&   Error (void) const;
-		const
-		CSta_bar& Get (void) const;
-		CSta_bar& Get (void) ;
-
-		err_code  OnCreate  (void) ; // this method must be called from main window on 'create' event handler; *status bar* must be ready;
-		err_code  OnDestroy (void) ;
-
-		void  SetText(_pc_sz _p_text, const uint16_t _pane_ndx = 1);
-
-	private:
-		void IWaitable_OnComplete (void) override final;
-
-	private:
-		CFooter& operator = (const CFooter&) = delete; CFooter& operator = (CFooter&&) = delete;
-		CError   m_error;
-		CSta_bar m_bar  ;
-		shared::common::CStdTimer m_timer;
-	};
-
-	class CTracker {
-	public:
-		 CTracker (void); CTracker (const CTracker&) = delete; CTracker (CTracker&&) = delete;
-		~CTracker (void);
-
-	public:
-		err_code  At_1st(void);
-		TError&   Error (void) const;
-		const
-		CTrkball& Get (void) const;
-		CTrkball& Get (void) ;
-
-		err_code  OnCreate (const HWND _h_page) ;
-		err_code  OnDestroy(void) ;
-
-	private:
-		CTracker& operator = (const CTracker&) = delete; CTracker& operator = (CTracker&&) = delete;
-		CError   m_error ;
-		CTrkball m_tracker;
-	};
-
-	class CPages {
-	static const uint16_t n_count = 2; // how many tabs will be appended to the tabbed control;
-	public:
-		 CPages (void); CPages (const CPages&) = delete; CPages (CPages&&) = delete;
-		~CPages (void);
-
-	public:
-		err_code  At_1st(void) ;     // this is just *before* creating tabbed control window: all tabs and their pages must be formatted and added;
-		TError&   Error (void) const;
-		const
-		CTabbed&  Get (void) const;
-		CTabbed&  Get (void) ;
-
-		bool Is_valid (void) const;  // validates each page window handle;
-
-		err_code  OnCreate (void) ;
-		err_code  OnDestroy(void) ;
-
-	private:
-		CPages& operator = (const CPages&) = delete; CPages& operator = (CPages&&) = delete;
-		mutable
-		CError   m_error ;
-		CTabbed  m_tabbed;
-		CTracker m_trackers[CPages::n_count];
-	};
 
 	// this is the view of the main window;
 	class CView {
+	using CStatus = ebo::boo::gui::ctl::CStatus;
 	public:
 		 CView (void) ; CView (const CView&) = delete; CView (CView&&) = delete;
 		~CView (void) ;
@@ -109,8 +37,8 @@ namespace ebo { namespace boo { namespace gui {
 		ex_ui::controls::sfx::CPane&    Pane (void) ;
 #endif
 		const
-		CFooter&  Footer (void) const;
-		CFooter&  Footer (void) ;
+		CStatus&  Status (void) const;
+		CStatus&  Status (void) ;
 
 		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;
 		err_code  OnDestroy(void);     // it suould be called from main window destroy event handler;
@@ -137,7 +65,7 @@ namespace ebo { namespace boo { namespace gui {
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 		ex_ui::controls::sfx::CPane m_pane;
 #endif
-		CFooter  m_footer ;
+		CStatus  m_status ;
 		CPages   m_pages  ;
 		CTracker m_tracker;
 		CSurface m_surface;

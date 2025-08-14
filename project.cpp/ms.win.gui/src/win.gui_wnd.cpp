@@ -231,7 +231,7 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 #endif
 #if (1)
 	// this was made for testing of dynamic update of the status pane text; (passed)
-	shared::Get_View().Footer().SetText(TStringEx().Format(_T("Ready [%dx%d]"), __W(rc_client), __H(rc_client)));
+	shared::Get_View().Status().SetText(TString().Format(_T("Ready [%dx%d]"), __W(rc_client), __H(rc_client)));
 #endif
 	err_code n_result = __s_false;
 	return   n_result;

@@ -34,37 +34,33 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Root)interface\</_0>
     <_1>$(Root)src\</_1>
-    <_2>$(Root)src\resources\</_2>
-    <_3>$(Root)src\render\</_3> <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
-    <_4>$(Root)src\themes\</_4>
-    <_5>$(Root)src\resources\icons\</_5>
+    <_2>$(Root)src\controls\</_2>
+    <_3>$(Root)src\resources\</_3>
+    <_4>$(Root)src\render\</_4> <!--this is the folder for including render interface wrappers, especially direct_x for this time;-->
+    <_5>$(Root)src\themes\</_5>
     <_6>$(Shared)interface\</_6>
-    <_7>$(Error)interface\</_7>
-    <_8>$(Error)interface\seh\</_8>
-    <_9>$(Memory)interface\</_9>
-    <_a>$(ComCore)interface\</_a>
-    <_b>$(Shell)interface\</_b>
-    <_c>$(Geo-2d)interface\</_c>
-    <_d>$(Color)interface\</_d>
-    <_e>$(Color)interface\compl\</_e>
-    <_f>$(Color)interface\named\</_f>
-    <_g>$(Theme)interface\</_g>
-    <_h>$(Theme)interface\named\</_h>
-    <_i>$(MS-WTL)include\</_i>
-    <_j>$(Win-pop)interface\</_j>
-    <_k>$(Win-pop)interface\msg_handlers\</_k>
-    <_l>$(Render)interface\</_l>
-    <_m>$(DirectX)interface\</_m>
-    <_n>$(ZBuffer)interface\</_n>
-    <_o>$(CtlBase)interface\</_o>
-    <_p>$(SfxStatus)interface\</_p>
-    <_q>$(SfxTabbed)interface\</_q>
-    <_r>$(Image)interface\</_r>
-    <_s>$(SfxTrack)interface\</_s>
+    <_7>$(Error)interface\;$(Error)interface\seh\</_7>
+    <_8>$(Memory)interface\</_8>
+    <_9>$(ComCore)interface\</_9>
+    <_a>$(Shell)interface\</_a>
+    <_b>$(Geo-2d)interface\</_b>
+    <_c>$(Color)interface\;$(Color)interface\compl\;$(Color)interface\named\</_c>
+    <_d>$(Theme)interface\;$(Theme)interface\named\</_d>
+    <_e>$(MS-WTL)include\</_e>
+    <_f>$(Win-pop)interface\;$(Win-pop)interface\msg_handlers\</_f>
+    <_g>$(Render)interface\</_g>
+    <_h>$(DirectX)interface\</_h>
+    <_i>$(ZBuffer)interface\</_i>
+    <_j>$(CtlBase)interface\</_j>
+    <_k>$(SfxStatus)interface\</_k>
+    <_l>$(SfxTabbed)interface\</_l>
+    <_m>$(Image)interface\</_m>
+    <_n>$(SfxTrack)interface\</_n>
+    <_o>$(Root)src\resources\icons\</_o>
   </PropertyGroup>
   <PropertyGroup>
     <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o);$(_p);$(_q);$(_r);$(_s)</Include_abc>
+    <Include_abc>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f);$(_g);$(_h);$(_i);$(_j);$(_k);$(_l);$(_m);$(_n);$(_o)</Include_abc>
     <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />

@@ -246,26 +246,32 @@
     <ClCompile Include="$(_1)win.gui_layout.cpp" />
     <ClInclude Include="$(_1)win.gui_view.h" />
     <ClCompile Include="$(_1)win.gui_view.cpp" />
+    <ClInclude Include="$(_2)ctl.status.h" />
+    <ClCompile Include="$(_2)ctl.status.cpp" />
+    <ClInclude Include="$(_2)ctl.tabbed.h" />
+    <ClCompile Include="$(_2)ctl.tabbed.cpp" />
+    <ClInclude Include="$(_2)ctl.trkball.h" />
+    <ClCompile Include="$(_2)ctl.trkball.cpp" />
     <ClInclude Include="$(_1)win.gui_wnd.h" />
     <ClCompile Include="$(_1)win.gui_wnd.cpp" />
-    <ClInclude Include="$(_3)direct_x.surface.h" />
-    <ClCompile Include="$(_3)direct_x.surface.cpp" />
-    <ClInclude Include="$(_3)direct_x.wrap.h" />
-    <ClCompile Include="$(_3)direct_x.wrap.cpp" />
-    <ClInclude Include="$(_4)ebo.sha.dwm.wrap.h" />
-    <ClCompile Include="$(_4)ebo.sha.dwm.wrap.cpp" />
-    <ClInclude Include="$(_4)ebo.sha.gui.theme.h" />
-    <ClCompile Include="$(_4)ebo.sha.gui.theme.cpp" />
+    <ClInclude Include="$(_4)direct_x.surface.h" />
+    <ClCompile Include="$(_4)direct_x.surface.cpp" />
+    <ClInclude Include="$(_4)direct_x.wrap.h" />
+    <ClCompile Include="$(_4)direct_x.wrap.cpp" />
+    <ClInclude Include="$(_5)ebo.sha.dwm.wrap.h" />
+    <ClCompile Include="$(_5)ebo.sha.dwm.wrap.cpp" />
+    <ClInclude Include="$(_5)ebo.sha.gui.theme.h" />
+    <ClCompile Include="$(_5)ebo.sha.gui.theme.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(_0)win.gui.app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2)win.gui.res.h" />
-    <ResourceCompile Include="$(_2)win.gui.res.rc" />
+    <ClInclude Include="$(_3)win.gui.res.h" />
+    <ResourceCompile Include="$(_3)win.gui.res.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="$(_5)wanderer_rootless.ico" />
+    <Image Include="$(_o)wanderer_rootless.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

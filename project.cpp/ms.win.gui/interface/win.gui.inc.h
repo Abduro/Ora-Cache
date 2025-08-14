@@ -31,9 +31,6 @@
 #pragma region __comm_ctrls__
 #include "ctl.base.layout.h"
 #include "ctl.base.pane.h"
-#include "sfx.status.ctrl.h"
-#include "sfx.tabs.ctrl.h"
-#include "sfx.trkball.ctrl.h"
 #pragma endregion
 
 #include "sys.shell.dwm.h"
@@ -47,6 +44,7 @@ namespace ebo { namespace boo { namespace gui {
 
 	using namespace shared::types;
 	using CWindow = ::ATL::CWindow;
+	using TString = TStringEx;
 
 	// https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
 	// https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);

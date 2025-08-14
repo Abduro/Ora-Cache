@@ -21,7 +21,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace track {
 		CBorders& Borders(void) const;
 		CBorders& Borders(void) ;
 
-		err_code  Create (const HWND hParent, const uint32_t _ctrl_id);
+		err_code  Create (const HWND hParent, const uint32_t _ctrl_id, const t_rect&);
 		err_code  Destroy(void) ;
 		TError&   Error  (void) const;
 		const

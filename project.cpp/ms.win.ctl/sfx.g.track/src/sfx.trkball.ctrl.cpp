@@ -28,20 +28,21 @@ const
 CBorders&  CControl::Borders (void) const { return m_borders; }
 CBorders&  CControl::Borders (void)       { return m_borders; }
 
-err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
+err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id, const t_rect& _rect) {
 	hParent; _ctrl_id;
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == ::IsWindow(hParent)) return this->m_error << __e_hwnd = _T("Invalid parent window handle;");
 	if (nullptr == m_wnd_ptr)         return this->m_error << __e_not_inited;
+	if (::IsRectEmpty(&_rect))        return this->m_error << __e_rect;
 
 	this->m_ctrl_id = _ctrl_id;
-	t_rect  rc_area = {0};
-
+	t_rect  rc_area = _rect;
+#if (0)
 	if (false == ::GetClientRect(hParent, &rc_area)) {
 		return this->m_error.Last();
 	}
-
+#endif
 	const uint32_t n_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 
 	_wnd_ref(m_wnd_ptr).Create(
@@ -81,7 +82,16 @@ bool       CControl::Id (const uint32_t _u_id) {
 }
 
 bool       CControl::Is_valid (void) const {
+#if (0)
+	bool b_valid = nullptr != m_wnd_ptr;
+	if ( b_valid ) {
+		const HWND h_wnd = _wnd_ref(m_wnd_ptr);
+		b_valid = 0 != ::IsWindow(h_wnd); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindow ;
+	}
+	return b_valid;
+#else
 	return nullptr != m_wnd_ptr && true == !!_wnd_ref(m_wnd_ptr).IsWindow();
+#endif
 }
 const
 CLayout&   CControl::Layout (void) const { return this->m_layout; }

@@ -73,6 +73,23 @@ t_rect  layout::CPage::GetTrackerPos (void) const {
 		return rect_track;
 	}
 
+	const CTracker* p_tracker = shared::Get_View().Pages().Tracker(tabbed.Tabs().Active());
+	if (nullptr == p_tracker) {
+		this->m_error << __e_index = _T("Invalid index to trackers' array element");
+		return rect_track;
+	}
+
+	// (1) gets the tab page rectangle first;
+	const t_rect rect_page = tabbed.Tabs().Current().Page().Layout().Rect();
+	const t_size pref_size = p_tracker->Get().Layout().Pref_Sz();
+	/*
+		it is assumed the following:
+		(a) the trackball control is aligned to right-bottom corner of the page window client area;
+		(b) the preferable size of the tracker control is applied to calculation of the control position;
+	*/
+	rect_track.left = rect_page.right  - pref_size.cx; rect_track.right  = rect_page.right;
+	rect_track.top  = rect_page.bottom - pref_size.cy; rect_track.bottom = rect_page.bottom;
+
 	return rect_track;
 }
 
@@ -152,8 +169,8 @@ err_code  CLayout::Update (const t_rect& _rect) {
 	shared::Get_View().Pane().Layout().Update(rect_pane);
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 1)
-	::shared::Get_View().Footer().Get().Layout().Update(_rect);
-	this->m_draw_area.bottom -= ::shared::Get_View().Footer().Get().Layout().Height();
+	::shared::Get_View().Status().Get().Layout().Update(_rect);
+	this->m_draw_area.bottom -= ::shared::Get_View().Status().Get().Layout().Height();
 #endif
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
