@@ -53,9 +53,6 @@ namespace ebo { namespace boo { namespace gui {
 		const
 		CSurface& Surface(void) const;
 		CSurface& Surface(void) ;
-		const
-		CTracker& Tracker(void) const;
-		CTracker& Tracker(void) ;
 
 	public:
 		CView& operator = (const CView&) = delete;
@@ -67,7 +64,6 @@ namespace ebo { namespace boo { namespace gui {
 #endif
 		CStatus  m_status ;
 		CPages   m_pages  ;
-		CTracker m_tracker;
 		CSurface m_surface;
 		CWindow  m_parent ;  // this is the main window of this app;
 	};

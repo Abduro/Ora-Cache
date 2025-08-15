@@ -213,11 +213,27 @@ bool  CPage::Set_ptr (TCtrlPtr _ptr) {
 	return b_changed;
 }
 
+err_code CPage::MoveTo (const t_rect& _rect, const bool _b_redraw) {
+	_rect;
+	err_code n_result = __s_ok;
+	if (::IsRectEmpty(&_rect))
+		return n_result = __e_rect;
+
+	if (this->Is_valid() == false)
+		return n_result = __e_not_inited;
+
+	const bool b_result = !!TWindow::MoveWindow(&_rect, _b_redraw);
+	if (false == b_result)
+		n_result = __LastErrToHresult();
+
+	return n_result;
+}
+
 CPage&   CPage::operator <<(TCtrlPtr _ptr) { this->Set_ptr(_ptr); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_strip{0}, m_fake(false) {*this << _lp_sz_cap << _id; }
+CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_strip{0}, m_fake(false), m_index(0) {*this << _lp_sz_cap << _id; }
 CTab:: CTab (const CTab& _tab) : CTab() { *this = _tab; }
 CTab:: CTab (CTab&& _victim) : CTab() { *this = _victim; }
 CTab::~CTab (void) {}
@@ -229,6 +245,8 @@ CString&   CTab::Caption (void)       { return this->m_cap; }
 
 uint16_t   CTab::Id (void) const { return this->m_id; }
 uint16_t&  CTab::Id (void)       { return this->m_id; }
+
+uint16_t   CTab::Index (void) const { return this->m_index; }
 
 const bool CTab::Is_fake(void) const { return this->m_fake; } // this can be set by 
 const
@@ -262,8 +280,10 @@ TState& CTab::State  (void)       { return this->m_state; }
 /////////////////////////////////////////////////////////////////////////////
 
 CTab&   CTab::operator =  (const CTab& _tab) {
-	this->Page() << _tab.Page().Get_ptr(); // the page is not copyable due to window messages' handlers, just copying the control pointer;
-	*this << _tab.Caption() << _tab.Id() << _tab.State(); return *this;
+	 this->Page() << _tab.Page().Get_ptr(); // the page is not copyable due to window messages' handlers, just copying the control pointer;
+	*this << _tab.Caption() << _tab.Id() << _tab.State();
+	 this->m_index = _tab.m_index;  // no direct assigning of the index value;
+	return *this;
 }
 CTab&   CTab::operator =  (CTab&& _victim) { *this = (const CTab&)_victim; return *this; }
 
@@ -319,16 +339,27 @@ err_code CTabs::Append (const CTab& _tab) {
 
 	try {
 		m_tabs.push_back(_tab);
-		if (this->Active() == CTabs::not_avbl)
-			this->Active(this->Count() - 1);
 
-		m_tabs.at(m_tabs.size() - 1).Page().Set_ptr(&this->m_ctrl);
+		const uint16_t n_index = this->Count() - 1; // on this line of the code it is expected that 'push_back' is succeeded;
+
+		if (this->Active() == CTabs::not_avbl)
+			this->Active(n_index);
+
+		m_tabs.at(n_index).Page().Set_ptr(&this->m_ctrl);
+		m_tabs.at(n_index).m_index = n_index;
 
 		((ITabEvents&)this->m_ctrl).ITabEvent_OnAppend(_tab);
 	}
 	catch (const ::std::bad_alloc&) { m_error << __e_no_memory; }
 
 	return this->Error();
+}
+
+err_code CTabs::Append (_pc_sz _lp_sz_cap) {
+	_lp_sz_cap;
+	const uint16_t n_id = !!this->Count() ? this->Tab(this->Count() - 1).Id() + 1 : this->Count() + 1; // just creates new identifier with the next value;
+
+	CTab c_tab(n_id, _lp_sz_cap); return this->Append(c_tab);
 }
 
 uint16_t CTabs::Count (void) const { return static_cast<uint16_t>(this->m_tabs.size()); }

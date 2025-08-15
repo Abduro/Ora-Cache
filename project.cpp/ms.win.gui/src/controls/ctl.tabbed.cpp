@@ -23,18 +23,17 @@ err_code CPages::At_1st(void) {
 
 	tabbed.Layout().Tabs().LocatedOn(TSide::e_top);
 	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
-
+#if (0)
 	this->m_error << tabbed.Tabs().Append(1, _T("DirectX")); if (this->Error()) { return this->Error(); } // the tab page #0;
-	this->m_error << tabbed.Tabs().Append(2, _T("OpenGL"));  if (this->Error()) { return this->Error(); } // the tab page #1; the total == CPages::n_count;
-
+	this->m_error << tabbed.Tabs().Append(2, _T("OpenGL"));  if (this->Error()) { return this->Error(); } // the tab page #1; the total == cfg::n_page_count;
+#else
+	this->m_error << tabbed.Tabs().Append(_T("DirectX")); if (this->Error()) { return this->Error(); } // the tab page #0;
+	this->m_error << tabbed.Tabs().Append(_T("OpenGL"));  if (this->Error()) { return this->Error(); } // the tab page #1; the total == cfg::n_page_count;
+#endif
 	tabbed.Tabs().Tab(0).Page().Borders().Thickness(1);
 	tabbed.Tabs().Tab(1).Page().Borders().Thickness(1);
 
-	for (uint16_t i_ = 0; i_ < CPages::n_count; i_++) {
-		if (__failed(this->m_trackers[i_].At_1st())) {
-			this->m_error = this->m_trackers[i_].Error(); break; // the all trackers has the same settings, so if it's somethig wrong, break;
-		}
-	}
+	this->Trackers().At_1st(); // no error check yet;
 
 #endif
 	return this->Error();
@@ -78,43 +77,26 @@ err_code CPages::OnCreate (void) {
 	if (__failed(tabbed.Create(shared::Get_View().Parent(), 0xB)))
 		return this->m_error = tabbed.Error();
 
-	for (uint16_t i_ = 0; i_ < CPages::n_count; i_++) {
-		const HWND h_page = tabbed.Tabs().Tab(i_).Page().Handle();
-		if (__failed(this->m_trackers[i_].OnCreate(h_page))) {
-			this->m_error = this->m_trackers[i_].Error(); break;
-		}
-	}
+	// (2) creates the trackball controls;
+	if (__failed(this->Trackers().OnCreate()))
+		return this->m_error = this->Trackers().Error();
+
 	return this->Error();
 }
 
 err_code CPages::OnDestroy(void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	this->Trackers().OnDestroy(); // no error check yet;
+
 	CTabbed& tabbed = this->Get();
 
 	if (__failed(tabbed.Destroy()))
 		this->m_error = tabbed.Error();
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
-	// all trackers' windows are destroyed automatically because the page window is the parent one been destroyed first;
-
-	for (uint16_t i_ = 0; i_ < CPages::n_count; i_++) {
-		this->m_trackers[i_].OnDestroy(); // no error handling is required yet;
-	}
-
 	return this->Error();
 }
 
-#if (0)
-CTracker& Get_facke_tracker (void) {
-	static CTracker tracker; return tracker;
-}
-
 const
-CTracker& CPages::Tracker (const uint16_t _n_index) const { if (_n_index > CPages::n_count - 1) return Get_facke_tracker(); else return this->m_trackers[_n_index]; }
-CTracker& CPages::Tracker (const uint16_t _n_index)       { if (_n_index > CPages::n_count - 1) return Get_facke_tracker(); else return this->m_trackers[_n_index]; }
-#else
-const
-CTracker* CPages::Tracker (const uint16_t _n_index) const { if (_n_index > CPages::n_count - 1) return nullptr; else return &this->m_trackers[_n_index]; }
-CTracker* CPages::Tracker (const uint16_t _n_index)       { if (_n_index > CPages::n_count - 1) return nullptr; else return &this->m_trackers[_n_index]; }
-#endif
+CTrackers& CPages::Trackers(void) const { return this->m_tracks; }
+CTrackers& CPages::Trackers(void)       { return this->m_tracks; }

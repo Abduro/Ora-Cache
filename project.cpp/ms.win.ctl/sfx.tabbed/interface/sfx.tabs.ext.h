@@ -45,6 +45,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		ex_ui::controls::pane::CLayout& Layout (void) const;
 		ex_ui::controls::pane::CLayout& Layout (void) ;
 
+		err_code MoveTo (const t_rect&, const bool _b_redraw = false); // moves this page window to the specified rectangle;
+
 #pragma region __msg_handler_callbacks__
 	private:  // IDrawEvtSink override(s);
 		err_code IEvtDraw_OnErase   (const HDC _dev_ctx) override final;
@@ -74,9 +76,10 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		_pc_sz     Caption(void) const;
 		CString&   Caption(void)      ;
 
-		uint16_t   Id (void) const;
+		uint16_t   Id (void) const;      // returns this tab identifier; looks like to be useless for this version of the tab collection implementation;
 		uint16_t&  Id (void)      ;
 
+		uint16_t   Index (void) const;   // returns the index of this tab, assigned on creation event, changed on remove a tab from the tabs' collection;
 		const bool Is_fake (void) const; // returns true in case if it is fake object that is returned ,for example, as active tab but there is none of them;
 
 		const
@@ -84,11 +87,11 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		TLayersEx& Layers (void)      ;
 
 		const
-		CPage&  Page (void) const;     // returns a reference to the content which this tab makes visible; (ro)
-		CPage&  Page (void) ;          // returns a reference to the content which this tab makes visible; (rw)
+		CPage&  Page (void) const;       // returns a reference to the content which this tab makes visible; (ro)
+		CPage&  Page (void) ;            // returns a reference to the content which this tab makes visible; (rw)
 
 		const
-		t_rect&    Strip (void) const; // returns a reference to the rectangle of the tab bookmark or a visible part in the ribbon of tab control ;
+		t_rect&    Strip (void) const;   // returns a reference to the rectangle of the tab bookmark or a visible part in the ribbon of tab control ;
 		t_rect&    Strip (void) ;
 		const bool Strip (const _long _left, const _long _top, const _long _right, const _long _bottom); // returns 'true' in case of change at least one of the rectangle values;
 
@@ -108,6 +111,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 	private:
 		bool       m_fake  ;  // indicates that this tab object is not valid, even does not exist in the tab set of this control;
 		uint16_t   m_id    ;  // the tab identifier;
+		uint16_t   m_index ;  // this is the index of the tab in the collection; i.e. this is vector element index;
 		TLayersEx  m_layers;  // for layered draw; not used yet;
 		t_rect     m_strip ;  // the tab rectangle that does not include the tab page rectangle; it is just the visible element of tab panel/document/page;
 		TState     m_state ;  // the tab current state: either selected or not;
@@ -131,8 +135,9 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		int16_t  Active (void) const;             // returns an index of tab that has state selected, otherwise e_na (-1);
 		err_code Active (const int16_t _ndx);     // no tab cannot be active, otherwise, it does not have a sense; updated: out of tab range makes no active tab;
 
-		err_code Append (const CTab&);
-		err_code Append (const uint16_t _id, _pc_sz _lp_sz_cap);
+		err_code Append (const CTab&);            // looks like useless, GUI of the app does not require to create 'tab' outside this collection;
+		err_code Append (const uint16_t _id, _pc_sz _lp_sz_cap); // no identifier of the tab actually required for the appending new tab to this collection;
+		err_code Append (_pc_sz _lp_sz_cap);      // this is the most useful method of the appending new tab; the tab identifier and the index are assigned automatically;
 
 		uint16_t Count  (void) const;
 		// if there's no active or currently selected tab in the tab control the reference to the fake tab object is returned: Is_fake() == true;

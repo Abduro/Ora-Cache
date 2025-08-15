@@ -15,7 +15,6 @@ namespace ebo { namespace boo { namespace gui { namespace ctl {
 	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
 
 	class CPages {
-	static const uint16_t n_count = 2; // how many tabs will be appended to the tabbed control;
 	public:
 		 CPages (void); CPages (const CPages&) = delete; CPages (CPages&&) = delete;
 		~CPages (void);
@@ -31,22 +30,17 @@ namespace ebo { namespace boo { namespace gui { namespace ctl {
 
 		err_code  OnCreate (void) ;
 		err_code  OnDestroy(void) ;
-#if (0)
-		// returning the reference to fake object in case of invalid input index looks like to be not good approach;
+
 		const
-		CTracker& Tracker (const uint16_t _n_index) const; // gets the reference to the tracker that is associated with the page on input index;
-		CTracker& Tracker (const uint16_t _n_index)      ; // gets the reference to the tracker that is associated with the page on input index;
-#else
-		const
-		CTracker* Tracker (const uint16_t _n_index) const; // returns nullptr in case if input index is out of acceptable range;
-		CTracker* Tracker (const uint16_t _n_index)      ; // returns nullptr in case if input index is out of acceptable range;
-#endif
+		CTrackers& Trackers(void) const;
+		CTrackers& Trackers(void) ;
+
 	private:
 		CPages& operator = (const CPages&) = delete; CPages& operator = (CPages&&) = delete;
 		mutable
-		CError   m_error ;
-		CTabbed  m_tabbed;
-		CTracker m_trackers[CPages::n_count];
+		CError    m_error ;
+		CTabbed   m_tabbed;
+		CTrackers m_tracks;
 	};
 
 }}}}

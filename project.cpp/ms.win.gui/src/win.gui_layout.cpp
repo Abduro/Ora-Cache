@@ -56,46 +56,122 @@ layout::CPage:: CPage (void) { this->m_error >>__CLASS__ << __METHOD__ << __s_ok
 
 TError& layout::CPage::Error (void) const { return this->m_error; }
 
-t_rect  layout::CPage::GetTrackerPos (void) const {
+/////////////////////////////////////////////////////////////////////////////
+
+layout::CTrack:: CTrack (void) { this->m_error >>__CLASS__ << __METHOD__ << __s_ok; }
+
+TError& layout::CTrack::Error (void) const { return this->m_error; }
+
+t_rect layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) const {
+	_tab;
 	this->m_error << __METHOD__ << __s_ok;
 
 	t_rect rect_track = {0};
 
-	CTabbed& tabbed = shared::Get_View().Pages().Get();
-
-	if (0 == tabbed.Tabs().Count()) {
-		this->m_error << __e_not_inited = _T("Tabbed control has no pages");
-		return rect_track;
-	}
-	// it is suppossed the tabbed control always has selected or active tab page;
-	if (tabbed.Tabs().Current().Is_fake()) {
-		this->m_error << __e_not_inited = _T("Tabbed control has no active tab");
+	// it is suppossed the input 'tab' object is not the fake one;
+	if (_tab.Is_fake()) {
+		this->m_error << __e_not_inited = _T("The input tab object is invalid");
 		return rect_track;
 	}
 
-	const CTracker* p_tracker = shared::Get_View().Pages().Tracker(tabbed.Tabs().Active());
+	// namespaces make program architecture better and more understandable, even more readable, but sometimes it requires explicitly specifying their names;
+	ctl::CTracker* p_tracker = shared::Get_View().Pages().Trackers().Get(_tab.Index());
 	if (nullptr == p_tracker) {
 		this->m_error << __e_index = _T("Invalid index to trackers' array element");
 		return rect_track;
 	}
 
 	// (1) gets the tab page rectangle first;
-	const t_rect rect_page = tabbed.Tabs().Current().Page().Layout().Rect();
+	t_rect rect_page = _tab.Page().Layout().Rect();
+
+	_tab.Page().Layout().Padding().ApplyTo(rect_page); // applies padding values to the right and bottom sides of the page area;
+
 	const t_size pref_size = p_tracker->Get().Layout().Pref_Sz();
 	/*
 		it is assumed the following:
 		(a) the trackball control is aligned to right-bottom corner of the page window client area;
 		(b) the preferable size of the tracker control is applied to calculation of the control position;
 	*/
-	rect_track.left = rect_page.right  - pref_size.cx; rect_track.right  = rect_page.right;
-	rect_track.top  = rect_page.bottom - pref_size.cy; rect_track.bottom = rect_page.bottom;
+	// (2) makes a required shift for adjusting the trackball rectangle;
+	rect_track.left = rect_page.right  - pref_size.cx; rect_track.right  = rect_page.right - _tab.Page().Layout().Padding().Right();
+	rect_track.top  = rect_page.bottom - pref_size.cy; rect_track.bottom = rect_page.bottom - _tab.Page().Layout().Padding().Bottom();
 
 	return rect_track;
 }
 
-CLayout:: CLayout (void) : m_draw_area{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
+/////////////////////////////////////////////////////////////////////////////
+
+layout::CTracks:: CTracks (void) { this->m_error >>__CLASS__ << __METHOD__ << __s_ok; }
+
+TError& layout::CTracks::Error (void) const { return this->m_error; }
+
+const
+layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx) const { if (_ndx > cfg::n_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }
+layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx)       { if (_ndx > cfg::n_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }     
+
+t_rect layout::CTracks::GetPos (void) const {
+	this->m_error << __METHOD__ << __s_ok;
+
+	CTabbed& tabbed = shared::Get_View().Pages().Get();
+
+	if (0 == tabbed.Tabs().Count()) {
+		this->m_error << __e_not_inited = _T("Tabbed control has no pages");
+		return t_rect {0};
+	}
+
+	// it is suppossed the tabbed control always has selected or active tab page;
+	if (tabbed.Tabs().Current().Is_fake()) {
+		this->m_error << __e_not_inited = _T("Tabbed control has no active tab");
+		return t_rect {0};
+	}
+
+	const uint16_t n_index = tabbed.Tabs().Current().Index();  // gets the index of the currently active tab page;
+
+	return this->Get(n_index).GetPos(tabbed.Tabs().Current()); // gets the position for the tracker that resides on the current page;
+}
+
+err_code  layout::CTracks::Update (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	ctl::CTrackers& trackers = ::shared::Get_View().Pages().Trackers();
+
+	for (uint16_t i_ = 0; i_ < cfg::n_page_count; i_++) {
+
+		ex_ui::controls::sfx::tabbed::CTab& tab_ = ::shared::Get_View().Pages().Get().Tabs().Tab(i_);
+
+		layout::CTrack& track = this->Get(i_);
+
+		const t_rect rect_track = track.GetPos(tab_);
+		if (track.Error()) {
+			this->m_error = track.Error(); break;
+		}
+
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-windows ; some information of layered window there;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ;
+
+		ctl::CTracker* p_tracker = trackers.Get(i_);
+		if (nullptr == p_tracker) {
+			this->m_error << __e_pointer; break;
+		}
+
+		::ATL::CWindow trk_wnd = (*p_tracker)().Window();
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
+#if (0)
+		const err_code n_result = trk_wnd.MoveWindow(&rect_track, true);
+#else
+		const err_code n_result = trk_wnd.SetWindowPos(HWND_TOP, &rect_track, SWP_NOACTIVATE);
+#endif
+		if (__failed(n_result)) {
+			this->m_error << n_result; break;
+		}
+	}
+
+	return this->Error();
+}
 
 /////////////////////////////////////////////////////////////////////////////
+
+CLayout:: CLayout (void) : m_draw_area{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
 t_rect    CLayout::DrawArea (void)/* const */{
 	this->m_error << __METHOD__ << __s_ok;
@@ -130,6 +206,10 @@ CPadding& CLayout::Padding (void)       { return this->m_padding; }
 const
 layout::CPage&    CLayout::Page (void) const { return this->m_page; }
 layout::CPage&    CLayout::Page (void)       { return this->m_page; }
+
+const
+layout::CTracks& CLayout::Tracks(void) const { return this->m_tracks; }
+layout::CTracks& CLayout::Tracks(void)       { return this->m_tracks; }
 
 err_code  CLayout::Update (void) {
 	
@@ -175,11 +255,13 @@ err_code  CLayout::Update (const t_rect& _rect) {
 	CLayout_Default().Padding().ApplyTo(this->m_draw_area); // applies padding to the draw area rectangle;
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 	::shared::Get_View().Pages().Get().Layout().Update(this->m_draw_area);
+	this->Tracks().Update(); // no error check yet;
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 3)
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
 	if (shared::Get_View().Surface()) {
-		shared::Get_View().Surface().MoveWindow(&this->m_draw_area, false); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ; repainted == false;
+		shared::Get_View().Surface().MoveWindow(&this->m_draw_area, false);
 		shared::Get_View().Surface().IEvtFrame_OnSizing(eEdges::eUndefined, &this->m_draw_area);
 	}
 #endif

@@ -70,18 +70,18 @@ err_code  CControl::Destroy(void) {
 	return this->Error();
 }
 
-TError&    CControl::Error   (void) const { return this->m_error ; }
+TError&   CControl::Error   (void) const { return this->m_error ; }
 const
-CFormat&   CControl::Format (void) const { return this->m_format; }
-CFormat&   CControl::Format (void)       { return this->m_format; }
+CFormat&  CControl::Format (void) const { return this->m_format; }
+CFormat&  CControl::Format (void)       { return this->m_format; }
 
-uint32_t   CControl::Id (void) const { return this->m_ctrl_id; }
-bool       CControl::Id (const uint32_t _u_id) {
+uint32_t  CControl::Id (void) const { return this->m_ctrl_id; }
+bool      CControl::Id (const uint32_t _u_id) {
 	_u_id;
 	const bool b_changed = this->Id() != _u_id; if (b_changed) this->m_ctrl_id = _u_id; return b_changed;
 }
 
-bool       CControl::Is_valid (void) const {
+bool      CControl::Is_valid (void) const {
 #if (0)
 	bool b_valid = nullptr != m_wnd_ptr;
 	if ( b_valid ) {
@@ -94,5 +94,23 @@ bool       CControl::Is_valid (void) const {
 #endif
 }
 const
-CLayout&   CControl::Layout (void) const { return this->m_layout; }
-CLayout&   CControl::Layout (void)       { return this->m_layout; }
+CLayout&  CControl::Layout (void) const { return this->m_layout; }
+CLayout&  CControl::Layout (void)       { return this->m_layout; }
+
+err_code  CControl::Refresh(void) {
+
+	if (nullptr == m_wnd_ptr)
+		return __e_pointer;
+
+	if (false == _wnd_ref(m_wnd_ptr).RedrawWindow(0, 0, RDW_ERASE|RDW_INVALIDATE|RDW_ERASENOW|RDW_NOCHILDREN)) {
+		return (this->m_error << __METHOD__).Last();
+	}
+	else return __s_ok;
+}
+
+CWindow   CControl::Window (void) const {
+	if (nullptr == m_wnd_ptr)
+		return CWindow();
+	else
+		return _wnd_ref(m_wnd_ptr);
+}

@@ -97,7 +97,6 @@ err_code CView::OnDestroy (void) {
 
 	this->Status().OnDestroy(); // no error handling is made yet;
 	this->Pages().OnDestroy();
-	this->Tracker().OnDestroy();
 
 	return n_result;
 }
@@ -131,9 +130,6 @@ CPages&   CView::Pages  (void)       { return this->m_pages; }
 const
 CSurface& CView::Surface(void) const { return this->m_surface; }
 CSurface& CView::Surface(void)       { return this->m_surface; }
-const
-CTracker& CView::Tracker(void) const { return this->m_tracker; }
-CTracker& CView::Tracker(void)       { return this->m_tracker; }
 
 /////////////////////////////////////////////////////////////////////////////
 

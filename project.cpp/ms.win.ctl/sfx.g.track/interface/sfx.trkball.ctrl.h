@@ -31,10 +31,13 @@ namespace ex_ui { namespace controls { namespace sfx { namespace track {
 		uint32_t  Id (void) const;
 		bool      Id (const uint32_t);
 
-		bool    Is_valid (void) const;  // checks for: (1) window pointer; (2) this control window handle validity;
+		bool    Is_valid (void) const; // checks for: (1) window pointer; (2) this control window handle validity;
 		const
 		CLayout&  Layout (void) const;
 		CLayout&  Layout (void) ;
+
+		err_code  Refresh(void) ;
+		CWindow   Window (void) const; // returns trackball control internal window handle;
 
 	private:
 		CControl& operator = (const CControl&) = delete;

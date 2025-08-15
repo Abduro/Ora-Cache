@@ -46,6 +46,10 @@ namespace ebo { namespace boo { namespace gui {
 	using CWindow = ::ATL::CWindow;
 	using TString = TStringEx;
 
+namespace cfg {
+	const uint16_t n_page_count = 2;
+}
+
 	// https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
 	// https://en.cppreference.com/w/cpp/preprocessor/conditional ; << good example(s);
 

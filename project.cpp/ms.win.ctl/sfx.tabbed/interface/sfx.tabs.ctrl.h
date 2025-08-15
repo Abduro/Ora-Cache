@@ -45,11 +45,11 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
 		CFormat&  Format (void) const;
 		CFormat&  Format (void)      ;
 
-		bool    Is_valid (void) const;  // checks for: (1) window pointer; (2) this control window handle validity;
+		bool    Is_valid (void) const; // checks for: (1) window pointer; (2) this control window handle validity;
 
 		const
 		CLayout&  Layout (void) const;
-		CLayout&  Layout (void) ;
+		CLayout&  Layout (void) ;      // no reodering tabs is supported yet;
 
 		err_code  Refresh(void) ;
 		CWindow   Window (void) const; // returns tabbed control internal window handle;
