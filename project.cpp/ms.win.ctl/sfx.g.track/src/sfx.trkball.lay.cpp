@@ -92,8 +92,8 @@ err_code  CLayout::Update (const t_rect& _rc_area) {
 		return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
 
 #if defined(_DEBUG)
-	__trace_info(
-		_T("[%s::%s] >> {_rc_area:%d;%d;%d;%d}\n"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _rc_area.left, _rc_area.top, _rc_area.right, _rc_area.bottom
+	__trace_info_3(
+		_T("{_rc_area:%d;%d;%d;%d}"), _rc_area.left, _rc_area.top, _rc_area.right, _rc_area.bottom
 	);
 #endif
 

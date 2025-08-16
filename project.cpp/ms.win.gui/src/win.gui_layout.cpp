@@ -83,7 +83,11 @@ t_rect layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) c
 
 	// (1) gets the tab page rectangle first;
 	t_rect rect_page = _tab.Page().Layout().Rect();
-
+#if defined(_DEBUG)
+	__trace_info_3(
+		_T("{rect_page:l:%d;t:%d;r:%d;b:%d}"), rect_page.left, rect_page.top, rect_page.right, rect_page.bottom
+	);
+#endif
 	_tab.Page().Layout().Padding().ApplyTo(rect_page); // applies padding values to the right and bottom sides of the page area;
 
 	const t_size pref_size = p_tracker->Get().Layout().Pref_Sz();

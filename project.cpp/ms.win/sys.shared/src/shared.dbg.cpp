@@ -9,7 +9,7 @@
 namespace shared { namespace dbg {
 
 namespace _impl {
-	CString TraceCatToStr (const CTrace::e_category _e_cat) {
+	CString CatToStr (const CTrace::e_category _e_cat) {
 		_e_cat;
 		switch (_e_cat) {
 		case CTrace::e_category::e_warn: return CString(_T("[warn]"));
@@ -22,7 +22,7 @@ namespace _impl {
 using namespace _impl;
 using namespace shared::types;
 
-void CTrace::Out (const TCHAR* _lp_sz_fmt, ...) {
+void CTrace::Out_0 (_pc_sz _lp_sz_fmt, ...) {
 
 	va_list  args_;
 	va_start(args_, _lp_sz_fmt);
@@ -35,15 +35,39 @@ void CTrace::Out (const TCHAR* _lp_sz_fmt, ...) {
 	va_end  (args_);
 }
 
-void CTrace::Out (const e_category _e_cat, const TCHAR* _lp_sz_fmt, ...) { // perhaps __VA_ARGS__ would be useful, but for this time is not used;
+void CTrace::Out_0 (const e_category _e_cat, _pc_sz _lp_sz_fmt, ...) { // perhaps __VA_ARGS__ would be useful, but for this time is not used;
+	_e_cat; _lp_sz_fmt;
 	va_list  args_;
 	va_start(args_, _lp_sz_fmt);
 
-	CString cs_out = TraceCatToStr(_e_cat);
-	cs_out += _T(" ");
-	cs_out += TStringEx().Format(_lp_sz_fmt, args_);
+	CString cs_out = TStringEx().Format(_T("%s %s\n"), (_pc_sz) CatToStr(_e_cat), TStringEx().Format(_lp_sz_fmt, args_));
 
-	::OutputDebugString(cs_out.GetString());
+	::OutputDebugString((_pc_sz)cs_out);
+
+	va_end  (args_);
+}
+
+void CTrace::Out_2 (const e_category _e_cat, _pc_sz _p_cls, _pc_sz _p_method, _pc_sz _p_sz_format, ...) {
+	_e_cat; _p_cls; _p_method; _p_sz_format;
+	va_list  args_;
+	va_start(args_, _p_sz_format);
+
+	::OutputDebugString(
+		TStringEx().Format(_T("%s cls::[%s].%s()>>%s\n"), (_pc_sz) CatToStr(_e_cat), _p_cls, _p_method, TStringEx().Format(_p_sz_format, args_))
+	);
+
+	va_end  (args_);
+}
+
+void CTrace::Out_3 (const e_category _e_cat, _pc_sz _p_nm_space, _pc_sz _p_cls, _pc_sz _p_method, _pc_sz _p_sz_format, ...) {
+	_e_cat; _p_nm_space; _p_cls; _p_method; _p_sz_format;
+	va_list  args_;
+	va_start(args_, _p_sz_format);
+
+	::OutputDebugString(
+		TStringEx().Format(_T("%s cls::[%s::%s].%s()>>%s\n"),
+			(_pc_sz) CatToStr(_e_cat), _p_nm_space, _p_cls, _p_method, TStringEx().Format(_p_sz_format, args_))
+	);
 
 	va_end  (args_);
 }

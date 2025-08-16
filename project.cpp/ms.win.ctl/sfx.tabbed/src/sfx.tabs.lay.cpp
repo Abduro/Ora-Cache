@@ -501,8 +501,8 @@ void      CTabs::Update(void) {
 	this->m_ctrl.Layout().Padding().ApplyTo(rc_page);
 
 #if defined(_DEBUG)
-	__trace_info(
-		_T("[%s::%s] >> {_rc_area:%d;%d;%d;%d}\n"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, rc_page.left, rc_page.top, rc_page.right, rc_page.bottom
+	__trace_info_3(
+		_T("{_rc_area:l:%d;t:%d;r:%d;b:%d}"), rc_page.left, rc_page.top, rc_page.right, rc_page.bottom
 	);
 #endif
 
