@@ -153,7 +153,7 @@ l_result   CHandler::OnMoving (uint32_t, w_param _w_param, l_param _l_param, int
 			continue;
 
 		err_code n_result = pSink->IEvtFrame_OnMoving(_w_param, _l_param);
-		if (__s_ok == n_result) {
+		if (__s_false == n_result) {
 			_b_handled = true;
 			break;
 		}

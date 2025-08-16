@@ -1,0 +1,2 @@
+class name: HwndWrapper[DefaultDomain;;b7ee9568-9352-48ae-a539-d00e5e761b9f] << VS main window;
+class name: HwndWrapper[DefaultDomain;;7dea1f9f-87ca-4d4d-9e85-6b71526af29d] << the output window as a child one of VS main window;

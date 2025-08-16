@@ -41,7 +41,6 @@ rgb_color CColor::Normal   (void) const { return this->Get(TStateValue::eNormal)
 rgb_color CColor::Selected (void) const { return this->Get(TStateValue::eSelected); }
 
 /////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
 
 CFormat:: CFormat (CControl& _ctrl) : m_ctrl(_ctrl) { this->Default(); }
 CFormat::~CFormat (void) {}

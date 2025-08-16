@@ -25,7 +25,7 @@ CWnd::~CWnd(void) {
 
 err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
-	err_code n_result = __s_false;
+	err_code n_result = __s_false; // this message is handled; nothing is done;
 	return   n_result;
 }
 
@@ -35,8 +35,25 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 
 	CPaintDC dc_(*this);
 
-	err_code n_result = __s_false;  // this message is handled;
-	return   n_result;
+	err_code n_result = __s_ok;  // this message is handled;
+	t_rect& rc_paint  = dc_.m_ps.rcPaint;
+
+	ex_ui::draw::memory::CMode(dc_).Set(ex_ui::draw::memory::CMode::e_advanced);
+	CZBuffer z_buffer(dc_, rc_paint);
+	// (1) fills the background by the theme color;
+	z_buffer.Draw(rc_paint, this->m_ctrl.Format().Bkgnd().Solid().ToRgb());
+
+	// (2) draws the control borders;
+	const rgb_color clr_border = this->m_ctrl.Format().Border().Color().Normal();
+
+	using ex_ui::controls::borders::TRawBorders;
+
+	for (TRawBorders::const_iterator iter_ = this->m_ctrl.Borders().Raw().begin(); iter_ != this->m_ctrl.Borders().Raw().end(); ++iter_) {
+		const CBorder& border = iter_->second;
+		z_buffer.Draw( border, clr_border);
+	}
+
+	return n_result;
 }
 
 err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
@@ -53,14 +70,27 @@ err_code CWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
 
-err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size) {
-	_e_state;
+err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size _size) {
+	_e_state; _size;
+#if (0) // this control layout must take care about this;
+	t_rect rc_area = {0, 0, _size.cx, _size.cy};
+
+	this->m_ctrl.Borders() << rc_area;
+#endif
 	err_code n_result = __s_false;
 	return   n_result;
 }
 
 err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
 	_edges; _p_rect;
+#if (0) // this control layout must take care about this; 
+	if (_p_rect)
+		this->m_ctrl.Borders() << *_p_rect;
+	else {
+		bool b_break_point = false;
+		b_break_point = !b_break_point;
+	}
+#endif
 	err_code n_result = __s_false;
 	return   n_result;
 }

@@ -152,7 +152,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 		z_buffer.Draw(top_);
 	}
 #endif
-	err_code n_result = __s_false;  // this message is handled;
+	err_code n_result = __s_ok;  // this message is handled;
 	return   n_result;
 }
 

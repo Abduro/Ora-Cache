@@ -10,13 +10,12 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 
 	using shared::sys_core::CError;
 
-	// returns S_OK if message is handled, if not handled __s_false is returned, otherwise the error code;
 	interface IFrameEventSink {
-
+		// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		virtual err_code  IEvtFrame_OnActivate (const w_param, const l_param) { // wparam is an activation data; lparam is target window handle;
 			err_code n_result = __s_false; return n_result;
 		}
-		// https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged
+		// https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		virtual err_code  IEvtFrame_OnChanged (const w_param, const l_param _l_param) { // wparam is not used; lparam is a pointer to position data;
 			WINDOWPOS* p_pos_ = nullptr;
 			if (_l_param) {
@@ -30,7 +29,7 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			err_code n_result = __s_false; return n_result;
 		}
 
-		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		virtual err_code  IEvtFrame_OnChanging(const w_param, const l_param _l_param) { // wparam is not used; lparam is a pointer to position data;
 			WINDOWPOS* p_pos_ = nullptr;
 			if (_l_param) {
@@ -43,11 +42,11 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 		virtual err_code  IEvtFrame_OnChanging(const WINDOWPOS& _pos) { _pos;
 			err_code n_result = __s_false; return n_result;
 		}
-
+		// https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-enable ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		virtual err_code  IEvtFrame_OnEnable (const w_param, const l_param) { // wparam is enable/disable value; lparam is not used;
 			err_code n_result = __s_false; return n_result;
 		}
-		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move ;
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		// wparam is not used; lparam coordinates of the left-top corner of the client area;
 		virtual err_code  IEvtFrame_OnMove (const w_param, const l_param _l_param) {
 			return IEvtFrame_OnMove (t_point{LOWORD(_l_param), HIWORD(_l_param)});
@@ -58,7 +57,7 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			err_code n_result = __s_false; return n_result;
 		}
 
-		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-moving ;
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-moving ; returns __s_ok: not handled; __s_false: handled; otherwise error code;
 		// wparam is not used; l_param is a pointer to a RECT structure with the current position of the window, in screen coordinates ;
 		virtual err_code  IEvtFrame_OnMoving (const w_param, const l_param _l_param) {
 			LPRECT p_rect = nullptr;
@@ -67,20 +66,20 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 				if (p_rect)
 					return IEvtFrame_OnMoving(*p_rect);
 			}
-			return __s_false;
+			return __s_ok;
 		}
 
 		virtual err_code  IEvtFrame_OnMoving (const t_rect& _p_wnd_coords) {
 			_p_wnd_coords; 
-			err_code n_result = __s_false; return n_result;
+			err_code n_result = __s_ok; return n_result;
 		}
 
-		enum eState : uint32_t {         // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size ;
+		enum eState : uint32_t {
 			eMaximized = SIZE_MAXIMIZED, // a window has been maximized ;
 			eMinimized = SIZE_MINIMIZED, // a window has been minimized ;
 			eRestored  = SIZE_RESTORED , // a window has been resized ; looks like as a default value;
 		};
-
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		virtual err_code  IEvtFrame_OnSize (const w_param _w_param, const l_param _l_param) { // wparam is a size mode; lparam is a size of client area;
 			return IEvtFrame_OnSize((const eState)_w_param, SIZE{LOWORD(_l_param), HIWORD(_l_param)});
 		}
@@ -88,7 +87,7 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			err_code n_result = __s_false; return n_result;
 		}
 
-		enum eEdges : uint32_t {             // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-sizing ;
+		enum eEdges : uint32_t {
 			eBottom      = WMSZ_BOTTOM     , // bottom edge ;
 			eBottomLeft  = WMSZ_BOTTOMLEFT , // bottom-left corner ;
 			eBottomRight = WMSZ_BOTTOMRIGHT, // bottom-right corner;
@@ -100,6 +99,7 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			eUndefined   = 0,
 		};
 
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-sizing ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		virtual err_code  IEvtFrame_OnSizing (const w_param _w_param, const l_param _l_param) { // wparam is a size mode; lparam is window rectangle in screen coords;
 			LPRECT p_rect = nullptr;
 			if (_l_param) {

@@ -500,6 +500,12 @@ void      CTabs::Update(void) {
 
 	this->m_ctrl.Layout().Padding().ApplyTo(rc_page);
 
+#if defined(_DEBUG)
+	__trace_info(
+		_T("[%s::%s] >> {_rc_area:%d;%d;%d;%d}\n"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, rc_page.left, rc_page.top, rc_page.right, rc_page.bottom
+	);
+#endif
+
 	for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 
 		CPage& page = this->m_ctrl.Tabs().Tab(i_).Page();
@@ -560,7 +566,6 @@ err_code  CLayout::Update (void) {
 
 err_code  CLayout::Update (const t_rect& _rc_area) {
 	_rc_area;
-
 	if (::IsRectEmpty(&_rc_area))
 		return this->m_error << __METHOD__ << __e_rect;
 

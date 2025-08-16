@@ -36,7 +36,7 @@ CPage::~CPage (void) {
 
 err_code CPage::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
-	err_code n_result = __s_false;
+	err_code n_result = __s_false; // this message is handled; nothing is done; 
 #if (0) // trying to remove incorrect drawing the borders on handling window size message, when the window size is decreased;
 	if (this->Get_ptr() == nullptr)
 		return n_result;
@@ -66,7 +66,7 @@ err_code CPage::IEvtDraw_OnErase (const HDC _dev_ctx) {
 // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ;
 err_code CPage::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
 
-	err_code n_result = __s_false;  // this message is handled;
+	err_code n_result = __s_ok;  // this message is handled;
 
 	if (this->Get_ptr() == nullptr)
 		return n_result;
@@ -111,10 +111,10 @@ err_code CPage::IEvtLife_OnDestroy (const w_param, const l_param) {
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
 
-err_code CPage::IEvtFrame_OnSize   (const eState _e_state, const t_size _rect) {
-	_e_state;
+err_code CPage::IEvtFrame_OnSize   (const eState _e_state, const t_size _size) {
+	_e_state; _size;
 
-	t_rect rc_area = {0, 0, _rect.cx, _rect.cy};
+	t_rect rc_area = {0, 0, _size.cx, _size.cy};
 
 	TPane::Borders() << rc_area;
 

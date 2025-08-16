@@ -49,7 +49,6 @@ namespace format {
 	private:
 		CColor m_color;
 	};
-
 }
 	using format::TBorderAssoc;
 

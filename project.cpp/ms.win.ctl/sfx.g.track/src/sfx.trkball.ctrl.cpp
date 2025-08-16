@@ -52,6 +52,8 @@ err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id, const 
 	if (false == _wnd_ref(m_wnd_ptr).IsWindow())
 		return this->m_error.Last();
 
+	_wnd_ref(m_wnd_ptr).MoveWindow(&rc_area, true);
+
 	return this->Error();
 }
 

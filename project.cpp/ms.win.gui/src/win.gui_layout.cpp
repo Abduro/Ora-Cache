@@ -154,12 +154,15 @@ err_code  layout::CTracks::Update (void) {
 			this->m_error << __e_pointer; break;
 		}
 
+		err_code n_result = (*p_tracker)().Layout().Update(rect_track);
+#if (0)
 		::ATL::CWindow trk_wnd = (*p_tracker)().Window();
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
 #if (0)
 		const err_code n_result = trk_wnd.MoveWindow(&rect_track, true);
 #else
 		const err_code n_result = trk_wnd.SetWindowPos(HWND_TOP, &rect_track, SWP_NOACTIVATE);
+#endif
 #endif
 		if (__failed(n_result)) {
 			this->m_error << n_result; break;

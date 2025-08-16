@@ -1,0 +1,4 @@
+[InternetShortcut]
+URL=https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw
+
+desc=Sends a string to the debugger for display.
