@@ -125,7 +125,13 @@ CString   CLayout::Print(const e_print _e_opt/*= e_print::e_all*/) const {
 
 const
 t_rect&   CLayout::Rect (void) const { return this->m_rect ; }
-t_rect&   CLayout::Rect (void)       { return this->m_rect ; }
+t_rect&   CLayout::Rect (void) {
+#if defined(_DEBUG) && defined (_use_break)
+	if (::IsRectEmpty(&this->m_rect)) {
+		::DebugBreak();
+	}
+#endif
+	return this->m_rect ; }
 
 bool      CLayout::Rect (const t_rect& _rect) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setrect ;

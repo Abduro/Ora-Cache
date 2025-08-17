@@ -500,7 +500,7 @@ void      CTabs::Update(void) {
 
 	this->m_ctrl.Layout().Padding().ApplyTo(rc_page);
 
-#if defined(_DEBUG)
+#if defined(_DEBUG) && defined(_use_track)
 	__trace_info_3(
 		_T("{_rc_area:l:%d;t:%d;r:%d;b:%d}"), rc_page.left, rc_page.top, rc_page.right, rc_page.bottom
 	);
@@ -511,8 +511,11 @@ void      CTabs::Update(void) {
 		CPage& page = this->m_ctrl.Tabs().Tab(i_).Page();
 		if (page.Is_valid() == false)
 			continue;
-
+#if (0) // this leads to the bug: the layout of the page is not updated by proper rectangle that is applied right here;
 		::ATL::CWindow(page.Handle()).MoveWindow(&rc_page, true);
+#else
+		page.MoveTo(rc_page, true);
+#endif
 	}
 }
 

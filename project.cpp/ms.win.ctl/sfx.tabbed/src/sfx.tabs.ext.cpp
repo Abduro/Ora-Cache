@@ -225,6 +225,8 @@ err_code CPage::MoveTo (const t_rect& _rect, const bool _b_redraw) {
 	const bool b_result = !!TWindow::MoveWindow(&_rect, _b_redraw);
 	if (false == b_result)
 		n_result = __LastErrToHresult();
+	else
+		this->Layout().Rect() = _rect; // it is required!
 
 	return n_result;
 }

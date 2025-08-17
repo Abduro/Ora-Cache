@@ -83,11 +83,7 @@ t_rect layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) c
 
 	// (1) gets the tab page rectangle first;
 	t_rect rect_page = _tab.Page().Layout().Rect();
-#if defined(_DEBUG)
-	__trace_info_3(
-		_T("{rect_page:l:%d;t:%d;r:%d;b:%d}"), rect_page.left, rect_page.top, rect_page.right, rect_page.bottom
-	);
-#endif
+
 	_tab.Page().Layout().Padding().ApplyTo(rect_page); // applies padding values to the right and bottom sides of the page area;
 
 	const t_size pref_size = p_tracker->Get().Layout().Pref_Sz();
@@ -97,8 +93,21 @@ t_rect layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) c
 		(b) the preferable size of the tracker control is applied to calculation of the control position;
 	*/
 	// (2) makes a required shift for adjusting the trackball rectangle;
-	rect_track.left = rect_page.right  - pref_size.cx; rect_track.right  = rect_page.right - _tab.Page().Layout().Padding().Right();
-	rect_track.top  = rect_page.bottom - pref_size.cy; rect_track.bottom = rect_page.bottom - _tab.Page().Layout().Padding().Bottom();
+	// it looks like the shift of the page rectangle in client area of the tabbed control must be taken into account too;
+	rect_track.left   = rect_page.right  - pref_size.cx - rect_page.left - (*p_tracker)().Layout().Margins().Right();
+	rect_track.right  = rect_track.left  + pref_size.cx;
+	rect_track.top    = rect_page.bottom - pref_size.cy - rect_page.top - (*p_tracker)().Layout().Margins().Bottom();
+	rect_track.bottom = rect_track.top   + pref_size.cy;
+	// (3) applies the margins of the trackball control layout;
+	// (*p_tracker)().Layout().Margins().ApplyTo(rect_track); >> does not work properly; must be fixed;
+
+#if defined(_DEBUG) && defined(_use_track)
+	CString cs_out;
+	cs_out += TString().Format(_T("\n\trect_page =[lft:%d;top:%d;rhs:%d;btm:%d}"), rect_page.left, rect_page.top, rect_page.right, rect_page.bottom);
+	cs_out += TString().Format(_T("\n\trect_track=[lft:%d;top:%d;rhs:%d;btm:%d}"), rect_track.left, rect_track.top, rect_track.right, rect_track.bottom);
+
+	__trace_info_3( (_pc_sz) cs_out );
+#endif
 
 	return rect_track;
 }

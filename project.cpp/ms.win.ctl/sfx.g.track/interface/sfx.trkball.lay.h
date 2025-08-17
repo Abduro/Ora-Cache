@@ -11,6 +11,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace track { class C
 	using CSides = ex_ui::controls::layout::CMargins_of_rect::CSides;
 	using TSide  = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
+	using CMargins = ex_ui::controls::layout::CMargins_of_rect;
 	using CPadding = ex_ui::controls::layout::CPadding_of_rect;
 
 	class CLayout;
@@ -25,6 +26,9 @@ namespace layout {}
 
 	public:
 		TError&   Error  (void) const;
+		const
+		CMargins& Margins(void) const;
+		CMargins& Margins(void) ;
 		const
 		CPadding& Padding(void) const;
 		CPadding& Padding(void) ;
@@ -43,6 +47,7 @@ namespace layout {}
 		mutable
 		CError    m_error ;
 		CControl& m_ctrl  ;
+		CMargins  m_margins;
 		CPadding  m_padding;
 		t_size    m_pref_sz;
 		t_rect    m_rect  ;  // cached client area rectangle;

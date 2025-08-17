@@ -16,8 +16,10 @@ CTracker::~CTracker (void) {}
 
 err_code  CTracker::At_1st(void) {
 	this->m_error <<__METHOD__<<__s_ok;
+
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
-	CTrkball& tracker = this->Get(); tracker;
+	CTrkball& tracker = this->Get();
+	tracker.Layout().Margins().Set(0, 0, 5, 5);
 #endif
 	return this->Error();
 }

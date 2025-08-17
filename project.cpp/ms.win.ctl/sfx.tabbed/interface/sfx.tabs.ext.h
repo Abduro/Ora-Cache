@@ -44,7 +44,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		const
 		ex_ui::controls::pane::CLayout& Layout (void) const;
 		ex_ui::controls::pane::CLayout& Layout (void) ;
-
+		// *important*: when moving the window to given rectangle the layout of the page must have the same one or be updated;
 		err_code MoveTo (const t_rect&, const bool _b_redraw = false); // moves this page window to the specified rectangle;
 
 #pragma region __msg_handler_callbacks__

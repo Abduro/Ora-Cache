@@ -167,6 +167,9 @@ namespace ex_ui { namespace controls { namespace layout {
 		    (b) the padding means decreasing an object area;
 		   thus applying a negative values to either margins or padding sides is not coincident with meaning what those notations/definitions have;
 		*/
+		/*
+			ToDo: ApplyTo() affects the target rectangle in difference ways in case of 'margins' and 'padding'; must be reviewed;
+		*/
 		bool  ApplyTo(t_rect& _rect) const; // returns true in case of change at least one side of the input rectangle;
 		const
 		CGap& Get (const e_sides) const;    // returns the reference to margin of input side; if not fount, the reference to fake object is returned;

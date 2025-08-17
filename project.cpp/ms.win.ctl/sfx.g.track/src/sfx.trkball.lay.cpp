@@ -30,7 +30,9 @@ CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_padding(5,5,-5,-5), m_pre
 CLayout::~CLayout (void) {}
 
 TError&   CLayout::Error   (void) const { return this->m_error ; }
-
+const
+CMargins& CLayout::Margins(void) const  { return this->m_margins; }
+CMargins& CLayout::Margins(void)        { return this->m_margins; }
 const
 CPadding& CLayout::Padding (void) const { return this->m_padding; }
 CPadding& CLayout::Padding (void)       { return this->m_padding; }
@@ -91,7 +93,7 @@ err_code  CLayout::Update (const t_rect& _rc_area) {
 	if (false == wnd_.IsWindow())
 		return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
 
-#if defined(_DEBUG)
+#if defined(_DEBUG) && defined(_use_track)
 	__trace_info_3(
 		_T("{_rc_area:%d;%d;%d;%d}"), _rc_area.left, _rc_area.top, _rc_area.right, _rc_area.bottom
 	);
