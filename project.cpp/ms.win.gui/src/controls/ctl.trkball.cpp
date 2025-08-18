@@ -77,6 +77,9 @@ err_code CTrackers::At_1st(void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	for (uint16_t i_ = 0; i_ < cfg::n_page_count; i_++) {
+
+		this->m_trackers[i_]().Layout().Pref_Sz({128,128});
+
 		if (__failed(this->m_trackers[i_].At_1st())) {
 			this->m_error = this->m_trackers[i_].Error(); break; // the all trackers has the same settings, so if it's somethig wrong, break;
 		}

@@ -1,3 +1,19 @@
+removing AutoPCH folder
+https://learn.microsoft.com/en-us/visualstudio/ide/reference/options-text-editor-c-cpp-advanced?view=vs-2019 ; << official documentation;
+
+https://stackoverflow.com/questions/19398287/ipch-files-on-a-visual-studio-project ;  << this has the good answers;
+https://www.visualmicro.com/page/How-to-prevent-the-creation-of-Visual-Studio-PCH-folders.aspx ;
+1) Options >> Text Editor >> C/C++ >> Advanced >> Fallback Location:
+ a)  Always Use Fallback Location == True ;
+ b)  Do Not Warn If Fallback Location Is Used == True ;
+ c)  Fallback Location == empty ; (Temp directory under current user account is used in such case)
+
+https://www.reddit.com/r/VisualStudio/comments/fb7amd/why_the_size_of_vs_folder_keeps_growing_each_time/ 
+2)   Options >> Text Editor >> C/C++ >> Advanced >> Intellisense:
+ a)  Disable Automatic Precompile Header == True ;
+ or
+ b)  Automatic Precompiled Header Cache Quota =~ 100 (Mb) or some other size;
+
 time build of the projects:
 https://stackoverflow.com/questions/82128/displaying-build-times-in-visual-studio ;
 1) Tools > Options > Projects and Solutions > Build and Run > MSBuild project build output verbosity; Normal is enough; this works;
