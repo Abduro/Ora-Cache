@@ -17,6 +17,8 @@
   <ItemGroup>
     <ClInclude Include="open_gl_tutor.0.fake.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="open_gl_tutor.0.fake.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="open_gl_tutor.0.module.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.0.module.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="Tutor.0.Fake.manifest"><Filter>interface</Filter></Manifest>

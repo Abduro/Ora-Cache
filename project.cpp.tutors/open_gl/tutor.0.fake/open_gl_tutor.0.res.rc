@@ -7,7 +7,7 @@
 //   Adopted to OpenGL tutotrial of the creating fake content project on 18-Aug-2025 at 12:54:27.277, UTC+4, Batumi, Monday;
 //
 #include <winresrc.h>
-#include "open_gl_tutor.0.fake.res.h"
+#include "open_gl_tutor.0.res.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // English (U.S.) resources
@@ -65,7 +65,7 @@ END
 // auxiliary string(s)
 //
 
-  IDR_TUTOR_0_ICO  ICON    "open_gl_tutor.0.fake.ico"
+  IDR_TUTOR_0_ICO  ICON    "open_gl_tutor.0.ico"
 /////////////////////////////////////////////////////////////////////////////
 //
 // auxiliary string(s)

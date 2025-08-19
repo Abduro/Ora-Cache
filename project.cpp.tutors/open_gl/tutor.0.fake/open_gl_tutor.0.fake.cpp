@@ -3,6 +3,10 @@
 	This is OpenGL tutorial of the creating fake content interface implementation file;
 */
 #include "open_gl_tutor.0.fake.h"
+// It is mandatory: shared static library must be created;
+#include "shared.defs.cpp"
+#include "shared.preproc.cpp"
+#include "shared.dbg.cpp"
 
 using namespace ebo::pack::draw::open_gl::fake;
 
@@ -11,11 +15,13 @@ CWnd:: CWnd (void) : TWindow(), m_err_code(__e_not_inited), m_h_dc(0), m_h_rende
 	TWindow::Create(HWND_MESSAGE);
 
 	if (false == TWindow::IsWindow()) {
-		this->m_err_code = __LastErrToHresult(); return;
+		this->m_err_code = __LastErrToHresult();
+		__trace_err_3(_T("error: code=0x%08x; %s"), this->Err_code(), _T("Fake window creation failed;")); return;
 	}
 	else {
 		this->m_err_code = __s_ok;
 		this->m_h_dc = TWindow::GetDC();
+		__trace_err_3(_T("result: hdc=%s"), (_pc_sz) __address_of(this->Get_ctx(), _T("0x%08x")));
 	}
 
 	PIXELFORMATDESCRIPTOR px_fmt_desc = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;

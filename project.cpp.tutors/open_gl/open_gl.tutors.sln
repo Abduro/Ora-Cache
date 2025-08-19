@@ -1,8 +1,25 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.35826.109
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_shared", "_shared", "{00000C13-EEEE-BBBB-6667-100000000000}"
+	ProjectSection(SolutionItems) = preProject
+		..\_shared\__read_me.txt   = ..\_shared\__read_me.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "interface", "interface", "{00000C13-EEEE-BBBB-6667-100000000001}"
+	ProjectSection(SolutionItems) = preProject
+		..\_shared\interface\shared.defs.h    = ..\_shared\interface\shared.defs.h
+		..\_shared\interface\shared.dbg.h     = ..\_shared\interface\shared.dbg.h
+		..\_shared\interface\shared.preproc.h = ..\_shared\interface\shared.preproc.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00000C13-EEEE-BBBB-6667-100000000002}"
+	ProjectSection(SolutionItems) = preProject
+		..\_shared\src\shared.preproc.cpp = ..\_shared\src\shared.preproc.cpp
+		..\_shared\src\shared.dbg.cpp  = ..\_shared\src\shared.dbg.cpp
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutor.0.Fake", "tutor.0.fake\Tutor.0.Fake.vcxproj", "{00000C13-EEEE-BBBB-6667-000000000042}"
 EndProject
 Global
@@ -24,6 +41,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00000C13-EEEE-BBBB-6667-100000000010} = {00000C13-EEEE-BBBB-6667-100000000000}
+		{00000C13-EEEE-BBBB-6667-100000000010} = {00000C13-EEEE-BBBB-6667-100000000000}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00000C13-EEEE-BBBB-6667-000000000666}
