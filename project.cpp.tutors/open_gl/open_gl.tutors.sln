@@ -4,23 +4,27 @@ VisualStudioVersion = 15.0.35826.109
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_shared", "_shared", "{00000C13-EEEE-BBBB-6667-100000000000}"
 	ProjectSection(SolutionItems) = preProject
-		..\_shared\__read_me.txt   = ..\_shared\__read_me.txt
+		..\_shared\__read_me.txt = ..\_shared\__read_me.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "interface", "interface", "{00000C13-EEEE-BBBB-6667-100000000001}"
-	ProjectSection(SolutionItems) = preProject
-		..\_shared\interface\shared.defs.h    = ..\_shared\interface\shared.defs.h
-		..\_shared\interface\shared.dbg.h     = ..\_shared\interface\shared.dbg.h
-		..\_shared\interface\shared.preproc.h = ..\_shared\interface\shared.preproc.h
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tutors", "tutors", "{00000C13-EEEE-BBBB-6667-100000000001}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectX", "DirectX", "{00000C13-EEEE-BBBB-6667-100000000003}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenGL", "OpenGL", "{00000C13-EEEE-BBBB-6667-100000000002}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared.trim_v15", "..\_shared\shared.trim_v15.vcxproj", "{00000C13-EEEE-BBBB-6667-0000000B0001}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gl.shared_v15", "open_gl.shared\gl.shared_v15.vcxproj", "{00000C13-EEEE-BBBB-6667-0000000B0002}"
+	ProjectSection(ProjectDependencies) = postProject
+		{00000C13-EEEE-BBBB-6667-0000000B0001} = {00000C13-EEEE-BBBB-6667-0000000B0001}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00000C13-EEEE-BBBB-6667-100000000002}"
-	ProjectSection(SolutionItems) = preProject
-		..\_shared\src\shared.preproc.cpp = ..\_shared\src\shared.preproc.cpp
-		..\_shared\src\shared.dbg.cpp  = ..\_shared\src\shared.dbg.cpp
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutor.0.Fake", "tutor.0.fake\Tutor.0.Fake.vcxproj", "{00000C13-EEEE-BBBB-6667-0000000B0003}"
+	ProjectSection(ProjectDependencies) = postProject
+		{00000C13-EEEE-BBBB-6667-0000000B0001} = {00000C13-EEEE-BBBB-6667-0000000B0001}
+		{00000C13-EEEE-BBBB-6667-0000000B0002} = {00000C13-EEEE-BBBB-6667-0000000B0002}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutor.0.Fake", "tutor.0.fake\Tutor.0.Fake.vcxproj", "{00000C13-EEEE-BBBB-6667-000000000042}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,21 +34,40 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{00000C13-EEEE-BBBB-6667-000000000042}.Debug|x64.ActiveCfg = Debug|x64
-		{00000C13-EEEE-BBBB-6667-000000000042}.Debug|x64.Build.0 = Debug|x64
-		{00000C13-EEEE-BBBB-6667-000000000042}.Debug|x86.ActiveCfg = Debug|Win32
-		{00000C13-EEEE-BBBB-6667-000000000042}.Debug|x86.Build.0 = Debug|Win32
-		{00000C13-EEEE-BBBB-6667-000000000042}.Release|x64.ActiveCfg = Release|x64
-		{00000C13-EEEE-BBBB-6667-000000000042}.Release|x64.Build.0 = Release|x64
-		{00000C13-EEEE-BBBB-6667-000000000042}.Release|x86.ActiveCfg = Release|Win32
-		{00000C13-EEEE-BBBB-6667-000000000042}.Release|x86.Build.0 = Release|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Debug|x64.ActiveCfg = Debug|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Debug|x64.Build.0 = Debug|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Debug|x86.ActiveCfg = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Debug|x86.Build.0 = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Release|x64.ActiveCfg = Release|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Release|x64.Build.0 = Release|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Release|x86.ActiveCfg = Release|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0001}.Release|x86.Build.0 = Release|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Debug|x64.ActiveCfg = Debug|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Debug|x64.Build.0 = Debug|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Debug|x86.ActiveCfg = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Debug|x86.Build.0 = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Release|x64.ActiveCfg = Release|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Release|x64.Build.0 = Release|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Release|x86.ActiveCfg = Release|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0002}.Release|x86.Build.0 = Release|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Debug|x64.ActiveCfg = Debug|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Debug|x64.Build.0 = Debug|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Debug|x86.ActiveCfg = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Debug|x86.Build.0 = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Release|x64.ActiveCfg = Release|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Release|x64.Build.0 = Release|x64
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Release|x86.ActiveCfg = Release|Win32
+		{00000C13-EEEE-BBBB-6667-0000000B0003}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{00000C13-EEEE-BBBB-6667-100000000010} = {00000C13-EEEE-BBBB-6667-100000000000}
-		{00000C13-EEEE-BBBB-6667-100000000010} = {00000C13-EEEE-BBBB-6667-100000000000}
+		{00000C13-EEEE-BBBB-6667-100000000003} = {00000C13-EEEE-BBBB-6667-100000000001}
+		{00000C13-EEEE-BBBB-6667-100000000002} = {00000C13-EEEE-BBBB-6667-100000000001}
+		{00000C13-EEEE-BBBB-6667-0000000B0001} = {00000C13-EEEE-BBBB-6667-100000000000}
+		{00000C13-EEEE-BBBB-6667-0000000B0002} = {00000C13-EEEE-BBBB-6667-100000000002}
+		{00000C13-EEEE-BBBB-6667-0000000B0003} = {00000C13-EEEE-BBBB-6667-100000000002}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00000C13-EEEE-BBBB-6667-000000000666}

@@ -8,6 +8,7 @@
 */
 #include <cstdint>
 #include <atltrace.h>
+#include <cstdarg>
 
 #include "shared.defs.h"
 #include "shared.preproc.h"
@@ -23,6 +24,16 @@
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/debugging-and-error-reporting-macros ;
 	// https://stackoverflow.com/questions/20508086/getting-rid-of-atltracegeneral-category-shown-in-atltrace-output ; << good example ;
 
+	/*
+	*important*
+		regarding a variadic argument list:
+		::ATL::CString is capable to format variadic argument list by CString::FormatV() ::
+		https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class?view=msvc-150#formatv ;
+
+		alternatively, the following function can be used:
+		StringCchVPrintfEx() :: https://learn.microsoft.com/en-us/windows/win32/api/strsafe/nf-strsafe-stringcchvprintfexw ;
+	*/
+
 namespace shared { namespace dbg {
 
 	using namespace shared::defs;
@@ -33,10 +44,13 @@ namespace shared { namespace dbg {
 		
 	public:
 		enum e_category : uint32_t {
-		     e_info = 0x0, // this is informative category trace prefix: [info] ;
+		     e_info = 0x0, // this is information category trace prefix: [info] ;
 		     e_warn = 0x1, // this is warning category trace prefix: [warn] ;
 		     e_err  = 0x2, // this is error category trace prefix: [error] ;
 		};
+
+		static void Empty_ln (void); // outputs an empty line; 
+
 		// https://learn.microsoft.com/en-us/cpp/preprocessor/variadic-macros ;
 		/*
 			Initially it is supposed to have overloaded methods with one name 'Out',
@@ -56,6 +70,8 @@ namespace shared { namespace dbg {
 
 typedef shared::dbg::CTrace __trace;
 
+#define __empty_ln() __trace::Empty_ln();
+
 #define __trace_err(_p_format, ...)  __trace::Out_0(__trace::e_err , _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
 #define __trace_info(_p_format, ...) __trace::Out_0(__trace::e_info, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
 #define __trace_warn(_p_format, ...) __trace::Out_0(__trace::e_warn, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
@@ -69,6 +85,7 @@ typedef shared::dbg::CTrace __trace;
 #define __trace_warn_3(_p_format, ...) __trace::Out_3(__trace::e_warn, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // namespace, class and metod names are included automatically;
 
 #else
+#define __empty_ln() {}
 
 #define __trace_err(_p_format, ...)    { _p_format; __VA_ARGS__; }
 #define __trace_info(_p_format, ...)   { _p_format; __VA_ARGS__; }

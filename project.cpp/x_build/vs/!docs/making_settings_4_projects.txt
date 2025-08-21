@@ -1,3 +1,11 @@
+using Output Debug window
+For output messages in Debug mode it would be better to remove all unnecessary information in order to do not mix it with custom messages;
+1) Options >> Debugging >> Output Window >> General Output Settings:
+ a) Exception Messages = On;
+ b) Process Exit Messages = On;
+ c) Thread Exit Messages = On, but it is not required in the most cases;
+ all other options are turned off; 
+
 removing AutoPCH folder
 https://learn.microsoft.com/en-us/visualstudio/ide/reference/options-text-editor-c-cpp-advanced?view=vs-2019 ; << official documentation;
 

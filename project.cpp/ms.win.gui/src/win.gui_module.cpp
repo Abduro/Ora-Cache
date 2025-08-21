@@ -55,6 +55,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	ebo::boo::gui::CFrame frame;
 
 	n_result = frame.Create();
+#if (0) // the section of the code below is for testing the output of the __trace, because in tutorial projects it does not work;
+	HDC h_dc_ = frame.Window().GetDC();
+	__trace_err(_T("hdc=%s"), TString().__address_of(h_dc_));
+	frame.Window().ReleaseDC(h_dc_); h_dc_ = 0;
+#endif
 	if (__succeeded(n_result)) {
 #if (0)
 		_Module.WinMain(nCmdShow);

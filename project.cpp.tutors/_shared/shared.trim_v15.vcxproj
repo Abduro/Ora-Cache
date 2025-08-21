@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<ItemGroup Label="ProjectConfigurations">
+  <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -26,33 +26,32 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0003}</ProjectGuid>
-    <Keyword>AtlProj</Keyword>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0001}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -61,198 +60,139 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
- <!--Import Project="($ProjectDir)..\tutor.all.inc.props" /--><!--such relative reference to the path of the properties file does not work;-->
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="shared.trim.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="shared.trim.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="shared.trim.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="shared.trim.inc.props"/>
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <!--It is assumed the environment variables contain paths that end up with backslash;-->
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
-    <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
-    <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
+    <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\</OutPath>
+    <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\</IntPath>
   </PropertyGroup>
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <EmbedManifest>false</EmbedManifest>
     <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <EmbedManifest>false</EmbedManifest>
     <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <EmbedManifest>false</EmbedManifest>
     <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <EmbedManifest>false</EmbedManifest>
     <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
-<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_DEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-    </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
-    <Manifest>
-      <AdditionalManifestFiles>
-      </AdditionalManifestFiles>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-    </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
-    <Manifest>
-      <AdditionalManifestFiles>
-      </AdditionalManifestFiles>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>NODEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
     </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
-    <Manifest>
-      <AdditionalManifestFiles>
-      </AdditionalManifestFiles>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>NODEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
     </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ResourceCompile>
-    <Manifest><AdditionalManifestFiles></AdditionalManifestFiles></Manifest>
-    <PostBuildEvent><Command></Command></PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.0.fake.h" />
-    <ClCompile Include="open_gl_tutor.0.fake.cpp" />
-    <ClInclude Include="open_gl_tutor.0.module.h" />
-    <ClCompile Include="open_gl_tutor.0.module.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="open_gl_tutor.0.res.h" />
-    <ResourceCompile Include="open_gl_tutor.0.res.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="open_gl_tutor.0.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="Tutor.0.Fake.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(GL_Shared)gl.shared_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
-    </ProjectReference>
+    <ClInclude Include="$(_0)shared.dbg.h" />
+    <ClCompile Include="$(_1)shared.dbg.cpp" />
+    <ClInclude Include="$(_0)shared.defs.h" />
+    <ClCompile Include="$(_1)shared.defs.cpp" />
+    <ClInclude Include="$(_0)shared.preproc.h" />
+    <ClCompile Include="$(_1)shared.preproc.cpp" />
+    <ClInclude Include="$(_0)shared.types.h" />
+    <ClCompile Include="$(_1)shared.types.cpp" />
+    <ClInclude Include="$(_0)sys.err.codes.h"/>
+    <ClInclude Include="$(_1)sys.err.format.h" />
+    <ClCompile Include="$(_1)sys.err.format.cpp" />
+    <ClInclude Include="$(_0)sys.err.trim.h" />
+    <ClCompile Include="$(_1)sys.err.trim.cpp" />
+    <ClInclude Include="$(_0)sys.sync_obj.h" />
+    <ClCompile Include="$(_1)sys.sync_obj.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

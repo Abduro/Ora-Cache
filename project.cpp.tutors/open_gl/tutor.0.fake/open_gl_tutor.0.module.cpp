@@ -5,7 +5,7 @@
 #include "open_gl_tutor.0.module.h"
 #include "open_gl_tutor.0.fake.h"
 
-using namespace ebo::pack::draw::open_gl::fake;
+using namespace ex_ui::draw::open_gl::fake;
 
 CFakeModule _Module;
 

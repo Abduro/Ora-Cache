@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\error">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\error">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0003}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)shared.dbg.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.dbg.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.preproc.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.preproc.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.types.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.types.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.err.codes.h"><Filter>interface\error</Filter></ClInclude>
+    <ClInclude Include="$(_0)sys.err.trim.h"><Filter>interface\error</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.err.trim.cpp"><Filter>src\error</Filter></ClCompile>
+    <ClInclude Include="$(_1)sys.err.format.h"><Filter>src\error</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.err.format.cpp"><Filter>src\error</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.sync_obj.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.sync_obj.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

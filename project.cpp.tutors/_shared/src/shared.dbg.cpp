@@ -26,15 +26,19 @@ namespace _impl {
 using namespace _impl;
 using namespace shared::defs;
 
+void CTrace::Empty_ln (void) {
+	::OutputDebugString(_T("\n"));
+}
+
 void CTrace::Out_0 (_pc_sz _lp_sz_fmt, ...) {
 
 	va_list  args_;
 	va_start(args_, _lp_sz_fmt);
 
-	CString cs_out; cs_out.Format(_lp_sz_fmt, args_);
+	CString cs_out; cs_out.FormatV(_lp_sz_fmt, args_);
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw ;
-	::OutputDebugString(cs_out.GetString());
+	::OutputDebugString((_pc_sz) cs_out);
 
 	va_end  (args_);
 }
@@ -44,7 +48,7 @@ void CTrace::Out_0 (const e_category _e_cat, _pc_sz _lp_sz_fmt, ...) { // perhap
 	va_list  args_;
 	va_start(args_, _lp_sz_fmt);
 
-	CString cs_in ; cs_in.Format(_lp_sz_fmt, args_);
+	CString cs_in ; cs_in.FormatV(_lp_sz_fmt, args_);
 	CString cs_out; cs_out.Format(_T("%s %s\n"), (_pc_sz) CatToStr(_e_cat), (_pc_sz) cs_in);
 
 	::OutputDebugString((_pc_sz) cs_out);
@@ -57,7 +61,7 @@ void CTrace::Out_2 (const e_category _e_cat, _pc_sz _p_cls, _pc_sz _p_method, _p
 	va_list  args_;
 	va_start(args_, _p_sz_format);
 
-	CString cs_in ; cs_in.Format(_p_sz_format, args_); // perhaps, cs_in = this->Out(_p_sz_format, __VA_ARGS__); would be better;
+	CString cs_in ; cs_in.FormatV(_p_sz_format, args_);
 	CString cs_out; cs_out.Format(_T("%s cls::[%s].%s()>>%s\n"), (_pc_sz) CatToStr(_e_cat), _p_cls, _p_method, (_pc_sz) cs_in);
 
 	::OutputDebugString((_pc_sz) cs_out);
@@ -70,7 +74,7 @@ void CTrace::Out_3 (const e_category _e_cat, _pc_sz _p_nm_space, _pc_sz _p_cls, 
 	va_list  args_;
 	va_start(args_, _p_sz_format);
 
-	CString cs_in ; cs_in.Format(_p_sz_format, args_);
+	CString cs_in ; cs_in.FormatV(_p_sz_format, args_);
 	CString cs_out; cs_out.Format(_T("%s cls::[%s::%s].%s()>>%s\n"), (_pc_sz) CatToStr(_e_cat), _p_nm_space, _p_cls, _p_method, (_pc_sz) cs_in);
 
 	::OutputDebugString((_pc_sz) cs_out);

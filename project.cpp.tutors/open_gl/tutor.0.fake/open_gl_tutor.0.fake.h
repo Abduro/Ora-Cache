@@ -6,7 +6,7 @@
 */
 #include "open_gl_tutor.0.module.h"
 
-namespace ebo { namespace pack { namespace draw { namespace open_gl {  namespace fake {
+namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 
 	class CWnd : public ::ATL::CWindowImpl<CWnd> { typedef ::ATL::CWindowImpl<CWnd> TWindow;
 	public:
@@ -19,7 +19,7 @@ namespace ebo { namespace pack { namespace draw { namespace open_gl {  namespace
 		 DECLARE_WND_CLASS_EX(_T("open_gl::fake::CWnd"), u_style, COLOR_ACTIVECAPTION);
 		 DECLARE_EMPTY_MSG_MAP();
 
-		 int32_t Err_code (void) const;
+		 TError& Error (void) const;
 		 bool    Is_valid (void) const;
 
 		 const
@@ -30,8 +30,9 @@ namespace ebo { namespace pack { namespace draw { namespace open_gl {  namespace
 	private:
 		 CWnd& operator = (const CWnd&) = delete; CWnd& operator = (CWnd&&) = delete;
 
+		 mutable
+		 CError  m_error;
 		 HDC     m_h_dc ;
-		 int32_t m_err_code; // taking into account that hresult is defined as long data type, unsigned integer cannot be used;
 		 HGLRC   m_h_render; // the render context;
 	};
 
@@ -41,6 +42,6 @@ namespace ebo { namespace pack { namespace draw { namespace open_gl {  namespace
 		~CVersion (void) = default;
 	};
 
-}}}}}
+}}}}
 
 #endif/*_OPEN_GL_TUTOR_0_FAKE_H_INCLUDED*/

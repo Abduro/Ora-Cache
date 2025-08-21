@@ -6,10 +6,19 @@
 */
 #include "shared.defs.h"
 #include "shared.dbg.h"
+#include "sys.err.trim.h"
 
-namespace ebo { namespace pack { namespace draw { namespace open_gl {  namespace fake {
+#include "gl_defs.h" // reference to this header file is required, otherwise the linker is not available to link to OpenGL32.dll;
+
+#pragma comment(lib, "shared.trim_v15.lib")
+#pragma comment(lib, "gl.shared_v15.lib")
+
+namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 
 	using namespace shared::defs;
+
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;
 	class CFakeModule : public ATL::CAtlExeModuleT<CFakeModule> { typedef ATL::CAtlExeModuleT<CFakeModule> TModule;
@@ -17,6 +26,6 @@ namespace ebo { namespace pack { namespace draw { namespace open_gl {  namespace
 		err_code PreMessageLoop(int nShowCmd); // it is just for debug purpose only yet;
 	};
 
-}}}}}
+}}}}
 
 #endif/*_OPEN_GL_TUTOR_0_MODULE_H_INCLUDED*/

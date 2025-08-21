@@ -3,25 +3,37 @@
 	This is OpenGL tutorial of the creating fake content interface implementation file;
 */
 #include "open_gl_tutor.0.fake.h"
-// It is mandatory: shared static library must be created;
-#include "shared.defs.cpp"
-#include "shared.preproc.cpp"
-#include "shared.dbg.cpp"
 
-using namespace ebo::pack::draw::open_gl::fake;
+using namespace ex_ui::draw::open_gl::fake;
 
-CWnd:: CWnd (void) : TWindow(), m_err_code(__e_not_inited), m_h_dc(0), m_h_render(0) {
+#ifndef _T
+#ifndef  _UNICODE
+#define _T(x)      x
+#else
+#define _T(x) L ## x
+#endif
+#endif
+
+namespace ex_ui { namespace draw { namespace open_gl { namespace fake { namespace _impl {
+
+	using namespace shared::defs;
+
+}}}}}
+using namespace ex_ui::draw::open_gl::fake::_impl;
+
+CWnd:: CWnd (void) : TWindow(), m_h_dc(0), m_h_render(0) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited;
 
 	TWindow::Create(HWND_MESSAGE);
 
 	if (false == TWindow::IsWindow()) {
-		this->m_err_code = __LastErrToHresult();
-		__trace_err_3(_T("error: code=0x%08x; %s"), this->Err_code(), _T("Fake window creation failed;")); return;
+		this->m_error.Last();
+		__trace_err_3(_T("%s"), (_pc_sz) this->Error().Print(TError::e_req)); return;
 	}
 	else {
-		this->m_err_code = __s_ok;
+		this->m_error << __s_ok;
 		this->m_h_dc = TWindow::GetDC();
-		__trace_err_3(_T("result: hdc=%s"), (_pc_sz) __address_of(this->Get_ctx(), _T("0x%08x")));
+		__empty_ln();
+		__trace_info_3(_T("context device: handle=%s\n"), (_pc_sz)__address_of(this->Get_ctx()));
 	}
 
 	PIXELFORMATDESCRIPTOR px_fmt_desc = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
@@ -36,28 +48,28 @@ CWnd:: CWnd (void) : TWindow(), m_err_code(__e_not_inited), m_h_dc(0), m_h_rende
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat ;
 	int32_t n_px_format = ::ChoosePixelFormat(this->Get_ctx(), &px_fmt_desc);
 	if (0== n_px_format) {
-		this->m_err_code = __LastErrToHresult(); return;
+		this->m_error.Last(); return;
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setpixelformat ;
 	if (false == !!::SetPixelFormat(this->Get_ctx(), n_px_format, &px_fmt_desc)) {
-		this->m_err_code = __LastErrToHresult(); return;
+		this->m_error.Last(); return;
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
 	this->m_h_render = ::wglCreateContext(this->Get_ctx());
 	if ( 0 == this->m_h_render) {
-		this->m_err_code = __LastErrToHresult(); return;
+		this->m_error.Last(); return;
 	}
 }
 CWnd::~CWnd (void) {
 	// (1) destroys the renderer handle first;
 
-	this->m_err_code = __s_ok;
+	this->m_error << __METHOD__ << __s_ok;
 
 	if (nullptr != this->m_h_render) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
-		if (0 == ::wglMakeCurrent(this->Get_ctx(), 0)) { this->m_err_code = __LastErrToHresult(); ATLASSERT(FALSE); }
+		if (0 == ::wglMakeCurrent(this->Get_ctx(), 0)) { this->m_error.Last(); ATLASSERT(FALSE); }
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wgldeletecontext ;
-		if (0 == ::wglDeleteContext(this->m_h_render)) { this->m_err_code = __LastErrToHresult(); ATLASSERT(FALSE); }
+		if (0 == ::wglDeleteContext(this->m_h_render)) { this->m_error.Last(); ATLASSERT(FALSE); }
 		else this->m_h_render = nullptr;
 	}
 	// (2) destroys device context handle;
@@ -69,8 +81,8 @@ CWnd::~CWnd (void) {
 		TWindow::DestroyWindow(); // the error code is not important yet;
 }
 
-int32_t CWnd::Err_code (void) const { return this->m_err_code; }
-bool    CWnd::Is_valid (void) const { return false == !!this->Err_code(); }
+TError& CWnd::Error (void) const { return this->m_error; }
+bool    CWnd::Is_valid (void) const { return false == this->Error(); }
 
 const
 HDC&    CWnd::Get_ctx  (void) const { return this->m_h_dc; }

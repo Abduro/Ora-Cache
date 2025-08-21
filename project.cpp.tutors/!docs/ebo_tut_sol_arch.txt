@@ -1,0 +1,13 @@
+*important*: node names may be different from folder names which the projects reside in;
+@cpp
+	_shared : {00000C13-EEEE-BBBB-6667-100000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
+		shared.trim_v15 : {00000C13-EEEE-BBBB-6667-0000000B0001} << this is the shared project of excerpts from Ebo Pack solution;
+
+	tutors  : {00000C13-EEEE-BBBB-6667-100000000001} << the sub-root of the tutorial projects;
+	DirecX  : {00000C13-EEEE-BBBB-6667-100000000003} << the sub-root for DirectX tutorials;
+	OpenGL  : {00000C13-EEEE-BBBB-6667-100000000002} << the sub-root for OpenGL tutorials;
+		open_gl.shared  : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project for OpenGL tutorials;
+		tutor.0.fake    : {00000C13-EEEE-BBBB-6667-0000000B0003} << the tutorial for creating OpenGL context based on fake window;
+
+@net
+--none for this time--
