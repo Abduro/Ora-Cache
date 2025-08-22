@@ -9,6 +9,8 @@
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/error-handling ;
+
 }}}
 
 #endif/*_GL_ERROR_H_INCLUDED*/

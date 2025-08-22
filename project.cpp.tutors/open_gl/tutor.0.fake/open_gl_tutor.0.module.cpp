@@ -40,6 +40,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox ;
 		CWnd wnd;
 		if (wnd.Is_valid()) {
+			CVersion().Print();
 #if defined(_DEBUG)
 			::MessageBox(0, _T("The content is created successfullly;"), _T("OpenGL Tutors"), MB_OK|MB_ICONINFORMATION);
 #endif

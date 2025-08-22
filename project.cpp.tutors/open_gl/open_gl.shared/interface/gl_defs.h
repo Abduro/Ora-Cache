@@ -12,6 +12,9 @@
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
+	// https://github.com/KhronosGroup/OpenGL-Registry ;
+
+
 }}}
 
 #endif/*_GL_DEFS_H_INCLUDED*/
