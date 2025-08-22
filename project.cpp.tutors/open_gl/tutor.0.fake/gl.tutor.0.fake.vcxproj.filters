@@ -2,26 +2,28 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000420}</UniqueIdentifier>
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0030}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000421}</UniqueIdentifier>
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0031}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\resources">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000422}</UniqueIdentifier>
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0032}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\resources\icons">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000423}</UniqueIdentifier>
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0033}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="open_gl_tutor.0.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.0.defs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="open_gl_tutor.0.fake.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="open_gl_tutor.0.fake.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="open_gl_tutor.0.module.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="open_gl_tutor.0.module.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="Tutor.0.Fake.manifest"><Filter>interface</Filter></Manifest>
+    <Manifest Include="gl.tutor.0.fake.manifest"><Filter>interface</Filter></Manifest>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="open_gl_tutor.0.res.h"><Filter>src\resources</Filter></ClInclude>

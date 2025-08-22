@@ -83,4 +83,4 @@ END
 // https://blogs.msdn.microsoft.com/junfeng/2007/06/26/rt_manifest-resource-and-isolation_aware_enabled/
 //
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Tutor.0.Fake.manifest"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "gl.tutor.0.fake.manifest"

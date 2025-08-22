@@ -231,6 +231,8 @@
     <PostBuildEvent><Command></Command></PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="open_gl_tutor.0.defs.h" />
+    <ClCompile Include="open_gl_tutor.0.defs.cpp" />
     <ClInclude Include="open_gl_tutor.0.fake.h" />
     <ClCompile Include="open_gl_tutor.0.fake.cpp" />
     <ClInclude Include="open_gl_tutor.0.module.h" />
@@ -244,7 +246,7 @@
     <Image Include="open_gl_tutor.0.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="Tutor.0.Fake.manifest" />
+    <Manifest Include="gl.tutor.0.fake.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

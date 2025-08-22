@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0031}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="open_gl_tutor.0.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.0.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="open_gl_tutor.0.fake.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.0.fake.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

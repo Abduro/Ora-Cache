@@ -2,9 +2,9 @@
 #define _OPEN_GL_TUTOR_0_FAKE_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) 0n 18-Aug-2025 at 11:16:27.485, UTC+4, Batumi, Monday;
-	This is OpenGL tutorial of the creating fake content interface declaration file;
+	This is OpenGL tutorial of the creating fake context interface declaration file;
 */
-#include "open_gl_tutor.0.module.h"
+#include "open_gl_tutor.0.defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 

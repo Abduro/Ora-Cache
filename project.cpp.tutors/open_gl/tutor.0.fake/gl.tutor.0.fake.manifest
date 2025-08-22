@@ -4,7 +4,7 @@
     This is sound-bin-trans receiver desktop console application manifest file.
     ============================================================================
     Adopted to ms.win shell extension gui test project on 17-Nov-2024 at 09:13:27.921, UTC+4, Batumi, Sunday;
-    Adopted to OpenGL tutorial of the creating fake content project on 18-Aug-2025 at 13:04:17.182, UTC+4, Batumi, Monday;
+    Adopted to OpenGL tutorial of the creating fake context project on 18-Aug-2025 at 13:04:17.182, UTC+4, Batumi, Monday;
   -->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity
@@ -13,7 +13,7 @@
     version="1.0.0.1"
     type="win32"
   />
-  <description>OpenGL Fake Content Tutorial App</description>
+  <description>OpenGL Fake Context Tutorial App</description>
   <dependency>
     <dependentAssembly>
       <assemblyIdentity
