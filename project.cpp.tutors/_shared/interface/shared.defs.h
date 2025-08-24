@@ -23,6 +23,13 @@ namespace shared { namespace defs {
 	CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
 #endif
 
+	class CString_Ex : public CString { typedef CString TBase;
+	public:
+		_pc_sz Format(_pc_sz _p_pattern, ...);
+	};
+
 }}
+
+typedef shared::defs::CString_Ex TString;
 
 #endif/*_SHARED_DEFS_H_INCLUDED*/

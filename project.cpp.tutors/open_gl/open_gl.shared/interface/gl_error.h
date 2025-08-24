@@ -4,13 +4,15 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Aug-2025 at 11:47:47.855, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL error handler adapter interface declaration file;
 */
-#include "gl_defs.h"
+#include "shared.defs.h"
 #include "sys.err.trim.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/error-handling ;
-
+	// https://docs.gl/gl4/glDebugMessageCallback ; << error callback function;
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
 }}}
 
 #endif/*_GL_ERROR_H_INCLUDED*/

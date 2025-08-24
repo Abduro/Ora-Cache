@@ -72,3 +72,18 @@ CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
 #endif
 
 }}
+
+using namespace shared::defs;
+
+_pc_sz CString_Ex::Format (_pc_sz _p_pattern, ...) {
+	_p_pattern;
+	if (nullptr == _p_pattern || 0 == ::lstrlen(_p_pattern)) {
+		(TBase&)*this = _T("#inv_arg");
+		return TBase::GetString();
+	}
+	va_list args;
+	va_start (args, _p_pattern);
+	TBase::FormatV(_p_pattern, args);
+	va_end (args);
+	return TBase::GetString();
+}

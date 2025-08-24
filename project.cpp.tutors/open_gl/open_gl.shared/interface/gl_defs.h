@@ -6,14 +6,14 @@
 */
 #include "shared.defs.h"
 // https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-on-windows-nt--windows-2000--and-windows-95-98 ; << old but still valid;
-#include <gl/gl.h>
+// https://github.com/KhronosGroup/OpenGL-Registry ;
+#include <gl/gl.h> // the headers' include order is important: windows.h must go first;
 #include <map>
+#include "gl_error.h"
 
 #pragma comment(lib, "opengl32.lib")
 
 namespace ex_ui { namespace draw { namespace open_gl {
-
-	// https://github.com/KhronosGroup/OpenGL-Registry ;`
 	using namespace shared::types;
 
 namespace procs {
@@ -23,14 +23,17 @@ namespace procs {
 
 	class CBase {
 	public:
-		CBase (void) = default; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
+		CBase (void) ; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
-		PROC Get (_pc_sz _p_fun_name);
+		TError& Error (void) const;
+		PROC    Get (_pc_sz _p_fun_name); // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
 
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
+
 	protected:
 		TProcCache m_cached;
+		CError m_error;
 	};
 
 	class CBuffer : public CBase {
