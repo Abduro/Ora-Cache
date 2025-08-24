@@ -1,0 +1,7 @@
+#pragma region __refs_c
+	// https://en.wikipedia.org/wiki/Functor ;
+	// https://en.wikipedia.org/wiki/Functor_(functional_programming) ;
+	// https://en.wikipedia.org/wiki/Applicative_functor;
+	// https://stackoverflow.com/questions/2030863/in-functional-programming-what-is-a-functor ; << very good discussion :)
+	// https://www.adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html ; << unbelievable explanation ;)
+#pragma endregion

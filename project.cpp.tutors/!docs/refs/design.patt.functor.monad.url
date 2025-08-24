@@ -1,0 +1,4 @@
+[InternetShortcut]
+URL=https://en.wikipedia.org/wiki/Monad_(functional_programming)
+
+desc=Monads are a way to structure computations as a sequence of steps, where each step not only produces a value but also some extra information about the computation ;
