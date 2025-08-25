@@ -1,0 +1,8 @@
+#pragma region __refs_c
+	// needs to be reviewed for how to apply other functionality to base window class by avoiding atlthunk intermediate component;
+	// https://learn.microsoft.com/en-us/answers/questions/1330903/a-curiosity-question-on-atl-cwindowimpl-class ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/atlthunk/nf-atlthunk-atlthunk_initdata ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/atlthunk/nf-atlthunk-atlthunk_allocatedata ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/atlthunk/nf-atlthunk-atlthunk_datatocode ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/atlthunk/nf-atlthunk-atlthunk_freedata ;
+#pragma endregion // the review of the ATL::CWindow interface and its functionality is postponed; this comment is in different color than it should be, looks like a VS defect :-D
