@@ -4,7 +4,7 @@
 //   -----------------------------------------------------------------------------
 //   Adopted to FakeGPS project on 13-Dec-2019 at 8:28:09a, UTC+7, Novosibirsk, Friday;
 //   Adopted to Ebo Pack draw renderer test project on 17-Nov-2024 at 16:03:01.793, UTC+4, Batumi, Sunday;
-//   Adopted to OpenGL tutorial of the creating fake context project on 18-Aug-2025 at 12:53:35.388, UTC+4, Batumi, Monday;
+//   Adopted to OpenGL tutorial of the creating shader project on 26-Aug-2025 at 11:40:05.200, UTC+4, Batumi, Tuesday;
 //
 
 #pragma region __generic

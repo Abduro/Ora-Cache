@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) 0n 18-Aug-2025 at 11:10:36.540, UTC+4, Batumi, Monday;
-	This is OpenGL tutorial of the creating fake content interface implementation file;
+	This is OpenGL tutorial of the creating fake context interface implementation file;
 */
 #include "open_gl_tutor.0.fake.h"
 

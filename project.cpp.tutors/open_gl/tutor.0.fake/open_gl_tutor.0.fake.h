@@ -8,6 +8,8 @@
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 
+	using namespace ex_ui::draw::open_gl;
+
 	class CWnd : public ::ATL::CWindowImpl<CWnd> { typedef ::ATL::CWindowImpl<CWnd> TWindow;
 	public:
 		 CWnd (void); CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;

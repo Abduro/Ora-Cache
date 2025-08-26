@@ -15,17 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.0.module.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="open_gl_tutor.0.module.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="open_gl_tutor.1.wnd.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.1.wnd.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="open_gl_tutor.1.module.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.1.module.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="gl.tutor.0.fake.manifest"><Filter>interface</Filter></Manifest>
+    <Manifest Include="gl.tutor.1.shader.manifest"><Filter>interface</Filter></Manifest>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.0.res.h"><Filter>src\resources</Filter></ClInclude>
-    <ResourceCompile Include="open_gl_tutor.0.res.rc"><Filter>src\resources</Filter></ResourceCompile>
+    <ClInclude Include="open_gl_tutor.1.res.h"><Filter>src\resources</Filter></ClInclude>
+    <ResourceCompile Include="open_gl_tutor.1.res.rc"><Filter>src\resources</Filter></ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
+    <Image Include="$(_3)open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
   </ItemGroup>
 </Project>

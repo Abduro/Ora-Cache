@@ -1,15 +1,15 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) 0n 18-Aug-2025 at 22:33:32.728, UTC+4, Batumi, Monday;
-	This is OpenGL fake context creation tutorial module interface implementation file;
+	Created by Tech_dog (ebontrop@gmail.com) 0n 26-Aug-2025 at 02:41:05.044, UTC+4, Batumi, Tuesday;
+	This is OpenGL shader creation tutorial module interface implementation file;
 */
-#include "open_gl_tutor.0.module.h"
-#include "open_gl_tutor.0.fake.h"
+#include "open_gl_tutor.1.module.h"
+#include "open_gl_tutor.1.wnd.h"
 
-using namespace ex_ui::draw::open_gl::fake;
+using namespace ex_ui::draw::open_gl::shader;
 
-CFakeModule _Module;
+CShaderModule _Module;
 
-err_code CFakeModule::PreMessageLoop (int nShowCmd) {
+err_code CShaderModule::PreMessageLoop (int nShowCmd) {
 		nShowCmd;
 		err_code n_result = __s_ok;
 
@@ -36,21 +36,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(NULL, 0, 0, 0L);
-	{
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox ;
-		CWnd wnd;
-		if (wnd.Is_valid()) {
-			CVersion().Print();
-#if defined(_DEBUG)
-			::MessageBox(0, _T("The content is created successfullly;"), _T("OpenGL Tutors"), MB_OK|MB_ICONINFORMATION);
-#endif
-		}
-		else {
-#if defined(_DEBUG)
-#endif
-		}
-	}
-
+	
 	MSG msg = {0, WM_QUIT, 0, 0, 0, {0, 0}};
 
 	while( WM_QUIT != msg.message ) {

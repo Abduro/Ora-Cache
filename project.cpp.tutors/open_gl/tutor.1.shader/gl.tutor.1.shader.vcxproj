@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup Label="ProjectConfigurations">
+<ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0003}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0004}</ProjectGuid>
     <Keyword>AtlProj</Keyword>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
@@ -63,21 +63,24 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <!--Import Project="($ProjectDir)..\tutor.all.inc.props" /-->
-    <!--such relative reference to the path of the properties file does not work;-->
+ <!--Import Project="($ProjectDir)..\tutor.all.inc.props" /--><!--such relative reference to the path of the properties file does not work;-->
     <Import Project="..\tutor.all.inc.props" />
+    <Import Project="gl.tutor.1.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\tutor.all.inc.props" />
+    <Import Project="gl.tutor.1.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\tutor.all.inc.props" />
+    <Import Project="gl.tutor.1.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\tutor.all.inc.props" />
+    <Import Project="gl.tutor.1.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -86,7 +89,7 @@
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
@@ -118,7 +121,7 @@
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -130,8 +133,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExceptionHandling>Async</ExceptionHandling>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,8 +160,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExceptionHandling>Async</ExceptionHandling>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,9 +188,6 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExceptionHandling>Async</ExceptionHandling>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
-      <SupportJustMyCode>true</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -213,7 +209,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -223,9 +219,6 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExceptionHandling>Async</ExceptionHandling>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
-      <SupportJustMyCode>true</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -238,31 +231,33 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
-    <Manifest>
-      <AdditionalManifestFiles>
-      </AdditionalManifestFiles>
-    </Manifest>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
+    <Manifest><AdditionalManifestFiles></AdditionalManifestFiles></Manifest>
+    <PostBuildEvent><Command></Command></PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.0.module.h" />
-    <ClCompile Include="open_gl_tutor.0.module.cpp" />
+    <ClInclude Include="open_gl_tutor.1.module.h" />
+    <ClCompile Include="open_gl_tutor.1.module.cpp" />
+    <ClInclude Include="open_gl_tutor.1.wnd.h" />
+    <ClCompile Include="open_gl_tutor.1.wnd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.0.res.h" />
-    <ResourceCompile Include="open_gl_tutor.0.res.rc" />
+    <ClInclude Include="open_gl_tutor.1.res.h" />
+    <ResourceCompile Include="open_gl_tutor.1.res.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="open_gl_tutor.0.ico" />
+    <Image Include="$(_0)open_gl_tutor.0.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="gl.tutor.0.fake.manifest" />
+    <Manifest Include="gl.tutor.1.shader.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="gl.tutor.0.fake.lib.vcxproj">
+    <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(GL_Shared)gl.shared_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(_0)gl.tutor.0.fake.lib.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>
     </ProjectReference>
   </ItemGroup>

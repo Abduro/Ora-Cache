@@ -1,0 +1,43 @@
+::*important*:
+:: in the project file each node <ItemDefinitionGroup>/<ClCompile> must contain <PreprocessorDefinitions> sub-node for working prerocessor defs properly:
+:: for example:
+
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <ClCompile>
+         <PreprocessorDefinitions>_DEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      </ClCompile>
+   </ItemDefinitionGroup>
+
+:: or Project Properties >> C/C++ >> Preprocessor >> Preprocessor Definitions:
+
+_DEBUG;WIN32;%(PreprocessorDefinitions)   set for {Debug|x86}
+_DEBUG;WIN64;%(PreprocessorDefinitions)   set for {Debug|x64}
+
+NDEBUG;WIN32;%(PreprocessorDefinitions)   set for {Release|x86}
+NDEBUG;WIN34;%(PreprocessorDefinitions)   set for {Release|x64}
+
+::
+:: The preprocessor definition must contain 'WIN64' or 'WIN32' either in accordance with project's platform (x64/Win32);
+::
+::*important*: in order to avoid warning LNK4003: invalid library format; library ignored ...
+::
+::Settings of all projects for configurations {Debug|Release} and platforms {x64|Win32} must have:
+
+<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='{Release|Debug}|{Win32|x64}'">
+  <ClCompile>
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary> <!--'Release'-->
+<!--or-->
+    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary> <!--'Debug'-->
+  </ClCompile>
+</ItemDefinitionGroup>
+
+:: or Project Properties >> C/C++ >> Code Generation >> Runtime Library:
+
+Multi-threaded Debug (/MTd) set for {Debug} configuration
+Multi-threaded (/MT)        set for {Release} configuration
+
+:: A couple more things:
+:: Project Properties >> C/C++ >> General >>
+:: Debug Information Format => Program Database (/Zi) ; for all config and platforms;
+:: Support Just My Code Debugging => Yes (/JMC) ; for all config and platforms;
+
