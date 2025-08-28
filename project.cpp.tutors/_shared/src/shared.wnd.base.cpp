@@ -2,8 +2,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 24-Aug-2025 at 12:41:07.778, UTC+4, Batumi, Sunday;
 	This is Ebo Pack tutorials' shared window base interface implementation file;
 */
-#include <map>
 #include "shared.wnd.base.h"
+#include "shared.preproc.h"
 #include "sys.sync_obj.h"
 
 #ifndef __H
@@ -56,10 +56,14 @@ err_code CAtom::Register (_pc_sz _cls_name) {
 
 	WNDCLASSEX wnd_cls = { 0 }; // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw ;
 
-	wnd_cls.cbSize        = sizeof(WNDCLASSEX);
-	wnd_cls.style         = CS_OWNDC|CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS;
-	wnd_cls.lpfnWndProc   = ::DefWindowProc;
-	wnd_cls.hInstance     = h_instance;
+	wnd_cls.cbSize = sizeof(WNDCLASSEX);
+	wnd_cls.style  = CS_OWNDC|CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS;
+#if (0)
+	wnd_cls.lpfnWndProc = ::DefWindowProc;
+#else
+	::Get_router().ApplyTo(wnd_cls);
+#endif
+	wnd_cls.hInstance   = h_instance;
 #if (0)
 	/* excerpt from above URL:
 		When this member is NULL, an application must paint its own background whenever it is requested to paint in its client area...

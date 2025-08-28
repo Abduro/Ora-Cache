@@ -7,13 +7,18 @@
 #include <atlbase.h>
 #include <atlwin.h>
 #include <atlstr.h>
-#include <cstdint>    // for declareing and/or defining data types such as: uint32_t for example;
+#include <cstdint>        // for declareing and/or defining data types such as: uint32_t for example;
+#include <map>            // window message router uses this header;
+#include <vector>         // preprocessor wrapper uses this header;
 
-#include "sys.err.codes.h"
+#include "sys.err.trim.h" // includes error codes;
 
 namespace shared { namespace defs {
 
 	using namespace shared::types;
+
+	using CError = shared::sys_core::CError;
+	using TError = const CError;
 
 #if defined WIN64
 	CString __address_of (const void* const _p_fun_or_obj_ptr);

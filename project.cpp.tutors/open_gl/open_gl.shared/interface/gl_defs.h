@@ -8,7 +8,6 @@
 // https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-on-windows-nt--windows-2000--and-windows-95-98 ; << old but still valid;
 // https://github.com/KhronosGroup/OpenGL-Registry ;
 #include <gl/gl.h> // the headers' include order is important: windows.h must go first;
-#include <map>
 #include "gl_error.h"
 
 #pragma comment(lib, "opengl32.lib")

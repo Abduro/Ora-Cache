@@ -3,3 +3,9 @@
 	This is Ebo Pack OpenGL tutorials' shader window interface implementation file;
 */
 #include "open_gl_tutor.1.wnd.h"
+#include "shared.preproc.h"
+
+using namespace ex_ui::draw::open_gl::shade;
+
+CWnd:: CWnd (void) : TWindow() { TWindow::m_error >>__CLASS__; }
+CWnd::~CWnd (void) { } // parent class object will destroy window created automatically on its (parent) destruction;

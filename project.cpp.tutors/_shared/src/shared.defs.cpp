@@ -4,7 +4,6 @@
 */
 #include "shared.defs.h"
 
-
 namespace shared { namespace defs {
 
 #if defined WIN64

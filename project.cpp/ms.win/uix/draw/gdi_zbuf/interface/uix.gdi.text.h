@@ -272,7 +272,7 @@ namespace output {
 	public:
 		enum e_value : uint32_t {
 		     e_base   = TA_BASELINE , // The reference point is on the base line of the text ; VTA_BASELINE == TA_BASELINE ;
-			 e_center = TA_CENTER   , // The reference point is aligned horizontally with the center of the bounding rectangle;
+		     e_center = TA_CENTER   , // The reference point is aligned horizontally with the center of the bounding rectangle;
 		     e_left   = TA_LEFT     , // The reference point is on the left edge of the bounding rectangle; 0 value indicates this flag is *default*;
 		     e_right  = TA_RIGHT    , // The reference point is on the right edge of the bounding rectangle;
 		};

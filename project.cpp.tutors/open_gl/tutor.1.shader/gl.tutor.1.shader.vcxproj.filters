@@ -15,8 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.1.wnd.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="open_gl_tutor.1.wnd.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="open_gl_tutor.1.module.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="open_gl_tutor.1.module.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
@@ -28,6 +26,6 @@
     <ResourceCompile Include="open_gl_tutor.1.res.rc"><Filter>src\resources</Filter></ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="$(_3)open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
+    <Image Include="$(_0)open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
   </ItemGroup>
 </Project>

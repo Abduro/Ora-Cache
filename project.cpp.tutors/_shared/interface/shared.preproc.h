@@ -6,10 +6,6 @@
 	-----------------------------------------------------------------------------
 	Adopted to tutorials' solution(s) on 19-Aug-2025 at 15:21:05.870, UTC+4, Batumi, Tuesday;
 */
-#include <atlbase.h>
-#include <atlstr.h>
-#include <vector>
-
 #include "shared.defs.h"
 
 #if defined(_UNICODE)
@@ -17,7 +13,6 @@
 #else
 #define __SPEC__  __FUNCTION__
 #endif
-
 
 namespace shared { namespace common {
 

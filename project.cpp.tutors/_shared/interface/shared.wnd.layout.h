@@ -1,23 +1,14 @@
-#ifndef _WND_LAYOUT_H_INCLUDED
-#define _WND_LAYOUT_H_INCLUDED
+#ifndef _SHARED_WND_LAYOUT_H_INCLUDED
+#define _SHARED_WND_LAYOUT_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 11-Dec-2021 at 2:01:28.3414539 pm, UTC+7, Novosibirsk, Saturday;
-	This is base window layout interface declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 27-Aug-2025 at 04:57:55.510, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack OpenGL tutorial main window layout interface declaration file;
 */
-#include "sys.error.h"
-#include "2d.base.h"
-#include "2d.shape.rect.h"
+#include "shared.defs.h"
 
-#include "shared.types.h"
+namespace ex_ui { namespace popup { namespace layout {
 
-namespace ex_ui { namespace popup {  namespace layout {
-
-	using namespace shared::types;
-
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
-	using TPosition = geometry::_2D::base::CPosition;
-	using CRect  = geometry::_2D::shapes::COblong;
+	using namespace shared::defs;
 
 	// https://wikidiff.com/position/placement ;
 	// https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize ;
@@ -27,7 +18,7 @@ namespace ex_ui { namespace popup {  namespace layout {
 	class CPlacement {
 	public:
 		 CPlacement (void);
-		 CPlacement (const CPlacement&);
+		 CPlacement (const CPlacement&); CPlacement (CPlacement&&) = delete; // not required yet;
 		~CPlacement (void);
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions ;
 	public:
@@ -41,15 +32,23 @@ namespace ex_ui { namespace popup {  namespace layout {
 		t_rect& Rect (void)      ;
 
 	public:
-		CPlacement& operator = (const CPlacement&);
+		CPlacement& operator = (const CPlacement&); CPlacement& operator = (CPlacement&&) = delete;
 		CPlacement& operator <<(const t_rect&);
+
+		operator const t_rect& (void) const;
+		operator       t_rect& (void) ;
+
+		const
+		t_rect& operator ()(void) const;
+		t_rect& operator ()(void) ;
+
 	protected:
 		t_rect   m_rect;
 	};
 
-	class CPosition : public TPosition { typedef TPosition TBase;
+	class CPosition : public CPlacement { typedef CPlacement TBase;
 	public:
-		 CPosition (void);
+		 CPosition (void); CPosition (const CPosition&); CPosition (CPosition&&) = delete; // not required yet;
 		~CPosition (void) = default;
 
 	public:
@@ -57,7 +56,18 @@ namespace ex_ui { namespace popup {  namespace layout {
 		// calculates a center point of the position in absolute coordinates;
 		const
 		t_point    Center (void) const;
-		t_rect     Place  (void) const;
+
+		CPosition& operator = (const CPosition&) ; CPosition& operator = (CPosition&&) = delete;
+		const
+		CPlacement&  operator ()(void) const;
+		CPlacement&  operator ()(void) ;
+	};
+
+	// https://math.stackexchange.com/questions/2556531/negative-length-is-there-a-specific-reason-that-a-length-cannot-be-negative ;
+
+	struct t_size_u {
+		uint32_t cx = 0;
+		uint32_t cy = 0;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
@@ -65,13 +75,15 @@ namespace ex_ui { namespace popup {  namespace layout {
 	class CPrimary : public CPosition {
 	                typedef CPosition TBase;
 	public:
-		 CPrimary (void) ;
+		 CPrimary (void) ; CPrimary (const CPrimary&) = delete; CPrimary (CPrimary&&) = delete;
 		~CPrimary (void) ;
 
 	public:
 		t_rect Autosize (void) const;                        // a window size is calculated as: width = resolution / 2; height = (resolution / 4) * 2;
-		t_rect Centered (const TSizeU& _size) const;         // returns a rectangle of the specidied size at the center of monitor area;
-		t_size Default  (const float  _coeff = 1.56) const ; // this is a default size of a window; the size is dependable from current resolution;
+		t_rect Centered (const t_size_u& _size) const;       // returns a rectangle of the specidied size at the center of monitor area;
+		t_size Default  (const float  _coeff = 1.56) const ; // this is a default size of a window; the size is dependable on current resolution;
+
+		CPrimary& operator = (const CPrimary&) = delete; CPrimary& operator = (CPrimary&&) = delete;
 	};
 
 	// https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/video-stabilization-resolution-limits-h-264 ;
@@ -85,8 +97,8 @@ namespace ex_ui { namespace popup {  namespace layout {
 		~CRatios (void);
 
 	public:
-		RECT   Accepted (const t_rect& _work_area) const; // gets an accepted ratio for primary monitor work area;
-		RECT   Accepted (const CPosition&  _res) const;   // gets an accepted ratio for primary monitor resolution;
+		t_rect Accepted (const t_rect& _work_area) const; // gets an accepted ratio for primary monitor work area;
+		t_rect Accepted (const CPosition&  _res) const;   // gets an accepted ratio for primary monitor resolution;
 
 		const
 		TRatios& Get (void) const ;
@@ -100,20 +112,6 @@ namespace ex_ui { namespace popup {  namespace layout {
 		TRatios  m_ratios;
 	};
 
-	class CWndLayout : public CPrimary {
-	                  typedef CPrimary TBase;
-	public:
-		 CWndLayout (void);
-		~CWndLayout (void);
-
-	public:
-		TError& Error (void) const;  // not used yet;
-
-	private:
-		CError   m_error;
-	};
 }}}
 
-typedef ex_ui::popup::layout::CWndLayout TWndLayout;
-
-#endif/*_WND_LAYOUT_H_INCLUDED*/
+#endif/*_SHARED_WND_LAYOUT_H_INCLUDED*/

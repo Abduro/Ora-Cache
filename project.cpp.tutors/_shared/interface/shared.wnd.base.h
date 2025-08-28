@@ -5,14 +5,12 @@
 	This is Ebo Pack tutorials' shared window base interface declaration file;
 */
 #include "shared.defs.h"
-#include "sys.err.trim.h"
+//#include "shared.wnd.layout.h"
 
 namespace ex_ui { namespace popup {
 
-	using namespace shared::types;
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
-
+	using namespace shared::defs;
+	
 	interface IMsg_Handler {
 		static const int32_t _n_not_handled = -1;
 		virtual err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) { // possibly, 'const' to w_param/l_param must be removed;
@@ -20,7 +18,7 @@ namespace ex_ui { namespace popup {
 			return _n_not_handled;  // __s_ok|__s_false - depending on the message code, otherwise the error code; 
 		}
 	};
-
+	// https://learn.microsoft.com/en-us/windows/win32/learnwin32/writing-the-window-procedure#avoiding-bottlenecks-in-your-window-procedure ;
 	class CMsgRouter {
 	public:
 		CMsgRouter (void); ~CMsgRouter (void) = default;
@@ -74,7 +72,7 @@ namespace ex_ui { namespace popup {
 		ATOM    m_atom;
 		CString m_cls_name;
 	};
-
+	// ToDo: Window builder must be involeved into creating new window; the builder must have window style, layout, etc.;
 	class CWnd : private IMsg_Handler {
 	public:
 		 CWnd (void); CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;

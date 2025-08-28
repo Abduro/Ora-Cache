@@ -9,6 +9,7 @@
 	Adopted to FakeGPS driver project on 13-Dec-2019 at 10:20:24a, UTC+7, Novosibirsk, Friday;
 */
 #include "sys.err.trim.h"
+#include "shared.preproc.h" // playing with some preprocessor definitions;
 
 using namespace shared::common;
 using namespace shared::sys_core;
@@ -434,6 +435,15 @@ CError::operator _pc_sz   (void) const { return this->Desc();   }
 
 CError::operator CErr_State& (void)       { return m_state; }
 CError::operator TErr_State& (void) const { return m_state; }
+
+CError& CError::operator () (const e_cmds _n_cmd) {
+	_n_cmd;
+	switch (_n_cmd) {
+	case e_cmds::e_get_last: this->Last();
+	default:;
+	}
+	return *this;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

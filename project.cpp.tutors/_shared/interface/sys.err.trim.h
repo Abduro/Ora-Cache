@@ -13,7 +13,6 @@
 #include <comdef.h> // https://learn.microsoft.com/en-us/cpp/cpp/com-error-class ;
 #include <map>
 
-#include "shared.preproc.h" // playing with some preprocessor definitions;
 #include "shared.types.h"   // typedefs from shared::types;
 
 #include "sys.err.codes.h"  // for converting winapi system error codes to handle result;
@@ -166,7 +165,7 @@ namespace shared { namespace sys_core {
 		_pc_sz      Desc  (void) const ;        // gets the current description;
 		bool        Is    (void) const ;        // returns true if the object is in error state, otherwise, false, i.e. no error;
 		TLangRef&   Lang  (void) const ;        // gets language identifier;
-		err_code    Last  (void)       ;        // updates error state by getting last error code by ::GetLastError() function;
+		err_code    Last  (void)       ;        // updates error state by calling ::GetLastError() function;
 		_pc_sz      Method(void) const ;        // gets method name that produces the error, if any
 		void        Method(_pc_sz)     ;        // sets method name that produces the error
 		void        Reset (void)       ;        // re-sets the error object to blank state (OLE_E_BLANK)
@@ -183,13 +182,13 @@ namespace shared { namespace sys_core {
 		};
 		CString Print (const CError::e_print = CError::e_print::e_all) const;
 #endif
-
+		// ToDo: there is some mess with assignment operators; needs to be reviewed;
 	public:
-		CError& operator= (const _com_error&);    // sets error info from COM error object;
-		CError& operator= (const CError&)    ;    // sets error info from other error object;
-		CError& operator= (const dword _code);    // sets error result from win 32 error code;
-		CError& operator= (const err_code _hr);   // sets error result; S_OK is acceptable;
-		CError& operator= (_pc_sz _lp_desc );     // sets error description;
+		CError& operator= (const _com_error&);      // sets error info from COM error object;
+		CError& operator= (const CError&)    ;      // sets error info from other error object;
+		CError& operator= (const dword _code);      // sets error result from win 32 error code;
+		CError& operator= (const err_code _hr);     // sets error result; S_OK is acceptable;
+		CError& operator= (_pc_sz _lp_desc );       // sets error description;
 
 	public:
 		CError& operator<<(const err_code _hr);     // sets error result; intended for using in routines for error initial state set;
@@ -199,11 +198,18 @@ namespace shared { namespace sys_core {
 		CError& operator>>(_pc_sz _p_class );       // sets error source; intended for using in routines for error initial state set;
 
 	public:
-		operator const bool  (void) const ;    // returns true if error object is ***IN*** error state, otherwise false;
-		operator err_code    (void) const ;    // returns error result;
-		operator _pc_sz      (void) const ;    // returns error description;
-		operator CErr_State& (void)       ;    // returns error state (rw) ;
-		operator TErr_State& (void) const ;    // returns error state (ra) ;
+		operator const bool  (void) const ;         // returns true if error object is ***IN*** error state, otherwise false;
+		operator err_code    (void) const ;         // returns error result;
+		operator _pc_sz      (void) const ;         // returns error description;
+		operator CErr_State& (void)       ;         // returns error state (rw) ;
+		operator TErr_State& (void) const ;         // returns error state (ra) ;
+
+		enum e_cmds : uint32_t {
+		e_do_nothing = 0x0,
+		e_get_last   = 0x1,   // performs command this::Last() for getting last system error code and its description;
+		};
+
+		CError&  operator () (const e_cmds _n_cmd); // executes command specified through input arg;
 	
 	protected:
 		mutable
@@ -223,8 +229,8 @@ namespace shared { namespace sys_core {
 		CError&   m_error_ref;
 
 	public:
-		 CErr_Format (const CError&);
-		~CErr_Format (void);
+		 CErr_Format (const CError&); CErr_Format (void) = delete; CErr_Format (const CErr_Format&) = delete; CErr_Format (CErr_Format&&) = delete;
+		~CErr_Format (void) ;
 
 	public:
 		CString   Do  (_pc_sz _lp_sz_sep = NULL) const; // gets formatted string: {code|@sep|description|@sep|module|@sep|source};

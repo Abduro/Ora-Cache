@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL common definitions' implamentation file;
 */
 #include "gl_defs.h"
+#include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl::procs;
 
