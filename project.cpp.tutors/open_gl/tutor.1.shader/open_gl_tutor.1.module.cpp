@@ -5,6 +5,7 @@
 #include "open_gl_tutor.1.module.h"
 #include "open_gl_tutor.1.wnd.h"
 
+using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
 CShaderModule _Module;
@@ -36,8 +37,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(NULL, 0, 0, 0L);
-	
-	MSG msg = {0, WM_QUIT, 0, 0, 0, {0, 0}};
+
+	MSG msg = {0};
+
+	shader::CWnd wnd;
+	if (__failed(wnd.Create()))
+		msg.message = WM_QUIT;
 
 	while( WM_QUIT != msg.message ) {
 		if (::PeekMessage( &msg, NULL, 0, 0, PM_REMOVE )) {

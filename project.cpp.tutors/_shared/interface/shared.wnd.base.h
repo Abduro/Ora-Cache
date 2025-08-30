@@ -5,7 +5,6 @@
 	This is Ebo Pack tutorials' shared window base interface declaration file;
 */
 #include "shared.defs.h"
-//#include "shared.wnd.layout.h"
 
 namespace ex_ui { namespace popup {
 
@@ -44,39 +43,66 @@ namespace ex_ui { namespace popup {
 	/*
 		*important*: the window class style must have CS_OWNDC flag, otherwise there is not way to create OpenGL renderer context;
 	*/
-	class CAtom {
+	class CWndCls {
 	public:
-		 CAtom (void); CAtom (const CAtom&) = delete; CAtom (CAtom&&) = delete;
-		~CAtom (void);
+		enum e_type : uint32_t {
+		e_cfg_ctrl = 0x1, // user control window class cfg type;
+		e_cfg_over = 0x0, // overlapped window class cfg type; it's default;
+		};
+	public:
+		 CWndCls (void); CWndCls (const CWndCls&) = delete; CWndCls (CWndCls&&) = delete;
+		~CWndCls (void);
 
 	public:
+		err_code Cfg  (const e_type); // sets the default settings for specified input type of the configuration;
+
 		TError& Error (void) const;
 		bool Is_valid (void) const;
-
-		bool Is_exist (_pc_sz _p_cls_name) const; // checks the input class name for registration, the status of the error object is updated;
+		// checks the input class name for registration, the status of the error object is updated;
+		bool Is_exist (_pc_sz _p_cls_name) const;
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/about-window-classes#class-name ;
+		// excerpt from above article: ... should keep class name strings as short as possible ...;
+		_pc_sz   Name (void) const;      // returns  window class name; *max* length is 256, otherwise the registration will fail;
+		bool     Name (_pc_sz) ;         // sets the window class name, returns true in case of name change; assigns the input to the cached name first;
 
 		err_code Register (_pc_sz _cls_name) ; // window procedure pointer is assigned automatically to the message router's procedure;
-		err_code Unregister (void); // unregisters the class; it is not necessary due to operating system makes it on app process termination;
+		err_code Unregister (void);      // unregisters the class; it is not necessary due to operating system makes it on app process termination;
+
+		const
+		WNDCLASSEXW&  Ref (void) const;
+		WNDCLASSEXW&  Ref (void) ;       // there is the possible problem: direct assigning class name may be not sync with cached one;
+
+		uint32_t Style (void) const;     // gets window class style flags;
+		bool     Style (const uint32_t); // sets window class style flags; returns 'true' in case of flags' set value change;
 
 	public:
-		CAtom& operator = (const CAtom&) = delete;
-		CAtom& operator = (CAtom&&) = delete;
+		CWndCls& operator = (const CWndCls&) = delete;
+		CWndCls& operator = (CWndCls&&) = delete;
 		const
-		CAtom& operator >>(CString& _cls_name) const;
+		CWndCls& operator >>(CString& _cls_name) const;
 
 		operator ATOM (void) const;
+		const
+		WNDCLASSEXW&  operator ()(void) const;
+		WNDCLASSEXW&  operator ()(void) ;
 
 	private:
 		mutable
-		CError  m_error;
-		ATOM    m_atom;
-		CString m_cls_name;
+		CError  m_error;    // the error state of the last operation;
+		ATOM    m_atom ;    // this is the result of the window class registration; in other words this is this class identifier;
+		WNDCLASSEXW m_wnd_cls;
+		CString m_name ;    // this is cached class name; it is required due to the registration of the class may be deferred;
 	};
+
 	// ToDo: Window builder must be involeved into creating new window; the builder must have window style, layout, etc.;
-	class CWnd : private IMsg_Handler {
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassname ; getting class name from the window;
+
+	class CWndBase : private IMsg_Handler {
 	public:
-		 CWnd (void); CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;
-		~CWnd (void);
+		 CWndBase (void); CWndBase (const CWndBase&) = delete; CWndBase (CWndBase&&) = delete;
+		~CWndBase (void);
+	protected: // IMsg_Handler impl;
+		err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) override; // goes first due to its virtuality;
 
 	public:
 		/* the input parameters are placed in such order specifically in accordance with default values they have;
@@ -93,22 +119,64 @@ namespace ex_ui { namespace popup {
 			in this case, no prompt to the user, but just the destroying the window;
 		*/
 
-		TError&  Error (void) const;
+		TError&  Error (void) const;	
 		HWND     Handle (void) const;
 		bool  Is_valid (void) const;
 
 	public:
-		bool operator == (const CWnd&) const;
+		bool operator == (const CWndBase&) const;
 		bool operator == (const HWND) const;
 		operator const HWND (void) const;
 
-		CWnd& operator = (const CWnd&) = delete;
-		CWnd& operator = (CWnd&&) = delete;
+		CWndBase& operator = (const CWndBase&) = delete;
+		CWndBase& operator = (CWndBase&&) = delete;
 
 	protected:
 		mutable
-		CError m_error;
-		HWND   m_h_wnd;
+		CError  m_error;
+		HWND    m_h_wnd;
+		
+	public:
+		class CIcons {
+		public:
+			CIcons (void); CIcons (const CIcons&) = delete; CIcons (CIcons&&) = delete; ~CIcons (void) = default;
+			// ToDo: under such a signature this method may be just the static one;
+			err_code Set (const uint16_t _u_res_id, const HWND&); // sets icons of both sizes (small & large) to the window handle;
+
+		private:
+			CIcons& operator = (const CIcons&) = delete; CIcons& operator = (CIcons&&) = delete;
+		};
+		class CStyles {
+		public:
+			 CStyles (void) ; CStyles (const CStyles&) = delete; CStyles (CStyles&&) = delete;
+			~CStyles (void) ;
+
+			 bool Default_for_app (void); // sets default flags' set either to extended and standard flags' values; returns 'true' in case of change;
+			 bool Default_for_kid (void); // sets default flags' set either to extended and standard flags' values; returns 'true' in case of change;
+
+			 uint32_t Extended (void) const;     uint32_t Ext (void) const;      // gets extended style of the window;
+			 bool     Extended (const uint32_t); bool     Ext (const uint32_t);  // sets extended style of the window; this works before creating the window;
+
+			 uint32_t Standard (void) const;     uint32_t Std (void) const;      // gets standard style of the window;
+			 bool     Standard (const uint32_t); bool     Std (const uint32_t);  // sets standard style of the window; this works before creating the window;
+
+		private:
+			 CStyles& operator = (const CStyles&) = delete; CStyles& operator = (CStyles&&) = delete;
+		private:
+			uint32_t m_ext;
+			uint32_t m_std;
+		};
+	public:
+		const
+		CIcons& Icons (void) const;
+		CIcons& Icons (void) ;
+		const
+		CStyles&  Styles (void) const;
+		CStyles&  Styles (void) ;
+
+	protected:
+		CIcons  m_icons;
+		CStyles m_styles;
 	};
 }}
 

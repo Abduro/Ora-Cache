@@ -6,7 +6,6 @@
 	-----------------------------------------------------------------------------
 	Adopted to tutorials solution on 19-Aug-2025 at 11:33:11.427, UTC+4, Batumi, Tuesday;
 */
-#include <cstdint>
 #include <atltrace.h>
 #include <cstdarg>
 

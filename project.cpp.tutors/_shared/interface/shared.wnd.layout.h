@@ -83,7 +83,11 @@ namespace ex_ui { namespace popup { namespace layout {
 		t_rect Centered (const t_size_u& _size) const;       // returns a rectangle of the specidied size at the center of monitor area;
 		t_size Default  (const float  _coeff = 1.56) const ; // this is a default size of a window; the size is dependable on current resolution;
 
+		_pc_sz Name (void) const;  // returns the primary monitor name that is set by operating system; this name is used in work with drivers usually;
+
 		CPrimary& operator = (const CPrimary&) = delete; CPrimary& operator = (CPrimary&&) = delete;
+	private:
+		CString m_name;
 	};
 
 	// https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/video-stabilization-resolution-limits-h-264 ;
@@ -98,7 +102,6 @@ namespace ex_ui { namespace popup { namespace layout {
 
 	public:
 		t_rect Accepted (const t_rect& _work_area) const; // gets an accepted ratio for primary monitor work area;
-		t_rect Accepted (const CPosition&  _res) const;   // gets an accepted ratio for primary monitor resolution;
 
 		const
 		TRatios& Get (void) const ;

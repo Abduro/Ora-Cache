@@ -5,15 +5,24 @@
 	This is Ebo Pack OpenGL tutorials' shader window interface declaration file;
 */
 #include "shared.wnd.base.h"
+#include "shared.wnd.layout.h"
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace shade {
+namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
-	using TWindow = ex_ui::popup::CWnd;
+	using namespace shared::defs;
+	using namespace shared::types;
 
-	class CWnd : public TWindow {
+	using namespace ex_ui::popup;
+	using namespace ex_ui::popup::layout;
+
+	using TWindow = ex_ui::popup::CWndBase;
+
+	class CWnd : public TWindow { typedef TWindow TBase;
 	public:
 		 CWnd (void);
 		~CWnd (void);
+
+		err_code Create (void);
 	};
 
 }}}}

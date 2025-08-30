@@ -157,7 +157,7 @@ namespace shared { namespace sys_core {
 
 	public:
 		_pc_sz      Class (void) const ;                              // gets the error source class name;
-		void        Class (_pc_sz)    ;                               // sets the error source class name;
+		void        Class (_pc_sz)     ;                              // sets the error source class name;
 		void        Class (_pc_sz _lp_class, const bool bFormatted);  // sets the error source class name;
 		void        Clear (void)       ;        // sets the error object to success state, i.e. no error state;
 		dword       Code  (void) const ;        // gets Win API error code;

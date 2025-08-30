@@ -93,7 +93,7 @@ CPlacement& CPosition::operator ()(void)       { return (TBase&)*this; }
 
 namespace ex_ui { namespace popup { namespace layout { namespace _impl {
 
-	t_rect PrimaryMonitorArea (void) {
+	t_rect PrimaryMonitorArea (CString& _cs_name) {
 
 		const t_point ptZero = {0};
 		// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
@@ -108,7 +108,9 @@ namespace ex_ui { namespace popup { namespace layout { namespace _impl {
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfoa ;
 		if (false == !!::GetMonitorInfo(hMonitor, &mInfo)) {
 			__trace_err_3(_T("%s"), (_pc_sz) (CError()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+			_cs_name = _T("#error");
 		}
+		else _cs_name = mInfo.szDevice;
 
 		return mInfo.rcWork; // the empty rectangle is returned in case of error;
 	}
@@ -117,7 +119,9 @@ namespace ex_ui { namespace popup { namespace layout { namespace _impl {
 
 using namespace ex_ui::popup::layout::_impl;
 
-CPrimary:: CPrimary (void) : TBase() { TBase().Rect() = PrimaryMonitorArea(); }
+CPrimary:: CPrimary (void) : TBase() {
+	TBase::Rect() = PrimaryMonitorArea(this->m_name);
+}
 CPrimary::~CPrimary (void) {}
 
 t_rect  CPrimary::Autosize (void) const {
@@ -145,3 +149,55 @@ t_size  CPrimary::Default  (const float _coeff) const {
 	else
 		return t_size { _long(__W(TBase().Rect())/_coeff), _long(__H(TBase().Rect())/_coeff) };
 }
+
+_pc_sz  CPrimary::Name (void) const { return (_pc_sz)this->m_name; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CRatios:: CRatios (void) {
+	/*
+		https://en.wikipedia.org/wiki/Advanced_Video_Coding ;
+		It looks very like that nothing was made better than H.264;
+		Commonly supported resolutions and aspect ratios include:
+	*/
+	m_ratios.push_back(t_size{ 640,  480}); //  640 x 480  ( 4:3 480p) ;
+	m_ratios.push_back(t_size{ 854,  480}); //  854 x 480  (16:9 480p) ;
+	m_ratios.push_back(t_size{1280,  720}); // 1280 x 720  (16:9 720p) ;
+	m_ratios.push_back(t_size{1280, 1024}); // 1280 x 1024 ( 5:4);
+	m_ratios.push_back(t_size{1920, 1080}); // 1920 x 1080 (16:9 1080p);
+	m_ratios.push_back(t_size{1920, 1440}); // 1920 x 1440 ( 4:3);
+}
+CRatios:: CRatios (const CRatios& _ref) : CRatios() { *this = _ref; }
+CRatios::~CRatios (void) {}
+
+t_rect    CRatios::Accepted (const t_rect& _work_area) const {
+	_work_area;
+	t_rect  rc_pos = {0};
+	if (!!::IsRectEmpty(&_work_area))
+		return rc_pos;
+
+	const SIZE sz_available = {__H(_work_area), __W(_work_area)};
+	
+	// it requires to analyze both sizes of screen, a width and a height, because system taskbar can be set to vertical position;
+	// also the monitor may be set to 'Portrait' position;
+	TRatios::const_iterator it_ = ::std::lower_bound(
+		m_ratios.begin(), m_ratios.end(), sz_available,
+		[&](const t_size& _sz, const t_size& sz_available) { return _sz.cy < sz_available.cy && _sz.cx < sz_available.cx; }
+	);
+	if (m_ratios.end() == it_) {} // actually it is almost impossible, but nevertheless;
+	else
+	{
+		const t_point pt_anchor = {
+			_work_area.left + (__W(_work_area) - it_->cx) / 2,
+			_work_area.top  + (__H(_work_area) - it_->cy) / 2,
+		};
+		::SetRect(&rc_pos, pt_anchor.x, pt_anchor.y, pt_anchor.x + it_->cx, pt_anchor.y + it_->cy);
+	}
+	return rc_pos;
+}
+
+const
+TRatios&  CRatios::Get (void) const { return this->m_ratios; }
+TRatios&  CRatios::Get (void)       { return this->m_ratios; }
+
+CRatios&  CRatios::operator = (const CRatios& _ref) { this->Get() = _ref.Get(); return *this; }

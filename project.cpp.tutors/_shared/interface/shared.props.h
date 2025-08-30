@@ -1,14 +1,11 @@
 #ifndef _SHARED_PROPS_H_INCLUDED
 #define _SHARED_PROPS_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 21-Jun-2025 at 04:39:42.954, UTC+4, Batumi, Saturday;
+	Created by Tech_dog (ebontrop@gmail.com) on 21-Jun-2025 at 04:39:42.954, UTC+4, Batume, Saturday;
 	This is Ebo Pack generic property interface declaration file;
 */
-#include <atlbase.h>
-#include <stdint.h>
-#include "shared.types.h"
-#include "shared.preproc.h"
-#include "shared.string.h"
+#include "shared.defs.h"
+#include "shared.dbg.h"
 
 namespace shared { namespace common {
 
