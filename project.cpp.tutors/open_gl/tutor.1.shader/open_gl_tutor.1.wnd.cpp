@@ -39,6 +39,7 @@ err_code shader::CWnd::Create (void) {
 #endif
 	TBase::Styles().Default_for_app();
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrect ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex ;
 	if (false == !!::AdjustWindowRect(&rc_pos, TBase::Styles().Std(), false)) {
 		__trace_err_3(_T("%s"), (_pc_sz) TBase::Error().Print(TError::e_req)); // just for indicating the error state and continue;
 	}

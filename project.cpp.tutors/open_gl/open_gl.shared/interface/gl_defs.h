@@ -13,7 +13,7 @@
 #pragma comment(lib, "opengl32.lib")
 
 namespace ex_ui { namespace draw { namespace open_gl {
-	using namespace shared::types;
+	using namespace shared::defs;
 
 namespace procs {
 	using namespace ex_ui::draw::open_gl;
@@ -31,7 +31,7 @@ namespace procs {
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 
 	protected:
-		TProcCache m_cached;
+		TProcCache m_cached; // every child class will have its own cache of the functions pointers;
 		CError m_error;
 	};
 
@@ -46,6 +46,25 @@ namespace procs {
 
 	private:
 		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator = (CBuffer&&) = delete;
+	};
+
+	class CContext : public CBase {
+	typedef int32_t  (__stdcall *pfn_ChoosePxFormatArb) (
+		HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count
+	);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	typedef HGLRC    (__stdcall *pfn_CreateCtxAttsArb) (
+		HDC, HGLRC _h_shared_ctx, const int* p_att_lst
+	);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
+	typedef int32_t  (__stdcall *pfn_SwapIntervalExt) (int _n_interval);
+	public:
+		CContext (void); ~CContext (void) = default;
+
+		int32_t ChoosePxFormatArb (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count);
+		HGLRC   CreateCtxAttsArb  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst);
+		int32_t SwapIntervalExt   (const int _n_interval);
+
+	private:
+		CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
 	};
 
 	class CProg : public CBase {

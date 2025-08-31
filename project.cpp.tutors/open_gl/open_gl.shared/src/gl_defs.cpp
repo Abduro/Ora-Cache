@@ -44,3 +44,51 @@ PROC CBase::Get (_pc_sz _p_proc_name) {
 	}
 	return p_proc;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CContext:: CContext (void) : CBase() {  CBase::m_error >>__CLASS__;
+}
+
+int32_t CContext::ChoosePxFormatArb (HDC _h_dc, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count) {
+	_h_dc; _p_atts_i; _p_atts_f; _n_max_formats; _p_formats; _p_fmt_count;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	int32_t n_result = 0;
+
+	pfn_ChoosePxFormatArb p_fun = reinterpret_cast<pfn_ChoosePxFormatArb>(CBase::Get(_T("wglChoosePixelFormatARB")));
+	if (nullptr == p_fun)
+		return n_result; // needs to be figured out of what result should be returned in case of failure;
+
+	n_result = p_fun(_h_dc, _p_atts_i, _p_atts_f, _n_max_formats, _p_formats, _p_fmt_count);
+	return n_result;
+}
+
+HGLRC   CContext::CreateCtxAttsArb  (HDC _h_dc, HGLRC _h_shared_ctx, const int* p_att_lst) {
+	_h_dc; _h_shared_ctx; p_att_lst;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	HGLRC h_render = nullptr;
+
+	pfn_CreateCtxAttsArb p_fun = reinterpret_cast<pfn_CreateCtxAttsArb>(CBase::Get(_T("wglCreateContextAttribsARB")));
+	if (nullptr == p_fun)
+		return h_render;
+
+	h_render = p_fun(_h_dc, _h_shared_ctx, p_att_lst);
+
+	return h_render;
+}
+
+int32_t CContext::SwapIntervalExt   (const int _n_interval) {
+	_n_interval;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	int32_t n_result = 0;
+
+	pfn_SwapIntervalExt p_fun = reinterpret_cast<pfn_SwapIntervalExt>(CBase::Get(_T("wglSwapIntervalEXT")));
+	if (nullptr == p_fun)
+		return n_result; // needs to be figured out of what result should be returned in case of failure;
+
+	n_result = p_fun(_n_interval);
+	return n_result;
+}

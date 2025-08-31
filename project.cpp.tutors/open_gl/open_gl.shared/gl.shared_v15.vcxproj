@@ -178,10 +178,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)gl_context.h" />
+    <ClCompile Include="$(_1)gl_context.cpp" />
     <ClInclude Include="$(_0)gl_defs.h" />
     <ClCompile Include="$(_1)gl_defs.cpp" />
     <ClInclude Include="$(_0)gl_error.h" />
     <ClCompile Include="$(_1)gl_error.cpp" />
+    <ClInclude Include="$(_0)gl_shader.h" />
+    <ClCompile Include="$(_1)gl_shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

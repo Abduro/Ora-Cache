@@ -148,7 +148,7 @@ namespace shared { namespace sys_core {
 	class CError {
 	public:
 		 CError(void);
-		 CError(const CError&);
+		 CError(const CError&); CError (CError&&) = delete;
 		~CError(void);
 
 	public:
@@ -184,18 +184,20 @@ namespace shared { namespace sys_core {
 #endif
 		// ToDo: there is some mess with assignment operators; needs to be reviewed;
 	public:
-		CError& operator= (const _com_error&);      // sets error info from COM error object;
-		CError& operator= (const CError&)    ;      // sets error info from other error object;
-		CError& operator= (const dword _code);      // sets error result from win 32 error code;
-		CError& operator= (const err_code _hr);     // sets error result; S_OK is acceptable;
-		CError& operator= (_pc_sz _lp_desc );       // sets error description;
+		CError& operator = (const _com_error&);      // sets error info from COM error object;
+		CError& operator = (const CError&)    ;      // sets error info from other error object;
+		CError& operator = (const dword _code);      // sets error result from win 32 error code;
+		CError& operator = (const err_code _hr);     // sets error result; S_OK is acceptable;
+		CError& operator = (_pc_sz _lp_desc );       // sets error description;
 
 	public:
-		CError& operator<<(const err_code _hr);     // sets error result; intended for using in routines for error initial state set;
-		CError& operator<<(const CString& _method); // sets method name the error occurs in; 
-		CError& operator>>(const CString& _class) ; // sets class name that is the source of the error;
-		CError& operator<<(_pc_sz _p_method);       // sets error method;
-		CError& operator>>(_pc_sz _p_class );       // sets error source; intended for using in routines for error initial state set;
+		CError& operator <<(const err_code _hr);     // sets error result; intended for using in routines for error initial state set;
+		CError& operator <<(const CString& _method); // sets method name the error occurs in; 
+		CError& operator >>(const CString& _class) ; // sets class name that is the source of the error;
+		CError& operator <<(_pc_sz _p_method);       // sets error method;
+		CError& operator >>(_pc_sz _p_class );       // sets error source; intended for using in routines for error initial state set;
+
+		CError& operator = (CError&&) = delete;
 
 	public:
 		operator const bool  (void) const ;         // returns true if error object is ***IN*** error state, otherwise false;
