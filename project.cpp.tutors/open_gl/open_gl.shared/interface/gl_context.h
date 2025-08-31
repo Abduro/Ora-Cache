@@ -19,14 +19,27 @@ namespace context {
 		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
 		~CBase (void);
 
-		 err_code CreateAttsArb (HDC, HGLRC _h_shared_ctx, const int* p_att_lst);
-
 		 TErr_ex& Error (void) const;
 
 	private:
 		 CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 	protected:
 		 CError_ex m_error;
+	};
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
+	// excerpt: ...creates a new OpenGL rendering context, which is suitable for drawing on the device referenced by hdc... ;
+	class CDevice : public CBase {
+	public:
+		 CDevice (void);
+		~CDevice (void);
+
+		err_code Create (const HWND); // creates the rendering context that is compatible with input window device context;
+		err_code Destroy(void);
+
+	private:
+		HDC    m_dc_src ; // this is the source device context from which the device renderer is created;
+		HGLRC  m_drw_ctx; // rendering context that is compatible with regular GDI;
+		HWND   m_target ; // the target window handle, it owns the source device context;
 	};
 
 }}}

@@ -69,10 +69,10 @@ CWnd:: CWnd (void) : TWindow(), m_h_dc(0), m_h_render(0) { this->m_error >> __CL
 	}
 
 	PIXELFORMATDESCRIPTOR px_fmt_desc = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
-
+	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << there is the example of how to do that;
 	px_fmt_desc.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	px_fmt_desc.nVersion = 1;
-	px_fmt_desc.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
+	px_fmt_desc.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL|PFD_DOUBLEBUFFER;
 	px_fmt_desc.iPixelType = PFD_TYPE_RGBA;
 	px_fmt_desc.cColorBits = 32;
 	px_fmt_desc.cAlphaBits = 8;
@@ -94,6 +94,7 @@ CWnd:: CWnd (void) : TWindow(), m_h_dc(0), m_h_render(0) { this->m_error >> __CL
 	if (0 == ::wglMakeCurrent(this->Get_ctx(), this->Renderer())) // it is required, otherwise nothing will work;
 		this->m_error.Last();
 }
+
 CWnd::~CWnd (void) {
 	// (1) destroys the renderer handle first;
 
