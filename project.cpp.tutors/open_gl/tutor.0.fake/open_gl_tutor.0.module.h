@@ -5,8 +5,13 @@
 	This is OpenGL fake context creation tutorial module interface declaration file;
 */
 #include "open_gl_tutor.0.defs.h"
+#include "open_gl_tutor.0.fake.h"
 
-#pragma comment(lib, "gl.tutor.0.fake.lib.vcxproj")
+#include "gl_context.h"
+#include "gl_version.h"
+
+#pragma comment(lib, "gl.shared_v15.lib")
+#pragma comment(lib, "gl.tutor.0.fake.lib")
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 

@@ -3,7 +3,6 @@
 	This is OpenGL fake context creation tutorial module interface implementation file;
 */
 #include "open_gl_tutor.0.module.h"
-#include "open_gl_tutor.0.fake.h"
 
 using namespace ex_ui::draw::open_gl::fake;
 
@@ -36,19 +35,34 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(NULL, 0, 0, 0L);
-	{
+
+	while (true != false) {
+	// (1) the message-only window must be created first aka fake window, it is necessary for creating OpenGL draw renderer compatible with regular GDI context;
+		TFakeWnd fk_wnd; // this class creates the fake window in its constructor;
+		if (fk_wnd.Is_valid() == false) {
+			// the error of the creating the window is already traced; just break the test case;
+			fk_wnd.Error().Show();
+			break;
+		}
+	// (2) creating the drawing renderer context;
+		context::CDevice dev_ctx;
+		if (__failed(dev_ctx.Create(fk_wnd.m_hWnd))) {
+			dev_ctx.Error()().Show();
+			break;
+		}
+	// (3) getting version information of openGL that is default in MS Windows;
+		CVersion ver;
+		if (ver.Error()) {
+			ver.Error().Show();
+			break;
+		}
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox ;
-		CWnd wnd;
-		if (wnd.Is_valid()) {
-			CVersion().Print();
-#if defined(_DEBUG)
-			::MessageBox(0, _T("The content is created successfullly;"), _T("OpenGL Tutors"), MB_OK|MB_ICONINFORMATION);
-#endif
-		}
-		else {
-#if defined(_DEBUG)
-#endif
-		}
+		CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
+		::MessageBox(
+			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
+		);
+		break;
 	}
 
 	MSG msg = {0, WM_QUIT, 0, 0, 0, {0, 0}};

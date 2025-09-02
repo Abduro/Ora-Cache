@@ -48,7 +48,12 @@ err_code  context::CTarget::Free(void) {
 
 bool context::CTarget::Is_valid (void) const {
 
+	CBase::m_error << __METHOD__ << __s_ok;
+
 	if (nullptr == this->m_dc_src)
+		return false;
+
+	if (nullptr != this->m_dc_src)
 		return false != (CBase::m_error << __e_not_inited).Is(); // the error onject set to error state (i.e. error == true);
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjecttype ;
@@ -94,7 +99,7 @@ CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-context::CDevice:: CDevice (void) : CBase() { CBase::m_error <<__CLASS__; }
+context::CDevice:: CDevice (void) : CBase(), m_drw_ctx(0) { CBase::m_error <<__CLASS__; }
 
 context::CDevice:: CDevice (const HWND _h_wnd) : CDevice() { *this << _h_wnd; }
 

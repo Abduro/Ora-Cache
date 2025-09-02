@@ -1,0 +1,75 @@
+#ifndef _GL_VERSION_H_INCLUDED
+#define _GL_VERSION_H_INCLUDED
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 02-Sep-2025 at 02:10:53.758, UTC+4, Batumi, Tuesday;
+	This is Ebo Pack OpenGL version wrapper interface declaration file;
+*/
+#include "gl_defs.h"
+#include "gl_error.h"
+#include "shared.dbg.h"
+
+namespace ex_ui { namespace draw { namespace open_gl {
+
+	// https://stackoverflow.com/questions/7909358/how-do-i-know-which-version-of-opengl-i-am-using ;
+
+	class CVer_Att {
+	public:
+		CVer_Att (const uint32_t _n_id = 0, _pc_sz _p_name = _T("#undef"), _pc_sz _p_value = _T("#unset"));
+		CVer_Att (const CVer_Att&); CVer_Att (CVer_Att&&); ~CVer_Att (void) = default;
+
+		uint32_t Id (void) const;
+		bool     Id (const uint32_t);
+
+		_pc_sz Name (void) const;
+		bool   Name (_pc_sz);
+
+		_pc_sz Value(void) const;
+		bool   Value(_pc_sz);
+
+		CString  Print (const e_print = e_print::e_all, const bool _b_trace = true) const;
+
+	public:
+		CVer_Att& operator = (const CVer_Att&); CVer_Att& operator = (CVer_Att&&);
+		CVer_Att& operator <<(const uint32_t _n_id);
+		CVer_Att& operator <<(_pc_sz _p_name);
+		CVer_Att& operator >>(_pc_sz _p_value);
+		CVer_Att& operator >>(const char* _p_value); // used for assining the value returned by glGetString();
+
+	private:
+		uint32_t m_n_id;
+		CString  m_name;
+		CString  m_value;
+	};
+
+	class CVersion {
+	public:
+		enum e_atts : uint32_t {
+		e_undef   = 0x0, // no recognizable version attribute;
+		e_render  = 0x1, // GL_RENDERER;
+		e_shader  = 0x2, // GL_SHADING_LANGUAGE_VERSION ;
+		e_vendor  = 0x3, // GL_VENDOR  ;
+		e_version = 0x0, // GL_VERSION ;
+		};
+		static const uint32_t n_atts_count = e_atts::e_vendor + 1;
+
+	public:
+		 CVersion (void); CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete;
+		~CVersion (void);
+
+		 TError& Error (void) const;
+		 const
+		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
+
+		 CString   Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n"), const bool _b_trace = true) const;
+
+	private:
+		 CVersion& operator = (const CVersion&) = delete; CVersion& operator = (CVersion&&) = delete;
+
+	private:
+		 CError    m_error;
+		 CVer_Att  m_atts[CVersion::n_atts_count];
+	};
+
+}}}
+
+#endif/*_GL_VERSION_H_INCLUDED*/

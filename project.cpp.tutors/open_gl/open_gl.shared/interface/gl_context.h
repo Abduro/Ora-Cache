@@ -56,7 +56,7 @@ namespace context {
 		err_code Create (const HWND); // creates the rendering context that is compatible with input window device context;
 		err_code Destroy(void);
 
-		bool   Is_valid (void) const; // returns 'true' in case if device renderer context is not not nullptr; no target object check;
+		bool   Is_valid (void) const; // returns 'true' in case if device renderer context is not nullptr; no target object check;
 		HGLRC  Renderer (void) const;
 
 		const
@@ -70,7 +70,6 @@ namespace context {
 		HGLRC  m_drw_ctx; // rendering context that is compatible with regular GDI;
 	};
 }
-
 	class CContext : public context::CBase { typedef context::CBase TBase;
 	public:
 		 CContext (void) ;  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
@@ -78,9 +77,7 @@ namespace context {
 
 	private:
 		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
-	
 	};
-
 }}}
 
 #endif/*_GL_CONTEXT_H_INCLUDED*/

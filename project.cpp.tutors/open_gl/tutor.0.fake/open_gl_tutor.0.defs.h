@@ -2,10 +2,9 @@
 #define _OPEN_GL_TUTOR_0_DEFS_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Aug-2025 at 22:08:29.106, UTC+4, Batumi, Friday;
-	This is OpenGL tutorial of the creating fake context declaration file;
+	This is Ebo Pack OpenGL tutorial of the creating fake window declaration file;
 */
 #include "shared.defs.h"
-#include "shared.dbg.h"
 #include "sys.err.trim.h"
 
 #include "gl_defs.h" // reference to this header file is required, otherwise the linker is not available to link to OpenGL32.dll;
@@ -20,6 +19,5 @@ namespace ex_ui { namespace draw { namespace open_gl {
 namespace fake {}}}}
 
 #pragma comment(lib, "shared.trim_v15.lib")
-#pragma comment(lib, "gl.shared_v15.lib")
 
 #endif/*_OPEN_GL_TUTOR_0_DEFS_H_INCLUDED*/
