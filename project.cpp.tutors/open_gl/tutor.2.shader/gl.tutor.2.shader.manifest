@@ -10,7 +10,7 @@
   <assemblyIdentity
     name="OpenGL_Tutorials"
     processorArchitecture="*"
-    version="1.0.0.2"
+    version="1.0.0.5"
     type="win32"
   />
   <description>OpenGL Shader Tutorial App</description>

@@ -82,7 +82,7 @@ err_code  context::CTarget::Set (const HWND _h_wnd) {
 
 	this->m_target = _h_wnd;
 	this->m_dc_src = ::GetDC(_h_wnd);
-	__empty_ln();
+//	__empty_ln();
 	__trace_info_3(_T("context device: handle=%s\n"), (_pc_sz)__address_of(this->m_dc_src));
 
 	return CBase::Error();
@@ -201,5 +201,30 @@ CDevice& context::CDevice::operator <<(const HWND _h_wnd) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+#include "open_gl_tutor.0.fake.h"
+#pragma comment(lib, "gl.tutor.0.fake.lib") // this is required due to the fake window is used in the first step;
+
 CContext:: CContext (void) { TBase::m_error >>__CLASS__<<__METHOD__<< __e_not_inited; }
 CContext::~CContext (void) {}
+
+err_code   CContext::Create (const HWND h_target) {
+	h_target;
+	TBase::m_error <<__METHOD__<< __s_ok;
+	// (1) Creates the fake window;
+	TFakeWnd fk_wnd;
+	if (fk_wnd.Is_valid() == false)
+		return TBase::m_error() = fk_wnd.Error();
+	// (2) creating the drawing renderer context;
+	context::CDevice dev_ctx;
+	if (__failed(dev_ctx.Create(fk_wnd.m_hWnd)))
+		return TBase::m_error() = dev_ctx.Error();
+	// (3) creates OpenGL context functions' cache;
+	procs::CContext  m_fn_cache;
+
+	m_fn_cache.Get_all();
+
+	if (m_fn_cache.Error())
+		return TBase::m_error() = m_fn_cache.Error();
+
+	return TBase::Error();
+}

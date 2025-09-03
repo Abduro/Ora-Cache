@@ -4,7 +4,7 @@
 //   -----------------------------------------------------------------------------
 //   Adopted to FakeGPS project on 13-Dec-2019 at 8:29:54a, UTC+7, Novosibirsk, Friday;
 //   Adopted to Ebo Pack draw renderer test project on 17-Nov-2024 at 16:06:44.806, UTC+4, Batumi, Sunday;
-//   Adopted to OpenGL tutotrial of the creating shader project on 26-Aug-2025 at 11:40:05.202, UTC+4, Batumi, Tuesday;
+//   Adopted to OpenGL tutotrial of the creating shader project on 03-Sep-2025 at 13:11:38.660, UTC+4, Batumi, Wednesday;
 //
 #include <winresrc.h>
 #include "open_gl_tutor.1.res.h"
@@ -23,8 +23,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION    1,0,0,2
- PRODUCTVERSION 1,0,0,2
+ FILEVERSION    1,0,0,1
+ PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK  0x3fL
 #ifdef _DEBUG
  FILEFLAGS      0x1L
@@ -40,19 +40,19 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
 #if defined(WIN64)
-            VALUE "Comments"        , "OpenGL Shader Tutorial (64-bit)"
-            VALUE "FileDescription" , "OpenGL Shader Tutorial (64-bit)"
+            VALUE "Comments"        , "OpenGL Context Tutorial (64-bit)"
+            VALUE "FileDescription" , "OpenGL Context Tutorial (64-bit)"
 #else
-            VALUE "Comments"        , "OpenGL Shader Tutorial (32-bit)"
-            VALUE "FileDescription" , "OpenGL Shader Tutorial (32-bit)"
+            VALUE "Comments"        , "OpenGL Context Tutorial (32-bit)"
+            VALUE "FileDescription" , "OpenGL Context Tutorial (32-bit)"
 #endif
             VALUE "CompanyName"     , "#n/a"
-            VALUE "FileVersion"     , "1.0.1.2"
+            VALUE "FileVersion"     , "1.0.1.1"
             VALUE "InternalName"    , "GUI Test Project"
             VALUE "LegalCopyright"  , "Tech_dog (c) 2010-2025"
-            VALUE "OriginalFilename", "tutor.1.shader.exe"
+            VALUE "OriginalFilename", "tutor.1.ctx.exe"
             VALUE "ProductName"     , "OpenGL Tutorial Project"
-            VALUE "ProductVersion"  , "1.0.1.2"
+            VALUE "ProductVersion"  , "1.0.1.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -83,4 +83,4 @@ END
 // https://blogs.msdn.microsoft.com/junfeng/2007/06/26/rt_manifest-resource-and-isolation_aware_enabled/
 //
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "gl.tutor.1.shader.manifest"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "gl.tutor.1.ctx.manifest"

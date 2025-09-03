@@ -61,7 +61,7 @@ namespace context {
 
 		const
 		CTarget& Target (void) const;
-		CTarget& Target (void) ;       // releasing device context directly in target object will lead to errors on operations with the renderer;
+		CTarget& Target (void) ;      // releasing device context directly in target object will lead to errors on operations with the renderer;
 
 		CDevice& operator <<(const HWND); // invokes this::Create(...); if the renderer context is already created, it will be destroyed first;
 
@@ -70,10 +70,21 @@ namespace context {
 		HGLRC  m_drw_ctx; // rendering context that is compatible with regular GDI;
 	};
 }
+	/* The main idea is composed by several steps:
+		(1) creates fake window;
+		(2) gets renderer context that is based on regular device context handle; *important* the rendering context must be set as active one;
+		(3) querying pointers to the OpenGL functions that are required for creating real draw context of OpenGL version at least 3.0;
+		(4) creates new window that is expected to be surface of the drawing;
+		(5) using new window device context for setting pixel format;
+		(6) creating the OpenGL draw context;
+	*/
+
 	class CContext : public context::CBase { typedef context::CBase TBase;
 	public:
 		 CContext (void) ;  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
 		~CContext (void) ;
+
+		 err_code Create (const HWND h_target);
 
 	private:
 		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;

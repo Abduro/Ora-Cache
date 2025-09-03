@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0004}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0005}</ProjectGuid>
     <Keyword>AtlProj</Keyword>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
@@ -65,22 +65,22 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
  <!--Import Project="($ProjectDir)..\tutor.all.inc.props" /--><!--such relative reference to the path of the properties file does not work;-->
     <Import Project="..\tutor.all.inc.props" />
-    <Import Project="gl.tutor.1.shader.inc.props" />
+    <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\tutor.all.inc.props" />
-    <Import Project="gl.tutor.1.shader.inc.props" />
+    <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\tutor.all.inc.props" />
-    <Import Project="gl.tutor.1.shader.inc.props" />
+    <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\tutor.all.inc.props" />
-    <Import Project="gl.tutor.1.shader.inc.props" />
+    <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -235,22 +235,22 @@
     <PostBuildEvent><Command></Command></PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.1.module.h" />
-    <ClCompile Include="open_gl_tutor.1.module.cpp" />
+    <ClInclude Include="open_gl_tutor.2.module.h" />
+    <ClCompile Include="open_gl_tutor.2.module.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.1.res.h" />
-    <ResourceCompile Include="open_gl_tutor.1.res.rc" />
+    <ClInclude Include="open_gl_tutor.2.res.h" />
+    <ResourceCompile Include="open_gl_tutor.2.res.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="$(_0)open_gl_tutor.0.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="gl.tutor.1.shader.manifest" />
+    <Manifest Include="gl.tutor.2.shader.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="gl.tutor.1.shader.lib.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0004}</Project>
+    <ProjectReference Include="gl.tutor.2.shader.lib.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000C0005}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

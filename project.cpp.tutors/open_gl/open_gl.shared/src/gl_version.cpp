@@ -9,9 +9,9 @@
 #include "open_gl_tutor.0.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
 
 using namespace ex_ui::draw::open_gl;
-
-#pragma comment(lib, "gl.tutor.0.fake.lib")
-
+#if (0) // fake window is not used directly, it is assumed the context is already created and selected before calling this version API;
+#pragma comment(lib, "gl.tutor.0.fake.lib") 
+#endif
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 	using namespace shared::defs;

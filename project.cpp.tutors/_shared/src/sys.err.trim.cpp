@@ -288,7 +288,7 @@ CError::~CError(void) { }
 
 /////////////////////////////////////////////////////////////////////////////
 
-_pc_sz   CError::Class (void) const      { Safe_Lock(m_state); return m_class.GetString(); }
+_pc_sz   CError::Class (void) const { Safe_Lock(m_state); return m_class.GetString(); }
 void     CError::Class (_pc_sz _pClass) { Safe_Lock(m_state); m_class = _pClass;  }
 void     CError::Class (_pc_sz _lp_sz_val, const bool bFormatted) {
 	_lp_sz_val;

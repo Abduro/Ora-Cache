@@ -75,7 +75,7 @@ void CTrace::Out_3 (const e_category _e_cat, _pc_sz _p_nm_space, _pc_sz _p_cls, 
 	va_start(args_, _p_sz_format);
 
 	CString cs_in ; cs_in.FormatV(_p_sz_format, args_);
-	CString cs_out; cs_out.Format(_T("%s cls::[%s::%s].%s()>>%s\n"), (_pc_sz) CatToStr(_e_cat), _p_nm_space, _p_cls, _p_method, (_pc_sz) cs_in);
+	CString cs_out; cs_out.Format(_T("%s cls::[%s::%s].%s()>>%s"), (_pc_sz) CatToStr(_e_cat), _p_nm_space, _p_cls, _p_method, (_pc_sz) cs_in);
 
 	::OutputDebugString((_pc_sz) cs_out);
 

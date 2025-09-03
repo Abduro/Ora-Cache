@@ -1,27 +1,27 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 26-Aug-2025 at 03:01:10.215, UTC+4, Batumi, Tuesday;
-	This is Ebo Pack OpenGL tutorials' shader window interface implementation file;
+	Created by Tech_dog (ebontrop@gmail.com) on 03-Sep-2025 at 13:37:58.720, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack OpenGL tutorials' context window interface implementation file;
 */
 #include "open_gl_tutor.1.wnd.h"
+#include "open_gl_tutor.1.res.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
-#include "open_gl_tutor.1.res.h"
 
 using namespace ex_ui::draw::open_gl;
-using namespace ex_ui::draw::open_gl::shader;
+using namespace ex_ui::draw::open_gl::context;
 
-shader::CWnd:: CWnd (void) : TBase() { TBase::m_error >>__CLASS__; }
-shader::CWnd::~CWnd (void) { } // parent class object will destroy window created automatically on its (parent) destruction;
+context::CWnd:: CWnd (void) : TBase() { TBase::m_error >>__CLASS__; }
+context::CWnd::~CWnd (void) { } // parent class object will destroy window created automatically on its (parent) destruction;
 
 
-err_code shader::CWnd::Create (void) {
+err_code context::CWnd::Create (void) {
 
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	if (TWindow::Is_valid())
 		return TBase::m_error << (err_code) TErrCodes::eObject::eExists;
 
-	static _pc_sz p_cls_name = _T("__open_gl_shader_wnd");
+	static _pc_sz p_cls_name = _T("__open_gl_ctx_wnd");
 
 	CWndCls wnd_cls;
 

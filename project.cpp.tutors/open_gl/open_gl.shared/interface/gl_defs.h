@@ -18,14 +18,15 @@ namespace ex_ui { namespace draw { namespace open_gl {
 namespace procs {
 	using namespace ex_ui::draw::open_gl;
 
-	typedef ::std::map<_pc_sz, PROC> TProcCache;  // the key is the procedure name, the value is the pointer to the address of procefure function/method;
+	typedef ::std::map<CString, PROC> TProcCache;  // the key is the procedure name, the value is the pointer to the address of procefure function/method;
 
-	class CBase {
+	class CBase { // not thread safe yet;
 	public:
 		CBase (void) ; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
 		TError& Error (void) const;
-		PROC    Get (_pc_sz _p_fun_name); // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
+		PROC     Get (_pc_sz _p_fun_name); // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
+		err_code Get_all (void); // get all functions pointers; in this base class it does nothing, must be implemented in a child class if necessary;
 
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
@@ -58,6 +59,8 @@ namespace procs {
 	typedef int32_t  (__stdcall *pfn_SwapIntervalExt) (int _n_interval);
 	public:
 		CContext (void); ~CContext (void) = default;
+
+		err_code Get_all (void) ; // in the most cases this method is very useful for testing purposes;
 
 		int32_t ChoosePxFormatArb (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count);
 		HGLRC   CreateCtxAttsArb  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst);

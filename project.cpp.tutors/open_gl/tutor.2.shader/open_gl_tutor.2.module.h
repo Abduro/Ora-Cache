@@ -1,5 +1,5 @@
-#ifndef _OPEN_GL_TUTOR_1_MODULE_H_INCLUDED
-#define _OPEN_GL_TUTOR_1_MODULE_H_INCLUDED
+#ifndef _OPEN_GL_TUTOR_2_MODULE_H_INCLUDED
+#define _OPEN_GL_TUTOR_2_MODULE_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) 0n 26-Aug-2025 at 02:35:44.496, UTC+4, Batumi, Tuesday;
 	This is OpenGL shader creation tutorial module interface declaration file;
@@ -18,4 +18,4 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace shader {
 
 }}}}
 
-#endif/*_OPEN_GL_TUTOR_1_MODULE_H_INCLUDED*/
+#endif/*_OPEN_GL_TUTOR_2_MODULE_H_INCLUDED*/

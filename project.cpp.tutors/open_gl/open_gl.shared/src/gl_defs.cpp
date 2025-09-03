@@ -9,7 +9,7 @@ using namespace ex_ui::draw::open_gl::procs;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_0 { void __warning_lnk_4221 (void) {}}}}}
 
-CBase:: CBase (void) { this->m_error >>__CLASS__<<__METHOD__<< __s_ok; }
+CBase:: CBase (void) { this->m_error >>__CLASS__<<__METHOD__<< __e_not_inited; }
 
 TError&  CBase::Error (void) const { return this->m_error; }
 
@@ -25,14 +25,22 @@ PROC CBase::Get (_pc_sz _p_proc_name) {
 	CStringA cs_ansi(_p_proc_name);
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglgetprocaddress?source=docs ;
 	PROC p_proc = ::wglGetProcAddress(cs_ansi.GetString());
-	if ( p_proc )
-		this->m_cached.insert(::std::make_pair(_p_proc_name, p_proc));
+	if ( p_proc ) {
+		try {
+			this->m_cached.insert(::std::make_pair(CString(_p_proc_name), p_proc));
+		}
+		catch (const ::std::bad_alloc&) {
+			this->m_error << __e_no_memory;
+		}
+	}
+	// https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
 	else if ( 0 == p_proc || (void*)0x1 == p_proc || (void*)0x2 == p_proc || (void*)0x3 == p_proc || (void*)-1 == p_proc )
-	{ // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
-		HMODULE h_module = ::LoadLibrary(_T("opengl32.dll")); // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya ;
+	{		// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya ;
+		HMODULE h_module = ::LoadLibrary(_T("opengl32.dll"));
 		if (0 ==h_module)
 			this->m_error.Last();
 		else {
+			// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress ;
 			p_proc = ::GetProcAddress(h_module, cs_ansi.GetString());
 			if (0 == p_proc) {
 				this->m_error.Last(); this->m_error = TString().Format(_T("Get address of '%s' failed"), _p_proc_name);
@@ -40,14 +48,17 @@ PROC CBase::Get (_pc_sz _p_proc_name) {
 		}
 	}
 	else {
-	
+		this->m_error << (err_code) TErrCodes::eExecute::eFunction = TString().Format(_T("the proc '%s' is not found"), _p_proc_name);
 	}
 	return p_proc;
 }
 
+err_code CBase::Get_all (void) { return __e_not_impl; }
+
 /////////////////////////////////////////////////////////////////////////////
 
-CContext:: CContext (void) : CBase() {  CBase::m_error >>__CLASS__;
+CContext:: CContext (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
 }
 
 int32_t CContext::ChoosePxFormatArb (HDC _h_dc, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count) {
@@ -91,4 +102,19 @@ int32_t CContext::SwapIntervalExt   (const int _n_interval) {
 
 	n_result = p_fun(_n_interval);
 	return n_result;
+}
+
+err_code CContext::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	static _pc_sz fn_names[] = {
+		_T("wglChoosePixelFormatARB"), _T("wglCreateContextAttribsARB"), _T("wglSwapIntervalEXT")
+	};
+
+	for (uint32_t i_ = 0; i_ < _countof(fn_names); i_++) {
+		if (nullptr == CBase::Get(fn_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
 }

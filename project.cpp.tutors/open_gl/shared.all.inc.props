@@ -9,14 +9,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared>
-    <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared>
+    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL>
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(Shared)</Root><!--This the parent node of the OpenGL tutorials' solution, not for tutorial projects;-->
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Shared)interface\</_0>
-    <_1>$(GL_Shared)interface\</_1>
+    <_1>$(Shared_GL)interface\</_1>
     <_2></_2>
     <_3></_3>
     <_4></_4>

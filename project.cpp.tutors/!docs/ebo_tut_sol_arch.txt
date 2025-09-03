@@ -1,16 +1,25 @@
 *important*: node names may be different from folder names which the projects reside in;
 @cpp
-	!docs   : {00000C13-EEEE-BBBB-6667-D00000000000} << the root node of documents for settings c/c++ projects;
-	_shared : {00000C13-EEEE-BBBB-6667-100000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
+	[!docs]   : {00000C13-EEEE-BBBB-6667-D00000000000} << the root node of documents for settings c/c++ projects;
+	[_shared] : {00000C13-EEEE-BBBB-6667-100000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
 		shared.trim_v15 : {00000C13-EEEE-BBBB-6667-0000000B0001} << this is the shared project of excerpts from Ebo Pack solution;
 
-	tutors  : {00000C13-EEEE-BBBB-6667-100000000001} << the sub-root of the tutorial projects;
-	DirecX  : {00000C13-EEEE-BBBB-6667-100000000003} << the sub-root for DirectX tutorials;
-	OpenGL  : {00000C13-EEEE-BBBB-6667-100000000002} << the sub-root for OpenGL tutorials;
+	[tutors]  : {00000C13-EEEE-BBBB-6667-100000000001} << the sub-root of the tutorial projects;
+	[DirecX]  : {00000C13-EEEE-BBBB-6667-100000000003} << the sub-root for DirectX tutorials;
+	[OpenGL]  : {00000C13-EEEE-BBBB-6667-100000000002} << the sub-root for OpenGL tutorials;
 		open_gl.shared  : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project for OpenGL tutorials;
-		tutor.0.fake    : {00000C13-EEEE-BBBB-6667-0000000B0003} << the tutorial for creating OpenGL context based on fake window;
-		                : {00000C13-EEEE-BBBB-6667-0000000C0003} << this is the static library of the fake window project;
-		tutor.1.shader  : {00000C13-EEEE-BBBB-6667-0000000B0004} << the tutorial for creating OpenGL shader based on real window;
+
+	[tutor.0.fake] : {00000C13-EEEE-BBBB-6667-100000000020} << the node of the fake window project tutorial;
+	   gl.tutor.0.fake    : {00000C13-EEEE-BBBB-6667-0000000B0003} << the tutorial for creating OpenGL context based on fake window;
+	   gl.tutor.0.fake.lib: {00000C13-EEEE-BBBB-6667-0000000C0003} << this is the static library of the fake window project;
+
+	[tutor.1.context] : {00000C13-EEEE-BBBB-6667-100000000021} << the node of the context project tutorial;
+	   gl.tutor.1.ctx     : {00000C13-EEEE-BBBB-6667-0000000B0004} << the tutorial project for creating OpenGL context based on fake and real windows;
+	   gl.tutor.1.ctx.lib : {00000C13-EEEE-BBBB-6667-0000000C0004} << this is the static library of the context project;
+
+	[tutor.2.shader] : {00000C13-EEEE-BBBB-6667-100000000022} << the node of the shader project tutorial;
+	   gl.tutor.2.shader    : {00000C13-EEEE-BBBB-6667-0000000B0005} << the tutorial project for creating OpenGL shader based on the real window;
+	   gl.tutor.2.shader.lib: {00000C13-EEEE-BBBB-6667-0000000C0005} << this is the static library of the shader project;
 
 @net
 --none for this time--

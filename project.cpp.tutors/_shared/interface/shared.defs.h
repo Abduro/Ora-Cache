@@ -10,6 +10,7 @@
 #include <cstdint>        // for declareing and/or defining data types such as: uint32_t for example;
 #include <map>            // window message router uses this header;
 #include <vector>         // preprocessor wrapper uses this header;
+#include <typeinfo>       // typeinfo >> exception >> vcruntime_exception >> ::std::bad_alloc;
 
 #include "sys.err.trim.h" // includes error codes;
 

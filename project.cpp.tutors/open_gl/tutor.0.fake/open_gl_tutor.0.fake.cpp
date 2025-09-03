@@ -34,7 +34,7 @@ CWnd:: CWnd (void) : TWindow(), m_h_dc(0) { this->m_error >> __CLASS__ << __METH
 	else {
 		this->m_error << __s_ok;
 		this->m_h_dc = TWindow::GetDC();
-		__empty_ln();
+	//	__empty_ln();
 		__trace_info_3(_T("context device: handle=%s\n"), (_pc_sz)__address_of(this->Get_ctx()));
 	}
 }

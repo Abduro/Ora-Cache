@@ -14,8 +14,8 @@
     <Root>$(ThisLib)</Root>
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>$(Root)interface\</_0>
-    <_1>$(Root)src\</_1>
+    <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
+    <_1>src\</_1>
     <_2></_2>
     <_3></_3>
     <_4></_4>

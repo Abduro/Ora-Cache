@@ -4,6 +4,8 @@
 */
 #include "gl_error.h"
 
+#pragma comment(lib, "shared.trim_v15.lib") // it is required for usage of the error base API;
+
 using namespace ex_ui::draw::open_gl;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_1 { void __warning_lnk_4221 (void) {}}}}}
