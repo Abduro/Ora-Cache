@@ -85,9 +85,14 @@ namespace context {
 		~CContext (void) ;
 
 		 err_code Create (const HWND h_target);
+		 const
+		 procs::CContext& Cache (void) const;
+		 procs::CContext& Cache (void) ;
 
 	private:
 		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
+
+		 procs::CContext  m_fn_cache;
 	};
 }}}
 

@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000C0004}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000C0001}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,54 +64,49 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <Import Project="shared.gui.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <Import Project="shared.gui.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <Import Project="shared.gui.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <Import Project="shared.gui.inc.props"/>
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <!--It is assumed the environment variables contain paths that end up with backslash;-->
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
-    <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
-    <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
-    <LibName>gl.tutor.1.ctx</LibName>
+    <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\</OutPath>
+    <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\</IntPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,13 +117,10 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_DEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,13 +131,10 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -158,13 +147,10 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>NODEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <SupportJustMyCode>true</SupportJustMyCode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -181,13 +167,10 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>NODEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <SupportJustMyCode>true</SupportJustMyCode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -195,18 +178,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.1.wnd.h" />
-    <ClCompile Include="open_gl_tutor.1.wnd.cpp" />
+    <ClInclude Include="$(_0)shared.wnd.base.h" />
+    <ClCompile Include="$(_1)shared.wnd.base.cpp" />
+    <ClInclude Include="$(_0)shared.wnd.layout.h" />
+    <ClCompile Include="$(_1)shared.wnd.layout.cpp" />
+    <ClInclude Include="$(_0)shared.wnd.res.h" />
+    <ClCompile Include="$(_1)shared.wnd.res.cpp" />
+    <ClInclude Include="$(_0)win.gui.wnd.h" />
+    <ClCompile Include="$(_1)win.gui.wnd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(Fake)gl.tutor.0.fake.lib.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(Shared_GL)gl.shared_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(Shared_Out)shared.gui_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
+    <Manifest  Include="$(_0)win.gui.app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

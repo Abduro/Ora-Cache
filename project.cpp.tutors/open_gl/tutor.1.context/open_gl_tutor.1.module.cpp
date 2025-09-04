@@ -51,6 +51,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}
+
+		::MessageBox(HWND_DESKTOP, TString().Format(_T("Loaded functions:\n%s"), (_pc_sz)ctx.Cache().Print()), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK);
+
 	} while (true == false);
 #endif
 	msg.message = WM_QUIT;

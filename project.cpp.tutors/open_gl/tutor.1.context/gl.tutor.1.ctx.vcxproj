@@ -246,7 +246,7 @@
     <Image Include="$(_0)open_gl_tutor.0.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="gl.tutor.1.shader.manifest" />
+    <Manifest Include="gl.tutor.1.ctx.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="gl.tutor.1.ctx.lib.vcxproj">

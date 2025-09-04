@@ -24,9 +24,11 @@ namespace procs {
 	public:
 		CBase (void) ; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
-		TError& Error (void) const;
+		TError&  Error (void) const;
 		PROC     Get (_pc_sz _p_fun_name); // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
 		err_code Get_all (void); // get all functions pointers; in this base class it does nothing, must be implemented in a child class if necessary;
+
+		CString  Print (void) const; // enumerates all loaded function(s); the output string is formatted for message box (i.e. multilined);
 
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;

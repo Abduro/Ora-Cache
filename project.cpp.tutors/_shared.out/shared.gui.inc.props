@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 19-Aug-2025 at 12:22:20.101, UTC+4, Batumi, Tuesday;
-	This is Ebo pack tutors projects shared include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 20-Aug-2025 at 01:47:45.867, UTC+4, Batumi, Wednesday;
+	This is Ebo pack tutorials' shared library include property page declaration file;
+	Adopted to Ebo Pack tutorials' shared GUI project on 04-Sep-2025 at 18:38:56.866, UTC+4, Batumi, Thursday;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
-    <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared> <!--This is excerpts from Ebo Pack like this: system error and crit section wrappers;-->
-    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
-    <Shared_Out Condition="'$(Shared_Out)'==''">..\..\_shared.out\</Shared_Out><!--This is the key to GUI rich app window composition;-->
+    <Shared Condition="'$(Shared)'==''">..\_shared\</Shared> <!--This is the reference to the shared project of excerptions from Ebo Pack;-->
+    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
-    <Root>$(Shared)</Root><!--This the parent node of the OpenGL tutorials' solution, not for tutorial projects;-->
+    <Root>$(ThisLib)</Root>
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>$(Shared)interface\</_0>
-    <_1>$(Shared_GL)interface\</_1>
-    <_2>$(Shared_Out)interface\</_2>
+    <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
+    <_1>src\</_1>
+    <_2>$(Shared)interface\</_2>
     <_3></_3>
     <_4></_4>
     <_5></_5>

@@ -219,12 +219,15 @@ err_code   CContext::Create (const HWND h_target) {
 	if (__failed(dev_ctx.Create(fk_wnd.m_hWnd)))
 		return TBase::m_error() = dev_ctx.Error();
 	// (3) creates OpenGL context functions' cache;
-	procs::CContext  m_fn_cache;
 
-	m_fn_cache.Get_all();
+	this->Cache().Get_all();
 
-	if (m_fn_cache.Error())
-		return TBase::m_error() = m_fn_cache.Error();
+	if (this->Cache().Error())
+		return TBase::m_error() = this->Cache().Error();
 
 	return TBase::Error();
 }
+
+const
+procs::CContext& CContext::Cache (void) const { return this->m_fn_cache; }
+procs::CContext& CContext::Cache (void)       { return this->m_fn_cache; }

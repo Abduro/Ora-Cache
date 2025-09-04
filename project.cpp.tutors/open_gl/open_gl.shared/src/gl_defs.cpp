@@ -55,6 +55,23 @@ PROC CBase::Get (_pc_sz _p_proc_name) {
 
 err_code CBase::Get_all (void) { return __e_not_impl; }
 
+CString  CBase::Print (void) const {
+
+	if (this->m_cached.empty()) {
+		return CString(_T("#empty"));
+	}
+	
+	CString cs_out;
+
+	for (TProcCache::const_iterator it_ = this->m_cached.begin(); it_ != this->m_cached.end(); ++it_) {
+		cs_out += _T("\t");
+		cs_out += it_->first;
+		cs_out += _T(";\n");
+	}
+
+	return cs_out;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 CContext:: CContext (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);

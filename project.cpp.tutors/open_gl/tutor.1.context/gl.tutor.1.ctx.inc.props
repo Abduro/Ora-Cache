@@ -11,10 +11,10 @@
     <!--Import Project="..\shared.all.inc.props" /--><!--Including other property sheet files cannot be made like this;-->
     <!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <!--Required include paths are defined in tutor.all.inc.props; it is included to this project too;-->
-    <Tutor-0-Fake Condition="'$(Tutor-0-Fake)'==''">..\tutor.0.fake\</Tutor-0-Fake><!--OpenGL version interface;-->
+    <Fake Condition="'$(Fake)'==''">..\tutor.0.fake\</Fake><!--OpenGL version interface;-->
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>$(Tutor-0-Fake)</_0>
+    <_0>$(Fake)</_0>
     <_1></_1>
     <_2></_2>
     <_3></_3>

@@ -188,12 +188,6 @@
     <ClCompile Include="$(_1)shared.props.cpp" />
     <ClInclude Include="$(_0)shared.types.h" />
     <ClCompile Include="$(_1)shared.types.cpp" />
-    <ClInclude Include="$(_0)shared.wnd.base.h" />
-    <ClCompile Include="$(_1)shared.wnd.base.cpp" />
-    <ClInclude Include="$(_0)shared.wnd.layout.h" />
-    <ClCompile Include="$(_1)shared.wnd.layout.cpp" />
-    <ClInclude Include="$(_0)shared.wnd.res.h" />
-    <ClCompile Include="$(_1)shared.wnd.res.cpp" />
     <ClInclude Include="$(_0)sys.err.codes.h"/>
     <ClInclude Include="$(_1)sys.err.format.h" />
     <ClCompile Include="$(_1)sys.err.format.cpp" />
