@@ -3,6 +3,7 @@
 	This is OpenGL context creation tutorial module interface implementation file;
 */
 #include "open_gl_tutor.1.module.h"
+#include "open_gl_tutor.1.res.h"
 #include "open_gl_tutor.1.wnd.h"
 
 #include "shared.dbg.h"
@@ -41,21 +42,60 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	::DefWindowProc(NULL, 0, 0, 0L);
 
 	MSG msg = {0};
-#if (0)
-	::MessageBox(HWND_DESKTOP, _T("Context module;"), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK);
-#else
-	do {
-		CContext ctx;
 
+	static _pc_sz pc_sz_cls_name = _T("__open_gl_tutor_1_ctx");
+
+	do {
+
+		// (0) creating the main window/application at the beginning of this 'journey';
+		CAppWnd app_wnd;
+		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#1_ctx"), false))) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
+			app_wnd.Error().Show(); break;
+		}
+
+		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
+		app_wnd.Set_visible(true);
+		// for this version of the implementation it is suppossed to be the same rectangle that was used for the client area of the main window;
+		t_rect rc_client  = {0, 0, CRatios().Get().at(0).cx, CRatios().Get().at(0).cy};
+
+		// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect ;
+		::InflateRect(&rc_client, -0x4, -0x4); // no check for error this time;
+
+		context::CWnd w_target;
+		if (__failed(w_target.Create(app_wnd.Handle(), rc_client, true))) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) w_target.Error().Print(TError::e_req));
+			w_target.Error().Show(); break;
+		}
+
+		CContext ctx;
+		// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
+		// the error *always* occurs on RDP of MS Windows;
 		if (__failed(ctx.Create(0))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}
 
-		::MessageBox(HWND_DESKTOP, TString().Format(_T("Loaded functions:\n%s"), (_pc_sz)ctx.Cache().Print()), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK);
+		::MessageBox(
+			HWND_DESKTOP, TString().Format(_T("Loaded functions:\n%s"), (_pc_sz)ctx.Cache().Print()), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK
+		);
+
+		// (3) getting *real* version information of openGL that is installed in MS Windows; *important*: OpenGL draw renderer context must be current;
+		CVersion ver;
+		if (ver.Error()) {
+			ver.Error().Show();
+			break;
+		}
+
+		CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
+		::MessageBox(
+			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
+		);
+		break;
 
 	} while (true == false);
-#endif
+
 	msg.message = WM_QUIT;
 
 	while( WM_QUIT != msg.message ) {

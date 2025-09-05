@@ -41,6 +41,16 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CString  m_value;
 	};
 
+	/* important:
+		the version can be checked in case when fake (based on regular GDI) or OpenGL draw renderer context is set current (by wglMakeCurrent);
+		(1) for the 'fake' aka 'false' context the version number is always '1.1';
+		(2) for the 'driver' context that is dependable on installed hardware driver of particular GPU vendor, the version is expected at least '3.1';
+		otherwise,
+		without setting the draw context to be current the version number is '#unset';
+
+		https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << gives good explanation for above case;
+	*/
+
 	class CVersion {
 	public:
 		enum e_atts : uint32_t {

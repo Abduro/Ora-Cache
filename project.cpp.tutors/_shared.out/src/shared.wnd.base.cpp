@@ -84,6 +84,10 @@ bool      CWndCls::Name (_pc_sz _p_name) {
 
 	const bool b_changed = (false == cs_name.IsEmpty() && !!cs_name.CompareNoCase((_pc_sz) this->m_name));
 	if (b_changed) {
+
+		if (cs_name.GetLength() > CWndCls::n_cls_name_max)
+			cs_name.Left(CWndCls::n_cls_name_max);
+
 		this->m_name = cs_name;
 		this->m_wnd_cls.lpszClassName = (_pc_sz) this->m_name;
 	}
@@ -252,7 +256,7 @@ err_code CMsgRouter::Unsubscribe (const HWND _h_wnd) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CWndBase:: CWndBase (void) : m_h_wnd (0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CWndBase:: CWndBase (void) : m_h_wnd (0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; this->m_cls_name = __CLASS__; }
 CWndBase::~CWndBase (void) {
 	if (this->Is_valid())
 		this->Destroy(); // it is *required* for removing message handler interface pointer from router notification queue;
@@ -329,38 +333,23 @@ bool  CWndBase::Is_valid (void) const {
 	return nullptr != this->m_h_wnd && true == !!::IsWindow(this->Handle());
 }
 
-const
-CWndBase::CIcons&  CWndBase::Icons (void) const { return this->m_icons; }
-CWndBase::CIcons&  CWndBase::Icons (void)       { return this->m_icons; }
+void  CWndBase::Set_visible (const bool _b_state) const {
+	_b_state;
+	if (this->Is_valid()) {
+		::ShowWindow(this->Handle(), _b_state ? SW_SHOW : SW_HIDE);
+	}
+}
+
 const
 CWndBase::CStyles& CWndBase::Styles (void) const { return this->m_styles; }
 CWndBase::CStyles& CWndBase::Styles (void)       { return this->m_styles; }
+
+_pc_sz CWndBase::Cls_name (void) const { return (_pc_sz) this->m_cls_name; }
 
 bool CWndBase::operator == (const CWndBase& _rsh) const { return this->Handle() == _rsh.Handle(); }
 bool CWndBase::operator == (const HWND _what) const { return this->Handle() == _what; }
 
 CWndBase::operator const HWND (void) const { return this->Handle(); }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CWndBase::CIcons:: CIcons (void) {}
-
-err_code  CWndBase::CIcons::Set (const uint16_t _u_res_id, const HWND& _h_wnd) {
-	_u_res_id;
-	err_code n_result = __s_ok;
-
-	if (false == !!_u_res_id)
-		return n_result = __e_invalid_arg;
-
-	if (false == !!_h_wnd || false == !!::IsWindow(_h_wnd))
-		return n_result = __e_hwnd;
-
-	// no error handling of icon assignment through sending the message; 
-	::SendMessage(_h_wnd, WM_SETICON, 0, (l_param) ex_ui::resource::CIcon().Load(_u_res_id, 0));
-	::SendMessage(_h_wnd, WM_SETICON, 1, (l_param) ex_ui::resource::CIcon().Load(_u_res_id, 1));
-
-	return n_result;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -5,9 +5,16 @@
 	This is OpenGL context creation tutorial module interface declaration file;
 */
 #include "gl_context.h"
+#include "gl_version.h"
 #include "open_gl_tutor.0.defs.h" // has the reference to OpenGL32.lib;
+#include "open_gl_tutor.1.wnd.h"  // this is the target window class interface;
+
+#include "win.gui.wnd.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace context {
+
+	using namespace shared::out;
+	using namespace ex_ui::draw::open_gl;
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;
 	class CContextModule : public ATL::CAtlExeModuleT<CContextModule> { typedef ATL::CAtlExeModuleT<CContextModule> TModule;
@@ -16,6 +23,8 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace context {
 	};
 
 }}}}
+
+#pragma comment(lib, "shared.gui_v15.lib")  // shared GUI lib for creating main/app window;
 
 #pragma comment(lib, "gl.shared_v15.lib")   // OpenGL tutorials shared lib; it is required for usage of shader API;
 #pragma comment(lib, "gl.tutor.0.fake.lib") // this lib refers to shared.trim_v15.lib that is common for OpenGL and DirectX;

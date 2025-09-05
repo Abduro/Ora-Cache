@@ -16,13 +16,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 	using namespace ex_ui::popup::layout;
 
 	using TWindow = ex_ui::popup::CWndBase;
-
+	// it is not the main window of this tutor app, it is just the child of it for creating the OpenGL draw context, i.e. it is the target window;
 	class CWnd : public TWindow { typedef TWindow TBase;
 	public:
 		 CWnd (void);
 		~CWnd (void);
 
-		err_code Create (void);
+		err_code Create (const HWND _h_parent, const t_rect&, const bool _b_visible = true); // this window position rectangle is defined by parent window layout;
 	};
 
 }}}}

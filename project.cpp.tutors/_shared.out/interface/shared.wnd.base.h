@@ -49,6 +49,8 @@ namespace ex_ui { namespace popup {
 		e_cfg_ctrl = 0x1, // user control window class cfg type;
 		e_cfg_over = 0x0, // overlapped window class cfg type; it's default;
 		};
+
+		static const int32_t n_cls_name_max = 256; // the maximum length of the class name as it's defined in one of the above URLs;
 	public:
 		 CWndCls (void); CWndCls (const CWndCls&) = delete; CWndCls (CWndCls&&) = delete;
 		~CWndCls (void);
@@ -62,7 +64,7 @@ namespace ex_ui { namespace popup {
 		bool Is_exist (_pc_sz _p_cls_name) const;
 		// https://learn.microsoft.com/en-us/windows/win32/winmsg/about-window-classes#class-name ;
 		// excerpt from above article: ... should keep class name strings as short as possible ...;
-		_pc_sz   Name (void) const;      // returns  window class name; *max* length is 256, otherwise the registration will fail;
+		_pc_sz   Name (void) const;      // returns  window class name; *max* length is 256 chars, otherwise the registration will fail;
 		bool     Name (_pc_sz) ;         // sets the window class name, returns true in case of name change; assigns the input to the cached name first;
 
 		err_code Register (_pc_sz _cls_name) ; // window procedure pointer is assigned automatically to the message router's procedure;
@@ -119,9 +121,10 @@ namespace ex_ui { namespace popup {
 			in this case, no prompt to the user, but just the destroying the window;
 		*/
 
-		TError&  Error (void) const;	
+		TError&  Error  (void) const;	
 		HWND     Handle (void) const;
-		bool  Is_valid (void) const;
+		bool  Is_valid  (void) const;
+		void  Set_visible (const bool) const;
 
 	public:
 		bool operator == (const CWndBase&) const;
@@ -137,15 +140,6 @@ namespace ex_ui { namespace popup {
 		HWND    m_h_wnd;
 		
 	public:
-		class CIcons {
-		public:
-			CIcons (void); CIcons (const CIcons&) = delete; CIcons (CIcons&&) = delete; ~CIcons (void) = default;
-			// ToDo: under such a signature this method may be just the static one;
-			err_code Set (const uint16_t _u_res_id, const HWND&); // sets icons of both sizes (small & large) to the window handle;
-
-		private:
-			CIcons& operator = (const CIcons&) = delete; CIcons& operator = (CIcons&&) = delete;
-		};
 		class CStyles {
 		public:
 			 CStyles (void) ; CStyles (const CStyles&) = delete; CStyles (CStyles&&) = delete;
@@ -166,17 +160,17 @@ namespace ex_ui { namespace popup {
 			uint32_t m_ext;
 			uint32_t m_std;
 		};
+
 	public:
-		const
-		CIcons& Icons (void) const;
-		CIcons& Icons (void) ;
 		const
 		CStyles&  Styles (void) const;
 		CStyles&  Styles (void) ;
 
+		_pc_sz    Cls_name (void) const;
+
 	protected:
-		CIcons  m_icons;
-		CStyles m_styles;
+		CStyles   m_styles;
+		CString   m_cls_name;  // this is the name of this class, i.e. the name this class is declared; for debug purposes only;
 	};
 }}
 

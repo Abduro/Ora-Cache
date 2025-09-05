@@ -72,11 +72,11 @@ namespace context {
 }
 	/* The main idea is composed by several steps:
 		(1) creates fake window;
-		(2) gets renderer context that is based on regular device context handle; *important* the rendering context must be set as active one;
+		(2) gets renderer context that is based on regular device context handle; *important* the rendering context must be set as current one;
 		(3) querying pointers to the OpenGL functions that are required for creating real draw context of OpenGL version at least 3.0;
 		(4) creates new window that is expected to be surface of the drawing;
-		(5) using new window device context for setting pixel format;
-		(6) creating the OpenGL draw context;
+		(5) using new window device context for setting pixel format by using OpenGL functions been loaded on the previous step (#3);
+		(6) creating the OpenGL draw context and making it current;
 	*/
 
 	class CContext : public context::CBase { typedef context::CBase TBase;
