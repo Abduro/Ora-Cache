@@ -110,8 +110,19 @@ namespace ex_ui { namespace popup {
 		/* the input parameters are placed in such order specifically in accordance with default values they have;
 		   also, taking into account that in the most tutorials the window being created has the desktop as its parent, so it is the last param;
 		*/
-		err_code Create (_pc_sz _p_cls_name, _pc_sz _p_title, const t_rect&, const bool _b_vidible = true, const HWND _h_parent = 0);
-		err_code Destroy(void); // https://learn.microsoft.com/en-us/windows/win32/learnwin32/closing-the-window ;
+		err_code Create (_pc_sz _p_cls_name, _pc_sz _p_title, const t_rect&, const bool _b_vidible/* = true*/, const HWND _h_parent/* = 0*/);
+
+		/*
+			https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
+			https://learn.microsoft.com/en-us/windows/win32/learnwin32/closing-the-window ;
+			...
+			the excerpt from the destroy window article:
+			DestroyWindow() automatically destroys the associated child or owned windows when it destroys the parent or owner window;
+			...
+			it is the reason why the child window does not unsubcribe from the message queue; this fact must be taken into account;
+		*/
+
+		err_code Destroy(void);
 		/*
 			the excerpt from the article which is referred by the link given above:
 			...
@@ -140,6 +151,39 @@ namespace ex_ui { namespace popup {
 		HWND    m_h_wnd;
 		
 	public:
+		class CLayout {
+		public:
+			class CSize {
+			public:
+				CSize (const uint32_t _u_cx = 0, const uint32_t _u_cy = 0); CSize (const CSize&) = delete; CSize (CSize&&) = delete; ~CSize (void) = default;
+
+				bool  Is_locked (void) const;
+				bool  Is_locked (const bool); // returns 'true' in case of changing lock mode option;
+
+				const
+				t_size& Ref (void) const;
+				t_size& Ref (void) ;
+
+			private:
+				CSize& operator = (const CSize&) = delete; CSize& operator = (CSize&&) = delete;
+			private:
+				t_size m_size; // stores the currently size of the window;
+				bool   m_lock; // the flags for indicating the locking size change;
+			};
+
+		public:
+			CLayout (void);  CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete; ~CLayout (void) = default;
+
+			const
+			CSize&  Size (void) const;
+			CSize&  Size (void) ;
+
+		private:
+			CLayout& operator = (const CLayout&) = delete; CLayout& operator = (CLayout&&) = delete;
+
+			CSize  m_size;
+		};
+
 		class CStyles {
 		public:
 			 CStyles (void) ; CStyles (const CStyles&) = delete; CStyles (CStyles&&) = delete;
@@ -163,12 +207,16 @@ namespace ex_ui { namespace popup {
 
 	public:
 		const
+		CLayout&  Layout (void) const;
+		CLayout&  Layout (void) ;
+		const
 		CStyles&  Styles (void) const;
 		CStyles&  Styles (void) ;
 
 		_pc_sz    Cls_name (void) const;
 
 	protected:
+		CLayout   m_layout;
 		CStyles   m_styles;
 		CString   m_cls_name;  // this is the name of this class, i.e. the name this class is declared; for debug purposes only;
 	};

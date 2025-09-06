@@ -225,6 +225,8 @@ err_code   CContext::Create (const HWND h_target) {
 	if (this->Cache().Error())
 		return TBase::m_error() = this->Cache().Error();
 
+	// (4) gets context;
+
 	return TBase::Error();
 }
 

@@ -5,6 +5,9 @@
 #include "shared.wnd.base.h"
 #include "shared.preproc.h"
 #include "shared.wnd.res.h"
+
+#include "shared.dbg.h"
+
 #include "sys.sync_obj.h"
 
 #ifndef __H
@@ -176,13 +179,16 @@ namespace ex_ui { namespace popup { namespace _impl {
 
 	typedef ::std::map<const HWND, IMsg_Handler*> THandlers; // the reference to handle interface cannot be used here;
 
-	THandlers handlers;
+	THandlers& Get_handlers (void) {
+		static THandlers handlers;
+		return handlers;
+	}
 
 	static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param _w_param, l_param _l_param)  {
 		_h_wnd; _msg_id; _w_param; _l_param;
 		Router_Safe_Lock();
-		THandlers::iterator it_ = handlers.find(_h_wnd);
-		if (handlers.end() == it_ || nullptr == it_->second)
+		THandlers::iterator it_ = Get_handlers().find(_h_wnd);
+		if (Get_handlers().end() == it_ || nullptr == it_->second)
 			return ::DefWindowProc(_h_wnd, _msg_id, _w_param, _l_param);
 		l_result n_result = 0;
 		// each message defines the value of the result code: i.e. the message is handled or not;
@@ -193,6 +199,9 @@ namespace ex_ui { namespace popup { namespace _impl {
 			n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
 		} break;
 		case WM_KEYDOWN: break;
+		case WM_WINDOWPOSCHANGING: {
+			n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
+		} break;
 		case WM_SIZE   : break;
 		default:
 			n_result = ::DefWindowProc(_h_wnd, _msg_id, _w_param, _l_param);
@@ -224,12 +233,12 @@ err_code CMsgRouter::Subscribe (const HWND _h_wnd, IMsg_Handler& _handler) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
-	THandlers::const_iterator it_ = handlers.find(_h_wnd);
-	if (it_ != handlers.end())
+	THandlers::const_iterator it_ = Get_handlers().find(_h_wnd);
+	if (it_ != Get_handlers().end())
 		return this->m_error << (err_code) TErrCodes::eObject::eExists;
 
 	try {
-		handlers.insert(::std::make_pair(_h_wnd, &_handler));
+		Get_handlers().insert(::std::make_pair(_h_wnd, &_handler));
 	}
 	catch (const ::std::bad_alloc&) {
 		this->m_error << __e_no_memory;
@@ -245,14 +254,40 @@ err_code CMsgRouter::Unsubscribe (const HWND _h_wnd) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
-	THandlers::iterator it_ = handlers.find(_h_wnd);
-	if (it_ == handlers.end())
+	THandlers::iterator it_ = Get_handlers().find(_h_wnd);
+	if (it_ == Get_handlers().end())
 		return this->m_error << (err_code) TErrCodes::eData::eNotFound;
 
-	handlers.erase(it_);
+	Get_handlers().erase(it_);
 
 	return this->Error();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CWndBase::CLayout::CSize:: CSize (const uint32_t _u_cx, const uint32_t _u_cy) : m_size{static_cast<long>(_u_cx), static_cast<long>(_u_cy)}, m_lock(false) {}
+
+bool  CWndBase::CLayout::CSize::Is_locked (void) const { return this->m_lock; }
+bool  CWndBase::CLayout::CSize::Is_locked (const bool _b_state) {
+	_b_state;
+	const bool b_changed = this->Is_locked() != _b_state;
+	if (b_changed)
+		this->m_lock = _b_state;
+
+	return b_changed;
+}
+
+const
+t_size& CWndBase::CLayout::CSize::Ref (void) const { return this->m_size; }
+t_size& CWndBase::CLayout::CSize::Ref (void)       { return this->m_size; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CWndBase::CLayout:: CLayout (void) {}
+
+const
+CWndBase::CLayout::CSize&  CWndBase::CLayout::Size (void) const { return this->m_size; }
+CWndBase::CLayout::CSize&  CWndBase::CLayout::Size (void)       { return this->m_size; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -272,6 +307,23 @@ err_code CWndBase::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 			this->Destroy();   // unsubscribes and destroys itself; this base window implementation does not show any prompt;
 		} break;
 	case WM_DESTROY: {
+		} break;
+	case WM_WINDOWPOSCHANGING: { // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging ;
+			_w_param;  // not used;
+			WINDOWPOS* p_wnd_pos = reinterpret_cast<WINDOWPOS*>(_l_param);
+			if (nullptr != p_wnd_pos) {
+#if (0)
+				__trace_info(_T("x=%d;y=%d;cx=%d;cy=%d"), p_wnd_pos->x, p_wnd_pos->y, p_wnd_pos->cx, p_wnd_pos->cy);
+#endif
+				if (this->Layout().Size().Is_locked()) {
+					p_wnd_pos->cx = this->Layout().Size().Ref().cx;
+					p_wnd_pos->cy = this->Layout().Size().Ref().cy;
+					n_result = __s_ok; // handled;
+				}
+			}
+			else
+				n_result = __s_false; // not handled;
+			// https://stackoverflow.com/questions/1825868/how-to-prevent-window-resizing-temporarily ;
 		} break;
 	}
 
@@ -327,7 +379,7 @@ err_code CWndBase::Destroy (void) {
 
 TError&  CWndBase::Error (void) const { return this->m_error; }
 
-HWND CWndBase::Handle (void) const { return this->m_h_wnd; }
+HWND  CWndBase::Handle (void) const { return this->m_h_wnd; }
 
 bool  CWndBase::Is_valid (void) const {
 	return nullptr != this->m_h_wnd && true == !!::IsWindow(this->Handle());
@@ -339,6 +391,10 @@ void  CWndBase::Set_visible (const bool _b_state) const {
 		::ShowWindow(this->Handle(), _b_state ? SW_SHOW : SW_HIDE);
 	}
 }
+
+const
+CWndBase::CLayout& CWndBase::Layout (void) const { return this->m_layout; }
+CWndBase::CLayout& CWndBase::Layout (void)       { return this->m_layout; }
 
 const
 CWndBase::CStyles& CWndBase::Styles (void) const { return this->m_styles; }
@@ -356,8 +412,8 @@ CWndBase::operator const HWND (void) const { return this->Handle(); }
 CWndBase::CStyles:: CStyles (void) : m_ext(0), m_std(0) {}
 CWndBase::CStyles::~CStyles (void) {}
 
-bool CWndBase::CStyles::Default_for_app (void) { bool b_changed = this->Ext(WS_EX_NOPARENTNOTIFY); if (this->Std(WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS)) b_changed = true; return b_changed; }
-bool CWndBase::CStyles::Default_for_kid (void) { bool b_changed = this->Ext(WS_EX_NOPARENTNOTIFY); if (this->Std(WS_CHILD|WS_CLIPCHILDREN|WS_CLIPSIBLINGS)) b_changed = true; return b_changed; }
+bool CWndBase::CStyles::Default_for_app (void) { bool b_changed = /*this->Ext(WS_EX_NOPARENTNOTIFY)*/false; if (this->Std(WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS)) b_changed = true; return b_changed; }
+bool CWndBase::CStyles::Default_for_kid (void) { bool b_changed = /*this->Ext(WS_EX_NOPARENTNOTIFY)*/false; if (this->Std(WS_CHILD|WS_CLIPCHILDREN|WS_CLIPSIBLINGS)) b_changed = true; return b_changed; }
 
 uint32_t CWndBase::CStyles::Ext (void) const { return this->m_ext; }
 bool     CWndBase::CStyles::Ext (const uint32_t _u_styles) {

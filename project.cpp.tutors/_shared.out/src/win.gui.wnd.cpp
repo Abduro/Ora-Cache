@@ -73,7 +73,7 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 		__trace_err_3(_T("%s"), (_pc_sz) TBase::Error().Print(TError::e_req)); // just for indicating the error state and continue;
 	}
 
-	if (__succeeded(TBase::Create(_p_cls_name, _p_title, rc_pos, _b_visible)))
+	if (__succeeded(TBase::Create(_p_cls_name, _p_title, rc_pos, _b_visible, HWND_DESKTOP)))
 		this->Frame().Window() = TBase::Handle();
 	else
 		this->Frame().Window() = HWND_DESKTOP; // the same as (HWND)nullptr;

@@ -8,6 +8,13 @@
 
 #include "shared.dbg.h"
 
+#ifndef __H
+#define __H(_rect) (_rect.bottom - _rect.top)
+#endif
+#ifndef __W
+#define __W(_rect) (_rect.right - _rect.left)
+#endif
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::context;
 
@@ -45,17 +52,28 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	static _pc_sz pc_sz_cls_name = _T("__open_gl_tutor_1_ctx");
 
+	bool b_error = true; // this is for cases when an error occurs and after displaying the error message the message loop is interrupted;
+
+	CAppWnd app_wnd;
+	context::CWnd w_target;
+
 	do {
 
 		// (0) creating the main window/application at the beginning of this 'journey';
-		CAppWnd app_wnd;
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#1_ctx"), false))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
 			app_wnd.Error().Show(); break;
 		}
 
+		t_rect rect_wnd = {0};
+		::GetWindowRect(app_wnd.Handle(), &rect_wnd);
+
+		app_wnd.Layout().Size().Ref() = t_size{__W(rect_wnd), __H(rect_wnd)};
+		app_wnd.Layout().Size().Is_locked(true);
+
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 		app_wnd.Set_visible(true);
+
 		// for this version of the implementation it is suppossed to be the same rectangle that was used for the client area of the main window;
 		t_rect rc_client  = {0, 0, CRatios().Get().at(0).cx, CRatios().Get().at(0).cy};
 
@@ -63,7 +81,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect ;
 		::InflateRect(&rc_client, -0x4, -0x4); // no check for error this time;
 
-		context::CWnd w_target;
 		if (__failed(w_target.Create(app_wnd.Handle(), rc_client, true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) w_target.Error().Print(TError::e_req));
 			w_target.Error().Show(); break;
@@ -72,11 +89,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		CContext ctx;
 		// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
 		// the error *always* occurs on RDP of MS Windows;
-		if (__failed(ctx.Create(0))) {
+		if (__failed(ctx.Create(w_target.Handle()))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}
-
+#if (0)
 		::MessageBox(
 			HWND_DESKTOP, TString().Format(_T("Loaded functions:\n%s"), (_pc_sz)ctx.Cache().Print()), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK
 		);
@@ -92,11 +109,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		::MessageBox(
 			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
 		);
-		break;
+#endif
+		b_error = false;
 
 	} while (true == false);
 
-	msg.message = WM_QUIT;
+	if (b_error != false)
+		msg.message = WM_QUIT;
 
 	while( WM_QUIT != msg.message ) {
 		if (::PeekMessage( &msg, NULL, 0, 0, PM_REMOVE )) {
@@ -104,6 +123,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 		else {
+			::Sleep(10);
 		}
 	}
 

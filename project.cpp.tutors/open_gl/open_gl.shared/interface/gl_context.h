@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "gl_error.h"
+#include "gl_procs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 

@@ -33,7 +33,7 @@ err_code context::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos,
 	TBase::Styles().Default_for_kid();
 
 	if (__failed(TBase::Create(
-		p_cls_name, TString().Format(_T("cls::[%s:%s]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), _rc_wnd_pos
+		p_cls_name, TString().Format(_T("cls::[%s:%s]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), _rc_wnd_pos, _b_visible, _h_parent
 	))) {
 	}
 
