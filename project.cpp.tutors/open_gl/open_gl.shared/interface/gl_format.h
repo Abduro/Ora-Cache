@@ -4,14 +4,60 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Sep-2025 at 12:55:04.373, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL tutorials' format wrapper interface declaration file; 
 */
+#include <vector>
 #include "gl_defs.h"
+#include "shared.props.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	// https://agrawalsuneet.github.io/blogs/enum-vs-enum-class-in-c++/ ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/enumerations-cpp ;
 
-namespace format { namespace arb {
+	using CProperty = shared::common::CProperty; // still be useless for the time being;
+
+namespace format {
+
+#define _gl_false uint32_t(0)
+#define _gl_true  uint32_t(1)
+
+	class CAtt {
+	public:
+		 CAtt (const uint32_t _u_key = 0, const uint32_t _u_value = 0, _pc_sz _p_name = nullptr); // the att key it is its some sort of 'name';
+		 CAtt (const CAtt&);
+		 CAtt (CAtt&&);
+		~CAtt (void) = default;
+
+	public:
+		uint32_t Key (void) const;
+		bool     Key (const uint32_t);   // returns 'true' in case of key change;
+
+		uint32_t Value (void) const;
+		bool     Value (const uint32_t); // returns 'true' in case of value change;
+
+		CString  Print (const e_print = e_print::e_all) const;
+
+		_pc_sz   Name  (void) const;
+		bool     Name  (_pc_sz) ;        // returns 'true' in case of name is changed;
+
+	public:
+		CAtt& operator = (const CAtt&) ;
+		CAtt& operator = (CAtt&&) ;
+
+		CAtt& operator <<(const uint32_t _u_value);
+		CAtt& operator >>(const uint32_t _u_key);
+		CAtt& operator <<(_pc_sz _p_name);
+
+	private:
+		uint32_t m_key;
+		uint32_t m_val;
+		CString  m_name;
+	};
+
+	typedef ::std::vector<CAtt> TAtts;
+	typedef ::std::vector<int>  TRawAtts_Int; // excerpt from the article: ...piAttribIList is a list of integer attributes. Every two elements in the list is an attribute/value pair... zero (0) ends up the list;
+	typedef ::std::vector<float>  TRawAtts_Flt; // excerpt from the article: ...need to static-cast int to float or do other trickery to make C keep the bit-pattern between the integer and float form the same ;
+
+namespace arb {
 
 	// https://www.allacronyms.com/accel./Acceleration ;
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
@@ -22,6 +68,17 @@ namespace format { namespace arb {
 		e_none = 0x2025, // WGL_NO_ACCELERATION_ARB ; only the software renderer supports this pixel format;
 		e_norm = 0x2026, // WGL_GENERIC_ACCELERATION_ARB ; the pixel format is supported by an MCD driver;
 		e_supp = 0x2003, // WGL_ACCELERATION_ARB ; Indicates whether the pixel format is supported by the driver.
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CBuffer : private no_copy {
+	public:
+		enum e_tokens : uint16_t {
+		e_double = 0x2011, // WGL_DOUBLE_BUFFER_ARB ; att name: att value is 'true' if the color buffer has back/front pairs;
+		e_stereo = 0x2012, // WGL_STEREO_ARB ; att name: att value is 'true' if the color buffer has left/right pairs;
 		};
 
 		static CString To_str (const e_tokens);
@@ -125,7 +182,39 @@ namespace format { namespace arb {
 
 		static CString To_str (const e_tokens);
 	};
-}}
+}
 
+	interface IAtt_Set_Base {
+		virtual const float* const IAtt_Get_Flt_Ptr (void) const { return (float*)nullptr; }
+		virtual const int* const IAtt_Get_Int_Ptr (void) const { return (int*)nullptr; }
+	};
+
+	class CAtt_set_base : public IAtt_Set_Base, private no_copy {
+	protected:
+		 CAtt_set_base (void);
+		~CAtt_set_base (void) = default;
+
+	public:
+		const float* const IAtt_Get_Flt_Ptr (void) const override;
+		const int* const IAtt_Get_Int_Ptr (void) const override;
+
+	public:
+		err_code Append (const CAtt&); //  no check for attributes duplication; adds the input attribute to the internal cache;
+		err_code Append (const uint32_t _u_key, uint32_t _u_val, _pc_sz _p_name);
+
+	public:
+		CAtt_set_base& operator += (const CAtt&);
+
+	protected:
+		TAtts   m_atts;
+		mutable TRawAtts_Int m_raw_int; // this vector must have the last element as (int)0;
+		mutable TRawAtts_Flt m_raw_flt; // this vector must have the last element as (float)0.0;
+	};
+
+	class CAtt_set_pixels : public CAtt_set_base { typedef CAtt_set_base TBase;
+	public:
+		CAtt_set_pixels (void) ; // creates the set;
+	};
+}
 }}}
 #endif/*_GL_FORMAT_H_INCLUDED*/

@@ -8,6 +8,59 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::format;
 using namespace ex_ui::draw::open_gl::format::arb;
 
+/////////////////////////////////////////////////////////////////////////////
+
+CAtt:: CAtt (const uint32_t _u_key, const uint32_t _u_value, _pc_sz _p_name) : m_key(_u_key), m_val(_u_value), m_name(nullptr == _p_name ? _T("#undef") : _p_name) {}
+CAtt:: CAtt (const CAtt& _src) : CAtt() { *this = _src; }
+CAtt:: CAtt (CAtt&& _victim) : CAtt() { *this = _victim; }
+
+uint32_t CAtt::Key (void) const { return this->m_key; }
+bool     CAtt::Key (const uint32_t _u_key) {
+	_u_key;
+	const bool b_changed = this->Key() != _u_key;
+	if (b_changed)
+		this->m_key = _u_key;
+
+	return b_changed;
+}
+
+uint32_t CAtt::Value (void) const { return this->m_val; }
+bool     CAtt::Value (const uint32_t _u_val) {
+	_u_val;
+	const bool b_changed = this->Value() != _u_val;
+	if (b_changed)
+		this->m_val = _u_val;
+
+	return b_changed;
+}
+
+CString  CAtt::Print (const e_print _e_opt) const {
+	_e_opt;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {key=%u(%s);value=%u}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {key=%u(%s);value=%u}");
+	static _pc_sz pc_sz_pat_r = _T("key=%u(%s);value=%u");
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Key(), this->Name(), this->Value()); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, this->Key(), this->Name(), this->Value()); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format (pc_sz_pat_r, this->Key(), this->Name(), this->Value()); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+
+CAtt& CAtt::operator = (const CAtt& _src) { *this >> _src.Key() << _src.Value() << _src.Name(); return *this; }
+CAtt& CAtt::operator = (CAtt&& _victim) { *this = const_cast<CAtt&>(_victim);  return *this; }
+
+CAtt& CAtt::operator <<(const uint32_t _u_value) { this->Value(_u_value); return *this; }
+CAtt& CAtt::operator >>(const uint32_t _u_key) { this->Key(_u_key); return *this; }
+
+CAtt& CAtt::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CString CAccel::To_str (const e_tokens _e_value) {
 	_e_value;
 	switch (_e_value) {
@@ -96,4 +149,91 @@ CString CType::To_str (const CType::e_tokens _e_value) {
 	case CType::e_tokens::e_index : return CString(_T("__wgl_type_index_arb")); break;
 	}
 	return CString(_T("#undef"));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAtt_set_base:: CAtt_set_base (void) {
+	try { // ends up the result vectors by zero (0);	
+
+		this->m_raw_int.push_back(0);
+		this->m_raw_flt.push_back(0.0f);
+	}
+	catch (const ::std::bad_alloc&) {}
+}
+
+const float* const  CAtt_set_base::IAtt_Get_Flt_Ptr (void) const {
+
+	if (this->m_raw_flt.empty() == false)
+		this->m_raw_flt.clear();
+
+	try {
+		for (uint32_t i_ = 0; i_ < this->m_atts.size(); i_++) {
+			const CAtt& att = m_atts.at(i_);
+			this->m_raw_flt.push_back(static_cast<float>(att.Key()));
+			this->m_raw_flt.push_back(static_cast<float>(att.Value()));
+		}
+		this->m_raw_flt.push_back(0.0f); // mandatory requirement;
+	}
+	catch (const ::std::bad_alloc&) {
+	}
+
+	return this->m_raw_flt.data();
+}
+
+const int*   const  CAtt_set_base::IAtt_Get_Int_Ptr (void) const {
+
+	if (this->m_raw_int.empty() == false)
+		this->m_raw_int.clear();
+
+	try {
+		for (uint32_t i_ = 0; i_ < this->m_atts.size(); i_++) {
+			const CAtt& att = m_atts.at(i_);
+			this->m_raw_int.push_back(static_cast<int>(att.Key()));
+			this->m_raw_int.push_back(static_cast<int>(att.Value()));
+		}
+		this->m_raw_int.push_back(0); // mandatory requirement;
+	}
+	catch (const ::std::bad_alloc&) {
+	}
+
+	return this->m_raw_int.data();
+}
+
+err_code CAtt_set_base::Append (const CAtt& _att) {
+	_att;
+	err_code n_result = __s_ok;
+	try {
+		this->m_atts.push_back(_att);
+	}
+	catch (const ::std::bad_alloc&) {
+		n_result = __e_no_memory;
+	}
+	return n_result;
+}
+
+err_code CAtt_set_base::Append (const uint32_t _u_key, uint32_t _u_val, _pc_sz _p_name) {
+	_u_key; _u_val; _p_name;
+	CAtt att(_u_key, _u_val, _p_name);
+	return this->Append(att);
+}
+
+CAtt_set_base& CAtt_set_base::operator += (const CAtt& _att) { this->Append(_att); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAtt_set_pixels:: CAtt_set_pixels (void) : TBase() {
+
+	err_code n_result = __s_ok;
+	// -----------------------------------------------------+     att key   -+-   att value   -+-  att name ;  
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CDraw::e_window, _gl_true, (_pc_sz) arb::CDraw::To_str(arb::CDraw::e_window)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, _gl_true, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CBuffer::e_double, _gl_true, (_pc_sz) arb::CBuffer::To_str(arb::CBuffer::e_double)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_exchange, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_exchange)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel, arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, arb::CAccel::e_full, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_method, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_method)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_alpha,  8, (_pc_sz) arb::CColor::To_str(arb::CColor::e_alpha)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_color, 32, (_pc_sz) arb::CColor::To_str(arb::CColor::e_color)));
+	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_depth, 24, (_pc_sz) arb::CColor::To_str(arb::CColor::e_depth)));
 }
