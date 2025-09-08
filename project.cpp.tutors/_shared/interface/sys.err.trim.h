@@ -99,6 +99,7 @@ namespace shared { namespace sys_core {
 		CString  m_space ;  // name space full path; mostly used for global functions that is defined outside of structure or class; 
 	};
 #endif
+	// https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes ;
 	class CErr_State : public CErr_Base {
 	                  typedef CErr_Base TBase;
 	protected:

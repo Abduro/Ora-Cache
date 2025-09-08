@@ -204,7 +204,11 @@ CDevice& context::CDevice::operator <<(const HWND _h_wnd) {
 #include "open_gl_tutor.0.fake.h"
 #pragma comment(lib, "gl.tutor.0.fake.lib") // this is required due to the fake window is used in the first step;
 
-CContext:: CContext (void) { TBase::m_error >>__CLASS__<<__METHOD__<< __e_not_inited; }
+#include "gl_format.h"
+
+using namespace ex_ui::draw::open_gl::format;
+
+CContext:: CContext (void) : m_drw_ctx(0) { TBase::m_error >>__CLASS__<<__METHOD__<< __e_not_inited; }
 CContext::~CContext (void) {}
 
 err_code   CContext::Create (const HWND h_target) {
@@ -226,6 +230,71 @@ err_code   CContext::Create (const HWND h_target) {
 		return TBase::m_error() = this->Cache().Error();
 
 	// (4) gets context;
+	// (4.a) get target window context device first;
+	CTarget target;
+	if (__failed(target.Set(h_target)) || false == target.Is_valid())
+		return TBase::m_error = target.Error();
+
+	// (4.b) chooses the pixel format first;
+	CAtt_set_pixels pxl_atts; // no error check for this time yet;
+
+	uint32_t n_count = 0;
+	int32_t p_formats = 0;
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ; this file contains the function description;
+	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) ; << there is the example of how to use the function;
+
+	const int32_t n_result = this->Cache().ChoosePxFormatArb(
+		target.Get(), pxl_atts.IAtt_Get_Int_Ptr(), nullptr, 1, &p_formats, &n_count
+	);
+
+#define btns_info (MB_OK|MB_ICONINFORMATION)
+#define btns_warn (MB_OK|MB_ICONEXCLAMATION)
+
+	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	CString cs_fmts = TString().Format(_T("formats: %u; count: %u;"), p_formats, n_count);
+
+	bool b_can_go_ahead = false;
+
+	if (0 == n_result) { // the failure has occurs: the format cannot be chosen for creating the context;
+		if (this->Cache().Error()) { // checks for failure of loading the function pointer;
+			this->Cache().Error().Show();
+			TBase::m_error() = this->Cache().Error();
+		}
+		else { // otherwise checks the OpenGL error that has been thrown;
+			TBase::m_error.Get_last();
+			TBase::m_error().Show();
+		}
+	}
+	else if (nullptr != &p_formats && true == !!n_count) {}
+	else { b_can_go_ahead = true; }
+
+	::MessageBox(
+			0, (_pc_sz) cs_fmts,
+			   (_pc_sz) cs_cap , btns_info
+		);
+	::MessageBox(
+			0, (_pc_sz) pxl_atts.Print(),
+			   (_pc_sz) cs_cap , btns_info
+		);
+
+	if (false == b_can_go_ahead)
+		return TBase::Error();
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-describepixelformat ;
+	PIXELFORMATDESCRIPTOR pfd = {0};
+	if (0 == ::DescribePixelFormat(target.Get(), p_formats, sizeof(PIXELFORMATDESCRIPTOR), &pfd))
+		return this->m_error().Last();
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setpixelformat ;
+	if (false ==!!::SetPixelFormat(target.Get(), p_formats, &pfd))
+		return this->m_error().Last();
+
+	CAtt_set_ctx ctx_atts;
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
+	this->m_drw_ctx = this->Cache().CreateCtxAttsArb(target.Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
+	if (nullptr == this->m_drw_ctx) {
+		return TBase::m_error.Last(); // the excerpt: Extended error information can be obtained with GetLastError().
+	}
 
 	return TBase::Error();
 }

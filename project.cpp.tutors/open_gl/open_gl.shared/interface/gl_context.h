@@ -20,7 +20,7 @@ namespace context {
 		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
 		~CBase (void);
 
-		 TErr_ex& Error (void) const;
+		 TErr_ex&  Error (void) const;
 
 	private:
 		 CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
@@ -90,10 +90,13 @@ namespace context {
 		 procs::CContext& Cache (void) const;
 		 procs::CContext& Cache (void) ;
 
+		 err_code Destroy(void); // this function must be in parent class obviously, but for current version of the implementation it is here;
+
 	private:
 		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
 
 		 procs::CContext  m_fn_cache;
+		 HGLRC  m_drw_ctx; // rendering context that is compatible with regular GDI; >> it looks like to be in the base class, but not for now;
 	};
 }}}
 

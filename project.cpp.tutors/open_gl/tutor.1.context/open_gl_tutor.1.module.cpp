@@ -93,11 +93,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}
-#if (0)
+#if (1)
+		else
 		::MessageBox(
-			HWND_DESKTOP, TString().Format(_T("Loaded functions:\n%s"), (_pc_sz)ctx.Cache().Print()), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK
+			HWND_DESKTOP, TString().Format(_T("Ctx is created: %s"), _T("successfully;")), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK
 		);
-
+#endif
 		// (3) getting *real* version information of openGL that is installed in MS Windows; *important*: OpenGL draw renderer context must be current;
 		CVersion ver;
 		if (ver.Error()) {
@@ -109,7 +110,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		::MessageBox(
 			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
 		);
-#endif
+
 		b_error = false;
 
 	} while (true == false);

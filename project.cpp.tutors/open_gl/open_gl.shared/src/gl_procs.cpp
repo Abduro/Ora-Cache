@@ -82,11 +82,13 @@ int32_t CContext::ChoosePxFormatArb (HDC _h_dc, const int* _p_atts_i, const floa
 	_h_dc; _p_atts_i; _p_atts_f; _n_max_formats; _p_formats; _p_fmt_count;
 	CBase::m_error << __METHOD__ << __s_ok;
 
-	int32_t n_result = 0;
-
+	int32_t n_result = 0; // this is the failure result; in case of unsuccessful loading the function it will be returned to the caller;
+	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) ;
+	// this is the function for creating draw renderer context;
+	// it returns: 0 - this is the failure, otherwise the result value >0, that means success;
 	pfn_ChoosePxFormatArb p_fun = reinterpret_cast<pfn_ChoosePxFormatArb>(CBase::Get(_T("wglChoosePixelFormatARB")));
 	if (nullptr == p_fun)
-		return n_result; // needs to be figured out of what result should be returned in case of failure;
+		return n_result; // needs to be figured out of what result should be returned in case of failure; (done)
 
 	n_result = p_fun(_h_dc, _p_atts_i, _p_atts_f, _n_max_formats, _p_formats, _p_fmt_count);
 	return n_result;

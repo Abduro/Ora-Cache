@@ -6,14 +6,12 @@
 */
 #include <vector>
 #include "gl_defs.h"
-#include "shared.props.h"
+#include "shared.dbg.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	// https://agrawalsuneet.github.io/blogs/enum-vs-enum-class-in-c++/ ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/enumerations-cpp ;
-
-	using CProperty = shared::common::CProperty; // still be useless for the time being;
 
 namespace format {
 
@@ -158,6 +156,17 @@ namespace arb {
 	};
 
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CSupport : private no_copy {
+	public:
+		enum e_tokens : uint16_t {
+		e_gdi    = 0x200F, // WGL_SUPPORT_GDI_ARB ; 'true' if GDI rendering is supported;
+		e_opengl = 0x2010, // WGL_SUPPORT_OPENGL_ARB ; 'true' if OpenGL is supported; *important*: it must be passed on choosing color format for context creation;
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
 	class CSwap : private no_copy {
 	public:
 		enum e_tokens : uint16_t {
@@ -202,6 +211,8 @@ namespace arb {
 		err_code Append (const CAtt&); //  no check for attributes duplication; adds the input attribute to the internal cache;
 		err_code Append (const uint32_t _u_key, uint32_t _u_val, _pc_sz _p_name);
 
+		CString  Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n")) const;
+
 	public:
 		CAtt_set_base& operator += (const CAtt&);
 
@@ -211,6 +222,13 @@ namespace arb {
 		mutable TRawAtts_Flt m_raw_flt; // this vector must have the last element as (float)0.0;
 	};
 
+	class CAtt_set_ctx : public CAtt_set_base { typedef CAtt_set_base TBase;
+	public:
+		CAtt_set_ctx (void) ; // creates the set;
+	};
+
+	// this is minimal attribute set which is required for creating OpenGL render context;
+	// *important*: arb::CSupport::e_opengl is required for being included, otherwise 'wglChoosePixelFormatARB' fails;
 	class CAtt_set_pixels : public CAtt_set_base { typedef CAtt_set_base TBase;
 	public:
 		CAtt_set_pixels (void) ; // creates the set;

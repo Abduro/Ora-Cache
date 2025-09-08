@@ -51,6 +51,20 @@ CString  CAtt::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 
+_pc_sz   CAtt::Name (void) const { return (_pc_sz)this->m_name; }
+bool     CAtt::Name (_pc_sz _p_name) {
+	_p_name;
+	if (nullptr == _p_name)
+		return false;
+	CString cs_name(_p_name); cs_name.Trim();
+
+	const bool b_changed = (cs_name.IsEmpty() == false && true == !!this->m_name.CompareNoCase(cs_name));
+	if (b_changed)
+		this->m_name = cs_name;
+
+	return b_changed;
+}
+
 CAtt& CAtt::operator = (const CAtt& _src) { *this >> _src.Key() << _src.Value() << _src.Name(); return *this; }
 CAtt& CAtt::operator = (CAtt&& _victim) { *this = const_cast<CAtt&>(_victim);  return *this; }
 
@@ -64,13 +78,23 @@ CAtt& CAtt::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
 CString CAccel::To_str (const e_tokens _e_value) {
 	_e_value;
 	switch (_e_value) {
-	case CAccel::e_tokens::e_full : return CString(_T("__wgl_full_accel_arb")); break;
-	case CAccel::e_tokens::e_none : return CString(_T("__wgl_none_accel_arb")); break;
-	case CAccel::e_tokens::e_norm : return CString(_T("__wgl_generic_accel_arb")); break;
-	case CAccel::e_tokens::e_supp : return CString(_T("__wgl_support_accel_arb")); break;	
+	case CAccel::e_tokens::e_full : return CString(_T("__wgl_accel_full_arb")); break;
+	case CAccel::e_tokens::e_none : return CString(_T("__wgl_accel_none_arb")); break;
+	case CAccel::e_tokens::e_norm : return CString(_T("__wgl_accel_generic_arb")); break;
+	case CAccel::e_tokens::e_supp : return CString(_T("__wgl_accel_support_arb")); break;	
 	}
 	return CString(_T("#undef"));
 }
+
+CString CBuffer::To_str (const e_tokens _e_value) {
+	_e_value;
+	switch (_e_value) {
+	case CBuffer::e_tokens::e_double : return CString(_T("__wgl_buffer_double_arb")); break;
+	case CBuffer::e_tokens::e_stereo : return CString(_T("__wgl_buffer_stereo_arb")); break;
+	}
+	return CString(_T("#undef"));
+}
+
 
 CString CColor::To_str (const e_tokens _e_value) {
 	_e_value;
@@ -125,6 +149,15 @@ CString CSample::To_str (const CSample::e_tokens _e_value) {
 	switch (_e_value) {
 	case CSample::e_tokens::e_multi : return CString(_T("__wgl_sample_multi_arb")); break;
 	case CSample::e_tokens::e_count : return CString(_T("__wgl_sample_count_arb")); break;
+	}
+	return CString(_T("#undef"));
+}
+
+CString CSupport::To_str (const CSupport::e_tokens _e_value) {
+	_e_value;
+	switch (_e_value) {
+	case CSupport::e_tokens::e_gdi    : return CString(_T("__wgl_support_gdi_arb")); break;
+	case CSupport::e_tokens::e_opengl : return CString(_T("__wgl_support_opengl_arb")); break;
 	}
 	return CString(_T("#undef"));
 }
@@ -218,22 +251,64 @@ err_code CAtt_set_base::Append (const uint32_t _u_key, uint32_t _u_val, _pc_sz _
 	return this->Append(att);
 }
 
+CString  CAtt_set_base::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%s%s}");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%s%s}");
+	static _pc_sz pc_sz_pat_r = _T("{%s%s%s}");
+
+	CString cs_atts;
+	if (m_atts.empty() == true) {
+		cs_atts = TString().Format(_T("%s#empty"), _p_pfx);
+	}
+	else {
+		for (uint32_t i_ = 0; i_ < this->m_atts.size(); i_++) {
+			const CAtt& att = this->m_atts.at(i_);
+			cs_atts += _p_pfx;
+			cs_atts += att.Print(e_print::e_req);
+			if (i_ < this->m_atts.size() - 1)
+			cs_atts += _p_sfx;
+		}
+	}
+
+	CString cs_out;
+	if (e_print::e_all   == _e_opt) { cs_out.Format(pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _p_sfx, (_pc_sz)cs_atts, _p_sfx); }
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format(pc_sz_pat_n, (_pc_sz)__CLASS__, _p_sfx, (_pc_sz)cs_atts, _p_sfx); }
+	if (e_print::e_req   == _e_opt) { cs_out.Format(pc_sz_pat_r, _p_sfx, (_pc_sz)cs_atts, _p_sfx); }
+
+	if (cs_out.IsEmpty())
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg==%d);"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+
+	return  cs_out;
+}
+
 CAtt_set_base& CAtt_set_base::operator += (const CAtt& _att) { this->Append(_att); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
+CAtt_set_ctx:: CAtt_set_ctx (void) : TBase() {
+
+	err_code n_result = __s_ok;
+
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_major, 3, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_major)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_minor, 0, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_minor)));
+	if (__is_okay(n_result)) n_result = TBase::Append(
+		CAtt(arb::CContext::CProfile::e_mask, arb::CContext::CProfile::e_core, (_pc_sz) arb::CContext::CProfile::To_str(arb::CContext::CProfile::e_mask)));
+}
+
 CAtt_set_pixels:: CAtt_set_pixels (void) : TBase() {
 
 	err_code n_result = __s_ok;
-	// -----------------------------------------------------+     att key   -+-   att value   -+-  att name ;  
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CDraw::e_window, _gl_true, (_pc_sz) arb::CDraw::To_str(arb::CDraw::e_window)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, _gl_true, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CBuffer::e_double, _gl_true, (_pc_sz) arb::CBuffer::To_str(arb::CBuffer::e_double)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_exchange, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_exchange)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel, arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, arb::CAccel::e_full, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_method, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_method)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_alpha,  8, (_pc_sz) arb::CColor::To_str(arb::CColor::e_alpha)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_color, 32, (_pc_sz) arb::CColor::To_str(arb::CColor::e_color)));
-	if (__succeeded(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_depth, 24, (_pc_sz) arb::CColor::To_str(arb::CColor::e_depth)));
+	// -----------------------------------------------------+     att key   -+-   att value   -+-  att name ;
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CDraw::e_window, _gl_true, (_pc_sz) arb::CDraw::To_str(arb::CDraw::e_window)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSupport::e_opengl, _gl_true, (_pc_sz) arb::CSupport::To_str(arb::CSupport::e_opengl)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, _gl_true, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CBuffer::e_double, _gl_true, (_pc_sz) arb::CBuffer::To_str(arb::CBuffer::e_double)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_exchange, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_exchange)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel, arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, arb::CAccel::e_full, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_method, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_method)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_alpha,  8, (_pc_sz) arb::CColor::To_str(arb::CColor::e_alpha)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_color, 32, (_pc_sz) arb::CColor::To_str(arb::CColor::e_color)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_depth, 24, (_pc_sz) arb::CColor::To_str(arb::CColor::e_depth)));
 }
