@@ -98,9 +98,15 @@ namespace arb {
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
 	class CContext : private no_copy {
 	public:
+		// WGL_CONTEXT_FLAGS ;
+		enum e_tokens : uint16_t {
+		     e_flags   = 0x2094, // WGL_CONTEXT_FLAGS_ARB ; this is the att token; the acceptable tokens for getting values are listed below;
+		};
+
+		static CString To_str (const e_tokens);
+
 		class CDebug : private no_copy {
 		public:
-			// WGL_CONTEXT_FLAGS ;
 			enum e_tokens : uint16_t {
 			e_debug   = 0x0001, // WGL_CONTEXT_DEBUG_BIT_ARB ; att value: a high-level description of the concept of "debug contexts";
 			e_forward = 0x0002, // WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB ; att value: a <forward-compatible> context will be created;
@@ -124,8 +130,8 @@ namespace arb {
 		class CVersion : private no_copy {
 		public:
 			enum e_tokens : uint16_t {
-			e_major = 0x2091, // WGL_CONTEXT_MAJOR_VERSION_ARB ; the actual major number of the version supported by a context;
-			e_minor = 0x2092, // WGL_CONTEXT_MINOR_VERSION_ARB ; the actual minor number of the version supported by a context;
+			e_major = 0x2091, // WGL_CONTEXT_MAJOR_VERSION_ARB ; att value: the actual major number of the version supported by a context;
+			e_minor = 0x2092, // WGL_CONTEXT_MINOR_VERSION_ARB ; att value: the actual minor number of the version supported by a context;
 			};
 
 			static CString To_str (const e_tokens);
@@ -224,7 +230,7 @@ namespace arb {
 
 	class CAtt_set_ctx : public CAtt_set_base { typedef CAtt_set_base TBase;
 	public:
-		CAtt_set_ctx (void) ; // creates the set;
+		CAtt_set_ctx (const uint32_t _u_major = 1, const uint32_t _u_minor = 1) ; // creates the set;
 	};
 
 	// this is minimal attribute set which is required for creating OpenGL render context;

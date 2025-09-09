@@ -186,6 +186,8 @@
     <ClCompile Include="$(_1)shared.wnd.res.cpp" />
     <ClInclude Include="$(_0)win.gui.wnd.h" />
     <ClCompile Include="$(_1)win.gui.wnd.cpp" />
+    <ClInclude Include="$(_0)win.gui.wnd.layout.h" />
+    <ClCompile Include="$(_1)win.gui.wnd.layout.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Manifest  Include="$(_0)win.gui.app.manifest" />

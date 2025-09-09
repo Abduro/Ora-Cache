@@ -15,14 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)win.gui.wnd.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)win.gui.wnd.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.base.h"><Filter>interface\window</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.wnd.base.cpp"><Filter>src\window</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.layout.h"><Filter>interface\window</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.wnd.layout.cpp"><Filter>src\window</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.res.h"><Filter>interface\window</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.wnd.res.cpp"><Filter>src\window</Filter></ClCompile>
+    <ClInclude Include="$(_0)win.gui.wnd.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)win.gui.wnd.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)win.gui.wnd.layout.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)win.gui.wnd.layout.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest  Include="$(_0)win.gui.app.manifest"><Filter>interface</Filter></Manifest>

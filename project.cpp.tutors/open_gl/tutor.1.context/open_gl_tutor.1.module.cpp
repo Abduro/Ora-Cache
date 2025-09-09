@@ -68,8 +68,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		t_rect rect_wnd = {0};
 		::GetWindowRect(app_wnd.Handle(), &rect_wnd);
 
-		app_wnd.Layout().Size().Ref() = t_size{__W(rect_wnd), __H(rect_wnd)};
-		app_wnd.Layout().Size().Is_locked(true);
+		app_wnd().Layout().Size().Is_locked(true);
+		app_wnd().Layout().Size().Ref() = t_size{__W(rect_wnd), __H(rect_wnd)};
 
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 		app_wnd.Set_visible(true);
@@ -89,7 +89,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		CContext ctx;
 		// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
 		// the error *always* occurs on RDP of MS Windows;
-		if (__failed(ctx.Create(w_target.Handle()))) {
+		if (__failed(ctx.Create(w_target.Handle(), 3, 3))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}

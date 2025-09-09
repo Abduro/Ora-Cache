@@ -62,7 +62,7 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 	t_size cl_size = CRatios().Get().at(0);
 	t_rect cl_rect = CPrimary().Centered(t_size_u{(uint32_t)cl_size.cx, (uint32_t)cl_size.cy});
 #else
-	t_rect rc_pos  = CPrimary().Centered(t_size_u{uint32_t(CRatios().Get().at(0).cx), uint32_t(CRatios().Get().at(0).cy)});
+	t_rect rc_pos  = layout::CPrimary().Centered(layout::t_size_u{uint32_t(layout::CRatios().Get().at(0).cx), uint32_t(layout::CRatios().Get().at(0).cy)});
 #endif
 	TBase::Styles().Default_for_app();
 
@@ -89,3 +89,11 @@ err_code CAppWnd::Destroy (void) {
 const
 CFrame&  CAppWnd::Frame (void) const { return this->m_frame; }
 CFrame&  CAppWnd::Frame (void)       { return this->m_frame; }
+
+const
+shared::out::CLayout& CAppWnd::Layout(void) const { return this->m_layout; }
+shared::out::CLayout& CAppWnd::Layout(void)       { return this->m_layout; }
+
+const
+CAppWnd::TBase& CAppWnd::operator ()(void) const { return (const TBase&)*this; }
+CAppWnd::TBase& CAppWnd::operator ()(void) { return (TBase&)*this; }

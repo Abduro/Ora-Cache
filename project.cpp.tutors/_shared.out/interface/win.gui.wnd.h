@@ -8,13 +8,15 @@
 #include "shared.wnd.res.h"
 #include "shared.wnd.layout.h"
 
+#include "win.gui.wnd.layout.h"
+
 namespace shared { namespace out {
 
 	using namespace shared::defs;
 	using namespace shared::types;
 
 	using namespace ex_ui::popup;
-	using namespace ex_ui::popup::layout;
+//	using namespace ex_ui::popup::layout;
 
 	using CWindow = ::ATL::CWindow;
 
@@ -67,11 +69,20 @@ namespace shared { namespace out {
 		const
 		CFrame&  Frame (void) const;
 		CFrame&  Frame (void) ;
+		// overriding the methods of the base class hides the specifics of the layouts to which the reference is returned; must be reviewed;
+		const
+		shared::out::CLayout& Layout (void) const;
+		shared::out::CLayout& Layout (void) ;
+
+		const
+		TBase& operator ()(void) const;
+		TBase& operator ()(void) ;
 
 	private:
 		CAppWnd& operator = (const CAppWnd&) = delete; CAppWnd& operator = (CAppWnd&&) = delete;
 
-		CFrame m_frame;
+		CFrame  m_frame ;
+		shared::out::CLayout m_layout;
 	};
 
 }}

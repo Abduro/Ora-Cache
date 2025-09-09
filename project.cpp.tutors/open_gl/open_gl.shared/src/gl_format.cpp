@@ -95,13 +95,20 @@ CString CBuffer::To_str (const e_tokens _e_value) {
 	return CString(_T("#undef"));
 }
 
-
 CString CColor::To_str (const e_tokens _e_value) {
 	_e_value;
 	switch (_e_value) {
 	case CColor::e_tokens::e_alpha : return CString(_T("__wgl_alpha_bits_arb")); break;
 	case CColor::e_tokens::e_color : return CString(_T("__wgl_color_bits_arb")); break;
 	case CColor::e_tokens::e_depth : return CString(_T("__wgl_depth_bits_arb")); break;
+	}
+	return CString(_T("#undef"));
+}
+
+CString CContext::To_str (const e_tokens _e_value) {
+	_e_value;
+	switch (_e_value) {
+	case CContext::e_tokens::e_flags   : return CString(_T("__wgl_ctx_flags_arb")); break;
 	}
 	return CString(_T("#undef"));
 }
@@ -286,29 +293,30 @@ CAtt_set_base& CAtt_set_base::operator += (const CAtt& _att) { this->Append(_att
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAtt_set_ctx:: CAtt_set_ctx (void) : TBase() {
+CAtt_set_ctx:: CAtt_set_ctx (const uint32_t _u_major/* = 1*/, const uint32_t _u_minor/* = 1*/) : TBase() {
 
 	err_code n_result = __s_ok;
 
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_major, 3, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_major)));
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_minor, 0, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_minor)));
-	if (__is_okay(n_result)) n_result = TBase::Append(
-		CAtt(arb::CContext::CProfile::e_mask, arb::CContext::CProfile::e_core, (_pc_sz) arb::CContext::CProfile::To_str(arb::CContext::CProfile::e_mask)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_major, _u_major, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_major)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_minor, _u_minor, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_minor)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(
+//		CAtt(arb::CContext::CProfile::e_mask, arb::CContext::CProfile::e_core, (_pc_sz) arb::CContext::CProfile::To_str(arb::CContext::CProfile::e_mask)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::e_flags, 0, (_pc_sz) arb::CContext::To_str(arb::CContext::e_flags)));
 }
 
 CAtt_set_pixels:: CAtt_set_pixels (void) : TBase() {
 
 	err_code n_result = __s_ok;
-	// -----------------------------------------------------+     att key   -+-   att value   -+-  att name ;
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CDraw::e_window, _gl_true, (_pc_sz) arb::CDraw::To_str(arb::CDraw::e_window)));
+	// -----------------------------------------------------+   att key   ---+---   att value   ---+---  att name ---+ ;
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CDraw::e_window   , _gl_true, (_pc_sz) arb::CDraw::To_str(arb::CDraw::e_window)));
 	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSupport::e_opengl, _gl_true, (_pc_sz) arb::CSupport::To_str(arb::CSupport::e_opengl)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, _gl_true, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CBuffer::e_double, _gl_true, (_pc_sz) arb::CBuffer::To_str(arb::CBuffer::e_double)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_exchange, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_exchange)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel, arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp, arb::CAccel::e_full, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_method, arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_method)));
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_alpha,  8, (_pc_sz) arb::CColor::To_str(arb::CColor::e_alpha)));
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_color, 32, (_pc_sz) arb::CColor::To_str(arb::CColor::e_color)));
-	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_depth, 24, (_pc_sz) arb::CColor::To_str(arb::CColor::e_depth)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp    , _gl_true, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CBuffer::e_double , _gl_true, (_pc_sz) arb::CBuffer::To_str(arb::CBuffer::e_double)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_exchange , arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_exchange)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel    , arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp    , arb::CAccel::e_full, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
+//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_method   , arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_method)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_alpha   ,  8, (_pc_sz) arb::CColor::To_str(arb::CColor::e_alpha)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_color   , 32, (_pc_sz) arb::CColor::To_str(arb::CColor::e_color)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_depth   , 24, (_pc_sz) arb::CColor::To_str(arb::CColor::e_depth)));
 }

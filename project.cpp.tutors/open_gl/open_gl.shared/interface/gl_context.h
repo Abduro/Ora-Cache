@@ -91,7 +91,7 @@ namespace context {
 		 CContext (void) ;  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
 		~CContext (void) ;
 
-		 err_code Create (const HWND h_target);
+		 err_code Create (const HWND h_target, const uint32_t _u_gl_major_ver, const uint32_t _u_gl_miner_ver);
 		 const
 		 procs::CContext& Cache (void) const;
 		 procs::CContext& Cache (void) ;

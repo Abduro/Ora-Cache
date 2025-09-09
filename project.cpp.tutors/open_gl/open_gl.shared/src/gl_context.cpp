@@ -230,8 +230,8 @@ using namespace ex_ui::draw::open_gl::format;
 CContext:: CContext (void) : TBase() { TBase::m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
 CContext::~CContext (void) {}
 
-err_code   CContext::Create (const HWND h_target) {
-	h_target;
+err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver, const uint32_t _u_gl_miner_ver) {
+	h_target; _u_gl_major_ver; _u_gl_miner_ver;
 	TBase::m_error() <<__METHOD__<< __s_ok;
 	// (1) Creates the fake window;
 	TFakeWnd fk_wnd;
@@ -272,10 +272,20 @@ err_code   CContext::Create (const HWND h_target) {
 
 	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	CString cs_fmts = TString().Format(_T("formats: %u; count: %u;"), p_formats, n_count);
+#if (0) // wrong way;
+	CString cs_fmt_pairs;
+	int32_t n_fmt_num = 0;
+	int32_t* p_data = &p_formats;
 
+	while (n_count > 0 && !!p_formats) {
+		cs_fmt_pairs += TString().Format(_T("att #%u: id=%u;val=%u;"), n_fmt_num, &p_data[n_fmt_num + 0], &p_data[n_fmt_num + 1]);
+		n_fmt_num += 1;
+		n_count -= 2;
+	}
+#endif
 	bool b_can_go_ahead = false;
 
-	if (0 == n_result) { // the failure has occurs: the format cannot be chosen for creating the context;
+	if (0 == n_result) { // the failure has occurred: the format cannot be chosen for creating the context;
 		if (this->Cache().Error()) { // checks for failure of loading the function pointer;
 			this->Cache().Error().Show();
 			TBase::m_error() = this->Cache().Error();
@@ -308,11 +318,22 @@ err_code   CContext::Create (const HWND h_target) {
 	if (false ==!!::SetPixelFormat(TBase::Target().Get(), p_formats, &pfd))
 		return TBase::m_error().Last();
 
-	CAtt_set_ctx ctx_atts;
+	const uint32_t u_major_ver = _u_gl_major_ver;
+	const uint32_t u_minor_ver = _u_gl_miner_ver;
+
+	CAtt_set_ctx ctx_atts(u_major_ver, u_minor_ver);
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
 	this->m_drw_ctx = this->Cache().CreateCtxAttsArb(TBase::Target().Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
 	if (nullptr == this->m_drw_ctx) {
 		return TBase::m_error().Last(); // the excerpt: Extended error information can be obtained with GetLastError().
+	}
+
+	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
+		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		::MessageBox(
+			0, (_pc_sz) _T("wglMakeCurrent is failed") ,
+			   (_pc_sz) cs_cap , btns_warn
+		);
 	}
 
 	return TBase::Error()();
