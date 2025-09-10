@@ -66,6 +66,8 @@ err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 			}
 			// https://stackoverflow.com/questions/1825868/how-to-prevent-window-resizing-temporarily ;
 		} break;
+	default:
+		TBase::IMsg_OnMessage(_u_code, _w_param, _l_param); // it is ***mandatory***, otherwise not handled messages will be lost;
 	}
 
 	return n_result;

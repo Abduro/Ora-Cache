@@ -427,7 +427,7 @@ bool  CWndBase::Is_valid (void) const {
 }
 
 bool  CWndBase::Is_top (void) const {
-	return !!(this->Styles().Std() & WS_CHILD);
+	return 0 == (this->Styles().Std() & WS_CHILD); // it is assumed that all child windows has this style flag, the main window doesn't;
 }
 
 void  CWndBase::Set_visible (const bool _b_state) const {
