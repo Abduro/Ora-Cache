@@ -7,7 +7,9 @@
 using namespace shared::out;
 using namespace shared::out::docking;
 
-CPane:: CPane (void) {}
+CPane:: CPane (void) : m_wnd(0) {}
+
+bool    CPane::Is_valid (void) const { return (0 != this->m_wnd && ::IsWindow(this->m_wnd)); }
 
 const
 CSide&  CPane::Side (void) const { return this->m_side; }
@@ -15,6 +17,18 @@ CSide&  CPane::Side (void)       { return this->m_side; }
 const
 CSize&  CPane::Size (void) const { return this->m_size; }
 CSize&  CPane::Size (void)       { return this->m_size; }
+
+const
+HWND     CPane::Target (void) const { return this->m_wnd; }
+err_code CPane::Target (const HWND _h_target) {
+	_h_target;
+	if (0 == _h_target || false == !!::IsWindow(_h_target))
+		return __e_hwnd;
+
+	this->m_wnd = _h_target;
+
+	return __s_ok;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -44,6 +58,8 @@ bool    CSize::Height (const long _l_value, const CValue::e_ctrl _e_type) {
 	_l_value; _e_type;
 	return this->Height().Set(_l_value, _e_type);
 }
+
+bool CSize::Is_locked (void) const { return (this->Height().Is_fixed() && this->Height().Is_fixed()); }
 
 const
 CValue& CSize::Width (void) const { return this->m_width; }
@@ -98,12 +114,23 @@ bool    CValue::Set (const long _l_value, const e_ctrl _ctrl) {
 }
 
 CValue& CValue::operator <<(const e_ctrl _e_type) { this->Ctrl(_e_type); return *this; }
-CValue& CValue::operator <<(const long _l_value) { this->Set(_l_value); return *this; }  
+CValue& CValue::operator <<(const long _l_value) { this->Set(_l_value); return *this; }
+
+CValue::operator long (void) const { return this->Get(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CLayout:: CLayout (void) {}
 
 const
-CWindow&  CLayout::Main (void) const { return this->m_target; }
-CWindow&  CLayout::Main (void)       { return this->m_target; }
+CPane&  CLayout::Bottom (void) const { return this->m_low; }
+CPane&  CLayout::Bottom (void)       { return this->m_low; }
+
+bool    CLayout::Is_valid (void) const { return this->Bottom().Is_valid() && this->Main().Is_valid() && this->Top().Is_valid(); }
+
+const
+CPane&  CLayout::Main (void) const { return this->m_target; }
+CPane&  CLayout::Main (void)       { return this->m_target; }
+const
+CPane&  CLayout::Top (void) const { return this->m_top; }
+CPane&  CLayout::Top (void)       { return this->m_top; }

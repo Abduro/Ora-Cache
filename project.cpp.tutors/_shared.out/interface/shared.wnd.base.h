@@ -135,6 +135,9 @@ namespace ex_ui { namespace popup {
 		TError&  Error  (void) const;	
 		HWND     Handle (void) const;
 		bool  Is_valid  (void) const;
+
+		bool  Is_top (void) const; // checks it is the top window, i.e. is the main window of the app or not; ToDo: possibly the name must be changed;
+
 		void  Set_visible (const bool) const;
 
 	public:

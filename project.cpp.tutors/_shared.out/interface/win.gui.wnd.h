@@ -59,6 +59,9 @@ namespace shared { namespace out {
 		 CAppWnd (void); CAppWnd (const CAppWnd&) = delete; CAppWnd (CAppWnd&&) = delete;
 		~CAppWnd (void);
 
+	public: // IMsg_Handler impl;
+		err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) override final; // goes first due to its virtuality;
+
 		// window class name should be unique for better distuingwishing between tutorials, e.g. '__direct_x_ctx' or '__open_gl_ctx';
 		// https://www.geeksforgeeks.org/cpp/function-overloading-vs-function-overriding-in-cpp/ ;
 		// no window position rectangle is provided in this version yet; it is assigned automatically by this function;

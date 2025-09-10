@@ -55,7 +55,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	bool b_error = true; // this is for cases when an error occurs and after displaying the error message the message loop is interrupted;
 
 	CAppWnd app_wnd;
-	context::CWnd w_target;
+	context::CWnd wnd_ctx; // the draw context window;
 
 	do {
 
@@ -64,12 +64,21 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
 			app_wnd.Error().Show(); break;
 		}
+		else {
+			const bool b_is_top = app_wnd.Is_top();
+			if (true == b_is_top) {
+			}
+		}
 
 		t_rect rect_wnd = {0};
 		::GetWindowRect(app_wnd.Handle(), &rect_wnd);
 
-		app_wnd().Layout().Size().Is_locked(true);
-		app_wnd().Layout().Size().Ref() = t_size{__W(rect_wnd), __H(rect_wnd)};
+		shared::out::CLayout& layout = app_wnd.Layout();
+
+		// (0.a) sets up the app/main window layer first;
+		layout.Main().Target(app_wnd);
+		layout.Main().Size().Height().Set(__H(rect_wnd), docking::CValue::e_ctrl::e_fixed);
+		layout.Main().Size().Width().Set(__W(rect_wnd), docking::CValue::e_ctrl::e_fixed);  // if both height and width is fixed, the size is locked;
 
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 		app_wnd.Set_visible(true);
@@ -81,15 +90,18 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect ;
 		::InflateRect(&rc_client, -0x4, -0x4); // no check for error this time;
 
-		if (__failed(w_target.Create(app_wnd.Handle(), rc_client, true))) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) w_target.Error().Print(TError::e_req));
-			w_target.Error().Show(); break;
+		// (1) creates the context target window;
+		if (__failed(wnd_ctx.Create(app_wnd.Handle(), rc_client, true))) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_ctx.Error().Print(TError::e_req));
+			wnd_ctx.Error().Show(); break;
 		}
+		else
+			layout.Top().Target(wnd_ctx);
 
 		CContext ctx;
 		// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
 		// the error *always* occurs on RDP of MS Windows;
-		if (__failed(ctx.Create(w_target.Handle(), 3, 3))) {
+		if (__failed(ctx.Create(wnd_ctx.Handle(), 3, 3))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}
@@ -115,7 +127,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	} while (true == false);
 
-	if (b_error != false)
+	if (b_error != false) // goes to message loop and waits the app window will be closed;
 		msg.message = WM_QUIT;
 
 	while( WM_QUIT != msg.message ) {

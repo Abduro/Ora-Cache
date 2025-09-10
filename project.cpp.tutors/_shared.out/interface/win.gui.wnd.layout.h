@@ -14,6 +14,12 @@ namespace shared { namespace out {
 
 namespace docking {
 
+	// it is *very* simplified version of the arranging child windows of the main main/app window;
+	// the MFC docking framework is taken as a sample or prototype:
+	// https://learn.microsoft.com/en-us/cpp/mfc/reference/cdockingmanager-class ;
+	
+	// https://learn.microsoft.com/en-us/cpp/mfc/reference/cdocksite-class ;
+
 	class CSide {
 	public:
 		enum e_sides : uint32_t {
@@ -60,6 +66,9 @@ namespace docking {
 		CValue& operator <<(const e_ctrl);  // sets the value control type;
 		CValue& operator <<(const long);    // sets the value;
 
+		
+		operator long (void) const;
+
 	private:
 		CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
 		e_ctrl  m_ctrl ;
@@ -76,6 +85,8 @@ namespace docking {
 		CValue& Height (void) ;
 		bool    Height (const long _l_value, const CValue::e_ctrl); // returns 'true' in case if the value or control type is changed;
 
+		bool Is_locked (void) const; // returns 'true' in case both attributes (height|width) is fixed;
+
 		const
 		CValue& Width  (void) const;
 		CValue& Width  (void) ;
@@ -90,10 +101,13 @@ namespace docking {
 		CValue m_width;
 	};
 
+	// https://learn.microsoft.com/en-us/cpp/mfc/reference/cdockablepane-class ; as prototype for the CPane;
+
 	class CPane {
 	public:
 		CPane (void); CPane (const CPane&) = delete; CPane (CPane&&) = delete; ~CPane (void) = default;
 
+		bool Is_valid (void) const; // checks the attached window handle;
 		const
 		CSide& Side (void) const;
 		CSide& Side (void) ;
@@ -101,49 +115,59 @@ namespace docking {
 		CSize& Size (void) const;
 		CSize& Size (void) ;
 
+		const HWND Target (void) const;
+		err_code   Target (const HWND);   // sets the target window handle; returns error in case of window handle being attached is invalid;
+
 	private:
 		CPane& operator = (const CPane&) = delete;
 		CPane& operator = (CPane&&) = delete;
 
+		HWND   m_wnd ;
+
 		CSide  m_side;
 		CSize  m_size;
 	};
-
 }
 
 	// this version of the layout implementation supports two components only:
 	// (a) a window in the top part of the client area, this is the child window of graphics output: DirectX and OpenGL tutorials;
 	// (b) a window in the bottom part of the client area, this is the debug output console; (text mode);
 	class CLayout {
+	using CPane = docking::CPane;
 	public:
 		 CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
 		~CLayout (void) = default;
 
-		 const
-		 CWindow& Main (void) const; // returns the reference to the target window which client area is adjusted by this layout; (ro);
-		 CWindow& Main (void) ;      // returns the reference to the target window which client area is adjusted by this layout; (rw);
-		 
 		 // https://thecontentauthority.com/blog/below-vs-bottom ;
 		 // https://www.abbreviations.com/abbreviation/bottom ;
 		 const
-		 CWindow& Bottom (void) const;
-		 CWindow& Bottom (void) ;
+		 CPane& Bottom (void) const;
+		 CPane& Bottom (void) ;
+
+		 err_code Default (void) ; // creates default layout by arranging the two (top|bottom) panes whithin the main one;
+
+		 // https://english.stackexchange.com/questions/14694/what-is-the-difference-between-adjust-settle-and-arrange ;
+		 bool   Is_valid  (void) const ; // just validates all panes; in any case the arrangement will be made on the panes that are valid;
+
+		 const
+		 CPane& Main (void) const; // returns the reference to the target window which client area is adjusted by this layout; (ro);
+		 CPane& Main (void) ;      // returns the reference to the target window which client area is adjusted by this layout; (rw);
 
 		 // https://forum.wordreference.com/threads/bottom-lower-and-top-upper.2453408/ ; << good explaining;
 		 // Google AI: 'Top' can be considered more *absolute*, referring to a singular point, whereas 'upper' is relative..."
 
 		 const
-		 CWindow& Top (void) const;
-		 CWindow& Top (void) ;
+		 CPane& Top (void) const;
+		 CPane& Top (void) ;
 
 	private:
 		 CLayout& operator = (const CLayout&) = delete;
 		 CLayout& operator = (CLayout&&) = delete;
 
-		 CWindow  m_low;
-		 CWindow  m_top;
+		 CPane  m_low;
+		 CPane  m_top;
 
-		 CWindow  m_target;   // actually, it is the main window of the tutorial app;
+		 CPane  m_target;   // actually, it is the main window of the tutorial app;
 	};
 
 }}

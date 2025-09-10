@@ -197,6 +197,27 @@ namespace ex_ui { namespace popup { namespace _impl {
 		case WM_CLOSE  :
 		case WM_DESTROY: {
 			n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
+#if (1)
+	#define btns_info (MB_OK|MB_ICONINFORMATION)
+
+	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	CString cs_msg ;
+
+	switch (_msg_id) {
+	case WM_CREATE : cs_msg = _T("wm_create"); break;
+	case WM_CLOSE  : cs_msg = _T("wm_close"); break;
+	case WM_DESTROY: cs_msg = _T("wm_destroy"); break;
+	default:
+		cs_msg = _T("#undef");
+	}
+
+	cs_msg.Format (_T("On message=%s"), (_pc_sz)cs_msg);
+
+	::MessageBox(
+			0, (_pc_sz) cs_msg,
+			   (_pc_sz) cs_cap , btns_info
+		);
+#endif
 		} break;
 		case WM_KEYDOWN: break;
 		case WM_WINDOWPOSCHANGING: {
@@ -299,33 +320,39 @@ CWndBase::~CWndBase (void) {
 
 err_code CWndBase::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
-	err_code n_result = __s_ok;
-
+	err_code n_result = __s_false; // not handled;
 	switch (_u_code) {
 	case WM_CREATE : {} break; // does nothing; this->Create() function subscribes to message router in case of success;
 	case WM_CLOSE  : {
-			this->Destroy();   // unsubscribes and destroys itself; this base window implementation does not show any prompt;
+			// unsubscribes and destroys itself; this base window implementation does not show any prompt;
+			if (__succeeded(this->Destroy()))
+				n_result = __s_ok; // this message is handled;
 		} break;
 	case WM_DESTROY: {
 		} break;
-	case WM_WINDOWPOSCHANGING: { // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging ;
-			_w_param;  // not used;
-			WINDOWPOS* p_wnd_pos = reinterpret_cast<WINDOWPOS*>(_l_param);
-			if (nullptr != p_wnd_pos) {
-#if (0)
-				__trace_info(_T("x=%d;y=%d;cx=%d;cy=%d"), p_wnd_pos->x, p_wnd_pos->y, p_wnd_pos->cx, p_wnd_pos->cy);
-#endif
-				if (this->Layout().Size().Is_locked()) {
-					p_wnd_pos->cx = this->Layout().Size().Ref().cx;
-					p_wnd_pos->cy = this->Layout().Size().Ref().cy;
-					n_result = __s_ok; // handled;
-				}
-			}
-			else
-				n_result = __s_false; // not handled;
-			// https://stackoverflow.com/questions/1825868/how-to-prevent-window-resizing-temporarily ;
-		} break;
 	}
+
+#if (1)
+	#define btns_info (MB_OK|MB_ICONINFORMATION)
+
+	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	CString cs_msg ;
+
+	switch (_u_code) {
+	case WM_CREATE : cs_msg = _T("wm_create"); break;
+	case WM_CLOSE  : cs_msg = _T("wm_close"); break;
+	case WM_DESTROY: cs_msg = _T("wm_destroy"); break;
+	default:
+		cs_msg = _T("#undef");
+	}
+
+	cs_msg.Format (_T("On message=%s"), (_pc_sz)cs_msg);
+
+	::MessageBox(
+			0, (_pc_sz) cs_msg,
+			   (_pc_sz) cs_cap , btns_info
+		);
+#endif
 
 	return n_result;
 }
@@ -362,6 +389,8 @@ err_code CWndBase::Destroy (void) {
 	if (this->Is_valid() == false)
 		return this->Error();   // no error, just returns 'success';
 
+	const bool b_is_top = this->Is_top();
+
 	::Get_router().Unsubscribe(this->Handle());
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
@@ -371,7 +400,19 @@ err_code CWndBase::Destroy (void) {
 		this->m_error << __e_not_inited;
 		this->m_h_wnd = 0;
 
+		if (b_is_top) {
+#if (1)
+		#define btns_info (MB_OK|MB_ICONINFORMATION)
+		CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		CString cs_msg = TString().Format(_T("is_top: %s;"), _T("true"));
+
+		::MessageBox(
+			0, (_pc_sz) cs_msg,
+			   (_pc_sz) cs_cap , btns_info
+		);
+#endif
 		::PostQuitMessage(0); // special case and it requires to exit; it is assumed the app main window handles this message;
+		}
 	}
 
 	return __s_ok;
@@ -383,6 +424,10 @@ HWND  CWndBase::Handle (void) const { return this->m_h_wnd; }
 
 bool  CWndBase::Is_valid (void) const {
 	return nullptr != this->m_h_wnd && true == !!::IsWindow(this->Handle());
+}
+
+bool  CWndBase::Is_top (void) const {
+	return !!(this->Styles().Std() & WS_CHILD);
 }
 
 void  CWndBase::Set_visible (const bool _b_state) const {
