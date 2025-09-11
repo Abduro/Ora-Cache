@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' shared GUI window layout interface declaration file;
 */
 #include "shared.defs.h"
-namespace shared { namespace out {
+namespace shared { namespace gui {
 
 	using namespace shared::defs;
 	using namespace shared::types;

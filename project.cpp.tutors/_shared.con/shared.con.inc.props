@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 20-Aug-2025 at 01:47:45.867, UTC+4, Batumi, Wednesday;
+	This is Ebo pack tutorials' shared library include property page declaration file;
+	Adopted to Ebo Pack tutorials' shared console project on 11-Sep-2025 at 00:01:05.219, UTC+4, Batumi, Thursday;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\_shared\</Shared> <!--This is the reference to the shared project of excerptions from Ebo Pack;-->
+    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\_shared.gui\</Shared_Gui>    
+    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib><!--This project is being compiled; -->
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
+    <_1>src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Shared_Gui)interface\</_3>
+    <_4></_4>
+    <_5></_5>
+    <_6></_6>
+    <_7></_7>
+    <_8></_8>
+    <_9></_9>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

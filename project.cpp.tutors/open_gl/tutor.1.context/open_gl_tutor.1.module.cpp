@@ -73,7 +73,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		t_rect rect_wnd = {0};
 		::GetWindowRect(app_wnd.Handle(), &rect_wnd);
 
-		shared::out::CLayout& layout = app_wnd.Layout();
+		shared::gui::CLayout& layout = app_wnd.Layout();
 
 		// (0.a) sets up the app/main window layer first;
 		layout.Main().Target(app_wnd);
@@ -83,15 +83,27 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 		app_wnd.Set_visible(true);
 
-		// for this version of the implementation it is suppossed to be the same rectangle that was used for the client area of the main window;
+		// for this version of the implementation it is supposed to be the same rectangle that was used for the client area of the main window;
 		t_rect rc_client  = {0, 0, CRatios().Get().at(0).cx, CRatios().Get().at(0).cy};
-
+#if (1)
+		const long n_part = __H(rc_client) / 3;
+		const t_rect rc_ctx = { rc_client.left, rc_client.top, rc_client.right, rc_client.bottom - n_part };
+		const t_rect rc_con = { rc_client.left, rc_ctx.bottom, rc_client.right, rc_client.bottom };
+#else	// not used anymore;
 		// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect ;
 		::InflateRect(&rc_client, -0x4, -0x4); // no check for error this time;
+#endif
+		// (0) creates the console output window;
+		CConsole out_;
+		if (__failed(out_.Open(app_wnd, rc_con, false))) { // the last arg of visibility mode is not used yet;
+			__trace_err_3(_T("%s\n"), (_pc_sz) out_.Error().Print(TError::e_req));
+			out_.Error().Show();
+			break;
+		}
 
 		// (1) creates the context target window;
-		if (__failed(wnd_ctx.Create(app_wnd.Handle(), rc_client, true))) {
+		if (__failed(wnd_ctx.Create(app_wnd.Handle(), rc_ctx, true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_ctx.Error().Print(TError::e_req));
 			wnd_ctx.Error().Show(); break;
 		}

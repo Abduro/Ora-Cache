@@ -25,7 +25,7 @@
     <ClInclude Include="open_gl_tutor.1.res.h"><Filter>src\resources</Filter></ClInclude>
     <ResourceCompile Include="open_gl_tutor.1.res.rc"><Filter>src\resources</Filter></ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup><!--There is a problem: $(Fake) is not included to <IncludePath> node, but its alias $(_0) is;-->
     <Image Include="$(_0)open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
   </ItemGroup>
 </Project>

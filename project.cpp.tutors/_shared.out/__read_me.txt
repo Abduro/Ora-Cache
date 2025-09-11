@@ -1,2 +1,0 @@
-::taking into account that MS Windows RDP does not allow to work with OpenGL this project is created to run under local mashine, not remote one;
-::in order to provide comprehensive information of possible issues visually, of course log file would be okay, but I prefer something different :)

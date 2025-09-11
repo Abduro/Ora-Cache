@@ -10,7 +10,7 @@
 
 #include "win.gui.wnd.layout.h"
 
-namespace shared { namespace out {
+namespace shared { namespace gui {
 
 	using namespace shared::defs;
 	using namespace shared::types;
@@ -74,8 +74,8 @@ namespace shared { namespace out {
 		CFrame&  Frame (void) ;
 		// overriding the methods of the base class hides the specifics of the layouts to which the reference is returned; must be reviewed;
 		const
-		shared::out::CLayout& Layout (void) const;
-		shared::out::CLayout& Layout (void) ;
+		shared::gui::CLayout& Layout (void) const;
+		shared::gui::CLayout& Layout (void) ;
 
 		const
 		TBase& operator ()(void) const;
@@ -85,7 +85,7 @@ namespace shared { namespace out {
 		CAppWnd& operator = (const CAppWnd&) = delete; CAppWnd& operator = (CAppWnd&&) = delete;
 
 		CFrame  m_frame ;
-		shared::out::CLayout m_layout;
+		shared::gui::CLayout m_layout;
 	};
 
 }}

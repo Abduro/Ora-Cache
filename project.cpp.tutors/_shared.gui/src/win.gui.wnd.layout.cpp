@@ -4,8 +4,8 @@
 */
 #include "win.gui.wnd.layout.h"
 
-using namespace shared::out;
-using namespace shared::out::docking;
+using namespace shared::gui;
+using namespace shared::gui::docking;
 
 CPane:: CPane (void) : m_wnd(0) {}
 

@@ -9,17 +9,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared> <!--This is excerpts from Ebo Pack like this: system error and crit section wrappers;-->
-    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
-    <Shared_Out Condition="'$(Shared_Out)'==''">..\..\_shared.out\</Shared_Out><!--This is the key to GUI rich app window composition;-->
+    <Shared_Con Condition="'$(Shared_Con)'==''">..\..\_shared.con\</Shared_Con><!--This is the key to system console wrapper;-->
+    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the key to GUI rich app window composition;-->
+   <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(Shared)</Root><!--This the parent node of the OpenGL tutorials' solution, not for tutorial projects;-->
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Shared)interface\</_0>
-    <_1>$(Shared_GL)interface\</_1>
-    <_2>$(Shared_Out)interface\</_2>
-    <_3></_3>
+    <_1>$(Shared_Con)interface\</_1>
+    <_2>$(Shared_GL)interface\</_2>
+    <_3>$(Shared_Gui)interface\</_3>
     <_4></_4>
     <_5></_5>
     <_6></_6>
@@ -29,7 +30,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

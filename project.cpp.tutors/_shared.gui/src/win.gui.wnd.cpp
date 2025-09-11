@@ -5,7 +5,7 @@
 #include "win.gui.wnd.h"
 #include "shared.dbg.h"
 
-using namespace shared::out;
+using namespace shared::gui;
 
 CFrame::CIcons:: CIcons (CFrame* const _p_frm) : m_p_frm(_p_frm) {}
 
@@ -118,8 +118,8 @@ CFrame&  CAppWnd::Frame (void) const { return this->m_frame; }
 CFrame&  CAppWnd::Frame (void)       { return this->m_frame; }
 
 const
-shared::out::CLayout& CAppWnd::Layout(void) const { return this->m_layout; }
-shared::out::CLayout& CAppWnd::Layout(void)       { return this->m_layout; }
+shared::gui::CLayout& CAppWnd::Layout(void) const { return this->m_layout; }
+shared::gui::CLayout& CAppWnd::Layout(void)       { return this->m_layout; }
 
 const
 CAppWnd::TBase& CAppWnd::operator ()(void) const { return (const TBase&)*this; }
