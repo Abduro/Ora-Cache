@@ -56,13 +56,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			ver.Error().Show();
 			break;
 		}
-
+#if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox ;
 		CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
 		::MessageBox(
 			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
 		);
 		break;
+#endif
 	} while (true == false);
 
 	MSG msg = {0, WM_QUIT, 0, 0, 0, {0, 0}};

@@ -22,23 +22,24 @@ namespace docking {
 
 	class CSide {
 	public:
-		enum e_sides : uint32_t {
+		enum e_areas : uint32_t {
 		e_left  = 0x0,
 		e_top   = 0x1,
 		e_right = 0x2,
 		e_btm   = 0x3,
 		};
 	public:
-		CSide (void); CSide (const CSide&) = delete; CSide (CSide&&) = delete; ~CSide (void) = default;
+		CSide (void);
+		CSide (const e_areas); CSide (const CSide&) = delete; CSide (CSide&&) = delete; ~CSide (void) = default;
 
-		e_sides Side (void) const;
-		bool    Side (const e_sides); // returns 'true' if side value is changed;
+		e_areas Value (void) const;
+		bool    Value (const e_areas); // returns 'true' if side value is changed;
 
-		CSide&  operator <<(const e_sides);
+		CSide&  operator <<(const e_areas);
 
 	private:
 		CSide& operator = (const CSide&) = delete; CSide& operator = (CSide&&) = delete;
-		e_sides  m_side;
+		e_areas  m_area;
 	};
 
 	class CValue {
@@ -146,6 +147,9 @@ namespace docking {
 
 		 err_code Default (void) ; // creates default layout by arranging the two (top|bottom) panes whithin the main one;
 
+		 // all required messages are routed to this function by the main window;
+		 err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param);
+
 		 // https://english.stackexchange.com/questions/14694/what-is-the-difference-between-adjust-settle-and-arrange ;
 		 bool   Is_valid  (void) const ; // just validates all panes; in any case the arrangement will be made on the panes that are valid;
 
@@ -159,6 +163,8 @@ namespace docking {
 		 const
 		 CPane& Top (void) const;
 		 CPane& Top (void) ;
+
+		 err_code Update (t_rect* const = 0);   // perhaps it would be better to name it as 'Recalc'; this method is called on 'moving' window message handler;
 
 	private:
 		 CLayout& operator = (const CLayout&) = delete;

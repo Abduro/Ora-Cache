@@ -5,38 +5,11 @@
 	This is Ebo Pack tutorials' shared window base interface declaration file;
 */
 #include "shared.defs.h"
+#include "shared.wnd.msg.h"
 
 namespace ex_ui { namespace popup {
 
 	using namespace shared::defs;
-	
-	interface IMsg_Handler {
-		static const int32_t _n_not_handled = -1;
-		virtual err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) { // possibly, 'const' to w_param/l_param must be removed;
-			_u_code;                // message code, e.g. WM_CREATE;
-			return _n_not_handled;  // __s_ok|__s_false - depending on the message code, otherwise the error code; 
-		}
-	};
-	// https://learn.microsoft.com/en-us/windows/win32/learnwin32/writing-the-window-procedure#avoiding-bottlenecks-in-your-window-procedure ;
-	class CMsgRouter {
-	public:
-		CMsgRouter (void); ~CMsgRouter (void) = default;
-
-	public:
-		bool ApplyTo (WNDCLASSEX&); // sets the pointer to address of the internal message handler/window procedure; returns 'true' in case of data changed;
-		TError& Error (void) const;
-
-		err_code Subscribe (const HWND, IMsg_Handler&);
-		err_code Unsubscribe (const HWND);
-
-	private:
-		CError m_error;
-
-		CMsgRouter (const CMsgRouter&) = delete; CMsgRouter (CMsgRouter&&) = delete;
-		CMsgRouter& operator = (const CMsgRouter&) = delete; CMsgRouter& operator = (CMsgRouter&&) = delete;
-
-		friend CMsgRouter& Get_router(void); // it is not necessary for the current implementation of this class;
-	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexa ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassa ;
@@ -99,7 +72,7 @@ namespace ex_ui { namespace popup {
 	// ToDo: Window builder must be involeved into creating new window; the builder must have window style, layout, etc.;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassname ; getting class name from the window;
 
-	class CWndBase : private IMsg_Handler {
+	class CWndBase : protected IMsg_Handler {
 	public:
 		 CWndBase (void); CWndBase (const CWndBase&) = delete; CWndBase (CWndBase&&) = delete;
 		~CWndBase (void);
@@ -224,9 +197,5 @@ namespace ex_ui { namespace popup {
 		CString   m_cls_name;  // this is the name of this class, i.e. the name this class is declared; for debug purposes only;
 	};
 }}
-
-typedef ex_ui::popup::CMsgRouter TRouter;
-
-TRouter& Get_router (void);
 
 #endif/*_SHARED_WND_BASE_H_INCLUDED*/

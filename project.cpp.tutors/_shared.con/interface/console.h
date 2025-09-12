@@ -25,8 +25,11 @@ namespace shared { namespace console {
 		 err_code Close (void); // closes all IO handles; ::FreeConsole() is not used because there is no call to ::AttachConsole() was made before;
 		 err_code Open  (const HWND _h_parent, const t_rect&, const bool _b_visible); // creates *new* console, inserts it as a chiled window to the parent one;
 
-		 TError&  Error (void) const;
-		 bool     Is_valid (void) const; // checks validity of the console window handle;
+		 TError&  Error  (void) const;
+		 HWND     Handle (void) const;
+		 bool  Is_valid  (void) const; // checks validity of the console window handle;
+		 
+		 operator const HWND (void) const;
 
 	private:
 		 CConsole& operator = (const CConsole&) = delete; CConsole& operator = (CConsole&&) = delete;

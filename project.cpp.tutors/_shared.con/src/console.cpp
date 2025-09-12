@@ -63,11 +63,11 @@ err_code   CConsole::Close (void) {
 	}
 
 	// ::setvbuf() is used for setting the stream operation(s); it is not required to manage these buffers due to they are opened with _IONBF option;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
+#if (0)
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ; throws the system error 'Access denied';
 	if (0 == ::DestroyWindow(this->m_con_wnd))
 		return this->m_error.Last();
-
+#endif
 	this->m_con_wnd = 0;
 
 	return this->Error();
@@ -99,8 +99,8 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	// (1.a) removes caption and borders of the window frame;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw ;
 	LONG_PTR lp_style = ::GetWindowLongPtr(this->m_con_wnd, GWL_STYLE);
-	lp_style &= ~(WS_CAPTION|WS_BORDER);
-	lp_style |=   WS_CHILD;
+	lp_style &= ~(WS_CAPTION|WS_BORDER/*|WS_MINIMIZE*/);
+//	lp_style |=   WS_CHILD; // it is not necessary because the console window can never be as a child window; (conhost.exe);
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw ;
 	::SetWindowLongPtr(this->m_con_wnd, GWL_STYLE, lp_style);
@@ -139,12 +139,17 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 
 	// (5) shows the console window at final step of the creating procedure;
 	::ShowWindow(this->m_con_wnd, SW_SHOW);
+//	::SetWindowPos(this->m_con_wnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
 
 	return this->Error();
 }
+
+HWND   CConsole::Handle (void) const { return this->m_con_wnd; }
 
 bool   CConsole::Is_valid (void) const {
 	return (0 != this->m_con_wnd && ::IsWindow(this->m_con_wnd));
 }
 
 TError&    CConsole::Error (void) const { return this->m_error; }
+
+CConsole::operator const HWND (void) const { return this->Handle(); }

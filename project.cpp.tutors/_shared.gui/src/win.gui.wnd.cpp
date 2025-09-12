@@ -50,25 +50,8 @@ err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 	_u_code; _w_param; _l_param;
 	err_code n_result = __s_false; // not handled;
 
-	switch (_u_code) {
-	case WM_WINDOWPOSCHANGING: { // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging ;
-			_w_param;  // not used;
-			WINDOWPOS* p_wnd_pos = reinterpret_cast<WINDOWPOS*>(_l_param);
-			if (nullptr != p_wnd_pos) {
-#if (0)
-				__trace_info(_T("x=%d;y=%d;cx=%d;cy=%d"), p_wnd_pos->x, p_wnd_pos->y, p_wnd_pos->cx, p_wnd_pos->cy);
-#endif
-				if (this->Layout().Main().Size().Is_locked()) {
-					p_wnd_pos->cx = this->Layout().Main().Size().Width();
-					p_wnd_pos->cy = this->Layout().Main().Size().Height();
-					n_result = __s_ok; // handled;
-				}
-			}
-			// https://stackoverflow.com/questions/1825868/how-to-prevent-window-resizing-temporarily ;
-		} break;
-	default:
-		TBase::IMsg_OnMessage(_u_code, _w_param, _l_param); // it is ***mandatory***, otherwise not handled messages will be lost;
-	}
+	if (IMsg_Handler::_n_not_handled == this->Layout().IMsg_OnMessage(_u_code, _w_param, _l_param))
+		n_result = TBase::IMsg_OnMessage(_u_code, _w_param, _l_param); // it is ***mandatory***, otherwise not handled messages will be lost;
 
 	return n_result;
 }

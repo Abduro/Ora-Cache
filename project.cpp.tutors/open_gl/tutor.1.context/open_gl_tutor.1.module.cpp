@@ -87,8 +87,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		t_rect rc_client  = {0, 0, CRatios().Get().at(0).cx, CRatios().Get().at(0).cy};
 #if (1)
 		const long n_part = __H(rc_client) / 3;
-		const t_rect rc_ctx = { rc_client.left, rc_client.top, rc_client.right, rc_client.bottom - n_part };
-		const t_rect rc_con = { rc_client.left, rc_ctx.bottom, rc_client.right, rc_client.bottom };
+		t_rect rc_ctx = { rc_client.left, rc_client.top, rc_client.right, rc_client.bottom - n_part };
+		t_rect rc_con = { rc_client.left, rc_ctx.bottom, rc_client.right, rc_client.bottom };
+
+		::MapWindowPoints(app_wnd, 0, (LPPOINT)&rc_con, 2); // *important*: the console window uses the screen coordinates only;
 #else	// not used anymore;
 		// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect ;
@@ -102,13 +104,22 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			break;
 		}
 
+		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
+		layout.Bottom().Target(out_);
+		layout.Bottom().Size().Height().Set(__H(rc_con), docking::CValue::e_ctrl::e_fixed);
+		layout.Bottom().Size().Width().Set(__W(rc_con), docking::CValue::e_ctrl::e_fixed);
+
+		layout.Update();
+
 		// (1) creates the context target window;
 		if (__failed(wnd_ctx.Create(app_wnd.Handle(), rc_ctx, true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_ctx.Error().Print(TError::e_req));
 			wnd_ctx.Error().Show(); break;
 		}
-		else
-			layout.Top().Target(wnd_ctx);
+		
+		layout.Top().Target(wnd_ctx);
+		layout.Top().Size().Height().Set(__H(rc_ctx), docking::CValue::e_ctrl::e_fixed);
+		layout.Top().Size().Width().Set(__W(rc_ctx), docking::CValue::e_ctrl::e_fixed);
 
 		CContext ctx;
 		// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
@@ -117,7 +128,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			ctx.Error()().Show(); break;
 		}
-#if (1)
+#if (0)
 		else
 		::MessageBox(
 			HWND_DESKTOP, TString().Format(_T("Ctx is created: %s"), _T("successfully;")), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK

@@ -19,6 +19,8 @@
     <ClCompile Include="$(_1)shared.wnd.base.cpp"><Filter>src\window</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.layout.h"><Filter>interface\window</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.wnd.layout.cpp"><Filter>src\window</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.wnd.msg.h"><Filter>interface\window</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.wnd.msg.cpp"><Filter>src\window</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.res.h"><Filter>interface\window</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.wnd.res.cpp"><Filter>src\window</Filter></ClCompile>
     <ClInclude Include="$(_0)win.gui.wnd.h"><Filter>interface</Filter></ClInclude>
