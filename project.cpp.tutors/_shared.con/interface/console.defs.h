@@ -10,6 +10,7 @@
 #include "shared.defs.h"
 #include <conio.h>
 #include <stdio.h>    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/printf-printf-l-wprintf-wprintf-l ;
+#include <iostream>
 
 namespace shared { namespace console {
 

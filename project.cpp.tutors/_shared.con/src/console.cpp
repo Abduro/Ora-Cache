@@ -12,6 +12,7 @@
 
 #include "console.h"
 #include "shared.preproc.h"
+#include "console.out.h"
 
 using namespace shared::console;
 
@@ -99,7 +100,7 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	// (1.a) removes caption and borders of the window frame;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw ;
 	LONG_PTR lp_style = ::GetWindowLongPtr(this->m_con_wnd, GWL_STYLE);
-	lp_style &= ~(WS_CAPTION|WS_BORDER/*|WS_MINIMIZE*/);
+	lp_style &= ~(WS_CAPTION|WS_THICKFRAME	);
 //	lp_style |=   WS_CHILD; // it is not necessary because the console window can never be as a child window; (conhost.exe);
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw ;
@@ -114,32 +115,38 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	// (2) sets output/read handle
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/open-osfhandle ;
 	{
-		const intptr_t handle_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_INPUT_HANDLE));
-		const INT input_ = ::_open_osfhandle(handle_, _O_TEXT );
-		FILE* pFile = ::_fdopen(input_, "r");
+		const intptr_t cin_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_INPUT_HANDLE));
+		const INT input_ = ::_open_osfhandle(cin_, _O_TEXT );
+		FILE* p_file_in = ::_fdopen(input_, "r");
 
-		::setvbuf( pFile, 0, _IONBF, 0 ); // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/setvbuf ;
+		::setvbuf( p_file_in, 0, _IONBF, 0 ); // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/setvbuf ;
 	}
 	// (3) sets input/write handle
 	{
-		const intptr_t handle_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_OUTPUT_HANDLE));
-		const INT output_ = ::_open_osfhandle(handle_, _O_TEXT );
-		FILE* pFile = ::_fdopen(output_, "w");
+		const intptr_t out_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_OUTPUT_HANDLE));
+		const INT output_ = ::_open_osfhandle(out_, _O_TEXT );
+		FILE* p_file_out = ::_fdopen(output_, "w");
 
-		::setvbuf( pFile, 0, _IONBF, 0 );
+		::setvbuf( p_file_out, 0, _IONBF, 0 );
 	}
 	// (4) sets error handle
 	{
-		const intptr_t handle_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_ERROR_HANDLE));
-		const INT error_ = ::_open_osfhandle(handle_, _O_TEXT );
-		FILE* pFile = ::_fdopen(error_, "w");
+		const intptr_t err_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_ERROR_HANDLE));
+		const INT error_ = ::_open_osfhandle(err_, _O_TEXT );
+		FILE* p_file_err = ::_fdopen(error_, "w");
 
-		::setvbuf( pFile, 0, _IONBF, 0 );
+		::setvbuf( p_file_err, 0, _IONBF, 0 );
 	}
 
 	// (5) shows the console window at final step of the creating procedure;
 	::ShowWindow(this->m_con_wnd, SW_SHOW);
-//	::SetWindowPos(this->m_con_wnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
+
+	// https://learn.microsoft.com/en-us/windows/console/console-functions ;
+	// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
+
+	COut::Error(_T("this is the error;\n"));
+	COut::Info (_T("this is the info;\n"));
+	COut::Warn (_T("this is the warn;\n"));
 
 	return this->Error();
 }

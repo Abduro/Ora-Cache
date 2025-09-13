@@ -186,6 +186,8 @@
     <ClCompile Include="$(_1)shared.preproc.cpp" />
     <ClInclude Include="$(_0)shared.props.h" />
     <ClCompile Include="$(_1)shared.props.cpp" />
+    <ClInclude Include="$(_0)shared.timer.h" />
+    <ClCompile Include="$(_1)shared.timer.cpp" />
     <ClInclude Include="$(_0)shared.types.h" />
     <ClCompile Include="$(_1)shared.types.cpp" />
     <ClInclude Include="$(_0)sys.err.codes.h"/>

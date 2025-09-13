@@ -8,6 +8,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared_Con Condition="'$(Shared_Con)'==''">..\_shared.con\</Shared_Con>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -16,7 +17,7 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
     <_1>src\</_1>
-    <_2></_2>
+    <_2>$(Shared_Con)interface\</_2>
     <_3></_3>
     <_4></_4>
     <_5></_5>
@@ -27,7 +28,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -5,12 +5,15 @@
 	This is Ebo Pack OpenGL tutorials' shared GUI window layout interface declaration file;
 */
 #include "shared.defs.h"
+#include "shared.timer.h"
 namespace shared { namespace gui {
 
 	using namespace shared::defs;
 	using namespace shared::types;
 
 	using CWindow = ::ATL::CWindow;
+	using IWaitable_Events = shared::common::IWaitable_Events;
+	using CStdTimer = shared::common::CStdTimer;
 
 namespace docking {
 
@@ -133,11 +136,11 @@ namespace docking {
 	// this version of the layout implementation supports two components only:
 	// (a) a window in the top part of the client area, this is the child window of graphics output: DirectX and OpenGL tutorials;
 	// (b) a window in the bottom part of the client area, this is the debug output console; (text mode);
-	class CLayout {
+	class CLayout : public IWaitable_Events {
 	using CPane = docking::CPane;
 	public:
 		 CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
-		~CLayout (void) = default;
+		~CLayout (void);
 
 		 // https://thecontentauthority.com/blog/below-vs-bottom ;
 		 // https://www.abbreviations.com/abbreviation/bottom ;
@@ -148,7 +151,10 @@ namespace docking {
 		 err_code Default (void) ; // creates default layout by arranging the two (top|bottom) panes whithin the main one;
 
 		 // all required messages are routed to this function by the main window;
-		 err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param);
+		 // *important*: in order to handle the particular message the code of that message must be added to the:
+		 // l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param _w_param, l_param _l_param); shared.wnd.msg.cpp;
+
+		 err_code  IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param);
 
 		 // https://english.stackexchange.com/questions/14694/what-is-the-difference-between-adjust-settle-and-arrange ;
 		 bool   Is_valid  (void) const ; // just validates all panes; in any case the arrangement will be made on the panes that are valid;
@@ -170,10 +176,13 @@ namespace docking {
 		 CLayout& operator = (const CLayout&) = delete;
 		 CLayout& operator = (CLayout&&) = delete;
 
+		 void IWaitable_OnComplete(void) override final;
+
 		 CPane  m_low;
 		 CPane  m_top;
 
 		 CPane  m_target;   // actually, it is the main window of the tutorial app;
+		 CStdTimer m_wait;
 	};
 
 }}

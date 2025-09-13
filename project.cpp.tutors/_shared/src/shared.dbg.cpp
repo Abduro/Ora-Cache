@@ -8,6 +8,9 @@
 #if (0)
 #include "shared.str.ext.h" // not applicable in this solution(s) of the tutorials;
 #endif
+#include "console.out.h"
+
+using namespace shared::console;
 
 #if defined(_DEBUG)
 namespace shared { namespace dbg {
@@ -28,6 +31,16 @@ using namespace shared::defs;
 
 void CTrace::Empty_ln (void) {
 	::OutputDebugString(_T("\n"));
+}
+
+static bool b_use_con = true;
+
+void CTrace::Use_con (const bool _b_use) {
+	b_use_con = _b_use;
+}
+
+bool CTrace::Use_con  (void) {
+	return b_use_con;
 }
 
 void CTrace::Out_0 (_pc_sz _lp_sz_fmt, ...) {
@@ -51,6 +64,12 @@ void CTrace::Out_0 (const e_category _e_cat, _pc_sz _lp_sz_fmt, ...) { // perhap
 	CString cs_in ; cs_in.FormatV(_lp_sz_fmt, args_);
 	CString cs_out; cs_out.Format(_T("%s %s\n"), (_pc_sz) CatToStr(_e_cat), (_pc_sz) cs_in);
 
+	if (CTrace::Use_con()) {
+		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
+		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
+	}
+	else
 	::OutputDebugString((_pc_sz) cs_out);
 
 	va_end  (args_);
@@ -64,6 +83,12 @@ void CTrace::Out_2 (const e_category _e_cat, _pc_sz _p_cls, _pc_sz _p_method, _p
 	CString cs_in ; cs_in.FormatV(_p_sz_format, args_);
 	CString cs_out; cs_out.Format(_T("%s cls::[%s].%s()>>%s\n"), (_pc_sz) CatToStr(_e_cat), _p_cls, _p_method, (_pc_sz) cs_in);
 
+	if (CTrace::Use_con()) {
+		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
+		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
+	}
+	else
 	::OutputDebugString((_pc_sz) cs_out);
 
 	va_end  (args_);
@@ -77,6 +102,12 @@ void CTrace::Out_3 (const e_category _e_cat, _pc_sz _p_nm_space, _pc_sz _p_cls, 
 	CString cs_in ; cs_in.FormatV(_p_sz_format, args_);
 	CString cs_out; cs_out.Format(_T("%s cls::[%s::%s].%s()>>%s"), (_pc_sz) CatToStr(_e_cat), _p_nm_space, _p_cls, _p_method, (_pc_sz) cs_in);
 
+	if (CTrace::Use_con()) {
+		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
+		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
+	}
+	else
 	::OutputDebugString((_pc_sz) cs_out);
 
 	va_end  (args_);

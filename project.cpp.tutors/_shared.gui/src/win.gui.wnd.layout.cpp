@@ -134,7 +134,11 @@ CValue::operator long (void) const { return this->Get(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout:: CLayout (void) { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
+CLayout:: CLayout (void) : m_wait(*this) { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
+CLayout::~CLayout (void) {
+	if (false == this->m_wait.IsValid())
+		this->m_wait.Destroy();
+}
 
 const
 CPane&  CLayout::Bottom (void) const { return this->m_low; }
@@ -147,7 +151,14 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 	case WM_ACTIVATE:{
 		const bool b_activated = (WA_INACTIVE != _w_param); // https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate ;
 		const HWND h_after = b_activated ?  HWND_TOPMOST : HWND_NOTOPMOST;
-		
+
+		if (false == b_activated) {
+			if (false == this->m_wait.IsValid())
+				this->m_wait.Create(555);
+		}
+		else
+			this->m_wait.Destroy();
+
 		::SetWindowPos(this->Bottom().Target(), h_after, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_NOACTIVATE);
 		n_result = __s_ok; // this message is handled;
 	} break;
@@ -188,6 +199,16 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 			}
 			// https://stackoverflow.com/questions/1825868/how-to-prevent-window-resizing-temporarily ; Tech_dog's answer is there;
 		} break;
+	case WM_SYSCOMMAND : { // https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syscommand ;
+		const bool b_max = (SC_MAXIMIZE == _w_param); b_max;
+		const bool b_min = (SC_MINIMIZE == _w_param); b_min;
+
+		if (b_max)
+			n_result = __s_ok; // this message is handled;
+		else
+			n_result = __s_false;
+
+		} break;
 	}
 	return n_result;
 }
@@ -214,13 +235,16 @@ err_code CLayout::Update (t_rect* const _p_rect) {
 		::CopyRect(&rc_wnd_pos, _p_rect);
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics ;
+	// removing WS_THICKFRAME style from the console window is useful, but it has the side effect: the console window size increases;
 	const int n_border = ::GetSystemMetrics(SM_CXBORDER);
 	if (0 == n_border) {
 		// looks like the system error occurs, but the last error does not contain any useful info;
 	}
+	const int n_gap = n_border * 8; // empirical way is used;
+
 	// it is assumed that the height and width of the input rectangle remain unchanged because the size of the main window is fixed;
 	const t_rect rect_con = {
-		rc_wnd_pos.left + n_border, rc_wnd_pos.bottom - this->Bottom().Size().Height(), rc_wnd_pos.right - n_border, rc_wnd_pos.bottom - n_border
+		rc_wnd_pos.left + n_gap, rc_wnd_pos.bottom - this->Bottom().Size().Height(), rc_wnd_pos.right - n_gap, rc_wnd_pos.bottom - n_gap
 	};
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow ;
 	if (0 == ::MoveWindow(this->Bottom().Target(), rect_con.left, rect_con.top, __W(rect_con), __H(rect_con), true)) {
@@ -229,4 +253,8 @@ err_code CLayout::Update (t_rect* const _p_rect) {
 	n_result = __s_false; // this message is handled;
 
 	return n_result;
+}
+
+void  CLayout::IWaitable_OnComplete (void) {
+	this->Update();
 }

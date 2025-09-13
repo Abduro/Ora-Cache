@@ -43,12 +43,14 @@ namespace shared { namespace dbg {
 		
 	public:
 		enum e_category : uint32_t {
+		     e_err  = 0x2, // this is error category trace prefix: [error] ;
 		     e_info = 0x0, // this is information category trace prefix: [info] ;
 		     e_warn = 0x1, // this is warning category trace prefix: [warn] ;
-		     e_err  = 0x2, // this is error category trace prefix: [error] ;
 		};
 
-		static void Empty_ln (void); // outputs an empty line; 
+		static void Empty_ln (void); // outputs an empty line;
+		static void Use_con  (const bool); // changes the output target: if it is set to 'true' outer console is used instead of VS 'debug output'; 
+		static bool Use_con  (void);       // returns the current state of using outer console;
 
 		// https://learn.microsoft.com/en-us/cpp/preprocessor/variadic-macros ;
 		/*

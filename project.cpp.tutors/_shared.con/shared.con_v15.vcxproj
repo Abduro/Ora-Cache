@@ -182,10 +182,8 @@
     <ClCompile Include="$(_1)console.cpp" />
     <ClInclude Include="$(_0)console.defs.h" />
     <ClCompile Include="$(_1)console.defs.cpp" />
-    <!--ClInclude Include="$(_0)console.rec.h" />
-    <ClCompile Include="$(_1)console.rec.cpp" />
-    <ClInclude Include="$(_0)console.sec.h" />
-    <ClCompile Include="$(_1)console.sec.cpp" /-->
+    <ClInclude Include="$(_0)console.out.h" />
+    <ClCompile Include="$(_1)console.out.cpp" />
   </ItemGroup>
   <!--ItemGroup>
     <Manifest  Include="$(_0)win.gui.app.manifest" />

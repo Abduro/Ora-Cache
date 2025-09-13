@@ -23,6 +23,8 @@
     <ClCompile Include="$(_1)shared.preproc.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.props.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.props.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)shared.timer.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.timer.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.types.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.types.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.err.codes.h"><Filter>interface\error</Filter></ClInclude>
