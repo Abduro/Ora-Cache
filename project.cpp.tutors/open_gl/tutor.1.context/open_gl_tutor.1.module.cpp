@@ -62,7 +62,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		// (0) creating the main window/application at the beginning of this 'journey';
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#1_ctx"), false))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
-			app_wnd.Error().Show(); break;
+		//	app_wnd.Error().Show(); break;
 		}
 		else {
 			const bool b_is_top = app_wnd.Is_top();
@@ -100,9 +100,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		CConsole out_;
 		if (__failed(out_.Open(app_wnd, rc_con, false))) { // the last arg of visibility mode is not used yet;
 			__trace_err_3(_T("%s\n"), (_pc_sz) out_.Error().Print(TError::e_req));
-			out_.Error().Show();
+		//	out_.Error().Show();
 			break;
 		}
+
+		// https://stackoverflow.com/questions/18114395/changing-command-prompt-text-size-c << the answer is not completed,
+		// because a user has a chance of not selecting the desired font size from the dropdown list, but to type directly the size that is not in the list;
+
+		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 
 		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
 		layout.Bottom().Target(out_);
@@ -110,11 +115,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		layout.Bottom().Size().Width().Set(__W(rc_con), docking::CValue::e_ctrl::e_fixed);
 
 		layout.Update();
+		shared::console::CLayout().Output().HScroll().Set(true);
 
 		// (1) creates the context target window;
 		if (__failed(wnd_ctx.Create(app_wnd.Handle(), rc_ctx, true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_ctx.Error().Print(TError::e_req));
-			wnd_ctx.Error().Show(); break;
+		//	wnd_ctx.Error().Show(); break;
 		}
 		
 		layout.Top().Target(wnd_ctx);
@@ -126,7 +132,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		// the error *always* occurs on RDP of MS Windows;
 		if (__failed(ctx.Create(wnd_ctx.Handle(), 3, 3))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
-			ctx.Error()().Show(); break;
+		//	ctx.Error()().Show(); break;
 		}
 #if (0)
 		else
@@ -142,10 +148,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		}
 
 		CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
+#if (0)
 		::MessageBox(
 			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
 		);
-
+#else
+		__trace_warn_3(_T("%s\n"), (_pc_sz) cs_ver);
+#endif
 		b_error = false;
 
 	} while (true == false);

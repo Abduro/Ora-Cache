@@ -10,13 +10,13 @@
 #include <io.h>       // for _open_osfhandle ;
 #include <fcntl.h>    // for constant decl, like to _O_TEXT ;
 
-#include "console.h"
 #include "shared.preproc.h"
+#include "console.h"
 #include "console.out.h"
 
 using namespace shared::console;
 
-namespace console { namespace shared { namespace _impl {
+namespace shared { namespace console  { namespace _impl {
 
 #ifndef __H
 #define __H(_rect) (_rect.bottom - _rect.top)
@@ -26,9 +26,46 @@ namespace console { namespace shared { namespace _impl {
 #define __W(_rect) (_rect.right - _rect.left)
 #endif
 
+	class CScreenBuffer {
+		CScreenBuffer (const CScreenBuffer&) = delete; CScreenBuffer (CScreenBuffer&&) = delete;
+	public:
+		CScreenBuffer (void) : m_info{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+		TError&  Error(void) const { return this->m_error; }
+
+		const
+		TScrBufInfo& Get (void) const {
+			this->m_error >>__METHOD__<<__s_ok;
+			
+			// https://learn.microsoft.com/en-us/windows/console/getconsolescreenbufferinfo ;
+			if (0 == ::GetConsoleScreenBufferInfo (__out_handle, &this->m_info))
+				this->m_error.Last();
+
+			return this->m_info;
+		}
+
+		err_code Set (void) {
+
+			COORD n_size =  m_info.dwSize;
+			n_size.X *= 2;
+			
+			::SetConsoleScreenBufferSize(__out_handle, n_size);
+			return this->Error();
+		}
+
+		operator const TScrBufInfo& (void) const { return this->m_info; }
+		operator       TScrBufInfo& (void)       { return this->m_info; }
+
+		TScrBufInfo    operator ()  (void) { this->Get(); return this->m_info; }
+
+	private:
+		CScreenBuffer& operator = (const CScreenBuffer&) = delete; CScreenBuffer& operator = (CScreenBuffer&&) = delete;
+		mutable CError m_error;
+		mutable TScrBufInfo m_info;
+	};
+
 }}}
 
-using namespace console::shared::_impl;
+using namespace shared::console::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -100,8 +137,9 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	// (1.a) removes caption and borders of the window frame;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw ;
 	LONG_PTR lp_style = ::GetWindowLongPtr(this->m_con_wnd, GWL_STYLE);
-	lp_style &= ~(WS_CAPTION|WS_THICKFRAME	);
+	lp_style &= ~(WS_CAPTION|WS_THICKFRAME|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX);
 //	lp_style |=   WS_CHILD; // it is not necessary because the console window can never be as a child window; (conhost.exe);
+	lp_style |=   WS_HSCROLL;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw ;
 	::SetWindowLongPtr(this->m_con_wnd, GWL_STYLE, lp_style);
@@ -143,11 +181,13 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 
 	// https://learn.microsoft.com/en-us/windows/console/console-functions ;
 	// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
-
+#if (0)
 	COut::Error(_T("this is the error;\n"));
 	COut::Info (_T("this is the info;\n"));
 	COut::Warn (_T("this is the warn;\n"));
-
+#else
+	// https://cplusplus.com/forum/windows/58206/ ; how to make thisngs better: redirect ::std::ios to this console;
+#endif
 	return this->Error();
 }
 
@@ -160,3 +200,78 @@ bool   CConsole::Is_valid (void) const {
 TError&    CConsole::Error (void) const { return this->m_error; }
 
 CConsole::operator const HWND (void) const { return this->Handle(); }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CLayout:: CLayout (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+
+TError&   CLayout::Error (void) const { return this->m_error; }
+const
+CLayout::COutput& CLayout::Output (void) const { return this->m_output; }
+CLayout::COutput& CLayout::Output (void)       { return this->m_output; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CLayout::COutput:: COutput (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+
+TError&   CLayout::COutput::Error (void) const { return this->m_error; }
+
+/////////////////////////////////////////////////////////////////////////////
+
+CLayout::COutput::CHScroll:: CHScroll (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+
+TError&  CLayout::COutput::CHScroll::Error (void) const { return this->m_error; }
+
+bool CLayout::COutput::CHScroll::Get (void) const {
+
+	CScreenBuffer buff;
+	if (__failed( buff.Set()))
+		return false;
+
+	LONG_PTR lp_style = ::GetWindowLongPtr(::GetConsoleWindow(), GWL_STYLE);
+	return   lp_style & WS_HSCROLL;
+}
+
+err_code CLayout::COutput::CHScroll::Set (const bool _b_set) {
+	_b_set;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	const bool b_has = this->Get();
+	if (_b_set == true && b_has == true)
+		return this->Error();
+
+	if (_b_set == false && b_has == false)
+		return this->Error();
+
+	// https://learn.microsoft.com/en-us/windows/console/getconsolescreenbufferinfo ;
+	CONSOLE_SCREEN_BUFFER_INFO con_info = {0};
+
+	if (false == !!::GetConsoleScreenBufferInfo(__out_handle, &con_info))
+		return this->m_error.Last();
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+	t_rect rc_client = {0};
+	if (0 == ::GetClientRect(::GetConsoleWindow(), &rc_client))
+		return this->m_error.Last();
+
+	const int n_req = __W(rc_client) / con_info.dwSize.X;
+
+	if (_b_set) {
+		con_info.dwSize.X = static_cast<int16_t>(con_info.dwSize.X * 2);
+	}
+	else {
+		con_info.dwSize.X = static_cast<int16_t>(con_info.dwSize.X / 2);
+	}
+
+	// https://learn.microsoft.com/en-us/windows/console/setconsolescreenbuffersize ;
+	if (0 == ::SetConsoleScreenBufferSize(__out_handle, con_info.dwSize))
+		this->m_error.Last();
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+const
+CLayout::COutput::CHScroll&  CLayout::COutput::HScroll (void) const { return this->m_h_scroll; }
+CLayout::COutput::CHScroll&  CLayout::COutput::HScroll (void)       { return this->m_h_scroll; }

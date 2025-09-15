@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.con.inc.props"/>
+    <Import Project="shared.dbg.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.con.inc.props"/>
+    <Import Project="shared.dbg.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.con.inc.props"/>
+    <Import Project="shared.dbg.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.con.inc.props"/>
+    <Import Project="shared.dbg.inc.props"/>
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -178,10 +178,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shared.dbg.h" />
+    <ClCompile Include="$(_1)shared.dbg.cpp" />
     <ClInclude Include="$(_0)console.h" />
     <ClCompile Include="$(_1)console.cpp" />
     <ClInclude Include="$(_0)console.defs.h" />
     <ClCompile Include="$(_1)console.defs.cpp" />
+    <ClInclude Include="$(_0)console.font.h" />
+    <ClCompile Include="$(_1)console.font.cpp" />
     <ClInclude Include="$(_0)console.out.h" />
     <ClCompile Include="$(_1)console.out.cpp" />
   </ItemGroup>

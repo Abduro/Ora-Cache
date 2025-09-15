@@ -10,6 +10,7 @@
 #include "open_gl_tutor.1.wnd.h"  // this is the target window class interface;
 
 #include "console.h"
+#include "console.font.h"
 #include "win.gui.wnd.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace context {
@@ -26,7 +27,7 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace context {
 
 }}}}
 
-#pragma comment(lib, "shared.con_v15.lib")  // shared console window for debug output;
+#pragma comment(lib, "shared.dbg_v15.lib")  // shared debug outpu/trace console;
 #pragma comment(lib, "shared.gui_v15.lib")  // shared GUI lib for creating main/app window;
 
 #pragma comment(lib, "gl.shared_v15.lib")   // OpenGL tutorials shared lib; it is required for usage of shader API;

@@ -297,7 +297,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	}
 	else if (nullptr != &p_formats && true == !!n_count) {}
 	else { b_can_go_ahead = true; }
-
+#if (0)
 	::MessageBox(
 			0, (_pc_sz) cs_fmts,
 			   (_pc_sz) cs_cap , btns_info
@@ -306,7 +306,10 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 			0, (_pc_sz) pxl_atts.Print(),
 			   (_pc_sz) cs_cap , btns_info
 		);
-
+#else
+	__trace_info_3(_T("%s\n"), (_pc_sz) cs_fmts);
+	__trace_info_3(_T("%s\n"), (_pc_sz) cs_cap);
+#endif
 	if (false == b_can_go_ahead)
 		return TBase::Error()();
 

@@ -8,8 +8,11 @@
 using namespace shared::console;
 
 namespace shared { namespace console { namespace _impl {
+#pragma region __refs_e
+	// https://burgaud.com/bring-colors-to-the-windows-console-with-python/ ;
 	// https://learn.microsoft.com/en-us/windows/console/console-screen-buffers?redirectedfrom=MSDN#_win32_character_attributes ;
 	// https://stackoverflow.com/questions/8621578/do-windows-console-color-values-have-official-names-constants-associated-with/49929936#49929936 ;
+#pragma endregion
 	class c_fg_clrs { c_fg_clrs (void) = default; ~c_fg_clrs (void) = default;
 	public:
 		typedef enum e_fg_clrs : uint16_t
@@ -76,6 +79,8 @@ namespace shared { namespace console { namespace _impl {
 			if (CTrace::e_category::e_warn == _e_cat) clrs = c_fg_clrs::e_yellow;
 			if (CTrace::e_category::e_err  == _e_cat) clrs = c_fg_clrs::e_red;
 
+			// https://learn.microsoft.com/en-us/windows/console/setconsoletextattribute ;
+			// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
 			::SetConsoleTextAttribute(Get_Out(), clrs);
 			::WriteConsole(Get_Out(), cs_out.GetBuffer(), cs_out.GetLength(), (LPDWORD)&n_written, 0);
 		}

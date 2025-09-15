@@ -9,3 +9,7 @@
 using namespace shared::console;
 
 namespace shared { namespace console { namespace _impl { void __warning_lnk_4221 (void) {}}}}
+
+const HANDLE CHandles::Err (void) { return ::GetStdHandle(STD_ERROR_HANDLE);  }
+const HANDLE CHandles::In  (void) { return ::GetStdHandle(STD_INPUT_HANDLE);  }
+const HANDLE CHandles::Out (void) { return ::GetStdHandle(STD_OUTPUT_HANDLE); }

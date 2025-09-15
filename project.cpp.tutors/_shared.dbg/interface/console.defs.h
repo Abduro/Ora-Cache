@@ -18,6 +18,23 @@ namespace shared { namespace console {
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/format-specification-syntax-printf-and-wprintf-functions ;
 
 	using namespace shared::defs;
+
+	class CHandles {
+	public:
+		CHandles (void) = default; CHandles (const CHandles&) = delete; CHandles (CHandles&&) = delete; ~CHandles (void) = default;
+
+		static const HANDLE Err (void);
+		static const HANDLE In  (void);
+		static const HANDLE Out (void);
+
+	private:
+		CHandles& operator = (const CHandles&) = delete; CHandles& operator = (CHandles&&) = delete;
+	};
+
+#define __err_handle CHandles::Err()
+#define __in_handle  CHandles::In ()
+#define __out_handle CHandles::Out()
+
 }}
 
 #endif/*_CONSOLE_DEFS_H_INCLUDED*/

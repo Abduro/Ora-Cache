@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tutor.2.shader", "tutor.2.s
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared.trim_v15", "..\_shared\shared.trim_v15.vcxproj", "{00000C13-EEEE-BBBB-6667-0000000B0001}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared.con_v15", "..\_shared.con\shared.con_v15.vcxproj", "{00000C13-EEEE-BBBB-6667-0000000A0001}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared.dbg_v15", "..\_shared.dbg\shared.dbg_v15.vcxproj", "{00000C13-EEEE-BBBB-6667-0000000A0001}"
 	ProjectSection(ProjectDependencies) = postProject
 		{00000C13-EEEE-BBBB-6667-0000000B0001} = {00000C13-EEEE-BBBB-6667-0000000B0001}
 	EndProjectSection

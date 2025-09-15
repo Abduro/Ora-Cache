@@ -10,6 +10,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\_shared\</Shared> <!--This is the reference to the shared project of excerptions from Ebo Pack;-->
+    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -19,7 +20,7 @@
     <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
     <_1>src\</_1>
     <_2>$(Shared)interface\</_2>
-    <_3></_3>
+    <_3>$(Shared_Dbg)interface\</_3>
     <_4></_4>
     <_5></_5>
     <_6></_6>
@@ -29,7 +30,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -18,6 +18,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 namespace fake {}}}}
 
-#pragma comment(lib, "shared.trim_v15.lib") // this is shared library for both groups of tutorials: OpenGL and DirectX;
+#pragma comment(lib, "shared.dbg_v15.lib")  // it is required for usage of the debug output;
+#pragma comment(lib, "shared.trim_v15.lib") // it is required for usage of the error base API;
 
 #endif/*_OPEN_GL_TUTOR_0_DEFS_H_INCLUDED*/

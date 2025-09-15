@@ -3,8 +3,8 @@
 	[!docs]   : {00000C13-EEEE-BBBB-6667-D00000000000} << the root node of documents for settings c/c++ projects;
 	[_shared] : {00000C13-EEEE-BBBB-6667-100000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
 		shared.trim_v15 : {00000C13-EEEE-BBBB-6667-0000000B0001} << this is the shared project of excerpts from Ebo Pack solution;
-		shared.out_v15  : {00000C13-EEEE-BBBB-6667-0000000C0001} << this is the shared project of the composite GUI for app main window;
-		shared.con_v15  : {00000C13-EEEE-BBBB-6667-0000000A0001} << this is the shared project of the console wrapper for app main window;
+		shared.gui_v15  : {00000C13-EEEE-BBBB-6667-0000000C0001} << this is the shared project of the composite GUI for app main window;
+		shared.dbg_v15  : {00000C13-EEEE-BBBB-6667-0000000A0001} << this is the shared project of the debug ouptup console wrapper for app main window;
 
 	[tutors]  : {00000C13-EEEE-BBBB-6667-100000000001} << the sub-root of the tutorial projects;
 	[DirecX]  : {00000C13-EEEE-BBBB-6667-100000000003} << the sub-root for DirectX tutorials;

@@ -9,7 +9,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared> <!--This is excerpts from Ebo Pack like this: system error and crit section wrappers;-->
-    <Shared_Con Condition="'$(Shared_Con)'==''">..\..\_shared.con\</Shared_Con><!--This is the key to system console wrapper;-->
+    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg><!--This is the key to debug output console wrapper;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the key to GUI rich app window composition;-->
    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
   </PropertyGroup>
@@ -18,7 +18,7 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>$(Shared)interface\</_0>
-    <_1>$(Shared_Con)interface\</_1>
+    <_1>$(Shared_Dbg)interface\</_1>
     <_2>$(Shared_GL)interface\</_2>
     <_3>$(Shared_Gui)interface\</_3>
     <_4></_4>

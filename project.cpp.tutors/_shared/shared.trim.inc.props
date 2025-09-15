@@ -8,7 +8,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
-    <Shared_Con Condition="'$(Shared_Con)'==''">..\_shared.con\</Shared_Con>
+    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -17,7 +17,7 @@
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
     <_1>src\</_1>
-    <_2>$(Shared_Con)interface\</_2>
+    <_2>$(Shared_Dbg)interface\</_2><!--ToDo: it looks like as not necessary reference to this folder due to debug and trace capabilities are moved there;-->
     <_3></_3>
     <_4></_4>
     <_5></_5>

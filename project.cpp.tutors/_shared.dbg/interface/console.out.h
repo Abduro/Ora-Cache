@@ -8,6 +8,8 @@
 
 namespace shared { namespace console {
 
+	// https://learn.microsoft.com/en-us/windows/console/console-screen-buffers ;
+
 	class COut {
 	COut (void) = delete; COut (const COut&) = delete; COut (COut&&) = delete; ~COut (void) = delete;
 	COut& operator = (const COut&) = delete; COut& operator = (COut&&) = delete;

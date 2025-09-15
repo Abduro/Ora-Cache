@@ -202,7 +202,7 @@
     <ProjectReference Include="$(Fake)gl.tutor.0.fake.lib.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(Shared_Con)shared.con_v15.vcxproj">
+    <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_GL)gl.shared_v15.vcxproj">
