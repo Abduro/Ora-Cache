@@ -67,6 +67,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		~CVersion (void);
 
 		 TError& Error (void) const;
+		 CString   Get (void) const; // gets version info by using glGetIntegerv();
 		 const
 		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
 

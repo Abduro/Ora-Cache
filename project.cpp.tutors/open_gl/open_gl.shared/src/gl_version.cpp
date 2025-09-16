@@ -157,6 +157,25 @@ CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_init
 CVersion::~CVersion (void) {}
 
 TError&    CVersion::Error (void) const { return this->m_error; }
+
+#define GL_MAJOR_VERSION 0x821B
+#define GL_MINOR_VERSION 0x821C
+
+CString    CVersion::Get (void) const {
+
+	CString cs_out;
+
+	int32_t n_minor = 0;
+	int32_t n_major = 0;
+
+	::glGetIntegerv(GL_MAJOR_VERSION, &n_major);
+	::glGetIntegerv(GL_MINOR_VERSION, &n_minor);
+
+	cs_out.Format(_T("%d.%d"), n_major, n_minor);
+
+	return  cs_out;
+}
+
 const
 CVer_Att&  CVersion::GetAtt (const e_atts _e_att) const {
 	_e_att;

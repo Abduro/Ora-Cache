@@ -299,8 +299,8 @@ CAtt_set_ctx:: CAtt_set_ctx (const uint32_t _u_major/* = 1*/, const uint32_t _u_
 
 	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_major, _u_major, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_major)));
 	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::CVersion::e_minor, _u_minor, (_pc_sz) arb::CContext::CVersion::To_str(arb::CContext::CVersion::e_minor)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(
-//		CAtt(arb::CContext::CProfile::e_mask, arb::CContext::CProfile::e_core, (_pc_sz) arb::CContext::CProfile::To_str(arb::CContext::CProfile::e_mask)));
+	if (__is_okay(n_result)) n_result = TBase::Append(
+		CAtt(arb::CContext::CProfile::e_mask, arb::CContext::CProfile::e_core, (_pc_sz) arb::CContext::CProfile::To_str(arb::CContext::CProfile::e_mask)));
 	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CContext::e_flags, 0, (_pc_sz) arb::CContext::To_str(arb::CContext::e_flags)));
 }
 

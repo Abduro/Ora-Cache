@@ -16,7 +16,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 using namespace ex_ui::draw::open_gl::_impl;
 
 context::CBase:: CBase (void) : m_drw_ctx(0) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
-context::CBase::~CBase (void) {}
+context::CBase::~CBase (void) { this->Destroy(); }
 
 err_code context::CBase::Destroy(void) {
 	this->m_error() <<__METHOD__<<__s_ok;
@@ -54,12 +54,13 @@ HGLRC  context::CBase::Renderer (void) const {
 
 err_code context::CBase::Set (const HWND _h_target) {
 	_h_target;
-	this->m_error()<<__METHOD__<<__s_ok;
 
 	if (this->Is_valid()) {
 		this->m_error() << (err_code) TErrCodes::eObject::eInited = _T("Draw renderer exists");
 		__trace_err_3(_T("%s"), (_pc_sz) this->Error()().Print(TError::e_req)); return this->Error()();
 	}
+
+	this->m_error()<<__METHOD__<<__s_ok;
 
 	if (__failed(this->Target().Set(_h_target))) {
 		return this->m_error() = this->Target().Error();
@@ -113,11 +114,10 @@ bool context::CTarget::Is_valid (void) const {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == this->m_dc_src)
+	if (nullptr == this->m_dc_src) {
+		this->m_error << __e_not_inited;  // the error object set to error state (i.e. error == true);
 		return false;
-
-	if (nullptr != this->m_dc_src)
-		return false != (this->m_error << __e_not_inited).Is(); // the error onject set to error state (i.e. error == true);
+	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjecttype ;
 	const uint32_t u_dc_type = ::GetObjectType(this->m_dc_src);
@@ -131,12 +131,13 @@ bool context::CTarget::Is_valid (void) const {
 const HDC context::CTarget::Get (void) const { return this->m_dc_src; }
 err_code  context::CTarget::Set (const HWND _h_wnd) {
 	_h_wnd;
-	this->m_error <<__METHOD__<<__s_ok;
 
 	if (this->Is_valid()) {
 		this->m_error << (err_code) TErrCodes::eObject::eInited = _T("Source device context is already set");
 		__trace_err_3(_T("%s"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
+
+	this->m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr == _h_wnd || false == !!::IsWindow(_h_wnd)) {
 		this->m_error << __e_hwnd = _T("Target window handle is invalid");
@@ -180,7 +181,7 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << there is the example of how to do that;
 	px_fmt_desc.nSize      = sizeof(PIXELFORMATDESCRIPTOR);
 	px_fmt_desc.nVersion   = 1;
-	px_fmt_desc.dwFlags    = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	px_fmt_desc.dwFlags    = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL/* | PFD_DOUBLEBUFFER*/;
 	px_fmt_desc.iPixelType = PFD_TYPE_RGBA;
 	px_fmt_desc.cColorBits = 32; // colordepth of the framebuffer;
 	px_fmt_desc.cAlphaBits = 8;  // the number of bits for the stencilbuffer;
@@ -254,7 +255,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	if (__failed(TBase::Set(h_target)) || false == TBase::Target().Is_valid())
 		return TBase::Error()();
 
-	// (4.b) chooses the pixel format first;
+	// (4.b) chooses the pixel format;
 	CAtt_set_pixels pxl_atts; // no error check for this time yet;
 
 	uint32_t n_count = 0;
@@ -270,8 +271,8 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 #define btns_info (MB_OK|MB_ICONINFORMATION)
 #define btns_warn (MB_OK|MB_ICONEXCLAMATION)
 
-	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	CString cs_fmts = TString().Format(_T("formats: %u; count: %u;"), p_formats, n_count);
+//	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+//	CString cs_fmts = TString().Format(_T("formats: %u; count: %u;"), p_formats, n_count);
 #if (0) // wrong way;
 	CString cs_fmt_pairs;
 	int32_t n_fmt_num = 0;
@@ -295,7 +296,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 			TBase::m_error().Show();
 		}
 	}
-	else if (nullptr != &p_formats && true == !!n_count) {}
+	else if (nullptr != &p_formats && true == !!n_count) { b_can_go_ahead = true; }
 	else { b_can_go_ahead = true; }
 #if (0)
 	::MessageBox(
@@ -307,8 +308,8 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 			   (_pc_sz) cs_cap , btns_info
 		);
 #else
-	__trace_info_3(_T("%s\n"), (_pc_sz) cs_fmts);
-	__trace_info_3(_T("%s\n"), (_pc_sz) cs_cap);
+//	__trace_info_3(_T("%s\n"), (_pc_sz) cs_fmts);
+//	__trace_info_3(_T("%s\n"), (_pc_sz) cs_cap);
 #endif
 	if (false == b_can_go_ahead)
 		return TBase::Error()();
@@ -321,10 +322,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	if (false ==!!::SetPixelFormat(TBase::Target().Get(), p_formats, &pfd))
 		return TBase::m_error().Last();
 
-	const uint32_t u_major_ver = _u_gl_major_ver;
-	const uint32_t u_minor_ver = _u_gl_miner_ver;
-
-	CAtt_set_ctx ctx_atts(u_major_ver, u_minor_ver);
+	CAtt_set_ctx ctx_atts(_u_gl_major_ver, _u_gl_miner_ver);
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
 	this->m_drw_ctx = this->Cache().CreateCtxAttsArb(TBase::Target().Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
 	if (nullptr == this->m_drw_ctx) {
@@ -333,10 +331,12 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
 		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+#if (0)
 		::MessageBox(
 			0, (_pc_sz) _T("wglMakeCurrent is failed") ,
 			   (_pc_sz) cs_cap , btns_warn
 		);
+#endif
 	}
 
 	return TBase::Error()();

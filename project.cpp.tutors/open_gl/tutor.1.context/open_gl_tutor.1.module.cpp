@@ -5,6 +5,7 @@
 #include "open_gl_tutor.1.module.h"
 #include "open_gl_tutor.1.res.h"
 #include "open_gl_tutor.1.wnd.h"
+#include "open_gl_tutor.0.fake.h"
 
 #include "shared.dbg.h"
 
@@ -19,6 +20,8 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::context;
 
 CContextModule _Module;
+
+#pragma warning(disable:4702)
 
 err_code CContextModule::PreMessageLoop (int nShowCmd) {
 		nShowCmd;
@@ -127,35 +130,64 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		layout.Top().Size().Height().Set(__H(rc_ctx), docking::CValue::e_ctrl::e_fixed);
 		layout.Top().Size().Width().Set(__W(rc_ctx), docking::CValue::e_ctrl::e_fixed);
 
-		CContext ctx;
-		// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
-		// the error *always* occurs on RDP of MS Windows;
-		if (__failed(ctx.Create(wnd_ctx.Handle(), 3, 3))) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
-		//	ctx.Error()().Show(); break;
+		struct gl_version {
+			uint32_t n_major = 0;
+			uint32_t n_minor = 0;
+		};
+
+		// https://en.wikipedia.org/wiki/OpenGL ;
+		gl_version vers[] = { // version 1.2.1 is skipped;
+			{4, 6}, {4, 5}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {3, 3}, {3, 2}, {3, 1}, {3, 0}, {2, 1}, {2, 0}, {1, 5}, {1, 4}, {1, 3}, {1, 2}, {1, 1}
+		};
+
+		__trace::Use_con(true);
+
+		TFakeWnd fk_wnd; // this class creates the fake window in its constructor;
+		if (fk_wnd.Is_valid() == false) {
+			// the error of the creating the window is already traced; just break the test case;
+			fk_wnd.Error().Show();
+			break;
 		}
-#if (0)
-		else
-		::MessageBox(
-			HWND_DESKTOP, TString().Format(_T("Ctx is created: %s"), _T("successfully;")), _T("OpenGL Tutors::1"), MB_OK|MB_ICONASTERISK
-		);
-#endif
-		// (3) getting *real* version information of openGL that is installed in MS Windows; *important*: OpenGL draw renderer context must be current;
+		// (2) creating the drawing renderer context;
+		context::CDevice dev_ctx;
+		if (__failed(dev_ctx.Create(fk_wnd.m_hWnd))) {
+			dev_ctx.Error()().Show();
+			break;
+		}
+		// (3) getting version information of openGL that is default in MS Windows; *important*: the fake/false context is still be current; (fake window is valid);
 		CVersion ver;
 		if (ver.Error()) {
 			ver.Error().Show();
 			break;
 		}
-
-		CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
-#if (0)
-		::MessageBox(
-			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
-		);
-#else
-		__trace_warn_3(_T("%s\n"), (_pc_sz) cs_ver);
-#endif
 		b_error = false;
+		__trace_warn_3(_T("%s\n\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false));
+		__empty_ln();
+
+		for (uint32_t i_ = 0; i_ < _countof(vers); i_++) {
+
+			CContext ctx;
+			// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
+			// the error *always* occurs on RDP of MS Windows;
+			if (__failed(ctx.Create(wnd_ctx.Handle(), vers[i_].n_major, vers[i_].n_minor))) {
+				__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
+			//	ctx.Error()().Show(); break;
+			}
+			// (3) getting *real* version information of openGL that is installed in MS Windows; *important*: OpenGL draw renderer context must be current;
+			CVersion ver_1;
+			if (ver_1.Error()) {
+				ver_1.Error().Show();
+				break;
+			}
+#if (0)
+			CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
+#else
+			CString cs_ver = ver.Get();
+#endif
+			__trace_warn_3(_T("Tries to get version for {%d.%d}: %s\n"), vers[i_].n_major, vers[i_].n_minor, (_pc_sz) cs_ver);
+			b_error = false;
+			break;
+		}
 
 	} while (true == false);
 

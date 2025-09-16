@@ -30,7 +30,7 @@ using namespace _impl;
 using namespace shared::defs;
 
 void CTrace::Empty_ln (void) {
-	::OutputDebugString(_T("\n"));
+	::OutputDebugString(_T(" \n"));
 }
 
 static bool b_use_con = true;

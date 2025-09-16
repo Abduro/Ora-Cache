@@ -36,6 +36,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(NULL, 0, 0, 0L);
 
+	__trace::Use_con(false);
+
 	do {
 	// (1) the message-only window must be created first aka fake window, it is necessary for creating OpenGL draw renderer compatible with regular GDI context;
 		TFakeWnd fk_wnd; // this class creates the fake window in its constructor;
@@ -62,8 +64,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		::MessageBox(
 			0, (_pc_sz) cs_ver, TString().Format(_T("%s::%s()"), (_pc_sz) __SP_NAME__, (_pc_sz) __METHOD__), MB_OK|MB_ICONINFORMATION
 		);
-		break;
+#else
+		__trace_info_3(_T("%s\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false));
 #endif
+		break;
 	} while (true == false);
 
 	MSG msg = {0, WM_QUIT, 0, 0, 0, {0, 0}};
