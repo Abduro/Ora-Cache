@@ -18,7 +18,7 @@ err_code context::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos,
 	_h_parent; _rc_wnd_pos; _b_visible;
 	TBase::m_error << __METHOD__ << __s_ok;
 
-	if (TWindow::Is_valid())
+	if (TBase::Is_valid())
 		return TBase::m_error << (err_code) TErrCodes::eObject::eExists;
 
 	static _pc_sz p_cls_name = _T("__open_gl_ctx_wnd");
@@ -26,7 +26,7 @@ err_code context::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos,
 	CWndCls wnd_cls;
 
 	if (__failed(wnd_cls.Register(p_cls_name))) {
-		__trace_err_3(_T("%s"), (_pc_sz) wnd_cls.Error().Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) wnd_cls.Error().Print(TError::e_req));
 		return TBase::m_error = wnd_cls.Error();
 	}
 
@@ -39,3 +39,7 @@ err_code context::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos,
 
 	return TBase::Error();
 }
+
+const
+CContext& context::CWnd::Ctx (void) const { return this->m_ctx; }
+CContext& context::CWnd::Ctx (void)       { return this->m_ctx; }

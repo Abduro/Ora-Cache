@@ -90,4 +90,7 @@ namespace shared { namespace gui {
 
 }}
 
+// the main window in any application can be the only one:
+shared::gui::CAppWnd&  Get_app_wnd (void);
+
 #endif/*_WIN_GUI_WND_H_INCLUDED*/

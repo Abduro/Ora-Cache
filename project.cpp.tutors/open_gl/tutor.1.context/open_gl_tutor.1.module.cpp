@@ -9,13 +9,6 @@
 
 #include "shared.dbg.h"
 
-#ifndef __H
-#define __H(_rect) (_rect.bottom - _rect.top)
-#endif
-#ifndef __W
-#define __W(_rect) (_rect.right - _rect.left)
-#endif
-
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::context;
 
@@ -64,8 +57,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		// (0) creating the main window/application at the beginning of this 'journey';
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#1_ctx"), false))) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
-		//	app_wnd.Error().Show(); break;
+		//	__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));  // the console window is not created yet;
+			app_wnd.Error().Show(); break;
 		}
 		else {
 			const bool b_is_top = app_wnd.Is_top();
@@ -80,9 +73,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		// (0.a) sets up the app/main window layer first;
 		layout.Main().Target(app_wnd);
+#if (0)
 		layout.Main().Size().Height().Set(__H(rect_wnd), docking::CValue::e_ctrl::e_fixed);
 		layout.Main().Size().Width().Set(__W(rect_wnd), docking::CValue::e_ctrl::e_fixed);  // if both height and width is fixed, the size is locked;
-
+#else
+		layout.Main().Is_locked(true);
+		layout.Main().Position() = rect_wnd;
+#endif
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 		app_wnd.Set_visible(true);
 
@@ -102,8 +99,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		// (0) creates the console output window;
 		CConsole out_;
 		if (__failed(out_.Open(app_wnd, rc_con, false))) { // the last arg of visibility mode is not used yet;
-			__trace_err_3(_T("%s\n"), (_pc_sz) out_.Error().Print(TError::e_req));
-		//	out_.Error().Show();
+		//	__trace_err_3(_T("%s\n"), (_pc_sz) out_.Error().Print(TError::e_req));
+			out_.Error().Show();
 			break;
 		}
 
@@ -119,6 +116,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		layout.Update();
 		shared::console::CLayout().Output().HScroll().Set(true);
+
+		CCon_cls con_cls;
+		con_cls.Get();
 
 		// (1) creates the context target window;
 		if (__failed(wnd_ctx.Create(app_wnd.Handle(), rc_ctx, true))) {

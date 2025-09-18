@@ -284,6 +284,8 @@ using namespace shared::sys_core::_impl;
 
 CError:: CError(void) { m_state = false; }
 CError:: CError(const CError& _err) {*this = _err;}
+CError:: CError (_pc_sz _p_cls, _pc_sz _p_method, const err_code _n_err_code) : CError() { *this >>_p_cls<<_p_method<<_n_err_code; }
+CError:: CError (const CString& _cs_cls, const CString& _cs_method, const err_code _n_err_code) : CError((_pc_sz)_cs_cls, (_pc_sz)_cs_method, _n_err_code) {}
 CError::~CError(void) { }
 
 /////////////////////////////////////////////////////////////////////////////

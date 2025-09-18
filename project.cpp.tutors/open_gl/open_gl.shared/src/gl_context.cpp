@@ -25,11 +25,11 @@ err_code context::CBase::Destroy(void) {
 	if (nullptr != this->m_drw_ctx) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
 		if (0 == ::wglMakeCurrent(this->Target().Get(), 0)) {
-			__trace_err_3(_T("%s"), (_pc_sz) (this->m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		}
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wgldeletecontext ;
 		if (0 == ::wglDeleteContext(this->m_drw_ctx)) {
-			__trace_err_3(_T("%s"), (_pc_sz) (this->m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		}
 		else
 			this->m_drw_ctx = nullptr;
@@ -57,7 +57,7 @@ err_code context::CBase::Set (const HWND _h_target) {
 
 	if (this->Is_valid()) {
 		this->m_error() << (err_code) TErrCodes::eObject::eInited = _T("Draw renderer exists");
-		__trace_err_3(_T("%s"), (_pc_sz) this->Error()().Print(TError::e_req)); return this->Error()();
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error()().Print(TError::e_req)); return this->Error()();
 	}
 
 	this->m_error()<<__METHOD__<<__s_ok;
@@ -102,7 +102,7 @@ err_code context::CTarget::Free (void) {
 
 	if (0 == ::ReleaseDC(this->m_target, this->m_dc_src)) {
 		this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Releasing source device context failed");
-		__trace_err_3(_T("%s"), (_pc_sz) this->Error().Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req));
 	}
 
 	return this->Error();
@@ -134,22 +134,36 @@ err_code  context::CTarget::Set (const HWND _h_wnd) {
 
 	if (this->Is_valid()) {
 		this->m_error << (err_code) TErrCodes::eObject::eInited = _T("Source device context is already set");
-		__trace_err_3(_T("%s"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
 
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr == _h_wnd || false == !!::IsWindow(_h_wnd)) {
 		this->m_error << __e_hwnd = _T("Target window handle is invalid");
-		__trace_err_3(_T("%s"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
 
 	this->m_target = _h_wnd;
 	this->m_dc_src = ::GetDC(_h_wnd);
-//	__empty_ln();
-	__trace_info_3(_T("context device: handle=%s\n"), (_pc_sz)__address_of(this->m_dc_src));
+//	__empty_ln(); // https://www.allacronyms.com/handle/abbreviated ;
+	__trace_info_3(
+		_T("#ctx_dev : {hndl=%s;src=%s}\n"), (_pc_sz)__address_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : this->Source())
+	);
 
 	return this->Error();
+}
+
+_pc_sz context::CTarget::Source (void) const { return (_pc_sz) this->m_cls_src; }
+bool   context::CTarget::Source (_pc_sz _p_cls_name) {
+	_p_cls_name;
+	CString cs_cls(_p_cls_name); cs_cls.Trim();
+
+	const bool b_changed = 0 != this->m_cls_src.CompareNoCase(cs_cls);
+	if (b_changed)
+		this->m_cls_src = cs_cls;
+
+	return b_changed;
 }
 
 CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
@@ -173,6 +187,8 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	_h_target;
 	CBase::m_error() <<__METHOD__<<__s_ok;
 
+	CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
+
 	if (__failed(CBase::Set(_h_target))) {
 		return CBase::Error()();
 	}
@@ -190,25 +206,25 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat ;
 	int32_t n_px_format = ::ChoosePixelFormat(CBase::Target().Get(), &px_fmt_desc);
 	if (0== n_px_format) {
-		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error()();
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setpixelformat ;
 	if (false == !!::SetPixelFormat(CBase::Target().Get(), n_px_format, &px_fmt_desc)) {
-		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error()();
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
 	this->m_drw_ctx = ::wglCreateContext(CBase::Target().Get());
 	if ( 0 == this->m_drw_ctx) {
-		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error()();
 	}
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
-		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 	}
 	return CBase::Error()();
 }
@@ -251,6 +267,8 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 
 	// (4) gets context;
 	// (4.a) get target window context device first;
+
+	TBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
 
 	if (__failed(TBase::Set(h_target)) || false == TBase::Target().Is_valid())
 		return TBase::Error()();
@@ -330,7 +348,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	}
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
-		__trace_err_3(_T("%s"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 #if (0)
 		::MessageBox(
 			0, (_pc_sz) _T("wglMakeCurrent is failed") ,

@@ -44,7 +44,7 @@ CWindow&  CFrame::Window (void)       { return this->m_owner; }
 /////////////////////////////////////////////////////////////////////////////
 
 CAppWnd:: CAppWnd (void) { TBase::m_error.Class(TString().Format(_T("%s::%s"), (_pc_sz)__CLASS__, TBase::Cls_name()), false); }
-CAppWnd::~CAppWnd (void) {}
+CAppWnd::~CAppWnd (void) { this->Destroy(); }
 
 err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
@@ -56,13 +56,44 @@ err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 	return n_result;
 }
 
+#if (1)
+err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_visible) {
+	_p_cls_name; _p_title; _b_visible;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	__trace::Use_con(false); // outputs to VS debug window; 
+
+	// the main window class must be registered first if it is not yet;
+	CWndCls wnd_cls;
+
+	if (__failed(wnd_cls.Register(_p_cls_name))) {
+		__trace_err_3(_T("%s\n"), (_pc_sz) wnd_cls.Error().Print(TError::e_req));
+		return TBase::m_error = wnd_cls.Error();
+	}
+
+	TBase::Styles().Default_for_app();
+
+	if (__failed(TBase::m_error << this->Layout().Recalc())) {
+		__trace_err_3(_T("%s\n"), (_pc_sz) TBase::m_error.Print(TError::e_req));
+	}
+
+	if (__succeeded(TBase::Create(_p_cls_name, _p_title, this->Layout().Main().Position(), _b_visible, HWND_DESKTOP))) {
+		this->Frame().Window() = TBase::Handle();
+		this->Layout().Main().Target(*this);
+	}
+	else
+		this->Frame().Window() = HWND_DESKTOP; // the same as (HWND)nullptr;
+
+	return TBase::Error();
+}
+#else
 err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_visible) {
 	_p_cls_name; _p_title; _b_visible;
 	// the main window class must be registered first if it is not yet;
 	CWndCls wnd_cls;
 
 	if (__failed(wnd_cls.Register(_p_cls_name))) {
-		__trace_err_3(_T("%s"), (_pc_sz) wnd_cls.Error().Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) wnd_cls.Error().Print(TError::e_req));
 		return TBase::m_error = wnd_cls.Error();
 	}
 
@@ -80,7 +111,7 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex ;
 
 	if (false == !!::AdjustWindowRect(&rc_pos, TBase::Styles().Std(), false)) {
-		__trace_err_3(_T("%s"), (_pc_sz) TBase::Error().Print(TError::e_req)); // just for indicating the error state and continue;
+		__trace_err_3(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req)); // just for indicating the error state and continue;
 	}
 
 	if (__succeeded(TBase::Create(_p_cls_name, _p_title, rc_pos, _b_visible, HWND_DESKTOP)))
@@ -90,6 +121,7 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 
 	return TBase::Error(); // it is very important to set error state properly, otherwise the module will exit immediately;
 }
+#endif
 
 err_code CAppWnd::Destroy (void) {
 	this->Frame().Window() = (HWND)nullptr;
@@ -107,3 +139,8 @@ shared::gui::CLayout& CAppWnd::Layout(void)       { return this->m_layout; }
 const
 CAppWnd::TBase& CAppWnd::operator ()(void) const { return (const TBase&)*this; }
 CAppWnd::TBase& CAppWnd::operator ()(void) { return (TBase&)*this; }
+
+shared::gui::CAppWnd&  ::Get_app_wnd (void) {
+	static shared::gui::CAppWnd app_wnd;
+	return app_wnd;
+}

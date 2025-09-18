@@ -26,12 +26,16 @@ namespace context {
 
 		const HDC Get (void) const; // gets target window device context handle;
 		err_code  Set (const HWND); // sets target window device context handle;
+		// it would be better to name the following property as 'Caller' instead of 'Source';
+		_pc_sz Source (void) const; // returns the window class name that is creator of the device context, i.e. the source;
+		bool   Source (_pc_sz _p_cls_name); // sets the source class name; returns 'true' in case of source class name change;
 
-		CTarget& operator <<(const HWND);  // invokes this::Set(...); if the device context is already obtained, it will be released first;
+		CTarget& operator <<(const HWND);   // invokes this::Set(...); if the device context is already obtained, it will be released first;
 
 	protected:
 		mutable
-		CError m_error;
+		CError  m_error;
+		CString m_cls_src;
 		HDC  m_dc_src ; // this is the source device context from which the device renderer is created; it is auto-released on destroying this class instance;
 		HWND m_target ; // the target window handle, it owns the source device context; this window handle is saved for releasing the HDC;
 	};

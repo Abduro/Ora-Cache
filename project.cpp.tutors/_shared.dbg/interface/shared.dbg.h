@@ -12,7 +12,6 @@
 #include "shared.defs.h"
 #include "shared.preproc.h"
 
-#if defined(_DEBUG)
 	// https://en.cppreference.com/w/cpp/language/enum ;
 	enum class e_print : uint32_t {
 		e_all   = 0x0,  // prints out the class name and namespace path, class field value(s);
@@ -22,7 +21,7 @@
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/debugging-and-error-reporting-macros ;
 	// https://stackoverflow.com/questions/20508086/getting-rid-of-atltracegeneral-category-shown-in-atltrace-output ; << good example ;
-
+#if defined(_DEBUG)
 	/*
 	*important*
 		regarding a variadic argument list:

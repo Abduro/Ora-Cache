@@ -107,7 +107,7 @@ namespace ex_ui { namespace popup { namespace layout { namespace _impl {
 #endif
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfoa ;
 		if (false == !!::GetMonitorInfo(hMonitor, &mInfo)) {
-			__trace_err_3(_T("%s"), (_pc_sz) (CError()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz) (CError()(CError::e_cmds::e_get_last)).Print(TError::e_req));
 			_cs_name = _T("#error");
 		}
 		else _cs_name = mInfo.szDevice;

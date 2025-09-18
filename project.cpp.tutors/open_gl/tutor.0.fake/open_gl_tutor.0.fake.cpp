@@ -29,7 +29,7 @@ CWnd:: CWnd (void) : TWindow(), m_h_dc(0) { this->m_error >> __CLASS__ << __METH
 
 	if (false == TWindow::IsWindow()) {
 		this->m_error.Last();
-		__trace_err_3(_T("%s"), (_pc_sz) this->Error().Print(TError::e_req)); return;
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return;
 	}
 	else {
 		this->m_error << __s_ok;

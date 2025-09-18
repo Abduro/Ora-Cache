@@ -19,6 +19,8 @@
     <ClCompile Include="$(_1)gl_format.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_program.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_program.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_shader.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_shader.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_version.h"><Filter>interface</Filter></ClInclude>

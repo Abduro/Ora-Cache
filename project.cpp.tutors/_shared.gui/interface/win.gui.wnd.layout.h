@@ -6,6 +6,7 @@
 */
 #include "shared.defs.h"
 #include "shared.timer.h"
+#include "shared.wnd.layout.h"
 namespace shared { namespace gui {
 
 	using namespace shared::defs;
@@ -70,7 +71,6 @@ namespace docking {
 		CValue& operator <<(const e_ctrl);  // sets the value control type;
 		CValue& operator <<(const long);    // sets the value;
 
-		
 		operator long (void) const;
 
 	private:
@@ -112,6 +112,11 @@ namespace docking {
 		CPane (void); CPane (const CPane&) = delete; CPane (CPane&&) = delete; ~CPane (void) = default;
 
 		bool Is_valid (void) const; // checks the attached window handle;
+
+		const
+		t_rect& Rect (void) const;
+		t_rect& Rect (void) ;
+
 		const
 		CSide& Side (void) const;
 		CSide& Side (void) ;
@@ -127,9 +132,9 @@ namespace docking {
 		CPane& operator = (CPane&&) = delete;
 
 		HWND   m_wnd ;
-
 		CSide  m_side;
 		CSize  m_size;
+		t_rect m_rect;
 	};
 }
 
@@ -137,6 +142,33 @@ namespace docking {
 	// (a) a window in the top part of the client area, this is the child window of graphics output: DirectX and OpenGL tutorials;
 	// (b) a window in the bottom part of the client area, this is the debug output console; (text mode);
 	class CLayout : public IWaitable_Events {
+	public:
+		class c_main_wnd {
+		public:
+			c_main_wnd (void); c_main_wnd (const c_main_wnd&) = delete; c_main_wnd (c_main_wnd&&) = delete; ~c_main_wnd (void) = default;
+			const
+			t_rect&  Clt_area (void) const;
+			t_rect&  Clt_area (void) ;
+			const
+			t_rect&  Position (void) const; // returns the reference to the rectangle of the main window position on the screen; (ro);
+			t_rect&  Position (void) ;      // direct changing of the rectangle value(s) does not move window or change its size;
+
+			bool     Is_locked(void) const;           // returns the lock state of the main window frame size, if it is 'true' the window size cannot be changed;
+			bool     Is_locked(const bool _b_state);  // sets the lock state of the main window frame rectangle (not its position, the window is still moveable); 
+
+			bool     Is_valid (void) const;
+
+			const HWND Target (void) const;
+			err_code   Target (const HWND);
+
+		private:
+			c_main_wnd& operator = (const c_main_wnd&) = delete; c_main_wnd& operator = (c_main_wnd&&) = delete;
+			t_rect m_rect_pos; // the main window frame position on the screen in absolute coordinates' system;
+			t_rect m_rect_clt; // the rectangle of the client area of the main window;
+
+			bool   m_locked;
+			HWND   m_main_wnd;
+		};
 	using CPane = docking::CPane;
 	public:
 		 CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
@@ -159,16 +191,18 @@ namespace docking {
 		 // https://english.stackexchange.com/questions/14694/what-is-the-difference-between-adjust-settle-and-arrange ;
 		 bool   Is_valid  (void) const ; // just validates all panes; in any case the arrangement will be made on the panes that are valid;
 
+		 err_code Recalc  (void) ; // re-calculates rectangles of all parts of the main window including its initial window rect too;
+
 		 const
-		 CPane& Main (void) const; // returns the reference to the target window which client area is adjusted by this layout; (ro);
-		 CPane& Main (void) ;      // returns the reference to the target window which client area is adjusted by this layout; (rw);
+		 c_main_wnd& Main (void) const; // actually, it is not the pane but the main window sizes themselves;
+		 c_main_wnd& Main (void) ;     
 
 		 // https://forum.wordreference.com/threads/bottom-lower-and-top-upper.2453408/ ; << good explaining;
 		 // Google AI: 'Top' can be considered more *absolute*, referring to a singular point, whereas 'upper' is relative..."
 
 		 const
-		 CPane& Top (void) const;
-		 CPane& Top (void) ;
+		 CPane& Top (void) const; // returns the reference to the target window which client area is adjusted by this layout; (ro);
+		 CPane& Top (void) ;	  // returns the reference to the target window which client area is adjusted by this layout; (rw);
 
 		 err_code Update (t_rect* const = 0);   // perhaps it would be better to name it as 'Recalc'; this method is called on 'moving' window message handler;
 
@@ -181,10 +215,17 @@ namespace docking {
 		 CPane  m_low;
 		 CPane  m_top;
 
-		 CPane  m_target;   // actually, it is the main window of the tutorial app;
+		 c_main_wnd  m_main_wnd; // it is the main window of the tutorial app;
 		 CStdTimer m_wait;
 	};
 
 }}
+
+#ifndef __H
+#define __H(_rect) (_rect.bottom - _rect.top)
+#endif
+#ifndef __W
+#define __W(_rect) (_rect.right - _rect.left)
+#endif
 
 #endif/*_WIN_GUI_WND_LAYOUT_H_INCLUDED*/

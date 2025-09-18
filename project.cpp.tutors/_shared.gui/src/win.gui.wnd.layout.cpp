@@ -3,6 +3,9 @@
 	This is Ebo Pack OpenGL tutorials' shared GUI window layout interface implementation file;
 */
 #include "win.gui.wnd.layout.h"
+#include "win.gui.wnd.h"
+
+#include "shared.dbg.h"
 #include "shared.wnd.base.h"
 #include "shared.wnd.msg.h"
 
@@ -11,18 +14,14 @@ using namespace shared::gui::docking;
 
 using namespace ex_ui::popup;
 
-#ifndef __H
-#define __H(_rect) (_rect.bottom - _rect.top)
-#endif
-#ifndef __W
-#define __W(_rect) (_rect.right - _rect.left)
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 
-CPane:: CPane (void) : m_wnd(0) {}
+CPane:: CPane (void) : m_wnd(0), m_rect{0} {}
 
 bool    CPane::Is_valid (void) const { return (0 != this->m_wnd && ::IsWindow(this->m_wnd)); }
+const
+t_rect& CPane::Rect (void) const { return this->m_rect; }
+t_rect& CPane::Rect (void)       { return this->m_rect; }
 
 const
 CSide&  CPane::Side (void) const { return this->m_side; }
@@ -134,6 +133,39 @@ CValue::operator long (void) const { return this->Get(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
+CLayout::c_main_wnd:: c_main_wnd (void) : m_rect_clt{0}, m_rect_pos{0}, m_main_wnd(0), m_locked(true) {}
+
+const
+t_rect&  CLayout::c_main_wnd::Clt_area (void) const { return this->m_rect_clt; }
+t_rect&  CLayout::c_main_wnd::Clt_area (void)       { return this->m_rect_clt; }
+const
+t_rect&  CLayout::c_main_wnd::Position (void) const { return this->m_rect_pos; }
+t_rect&  CLayout::c_main_wnd::Position (void)       { return this->m_rect_pos; }
+
+bool     CLayout::c_main_wnd::Is_locked(void) const { return this->m_locked; }        
+bool     CLayout::c_main_wnd::Is_locked(const bool _b_state) {
+	_b_state;
+	const bool b_changed = this->Is_locked() != _b_state;
+	if (b_changed)
+		this->m_locked = _b_state;
+	return b_changed;
+}
+
+bool     CLayout::c_main_wnd::Is_valid (void) const { return (0 != this->Target() && ::IsWindow(this->Target())); }
+
+const HWND CLayout::c_main_wnd::Target (void) const { return this->m_main_wnd; }
+err_code   CLayout::c_main_wnd::Target (const HWND _h_target) {
+	_h_target;
+	if (0 == _h_target || false == !!::IsWindow(_h_target))
+		return __e_hwnd;
+
+	this->m_main_wnd = _h_target;
+
+	return __s_ok;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CLayout:: CLayout (void) : m_wait(*this) { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
 CLayout::~CLayout (void) {
 	if (false == this->m_wait.IsValid())
@@ -141,8 +173,8 @@ CLayout::~CLayout (void) {
 }
 
 const
-CPane&  CLayout::Bottom (void) const { return this->m_low; }
-CPane&  CLayout::Bottom (void)       { return this->m_low; }
+CPane&   CLayout::Bottom (void) const { return this->m_low; }
+CPane&   CLayout::Bottom (void)       { return this->m_low; }
 
 err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
@@ -183,9 +215,9 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 				__trace_info(_T("x=%d;y=%d;cx=%d;cy=%d"), p_wnd_pos->x, p_wnd_pos->y, p_wnd_pos->cx, p_wnd_pos->cy);
 #endif
 				// locks the size change;
-				if (this->Main().Size().Is_locked()) {
-					p_wnd_pos->cx = this->Main().Size().Width();
-					p_wnd_pos->cy = this->Main().Size().Height();
+				if (this->Main().Is_locked()) {
+					p_wnd_pos->cx = __W(this->Main().Position());
+					p_wnd_pos->cy = __H(this->Main().Position());
 				}
 				// https://stackoverflow.com/questions/812686/can-a-window-be-always-on-top-of-just-one-other-window ;
 				// this answer: https://stackoverflow.com/a/821061/4325555 really works; thanks Matthew Xavier ;
@@ -209,15 +241,63 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 			n_result = __s_false;
 
 		} break;
+	default:
+		n_result = IMsg_Handler::_n_not_handled;
 	}
 	return n_result;
 }
 
-bool    CLayout::Is_valid (void) const { return this->Bottom().Is_valid() && this->Main().Is_valid() && this->Top().Is_valid(); }
+bool     CLayout::Is_valid (void) const { return this->Bottom().Is_valid() && this->Main().Is_valid() && this->Top().Is_valid(); }
+
+err_code CLayout::Recalc  (void) {
+
+	err_code n_result = __s_ok;
+
+	// (1) sets the main window position and size first;
+	t_rect rc_client  = layout::CPrimary().Centered(layout::t_size_u{uint32_t(layout::CRatios().Get().at(0).cx), uint32_t(layout::CRatios().Get().at(0).cy)});
+
+	this->Main().Clt_area() = rc_client; // sets the main window client area rectangle;
+	this->Main().Is_locked(true);        // it is set to 'true' by default, but nevertheless;
+
+	// (1.a) calculates the rectangles of the child windows;
+
+	const long n_part  = __H(rc_client) / 3;
+	this->Top().Rect() = { 0, 0, __W(rc_client), __H(rc_client) - n_part };
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrect ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex ;
+
+	t_rect rc_pos =  rc_client;
+
+	if (false == !!::AdjustWindowRect(&rc_pos, ::Get_app_wnd().Styles().Std(), false)) {
+		__trace_err_3(_T("%s\n"), (_pc_sz) CError(__CLASS__, __METHOD__, __LastErrToHresult()).Print(TError::e_req)); // just for indicating the error state and continue;
+	}
+	this->Main().Position() = rc_pos; // sets main window position on the screen by already converted rectangle;
+
+	// the console window requires the rectangle in screen coordinates not in the client area one;
+	this->Bottom().Rect() = { rc_pos.left, rc_pos.bottom - n_part, rc_pos.right, rc_pos.bottom };
+
+	// (2) sets the rectangles to the child windows;
+	// (2.a) to the window that is at the bottom area, i.e. to the debug output console window;
+#if (1)
+	// ToDo: setting the child windows' sizes requires the review, it very looks like such approach must be removed or at least be changed;
+	this->Bottom().Size().Height().Set(__H(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
+	this->Bottom().Size().Width().Set(__W(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
+
+	// (2.b) to the window that is at the top area, i.e. to the draw context window;
+
+	this->Top().Size().Height().Set(__H(this->Top().Rect()), docking::CValue::e_ctrl::e_fixed);
+	this->Top().Size().Width().Set(__W(this->Top().Rect()), docking::CValue::e_ctrl::e_fixed);
+#else
+#endif
+	// this procedure is ended, all child windows has appropriate rectangles;
+
+	return n_result;
+}
 
 const
-CPane&  CLayout::Main (void) const { return this->m_target; }
-CPane&  CLayout::Main (void)       { return this->m_target; }
+CLayout::c_main_wnd&  CLayout::Main (void) const { return this->m_main_wnd; }
+CLayout::c_main_wnd&  CLayout::Main (void)       { return this->m_main_wnd; }
 const
 CPane&  CLayout::Top (void) const { return this->m_top; }
 CPane&  CLayout::Top (void)       { return this->m_top; }
@@ -230,6 +310,7 @@ err_code CLayout::Update (t_rect* const _p_rect) {
 
 	if (0 == _p_rect) {
 		::GetWindowRect(this->Main().Target(), &rc_wnd_pos);
+		this->Main().Position() = rc_wnd_pos;
 	}
 	else
 		::CopyRect(&rc_wnd_pos, _p_rect);

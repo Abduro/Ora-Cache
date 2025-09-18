@@ -88,7 +88,7 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
-    <LibName>gl.tutor.2.shaper</LibName>
+    <LibName>gl.tutor.2.shader</LibName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
@@ -199,8 +199,8 @@
     <ClCompile Include="open_gl_tutor.2.wnd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(Fake)gl.tutor.0.fake.lib.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>
+    <ProjectReference Include="$(Ctx)gl.tutor.1.ctx.lib.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000C0004}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

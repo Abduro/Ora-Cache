@@ -178,6 +178,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shared.wnd.atom.h" />
+    <ClCompile Include="$(_1)shared.wnd.atom.cpp" />
     <ClInclude Include="$(_0)shared.wnd.base.h" />
     <ClCompile Include="$(_1)shared.wnd.base.cpp" />
     <ClInclude Include="$(_0)shared.wnd.msg.h" />

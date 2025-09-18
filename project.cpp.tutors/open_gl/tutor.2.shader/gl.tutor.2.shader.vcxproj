@@ -64,22 +64,22 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
  <!--Import Project="($ProjectDir)..\tutor.all.inc.props" /--><!--such relative reference to the path of the properties file does not work;-->
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="..\shared.all.inc.props" />
     <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="..\shared.all.inc.props" />
     <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="..\shared.all.inc.props" />
     <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\tutor.all.inc.props" />
+    <Import Project="..\shared.all.inc.props" />
     <Import Project="gl.tutor.2.shader.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
