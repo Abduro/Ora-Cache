@@ -75,6 +75,7 @@ namespace shared { namespace console { namespace _impl {
 
 			c_fg_clrs::e_fg_clrs clrs = c_fg_clrs::e_lightgray;
 
+			if (CTrace::e_category::e_impt == _e_cat) clrs = c_fg_clrs::e_lightblue;
 			if (CTrace::e_category::e_info == _e_cat) clrs = c_fg_clrs::e_lightgray;
 			if (CTrace::e_category::e_warn == _e_cat) clrs = c_fg_clrs::e_yellow;
 			if (CTrace::e_category::e_err  == _e_cat) clrs = c_fg_clrs::e_red;
@@ -95,5 +96,6 @@ using namespace shared::console::_impl;
 using namespace shared::dbg;
 
 void COut::Error (_pc_sz _text) { COutput::Print( shared::dbg::CTrace::e_err , _text); }
+void COut::Impt  (_pc_sz _text) { COutput::Print( shared::dbg::CTrace::e_impt, _text); }
 void COut::Info  (_pc_sz _text) { COutput::Print( shared::dbg::CTrace::e_info, _text); }
 void COut::Warn  (_pc_sz _text) { COutput::Print( shared::dbg::CTrace::e_warn, _text); }

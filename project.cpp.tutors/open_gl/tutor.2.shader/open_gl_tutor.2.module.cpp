@@ -79,28 +79,15 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		layout.Update();
 		shared::console::CLayout().Output().HScroll().Set(true);
 
+		__trace_warn_3(_T("%s\n\n"), (_pc_sz) CVersion().Print_2());
+		__empty_ln();
+
 		// (1) creates the context target window;
 		if (__failed(wnd_shader.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req)); // debug output console window is already created;
 		}
 		else
 			layout.Top().Target(wnd_shader);
-
-		TFakeWnd fk_wnd; // this class creates the fake window in its constructor;
-		if (fk_wnd.Is_valid() == false) {
-			// the error of the creating the window is already traced; just break the test case;
-			fk_wnd.Error().Show();
-			break;
-		}
-
-		CVersion ver;
-		if (ver.Error()) {
-			ver.Error().Show();
-			break;
-		}
-
-		__trace_warn_3(_T("%s\n\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false));
-		__empty_ln();
 
 		b_error = false;
 	} while (true == false);

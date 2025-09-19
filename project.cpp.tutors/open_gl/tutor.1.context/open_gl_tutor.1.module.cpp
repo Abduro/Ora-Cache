@@ -141,7 +141,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		};
 
 		__trace::Use_con(true);
-
+#if (0)
 		TFakeWnd fk_wnd; // this class creates the fake window in its constructor;
 		if (fk_wnd.Is_valid() == false) {
 			// the error of the creating the window is already traced; just break the test case;
@@ -160,9 +160,16 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			ver.Error().Show();
 			break;
 		}
-		b_error = false;
-		__trace_warn_3(_T("%s\n\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false));
+		__trace_warn_3(_T("%s\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false));
+		__trace_warn_3(_T("%s\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_vendor).Print(e_print::e_req, false));
+		__trace_warn_3(_T("%s\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_render).Print(e_print::e_req, false));
+		__trace_warn_3(_T("%s\n"), (_pc_sz) ver.GetAtt(CVersion::e_atts::e_shader).Print(e_print::e_req, false));
 		__empty_ln();
+		__trace_warn_3(_T("ver=%s;\n"), (_pc_sz) ver.Get());
+#else
+		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
+#endif
+		b_error = false;
 
 		for (uint32_t i_ = 0; i_ < _countof(vers); i_++) {
 
@@ -182,7 +189,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #if (0)
 			CString cs_ver = ver.GetAtt(CVersion::e_atts::e_version).Print(e_print::e_req, false);
 #else
-			CString cs_ver = ver.Get();
+			CString cs_ver = ver_1.Get();
 #endif
 			__trace_warn_3(_T("Tries to get version for {%d.%d}: %s\n"), vers[i_].n_major, vers[i_].n_minor, (_pc_sz) cs_ver);
 			b_error = false;

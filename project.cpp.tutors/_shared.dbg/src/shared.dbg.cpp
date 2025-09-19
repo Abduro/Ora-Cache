@@ -21,6 +21,7 @@ namespace _impl {
 		switch (_e_cat) {
 		case CTrace::e_category::e_warn: return CString(_T("[warn]"));
 		case CTrace::e_category::e_err : return CString(_T("[error]"));
+		case CTrace::e_category::e_impt: return CString(_T("[info]"));
 		default:
 			return CString(_T("[info]"));
 		}
@@ -66,6 +67,7 @@ void CTrace::Out_0 (const e_category _e_cat, _pc_sz _lp_sz_fmt, ...) { // perhap
 
 	if (CTrace::Use_con()) {
 		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_impt == _e_cat) { COut::Impt ((_pc_sz)cs_out); }
 		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
 		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
 	}
@@ -85,6 +87,7 @@ void CTrace::Out_2 (const e_category _e_cat, _pc_sz _p_cls, _pc_sz _p_method, _p
 
 	if (CTrace::Use_con()) {
 		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_impt == _e_cat) { COut::Impt ((_pc_sz)cs_out); }
 		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
 		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
 	}
@@ -104,6 +107,7 @@ void CTrace::Out_3 (const e_category _e_cat, _pc_sz _p_nm_space, _pc_sz _p_cls, 
 
 	if (CTrace::Use_con()) {
 		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_impt == _e_cat) { COut::Impt ((_pc_sz)cs_out); }
 		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
 		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
 	}

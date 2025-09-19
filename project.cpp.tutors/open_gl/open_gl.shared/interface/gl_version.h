@@ -43,7 +43,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	/* important:
 		the version can be checked in case when fake (based on regular GDI) or OpenGL draw renderer context is set current (by wglMakeCurrent);
-		(1) for the 'fake' aka 'false' context the version number is always '1.1';
+		(1) for the 'fake' aka 'false' context the version number is always '1.1'; (possibly it is not correct assumption);
 		(2) for the 'driver' context that is dependable on installed hardware driver of particular GPU vendor, the version is expected at least '3.1';
 		otherwise,
 		without setting the draw context to be current the version number is '#unset';
@@ -68,10 +68,14 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 		 TError& Error (void) const;
 		 CString   Get (void) const; // gets version info by using glGetIntegerv();
+
+		 err_code  Get_ex(void);     // creates device context based on a fake window and after that receives all attribute values;
+
 		 const
 		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
 
-		 CString   Print (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n"), const bool _b_trace = true) const;
+		 CString   Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n"), const bool _b_trace = false) const;
+		 CString   Print_2(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n")) const; // uses the internal print template;
 
 	private:
 		 CVersion& operator = (const CVersion&) = delete; CVersion& operator = (CVersion&&) = delete;

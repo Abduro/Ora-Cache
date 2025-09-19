@@ -9,7 +9,7 @@
 #include "open_gl_tutor.0.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
 
 using namespace ex_ui::draw::open_gl;
-#if (0) // fake window is not used directly, it is assumed the context is already created and selected before calling this version API;
+#if (1) // fake window is not used directly, it is assumed the context is already created and selected before calling this version API;
 #pragma comment(lib, "gl.tutor.0.fake.lib") 
 #endif
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
@@ -136,7 +136,7 @@ CVer_Att& CVer_Att::operator >>(const char* _p_value) { this->m_value = _p_value
 
 CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetstring ;
-#if (0)
+#if (1)
 	TFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
 	if (wnd.Is_valid() == false) {
 		this->m_error = wnd.Error(); return;
@@ -147,6 +147,7 @@ CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_init
 		this->m_error = ctx_dev.Error(); return;
 	}
 #endif
+
 	this->m_atts[e_atts::e_render ] << e_atts::e_render  >> reinterpret_cast<const char*>(::glGetString(GL_RENDERER));
 	this->m_atts[e_atts::e_shader ] << e_atts::e_shader  >> reinterpret_cast<const char*>(::glGetString(GL_SHADING_LANGUAGE_VERSION));
 	this->m_atts[e_atts::e_vendor ] << e_atts::e_vendor  >> reinterpret_cast<const char*>(::glGetString(GL_VENDOR));
@@ -214,6 +215,32 @@ CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_p
 	}
 	else if (_b_trace)
 		__trace_info(_T("%s"), (_pc_sz) cs_out);
+
+	return cs_out;
+}
+
+CString  CVersion::Print_2 (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("")*/, _pc_sz _p_sfx/* = _T(";")*/) const {
+	_e_opt; _p_pfx; _p_sfx;
+	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{ %s%s }");
+	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{ %s%s }");
+	static _pc_sz pc_sz_pat_r = _T("{ %s%s }");
+
+	CString cs_atts;
+	cs_atts += TString().Format(_T("%sversion : %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_version].Value(), _p_sfx);
+	cs_atts += TString().Format(_T("%sshader  : %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_shader ].Value(), _p_sfx);
+	cs_atts += TString().Format(_T("%srenderer: %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_render ].Value(), _p_sfx);
+	cs_atts += TString().Format(_T("%svendor  : %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_vendor ].Value(), _p_sfx);
+
+	CString cs_out;
+	if (e_print::e_all == _e_opt) {
+		cs_out.Format (pc_sz_pat_a, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _p_sfx, (_pc_sz) cs_atts);
+	}
+	if (e_print::e_no_ns == _e_opt) { cs_out.Format (pc_sz_pat_n, (_pc_sz)__CLASS__, _p_sfx, (_pc_sz) cs_atts); }
+	if (e_print::e_req == _e_opt)   { cs_out.Format (pc_sz_pat_r, _p_sfx, (_pc_sz) cs_atts); }
+
+	if (cs_out.IsEmpty()) {
+		cs_out.Format(_T("cls::[%s::%s].%s(#inv_arg=%d)"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _e_opt);
+	}
 
 	return cs_out;
 }

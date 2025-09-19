@@ -15,6 +15,7 @@ namespace shared { namespace console {
 	COut& operator = (const COut&) = delete; COut& operator = (COut&&) = delete;
 	public:
 		static void Error (_pc_sz);
+		static void Impt  (_pc_sz); // https://www.allacronyms.com/important/abbreviated ;
 		static void Info  (_pc_sz);
 		static void Warn  (_pc_sz);
 	};

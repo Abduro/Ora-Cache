@@ -104,6 +104,13 @@ err_code context::CTarget::Free (void) {
 		this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Releasing source device context failed");
 		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req));
 	}
+#if (0)
+	class CFakeWnd : public ::ATL::CWindowImpl<CFakeWnd> { typedef ::ATL::CWindowImpl<CFakeWnd> TBase;
+	public:
+		DECLARE_WND_CLASS_EX(_T("open_gl::fake::CWnd"), CS_DBLCLKS | CS_OWNDC, COLOR_ACTIVECAPTION);
+		DECLARE_EMPTY_MSG_MAP();
+	};
+#endif
 
 	return this->Error();
 }
@@ -136,7 +143,12 @@ err_code  context::CTarget::Set (const HWND _h_wnd) {
 		this->m_error << (err_code) TErrCodes::eObject::eInited = _T("Source device context is already set");
 		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
-
+#if (0)
+	if (!!this->m_target) {
+		this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Target window is not destroyed yet");
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
+	}
+#endif
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr == _h_wnd || false == !!::IsWindow(_h_wnd)) {
@@ -166,7 +178,7 @@ bool   context::CTarget::Source (_pc_sz _p_cls_name) {
 	return b_changed;
 }
 
-CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
+context::CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
 	_h_wnd;
 	if (this->Is_valid())
 		this->Free();
@@ -182,7 +194,34 @@ context::CDevice:: CDevice (void) : CBase() { CBase::m_error <<__CLASS__; }
 context::CDevice:: CDevice (const HWND _h_target) : CDevice() { *this << _h_target; }
 
 context::CDevice::~CDevice (void) { this->Destroy(); }
+#if (0)
+err_code context::CDevice::Create (void) {
 
+	class CFakeWnd : public ::ATL::CWindowImpl<CFakeWnd> { typedef ::ATL::CWindowImpl<CFakeWnd> TBase;
+	public:
+		DECLARE_WND_CLASS_EX(_T("open_gl::fake::CWnd"), CS_DBLCLKS | CS_OWNDC, COLOR_ACTIVECAPTION);
+		DECLARE_EMPTY_MSG_MAP();
+
+		HWND Create (void) { TBase::Create(HWND_MESSAGE); return TBase::Detach(); }
+	};
+
+	CBase::m_error() <<__METHOD__<<__s_ok;
+
+	const HWND h_fake = CFakeWnd().Create();
+	if (0 == h_fake) {
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		return CBase::Error()();
+	}
+
+	if (__succeeded(this->Create(h_fake))) {
+		CBase::Target().Is_managed(true);
+	}
+	else
+		::DestroyWindow(h_fake);
+
+	return CBase::Error()();
+}
+#endif
 err_code context::CDevice::Create (const HWND _h_target) {
 	_h_target;
 	CBase::m_error() <<__METHOD__<<__s_ok;
@@ -225,6 +264,10 @@ err_code context::CDevice::Create (const HWND _h_target) {
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+	}
+
+	if (false == CBase::Error()()) {
+		__trace_impt_3(_T("%s\n"), _T("*result*: success;"));
 	}
 	return CBase::Error()();
 }
@@ -355,6 +398,10 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 			   (_pc_sz) cs_cap , btns_warn
 		);
 #endif
+	}
+
+	if (false == CBase::Error()()) {
+		__trace_impt_3(_T("%s\n"), _T("*result*: success;"));
 	}
 
 	return TBase::Error()();
