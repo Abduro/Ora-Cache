@@ -12,3 +12,10 @@ CBase:: CBase (void) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_ini
 CBase::~CBase (void) {}
 
 TErr_ex& CBase::Error (void) const { return this->m_error; }
+
+CProgram:: CProgram (void) : TBase() { TBase::m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
+CProgram::~CProgram (void) {}
+
+const
+procs::CProg& CProgram::Cache (void) const { return this->m_fn_cache; }
+procs::CProg& CProgram::Cache (void)       { return this->m_fn_cache; }

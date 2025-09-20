@@ -194,6 +194,8 @@
     <ClCompile Include="$(_1)gl_shader.cpp" />
     <ClInclude Include="$(_0)gl_version.h" />
     <ClCompile Include="$(_1)gl_version.cpp" />
+    <ClInclude Include="$(_0)gl_vertex.h" />
+    <ClCompile Include="$(_1)gl_vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

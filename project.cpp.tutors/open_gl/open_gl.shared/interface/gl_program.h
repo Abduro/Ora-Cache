@@ -5,13 +5,9 @@
 	This is Ebo Pack OpenGL tutorials' shader program base interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_error.h"
+#include "gl_procs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
-
-	using CErr_ex = CError_ex;
-	using TErr_ex = const CErr_ex;
-
 namespace program {
 
 	class CBase {
@@ -26,9 +22,22 @@ namespace program {
 	protected:
 		 CError_ex m_error;
 	};
-
-}}}
-
 }
+
+	class CProgram : public program::CBase { typedef program::CBase TBase;
+	public:
+		 CProgram (void) ;  CProgram (const CProgram&) = delete; CProgram (CProgram&&) = delete;
+		~CProgram (void) ;
+
+		 const
+		 procs::CProg& Cache (void) const;
+		 procs::CProg& Cache (void) ;
+
+	private:
+		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
+
+		 procs::CProg  m_fn_cache;
+	};
+}}}
 
 #endif/*_GL_PROGRAM_H_INCLUDED*/

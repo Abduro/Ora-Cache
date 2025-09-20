@@ -25,5 +25,7 @@
     <ClCompile Include="$(_1)gl_shader.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_version.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

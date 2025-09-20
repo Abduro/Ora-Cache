@@ -13,7 +13,11 @@
 #pragma comment(lib, "opengl32.lib")
 
 namespace ex_ui { namespace draw { namespace open_gl {
+
 	using namespace shared::defs;
+
+	using CErr_ex = CError_ex;
+	using TErr_ex = const CErr_ex;
 
 	class no_copy { // maybe it's something like boost::noncopyable;
 	protected:

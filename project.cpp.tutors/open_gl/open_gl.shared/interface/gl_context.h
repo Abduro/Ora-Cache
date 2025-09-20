@@ -5,14 +5,9 @@
 	This is Ebo Pack OpenGL tutorials' context base interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_error.h"
 #include "gl_procs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
-
-	using CErr_ex = CError_ex;
-	using TErr_ex = const CErr_ex;
-
 namespace context {
 
 	class CTarget {

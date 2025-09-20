@@ -48,6 +48,11 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		otherwise,
 		without setting the draw context to be current the version number is '#unset';
 
+		it very looks like the above statement is not correct, but this one:
+		(1) creating win32 device context and setting desirable pixel format to it; *fake* window is helpful for this case;
+		(2) creating a draw renderer context of OpenGL that is compatible to win32 GDI; *mandatory*: making the context of that renderer to be current;
+		(3) finally, getting the version of OpenGL loads dynamic link library of the video card vendor and full information is *received*;
+
 		https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << gives good explanation for above case;
 	*/
 
