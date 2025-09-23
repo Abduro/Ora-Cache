@@ -5,30 +5,93 @@
 	This is Ebo Pack OpenGL tutorials' shader base interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_error.h"
+#include "gl_procs.h"
+
+#pragma region __shader_types
+/* copied from glcorearb.h */
+#define GL_COMPUTE_SHADER         0x91B9
+#define GL_FRAGMENT_SHADER        0x8B30
+#define GL_GEOMETRY_SHADER        0x8DD9
+#define GL_TESS_CONTROL_SHADER    0x8E88
+#define GL_TESS_EVALUATION_SHADER 0x8E87
+#define GL_VERTEX_SHADER          0x8B31
+#pragma endregion
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
-	using CErr_ex = CError_ex;
-	using TErr_ex = const CErr_ex;
-
 namespace shader {
 
-	class CBase {
+	class CLog { public: CLog(void); CLog (const CLog&) = delete; CLog (CLog&&) = delete; ~CLog (void) ;
+	private: CLog& operator = (const CLog&) = delete; CLog& operator = (CLog&&) = delete;
 	public:
-		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
-		~CBase (void);
+		TErr_ex& Error (void) const;
 
-		 TErr_ex& Error (void) const;
+		_pc_sz   Get (void) const;                    // returns log info ;
+		err_code Set (const uint32_t _u_shader_id) ;  // retrieves the log info from current state of specified _u_shader_id to string buffer;
 
 	private:
-		 CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
-	protected:
-		 CError_ex m_error;
+		mutable
+		CError_ex m_error ;
+		CString   m_buffer;  // stores the log info;
 	};
 
-}}}
+	class CType {
+	public:
+		enum e_value : uint16_t {    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
+		     e_undef     = 0x0,
+		     e_compute   = GL_COMPUTE_SHADER ,         // is intended to run on the programmable compute processor ;
+		     e_fragment  = GL_FRAGMENT_SHADER,         // is intended to run on the programmable fragment processor ;
+		     e_geometry  = GL_GEOMETRY_SHADER,         // is intended to run on the programmable geometry processor ;
+		     e_tess_ctrl = GL_TESS_CONTROL_SHADER,     // is intended to run on the programmable tessellation processor in the control stage ;
+		     e_tess_eval = GL_TESS_EVALUATION_SHADER,  // is intended to run on the programmable tessellation processor in the evaluation stage ;
+		     e_vertex    = GL_VERTEX_SHADER ,          // is intended to run on the programmable vertex processor ;
+		};
+		CType (void); CType (const CType&) = delete; CType (CType&&) = delete; ~CType (void) = default;
 
+		e_value Get (void) const;
+		bool    Set (const e_value) ;
+
+		operator uint16_t (void) const; // returns currently set value of the shader type;
+
+		static CString To_str(const uint16_t _u_type);
+
+	private:
+		CType& operator = (const CType&) = delete; CType& operator = (CType&&) = delete;
+		e_value m_value;
+	};
 }
+	typedef shader::CType::e_value TType;
+
+	class CShader {
+	public:
+		 CShader (void); CShader (const CShader&) = delete; CShader (CShader&&) = delete;
+		~CShader (void);
+
+		 static procs::CShader& Cache (void) ;
+
+		 static CString  Class (void);       // returns this class name for debug purposes;
+
+		 err_code Create (const TType);
+		 err_code Destroy (void);
+
+		 TErr_ex& Error (void) const;
+		 uint32_t Id (void) const;
+
+		 bool     Is_compiled (void) const;  // checks compilation status of the shader;
+		 bool     Is_valid (void) const;     // checks the validity of the shaper but after its compilation only, otherwise it returns 'false';
+
+		 const
+		 shader::CType& Type (void) const;
+		 shader::CType& Type (void) ;
+
+	private:
+		 CShader& operator = (const CShader&) = delete; CShader& operator = (CShader&&) = delete;
+	protected:
+		 mutable
+		 CError_ex m_error;
+		 uint32_t  m_id ;
+		 shader::CType  m_type ;
+	};
+}}}
 
 #endif/*_GL_SHADER_H_INCLUDED*/

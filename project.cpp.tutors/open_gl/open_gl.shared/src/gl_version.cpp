@@ -188,7 +188,7 @@ CVer_Att&  CVersion::GetAtt (const e_atts _e_att) const {
 	}
 }
 
-CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("")*/, _pc_sz _p_sfx/* = _T(";")*/, const bool _b_trace/* = true*/) const {
+CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("")*/, _pc_sz _p_sfx/* = _T(";")*/, const bool _b_trace/* = false*/) const {
 	_e_opt; _p_pfx; _p_sfx; _b_trace;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s%s}");
@@ -214,7 +214,7 @@ CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_p
 			__trace_err(_T("%s"), (_pc_sz) cs_out);
 	}
 	else if (_b_trace)
-		__trace_info(_T("%s"), (_pc_sz) cs_out);
+		__trace_impt(_T("%s"), (_pc_sz) cs_out);
 
 	return cs_out;
 }

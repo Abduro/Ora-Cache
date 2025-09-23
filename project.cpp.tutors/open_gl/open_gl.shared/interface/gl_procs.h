@@ -13,6 +13,7 @@ namespace procs {
 
 	typedef ::std::map<CString, PROC> TProcCache;  // the key is the procedure name, the value is the pointer to the address of procefure function/method;
 
+	// ToDo: it would be better in case if the cache is global and static for all functions; it looks very like OpenGL functions do not have the same names;
 	class CBase { // not thread safe yet;
 	public:
 		CBase (void) ; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
@@ -27,48 +28,84 @@ namespace procs {
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 
 	protected:
-		TProcCache m_cached; // every child class will have its own cache of the functions pointers;
+		mutable
 		CError m_error;
+		TProcCache m_cached; // every child class will have its own cache of the functions pointers;
 	};
 
+	/**important*:
+	if original function of the OpenGL returns 'void' the wrapper will return 'err_code' for indicating 'success' or 'failure' of loading a function pointer;
+	*/
+
+	// https://www.abbreviations.com/abbreviation/Target >> tgt ;
 	class CBuffer : public CBase {
-	typedef void (__stdcall *pfn_Bind) (uint32_t _n_target, uint32_t _buff_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml ;
-	typedef void (__stdcall *pfn_Data) (uint32_t _n_target, ptrdiff_t _n_size, const void* _p_data, uint32_t _n_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
+	typedef void (__stdcall *pfn_Bind) (uint32_t _u_tgt_id, uint32_t _u_buff_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml ;
+	typedef void (__stdcall *pfn_Data) (uint32_t _u_tgt_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
 	typedef void (__stdcall *pfn_Delete) (int32_t _n_count, const uint32_t* _p_buffers); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteBuffers.xhtml ;
-	typedef void (__stdcall *pfn_GenNames) (int32_t _n_count, uint32_t* _p_names); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml ;
-	typedef void (__stdcall *pfn_Named) (uint32_t _n_name, ptrdiff_t _n_size, const void* _p_data, uint32_t _n_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
+	typedef void (__stdcall *pfn_GenIds) (int32_t _n_count, uint32_t* _p_buff_ids); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml ;
+	typedef void (__stdcall *pfn_Named) (uint32_t _u_name, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
 	public:
 		CBuffer (void); ~CBuffer (void) = default;
 
-		err_code Bind (uint32_t _n_target, uint32_t _buff_id); // binds a buffer object to the specified buffer binding point ;
-		err_code Data (uint32_t _n_target, ptrdiff_t _n_size, const void* _p_data, uint32_t _n_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
-		err_code Delete (int32_t  _n_count , const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
-		err_code GenNames (int32_t _n_count, uint32_t* _p_names); // returns _n_count buffer object names in _p_names array ;
-		err_code Named (uint32_t _n_name, ptrdiff_t _n_size, const void* _p_data, uint32_t _n_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
+		err_code Bind (uint32_t _u_tgt_id, uint32_t _u_buff_id); // binds a buffer object to the specified buffer binding point ;
+		err_code Data (uint32_t _u_tgt_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
+		err_code Delete (int32_t  _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
+		err_code GenerateIds (int32_t _n_count, uint32_t* _p_buff_ids); // returns _n_count buffer object names in _p_names array ;
+		err_code Named (uint32_t _u_buff_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
+
+		err_code Get_all (void) ; // gets all functions' pointers at once;
 
 	private:
 		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator = (CBuffer&&) = delete;
 	};
 
+	/* https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetShaderiv.xml ;
+		the excerpt from above document:
+		Shader compiler support is optional, and thus must be queried before use by calling glGet with argument GL_SHADER_COMPILER.
+	*/
+	class CCompiler : public CBase {
+	public:
+		CCompiler (void); ~CCompiler (void) = default;
+
+		bool Is_supported (void) const; // returns 'true' if the compiler is supported; class CParam is used for getting support value;
+
+	private:
+		CCompiler& operator = (const CCompiler&) = delete; CCompiler& operator = (CCompiler&&) = delete;
+	};
+
+	// https://www.abbreviations.com/abbreviation/Format >> fmt ;
 	class CContext : public CBase {
-	typedef int32_t  (__stdcall *pfn_ChoosePxFormatArb) (
-		HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count
-	);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	typedef HGLRC    (__stdcall *pfn_CreateCtxAttsArb) (
-		HDC, HGLRC _h_shared_ctx, const int* p_att_lst
-	);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
-	typedef int32_t  (__stdcall *pfn_SwapIntervalExt) (int _n_interval);
+	typedef int32_t (__stdcall *pfn_ChoosePxFormatArb) (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _u_max_fmts, int* _p_fmts, uint32_t* _p_fmt_count);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	typedef HGLRC   (__stdcall *pfn_CreateCtxAttsArb)  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
+	typedef int32_t (__stdcall *pfn_SwapIntervalExt) (int _n_interval); // https://www.khronos.org/opengl/wiki/Swap_Interval ;
 	public:
 		CContext (void); ~CContext (void) = default;
 
 		err_code Get_all (void) ; // in the most cases this method is very useful for testing purposes;
-
-		int32_t ChoosePxFormatArb (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _n_max_formats, int* _p_formats, uint32_t* _p_fmt_count);
-		HGLRC   CreateCtxAttsArb  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst);
-		int32_t SwapIntervalExt   (const int _n_interval);
+		
+		int32_t ChoosePxFormatArb (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _u_max_fmts, int* _p_fmts, uint32_t* _p_fmt_count); // selects pixel formats to return based on the attribute values specified in _p_atts_i and _p_atts_f ;
+		HGLRC   CreateCtxAttsArb  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst); // creates an OpenGL rendering context ;
+		bool    SwapIntervalExt   (const int _n_interval); // controls vertical sync; specifies minimum number of frames before each buffer swap (back and front);
 
 	private:
 		CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
+	};
+	// https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGet.xml ; this document contains all parameter identifiers that is recognized by glGet*();
+	class CParam : public CBase {
+	typedef void   (__stdcall *pfn_GetBool) (uint32_t _u_param_id, uint32_t* _p_result);
+	typedef void   (__stdcall *pfn_GetFloat) (uint32_t _u_param_id, float* _p_result);
+	typedef void   (__stdcall *pfn_GetFInt) (uint32_t _u_param_id, int32_t* _p_result);
+	public:
+		CParam (void); ~CParam (void) = default;
+
+		err_code Get_all (void) ;
+
+		bool    GetBool (uint32_t _u_param_id);  // returns parameter value as boolean ;
+		float   GetFloat (uint32_t _u_param_id); // returns parameter value as float number;
+		int32_t GetInt (uint32_t _u_param_id);   // returns parameter value as integer ;
+
+	private:
+		CParam& operator = (const CParam&) = delete; CParam& operator = (CParam&&) = delete;
 	};
 
 	class CProg : public CBase {
@@ -78,7 +115,7 @@ namespace procs {
 	typedef void     (__stdcall *pfn_Delete)   (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteProgram.xhtml ;
 	typedef void     (__stdcall *pfn_InfoLog)  (uint32_t _prog_id, int32_t _buf_size, int32_t* _log_len, char* _p_log); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramInfoLog.xhtml ;
 	typedef void     (__stdcall *pfn_Link)     (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glLinkProgram.xhtml ;
-	typedef void     (__stdcall *pfn_Params)   (uint32_t _prog_id, uint32_t _p_name, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetProgramiv.xml ;
+	typedef void     (__stdcall *pfn_Params)   (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetProgramiv.xml ;
 	typedef void     (__stdcall *pfn_Use)      (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUseProgram.xhtml ;
 	typedef void     (__stdcall *pfn_Validate) (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml ;
 	public:
@@ -90,9 +127,11 @@ namespace procs {
 		err_code Delete  (uint32_t _prog_id);  // frees the memory and invalidates the name associated with the program object specified by _prog_id ;
 		err_code InfoLog (uint32_t _prog_id, int32_t _buf_size, int32_t* _log_len, char* _p_log); // returns the information log for the specified program object ;
 		err_code Link    (uint32_t _prog_id);  // links the program object specified by _prog_id ;
-		err_code Params  (uint32_t _prog_id, uint32_t _p_name, int32_t* _p_params); // returns the requested object parameter ;
+		err_code Params  (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_params); // returns the requested object parameter ;
 		err_code Use (uint32_t _prog_id);      // installs the program object specified by program as part of current rendering state ;
 		err_code Validate (uint32_t _prog_id); // checks to see whether the executables contained in program can execute given the current OpenGL state ;
+
+		err_code Get_all (void) ; // gets all functions' pointers at once;
 
 	private:
 		CProg& operator = (const CProg&) = delete; CProg& operator = (CProg&&) = delete;
@@ -100,20 +139,22 @@ namespace procs {
 
 	class CShader : public CBase {
 	typedef void     (__stdcall *pfn_Compile)(uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCompileShader.xhtml ;
-	typedef uint32_t (__stdcall *pfn_Create) (uint32_t _type);      // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
+	typedef uint32_t (__stdcall *pfn_Create) (uint32_t _u_type);    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
 	typedef void     (__stdcall *pfn_Delete) (uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteShader.xhtml ;
 	typedef void     (__stdcall *pfn_InfoLog)(uint32_t _shader_id, int32_t _n_max_length, int32_t* _p_log_len, char* _p_log); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetShaderInfoLog.xhtml ;
 	typedef void     (__stdcall *pfn_Params) (uint32_t _shader_id, uint32_t _param_type, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetShaderiv.xml ;
-	typedef void     (__stdcall *pfn_Source) (uint32_t _handle, int32_t _n_count, const char** const _p_string, const int32_t* _p_length); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glShaderSource.xhtml ;
+	typedef void     (__stdcall *pfn_Source) (uint32_t _shader_id, int32_t _n_count, const char** const _p_string, const int32_t* _p_length); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glShaderSource.xhtml ;
 	public:
 		CShader (void); ~CShader (void) = default;
 
 		err_code Compile (uint32_t _shader_id); // compiles the source code strings that have been stored in the shader object specified by _shader_id ;
-		uint32_t Create  (uint32_t _type);      // creates an empty shader object and returns a non-zero value by which it can be referenced ;
+		uint32_t Create  (uint32_t _u_type);    // creates an empty shader object and returns a non-zero value by which it can be referenced ;
 		err_code Delete  (uint32_t _shader_id); // frees the memory and invalidates the name associated with the shader object specified by _shader_id ;
 		err_code InfoLog (uint32_t _shader_id, int32_t _n_max_length, int32_t* _p_log_len, char* _p_log); // returns the information log for the specified shader object ;
-		err_code Params  (uint32_t _shader_id, uint32_t _param_type, int32_t* _p_params); // returns a parameter from a shader object ;
-		err_code Source  (uint32_t _handle, int32_t _n_count, const char** const _p_string, const int32_t* _p_length); // sets the source code in shader to the source code in the array of strings specified by _p_string ;
+		err_code Params  (uint32_t _shader_id, uint32_t _param_type, int32_t* _p_params); // returns a parameter from a shader object ; the error object is updated in case of this function failure;
+		err_code Source  (uint32_t _shader_id, int32_t _n_count, const char** const _p_string, const int32_t* _p_length); // sets the source code in shader to the source code in the array of strings specified by _p_string ;
+
+		err_code Get_all (void) ; // gets all functions' pointers at once;
 
 	private:
 		CShader& operator = (const CShader&) = delete; CShader& operator = (CShader&&) = delete;
@@ -121,29 +162,31 @@ namespace procs {
 
 	class CVertex : public CBase {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml ;
-	typedef void (__stdcall *pfn_AttPtr)   (uint32_t _n_ndx, int32_t _n_size, uint32_t _n_type, uint16_t _b_norm, int32_t _n_stride, const void** _ptr);
-	typedef void (__stdcall *pfn_AttPtr_I) (uint32_t _n_ndx, int32_t _n_size, uint32_t _n_type, int32_t _n_stride, const void** _ptr);
-	typedef void (__stdcall *pfn_AttPtr_L) (uint32_t _n_ndx, int32_t _n_size, uint32_t _n_type, int32_t _n_stride, const void** _ptr);
+	typedef void (__stdcall *pfn_AttPtr)   (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, uint16_t _b_norm, int32_t _n_stride, const void** _ptr);
+	typedef void (__stdcall *pfn_AttPtr_I) (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, int32_t _n_stride, const void** _ptr);
+	typedef void (__stdcall *pfn_AttPtr_L) (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, int32_t _n_stride, const void** _ptr);
 	typedef void (__stdcall *pfn_Bind) (uint32_t _arr_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml ;
 	typedef void (__stdcall *pfn_Delete) (int32_t _n_count, const uint32_t* _p_arrays); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteVertexArrays.xhtml ;
 	typedef void (__stdcall *pfn_DisableArrAtt)(uint32_t _arr_id, uint32_t _n_ndx);
-	typedef void (__stdcall *pfn_DisableAttArr)(uint32_t _n_ndx); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
+	typedef void (__stdcall *pfn_DisableAttArr)(uint32_t _u_ndx); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
 	typedef void (__stdcall *pfn_EnableArrAtt) (uint32_t _arr_id, uint32_t _n_ndx);
-	typedef void (__stdcall *pfn_EnableAttArr) (uint32_t _n_ndx);
-	typedef void (__stdcall *pfn_GenNames) (int32_t _n_count, uint32_t* _p_names); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml ;
+	typedef void (__stdcall *pfn_EnableAttArr) (uint32_t _u_ndx);
+	typedef void (__stdcall *pfn_GenIds) (int32_t _n_count, uint32_t* _p_ids); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml ;
 	public:
 		CVertex (void); ~CVertex (void) = default;
 
-		err_code AttPtr (uint32_t _n_ndx, int32_t _n_size, uint32_t _n_type, uint16_t _b_norm, int32_t _n_stride, const void** _ptr); // defines an array of generic vertex attribute data (signed & unsigned) ;
-		err_code AttPtr_I (uint32_t _n_ndx, int32_t _n_size, uint32_t _n_type, int32_t _n_stride, const void** _ptr); // the integer types GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT, GL_UNSIGNED_SHORT, GL_INT, GL_UNSIGNED_INT ;
-		err_code AttPtr_L (uint32_t _n_ndx, int32_t _n_size, uint32_t _n_type, int32_t _n_stride, const void** _ptr); // specifies state for a generic vertex attribute array associated with a shader attribute variable declared with 64-bit double precision components ;
-		err_code Bind   (uint32_t _arr_id); // binds the vertex array object with name array ;
+		err_code AttPtr (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, uint16_t _b_norm, int32_t _n_stride, const void** _ptr); // defines an array of generic vertex attribute data (signed & unsigned) ;
+		err_code AttPtr_I (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, int32_t _n_stride, const void** _ptr); // the integer types GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT, GL_UNSIGNED_SHORT, GL_INT, GL_UNSIGNED_INT ;
+		err_code AttPtr_L (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, int32_t _n_stride, const void** _ptr); // specifies state for a generic vertex attribute array associated with a shader attribute variable declared with 64-bit double precision components ;
+		err_code Bind (uint32_t _arr_id); // binds the vertex array object with name array ;
 		err_code Delete (int32_t _n_count, const uint32_t* _p_arrays); // deletes vertex array objects ;
 		err_code DisableArrAtt (uint32_t _arr_id, uint32_t _n_ndx);    // disables an attribute by index and updates state of the vertex array object with _arr_id ;
-		err_code DisableAttArr (uint32_t _n_ndx);                      // disables currently bound vertex array object for the operation ;
+		err_code DisableAttArr (uint32_t _u_ndx);                      // disables currently bound vertex array object for the operation ;
 		err_code EnableArrAtt  (uint32_t _arr_id, uint32_t _n_ndx);    // enables an attribute by index and updates state of the vertex array object with _arr_id ;
-		err_code EnableAttArr  (uint32_t _n_ndx);                      // enables currently bound vertex array object for the operation ;
-		err_code GenNames (int32_t _n_count, uint32_t* _p_names);      // generates vertex array object names and guarantees that none of the returned names was in use immediately before the call to it ;
+		err_code EnableAttArr  (uint32_t _u_ndx);                      // enables currently bound vertex array object for the operation ;
+		err_code GenerateIds   (int32_t _n_count, uint32_t* _p_ids);   // generates vertex array object names and guarantees that none of the returned names was in use immediately before the call to it ;
+
+		err_code Get_all (void) ; // gets all functions' pointers at once;
 
 	private:
 		CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;

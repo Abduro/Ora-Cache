@@ -5,6 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' shader window interface declaration file;
 */
 #include "open_gl_tutor.1.wnd.h"
+#include "gl_shader.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
@@ -22,6 +23,12 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		~CWnd (void);
 
 		err_code Create (const HWND _h_parent, const t_rect&, const bool _b_visible = true);
+		const
+		CShader& Shader (void) const;
+		CShader& Shader (void) ;
+
+	protected:
+		CShader m_shader;
 	};
 
 }}}}

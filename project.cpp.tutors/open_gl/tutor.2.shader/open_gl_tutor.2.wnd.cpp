@@ -15,7 +15,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 typedef ex_ui::popup::CWndBase TBase;
 
 shader::CWnd:: CWnd (void) : TParent() { TBase::m_error >>__CLASS__; }
-shader::CWnd::~CWnd (void) { } // parent class object will destroy window created automatically on its (parent) destruction;
+shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
+
+	this->Shader().Destroy();
+
+}
 
 err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
 	_h_parent; _rc_wnd_pos; _b_visible;
@@ -44,5 +48,9 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 	return TParent::Error();
 }
+
+const
+CShader& shader::CWnd::Shader (void) const { return m_shader; }
+CShader& shader::CWnd::Shader (void)       { return m_shader; }
 
 }}}}

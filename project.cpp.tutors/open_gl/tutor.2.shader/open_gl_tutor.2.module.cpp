@@ -80,7 +80,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		shared::console::CLayout().Output().HScroll().Set(true);
 
 		__trace_warn_3(_T("%s\n\n"), (_pc_sz) CVersion().Print_2());
-		__empty_ln();
 
 		// (1) creates the context target window;
 		if (__failed(wnd_shader.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
