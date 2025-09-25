@@ -32,4 +32,6 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace shader {
 #pragma comment(lib, "gl.tutor.0.fake.lib")   // this lib refers to shared.trim_v15.lib that is common for OpenGL and DirectX;
 #pragma comment(lib, "gl.tutor.2.shader.lib") // this is this tutorial project static library;
 
+#pragma comment(lib, "gl.tutor.0.fake.lib") 
+
 #endif/*_OPEN_GL_TUTOR_2_MODULE_H_INCLUDED*/

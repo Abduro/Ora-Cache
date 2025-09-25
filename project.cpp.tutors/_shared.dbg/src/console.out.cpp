@@ -4,6 +4,7 @@
 */
 #include "console.out.h"
 #include "shared.dbg.h"
+#include "console.h"
 
 using namespace shared::console;
 
@@ -57,12 +58,12 @@ namespace shared { namespace console { namespace _impl {
 			e_white        = 0xf0, // 1111 0000 ; BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE ;
 		} e_bkg_clrs;
 	};
-	
+#if (0)	
 	HANDLE Get_Out (void) {
 		static HANDLE h_out = ::GetStdHandle(STD_OUTPUT_HANDLE);
 		return h_out;
 	}
-
+#endif
 	class COutput {
 	using CTrace = shared::dbg::CTrace;
 	public:
@@ -82,8 +83,11 @@ namespace shared { namespace console { namespace _impl {
 
 			// https://learn.microsoft.com/en-us/windows/console/setconsoletextattribute ;
 			// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
-			::SetConsoleTextAttribute(Get_Out(), clrs);
-			::WriteConsole(Get_Out(), cs_out.GetBuffer(), cs_out.GetLength(), (LPDWORD)&n_written, 0);
+//			const HANDLE& h_out_ = _out.Get_out();
+//			if (false == !!h_out_ || __e_handle == h_out_)
+//				return;
+			::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), clrs);
+			::WriteConsole(::GetStdHandle(STD_OUTPUT_HANDLE), cs_out.GetBuffer(), cs_out.GetLength(), (LPDWORD)&n_written, 0);
 		}
 
 	private:

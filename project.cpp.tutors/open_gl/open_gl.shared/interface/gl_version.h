@@ -52,8 +52,6 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		(1) creating win32 device context and setting desirable pixel format to it; *fake* window is helpful for this case;
 		(2) creating a draw renderer context of OpenGL that is compatible to win32 GDI; *mandatory*: making the context of that renderer to be current;
 		(3) finally, getting the version of OpenGL loads dynamic link library of the video card vendor and full information is *received*;
-
-		https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << gives good explanation for above case;
 	*/
 
 	class CVersion {
@@ -74,10 +72,13 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		 TError& Error (void) const;
 		 CString   Get (void) const; // gets version info by using glGetIntegerv();
 
-		 err_code  Get_ex(void);     // creates device context based on a fake window and after that receives all attribute values;
+		 err_code  Get_ex (void);     // creates device context based on a fake window and after that receives all attribute values;
 
 		 const
 		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
+
+		 int32_t   Major (void) const;
+		 int32_t   Minor (void) const;
 
 		 CString   Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n"), const bool _b_trace = false) const;
 		 CString   Print_2(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n")) const; // uses the internal print template;

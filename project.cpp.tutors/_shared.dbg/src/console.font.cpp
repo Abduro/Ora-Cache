@@ -91,19 +91,19 @@ bool CFont::Is (void) const {
 
 UINT CFont::Size (void) const {
 
-	m_error << __METHOD__ << S_OK;
+	m_error << __METHOD__ << __s_ok;
 
 	// https://docs.microsoft.com/en-us/windows/console/reading-input-buffer-events ;
 	// https://docs.microsoft.com/en-us/windows/console/getstdhandle ;
 	HANDLE h_out = ::GetStdHandle(STD_OUTPUT_HANDLE);
-	if (INVALID_HANDLE_VALUE == h_out) {
+	if (__e_handle == h_out) {
 		m_error.Last();
 		return (0);
 	}
 
 	// https://docs.microsoft.com/en-us/windows/console/getconsolefontsize ;
 	CONSOLE_FONT_INFO fnt_inf = {0};
-	if (FALSE == ::GetCurrentConsoleFont(h_out, FALSE, &fnt_inf)) {
+	if (false == !!::GetCurrentConsoleFont(h_out, FALSE, &fnt_inf)) {
 		m_error.Last();
 		return (0);
 	}

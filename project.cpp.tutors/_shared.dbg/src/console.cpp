@@ -69,7 +69,7 @@ using namespace shared::console::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CConsole:: CConsole (void) : m_con_wnd(0), m_streams{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CConsole:: CConsole (void) : m_con_wnd(0), m_handles{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CConsole::~CConsole (void) {
 	this->Close(); // if it was called before the returned error code is ignored;
 }
@@ -83,7 +83,7 @@ err_code   CConsole::Close (void) {
 
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/get-osfhandl ;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fclose-fcloseall ;
-
+#if (0)
 	for (uint32_t i_ = 0; i_ < _countof(this->m_streams); i_++) {
 		if (nullptr == this->m_streams[i_])
 			continue;
@@ -99,7 +99,7 @@ err_code   CConsole::Close (void) {
 		else
 			this->m_streams[i_] = nullptr;
 	}
-
+#endif
 	// ::setvbuf() is used for setting the stream operation(s); it is not required to manage these buffers due to they are opened with _IONBF option;
 #if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ; throws the system error 'Access denied';
@@ -110,6 +110,12 @@ err_code   CConsole::Close (void) {
 
 	return this->Error();
 }
+
+ const HANDLE& CConsole::Get_err (void) const { return this->m_handles[2]; }
+ const HANDLE& CConsole::Get_in  (void) const { return this->m_handles[0]; }
+ const HANDLE& CConsole::Get_out (void) const {
+	 return this->m_handles[1];
+ }
 
 err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, const bool _b_visible) {
 	_h_parent; _rect_wnd_pos; _b_visible;
@@ -153,7 +159,8 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	// (2) sets output/read handle
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/open-osfhandle ;
 	{
-		const intptr_t cin_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_INPUT_HANDLE));
+		this->m_handles[0] = ::GetStdHandle(STD_INPUT_HANDLE);
+		const intptr_t cin_ = reinterpret_cast<intptr_t>(this->m_handles[0]);
 		const INT input_ = ::_open_osfhandle(cin_, _O_TEXT );
 		FILE* p_file_in = ::_fdopen(input_, "r");
 
@@ -161,7 +168,8 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	}
 	// (3) sets input/write handle
 	{
-		const intptr_t out_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_OUTPUT_HANDLE));
+		this->m_handles[1]  = ::GetStdHandle(STD_OUTPUT_HANDLE);
+		const intptr_t out_ = reinterpret_cast<intptr_t>(this->m_handles[1]);
 		const INT output_ = ::_open_osfhandle(out_, _O_TEXT );
 		FILE* p_file_out = ::_fdopen(output_, "w");
 
@@ -169,7 +177,8 @@ err_code   CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 	}
 	// (4) sets error handle
 	{
-		const intptr_t err_ = reinterpret_cast<intptr_t>(::GetStdHandle(STD_ERROR_HANDLE));
+		this->m_handles[2] = ::GetStdHandle(STD_ERROR_HANDLE);
+		const intptr_t err_ = reinterpret_cast<intptr_t>(this->m_handles[2]);
 		const INT error_ = ::_open_osfhandle(err_, _O_TEXT );
 		FILE* p_file_err = ::_fdopen(error_, "w");
 

@@ -18,9 +18,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 	using namespace ex_ui::popup::layout;
 
 	// it is not the main window of this tutor app, it is just the child of it for creating the OpenGL draw context, i.e. it is the target window;
-	class CWnd : public ex_ui::popup::CWndBase {
+	class CWnd : public ex_ui::popup::CWndBase { typedef ex_ui::popup::CWndBase TBase;
 	public:
-		typedef ex_ui::popup::CWndBase TBase;
 		 CWnd (void);
 		~CWnd (void);
 
@@ -28,6 +27,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 		const
 		CContext& Ctx (void) const;
 		CContext& Ctx (void) ;
+
+		err_code PostCreate (void);
+		const
+		ex_ui::popup::CWndBase& operator ()(void) const;
+		ex_ui::popup::CWndBase& operator ()(void) ;
 
 	protected:
 		CContext m_ctx;

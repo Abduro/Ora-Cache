@@ -25,7 +25,8 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 		 bool    Is_valid (void) const;
 
 		 const
-		 HDC&    Get_ctx  (void) const; // gets the reference to device context; read-only;
+		 HDC&    Get_ctx (void) const; // gets the reference to device context; read-only;
+		 HDC&    Get_ctx (void) ;
 
 		 operator const HDC& (void) const;
 

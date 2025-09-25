@@ -18,6 +18,9 @@
 #ifndef __e_fail
 #define __e_fail E_FAIL
 #endif
+#ifndef __e_handle
+#define __e_handle INVALID_HANDLE_VALUE // (uint32_t)(-1)
+#endif
 #ifndef __e_index
 #define __e_index DISP_E_BADINDEX
 #endif

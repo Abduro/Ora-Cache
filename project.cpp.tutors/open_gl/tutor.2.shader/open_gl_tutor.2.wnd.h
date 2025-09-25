@@ -6,6 +6,9 @@
 */
 #include "open_gl_tutor.1.wnd.h"
 #include "gl_shader.h"
+#include "gl_version.h"
+#include "open_gl_tutor.0.fake.h"
+#pragma comment(lib, "gl.tutor.0.fake.lib") 
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
@@ -17,18 +20,29 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
 	using TCtxWindow = ex_ui::draw::open_gl::context::CWnd;
 
-	class CWnd : public TCtxWindow { typedef TCtxWindow TParent;
+	class CWnd : public TCtxWindow { typedef TCtxWindow TBase;
 	public:
 		 CWnd (void);
 		~CWnd (void);
 
 		err_code Create (const HWND _h_parent, const t_rect&, const bool _b_visible = true);
+
 		const
-		CShader& Shader (void) const;
-		CShader& Shader (void) ;
+		shader::CFragment& Shader_frag (void) const;
+		shader::CFragment& Shader_frag (void) ;
+
+		const
+		shader::CVertex& Shader_vert (void) const;
+		shader::CVertex& Shader_vert (void) ;
+
+		err_code PostCreate (void);
 
 	protected:
-		CShader m_shader;
+		TFakeWnd m_fak_wnd; // message-only window (aka fake) is created in its constructor;
+		context::CDevice  m_ctx_dev;
+
+		shader::CFragment m_frag_shader;
+		shader::CVertex   m_vert_shader;
 	};
 
 }}}}

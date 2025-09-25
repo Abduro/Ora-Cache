@@ -50,10 +50,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	CAppWnd& app_wnd = ::Get_app_wnd();
 	shader::CWnd wnd_shader; // the draw context window;
-	CConsole out_;
 
 	do {
-		__trace::Use_con(false); // the console window is not created yet;
+		__trace::Use_con(true); // the console window is not created yet; VS debug output is used anyway;
 
 		// (0) creating the main window/application at the beginning of this 'journey';
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#2_shader"), true))) {
@@ -61,34 +60,41 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			app_wnd.Error().Show(); break;
 		}
 
+		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
+
 		/*const */shared::gui::CLayout& layout = app_wnd.Layout();
 		
-		// (0) creates the console output window;
-		if (__failed(out_.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
-			__trace_err_3(_T("%s\n"), (_pc_sz) out_.Error().Print(TError::e_req));
-			out_.Error().Show();
+		// (1) creates the console output window;
+		if (__failed(_out.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
+			__trace_err_3(_T("%s\n"), (_pc_sz) _out.Error().Print(TError::e_req));
+			_out.Error().Show();
 			break;
 		}
-		else
-			layout.Bottom().Target(out_);
+		__trace::Use_con(true);
+		layout.Bottom().Target(_out.Handle());
+		layout.Update();
+		b_error = false;
 
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 
-		__trace::Use_con(true);
 		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
 		layout.Update();
 		shared::console::CLayout().Output().HScroll().Set(true);
 
-		__trace_warn_3(_T("%s\n\n"), (_pc_sz) CVersion().Print_2());
+		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
 
-		// (1) creates the context target window;
+		// (2) creates the context target window;
 		if (__failed(wnd_shader.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req)); // debug output console window is already created;
 		}
 		else
 			layout.Top().Target(wnd_shader);
 
-		b_error = false;
+		if (__failed(wnd_shader.PostCreate())) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req));
+			break;
+		}
+
 	} while (true == false);
 
 	if (b_error != false) // goes to message loop and waits the app window will be closed;

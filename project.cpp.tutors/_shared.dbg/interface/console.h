@@ -26,8 +26,12 @@ namespace shared { namespace console {
 		 err_code Open  (const HWND _h_parent, const t_rect&, const bool _b_visible); // creates *new* console, inserts it as a chiled window to the parent one;
 
 		 TError&  Error  (void) const;	
-		 HWND     Handle (void) const;
+		 HWND     Handle (void) const; // returns console window handle;
 		 bool  Is_valid  (void) const; // checks validity of the console window handle;
+
+		 const HANDLE&   Get_err (void) const; // gets std::error handle;
+		 const HANDLE&   Get_in  (void) const; // gets std::input handle;
+		 const HANDLE&   Get_out (void) const; // gets std::output handle;
 		 
 		 operator const HWND (void) const;
 
@@ -36,7 +40,7 @@ namespace shared { namespace console {
 		 mutable
 		 CError    m_error;
 		 HWND      m_con_wnd;
-		 FILE*     m_streams[3]; // 0: is for std_input_handle; 1: is for std_output_handle; 2: is for std_err_handle;
+		 HANDLE    m_handles[3]; // 0: is for std_input_handle; 1: is for std_output_handle; 2: is for std_err_handle;
 	};
 
 	typedef CONSOLE_SCREEN_BUFFER_INFO  TScrBufInfo;

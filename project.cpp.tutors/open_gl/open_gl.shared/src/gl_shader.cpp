@@ -43,8 +43,19 @@ CType::operator uint16_t (void) const { return this->Get(); }
 /////////////////////////////////////////////////////////////////////////////
 
 #define GL_COMPILE_STATUS  0x8B81
-#define GL_INFO_LOG_LENGTH 0x8B84
-
+#define GL_DELETE_STATUS   0x8B80
+#define GL_SHADER_TYPE     0x8B4F
+#define GL_INFO_LOG_LEN    0x8B84
+#define GL_SHADER_SRC_LEN  0x8B88
+#if (0)
+enum e_params : uint32_t {
+     e_compile  = GL_COMPILE_STATUS , // GL_TRUE if the last compile operation on shader was successful;
+     e_delete   = GL_DELETE_STATUS  , // GL_TRUE if shader is currently flagged for deletion, and GL_FALSE otherwise;
+     e_type     = GL_SHADER_TYPE    , // GL_VERTEX_SHADER if shader is a vertex shader object, and GL_FRAGMENT_SHADER if shader is a fragment shader object;
+     e_info_len = GL_INFO_LOG_LEN   , // the size of the character buffer required to store the information log ;
+     e_src_len  = GL_SHADER_SRC_LEN , // the size of the character buffer required to store the shader source ;
+};
+#endif
 CShader:: CShader (void) : m_id(0) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CShader::~CShader (void) {}
 
@@ -55,21 +66,36 @@ procs::CShader& CShader::Cache (void) {
 
 CString CShader::Class (void) { return __CLASS__; }
 
+err_code CShader::Compile (void) {
+
+	this->m_error() <<__METHOD__<<__s_ok;
+	if (false == this->Is_valid())
+		return this->Error()();
+
+	procs::CShader& procs = CShader::Cache();
+
+	if (__failed(procs.Compile(this->Id()))) {
+		return this->m_error() = procs.Error();
+	}
+
+	return this->Error()();
+}
+
 err_code CShader::Create (const TType _e_type) {
 	_e_type;
 	this->m_error() <<__METHOD__<<__s_ok;
 
-	this->m_id = this->Cache().Create(_e_type);
+	this->m_id = CShader::Cache().Create(_e_type);
 	if (0 == this->m_id) { // the error has occurred;
-		if (this->Cache().Error()) // looks like function pointer is not created;
-			return (this->m_error() = this->Cache().Error());
+		if (CShader::Cache().Error()) // looks like function pointer is not created;
+			return (this->m_error() = CShader::Cache().Error());
 		if (GL_INVALID_ENUM == this->m_error.Get_last())
 			return this->m_error() << __e_inv_arg = TString().Format(_T("Undefined shader type: %u"), _e_type);
 		else
 			return this->m_error() << __e_fail = TString().Format(_T("Creating the shader of type '%s' failed"), (_pc_sz) CType::To_str(_e_type));
 	}
 	__trace::Use_con(true);
-	__trace_impt_3(_T("Creating the shader of type '%s' succeeded;"), (_pc_sz) CType::To_str(_e_type));
+	__trace_impt_3(_T("The shader: id=%u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
 
 	return this->Error()();
 }
@@ -80,15 +106,15 @@ err_code CShader::Destroy (void) {
 	if (0 == this->m_id)
 		return this->Error()(); // the shader is not created yet; returns no error for such a case;
 
-	if (__failed(this->Cache().Delete(this->Id())))
-		return (this->m_error() = this->Cache().Error()); // sets function cache error is required, otherwise the state of this shared remains the same;
+	if (__failed(CShader::Cache().Delete(this->Id())))
+		return (this->m_error() = CShader::Cache().Error()); // sets function cache error is required, otherwise the state of this shared remains the same;
 
 	if (GL_INVALID_VALUE == this->Error().Get_last())
 		return (this->m_error() << (err_code) TErrCodes::eData::eInvalid = TString().Format(_T("The ID=%u is not valid"), this->Id()));
 
-	this->m_id = 0;
 	__trace::Use_con(true);
-	__trace_warn_3(_T("The shader: id=%u, type='%s' is deleted;"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	__trace_warn_3(_T("The shader: id=%u, type='%s' is deleted;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	this->m_id = 0;
 
 	return this->Error()();
 }
@@ -102,18 +128,38 @@ bool  CShader::Is_compiled (void) const {
 	if (false == this->Is_valid())
 		return this->Error()();
 
-	return this->Error()();
+	procs::CShader& procs = CShader::Cache();
+	// (1) gets the shader log length;
+	int32_t n_result = 0;
+	if (__failed(procs.Params(this->Id(), GL_COMPILE_STATUS, &n_result))) {
+		this->m_error() = procs.Error();
+		return !!n_result;
+	}
+
+	return !!n_result;
 }
 
 bool  CShader::Is_valid (void) const {
 	this->m_error() <<__METHOD__<<__s_ok;
-	bool b_valid = false;
+	return CShader::Is_valid(this->Id(), this->m_error());
+}
 
-	if (0 == this->Id())
-		return false == (this->m_error() << __e_not_inited).Is();
+bool   CShader::Is_valid (const uint32_t _u_shader_id, CError& _err) {
+	_u_shader_id; _err;
+	if (0 == _u_shader_id) {
+		_err <<__METHOD__<<__e_inv_arg;
+		return false;
+	}
+	bool b_valid = CShader::Cache().Is_valid(_u_shader_id);
+	if (false == b_valid && CShader::Cache().Error().Is())
+		_err = CShader::Cache().Error();
 
 	return b_valid;
 }
+
+const
+shader::CSource& CShader::Src (void) const { return this->m_src; }
+shader::CSource& CShader::Src (void)       { return this->m_src; }
 
 const
 CType& CShader::Type (void) const { return this->m_type; }
@@ -139,7 +185,7 @@ err_code CLog::Set (const uint32_t _u_shader_id) {
 	procs::CShader& procs = CShader::Cache();
 	// (1) gets the shader log length;
 	int32_t n_length = 0;
-	if (__failed(procs.Params(_u_shader_id, GL_INFO_LOG_LENGTH, &n_length)))
+	if (__failed(procs.Params(_u_shader_id, GL_INFO_LOG_LEN, &n_length)))
 		return this->m_error() = procs.Error();
 
 	if (0 == n_length) {
@@ -154,4 +200,73 @@ err_code CLog::Set (const uint32_t _u_shader_id) {
 	this->m_buffer = buffer.data(); // ATL::CString makes the auto-conversion from 'char' to 'tchar';
 
 	return this->Error()();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CSource:: CSource (void) { this->m_error() >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
+CSource::~CSource (void) {}
+
+TErr_ex& CSource::Error (void) const { return this->m_error; }
+
+err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
+	_p_source; _u_shader_id;
+	this->m_error()<<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_source || CString(_p_source).IsEmpty())
+		return this->m_error() << __e_inv_arg = _T("Source code is empty");
+
+	if (false == CShader::Is_valid(_u_shader_id, this->m_error())) {
+		return this->Error()();
+	}
+	this->m_buffer = _p_source; m_buffer.Trim();
+
+	CStringA src_a((_pc_sz) this->m_buffer); // converts to ansi-char from unicode if necessary;
+	int32_t n_len = src_a.GetLength();
+
+	const char* p_buffer = src_a.GetBuffer();
+
+	procs::CShader& procs = CShader::Cache();
+	if (__failed(procs.Source(_u_shader_id, 1, &p_buffer, &n_len)))
+		return this->m_error() = procs.Error();
+
+	return this->Error()();
+}
+
+err_code CSource::Set (const uint16_t _res_id, const uint32_t _n_shader_id) {
+	_res_id; _n_shader_id;
+	this->m_error()<<__METHOD__<<__s_ok;
+	if (0 == _res_id)
+		return this->m_error() << __e_inv_arg = _T("String resource identifier is invalid");
+
+	CString cs_src;
+	cs_src.LoadString(_res_id);
+
+	return this->Set((_pc_sz) cs_src, _n_shader_id);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CFragment:: CFragment (void) : TBase() { TBase::m_error >>__CLASS__; TBase::Type().Set(TType::e_fragment); }
+CFragment::~CFragment (void) {}
+
+err_code CFragment::Create (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(TBase::Create(TBase::Type().Get())))
+		return TBase::Error();
+
+	return TBase::Error();
+}
+
+CVertex:: CVertex (void) : TBase() { TBase::m_error >>__CLASS__; TBase::Type().Set(TType::e_vertex); }
+CVertex::~CVertex (void) {}
+
+err_code CVertex::Create (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(TBase::Create(TBase::Type().Get())))
+		return TBase::Error();
+
+	return TBase::Error();
 }

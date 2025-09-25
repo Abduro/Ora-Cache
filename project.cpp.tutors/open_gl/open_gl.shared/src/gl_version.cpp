@@ -188,6 +188,9 @@ CVer_Att&  CVersion::GetAtt (const e_atts _e_att) const {
 	}
 }
 
+int32_t  CVersion::Major (void) const { int32_t n_major = 0; ::glGetIntegerv(GL_MAJOR_VERSION, &n_major); return n_major; }
+int32_t  CVersion::Minor (void) const { int32_t n_minor = 0; ::glGetIntegerv(GL_MINOR_VERSION, &n_minor); return n_minor; }
+
 CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("")*/, _pc_sz _p_sfx/* = _T(";")*/, const bool _b_trace/* = false*/) const {
 	_e_opt; _p_pfx; _p_sfx; _b_trace;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s%s}");

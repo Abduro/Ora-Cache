@@ -52,10 +52,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	CAppWnd app_wnd;
 	context::CWnd wnd_ctx; // the draw context window;
-	CConsole out_;
 
 	do {
-
 		// (0) creating the main window/application at the beginning of this 'journey';
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#1_ctx"), false))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));  // the console window is not created yet, VS debug output only;
@@ -67,14 +65,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 		app_wnd.Set_visible(true);
 
-
 		// (0) creates the console output window;
-		if (__failed(out_.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
-			__trace_err_3(_T("%s\n"), (_pc_sz) out_.Error().Print(TError::e_req));
-			out_.Error().Show();
+		if (__failed(_out.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
+			__trace_err_3(_T("%s\n"), (_pc_sz) _out.Error().Print(TError::e_req));
+			_out.Error().Show();
 			break;
 		}
-		layout.Bottom().Target(out_);
+		layout.Bottom().Target(_out.Handle());
+		layout.Update();
 
 		// https://stackoverflow.com/questions/18114395/changing-command-prompt-text-size-c << the answer is not completed,
 		// because a user has a chance of not selecting the desired font size from the dropdown list, but to type directly the size that is not in the list;
@@ -82,16 +80,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 		shared::console::CLayout().Output().HScroll().Set(true);
 
-		CCon_cls con_cls;
-		con_cls.Get();
-
 		// (1) creates the context target window;
 		if (__failed(wnd_ctx.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_ctx.Error().Print(TError::e_req));
 			wnd_ctx.Error().Show(); break;
 		}
 		layout.Top().Target(wnd_ctx);
-		
+
 		struct gl_version {
 			uint32_t n_major = 0;
 			uint32_t n_minor = 0;
@@ -133,7 +128,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #endif
 		b_error = false;
 
-		for (uint32_t i_ = 0; i_ < _countof(vers); i_++) {
+		for (uint32_t i_ = 0; i_ < _countof(vers) && false; i_++) {
 
 			CContext ctx;
 			// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);

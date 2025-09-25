@@ -203,6 +203,8 @@ bool CCompiler::Is_supported (void) const {
 	if (param.Error().Is()) {
 		if (GL_INVALID_ENUM == CError_ex().Get_last())
 			CBase::m_error << __e_inv_arg = TString().Format(_T("The param id (0x%04x) is undefined"), GL_SHADER_COMPILER);
+		else
+			CBase::m_error = param.Error();
 	}
 
 	return b_result;
@@ -543,7 +545,8 @@ err_code CProg::Get_all (void) {
 #define __err_no_support DXGI_ERROR_UNSUPPORTED
 
 static _pc_sz shader_fun_names[] = {
-	_T("glCompileShader"),  _T("glCreateShader"),  _T("glDeleteShader"),  _T("glGetShaderInfoLog"),  _T("glGetShaderiv"),  _T("glShaderSource")
+	// 0                     1                      2                      3                          4                    5                 6  
+	_T("glCompileShader"),  _T("glCreateShader"),  _T("glDeleteShader"),  _T("glGetShaderInfoLog"),  _T("glGetShaderiv"), _T("glIsShader"), _T("glShaderSource")
 };
 
 CShader:: CShader (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
@@ -619,6 +622,22 @@ err_code  CShader::InfoLog (uint32_t _shader_id, int32_t _n_max_length, int32_t*
 
 	return CBase::Error();
 }
+// https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glIsShader.xml ;
+bool   CShader::Is_valid  (uint32_t _shader_id) {
+	_shader_id;
+	// no error is generated if shader is not a valid shader object name ;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_IsValid p_fun = reinterpret_cast<pfn_IsValid>(CBase::Get(shader_fun_names[5]));
+	if (nullptr == p_fun) {
+		return false;
+	}
+
+	const uint32_t b_result = !!p_fun(_shader_id);
+
+	return b_result;
+}
+
 // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetShaderiv.xml ;
 err_code  CShader::Params  (uint32_t _shader_id, uint32_t _param_type, int32_t* _p_params) {
 	_shader_id; _param_type; _p_params;
@@ -661,7 +680,7 @@ err_code  CShader::Source  (uint32_t _shader_id, int32_t _n_count, const char** 
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
 
-	pfn_Source p_fun = reinterpret_cast<pfn_Source>(CBase::Get(shader_fun_names[5]));
+	pfn_Source p_fun = reinterpret_cast<pfn_Source>(CBase::Get(shader_fun_names[6]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 

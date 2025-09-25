@@ -35,6 +35,19 @@ namespace shader {
 		CString   m_buffer;  // stores the log info;
 	};
 
+	class CSource {
+	public: CSource (void); CSource (const CSource&) = delete; CSource (CSource&&) = delete; ~CSource (void) ;
+
+		TErr_ex& Error (void) const;
+		err_code Set (_pc_sz _p_source, const uint32_t _n_shader_id);       // sets the source text to the shader;
+		err_code Set (const uint16_t _res_id, const uint32_t _n_shader_id); // loads source text from the executable resource table string;
+
+	private:CSource& operator = (const CSource&) = delete; CSource& operator = (CSource&&) = delete;
+	mutable
+		CError_ex m_error ;
+		CString   m_buffer;
+	};
+
 	class CType {
 	public:
 		enum e_value : uint16_t {    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
@@ -68,8 +81,9 @@ namespace shader {
 		~CShader (void);
 
 		 static procs::CShader& Cache (void) ;
-
 		 static CString  Class (void);       // returns this class name for debug purposes;
+
+		 err_code Compile (void);            // tries to compile assigned code;
 
 		 err_code Create (const TType);
 		 err_code Destroy (void);
@@ -79,6 +93,12 @@ namespace shader {
 
 		 bool     Is_compiled (void) const;  // checks compilation status of the shader;
 		 bool     Is_valid (void) const;     // checks the validity of the shaper but after its compilation only, otherwise it returns 'false';
+		 static
+		 bool     Is_valid (const uint32_t _u_shader_id, CError&);
+
+		 const
+		 shader::CSource&  Src (void) const;
+		 shader::CSource&  Src (void) ;
 
 		 const
 		 shader::CType& Type (void) const;
@@ -90,8 +110,27 @@ namespace shader {
 		 mutable
 		 CError_ex m_error;
 		 uint32_t  m_id ;
+		 shader::CSource m_src ;
 		 shader::CType  m_type ;
 	};
+
+namespace shader {
+	class CFragment : public CShader { typedef CShader TBase;
+	public:
+		 CFragment (void);
+		~CFragment (void);
+
+		err_code Create (void);
+	};
+
+	class CVertex : public CShader { typedef CShader TBase;
+	public:
+		 CVertex (void);
+		~CVertex (void);
+
+		err_code Create (void);
+	};
+}
 }}}
 
 #endif/*_GL_SHADER_H_INCLUDED*/

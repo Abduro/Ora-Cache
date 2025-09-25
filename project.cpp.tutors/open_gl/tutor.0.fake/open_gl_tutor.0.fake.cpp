@@ -55,6 +55,7 @@ TError& CWnd::Error (void) const { return this->m_error; }
 bool    CWnd::Is_valid (void) const { return false == this->Error(); }
 
 const
-HDC&    CWnd::Get_ctx  (void) const { return this->m_h_dc; }
+HDC& CWnd::Get_ctx (void) const { return this->m_h_dc; }
+HDC& CWnd::Get_ctx (void)       { return this->m_h_dc; }
 
 CWnd::operator const HDC& (void) const { return this->Get_ctx(); }
