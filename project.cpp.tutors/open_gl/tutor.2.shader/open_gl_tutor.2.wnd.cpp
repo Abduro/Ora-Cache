@@ -88,13 +88,12 @@ err_code shader::CWnd::PostCreate (void) {
 		return this->m_error = ctx_dev.Error();
 	}
 #endif
-	procs::CCompiler cmpl;
+	shader::CCompiler cmpl;
 	if (false == cmpl.Is_supported()) {
-		if (cmpl.Error().Is())
-			return TBase::m_error = cmpl.Error();
-		else
-			return TBase::m_error <<__e_not_inited = _T("Shader compiler is not supported");
+		return TBase::m_error = cmpl.Error()();
 	}
+	else
+		__trace_warn_3(_T("%s\n"), _T("Shader compiler is supported;"));
 
 	if (false == this->Shader_frag().Is_valid()) {
 		if (__failed(this->Shader_frag().Create()))
@@ -121,8 +120,27 @@ err_code shader::CWnd::PostCreate (void) {
 		__trace_info_3(pc_sz_pat_src, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
 	}
 
+	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader compiled successfully;\n");
+
 	if (false == this->Shader_frag().Error()().Is()) {
-		if (__failed(this->Shader_frag().Compile())) {
+		cmpl << this->Shader_frag().Id();
+		if (__failed(cmpl.Compile())) {
+			__trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Log().Get());
+		}
+		else {
+			__trace_info_3(pc_sz_pat_cmpl, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
+		}
+	}
+
+	if (false == this->Shader_vert().Error()().Is()) {
+		cmpl << this->Shader_vert().Id();
+		if (__failed(cmpl.Compile())) {
+			__trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Log().Get());
+		}
+		else {
+			__trace_info_3(pc_sz_pat_cmpl, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
 		}
 	}
 

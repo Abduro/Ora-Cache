@@ -35,6 +35,33 @@ namespace shader {
 		CString   m_buffer;  // stores the log info;
 	};
 
+	class CCompiler {
+	public:
+		CCompiler (const uint32_t _u_shader_id = 0); CCompiler (const CCompiler&) = delete; CCompiler (CCompiler&&) = delete; ~CCompiler (void);
+
+		err_code Compile (void);              // tries to compile assigned code to the shader;
+
+		TErr_ex& Error (void) const;
+
+		bool  Is_compiled  (void) const;      // checks compilation status of the shader; if it is false, either no compilation was made or getting log info is required for details;
+		bool  Is_supported (void) const;
+		const
+		CLog&    Log (void) const;
+		CLog&    Log (void) ;
+
+		uint32_t ShaderId  (void) const;
+		err_code ShaderId  (const uint32_t);  // returns an error code in case if input shader identifier is not valid;
+
+		CCompiler& operator <<(const uint32_t _u_shader_id);
+
+	private:
+		CCompiler& operator = (const CCompiler&) = delete; CCompiler& operator = (CCompiler&&) = delete;
+		mutable
+		CError_ex  m_error;
+		uint32_t   m_shader_id;
+		CLog  m_log;
+	};
+
 	class CSource {
 	public: CSource (void); CSource (const CSource&) = delete; CSource (CSource&&) = delete; ~CSource (void) ;
 
@@ -82,8 +109,6 @@ namespace shader {
 
 		 static procs::CShader& Cache (void) ;
 		 static CString  Class (void);       // returns this class name for debug purposes;
-
-		 err_code Compile (void);            // tries to compile assigned code;
 
 		 err_code Create (const TType);
 		 err_code Destroy (void);
