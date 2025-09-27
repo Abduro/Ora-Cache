@@ -7,8 +7,16 @@
     <Filter Include="src">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\shader">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\shader">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0003}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0-0)gl_compiler.h"><Filter>interface\shader</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_compiler.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_context.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_context.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_defs.h"><Filter>interface</Filter></ClInclude>
@@ -17,6 +25,8 @@
     <ClCompile Include="$(_1)gl_error.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_format.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_format.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_logs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_logs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_program.h"><Filter>interface</Filter></ClInclude>

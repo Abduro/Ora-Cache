@@ -7,6 +7,8 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
+#include "shader\gl_compiler.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 

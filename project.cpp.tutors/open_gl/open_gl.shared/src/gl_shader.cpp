@@ -6,84 +6,12 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
+#include "shader\gl_compiler.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
-#define GL_COMPILE_STATUS  0x8B81
-
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
-
-CCompiler:: CCompiler (const uint32_t _u_shader_id) : m_shader_id(_u_shader_id) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
-CCompiler::~CCompiler (void) {}
-
-err_code CCompiler::Compile (void) {
-
-	this->m_error() <<__METHOD__<<__s_ok;
-
-	if (false == this->ShaderId())
-		return this->m_error()<<__e_not_inited = _T("Shader id is not valid");
-
-	procs::CShader& procs = CShader::Cache();
-
-	if (__failed(procs.Compile(this->ShaderId()))) {
-		this->Log().Set(this->ShaderId());        // gets log info for this complilation; the log error code can be retrieved by direct call to log error; 
-		return this->m_error() = procs.Error();
-	}
-
-	return this->Error()();
-}
-
-TErr_ex& CCompiler::Error (void) const { return this->m_error; }
-
-bool  CCompiler::Is_compiled (void) const {
-	this->m_error() <<__METHOD__<<__s_ok;
-
-	if (false == this->ShaderId())
-		return this->m_error()<<__e_not_inited = _T("Shader id is not valid");
-
-	procs::CShader& procs = CShader::Cache();
-	
-	int32_t n_result = 0;
-	if (__failed(procs.Params(this->ShaderId(), GL_COMPILE_STATUS, &n_result))) {
-		this->m_error() = procs.Error();
-		return !!n_result;
-	}
-
-	return !!n_result;
-}
-
-bool  CCompiler::Is_supported (void) const {
-
-	this->m_error() <<__METHOD__<<__s_ok;
-
-	procs::CCompiler cmpl;
-	const bool b_support = cmpl.Is_supported();
-
-	if (cmpl.Error().Is())
-		this->m_error() = cmpl.Error();
-	else
-		this->m_error() <<__e_not_inited = _T("Shader compiler is not supported");
-	return b_support;
-}
-
-const
-CLog&    CCompiler::Log (void) const { return this->m_log; }
-CLog&    CCompiler::Log (void)       { return this->m_log; }
-
-uint32_t CCompiler::ShaderId  (void) const { return this->m_shader_id; }
-err_code CCompiler::ShaderId  (const uint32_t _u_shader_id) {
-	_u_shader_id;
-	this->m_error()<<__METHOD__<<__s_ok;
-
-	if (false == CShader::Is_valid(_u_shader_id, this->m_error()))
-		return this->Error()();
-
-	this->m_shader_id = _u_shader_id;
-
-	return this->Error()();
-}
-
-CCompiler& CCompiler::operator <<(const uint32_t _u_shader_id) { this->ShaderId(_u_shader_id); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -120,7 +48,6 @@ CType::operator uint16_t (void) const { return this->Get(); }
 
 #define GL_DELETE_STATUS   0x8B80
 #define GL_SHADER_TYPE     0x8B4F
-#define GL_INFO_LOG_LEN    0x8B84
 #define GL_SHADER_SRC_LEN  0x8B88
 #if (0)
 enum e_params : uint32_t {
@@ -207,9 +134,12 @@ bool   CShader::Is_valid (const uint32_t _u_shader_id, CError& _err) {
 		return false;
 	}
 	bool b_valid = CShader::Cache().Is_valid(_u_shader_id);
-	if (false == b_valid && CShader::Cache().Error().Is())
-		_err = CShader::Cache().Error();
-
+	if (false == b_valid) {
+		if (CShader::Cache().Error().Is())
+			_err = CShader::Cache().Error();
+		else
+			_err <<__e_inv_arg = TString().Format(_T("'_u_shader_id' (%u) does not refer to shader object;"), _u_shader_id);
+	}
 	return b_valid;
 }
 
@@ -222,46 +152,6 @@ CType& CShader::Type (void) const { return this->m_type; }
 CType& CShader::Type (void)       { return this->m_type; }
 
 /////////////////////////////////////////////////////////////////////////////
-
-CLog:: CLog (void) { 
-	this->m_error() >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited;
-}
-CLog::~CLog (void) {}
-
-TErr_ex& CLog::Error (void) const { return this->m_error; }
-
-_pc_sz   CLog::Get (void) const { return (_pc_sz) this->m_buffer; }
-
-err_code CLog::Set (const uint32_t _u_shader_id) {
-	_u_shader_id;
-	this->m_error()<<__METHOD__<<__s_ok;
-
-	if (0 == _u_shader_id)
-		return this->m_error() <<__e_inv_arg = TString().Format(_T("Invalid shader id (%u)"), _u_shader_id);
-
-	procs::CShader& procs = CShader::Cache();
-	// (1) gets the shader log length;
-	int32_t n_length = 0;
-	if (__failed(procs.Params(_u_shader_id, GL_INFO_LOG_LEN, &n_length))) {
-		this->m_buffer = _T("#error");
-		return this->m_error() = procs.Error();
-	}
-
-	if (0 == n_length) {
-		this->m_buffer + _T("#no_info");
-		return this->Error()();
-	}
-	// retrieves the actual data from the log;
-	::std::vector<char> buffer(n_length + 1, 0);
-	if (__failed(procs.InfoLog(_u_shader_id, n_length, &n_length, buffer.data()))) {
-		this->m_buffer = _T("#error");
-		return this->m_error() = procs.Error();
-	}
-
-	this->m_buffer = buffer.data(); // ATL::CString makes the auto-conversion from 'char' to 'tchar';
-
-	return this->Error()();
-}
 
 /////////////////////////////////////////////////////////////////////////////
 

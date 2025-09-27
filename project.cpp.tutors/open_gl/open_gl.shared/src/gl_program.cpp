@@ -8,14 +8,77 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
 
-CBase:: CBase (void) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CBase::~CBase (void) {}
-
-TErr_ex& CBase::Error (void) const { return this->m_error; }
-
-CProgram:: CProgram (void) : TBase() { TBase::m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
+CProgram:: CProgram (void) : m_id(0) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CProgram::~CProgram (void) {}
 
-const
-procs::CProg& CProgram::Cache (void) const { return this->m_fn_cache; }
-procs::CProg& CProgram::Cache (void)       { return this->m_fn_cache; }
+procs::CProg& CProgram::Cache (void) {
+	static procs::CProg m_fn_cache;
+	return m_fn_cache;
+}
+
+CString   CProgram::Class (void) { return __CLASS__; }
+
+TErr_ex&  CProgram::Error (void) const { return this->m_error; }
+
+ err_code CProgram::Create (void) {
+	this->m_error()<<__METHOD__<<__s_ok;
+
+	if (!!this->Id())
+		return this->m_error()<<(err_code)TErrCodes::eObject::eExists = TString().Format(_T("Program object (id=%u) already exists"), this->Id());
+
+	procs::CProg& procs = CProgram::Cache();
+	this->m_id = procs.Create();
+	if (0 == this->m_id) {
+		if (procs.Error().Is())
+			return this->m_error() = procs.Error();
+		program::CLog log;
+		if (__failed(log.Set(0))) {}
+	}
+
+	return this->Error()();
+ }
+
+ err_code CProgram::Destroy (void) {
+	 this->m_error()<<__METHOD__<<__s_ok;
+
+	 if (false == !!this->Id())
+		 return this->Error()();  // returns __s_ok; there is nothing to destroy;
+
+	 procs::CProg& procs = CProgram::Cache();
+
+	 if (__failed(procs.Delete(this->Id())))
+		 return this->m_error() = procs.Error();
+
+	 this->m_id = 0;
+	 return this->Error()();
+ }
+
+uint32_t CProgram::Id (void) const { return this->m_id; }
+
+bool CProgram::Is_valid (void) const {
+	return CProgram::Is_valid(this->Id(), this->m_error()<<__METHOD__<<__s_ok);
+}
+
+#define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
+
+bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
+	_u_prog_id; _err;
+	static _pc_sz p_sz_pat_err = _T("'_u_prog_id' (%u) is invalid");
+
+	if (0 == _u_prog_id) {
+		return false == (_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id)).Is();
+	}
+	procs::CParam param;
+
+	uint32_t n_curr_prog = param.GetInt(__gl_curr_prog); // if a negative result is returned, the input '_u_prog_id' will still be different;
+
+	if (0 == n_curr_prog) {
+		if (param.Error())
+			return false == (_err = param.Error()).Is(); // Error.Is() returns 'true' in such case, thus 'false == true' is valid return result;
+	}
+	else if (_u_prog_id != n_curr_prog) {
+		_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id);
+	}
+
+	return false == _err.Is();
+}

@@ -6,37 +6,34 @@
 */
 #include "gl_defs.h"
 #include "gl_procs.h"
+#include "gl_logs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace program {
-
-	class CBase {
-	public:
-		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
-		~CBase (void);
-
-		 TErr_ex& Error (void) const;
-
-	private:
-		 CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
-	protected:
-		 CError_ex m_error;
-	};
 }
-
-	class CProgram : public program::CBase { typedef program::CBase TBase;
+	class CProgram  {
 	public:
 		 CProgram (void) ;  CProgram (const CProgram&) = delete; CProgram (CProgram&&) = delete;
 		~CProgram (void) ;
 
-		 const
-		 procs::CProg& Cache (void) const;
-		 procs::CProg& Cache (void) ;
+		 static procs::CProg& Cache (void) ;
+		 static CString  Class (void);       // returns this class name for debug purposes;
+
+		 err_code Create (void);
+		 err_code Destroy(void);
+
+		 TErr_ex& Error (void) const;
+
+		 uint32_t Id (void) const;
+		 static
+		 bool Is_valid (const uint32_t _n_prog_id, CError&); // there is not way to check program identifier as it can be made for shader;
+		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
 
 	private:
 		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
-
-		 procs::CProg  m_fn_cache;
+		 uint32_t  m_id ;
+		 mutable
+		 CError_ex m_error;
 	};
 }}}
 
