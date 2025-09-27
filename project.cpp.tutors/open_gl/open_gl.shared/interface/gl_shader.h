@@ -7,61 +7,14 @@
 #include "gl_defs.h"
 #include "gl_procs.h"
 #include "gl_logs.h"
-
-#pragma region __shader_types
-/* copied from glcorearb.h */
-#define GL_COMPUTE_SHADER         0x91B9
-#define GL_FRAGMENT_SHADER        0x8B30
-#define GL_GEOMETRY_SHADER        0x8DD9
-#define GL_TESS_CONTROL_SHADER    0x8E88
-#define GL_TESS_EVALUATION_SHADER 0x8E87
-#define GL_VERTEX_SHADER          0x8B31
-#pragma endregion
+#include "shader\gl_source.h"
+#include "shader\gl_type.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 namespace shader {
-
-	class CSource {
-	public: CSource (void); CSource (const CSource&) = delete; CSource (CSource&&) = delete; ~CSource (void) ;
-
-		TErr_ex& Error (void) const;
-		err_code Set (_pc_sz _p_source, const uint32_t _n_shader_id);       // sets the source text to the shader;
-		err_code Set (const uint16_t _res_id, const uint32_t _n_shader_id); // loads source text from the executable resource table string;
-
-	private:CSource& operator = (const CSource&) = delete; CSource& operator = (CSource&&) = delete;
-	mutable
-		CError_ex m_error ;
-		CString   m_buffer;
-	};
-
-	class CType {
-	public:
-		enum e_value : uint16_t {    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
-		     e_undef     = 0x0,
-		     e_compute   = GL_COMPUTE_SHADER ,         // is intended to run on the programmable compute processor ;
-		     e_fragment  = GL_FRAGMENT_SHADER,         // is intended to run on the programmable fragment processor ;
-		     e_geometry  = GL_GEOMETRY_SHADER,         // is intended to run on the programmable geometry processor ;
-		     e_tess_ctrl = GL_TESS_CONTROL_SHADER,     // is intended to run on the programmable tessellation processor in the control stage ;
-		     e_tess_eval = GL_TESS_EVALUATION_SHADER,  // is intended to run on the programmable tessellation processor in the evaluation stage ;
-		     e_vertex    = GL_VERTEX_SHADER ,          // is intended to run on the programmable vertex processor ;
-		};
-		CType (void); CType (const CType&) = delete; CType (CType&&) = delete; ~CType (void) = default;
-
-		e_value Get (void) const;
-		bool    Set (const e_value) ;
-
-		operator uint16_t (void) const; // returns currently set value of the shader type;
-
-		static CString To_str(const uint16_t _u_type);
-
-	private:
-		CType& operator = (const CType&) = delete; CType& operator = (CType&&) = delete;
-		e_value m_value;
-	};
 }
-	typedef shader::CType::e_value TType;
-
+	// https://www.khronos.org/opengl/wiki/shader ;
 	class CShader {
 	public:
 		 CShader (void); CShader (const CShader&) = delete; CShader (CShader&&) = delete;

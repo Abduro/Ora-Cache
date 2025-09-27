@@ -11,39 +11,8 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
+namespace ex_ui { namespace draw { namespace open_gl { namespace shader {}}}}
 
-/////////////////////////////////////////////////////////////////////////////
-
-CType:: CType (void) : m_value(e_value::e_undef) {}
-
-TType   CType::Get (void) const { return this->m_value; }
-bool    CType::Set (const e_value _e_type) {
-	_e_type;
-	const bool b_changed = this->Get() != _e_type;
-	if (b_changed)
-		this->m_value = _e_type;
-	return b_changed;
-}
-
-CString CType::To_str(const uint16_t _u_type) {
-	_u_type;
-	CString cs_out;
-	switch (_u_type) {
-	case e_value::e_compute   : cs_out = _T("__compute"); break;
-	case e_value::e_fragment  : cs_out = _T("__fragment"); break;
-	case e_value::e_geometry  : cs_out = _T("__geometry"); break;
-	case e_value::e_tess_ctrl : cs_out = _T("__tess_ctrl"); break;
-	case e_value::e_tess_eval : cs_out = _T("__tess_eval"); break;
-	case e_value::e_vertex    : cs_out = _T("__vertex"); break;
-	default:
-		cs_out.Format(_T("#undef(%u)"), _u_type);
-	}
-	return  cs_out;
-}
-
-CType::operator uint16_t (void) const { return this->Get(); }
-}}}}
 /////////////////////////////////////////////////////////////////////////////
 
 #define GL_DELETE_STATUS   0x8B80
@@ -150,51 +119,6 @@ shader::CSource& CShader::Src (void)       { return this->m_src; }
 const
 CType& CShader::Type (void) const { return this->m_type; }
 CType& CShader::Type (void)       { return this->m_type; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////
-
-CSource:: CSource (void) { this->m_error() >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
-CSource::~CSource (void) {}
-
-TErr_ex& CSource::Error (void) const { return this->m_error; }
-
-err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
-	_p_source; _u_shader_id;
-	this->m_error()<<__METHOD__<<__s_ok;
-
-	if (nullptr == _p_source || CString(_p_source).IsEmpty())
-		return this->m_error() << __e_inv_arg = _T("Source code is empty");
-
-	if (false == CShader::Is_valid(_u_shader_id, this->m_error())) {
-		return this->Error()();
-	}
-	this->m_buffer = _p_source; m_buffer.Trim();
-
-	CStringA src_a((_pc_sz) this->m_buffer); // converts to ansi-char from unicode if necessary;
-	int32_t n_len = src_a.GetLength();
-
-	const char* p_buffer = src_a.GetBuffer();
-
-	procs::CShader& procs = CShader::Cache();
-	if (__failed(procs.Source(_u_shader_id, 1, &p_buffer, &n_len)))
-		return this->m_error() = procs.Error();
-
-	return this->Error()();
-}
-
-err_code CSource::Set (const uint16_t _res_id, const uint32_t _n_shader_id) {
-	_res_id; _n_shader_id;
-	this->m_error()<<__METHOD__<<__s_ok;
-	if (0 == _res_id)
-		return this->m_error() << __e_inv_arg = _T("String resource identifier is invalid");
-
-	CString cs_src;
-	cs_src.LoadString(_res_id);
-
-	return this->Set((_pc_sz) cs_src, _n_shader_id);
-}
 
 /////////////////////////////////////////////////////////////////////////////
 

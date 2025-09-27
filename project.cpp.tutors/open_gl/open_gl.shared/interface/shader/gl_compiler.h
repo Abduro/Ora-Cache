@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "gl_logs.h"
+#include "gl_procs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace shader {
@@ -13,6 +14,8 @@ namespace shader {
 	class CCompiler {
 	public:
 		CCompiler (const uint32_t _u_shader_id = 0); CCompiler (const CCompiler&) = delete; CCompiler (CCompiler&&) = delete; ~CCompiler (void);
+
+		static procs::CCompiler& Cache (void) ;
 
 		err_code Compile (void);              // tries to compile source code of the shader;
 
@@ -23,6 +26,8 @@ namespace shader {
 		const
 		CLog&    Log (void) const;
 		CLog&    Log (void) ;
+
+		err_code Release (void) ;             // releases resources consumed by the implementation's shader compiler;
 
 		uint32_t ShaderId  (void) const;
 		err_code ShaderId  (const uint32_t);  // returns an error code in case if input shader identifier is not valid;

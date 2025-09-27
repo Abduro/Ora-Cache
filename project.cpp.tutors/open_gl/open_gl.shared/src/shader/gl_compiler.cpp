@@ -3,7 +3,6 @@
 	This is Ebo Pack OpenGL shader compiler wrapper interface implementation file;
 */
 #include "gl_compiler.h"
-#include "gl_procs.h"
 #include "gl_shader.h"
 #include "shared.preproc.h"
 
@@ -13,6 +12,11 @@ using namespace ex_ui::draw::open_gl::shader;
 CCompiler:: CCompiler (const uint32_t _u_shader_id) : m_shader_id(_u_shader_id) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
 CCompiler::~CCompiler (void) {}
 
+procs::CCompiler& CCompiler::Cache (void) {
+	static procs::CCompiler m_fn_cache;
+	return m_fn_cache;
+}
+
 err_code CCompiler::Compile (void) {
 
 	this->m_error() <<__METHOD__<<__s_ok;
@@ -20,7 +24,7 @@ err_code CCompiler::Compile (void) {
 	if (false == this->ShaderId())
 		return this->m_error()<<__e_not_inited = _T("Shader id is not valid");
 
-	procs::CShader& procs = CShader::Cache();
+	procs::CCompiler& procs = CCompiler::Cache();
 
 	if (__failed(procs.Compile(this->ShaderId()))) {
 		this->Log().Set(this->ShaderId());        // gets log info for this complilation; the log error code can be retrieved by direct call to log error; 
@@ -68,6 +72,17 @@ bool  CCompiler::Is_supported (void) const {
 const
 CLog&    CCompiler::Log (void) const { return this->m_log; }
 CLog&    CCompiler::Log (void)       { return this->m_log; }
+
+err_code CCompiler::Release (void) {
+	this->m_error()<<__METHOD__<<__s_ok;
+
+	procs::CCompiler& procs = CCompiler::Cache();
+
+	if (__failed(procs.Release())) {
+		this->m_error() = procs.Error();
+	}
+	return this->Error()();
+}
 
 uint32_t CCompiler::ShaderId  (void) const { return this->m_shader_id; }
 err_code CCompiler::ShaderId  (const uint32_t _u_shader_id) {

@@ -196,6 +196,10 @@
     <ClCompile Include="$(_1)gl_program.cpp" />
     <ClInclude Include="$(_0)gl_shader.h" />
     <ClCompile Include="$(_1)gl_shader.cpp" />
+    <ClInclude Include="$(_0-0)gl_source.h" />
+    <ClCompile Include="$(_1-1)gl_source.cpp" />
+    <ClInclude Include="$(_0-0)gl_type.h" />
+    <ClCompile Include="$(_1-1)gl_type.cpp" />
     <ClInclude Include="$(_0)gl_version.h" />
     <ClCompile Include="$(_1)gl_version.cpp" />
     <ClInclude Include="$(_0)gl_vertex.h" />

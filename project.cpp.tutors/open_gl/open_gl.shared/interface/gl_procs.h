@@ -64,10 +64,16 @@ namespace procs {
 		Shader compiler support is optional, and thus must be queried before use by calling glGet with argument GL_SHADER_COMPILER.
 	*/
 	class CCompiler : public CBase {
+	typedef void (__stdcall *pfn_Compile)(uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCompileShader.xhtml ;
+	typedef void (__stdcall *pfn_Release)(void); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glReleaseShaderCompiler.xhtml ;
 	public:
 		CCompiler (void); ~CCompiler (void) = default;
 
+		err_code Compile (uint32_t _shader_id); // compiles the source code strings that have been stored in the shader object specified by '_shader_id';
 		bool Is_supported (void) const; // returns 'true' if the compiler is supported; class CParam is used for getting support value;
+		err_code Release (void); // provides a hint to the implementation that it may free internal resources associated with its shader compiler;
+
+		err_code Get_all (void) ; // gets all functions' pointers at once;
 
 	private:
 		CCompiler& operator = (const CCompiler&) = delete; CCompiler& operator = (CCompiler&&) = delete;
@@ -138,7 +144,6 @@ namespace procs {
 	};
 
 	class CShader : public CBase {
-	typedef void     (__stdcall *pfn_Compile)(uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCompileShader.xhtml ;
 	typedef uint32_t (__stdcall *pfn_Create) (uint32_t _u_type);    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
 	typedef void     (__stdcall *pfn_Delete) (uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteShader.xhtml ;
 	typedef void     (__stdcall *pfn_InfoLog)(uint32_t _shader_id, int32_t _n_max_length, int32_t* _p_log_len, char* _p_log); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetShaderInfoLog.xhtml ;
@@ -148,7 +153,6 @@ namespace procs {
 	public:
 		CShader (void); ~CShader (void) = default;
 
-		err_code Compile (uint32_t _shader_id); // compiles the source code strings that have been stored in the shader object specified by _shader_id ;
 		uint32_t Create  (uint32_t _u_type);    // creates an empty shader object and returns a non-zero value by which it can be referenced ;
 		err_code Delete  (uint32_t _shader_id); // frees the memory and invalidates the name associated with the shader object specified by _shader_id ;
 		err_code InfoLog (uint32_t _shader_id, int32_t _n_max_length, int32_t* _p_log_len, char* _p_log); // returns the information log for the specified shader object ;

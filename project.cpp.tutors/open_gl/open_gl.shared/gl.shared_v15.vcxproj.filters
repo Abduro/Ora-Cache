@@ -33,6 +33,10 @@
     <ClCompile Include="$(_1)gl_program.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_shader.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_shader.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_source.h"><Filter>interface\shader</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_source.cpp"><Filter>src\shader</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_type.h"><Filter>interface\shader</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_type.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_version.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_vertex.h"><Filter>interface</Filter></ClInclude>
