@@ -8,6 +8,7 @@
 #include "shared.dbg.h"
 
 #include "shader\gl_compiler.h"
+#include "gl_program.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
@@ -91,6 +92,7 @@ err_code shader::CWnd::PostCreate (void) {
 	}
 #endif
 	shader::CCompiler cmpl;
+
 	if (false == cmpl.Is_supported()) {
 		return TBase::m_error = cmpl.Error()();
 	}
@@ -145,6 +147,26 @@ err_code shader::CWnd::PostCreate (void) {
 			__trace_info_3(pc_sz_pat_cmpl, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
 		}
 	}
+
+	CProgram prog;
+	if (__failed(prog.Create())) {
+		__trace_err_3(_T("%s\n"), (_pc_sz) prog.Error().Print(TError::e_print::e_req));
+		return TBase::m_error = prog.Error();
+	}
+	else
+		__trace_impt_3(_T("Program object (id=%u) is created;\n"), prog.Id() );
+
+	program::CLinker lnk(prog.Id());
+
+	static _pc_sz pc_sz_pat_lnk = _T("Linker attaches '%s' shader successfully;\n");
+
+	if (__failed(lnk.Attach(this->Shader_frag().Id()))) {
+	     __trace_err_3(_T("%s\n"), (_pc_sz) lnk.Error().Print(TError::e_print::e_req)); }
+	else __trace_impt_3(pc_sz_pat_lnk, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
+
+	if (__failed(lnk.Attach(this->Shader_vert().Id()))) {
+	     __trace_err_3(_T("%s\n"), (_pc_sz) lnk.Error().Print(TError::e_print::e_req)); }
+	else __trace_impt_3(pc_sz_pat_lnk, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
 
 	return (*this)().Error();
 }

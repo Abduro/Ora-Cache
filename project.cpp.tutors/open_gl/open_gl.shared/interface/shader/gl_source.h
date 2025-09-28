@@ -7,7 +7,7 @@
 #include "gl_defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
-
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetShaderSource.xhtml ;
 	class CSource {
 	public: CSource (void); CSource (const CSource&) = delete; CSource (CSource&&) = delete; ~CSource (void) ;
 

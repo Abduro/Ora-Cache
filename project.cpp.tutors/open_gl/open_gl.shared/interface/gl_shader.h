@@ -53,6 +53,7 @@ namespace shader {
 	};
 
 namespace shader {
+	// https://www.khronos.org/opengl/wiki/Fragment_Shader ;
 	class CFragment : public CShader { typedef CShader TBase;
 	public:
 		 CFragment (void);
@@ -60,7 +61,7 @@ namespace shader {
 
 		err_code Create (void);
 	};
-
+	// https://www.khronos.org/opengl/wiki/Vertex_Shader ;
 	class CVertex : public CShader { typedef CShader TBase;
 	public:
 		 CVertex (void);

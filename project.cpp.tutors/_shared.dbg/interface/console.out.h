@@ -9,6 +9,7 @@
 namespace shared { namespace console {
 
 	// https://learn.microsoft.com/en-us/windows/console/console-screen-buffers ;
+	// https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c ;
 
 	class COut {
 	COut (void) = delete; COut (const COut&) = delete; COut (COut&&) = delete; ~COut (void) = delete;
