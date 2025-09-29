@@ -179,7 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(_0-0)gl_compiler.h" />
-    <ClCompile Include="$(_1-1)gl_compiler.cpp" />
+    <ClCompile Include="$(_1-0)gl_compiler.cpp" />
     <ClInclude Include="$(_0)gl_context.h" />
     <ClCompile Include="$(_1)gl_context.cpp" />
     <ClInclude Include="$(_0)gl_defs.h" />
@@ -192,14 +192,18 @@
     <ClCompile Include="$(_1)gl_procs.cpp" />
     <ClInclude Include="$(_0)gl_logs.h" />
     <ClCompile Include="$(_1)gl_logs.cpp" />
+    <ClInclude Include="$(_0-1)gl_prog_id.h" />
+    <ClCompile Include="$(_1-1)gl_prog_id.cpp" />
     <ClInclude Include="$(_0)gl_program.h" />
     <ClCompile Include="$(_1)gl_program.cpp" />
     <ClInclude Include="$(_0)gl_shader.h" />
     <ClCompile Include="$(_1)gl_shader.cpp" />
     <ClInclude Include="$(_0-0)gl_source.h" />
-    <ClCompile Include="$(_1-1)gl_source.cpp" />
+    <ClCompile Include="$(_1-0)gl_source.cpp" />
     <ClInclude Include="$(_0-0)gl_type.h" />
-    <ClCompile Include="$(_1-1)gl_type.cpp" />
+    <ClCompile Include="$(_1-0)gl_type.cpp" />
+    <ClInclude Include="$(_0-1)gl_prog_status.h" />
+    <ClCompile Include="$(_1-1)gl_prog_status.cpp" />
     <ClInclude Include="$(_0)gl_version.h" />
     <ClCompile Include="$(_1)gl_version.cpp" />
     <ClInclude Include="$(_0)gl_vertex.h" />

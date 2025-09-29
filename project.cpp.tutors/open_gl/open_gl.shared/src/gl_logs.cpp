@@ -49,6 +49,7 @@ err_code program::CLog::Set (const uint32_t _u_prog_id) {
 	}
 
 	this->m_buffer = buffer.data(); // ATL::CString makes the auto-conversion from 'char' to 'tchar';
+	this->m_buffer.Replace(_T("  "), _T(" "));
 
 	return this->Error()();
 }

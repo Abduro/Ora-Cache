@@ -9,6 +9,7 @@
 
 #include "shader\gl_compiler.h"
 #include "gl_program.h"
+#include "program\gl_prog_status.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
@@ -154,19 +155,49 @@ err_code shader::CWnd::PostCreate (void) {
 		return TBase::m_error = prog.Error();
 	}
 	else
-		__trace_impt_3(_T("Program object (id=%u) is created;\n"), prog.Id() );
+		__trace_impt_3(_T("Program object (id=%u) is created;\n"), prog.Id().Get());
 
-	program::CLinker lnk(prog.Id());
+	program::CLinker link(prog.Id());
 
-	static _pc_sz pc_sz_pat_lnk = _T("Linker attaches '%s' shader successfully;\n");
+	static _pc_sz pc_sz_pat_att = _T("Linker attaches '%s' shader successfully;\n");
 
-	if (__failed(lnk.Attach(this->Shader_frag().Id()))) {
-	     __trace_err_3(_T("%s\n"), (_pc_sz) lnk.Error().Print(TError::e_print::e_req)); }
-	else __trace_impt_3(pc_sz_pat_lnk, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
+	if ( __failed(link.Attach(this->Shader_frag().Id())) ) {
+	     __trace_err_3(_T("%s\n"), (_pc_sz) link.Error().Print(TError::e_print::e_req)); }
+	else __trace_info_3(pc_sz_pat_att, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
 
-	if (__failed(lnk.Attach(this->Shader_vert().Id()))) {
-	     __trace_err_3(_T("%s\n"), (_pc_sz) lnk.Error().Print(TError::e_print::e_req)); }
-	else __trace_impt_3(pc_sz_pat_lnk, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
+	if ( __failed(link.Attach(this->Shader_vert().Id())) ) {
+	     __trace_err_3(_T("%s\n"), (_pc_sz) link.Error().Print(TError::e_print::e_req)); }
+	else __trace_info_3(pc_sz_pat_att, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
+
+	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked successfully;\n");
+
+	program::CStatus prog_status(prog.Id());
+
+	if (false == link.Error()) {
+		if ( __failed(link.Link()) ) {
+		     __trace_err_3(_T("%s\n"), (_pc_sz) link.Error().Print(TError::e_print::e_req)); }
+		else __trace_impt_3(pc_sz_pat_lnk, link.ProgId());
+		// just checks the program link status;
+		const bool b_linked = prog_status.Is_linked();
+		if ( prog_status.Error() ) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) prog_status.Error().Print(TError::e_print::e_req)); }
+		else {
+			__trace_info_3(_T("Program (id=%u) link status is '%s';\n"), link.ProgId(), TString().Bool(b_linked));
+			if (false == b_linked) {
+				program::CLog log;
+				if (__failed( log.Set(prog.Id()))) {
+				    __trace_err_3(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
+				else {
+					__trace_warn_3(_T("%s\n"), _T("Link log:"));
+				    __trace_err(_T("%s"), log.Get());
+				}
+			}
+		}
+	}
+
+	if ( __failed(prog.Validate()) ) {
+	     __trace_err_3(_T("%s\n"), (_pc_sz) prog.Error().Print(TError::e_print::e_req)); }
+	else __trace_info_3(_T("Program (id=%u) is validated;\n"), link.ProgId());
 
 	return (*this)().Error();
 }

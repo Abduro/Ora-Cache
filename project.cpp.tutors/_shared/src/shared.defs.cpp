@@ -76,7 +76,14 @@ CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
 
 using namespace shared::defs;
 
-_pc_sz CString_Ex::Format (_pc_sz _p_pattern, ...) {
+_pc_sz  CString_Ex::Bool  (const bool _b_value) {
+	_b_value;
+	(TBase&)*this = (_b_value ? _T("true") : _T("false"));
+
+	return (_pc_sz)*this;
+}
+
+_pc_sz  CString_Ex::Format (_pc_sz _p_pattern, ...) {
 	_p_pattern;
 	if (nullptr == _p_pattern || 0 == ::lstrlen(_p_pattern)) {
 		(TBase&)*this = _T("#inv_arg");

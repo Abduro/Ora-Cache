@@ -30,20 +30,17 @@ namespace program {
 	class CLog : public CLog_Base { typedef CLog_Base TBase;
 	public: CLog (void); ~CLog (void);
 
-		err_code Set (const uint32_t _u_shader_id) ;  // retrieves the log info from current state of the shader by _u_shader_id to string buffer;
+		err_code Set (const uint32_t _u_prog_id) ;    // retrieves the log info from current state of the program by _u_prog_id to string buffer;
 	};
-
 }
-
 namespace shader {
 
 	class CLog : public CLog_Base { typedef CLog_Base TBase;
 	public: CLog (void); ~CLog (void);
 
-		err_code Set (const uint32_t _u_prog_id) ;    // retrieves the log info from current state of the program by _u_prog_id to string buffer;
+		err_code Set (const uint32_t _u_shader_id) ;  // retrieves the log info from current state of the shader by _u_shader_id to string buffer;
 	};
 }
-
 }}}
 
 #endif/*_GL_LOGS_H_INCLUDED*/

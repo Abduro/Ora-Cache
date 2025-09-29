@@ -31,6 +31,7 @@ namespace shared { namespace defs {
 
 	class CString_Ex : public CString { typedef CString TBase;
 	public:
+		_pc_sz Bool (const bool) ; // sets this string value to text: false or true;
 		_pc_sz Format(_pc_sz _p_pattern, ...);
 	};
 

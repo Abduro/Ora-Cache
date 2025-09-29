@@ -1,0 +1,67 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 29-Sep-2025 at 20:05:37.059, UTC+4, Batumi, Monday;
+	This Ebo Pack OpenGL program identifier (aka symbolic name) interface implementation file;
+*/
+#include "gl_prog_id.h"
+#include "gl_procs.h"
+#include "shared.preproc.h"
+
+using namespace ex_ui::draw::open_gl;
+using namespace ex_ui::draw::open_gl::program;
+
+/////////////////////////////////////////////////////////////////////////////
+
+CProgId:: CProgId (const uint32_t _prog_id) : m_value(0) { this->m_error>>__CLASS__<<__METHOD__<<__e_not_inited; if (_prog_id) *this << _prog_id; }
+CProgId::~CProgId (void) {}
+
+TError&   CProgId::Error (void) const { return this->m_error; }
+
+uint32_t  CProgId::Get (void) const { return this->m_value; }
+err_code  CProgId::Set (const uint32_t _u_value) {
+	_u_value;
+	this->m_error<<__METHOD__<<__s_ok;
+
+	if (false == CProgId::Is_valid(_u_value, this->m_error))
+		return this->Error();
+
+	if (this->Get() == _u_value) // the check of input '_u_prog_id' is already made by above statement, thus '0==0' is avoided;
+		return this->m_error << __s_false = TString().Format(_T("The '_u_prog_id' (%u) is already assigned;"), _u_value);
+
+	this->m_value = _u_value;
+
+	return this->Error();
+}
+
+#define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
+
+bool CProgId::Is_valid (void) const {
+	return CProgId::Is_valid( this->m_value, this->m_error);
+}
+
+bool CProgId::Is_valid (const uint32_t _u_prog_id, CError& _err) {
+	_u_prog_id; _err;
+	static _pc_sz p_sz_pat_err = _T("'_u_prog_id' (%u) is invalid");
+
+	if (0 == _u_prog_id) {
+		return false == (_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id)).Is();
+	}
+	procs::CParam param;
+
+	const uint32_t n_curr_prog = param.GetInt(__gl_curr_prog); // if a negative result is returned, the input '_u_prog_id' will still be different;
+
+	if (0 == n_curr_prog) {
+		if (param.Error())
+			return false == (_err = param.Error()).Is(); // Error.Is() returns 'true' in such case, thus 'false == true' is valid return result;
+	}
+	else if (_u_prog_id != n_curr_prog) {
+		_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id);
+	}
+
+	return false == _err.Is();
+}
+
+void CProgId::Reset (void) { this->m_error<<__METHOD__<<__e_not_inited;  this->m_value = 0; }
+
+CProgId& CProgId::operator <<(const uint32_t _prog_id) { this->Set(_prog_id); return *this; }
+
+CProgId::operator uint32_t (void) const { return this->Get(); }

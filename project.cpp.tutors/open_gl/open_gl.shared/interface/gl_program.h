@@ -7,6 +7,7 @@
 #include "gl_defs.h"
 #include "gl_procs.h"
 #include "gl_logs.h"
+#include "program\gl_prog_id.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace program {
@@ -19,6 +20,9 @@ namespace program {
 		static
 		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Attach (const uint32_t _u_shader_id);
+		static
+		err_code Link (const uint32_t _u_prog_id, CError&);
+		err_code Link (void);               // assumes the program identifier is set;
 
 		TError&  Error  (void) const;
 		uint32_t ProgId (void) const;       // returns currently set program identifier;
@@ -46,16 +50,25 @@ namespace program {
 
 		 TError& Error (void) const;
 
-		 uint32_t Id (void) const;
+		 const
+		 program::CProgId& Id (void) const;
+		 program::CProgId& Id (void) ;
+
+		 /* the validation of a program is determined by the target that is required to be valid:
+			(a) program identifier (aka symbolic name); glGetIntegerv();
+			(b) program status; glGetProgramiv();
+		 */
 		 static
 		 bool Is_valid (const uint32_t _n_prog_id, CError&); // there is not way to check program identifier as it can be made for shader;
 		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
 
+		 err_code Validate (void);   // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
+
 	private:
 		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
-		 uint32_t  m_id;
+		 program::CProgId m_prog_id;
 		 mutable
-		 CError m_error;
+		 CError  m_error;
 	};
 }}}
 
