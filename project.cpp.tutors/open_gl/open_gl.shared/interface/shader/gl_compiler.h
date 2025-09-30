@@ -20,8 +20,9 @@ namespace shader {
 		err_code Compile (void);              // tries to compile source code of the shader;
 
 		TErr_ex& Error (void) const;
-
+#if (0) // it is not the property of the compiler, but shader status;
 		bool  Is_compiled  (void) const;      // checks compilation status of the shader; if it is false, either no compilation was made or getting log info is required for details;
+	#endif
 		bool  Is_supported (void) const;
 		const
 		CLog&    Log (void) const;

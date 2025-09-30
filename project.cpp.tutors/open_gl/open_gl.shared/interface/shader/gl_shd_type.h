@@ -1,5 +1,5 @@
-#ifndef _GL_TYPE_H_INCLUDED
-#define _GL_TYPE_H_INCLUDED
+#ifndef _GL_SHD_TYPE_H_INCLUDED
+#define _GL_SHD_TYPE_H_INCLUDED
 /*
 	Cretaed by Tech_dog (ebontrop@gmail.com) on 27-Sep-2025 at 20:02:22.895, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL shader type wrapper interface declaration file;
@@ -51,4 +51,4 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
 typedef ex_ui::draw::open_gl::shader::CType::e_value TType;
 
-#endif/*_GL_TYPE_H_INCLUDED*/
+#endif/*_GL_SHD_TYPE_H_INCLUDED*/

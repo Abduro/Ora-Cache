@@ -87,6 +87,10 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 	}
 
 	this->m_buffer = buffer.data(); // ATL::CString makes the auto-conversion from 'char' to 'tchar';
+	this->m_buffer.MakeLower();
+	// ToDo: this is temporary solution and will be replaced with the better one later;
+ 	this->m_buffer.Replace(_T("error"), _T("  error")); // makes an indentation at the beginning of each error line;
+	this->m_buffer.Replace(_T("   "), _T(" "));         // replaces the sequence of 3 (three) whitespaces by one;
 
 	return this->Error()();
 }

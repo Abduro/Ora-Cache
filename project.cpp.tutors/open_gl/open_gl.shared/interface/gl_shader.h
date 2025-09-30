@@ -7,8 +7,9 @@
 #include "gl_defs.h"
 #include "gl_procs.h"
 #include "gl_logs.h"
-#include "shader\gl_source.h"
-#include "shader\gl_type.h"
+#include "shader\gl_shd_source.h"
+#include "shader\gl_shd_type.h"
+#include "shader\gl_shd_status.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
@@ -29,7 +30,7 @@ namespace shader {
 		 TErr_ex& Error (void) const;
 		 uint32_t Id (void) const;
 
-		 bool     Is_compiled (void) const;  // checks compilation status of the shader;
+		 bool     Is_compiled (void) const;  // checks compilation status of the shader; the shader::CStatus::Is_compiled actually is called;
 		 bool     Is_valid (void) const;     // checks the validity of the shaper but after its compilation only, otherwise it returns 'false';
 		 static
 		 bool     Is_valid (const uint32_t _u_shader_id, CError&);

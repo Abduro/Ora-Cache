@@ -2,7 +2,7 @@
 	Cretaed by Tech_dog (ebontrop@gmail.com) on 27-Sep-2025 at 20:04:07.574, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL shader type wrapper interface implementation file;
 */
-#include "gl_type.h"
+#include "gl_shd_type.h"
 #include "gl_procs.h"
 #include "gl_shader.h"
 #include "shared.preproc.h"

@@ -82,11 +82,11 @@ bool   CShader::Is_compiled (void) const {
 
 	this->m_error()<<__METHOD__<<__s_ok;
 
-	shader::CCompiler cmpl(this->Id());
+	shader::CStatus status(this->Id());
 
-	const bool b_compiled = cmpl.Is_compiled();
-	if (false == b_compiled)
-		this->m_error() = cmpl.Error()();
+	const bool b_compiled = shader::CStatus(this->Id()).Is_compiled();
+	if (status.Error())
+		this->m_error() = status.Error();
 
 	return b_compiled;
 }

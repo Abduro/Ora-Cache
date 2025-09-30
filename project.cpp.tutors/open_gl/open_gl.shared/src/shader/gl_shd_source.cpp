@@ -2,7 +2,7 @@
 	Cretaed by Tech_dog (ebontrop@gmail.com) on 27-Sep-2025 at 17:18:00.979, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL shader SL source wrapper interface implementation file;
 */
-#include "gl_source.h"
+#include "gl_shd_source.h"
 #include "gl_shader.h"
 #include "shared.preproc.h"
 

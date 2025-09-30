@@ -93,6 +93,7 @@ err_code shader::CWnd::PostCreate (void) {
 	}
 #endif
 	shader::CCompiler cmpl;
+	shader::CStatus $_status;
 
 	if (false == cmpl.Is_supported()) {
 		return TBase::m_error = cmpl.Error()();
@@ -126,15 +127,29 @@ err_code shader::CWnd::PostCreate (void) {
 	}
 
 	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader compiled successfully;\n");
+	static _pc_sz pc_sz_pat_stat = _T("Shader '%s' compiled status: '%s';\n");
 
 	if (false == this->Shader_frag().Error()().Is()) {
 		cmpl << this->Shader_frag().Id();
-		if (__failed(cmpl.Compile())) {
-			__trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req));
-			__trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Log().Get());
-		}
+		if ( __failed(cmpl.Compile())) {
+		     __trace_err_3(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req)); }
+		else __trace_info_3(pc_sz_pat_cmpl, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
+		// checks the compile status of the shader;
+		$_status << this->Shader_frag().Id();
+		const bool b_compiled = $_status.Is_compiled();
+		if ($_status.Error() ) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) $_status.Error().Print(TError::e_print::e_req)); }
 		else {
-			__trace_info_3(pc_sz_pat_cmpl, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
+			__trace_info_3(pc_sz_pat_stat,  (_pc_sz) CType::To_str (this->Shader_frag().Type()), TString().Bool(b_compiled));
+			if (false == b_compiled) {
+				shader::CLog log;
+				if (__failed(log.Set(this->Shader_frag().Id()))) {
+				    __trace_err_3(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
+				else {
+					__trace_warn_3(_T("%s\n"), _T("Compile log:"));
+				    __trace_err(_T("%s"), log.Get());
+				}
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
-#ifndef _GL_SOURCE_H_INCLUDED
-#define _GL_SOURCE_H_INCLUDED
+#ifndef _GL_SHD_SOURCE_H_INCLUDED
+#define _GL_SHD_SOURCE_H_INCLUDED
 /*
 	Cretaed by Tech_dog (ebontrop@gmail.com) on 27-Sep-2025 at 17:13:32.083, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL shader SL source wrapper interface declaration file;
@@ -23,4 +23,4 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
 }}}}
 
-#endif/*_GL_SOURCE_H_INCLUDED*/
+#endif/*_GL_SHD_SOURCE_H_INCLUDED*/

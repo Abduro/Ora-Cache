@@ -86,6 +86,8 @@
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
   </PropertyGroup>
+    <!--warning MSB8004: Intermediate Directory does not end with a trailing slash. 
+        This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
@@ -262,6 +264,9 @@
     <Manifest Include="gl.tutor.0.fake.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="gl.shared_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
+    </ProjectReference>
     <ProjectReference Include="gl.tutor.0.fake.lib.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>
     </ProjectReference>

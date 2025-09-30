@@ -35,7 +35,7 @@ err_code CCompiler::Compile (void) {
 }
 
 TErr_ex& CCompiler::Error (void) const { return this->m_error; }
-
+#if (0)
 #define __gl_cmpl_status  0x8B81 // GL_COMPILE_STATUS;
 
 bool  CCompiler::Is_compiled (void) const {
@@ -54,7 +54,7 @@ bool  CCompiler::Is_compiled (void) const {
 
 	return !!n_result;
 }
-
+#endif
 bool  CCompiler::Is_supported (void) const {
 
 	this->m_error() <<__METHOD__<<__s_ok;
