@@ -112,6 +112,7 @@ namespace shared { namespace sys_core {
 			eFunction  = __DwordToHresult(ERROR_INVALID_FUNCTION)       , // Incorrect function.
 			eEnviron   = __DwordToHresult(ERROR_BAD_ENVIRONMENT)        , // The environment is incorrect.
 			eInternal  = __DwordToHresult(ERROR_INTERNAL_ERROR)         , // An internal error occurred.
+			eOperate   = __DwordToHresult(ERROR_INVALID_OPERATION)      , // The operation identifier is not valid.
 			eOverflow  = __DwordToHresult(ERROR_ARITHMETIC_OVERFLOW)    , // Arithmetic result exceeded 32 bits.
 			eParameter = __DwordToHresult(ERROR_INVALID_PARAMETER)      , // The parameter is incorrect.
 			eState     = __DwordToHresult(ERROR_INVALID_STATE)          , // The group or resource is not in the correct state to perform the requested operation.

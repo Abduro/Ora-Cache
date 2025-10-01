@@ -4,69 +4,10 @@
 */
 #include "gl_program.h"
 #include "shared.preproc.h"
+#include "program\gl_prog_linker.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
-
-CLinker:: CLinker (const uint32_t _u_prog_id) : m_prog_id(0) {
-	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
-	if (_u_prog_id) *this << _u_prog_id;
-}
-CLinker::~CLinker (void) {}
-
-err_code  CLinker::Attach (const uint32_t _u_shader_id) {
-	return CLinker::Attach(_u_shader_id, this->ProgId(), this->m_error);
-}
-
-err_code  CLinker::Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError& _err) {
-	_u_shader_id; _u_prog_id; _err;
-	procs::CProg& procs = CProgram::Cache();
-	if (__failed( procs.Attach(_u_prog_id, _u_shader_id )))
-		_err = procs.Error();
-
-	return _err.Result();
-}
-
-TError&   CLinker::Error (void) const { return this->m_error; }
-
-err_code  CLinker::Link (const uint32_t _u_prog_id, CError& _err) {
-	_u_prog_id; _err;
-	if (false == CProgram::Is_valid(_u_prog_id, _err))
-		return _err;
-
-	procs::CProg& procs = CProgram::Cache();
-	if (__failed( procs.Link(_u_prog_id)))   // makes all required checks and sets the error if necessary;
-		_err = procs.Error();
-
-	return _err;
-}
-
-err_code  CLinker::Link (void) {
-	return CLinker::Link(this->ProgId(), this->m_error);
-}
-
-uint32_t  CLinker::ProgId (void) const { return this->m_prog_id; }
-err_code  CLinker::ProgId (const uint32_t _u_prog_id) {
-	_u_prog_id;
-	this->m_error<<__METHOD__<<__s_ok;
-
-	if (false == CProgram::Is_valid(_u_prog_id, this->m_error))
-		return this->Error();
-
-	if (this->ProgId() == _u_prog_id) // the check of input '_u_prog_id' is already made by above statement, thus '0==0' is avoided;
-		return this->m_error << __s_false = TString().Format(_T("The '_u_prog_id' (%u) is already assigned;"), _u_prog_id);
-
-	this->m_prog_id = _u_prog_id;
-
-	return this->Error();
-}
-
-CLinker&  CLinker::operator <<(const uint32_t _u_prog_id) { this->ProgId(_u_prog_id); return *this; }
-
-CLinker&  CLinker::operator +=(const uint32_t _u_shader_id) {
-	this->Attach(_u_shader_id);
-	return *this;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -107,6 +48,8 @@ err_code  CProgram::Delete (void) {
 
 	if (false == !!this->Id())
 		return this->Error();  // returns __s_ok; there is nothing to destroy;
+
+	CLinker(this->Id()).Detach_all(); // it is supposed the shader(s) will be destroyed later than this program, so shader(s) must be detached first;
 
 	procs::CProg& procs = CProgram::Cache();
 

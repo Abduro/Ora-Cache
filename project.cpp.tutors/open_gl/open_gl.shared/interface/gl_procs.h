@@ -96,6 +96,27 @@ namespace procs {
 	private:
 		CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
 	};
+	// it is a loader of functions that are related to the program layout process; this class is intended for functional modularity only;
+	// ToDo: it very looks like the linker must do the only one operation: to link and nothing more;
+	class CLinker : public CBase {
+	typedef void     (__stdcall *pfn_Attach)   (uint32_t _prog_id, uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glAttachShader.xhtml ;
+	typedef void     (__stdcall *pfn_Detach)   (uint32_t _prog_id, uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDetachShader.xhtml ;
+	typedef void     (__stdcall *pfn_Attached) (uint32_t _prog_id, uint32_t _u_max_cnt, uint32_t* _p_count, uint32_t* _p_shaders); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttachedShaders.xhtml ;
+	typedef void     (__stdcall *pfn_Link)     (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glLinkProgram.xhtml ;
+	public:
+		CLinker (void); ~CLinker (void) = default;
+
+		err_code Attach  (const uint32_t _prog_id, const uint32_t _shader_id); // attaches the shader object specified by '_shader_id' to the program object specified by '_prog_id' ;
+		err_code Detach  (const uint32_t _prog_id, const uint32_t _shader_id); // detaches a shader object from a program object to which it is attached ;
+		err_code Attached(const uint32_t _prog_id, const uint32_t _u_max_cnt, uint32_t* _p_count, uint32_t* _p_shaders); // returns the identifiers of the shader objects attached to a program object;
+		err_code Link    (const uint32_t _prog_id);  // links the program object specified by _prog_id ;
+
+		err_code Get_all (void) ; // gets all functions' pointers at once;
+
+	private:
+		CLinker& operator = (const CLinker&) = delete; CLinker& operator = (CLinker&&) = delete;
+	};
+
 	// https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGet.xml ; this document contains all parameter identifiers that is recognized by glGet*();
 	class CParam : public CBase {
 	typedef void   (__stdcall *pfn_GetBool) (uint32_t _u_param_id, uint32_t* _p_result);
@@ -115,24 +136,20 @@ namespace procs {
 	};
 
 	class CProg : public CBase {
-	typedef void     (__stdcall *pfn_Attach)   (uint32_t _prog_id, uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glAttachShader.xhtml ;
 	typedef int32_t  (__stdcall *pfn_AttLocate)(uint32_t _prog_id, char* _p_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttribLocation.xhtml ;
 	typedef uint32_t (__stdcall *pfn_Create)   (void); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateProgram.xhtml ;
 	typedef void     (__stdcall *pfn_Delete)   (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteProgram.xhtml ;
 	typedef void     (__stdcall *pfn_InfoLog)  (uint32_t _prog_id, int32_t _buf_size, int32_t* _log_len, char* _p_log); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramInfoLog.xhtml ;
-	typedef void     (__stdcall *pfn_Link)     (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glLinkProgram.xhtml ;
 	typedef void     (__stdcall *pfn_Params)   (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetProgramiv.xml ;
 	typedef void     (__stdcall *pfn_Use)      (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUseProgram.xhtml ;
 	typedef void     (__stdcall *pfn_Validate) (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml ;
 	public:
 		CProg (void); ~CProg (void) = default;
 
-		err_code Attach  (uint32_t _prog_id, uint32_t _shader_id); // attaches the shader object specified by _shader_id to the program object specified by _prog_id ;
 		int32_t  AttLocate (uint32_t _prog_id, char* _p_name);     // returns the location of an attribute variable ;
 		uint32_t Create  (void);  // creates an empty program object and returns a non-zero value by which it can be referenced ;
 		err_code Delete  (uint32_t _prog_id);  // frees the memory and invalidates the name associated with the program object specified by _prog_id ;
 		err_code InfoLog (uint32_t _prog_id, int32_t _buf_size, int32_t* _log_len, char* _p_log); // returns the information log for the specified program object ;
-		err_code Link    (uint32_t _prog_id);  // links the program object specified by _prog_id ;
 		err_code Params  (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_params); // returns the requested object parameter ;
 		err_code Use (uint32_t _prog_id);      // installs the program object specified by program as part of current rendering state ;
 		err_code Validate (uint32_t _prog_id); // checks to see whether the executables contained in program can execute given the current OpenGL state ;

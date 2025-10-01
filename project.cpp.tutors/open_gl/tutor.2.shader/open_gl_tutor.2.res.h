@@ -14,7 +14,7 @@
 // https://www.microsoft.com/en-us/microsoft-365-life-hacks/writing/25-proofreading-abbreviations-and-what-they-mean ;
 // https://www.allacronyms.com/fragment/abbreviated ;
 
-#define IDS_TUTOR_2_SHADER_FRAG_0     1013
-#define IDS_TUTOR_2_SHADER_VERTEX_0   1015
+#define IDS_TUTOR_2_SHADER_FRAG_0   1013
+#define IDS_TUTOR_2_SHADER_VERT_0   1015
 
 

@@ -78,7 +78,7 @@ typedef shared::dbg::CTrace __trace;
 #define __trace_info(_p_format, ...) __trace::Out_0(__trace::e_info, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
 #define __trace_warn(_p_format, ...) __trace::Out_0(__trace::e_warn, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
 
-#define __trace_err_2(_p_format, ...)  __trace::Out_2(__trace::e_err , (_pc_sz)__CLASS__, (_pc_sz)__METHOD__. _p_format, __VA_ARGS__); // class and metod names are included automatically;
+#define __trace_err_2(_p_format, ...)  __trace::Out_2(__trace::e_err , (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // class and metod names are included automatically;
 #define __trace_impt_2(_p_format, ...) __trace::Out_2(__trace::e_impt, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // class and metod names are included automatically;
 #define __trace_info_2(_p_format, ...) __trace::Out_2(__trace::e_info, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // class and metod names are included automatically;
 #define __trace_warn_2(_p_format, ...) __trace::Out_2(__trace::e_warn, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // class and metod names are included automatically;

@@ -18,9 +18,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-//
 // Version
-//
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION    1,0,0,2
@@ -61,21 +59,38 @@ BEGIN
     END
 END
 /////////////////////////////////////////////////////////////////////////////
-//
-// auxiliary string(s)
-//
+// image(s) & icon(s)
 
   IDR_TUTOR_0_ICO  ICON    "open_gl_tutor.0.ico"
+
 /////////////////////////////////////////////////////////////////////////////
-//
 // auxiliary string(s)
-//
+
+/* Google AI: *important*
+	If you are constructing your shader source code programmatically (e.g., concatenating strings),
+	a missing newline character (\n) after a preprocessor directive or comment can cause subsequent lines to be interpreted incorrectly.
+*/
 
 STRINGTABLE {
 
-IDS_TUTOR_2_SHADER_FRAG_0   "#version 130\n\nin vec3 positionIn;\nin vec4 colorIn;\nout vec4 fragementColor;\n\nuniform mat4 projection = mat4(1.0);\nuniform mat4 model = mat4(1.0);\n\nvoid main() {\n\tgl_Position = projection * model * vec4(positionIn, 1.0f);\n\tfragementColor = colorIn;\n}"
-IDS_TUTOR_2_SHADER_VERTEX_0 "#version 130\n\nin vec4 fragementColor;\nout vec4 color;\n\nvoid main() {\n\tcolor = fragementColor;\n}"
-
+IDS_TUTOR_2_SHADER_FRAG_0
+"#version 330            \n \
+ in vec4 fragementColor; \n \
+ out vec4 color;         \n \
+ void main() {           \n \
+ color = fragementColor; \n \
+}"
+IDS_TUTOR_2_SHADER_VERT_0
+"#version 330            \n \
+ in vec3 positionIn;     \n \
+ in vec4 colorIn;        \n \
+ out vec4 fragementColor;\n \
+ uniform mat4 projection = mat4(1.0); \n \
+ uniform mat4 model = mat4(1.0);      \n \
+ void main() { \n \
+ gl_Position = projection * model * vec4(positionIn, 1.0f); \n \
+ fragementColor = colorIn; \n \
+}"
 }
 
 /////////////////////////////////////////////////////////////////////////////
