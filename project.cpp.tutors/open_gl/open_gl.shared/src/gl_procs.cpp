@@ -1095,3 +1095,41 @@ err_code CVertex::Get_all (void) {
 
 	return CBase::Error();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+static _pc_sz view_fun_names[] = {
+	_T("glDepthFunc"), _T("glDepthRange"), _T("glDepthRangef"), _T("glPolygonOffset"), _T("glViewport")
+};
+
+enum class e_view_fun_ndx : uint32_t {
+	e_depth_fun = 0x0, e_range_d = 0x1, e_range_f = 0x2, e_offset = 0x3, e_set = 0x4, 
+};
+
+CViewport:: CViewport (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glViewport.xhtml ;
+err_code CViewport::Set (const int32_t _x, const int32_t _y, const uint32_t _u_width, const uint32_t _u_height) {
+	_x; _y; _u_width; _u_height;
+	/* Possible error code(s):
+	GL_INVALID_VALUE : either '_u_width' or '_u_height' is negative;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Set p_fun = reinterpret_cast<pfn_Set>(CBase::Get(view_fun_names[(uint32_t)e_view_fun_ndx::e_set]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_x, _y, _u_width, _u_height);
+
+	switch (CErr_ex().Get_last()) {
+	case GL_INVALID_VALUE: {
+			if (0 == _u_height) CBase::m_error << __e_inv_arg = _T("#__e_inv_val: '_u_height' is 0 (zero)");
+			if (0 == _u_width ) CBase::m_error << __e_inv_arg = _T("#__e_inv_val: '_u_width' is 0 (zero)");
+		} break;
+	default:;
+	}
+	
+	return CBase::Error();
+}

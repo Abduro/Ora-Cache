@@ -10,33 +10,35 @@
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace vertex {
 
-	class CBase {
+	class CCoord {
 	public:
-		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
-		~CBase (void);
+		CCoord (const float _x = 0.0f, const float _y = 0.0f, const float _z = 0.0f); CCoord (const CCoord&); CCoord (CCoord&&); ~CCoord (void);
 
-		 TErr_ex& Error (void) const;
+		float X (void) const; void  X (const float); float& X (void);
+		float Y (void) const; void  Y (const float); float& Y (void);
+		float Z (void) const; void  Z (const float); float& Z (void);
 
+	public:
+		CCoord& operator = (const CCoord&);
+		CCoord& operator = (CCoord&&); // neither 'swap' or 'move' operations due to there is no non-copyable handles; https://en.cppreference.com/w/cpp/algorithm/swap.html ; 
 	private:
-		 CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
-	protected:
-		 CError_ex m_error;
+		float m_coord[3]; // 0:_x; 1:_y; 2:_z;
 	};
 }
 
-	class CVertex : public vertex::CBase { typedef vertex::CBase TBase;
+	class CVertex {
 	public:
 		 CVertex (void) ;  CVertex (const CVertex&) = delete; CVertex (CVertex&&) = delete;
 		~CVertex (void) ;
 
-		 const
-		 procs::CProg& Cache (void) const;
-		 procs::CProg& Cache (void) ;
+		 TError& Error (void) const;
+		 static
+		 procs::CVertex& Procs (void);
 
 	private:
 		 CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;
-
-		 procs::CProg  m_fn_cache;
+		 mutable
+		 CError  m_error;
 	};
 
 }}}

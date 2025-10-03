@@ -16,16 +16,6 @@ namespace program {
 		CLinker (const uint32_t _u_prog_id = 0); ~CLinker (void);
 
 		static
-		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
-		err_code Attach (const uint32_t _u_shader_id);
-		static
-		err_code Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
-		err_code Detach (const uint32_t _u_shader_id);
-		static
-		err_code Detach_all (const uint32_t _u_prog_id, CError&);
-		err_code Detach_all (void);
-
-		static
 		err_code Link (const uint32_t _u_prog_id, CError&);
 		err_code Link (void);               // assumes the program identifier is set;
 
@@ -37,8 +27,6 @@ namespace program {
 		err_code ProgId (const uint32_t);   // returns error code if the input prog_id is not valid, s_false: no change, otherwise: s_ok;
 
 		CLinker& operator <<(const uint32_t _u_prog_id);
-		CLinker& operator +=(const uint32_t _u_shader_id); // it is assumed the program identifier is already set to this linker;
-		CLinker& operator -=(const uint32_t _u_shader_id); // detaches the shader from linker (i.e. the program) by '_u_shader_id';
 
 	private:
 		mutable

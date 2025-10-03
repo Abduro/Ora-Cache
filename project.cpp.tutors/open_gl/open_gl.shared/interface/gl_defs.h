@@ -14,8 +14,6 @@
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
-	// https://www.khronos.org/opengl/wiki/OpenGL_Type ;
-
 	using namespace shared::defs;
 
 	using CErr_ex = CError_ex;

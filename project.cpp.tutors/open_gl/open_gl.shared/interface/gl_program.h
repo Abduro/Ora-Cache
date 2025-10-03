@@ -8,6 +8,7 @@
 #include "gl_procs.h"
 #include "gl_logs.h"
 #include "program\gl_prog_id.h"
+#include "program\gl_$_cache.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace program {}
@@ -36,13 +37,18 @@ namespace program {}
 		 bool Is_valid (const uint32_t _n_prog_id, CError&); // there is not way to check program identifier as it can be made for shader;
 		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
 
+		 const
+		 program::CCache& Shaders (void) const;
+		 program::CCache& Shaders (void) ;
+
 		 err_code Validate (void);   // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
 
 	private:
 		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
 		 program::CProgId m_prog_id;
 		 mutable
-		 CError  m_error;
+		 CError   m_error;
+		 program::CCache  m_shaders;
 	};
 }}}
 

@@ -49,7 +49,7 @@ err_code  CProgram::Delete (void) {
 	if (false == !!this->Id())
 		return this->Error();  // returns __s_ok; there is nothing to destroy;
 
-	CLinker(this->Id()).Detach_all(); // it is supposed the shader(s) will be destroyed later than this program, so shader(s) must be detached first;
+	CCache(this->Id()).Detach_all(); // it is supposed the shader(s) will be destroyed later than this program, so shader(s) must be detached first;
 
 	procs::CProg& procs = CProgram::Cache();
 
@@ -89,6 +89,10 @@ bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 
 	return false == _err.Is();
 }
+
+const
+program::CCache& CProgram::Shaders (void) const { return this->m_shaders; }
+program::CCache& CProgram::Shaders (void)       { return this->m_shaders; }
 
 err_code CProgram::Validate (void) {
 	this->m_error<<__METHOD__<<__s_ok;

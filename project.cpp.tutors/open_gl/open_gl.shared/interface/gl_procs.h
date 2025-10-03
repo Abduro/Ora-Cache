@@ -7,7 +7,7 @@
 #include "gl_defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
-
+	// https://www.khronos.org/opengl/wiki/OpenGL_Type ;
 namespace procs {
 	using namespace ex_ui::draw::open_gl;
 
@@ -213,6 +213,28 @@ namespace procs {
 
 	private:
 		CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;
+	};
+
+	class CViewport : public CBase {
+	typedef void (__stdcall *pfn_DepthFun) (uint32_t _u_type); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml ;
+	typedef void (__stdcall *pfn_DepthRng_dbl) (double _d_near, double _d_far);// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDepthRange.xhtml ;
+	typedef void (__stdcall *pfn_DepthRng_flt) (float _f_near, float _f_far);  // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDepthRange.xhtml ;
+	typedef void (__stdcall *pfn_Scale)(float _f_factor, float _f_units); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml ;
+	typedef void (__stdcall *pfn_Set) (int32_t _x, int32_t _y, uint32_t _u_width, uint32_t _u_height); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glViewport.xhtml ;
+	public:
+		CViewport (void); ~CViewport (void) = default;
+		// https://en.wikipedia.org/wiki/Affine_transformation ;
+		err_code Set (const int32_t _x, const int32_t _y, const uint32_t _u_width, const uint32_t _u_height); // specifies the affine transformation of x and y from normalized device coordinates to window coordinates;
+	public:
+		class CDepth : no_copy {
+		public:
+			CDepth (void); ~CDepth (void) = default;
+
+		};
+
+	private:
+		CViewport& operator = (const CViewport&) = delete; CViewport& operator = (CViewport&&) = delete;
+		friend class CViewport::CDepth;
 	};
 
 }}}}

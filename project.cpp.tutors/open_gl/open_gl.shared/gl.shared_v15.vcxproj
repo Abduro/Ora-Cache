@@ -178,6 +178,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_$_cache.h" />
+    <ClCompile Include="$(_1-1)gl_$_cache.cpp" />
     <ClInclude Include="$(_0-0)gl_compiler.h" />
     <ClCompile Include="$(_1-0)gl_compiler.cpp" />
     <ClInclude Include="$(_0)gl_context.h" />
@@ -214,6 +216,8 @@
     <ClCompile Include="$(_1)gl_version.cpp" />
     <ClInclude Include="$(_0)gl_vertex.h" />
     <ClCompile Include="$(_1)gl_vertex.cpp" />
+    <ClInclude Include="$(_0)gl_viewport.h" />
+    <ClCompile Include="$(_1)gl_viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

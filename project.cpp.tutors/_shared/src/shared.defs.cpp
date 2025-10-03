@@ -95,3 +95,7 @@ _pc_sz  CString_Ex::Format (_pc_sz _p_pattern, ...) {
 	va_end (args);
 	return TBase::GetString();
 }
+
+bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold) {
+	return (::std::fabs(_f_lhv-_f_rhv) < _f_threshold);
+}

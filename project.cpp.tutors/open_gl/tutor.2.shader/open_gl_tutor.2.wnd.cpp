@@ -128,7 +128,7 @@ err_code shader::CWnd::PostCreate (void) {
 		__trace_info_2(pc_sz_pat_src, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
 	}
 
-	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader compiled successfully;\n");
+	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader is compiled;\n");
 	static _pc_sz pc_sz_pat_stat = _T("Shader '%s' compiled status: '%s';\n");
 
 	if (false == this->Shader_frag().Error()().Is()) {
@@ -189,17 +189,17 @@ err_code shader::CWnd::PostCreate (void) {
 
 	program::CLinker linker(prog.Id());
 
-	static _pc_sz pc_sz_pat_att = _T("Linker attaches '%s' shader successfully;\n");
+	static _pc_sz pc_sz_pat_att = _T("Program attaches '%s' shader successfully;\n");
 
-	if ( __failed(linker.Attach(this->Shader_frag().Id())) ) {
-	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
+	if ( __failed(prog.Shaders().Attach(this->Shader_frag().Id())) ) {
+	     __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Error().Print(TError::e_print::e_req)); }
 	else __trace_info_2(pc_sz_pat_att, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
 
-	if ( __failed(linker.Attach(this->Shader_vert().Id())) ) {
-	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
+	if ( __failed(prog.Shaders().Attach(this->Shader_vert().Id())) ) {
+	     __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Error().Print(TError::e_print::e_req)); }
 	else __trace_info_2(pc_sz_pat_att, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
 
-	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked successfully;\n");
+	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked;\n");
 
 	program::CStatus prog_status(prog.Id());
 
@@ -230,7 +230,7 @@ err_code shader::CWnd::PostCreate (void) {
 	else __trace_info_2(_T("Program (id=%u) is validated;\n"), linker.ProgId());
 
 	// just for testing purpose;
-	if ( __failed(linker.Detach_all())) {
+	if ( __failed(prog.Shaders().Detach_all())) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
 	else __trace_warn_2(_T("All shaders are detached;\n"));
 

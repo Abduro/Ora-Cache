@@ -7,6 +7,7 @@
 #include "gl_defs.h"
 #include "gl_logs.h"
 #include "gl_procs.h"
+#include "program\gl_$_cache.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace shader {
