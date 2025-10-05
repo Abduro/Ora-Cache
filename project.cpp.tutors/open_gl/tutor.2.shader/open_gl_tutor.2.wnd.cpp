@@ -84,7 +84,7 @@ err_code shader::CWnd::PostCreate (void) {
 	if (__failed(TBase::PostCreate()))
 		return TBase::Error();
 #else
-	TFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
+	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
 	if (wnd.Is_valid() == false) {
 		return this->m_error = wnd.Error();
 	}

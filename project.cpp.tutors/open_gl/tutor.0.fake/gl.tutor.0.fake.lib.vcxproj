@@ -200,6 +200,9 @@
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
     </ProjectReference>
+    <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

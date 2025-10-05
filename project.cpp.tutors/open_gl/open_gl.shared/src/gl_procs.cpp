@@ -9,69 +9,6 @@ using namespace ex_ui::draw::open_gl::procs;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_1 { void __warning_lnk_4006 (void) {}}}}}
 
-procs::CBase:: CBase (void) { this->m_error >>__CLASS__<<__METHOD__<< __e_not_inited; }
-
-TError&  procs::CBase::Error (void) const { return this->m_error; }
-
-PROC procs::CBase::Get (_pc_sz _p_proc_name) {
-	_p_proc_name;
-	if (nullptr == _p_proc_name || 0 == ::_tcslen(_p_proc_name)) {
-		this->m_error <<__METHOD__<< __e_inv_arg; return nullptr;
-	}
-	TProcCache::const_iterator found_ = this->m_cached.find(_p_proc_name);
-	if (found_ != this->m_cached.end())
-		return found_->second;
-
-	CStringA cs_ansi(_p_proc_name);
-	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglgetprocaddress?source=docs ;
-	PROC p_proc = ::wglGetProcAddress(cs_ansi.GetString());
-	if ( p_proc ) {
-		try {
-			this->m_cached.insert(::std::make_pair(CString(_p_proc_name), p_proc));
-		}
-		catch (const ::std::bad_alloc&) {
-			this->m_error << __e_no_memory;
-		}
-	}
-	// https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
-	else if ( 0 == p_proc || (void*)0x1 == p_proc || (void*)0x2 == p_proc || (void*)0x3 == p_proc || (void*)-1 == p_proc )
-	{		// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya ;
-		HMODULE h_module = ::LoadLibrary(_T("opengl32.dll"));
-		if (0 ==h_module)
-			this->m_error.Last();
-		else {
-			// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress ;
-			p_proc = ::GetProcAddress(h_module, cs_ansi.GetString());
-			if (0 == p_proc) {
-				this->m_error.Last(); this->m_error = TString().Format(_T("Get address of '%s' failed"), _p_proc_name);
-			}
-		}
-	}
-	else {
-		this->m_error << (err_code) TErrCodes::eExecute::eFunction = TString().Format(_T("the proc '%s' is not found"), _p_proc_name);
-	}
-	return p_proc;
-}
-
-err_code procs::CBase::Get_all (void) { return __e_not_impl; }
-
-CString  procs::CBase::Print (void) const {
-
-	if (this->m_cached.empty()) {
-		return CString(_T("#empty"));
-	}
-	
-	CString cs_out;
-
-	for (TProcCache::const_iterator it_ = this->m_cached.begin(); it_ != this->m_cached.end(); ++it_) {
-		cs_out += _T("\t");
-		cs_out += it_->first;
-		cs_out += _T(";\n");
-	}
-
-	return cs_out;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 static _pc_sz buf_fun_names[] = {
@@ -208,7 +145,7 @@ err_code  CCompiler::Compile (uint32_t _shader_id) {
 
 	p_fun(_shader_id);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_VALUE:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: _shader_id (%u) is not valid;"), _shader_id); break;
 	case GL_INVALID_OPERATION:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: _shader_id (%u) refers to not shader;"), _shader_id); break;
 	default:;
@@ -226,7 +163,7 @@ bool CCompiler::Is_supported (void) const {
 	b_result = param.GetBool(GL_SHADER_COMPILER);
 
 	if (param.Error().Is()) {
-		if (GL_INVALID_ENUM == CError_ex().Get_last())
+		if (GL_INVALID_ENUM == CError_ex().Get_last(false))
 			CBase::m_error << __e_inv_arg = TString().Format(_T("The param id (0x%04x) is undefined"), GL_SHADER_COMPILER);
 		else
 			CBase::m_error = param.Error();
@@ -251,87 +188,6 @@ err_code CCompiler::Get_all (void) {
 
 	for (uint32_t i_ = 0; i_ < _countof(cmpl_fun_names); i_++) {
 		if (nullptr == CBase::Get(cmpl_fun_names[i_]))
-			break;
-	}
-
-	return CBase::Error();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-static _pc_sz ctx_fun_names[] = { _T("wglChoosePixelFormatARB"), _T("wglCreateContextAttribsARB"), _T("wglSwapIntervalEXT") };
-
-CContext:: CContext (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
-
-// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) ;
-int32_t  CContext::ChoosePxFormatArb (HDC _h_dc, const int* _p_atts_i, const float* _p_atts_f, uint32_t _u_max_fmts, int* _p_fmts, uint32_t* _p_fmt_count) {
-	_h_dc; _p_atts_i; _p_atts_f; _u_max_fmts; _p_fmts; _p_fmt_count;
-	// it returns: 0 - this is the failure, otherwise the result value > 0, that means success;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	int32_t n_result = 0; // this is the failure result; in case of unsuccessful loading the function it will be returned to the caller;
-	
-	// this is the function for creating draw renderer context;
-	pfn_ChoosePxFormatArb p_fun = reinterpret_cast<pfn_ChoosePxFormatArb>(CBase::Get(ctx_fun_names[0]));
-	if (nullptr == p_fun)
-		return n_result; // needs to be figured out of what result should be returned in case of failure; (done)
-
-	n_result = p_fun(_h_dc, _p_atts_i, _p_atts_f, _u_max_fmts, _p_fmts, _p_fmt_count);
-	return n_result;
-}
-// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
-HGLRC    CContext::CreateCtxAttsArb (HDC _h_dc, HGLRC _h_shared_ctx, const int* p_att_lst) {
-	_h_dc; _h_shared_ctx; p_att_lst;
-	// on failure returns nullptr; extended error information can be obtained with GetLastError() ;
-	/* Possible error codes:
-		ERROR_DC_NOT_FOUND        : _h_dc is not a valid device context handle ;
-		ERROR_INVALID_PIXEL_FORMAT: the pixel format associated with _h_dc does not support OpenGL contexts providing the requested API major and minor version, forward-compatible flag ;
-		ERROR_INVALID_OPERATION   : _h_shared_ctx is neither zero nor a valid context handle ;
-		ERROR_INVALID_OPERATION   : _h_shared_ctx was created on a different device context than the one referenced by _h_dc ; or if the contexts are otherwise incompatible ;
-		ERROR_NO_SYSTEM_RESOURCES : the OpenGL server does not have enough resources to allocate the new context ;
-		ERROR_INVALID_PARAMETER   : an unrecognized attribute is present in attribute list p_att_lst ;
-		ERROR_INVALID_VERSION_ARB : the major and minor attributes of the version with compatible bit specify non-exist version ;
-		ERROR_INVALID_PROFILE_ARB : WGL_CONTEXT_PROFILE_MASK_ARB has no bits set;
-			it has any bits set other than WGL_CONTEXT_CORE_PROFILE_BIT_ARB and WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB ;
-	*/
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	HGLRC h_render = nullptr;
-
-	pfn_CreateCtxAttsArb p_fun = reinterpret_cast<pfn_CreateCtxAttsArb>(CBase::Get(ctx_fun_names[1]));
-	if (nullptr == p_fun)
-		return h_render;
-
-	h_render = p_fun(_h_dc, _h_shared_ctx, p_att_lst);
-
-	return h_render;
-}
-// https://www.khronos.org/opengl/wiki/Swap_Interval ;
-bool  CContext::SwapIntervalExt (const int _n_interval) {
-	_n_interval;
-	/* Possible error reasons:
-		- PFD_DOUBLEBUFFER must be set, but it is not;
-		- the required OpenGL is not installed;
-	*/
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	int32_t n_result = 0;
-
-	pfn_SwapIntervalExt p_fun = reinterpret_cast<pfn_SwapIntervalExt>(CBase::Get(ctx_fun_names[2]));
-	if (nullptr == p_fun)
-		return n_result; // needs to be figured out of what result should be returned in case of failure;
-
-	n_result = p_fun(_n_interval);
-	return !!n_result;
-}
-
-err_code CContext::Get_all (void) {
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	for (uint32_t i_ = 0; i_ < _countof(ctx_fun_names); i_++) {
-		if (nullptr == CBase::Get(ctx_fun_names[i_]))
 			break;
 	}
 
@@ -368,7 +224,7 @@ err_code CLinker::Attach (const uint32_t _prog_id, const uint32_t _shader_id) {
 
 	p_fun(_prog_id, _shader_id);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_OPERATION:
 	case GL_INVALID_VALUE: {
 			if (false) {}
@@ -409,7 +265,7 @@ err_code CLinker::Attached (const uint32_t _prog_id, const uint32_t _u_max_cnt, 
 
 	p_fun(_prog_id, _u_max_cnt, _p_count, _p_shaders);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_OPERATION:
 	case GL_INVALID_VALUE: {
 			if (false) {}
@@ -443,7 +299,7 @@ err_code CLinker::Detach (const uint32_t _prog_id, const uint32_t _shader_id) {
 
 	p_fun(_prog_id, _shader_id);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_OPERATION :
 	case GL_INVALID_VALUE : {
 			if (false) {}
@@ -484,7 +340,7 @@ err_code CLinker::Link (const uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_OPERATION :
 	case GL_INVALID_VALUE : {
 			if (false) {}
@@ -570,7 +426,7 @@ int32_t CParam::GetInt (uint32_t _u_param_id) {
 
 	p_fun(_u_param_id, &n_result);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is invalid;"), _u_param_id);
 	default:;
 	}
@@ -631,7 +487,7 @@ uint32_t CProg::Create (void){
 
 	n_result = p_fun();
 	if (0 == n_result) {
-		switch (CErr_ex().Get_last()) {
+		switch (CErr_ex().Get_last(false)) {
 		case GL_OUT_OF_MEMORY: CBase::m_error << __e_no_memory = _T("#__e_no_mem: generic error;"); break;
 		default:; // keeps the error state in 'no error', but program id still equals to zero, the caller needs to call glGetProgramInfoLog();
 		}
@@ -651,7 +507,7 @@ err_code CProg::Delete  (uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is not valid;"), _prog_id);
 	default:;
 	}
@@ -674,7 +530,7 @@ err_code CProg::InfoLog (uint32_t _prog_id, int32_t _buf_size, int32_t* _log_len
 
 	p_fun(_prog_id, _buf_size, _log_len, _p_log);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_OPERATION: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program object"), _prog_id); break;
 	case GL_INVALID_VALUE: {
 			if (0 > _buf_size)
@@ -702,7 +558,7 @@ err_code CProg::Params  (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_para
 
 	p_fun(_prog_id, _param_id, _p_params);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_param_id' (%u) is not accepted;"), _param_id); break;
 	case GL_INVALID_OPERATION: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program;"), _prog_id); break;
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
@@ -745,7 +601,7 @@ err_code CProg::Validate (uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last()) {
+	switch (CErr_ex().Get_last(false)) {
 	case GL_INVALID_OPERATION : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program;"), _prog_id); break;
 	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
 	default:;
@@ -868,7 +724,7 @@ err_code  CShader::Params  (uint32_t _shader_id, uint32_t _param_type, int32_t* 
 
 	p_fun(_shader_id, _param_type, _p_params);
 	
-	switch (CError_ex().Get_last()) {
+	switch (CError_ex().Get_last(false)) {
 	case GL_INVALID_ENUM : { CBase::m_error << (err_code)TErrCodes::eData::eNotFound = TString().Format(_T("_param_type (%u) is invalid"), _param_type); } break;
 	case GL_INVALID_VALUE : { CBase::m_error << (err_code)TErrCodes::eData::eInvalid = TString().Format(_T("_shader_id (%u) is invalid"), _shader_id); } break;
 	case GL_INVALID_OPERATION : {
@@ -900,7 +756,7 @@ err_code  CShader::Source  (uint32_t _shader_id, int32_t _n_count, const char** 
 
 	p_fun(_shader_id, _n_count, _p_string, _p_length);
 
-	switch (CErr_ex().Get_last()){
+	switch (CErr_ex().Get_last(false)){
 	case GL_INVALID_OPERATION: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_shader_id'(%u) refers to not shader object;"), _shader_id); break;
 	case GL_INVALID_VALUE: {
 			if (0 > _n_count)
@@ -1093,43 +949,5 @@ err_code CVertex::Get_all (void) {
 			break;
 	}
 
-	return CBase::Error();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-static _pc_sz view_fun_names[] = {
-	_T("glDepthFunc"), _T("glDepthRange"), _T("glDepthRangef"), _T("glPolygonOffset"), _T("glViewport")
-};
-
-enum class e_view_fun_ndx : uint32_t {
-	e_depth_fun = 0x0, e_range_d = 0x1, e_range_f = 0x2, e_offset = 0x3, e_set = 0x4, 
-};
-
-CViewport:: CViewport (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
-// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glViewport.xhtml ;
-err_code CViewport::Set (const int32_t _x, const int32_t _y, const uint32_t _u_width, const uint32_t _u_height) {
-	_x; _y; _u_width; _u_height;
-	/* Possible error code(s):
-	GL_INVALID_VALUE : either '_u_width' or '_u_height' is negative;
-	*/
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_Set p_fun = reinterpret_cast<pfn_Set>(CBase::Get(view_fun_names[(uint32_t)e_view_fun_ndx::e_set]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_x, _y, _u_width, _u_height);
-
-	switch (CErr_ex().Get_last()) {
-	case GL_INVALID_VALUE: {
-			if (0 == _u_height) CBase::m_error << __e_inv_arg = _T("#__e_inv_val: '_u_height' is 0 (zero)");
-			if (0 == _u_width ) CBase::m_error << __e_inv_arg = _T("#__e_inv_val: '_u_width' is 0 (zero)");
-		} break;
-	default:;
-	}
-	
 	return CBase::Error();
 }

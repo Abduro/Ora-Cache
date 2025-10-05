@@ -14,7 +14,7 @@
     <Fake Condition="'$(Fake)'==''">..\tutor.0.fake\</Fake><!--OpenGL version interface;-->
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>$(Fake)</_0>
+    <_0>$(Fake)</_0><!--fake window, i.e. message-only window is moved to shared.win.gui_v15 project, this this reference is not used actually;-->
     <_1></_1>
     <_2></_2>
     <_3></_3>

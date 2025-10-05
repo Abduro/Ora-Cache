@@ -4,11 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 26-Aug-2025 at 02:53:28.276, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL tutorials' shader window interface declaration file;
 */
-#include "open_gl_tutor.1.wnd.h"
 #include "gl_shader.h"
-#include "gl_version.h"
-#include "open_gl_tutor.0.fake.h"
-#pragma comment(lib, "gl.tutor.0.fake.lib") 
+#include "open_gl_tutor.1.wnd.h"
+#include "shared.wnd.fake.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
@@ -18,9 +16,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 	using namespace ex_ui::popup;
 	using namespace ex_ui::popup::layout;
 
-	using TCtxWindow = ex_ui::draw::open_gl::context::CWnd;
+	using CCtxWindow = ex_ui::draw::open_gl::context::CWnd;
+	using CFakeWnd = ex_ui::popup::CMsgWnd;
 
-	class CWnd : public TCtxWindow { typedef TCtxWindow TBase;
+	class CWnd : public CCtxWindow { typedef CCtxWindow TBase;
 	public:
 		 CWnd (void);
 		~CWnd (void);
@@ -38,7 +37,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		err_code PostCreate (void);
 
 	protected:
-		TFakeWnd m_fak_wnd; // message-only window (aka fake) is created in its constructor;
+		CFakeWnd m_fak_wnd; // message-only window (aka fake) is created in its constructor;
 		context::CDevice  m_ctx_dev;
 
 		shader::CFragment m_frag_shader;

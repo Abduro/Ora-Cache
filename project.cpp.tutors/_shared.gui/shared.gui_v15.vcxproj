@@ -182,6 +182,8 @@
     <ClCompile Include="$(_1)shared.wnd.atom.cpp" />
     <ClInclude Include="$(_0)shared.wnd.base.h" />
     <ClCompile Include="$(_1)shared.wnd.base.cpp" />
+    <ClInclude Include="$(_0)shared.wnd.fake.h" />
+    <ClCompile Include="$(_1)shared.wnd.fake.cpp" />
     <ClInclude Include="$(_0)shared.wnd.msg.h" />
     <ClCompile Include="$(_1)shared.wnd.msg.cpp" />
     <ClInclude Include="$(_0)shared.wnd.layout.h" />

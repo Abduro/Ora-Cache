@@ -28,7 +28,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	// https://www.khronos.org/opengl/wiki/Example/OpenGL_Error_Testing_with_Message_Callbacks ;
 	// https://stackoverflow.com/questions/60486285/gldebugmessagecallback-doesnt-get-called-despite-of-error ; << example of usage;
 #pragma endregion
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgeterror?source=docs ;
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgeterror ;
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetError.xhtml ;
 	// https://www.khronos.org/opengl/wiki/OpenGL_Error ; << this is descriptive information of the error codes and how to use the error;
 
@@ -43,6 +43,9 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		// input arg is for keeping original error description i.e. that is defined by OpenGL, but the error may have WinAPI system error desc too;
 
 		err_code Get_last (const bool _b_origin = true) const;  // calls the glGetError() function for getting the last error code;
+
+		// https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluErrorString.xml ;
+		// https://learn.microsoft.com/en-us/windows/win32/opengl/gluerrorstring ; << this page the same content as above one, but is much better formatted;
 
 	public:
 		const

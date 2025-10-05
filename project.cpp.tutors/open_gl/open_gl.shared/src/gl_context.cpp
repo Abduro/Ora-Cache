@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' context base interface implementation file;
 */
 #include "gl_context.h"
+#include "procs\gl_procs_ctx.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
@@ -10,6 +11,11 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::context;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
+
+	procs::CContext& __get_ctx_procs (void) {
+		static procs::CContext procs;
+		return procs;
+	}
 
 }}}}
 
@@ -280,11 +286,10 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "open_gl_tutor.0.fake.h"
-#pragma comment(lib, "gl.tutor.0.fake.lib") // this is required due to the fake window is used in the first step;
-
+#include "shared.wnd.fake.h"
 #include "gl_format.h"
 
+using CFakeWnd = ex_ui::popup::CMsgWnd;
 using namespace ex_ui::draw::open_gl::format;
 
 CContext:: CContext (void) : TBase() { TBase::m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
@@ -294,7 +299,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	h_target; _u_gl_major_ver; _u_gl_miner_ver;
 	TBase::m_error() <<__METHOD__<< __s_ok;
 	// (1) Creates the fake window;
-	TFakeWnd fk_wnd;
+	CFakeWnd fk_wnd;
 	if (fk_wnd.Is_valid() == false)
 		return TBase::m_error() = fk_wnd.Error();
 	// (2) creating the drawing renderer context;
@@ -303,10 +308,10 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 		return TBase::m_error() = dev_ctx.Error()();
 	// (3) creates OpenGL context functions' cache;
 
-	this->Cache().Get_all();
+	__get_ctx_procs().Get_all();
 
-	if (this->Cache().Error())
-		return TBase::m_error() = this->Cache().Error();
+	if (__get_ctx_procs().Error())
+		return TBase::m_error() = __get_ctx_procs().Error();
 
 	// (4) gets context;
 	// (4.a) get target window context device first;
@@ -325,7 +330,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ; this file contains the function description;
 	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) ; << there is the example of how to use the function;
 
-	const int32_t n_result = this->Cache().ChoosePxFormatArb(
+	const int32_t n_result = __get_ctx_procs().ChoosePxFormatArb(
 		TBase::Target().Get(), pxl_atts.IAtt_Get_Int_Ptr(), nullptr, 1, &p_formats, &n_count
 	);
 
@@ -348,9 +353,9 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	bool b_can_go_ahead = false;
 
 	if (0 == n_result) { // the failure has occurred: the format cannot be chosen for creating the context;
-		if (this->Cache().Error()) { // checks for failure of loading the function pointer;
-			this->Cache().Error().Show();
-			TBase::m_error() = this->Cache().Error();
+		if (__get_ctx_procs().Error()) { // checks for failure of loading the function pointer;
+			__get_ctx_procs().Error().Show();
+			TBase::m_error() = __get_ctx_procs().Error();
 		}
 		else { // otherwise checks the OpenGL error that has been thrown;
 			TBase::m_error.Get_last();
@@ -385,7 +390,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 
 	CAtt_set_ctx ctx_atts(_u_gl_major_ver, _u_gl_miner_ver);
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
-	this->m_drw_ctx = this->Cache().CreateCtxAttsArb(TBase::Target().Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
+	this->m_drw_ctx = __get_ctx_procs().CreateCtxAttsArb(TBase::Target().Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
 	if (nullptr == this->m_drw_ctx) {
 		return TBase::m_error().Last(); // the excerpt: Extended error information can be obtained with GetLastError().
 	}
@@ -406,7 +411,3 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 
 	return TBase::Error()();
 }
-
-const
-procs::CContext& CContext::Cache (void) const { return this->m_fn_cache; }
-procs::CContext& CContext::Cache (void)       { return this->m_fn_cache; }

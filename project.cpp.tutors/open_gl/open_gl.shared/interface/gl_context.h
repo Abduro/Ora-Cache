@@ -5,7 +5,6 @@
 	This is Ebo Pack OpenGL tutorials' context base interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_procs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace context {
@@ -91,16 +90,10 @@ namespace context {
 		~CContext (void) ;
 
 		 err_code Create (const HWND h_target, const uint32_t _u_gl_major_ver, const uint32_t _u_gl_miner_ver);
-		 const
-		 procs::CContext& Cache (void) const;
-		 procs::CContext& Cache (void) ;
-
 		 err_code Destroy(void);
 
 	private:
 		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
-
-		 procs::CContext  m_fn_cache;
 	};
 }}}
 

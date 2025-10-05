@@ -4,8 +4,24 @@
 */
 #include "gl_viewport.h"
 #include "shared.preproc.h"
+#include "procs\gl_procs_view.h"
 
 using namespace ex_ui::draw::open_gl;
+
+namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
+
+	procs::CDepth&  __get_depth_procs(void) {
+		static procs::CDepth procs;
+		return procs;
+	}
+
+	procs::CViewport&  __get_depth_view(void) {
+		static procs::CViewport procs;
+		return procs;
+	}
+
+}}}}
+using namespace ex_ui::draw::open_gl::_impl;
 
 CViewPort:: CViewPort (const uint32_t _u_width, const uint32_t _u_height) : m_size{_u_width, _u_height} {
 	this->m_error >>__CLASS__<<__METHOD__<<(this->Is_valid() ? __s_ok : __e_not_inited);

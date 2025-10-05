@@ -5,37 +5,16 @@
 	This is Ebo Pack OpenGL fake (message-only) window interface declaration file;
 */
 #include "open_gl_tutor.0.defs.h"
+#include "shared.wnd.fake.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
 
 	using namespace ex_ui::draw::open_gl;
 
-	class CWnd : public ::ATL::CWindowImpl<CWnd> { typedef ::ATL::CWindowImpl<CWnd> TWindow;
+	class CWnd : public ex_ui::popup::CMsgWnd { typedef ex_ui::popup::CMsgWnd TWindow;
 	public:
 		 CWnd (void); CWnd (const CWnd&) = delete; CWnd (CWnd&&) = delete;
 		~CWnd (void);
-
-		 static
-		 const uint32_t u_style = CS_DBLCLKS | CS_OWNDC; // cs_owndc is important for creating open_gl window content;
-
-		 DECLARE_WND_CLASS_EX(_T("open_gl::fake::CWnd"), u_style, COLOR_ACTIVECAPTION);
-		 DECLARE_EMPTY_MSG_MAP();
-
-		 TError& Error (void) const;
-		 bool    Is_valid (void) const;
-
-		 const
-		 HDC&    Get_ctx (void) const; // gets the reference to device context; read-only;
-		 HDC&    Get_ctx (void) ;
-
-		 operator const HDC& (void) const;
-
-	private:
-		 CWnd& operator = (const CWnd&) = delete; CWnd& operator = (CWnd&&) = delete;
-
-		 mutable
-		 CError  m_error;
-		 HDC     m_h_dc ;
 	};
 
 }}}}

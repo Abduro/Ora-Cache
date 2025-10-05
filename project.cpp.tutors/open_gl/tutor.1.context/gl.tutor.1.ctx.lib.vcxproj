@@ -65,22 +65,22 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <!--Import Project="gl.tutor.1.ctx.inc.props" /-->
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <!--Import Project="gl.tutor.1.ctx.inc.props" /-->
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <!--Import Project="gl.tutor.1.ctx.inc.props" /-->
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.1.ctx.inc.props" />
+    <!--Import Project="gl.tutor.1.ctx.inc.props" /-->
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -199,9 +199,9 @@
     <ClCompile Include="open_gl_tutor.1.wnd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(Fake)gl.tutor.0.fake.lib.vcxproj">
+    <!--ProjectReference Include="$(Fake)gl.tutor.0.fake.lib.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>
-    </ProjectReference>
+    </ProjectReference-->
     <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
     </ProjectReference>

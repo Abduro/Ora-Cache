@@ -16,8 +16,8 @@
 
 typedef
 struct {
-uint32_t cx = 0;
-uint32_t cy = 0;
+	uint32_t cx = 0;
+	uint32_t cy = 0;
 } t_size_u;
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ; :: gettig the info of viewport;

@@ -4,13 +4,19 @@
 */
 #include "open_gl_tutor.2.module.h"
 #include "open_gl_tutor.2.res.h"
-#include "open_gl_tutor.0.fake.h"
 
 #include "shared.dbg.h"
 #include "gl_version.h"
 
+#include "console.h"
+#include "console.font.h"
+
+#include "win.gui.wnd.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
+using namespace shared::console;
+using namespace shared::gui;
 
 CShaderModule _Module;
 

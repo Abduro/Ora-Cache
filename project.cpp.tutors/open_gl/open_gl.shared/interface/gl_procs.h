@@ -4,38 +4,12 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Sep-2025 at 13:09:31.015, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL tutorials' procedures loader wrapper interface declaration file; 
 */
-#include "gl_defs.h"
+#include "procs\gl_procs_base.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
-	// https://www.khronos.org/opengl/wiki/OpenGL_Type ;
+	
 namespace procs {
 	using namespace ex_ui::draw::open_gl;
-
-	typedef ::std::map<CString, PROC> TProcCache;  // the key is the procedure name, the value is the pointer to the address of procefure function/method;
-
-	// ToDo: it would be better in case if the cache is global and static for all functions; it looks very like OpenGL functions do not have the same names;
-	class CBase { // not thread safe yet;
-	public:
-		CBase (void) ; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
-
-		TError&  Error (void) const;
-		PROC     Get (_pc_sz _p_fun_name); // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
-		err_code Get_all (void); // get all functions pointers; in this base class it does nothing, must be implemented in a child class if necessary;
-
-		CString  Print (void) const; // enumerates all loaded function(s); the output string is formatted for message box (i.e. multilined);
-
-	private:
-		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
-
-	protected:
-		mutable
-		CError m_error;
-		TProcCache m_cached; // every child class will have its own cache of the functions pointers;
-	};
-
-	/**important*:
-	if original function of the OpenGL returns 'void' the wrapper will return 'err_code' for indicating 'success' or 'failure' of loading a function pointer;
-	*/
 
 	// https://www.abbreviations.com/abbreviation/Target >> tgt ;
 	class CBuffer : public CBase {
@@ -79,23 +53,6 @@ namespace procs {
 		CCompiler& operator = (const CCompiler&) = delete; CCompiler& operator = (CCompiler&&) = delete;
 	};
 
-	// https://www.abbreviations.com/abbreviation/Format >> fmt ;
-	class CContext : public CBase {
-	typedef int32_t (__stdcall *pfn_ChoosePxFormatArb) (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _u_max_fmts, int* _p_fmts, uint32_t* _p_fmt_count);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	typedef HGLRC   (__stdcall *pfn_CreateCtxAttsArb)  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst);  // https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
-	typedef int32_t (__stdcall *pfn_SwapIntervalExt) (int _n_interval); // https://www.khronos.org/opengl/wiki/Swap_Interval ;
-	public:
-		CContext (void); ~CContext (void) = default;
-
-		err_code Get_all (void) ; // in the most cases this method is very useful for testing purposes;
-		
-		int32_t ChoosePxFormatArb (HDC, const int* _p_atts_i, const float* _p_atts_f, uint32_t _u_max_fmts, int* _p_fmts, uint32_t* _p_fmt_count); // selects pixel formats to return based on the attribute values specified in _p_atts_i and _p_atts_f ;
-		HGLRC   CreateCtxAttsArb  (HDC, HGLRC _h_shared_ctx, const int* p_att_lst); // creates an OpenGL rendering context ;
-		bool    SwapIntervalExt   (const int _n_interval); // controls vertical sync; specifies minimum number of frames before each buffer swap (back and front);
-
-	private:
-		CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
-	};
 	// it is a loader of functions that are related to the program layout process; this class is intended for functional modularity only;
 	// ToDo: it very looks like the linker must do the only one operation: to link and nothing more;
 	class CLinker : public CBase {
@@ -214,29 +171,6 @@ namespace procs {
 	private:
 		CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;
 	};
-
-	class CViewport : public CBase {
-	typedef void (__stdcall *pfn_DepthFun) (uint32_t _u_type); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml ;
-	typedef void (__stdcall *pfn_DepthRng_dbl) (double _d_near, double _d_far);// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDepthRange.xhtml ;
-	typedef void (__stdcall *pfn_DepthRng_flt) (float _f_near, float _f_far);  // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDepthRange.xhtml ;
-	typedef void (__stdcall *pfn_Scale)(float _f_factor, float _f_units); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml ;
-	typedef void (__stdcall *pfn_Set) (int32_t _x, int32_t _y, uint32_t _u_width, uint32_t _u_height); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glViewport.xhtml ;
-	public:
-		CViewport (void); ~CViewport (void) = default;
-		// https://en.wikipedia.org/wiki/Affine_transformation ;
-		err_code Set (const int32_t _x, const int32_t _y, const uint32_t _u_width, const uint32_t _u_height); // specifies the affine transformation of x and y from normalized device coordinates to window coordinates;
-	public:
-		class CDepth : no_copy {
-		public:
-			CDepth (void); ~CDepth (void) = default;
-
-		};
-
-	private:
-		CViewport& operator = (const CViewport&) = delete; CViewport& operator = (CViewport&&) = delete;
-		friend class CViewport::CDepth;
-	};
-
 }}}}
 
 #endif/*_GL_PROCS_H_INCLUDED*/

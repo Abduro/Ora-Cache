@@ -5,13 +5,12 @@
 #include "gl_version.h"
 #include "gl_context.h"
 
-#include "shared.dbg.h"           // using Print() function is perhaps useful, but it looks like need to be reviewed;
-#include "open_gl_tutor.0.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
+#include "shared.dbg.h"      // using Print() function is perhaps useful, but it looks like need to be reviewed;
+#include "shared.wnd.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
 
 using namespace ex_ui::draw::open_gl;
-#if (1) // fake window is not used directly, it is assumed the context is already created and selected before calling this version API;
-#pragma comment(lib, "gl.tutor.0.fake.lib") 
-#endif
+using CFakeWnd = ex_ui::popup::CMsgWnd;
+
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 	using namespace shared::defs;
@@ -137,7 +136,7 @@ CVer_Att& CVer_Att::operator >>(const char* _p_value) { this->m_value = _p_value
 CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetstring ;
 #if (1)
-	TFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
+	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
 	if (wnd.Is_valid() == false) {
 		this->m_error = wnd.Error(); return;
 	}
