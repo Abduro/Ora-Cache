@@ -29,7 +29,7 @@ err_code program::CLog::Set (const uint32_t _u_prog_id) {
 	if (false == CProgram::Is_valid(_u_prog_id, this->m_error()))
 		return TBase::Error()();
 
-	procs::CProg& procs = CProgram::Cache();
+	procs::CProg& procs = CProgram::Procs();
 	// (1) gets the shader log length;
 	int32_t n_length = 0;
 	if (__failed(procs.Params(_u_prog_id, GL_INFO_LOG_LEN, &n_length))) {

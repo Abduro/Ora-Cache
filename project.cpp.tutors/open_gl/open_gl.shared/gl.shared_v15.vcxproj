@@ -196,6 +196,10 @@
     <ClCompile Include="$(_1-2)gl_procs_base.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_ctx.h" />
     <ClCompile Include="$(_1-2)gl_procs_ctx.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_prog.h" />
+    <ClCompile Include="$(_1-2)gl_procs_prog.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_vert.h" />
+    <ClCompile Include="$(_1-2)gl_procs_vert.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_view.h" />
     <ClCompile Include="$(_1-2)gl_procs_view.cpp" />
     <ClInclude Include="$(_0)gl_logs.h" />

@@ -9,6 +9,86 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
 
+namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
+
+	procs::program::CAttr& __get_attr_procs (void) {
+		static procs::program::CAttr  procs;
+		return procs;
+	}
+
+}}}}
+
+using namespace ex_ui::draw::open_gl::_impl;
+
+CAttr::CIndex:: CIndex (const CAttr& _attr_ref) : m_attr_ref(_attr_ref) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CAttr::CIndex::~CIndex (void) {}
+
+TError& CAttr::CIndex::Error (void) const { return this->m_error; }
+
+int32_t CAttr::CIndex::Get (void) const { return CAttr::CIndex::Get (this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), this->m_error); }
+int32_t CAttr::CIndex::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CError& _err) {
+	_prog_id; _p_att_name; _err;
+	if (0 == _p_att_name || 0 == ::_tcslen(_p_att_name)) {
+		_err <<__e_inv_arg = _T("#__e_inv_arg: attr name is invalid");
+		return CAttr::CIndex::_$na;
+	}
+
+	const int32_t n_ndx = __get_attr_procs().GetIndex(_prog_id, _p_att_name);
+	if (0 > n_ndx) {
+		_err = __get_attr_procs().Error();
+	}
+	return n_ndx;
+}
+
+err_code CAttr::CIndex::Set (const uint32_t _u_ndx) { return CAttr::CIndex::Set(this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), _u_ndx, this->m_error); }
+err_code CAttr::CIndex::Set (const uint32_t _prog_id, _pc_sz _p_att_name, const uint32_t _u_ndx, CError& _err) {
+	_prog_id; _p_att_name; _err;
+	if (0 == _p_att_name || 0 == ::_tcslen(_p_att_name)) {
+		_err <<__e_inv_arg = _T("#__e_inv_arg: attr name is invalid");
+		return CAttr::CIndex::_$na;
+	}
+
+	if (__failed(__get_attr_procs().SetIndex(_prog_id, _p_att_name, _u_ndx)))
+		_err = __get_attr_procs().Error();
+	return _err;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAttr:: CAttr (_pc_sz _p_name) : m_index(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; if (_p_name) *this << _p_name; }
+CAttr::~CAttr (void) {}
+
+TError&  CAttr::Error (void) const { return this->m_error; }
+bool     CAttr::Is_valid (void) const { return false == this->m_name.IsEmpty(); }
+
+const
+CAttr::CIndex&  CAttr::Index (void) const { return this->m_index; }
+CAttr::CIndex&  CAttr::Index (void)       { return this->m_index; }
+
+_pc_sz   CAttr::Name (void) const { return (_pc_sz)this->m_name; }
+err_code CAttr::Name (_pc_sz _p_name) {
+	_p_name;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CString cs_name(_p_name); cs_name.Trim(); // trimming the input name and removing whitespaces in it look like to be unnecessary;
+	if (cs_name.IsEmpty())
+		return this->m_error <<__e_inv_arg = _T("An attribute name cannot be empty");
+	
+	if (this->m_name.Compare((_pc_sz)cs_name))
+		this->m_name = cs_name;
+	else
+		this->m_error <<__s_false;
+
+	return this->Error();
+}
+
+const
+CProgId& CAttr::ProgId (void) const { return this->m_prog_id; }
+CProgId& CAttr::ProgId (void)       { return this->m_prog_id; }
+
+CAttr&  CAttr::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+CAttr&  CAttr::operator <<(const CProgId& _prog_id) { this->ProgId() << _prog_id; return *this; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 #define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
@@ -16,7 +96,7 @@ using namespace ex_ui::draw::open_gl::program;
 CProgram:: CProgram (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CProgram::~CProgram (void) { this->Delete(); }
 
-procs::CProg& CProgram::Cache (void) {
+procs::CProg& CProgram::Procs (void) {
 	static procs::CProg m_fn_cache;
 	return m_fn_cache;
 }
@@ -31,7 +111,7 @@ err_code  CProgram::Create (void) {
 	if (!!this->Id())
 		return this->m_error <<(err_code)TErrCodes::eObject::eExists = TString().Format(_T("Program object (id=%u) already exists"), this->Id().Get());
 
-	procs::CProg& procs = CProgram::Cache();
+	procs::CProg& procs = CProgram::Procs();
 	this->Id() << procs.Create();
 	if (0 == this->Id()) {
 		if (procs.Error().Is())
@@ -39,6 +119,8 @@ err_code  CProgram::Create (void) {
 		program::CLog log;
 		if (__failed(log.Set(0))) {}
 	}
+	else
+		this->Shaders() << this->Id(); // this is very important, otherwise no shader attachment will succeed;
 
 	return this->Error();
  }
@@ -51,7 +133,7 @@ err_code  CProgram::Delete (void) {
 
 	CCache(this->Id()).Detach_all(); // it is supposed the shader(s) will be destroyed later than this program, so shader(s) must be detached first;
 
-	procs::CProg& procs = CProgram::Cache();
+	procs::CProg& procs = CProgram::Procs();
 
 	if (__failed(procs.Delete(this->Id())))
 		return this->m_error = procs.Error();
@@ -61,8 +143,8 @@ err_code  CProgram::Delete (void) {
 }
 
 const
-program::CProgId& CProgram::Id (void) const { return this->m_prog_id; }
-program::CProgId& CProgram::Id (void)       { return this->m_prog_id; }
+CProgId& CProgram::Id (void) const { return this->m_prog_id; }
+CProgId& CProgram::Id (void)       { return this->m_prog_id; }
 
 bool CProgram::Is_valid (void) const {
 	return CProgram::Is_valid(this->Id(), this->m_error<<__METHOD__<<__s_ok);
@@ -97,10 +179,12 @@ program::CCache& CProgram::Shaders (void)       { return this->m_shaders; }
 err_code CProgram::Validate (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
-	procs::CProg& procs = CProgram::Cache();
+	procs::CProg& procs = CProgram::Procs();
 
 	if (__failed(procs.Validate(this->Id())))
 		return this->m_error = procs.Error();
 
 	return this->Error();
 }
+
+CProgram& CProgram::operator <<(const CProgId& _prog_id) { this->Id() << _prog_id; return *this; }

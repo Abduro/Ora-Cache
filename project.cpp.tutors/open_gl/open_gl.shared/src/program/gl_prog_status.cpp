@@ -34,7 +34,7 @@ bool  CStatus::Get (const uint32_t _param_id, const uint32_t _prog_id, CError& _
 	if (false == CProgId::Is_valid(_prog_id, _err))
 		return false;
 
-	procs::CProg& procs = CProgram::Cache();
+	procs::CProg& procs = CProgram::Procs();
 	int32_t n_result = 0;
 
 	if (__failed(procs.Params(_prog_id, _param_id, &n_result)))

@@ -187,8 +187,6 @@ err_code shader::CWnd::PostCreate (void) {
 	else
 		__trace_impt_2(_T("Program object (id=%u) is created;\n"), prog.Id().Get());
 
-	program::CLinker linker(prog.Id());
-
 	static _pc_sz pc_sz_pat_att = _T("Program attaches '%s' shader successfully;\n");
 
 	if ( __failed(prog.Shaders().Attach(this->Shader_frag().Id())) ) {
@@ -202,6 +200,7 @@ err_code shader::CWnd::PostCreate (void) {
 	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked;\n");
 
 	program::CStatus prog_status(prog.Id());
+	program::CLinker linker(prog.Id());
 
 	if (false == linker.Error()) {
 		if ( __failed(linker.Link()) ) {
