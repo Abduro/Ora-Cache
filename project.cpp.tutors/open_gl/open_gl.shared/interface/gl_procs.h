@@ -11,28 +11,6 @@ namespace ex_ui { namespace draw { namespace open_gl {
 namespace procs {
 	using namespace ex_ui::draw::open_gl;
 
-	// https://www.abbreviations.com/abbreviation/Target >> tgt ;
-	class CBuffer : public CBase {
-	typedef void (__stdcall *pfn_Bind) (uint32_t _u_tgt_id, uint32_t _u_buff_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml ;
-	typedef void (__stdcall *pfn_Data) (uint32_t _u_tgt_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
-	typedef void (__stdcall *pfn_Delete) (int32_t _n_count, const uint32_t* _p_buffers); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteBuffers.xhtml ;
-	typedef void (__stdcall *pfn_GenIds) (int32_t _n_count, uint32_t* _p_buff_ids); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml ;
-	typedef void (__stdcall *pfn_Named) (uint32_t _u_name, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
-	public:
-		CBuffer (void); ~CBuffer (void) = default;
-
-		err_code Bind (uint32_t _u_tgt_id, uint32_t _u_buff_id); // binds a buffer object to the specified buffer binding point ;
-		err_code Data (uint32_t _u_tgt_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
-		err_code Delete (int32_t  _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
-		err_code GenerateIds (int32_t _n_count, uint32_t* _p_buff_ids); // returns _n_count buffer object names in _p_names array ;
-		err_code Named (uint32_t _u_buff_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
-
-		err_code Get_all (void) ; // gets all functions' pointers at once;
-
-	private:
-		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator = (CBuffer&&) = delete;
-	};
-
 	/* https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetShaderiv.xml ;
 		the excerpt from above document:
 		Shader compiler support is optional, and thus must be queried before use by calling glGet with argument GL_SHADER_COMPILER.

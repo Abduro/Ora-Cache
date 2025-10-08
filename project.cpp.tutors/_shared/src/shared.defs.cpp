@@ -7,6 +7,27 @@
 using namespace shared::defs;
 
 namespace shared { namespace defs {
+namespace _impl {
+
+	CString __get_inv_ptr_str (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
+
+		CString cs_out;
+		CString cs_val;
+
+		if (false){}
+		else if (!_p_fun_or_obj_ptr) {
+			cs_val.Format(!!_p_format ? _p_format : _T("0x%x"), 0);
+			cs_out.Format(_T("#nullptr (%s)"), (_pc_sz) cs_val);
+		}
+		else if (__e_handle == _p_fun_or_obj_ptr) {
+			cs_val.Format(!!_p_format ? _p_format : _T("0x%x"), __e_handle);
+			cs_out.Format(_T("#handle (%s)"), (_pc_sz) cs_val);
+		}
+		return cs_out;
+	}
+
+}
+using namespace _impl;
 
 #if defined WIN64
 CString __address_of (const void* const _p_fun_or_obj_ptr) {
@@ -16,23 +37,17 @@ CString __address_of (const void* const _p_fun_or_obj_ptr) {
 CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
 	_p_fun_or_obj_ptr; _p_format;
 
-	if (!_p_fun_or_obj_ptr) {
-		return CString(_T("#null"));
-	}
+	CString cs_out = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
+	if (false == cs_out.IsEmpty())
+		return cs_out;
 
-	if (INVALID_HANDLE_VALUE == _p_fun_or_obj_ptr) {
-		return CString(_T("#inv_val"));
-	}
-
-	CString cs_out;
 #if (1)
 	// https://stackoverflow.com/questions/22846721/pointer-outputs  ;
 	const
 	uint64_t* p_address = reinterpret_cast<const uint64_t*>(_p_fun_or_obj_ptr);
-	if (nullptr == _p_format)
-		cs_out.Format(_T("0x%x"), &p_address);
-	else
-		cs_out.Format(_p_format , &p_address);
+
+	cs_out.Format(!!_p_format ? _p_format : _T("0x%x"), &p_address);
+
 #else
 	// https://stackoverflow.com/questions/2369541/where-is-p-useful-with-printf ;
 	cs_out.Format(_T("0x%p"), _p_fun_or_obj_ptr);
@@ -49,25 +64,15 @@ CString __address_of (const void* const _p_fun_or_obj_ptr) {
 CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
 	_p_fun_or_obj_ptr;
 
-	if (!_p_fun_or_obj_ptr) {
-		return CString(_T("#null"));
-	}
-
-	if (INVALID_HANDLE_VALUE == _p_fun_or_obj_ptr) {
-		return CString(_T("#inv_val"));
-	}
-
-	CString cs_out;
+	CString cs_out = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
+	if (false == cs_out.IsEmpty())
+		return cs_out;
 
 	const
 	uint32_t* p_address = reinterpret_cast<const uint32_t*>(_p_fun_or_obj_ptr);
 	uint32_t  n_address = (!!p_address ? *p_address : 0);
-	
-	if (nullptr == _p_format)
-		cs_out.Format(_T("0x%x"), n_address);
-	else
-		cs_out.Format(_p_format , n_address);
 
+	cs_out.Format(!!_p_format ? _p_format : _T("0x%x"), n_address);
 	return  cs_out;
 }
 #endif
