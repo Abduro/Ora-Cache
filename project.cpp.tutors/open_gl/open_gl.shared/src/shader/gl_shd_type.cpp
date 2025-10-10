@@ -11,6 +11,7 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
 CType:: CType (void) : m_value(e_value::e_undef) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
+CType:: CType (const CType& _src) : CType() { *this = _src; }
 
 TErr_ex& CType::Error (void) const { return this->m_error; }
 
@@ -23,16 +24,19 @@ bool    CType::Set (const e_value _e_type) {
 	return b_changed;
 }
 
+bool CType::Is_fragment (void) const { return e_value::e_fragment == this->Get(); }
+bool CType::Is_vertex (void) const { return e_value::e_vertex == this->Get(); }
+
 CString CType::To_str(const uint16_t _u_type) {
 	_u_type;
 	CString cs_out;
 	switch (_u_type) {
-	case e_value::e_compute   : cs_out = _T("__compute"); break;
-	case e_value::e_fragment  : cs_out = _T("__fragment"); break;
-	case e_value::e_geometry  : cs_out = _T("__geometry"); break;
-	case e_value::e_tess_ctrl : cs_out = _T("__tess_ctrl"); break;
-	case e_value::e_tess_eval : cs_out = _T("__tess_eval"); break;
-	case e_value::e_vertex    : cs_out = _T("__vertex"); break;
+	case e_value::e_compute   : cs_out = _T("$_compute"); break;
+	case e_value::e_fragment  : cs_out = _T("$_fragment"); break;
+	case e_value::e_geometry  : cs_out = _T("$_geometry"); break;
+	case e_value::e_tess_ctrl : cs_out = _T("$_tess_ctrl"); break;
+	case e_value::e_tess_eval : cs_out = _T("$_tess_eval"); break;
+	case e_value::e_vertex    : cs_out = _T("$_vertex"); break;
 	default:
 		cs_out.Format(_T("#undef(%u)"), _u_type);
 	}
@@ -44,7 +48,7 @@ CString CType::To_str(const uint16_t _u_type) {
 CType::e_value CType::Get_type (const uint32_t _u_shader_id,  CError& _err) {
 	_u_shader_id;
 
-	procs::CShader& procs = CShader::Cache();
+	procs::CShader& procs = CShader::Procs();
 
 	int32_t n_type = CType::e_value::e_undef;
 
@@ -56,3 +60,5 @@ CType::e_value CType::Get_type (const uint32_t _u_shader_id,  CError& _err) {
 }
 
 CType::operator uint16_t (void) const { return this->Get(); }
+
+CType& CType::operator = (const CType& _src) { this->Set(_src.Get()); return *this; }

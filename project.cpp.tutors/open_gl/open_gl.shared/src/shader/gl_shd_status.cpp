@@ -33,7 +33,7 @@ bool  CStatus::Get (const uint32_t _param_id, const uint32_t _shader_id, CError&
 	if (false == CShaderId::Is_valid(_shader_id, _err))
 		return false;
 
-	procs::CShader& procs = CShader::Cache();
+	procs::CShader& procs = CShader::Procs();
 	int32_t n_result = 0;
 
 	if (__failed(procs.Params(_shader_id, _param_id, &n_result)))

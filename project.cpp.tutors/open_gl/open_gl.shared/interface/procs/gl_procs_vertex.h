@@ -1,5 +1,5 @@
-#ifndef _GL_PROCS_VERT_H_INCLUDED
-#define _GL_PROCS_VERT_H_INCLUDED
+#ifndef _GL_PROCS_VERTEX_H_INCLUDED
+#define _GL_PROCS_VERTEX_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Oct-2025 at 12:10:39.867, (UTC+4), Batumi, Monday;
 	This is Ebo Pack OpenGL vertex functions' loader interface declaration file;
@@ -77,4 +77,4 @@ namespace vertex {
 	};
 }}}}
 
-#endif/*_GL_PROCS_VERT_H_INCLUDED*/
+#endif/*_GL_PROCS_VERTEX_H_INCLUDED*/

@@ -27,10 +27,12 @@ enum e_params : uint32_t {
      e_src_len  = GL_SHADER_SRC_LEN , // the size of the character buffer required to store the shader source ;
 };
 #endif
-CShader:: CShader (void) : m_id(0) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CShader::~CShader (void) {}
+CShader:: CShader (void) : m_id(0), m_attached(false) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_inited; }
+CShader:: CShader (const CShader& _src) : CShader() { *this= _src; }
+CShader:: CShader (CShader&& _victim) : CShader() { *this = _victim; }
+CShader::~CShader (void) { this->Delete(); }
 
-procs::CShader& CShader::Cache (void) {
+procs::CShader& CShader::Procs (void) {
 	static procs::CShader m_fn_cache;
 	return m_fn_cache;
 }
@@ -41,10 +43,10 @@ err_code CShader::Create (const TType _e_type) {
 	_e_type;
 	this->m_error() <<__METHOD__<<__s_ok;
 
-	this->m_id = CShader::Cache().Create(_e_type);
+	this->m_id = CShader::Procs().Create(_e_type);
 	if (0 == this->m_id) { // the error has occurred;
-		if (CShader::Cache().Error()) // looks like function pointer is not created;
-			return (this->m_error() = CShader::Cache().Error());
+		if (CShader::Procs().Error()) // looks like function pointer is not created;
+			return (this->m_error() = CShader::Procs().Error());
 		if (GL_INVALID_ENUM == this->m_error.Get_last())
 			return this->m_error() << __e_inv_arg = TString().Format(_T("Undefined shader type: %u"), _e_type);
 		else
@@ -56,14 +58,14 @@ err_code CShader::Create (const TType _e_type) {
 	return this->Error()();
 }
 
-err_code CShader::Destroy (void) {
+err_code CShader::Delete (void) {
 	this->m_error() <<__METHOD__<<__s_ok;
 
 	if (0 == this->m_id)
 		return this->Error()(); // the shader is not created yet; returns no error for such a case;
 
-	if (__failed(CShader::Cache().Delete(this->Id())))
-		return (this->m_error() = CShader::Cache().Error()); // sets function cache error is required, otherwise the state of this shared remains the same;
+	if (__failed(CShader::Procs().Delete(this->Id())))
+		return (this->m_error() = CShader::Procs().Error()); // sets function cache error is required, otherwise the state of this shared remains the same;
 
 	if (GL_INVALID_VALUE == this->Error().Get_last())
 		return (this->m_error() << (err_code) TErrCodes::eData::eInvalid = TString().Format(_T("The ID=%u is not valid"), this->Id()));
@@ -77,6 +79,9 @@ err_code CShader::Destroy (void) {
 
 TErr_ex& CShader::Error (void) const { return this->m_error; }
 uint32_t CShader::Id (void) const { return this->m_id; }
+
+bool   CShader::Is_attached (bool _b_state) { const bool b_changed = (_b_state != this->Is_attached()); if (b_changed) this->m_attached = _b_state; return b_changed; }
+bool   CShader::Is_attached (void) const { return this->m_attached; }
 
 bool   CShader::Is_compiled (void) const {
 
@@ -102,10 +107,10 @@ bool   CShader::Is_valid (const uint32_t _u_shader_id, CError& _err) {
 		_err <<__METHOD__<<__e_inv_arg;
 		return false;
 	}
-	bool b_valid = CShader::Cache().Is_valid(_u_shader_id);
+	bool b_valid = CShader::Procs().Is_valid(_u_shader_id);
 	if (false == b_valid) {
-		if (CShader::Cache().Error().Is())
-			_err = CShader::Cache().Error();
+		if (CShader::Procs().Error().Is())
+			_err = CShader::Procs().Error();
 		else
 			_err <<__e_inv_arg = TString().Format(_T("'_u_shader_id' (%u) does not refer to shader object;"), _u_shader_id);
 	}
@@ -119,6 +124,14 @@ shader::CSource& CShader::Src (void)       { return this->m_src; }
 const
 CType& CShader::Type (void) const { return this->m_type; }
 CType& CShader::Type (void)       { return this->m_type; }
+
+CShader& CShader::operator = (const CShader& _src) {
+	this->m_id = _src.Id(); // ToDo: perhaps the source identifier must be set to zero in order to avoid shader identifier;
+	this->Is_attached(_src.Is_attached());
+	this->Src() = _src.Src();
+	this->Type() = _src.Type();
+	return *this;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

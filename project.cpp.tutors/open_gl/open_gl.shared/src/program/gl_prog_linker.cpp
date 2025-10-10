@@ -16,7 +16,7 @@ CLinker:: CLinker (const uint32_t _u_prog_id) : m_prog_id(0) {
 }
 CLinker::~CLinker (void) {}
 
-procs::CLinker& CLinker::Cache (void) {
+procs::CLinker& CLinker::Procs (void) {
 	static procs::CLinker m_fn_cache;
 	return m_fn_cache;
 }
@@ -30,7 +30,7 @@ err_code  CLinker::Link (const uint32_t _u_prog_id, CError& _err) {
 	if (false == CProgram::Is_valid(_u_prog_id, _err))
 		return _err;
 
-	procs::CLinker& procs = CLinker::Cache();
+	procs::CLinker& procs = CLinker::Procs();
 	if (__failed( procs.Link(_u_prog_id)))   // makes all required checks and sets the error if necessary;
 		_err = procs.Error();
 

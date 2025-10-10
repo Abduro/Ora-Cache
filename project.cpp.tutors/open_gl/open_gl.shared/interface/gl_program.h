@@ -78,7 +78,7 @@ namespace program {
 		 err_code Create (void);
 		 err_code Delete (void);
 
-		 TError& Error (void) const;
+		 TError&  Error (void) const;
 
 		 const
 		 CProgId& Id (void) const;
@@ -91,6 +91,8 @@ namespace program {
 		 static
 		 bool Is_valid (const uint32_t _n_prog_id, CError&); // there is not way to check program identifier as it can be made for shader;
 		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
+
+		 err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());
 
 		 const
 		 program::CCache& Shaders (void) const;

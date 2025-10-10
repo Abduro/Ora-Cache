@@ -172,6 +172,16 @@ bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	return false == _err.Is();
 }
 
+err_code CProgram::Link (void) {
+	this->m_error<<__METHOD__<<__s_ok;
+	CLinker::Link(this->Id(), this->m_error);
+
+	if (false == this->Error()) { // linking is successful;
+		this->Shaders().Delete_all();
+	}
+	return this->Error();
+}
+
 const
 program::CCache& CProgram::Shaders (void) const { return this->m_shaders; }
 program::CCache& CProgram::Shaders (void)       { return this->m_shaders; }

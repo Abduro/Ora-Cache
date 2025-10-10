@@ -67,7 +67,7 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 	if (0 == _u_shader_id)
 		return this->m_error() <<__e_inv_arg = TString().Format(_T("Invalid shader id (%u)"), _u_shader_id);
 
-	procs::CShader& procs = CShader::Cache();
+	procs::CShader& procs = CShader::Procs();
 	// (1) gets the shader log length;
 	int32_t n_length = 0;
 	if (__failed(procs.Params(_u_shader_id, GL_INFO_LOG_LEN, &n_length))) {

@@ -30,14 +30,14 @@ shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>__
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 
-	if (__failed(CShader::Cache().Get_all())) {
-		TBase::m_error = CShader::Cache().Error();
+	if (__failed(CShader::Procs().Get_all())) {
+		TBase::m_error = CShader::Procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 }
 shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
-	if (true == this->Shader_frag().Is_valid()) this->Shader_frag().Destroy();
-	if (true == this->Shader_vert().Is_valid()) this->Shader_vert().Destroy();
+	if (true == this->Shader_frag().Is_valid()) this->Shader_frag().Delete();
+	if (true == this->Shader_vert().Is_valid()) this->Shader_vert().Delete();
 
 	m_ctx_dev.Destroy();
 }
@@ -227,12 +227,16 @@ err_code shader::CWnd::PostCreate (void) {
 	if ( __failed(prog.Validate())) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) prog.Error().Print(TError::e_print::e_req)); }
 	else __trace_info_2(_T("Program (id=%u) is validated;\n"), linker.ProgId());
-
+#if (0)
 	// just for testing purpose;
 	if ( __failed(prog.Shaders().Detach_all())) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
 	else __trace_warn_2(_T("All shaders are detached;\n"));
-
+#else
+	if ( __failed(prog.Shaders().Delete_all())) {
+	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
+	else __trace_warn_2(_T("All shaders are deleted;\n"));
+#endif
 	return (*this)().Error();
 }
 

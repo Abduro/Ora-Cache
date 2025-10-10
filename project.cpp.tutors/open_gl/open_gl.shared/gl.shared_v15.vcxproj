@@ -178,6 +178,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)gl_buffer.h" />
+    <ClCompile Include="$(_1)gl_buffer.cpp" />
     <ClInclude Include="$(_0-1)gl_$_cache.h" />
     <ClCompile Include="$(_1-1)gl_$_cache.cpp" />
     <ClInclude Include="$(_0-0)gl_compiler.h" />
@@ -200,8 +202,10 @@
     <ClCompile Include="$(_1-2)gl_procs_ctx.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_prog.h" />
     <ClCompile Include="$(_1-2)gl_procs_prog.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_vert.h" />
-    <ClCompile Include="$(_1-2)gl_procs_vert.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_shader.h" />
+    <ClCompile Include="$(_1-2)gl_procs_shader.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_vertex.h" />
+    <ClCompile Include="$(_1-2)gl_procs_vertex.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_view.h" />
     <ClCompile Include="$(_1-2)gl_procs_view.cpp" />
     <ClInclude Include="$(_0)gl_logs.h" />

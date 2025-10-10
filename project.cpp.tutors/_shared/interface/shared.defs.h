@@ -9,6 +9,7 @@
 #include <atlstr.h>
 #include <cstdint>        // for declareing and/or defining data types such as: uint32_t for example;
 #include <map>            // window message router uses this header;
+#include <set>            // is used for cache of draw objects' identifiers;
 #include <vector>         // preprocessor wrapper uses this header;
 #include <typeinfo>       // typeinfo >> exception >> vcruntime_exception >> ::std::bad_alloc;
 

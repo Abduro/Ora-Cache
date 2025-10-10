@@ -5,12 +5,12 @@
 	This is Ebo Pack OpenGL shader collection or cache (used by program) interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_procs.h"
+#include "gl_shader.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 
-	typedef ::std::vector<uint32_t> TShaderIds;
-	// this class is intended for store of shader(s) being used by a program linking;
+	typedef ::std::set<uint32_t> TShaderIds; // it possibly must be used in order to avoid calling glGetAttachedShaders();
+	// this class is intended to store of shader(s) being used by a program linking;
 	class CCache : private no_copy {
 	public:
 		CCache (const uint32_t _prog_id = 0); ~CCache (void);
@@ -20,12 +20,20 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		err_code Attach (const uint32_t _u_shader_id);
 		static
 		err_code Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
-		err_code Detach (const uint32_t _u_shader_id);
+		err_code Detach (const uint32_t _u_shader_id); // *important:* a shader should be detached from an OpenGL program before being deleted;
+		/*Google AI Overview:
+		...a shader should be detached from an OpenGL program before being deleted,
+		as the shader object is not truly deleted until it's detached from all programs it's attached to...
+		*/
 		static
-		err_code Detach_all (const uint32_t _u_prog_id, CError&);
+		err_code Delete_all (const uint32_t _u_prog_id, CError&); // this method is called after the program links these shaders;
+		err_code Delete_all (void);
+
+		static
+		err_code Detach_all (const uint32_t _u_prog_id, CError&); // before deleting shader(s) they (shaders) must be detached;
 		err_code Detach_all (void);
 
-		TError& Error (void) const;
+		TError&  Error (void) const;
 
 		uint32_t ProgId (void) const;      // returns a 'prog_id' value;
 		err_code ProgId (const uint32_t);  // 'prog_id' value is just checked for 0 value and that's all;

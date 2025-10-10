@@ -90,8 +90,8 @@ IDS_TUTOR_2_SHADER_VERT_0
  void main() { \n \
  gl_Position = projection * model * vec4(positionIn, 1.0f); \n \
  fragementColor = colorIn; \n \
-}"
-}
+}" // '\0' perhaps it should be added to the end of the vertex code as it's shown in https://learnopengl.com/Getting-started/Hello-Triangle;
+}  // possibly CAtlString load function makes it itself and explicit zero-termination is not required;
 
 /////////////////////////////////////////////////////////////////////////////
 //

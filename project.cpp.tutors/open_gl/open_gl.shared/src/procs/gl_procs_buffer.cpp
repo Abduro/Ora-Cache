@@ -110,6 +110,7 @@ err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const
 	return CBase::Error();
 }
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteBuffers.xhtml ;
+// https://stackoverflow.com/questions/27937285/when-should-i-call-gldeletebuffers << good explanation;
 err_code CBuffer::Delete (const int32_t _n_count, const uint32_t* _p_buffers) {
 	_n_count; _p_buffers;
 	// GL_INVALID_VALUE : _n_count is negative ;

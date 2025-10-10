@@ -10,9 +10,12 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
 CSource:: CSource (void) { this->m_error() >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
+CSource:: CSource (const CSource& _src) : CSource() { *this = _src; }
 CSource::~CSource (void) {}
 
 TErr_ex& CSource::Error (void) const { return this->m_error; }
+
+_pc_sz   CSource::Get (void) const { return (_pc_sz)this->m_buffer; }
 
 err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
 	_p_source; _u_shader_id;
@@ -31,7 +34,7 @@ err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
 
 	const char* p_buffer = src_a.GetBuffer();
 
-	procs::CShader& procs = CShader::Cache();
+	procs::CShader& procs = CShader::Procs();
 	if (__failed(procs.Source(_u_shader_id, 1, &p_buffer, &n_len)))
 		return this->m_error() = procs.Error();
 
@@ -49,3 +52,5 @@ err_code CSource::Set (const uint16_t _res_id, const uint32_t _n_shader_id) {
 
 	return this->Set((_pc_sz) cs_src, _n_shader_id);
 }
+
+CSource& CSource::operator = (const CSource& _src) { this->m_buffer = _src.Get(); return *this; }

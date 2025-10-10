@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' shader vertex base interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_procs.h"
+#include "procs\gl_procs_vertex.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace vertex {

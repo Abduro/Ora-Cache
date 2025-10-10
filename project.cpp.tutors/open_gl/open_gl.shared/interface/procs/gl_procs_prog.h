@@ -25,6 +25,21 @@ namespace program {
 	private:
 		CAttr& operator = (const CAttr&) = delete; CAttr& operator = (CAttr&&) = delete;
 	};
+
+	class CShaders : public CBase {
+	typedef void     (__stdcall *pfn_Attach)   (uint32_t _prog_id, uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glAttachShader.xhtml ;
+	typedef void     (__stdcall *pfn_Attached) (uint32_t _prog_id, uint32_t _u_max_cnt, uint32_t* _p_count, uint32_t* _p_shaders); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttachedShaders.xhtml ;
+	typedef void     (__stdcall *pfn_Detach)   (uint32_t _prog_id, uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDetachShader.xhtml ;
+	public:
+		CShaders (void); ~CShaders (void) = default;
+
+		err_code Attach  (const uint32_t _prog_id, const uint32_t _shader_id); // attaches the shader object specified by '_shader_id' to the program object specified by '_prog_id' ;
+		err_code Detach  (const uint32_t _prog_id, const uint32_t _shader_id); // detaches a shader object from a program object to which it is attached ;
+		err_code Attached(const uint32_t _prog_id, const uint32_t _u_max_cnt, uint32_t* _p_count, uint32_t* _p_shaders); // returns the identifiers of the shader objects attached to a program object;
+
+	private:
+		CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
+	};
 }
 
 	class CProg : public CBase {

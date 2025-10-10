@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Oct-2025 at 12:23:26.137, (UTC+4), Batumi, Monday;
 	This is Ebo Pack OpenGL vertex functions' loader interface implementation file;
 */
-#include "gl_procs_vert.h"
+#include "gl_procs_vertex.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;

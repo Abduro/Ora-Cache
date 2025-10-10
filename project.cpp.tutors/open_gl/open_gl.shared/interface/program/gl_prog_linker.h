@@ -19,7 +19,7 @@ namespace program {
 		err_code Link (const uint32_t _u_prog_id, CError&);
 		err_code Link (void);               // assumes the program identifier is set;
 
-		static procs::CLinker& Cache (void) ;
+		static procs::CLinker& Procs (void) ;
 		static CString  Class (void);       // returns this class name for debug purposes;
 
 		TError&  Error  (void) const;
