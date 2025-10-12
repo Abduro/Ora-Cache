@@ -16,11 +16,11 @@ namespace shader {
 	public:
 		CCompiler (const uint32_t _u_shader_id = 0); CCompiler (const CCompiler&) = delete; CCompiler (CCompiler&&) = delete; ~CCompiler (void);
 
-		static procs::CCompiler& Cache (void) ;
+		static procs::CCompiler& Procs (void);
 
 		err_code Compile (void);              // tries to compile source code of the shader;
 
-		TErr_ex& Error (void) const;
+		TError&  Error (void) const;
 #if (0) // it is not the property of the compiler, but shader status;
 		bool  Is_compiled  (void) const;      // checks compilation status of the shader; if it is false, either no compilation was made or getting log info is required for details;
 	#endif
@@ -39,9 +39,9 @@ namespace shader {
 	private:
 		CCompiler& operator = (const CCompiler&) = delete; CCompiler& operator = (CCompiler&&) = delete;
 		mutable
-		CError_ex  m_error;
-		uint32_t   m_shader_id;
-		CLog  m_log;
+		CError   m_error;
+		uint32_t m_shader_id;
+		CLog     m_log;
 	};
 
 }}}}

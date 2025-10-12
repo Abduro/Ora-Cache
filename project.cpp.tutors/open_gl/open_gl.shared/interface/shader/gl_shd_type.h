@@ -41,7 +41,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
 		operator uint16_t (void) const; // returns currently set value of the shader type;
 
-		static CString To_str(const uint16_t _u_type);
+		static CString To_str(const uint32_t _u_type); // the data type is intentionally changed for avoiding unnecessary casts;
 		static e_value Get_type (const uint32_t _u_shader_id, CError&);
 
 	public:

@@ -49,3 +49,22 @@ err_code  CBuffer::Destroy (void) {
 }
 
 TError&   CBuffer::Error (void) const { return this->m_error; }
+
+uint32_t  CBuffer::Id (void) const { return this->m_buf_id; }
+
+bool  CBuffer::Is_valid (void) const {
+	return CBuffer::Is_valid(this->Id(), this->m_error);
+}
+
+bool  CBuffer::Is_valid (const uint32_t _buffer_id, CError& _err) {
+	_buffer_id; _err;
+
+	const bool b_valid = __get_buf_procs().Is_Buffer(_buffer_id);
+
+	if (false == b_valid) {
+		if (__get_buf_procs().Error())
+			_err = __get_buf_procs().Error();
+	}
+
+	return b_valid;
+}

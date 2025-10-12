@@ -67,6 +67,8 @@
     <ClCompile Include="$(_1-1)gl_prog_status.cpp"><Filter>src\program</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_program.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_program.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_scene.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_scene.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_shader.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_shader.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_id.h"><Filter>interface\shader</Filter></ClInclude>

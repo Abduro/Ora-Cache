@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' shader base interface implementation file;
 */
 #include "gl_shader.h"
+#include "gl_logs.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
@@ -43,18 +44,15 @@ err_code CShader::Create (const TType _e_type) {
 	_e_type;
 	this->m_error() <<__METHOD__<<__s_ok;
 
-	this->m_id = CShader::Procs().Create(_e_type);
-	if (0 == this->m_id) { // the error has occurred;
-		if (CShader::Procs().Error()) // looks like function pointer is not created;
-			return (this->m_error() = CShader::Procs().Error());
-		if (GL_INVALID_ENUM == this->m_error.Get_last())
-			return this->m_error() << __e_inv_arg = TString().Format(_T("Undefined shader type: %u"), _e_type);
-		else
-			return this->m_error() << __e_fail = TString().Format(_T("Creating the shader of type '%s' failed"), (_pc_sz) CType::To_str(_e_type));
-	}
-	__trace::Use_con(true);
-	__trace_impt_3(_T("The shader: id=%u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	__trace::Use_con(true); // ToDo: possibly it is not necessary and must be removed;
 
+	this->m_id = CShader::Procs().Create(_e_type);
+	if (0 == this->m_id) {
+		this->m_error() = CShader::Procs().Error();
+	__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	} else {
+	__trace_impt_2(_T("The shader: id=%u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	}
 	return this->Error()();
 }
 

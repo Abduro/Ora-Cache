@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL shader functions' loader interface implementation file;
 */
 #include "gl_procs_shader.h"
+#include "gl_shd_type.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -26,10 +27,10 @@ CShader:: CShader (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%
 }
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
-uint32_t  CShader::Create  (uint32_t _u_type) {
+uint32_t  CShader::Create  (const uint32_t _u_type) {
 	_u_type;
 	/* Possible errors:
-		the retult is 0 : an error occurs creating the shader object; it very looks like a call to glGetShaderInfoLog() must be made for getting error desc ;
+		the retult is 0 : an error occurs creating the shader object; a call to glGetShaderInfoLog() does nothing because shader id is not set ;
 		GL_INVALID_ENUM : is not an accepted value ;
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
@@ -43,6 +44,14 @@ uint32_t  CShader::Create  (uint32_t _u_type) {
 		return n_result;
 
 	n_result = p_fun(_u_type);
+
+	if (0 == n_result) {
+		switch (CErr_ex().Get_last(false)) {
+		case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_u_type' (%u) is invalid"), _u_type); break;
+		default:
+			CBase::m_error << __e_fail = TString().Format(_T("#__e_int_err: creating shader of type '%s' failed"), (_pc_sz)shader::CType::To_str(_u_type));
+		}
+	}
 
 	return n_result;
 }

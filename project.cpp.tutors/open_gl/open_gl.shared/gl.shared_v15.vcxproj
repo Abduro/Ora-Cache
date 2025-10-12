@@ -218,6 +218,8 @@
     <ClCompile Include="$(_1-1)gl_prog_status.cpp" />
     <ClInclude Include="$(_0)gl_program.h" />
     <ClCompile Include="$(_1)gl_program.cpp" />
+    <ClInclude Include="$(_0)gl_scene.h" />
+    <ClCompile Include="$(_1)gl_scene.cpp" />
     <ClInclude Include="$(_0)gl_shader.h" />
     <ClCompile Include="$(_1)gl_shader.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_id.h" />

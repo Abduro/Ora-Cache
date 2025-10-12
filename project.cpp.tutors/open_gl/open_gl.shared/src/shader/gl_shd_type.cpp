@@ -27,7 +27,7 @@ bool    CType::Set (const e_value _e_type) {
 bool CType::Is_fragment (void) const { return e_value::e_fragment == this->Get(); }
 bool CType::Is_vertex (void) const { return e_value::e_vertex == this->Get(); }
 
-CString CType::To_str(const uint16_t _u_type) {
+CString CType::To_str(const uint32_t _u_type) {
 	_u_type;
 	CString cs_out;
 	switch (_u_type) {

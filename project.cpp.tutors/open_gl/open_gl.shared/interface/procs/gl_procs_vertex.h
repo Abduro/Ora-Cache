@@ -23,13 +23,13 @@ namespace vertex {
 	e_fixed = GL_FIXED,
 	e_int_2_10_10_10 = GL_INT_2_10_10_10_REV, e_uint_2_10_10_10 = GL_UNSIGNED_INT_2_10_10_10_REV, e_uint_10_11_11 = GL_UNSIGNED_INT_10F_11F_11F_REV
 	};
-	uint32_t _i_to_u(const e_att_val_int _e_el) { return static_cast<uint32_t>(_e_el);}
+	static __inline uint32_t _i_to_u(const e_att_val_int _e_el) { return static_cast<uint32_t>(_e_el);}
 
 	#define GL_HALF_FLOAT 0x140B // from glcorearb.h ; supported from version 4.1;
 	enum class e_att_val_float : uint32_t {
 	e_double = GL_DOUBLE, e_float = GL_FLOAT, e_float_16bits = GL_HALF_FLOAT,
 	};
-	uint32_t _i_to_f(const e_att_val_float _e_el) { return static_cast<uint32_t>(_e_el);}
+	static __inline uint32_t _i_to_f(const e_att_val_float _e_el) { return static_cast<uint32_t>(_e_el);}
 
 	class CAtt : public CBase {
 	};

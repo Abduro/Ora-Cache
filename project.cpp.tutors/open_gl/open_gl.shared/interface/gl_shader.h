@@ -6,7 +6,6 @@
 */
 #include "gl_defs.h"
 #include "procs\gl_procs_shader.h"
-#include "gl_logs.h"
 #include "shader\gl_shd_source.h"
 #include "shader\gl_shd_type.h"
 #include "shader\gl_shd_status.h"

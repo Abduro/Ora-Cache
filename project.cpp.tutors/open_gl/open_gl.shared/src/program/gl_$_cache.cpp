@@ -116,8 +116,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 using namespace ex_ui::draw::open_gl::_impl;
 
 CCache:: CCache (const uint32_t _prog_id) : m_prog_id(0) { this->m_error>>__CLASS__<<__METHOD__<<__s_ok; if (!!_prog_id) *this<<_prog_id; }
-CCache::~CCache (void) { this->Detach_all(); }
-
+CCache::~CCache (void) { /*this->Detach_all();*/ }
+#if (0)
 err_code  CCache::Attach (const uint32_t _u_shader_id) {
 	return CCache::Attach(_u_shader_id, this->ProgId(), this->m_error);
 }
@@ -219,7 +219,11 @@ err_code  CCache::Detach_all (const uint32_t _u_prog_id, CError& _err) {
 #endif
 	return _err;
 }
- 
+#endif
+const
+shader::CFragment& CCache::Fragment (void) const { return this->m_$_frag; }
+shader::CFragment& CCache::Fragment (void)       { return this->m_$_frag; }
+
 TError&  CCache::Error (void) const { return this->m_error; }
 
 uint32_t CCache::ProgId (void) const { return this->m_prog_id; }   
@@ -230,9 +234,12 @@ err_code CCache::ProgId (const uint32_t _prog_id) {
 
 	return this->Error();
 }
+const
+shader::CVertex& CCache::Vertex (void) const { return this->m_$_vert; }
+shader::CVertex& CCache::Vertex (void)       { return this->m_$_vert; }
 
 CCache& CCache::operator <<(const uint32_t _prog_id) { this->ProgId(_prog_id); return *this; }
-
+#if (0)
 CCache&  CCache::operator +=(const uint32_t _u_shader_id) {
 	this->Attach(_u_shader_id);
 	return *this;
@@ -242,3 +249,4 @@ CCache&  CCache::operator -=(const uint32_t _u_shader_id) {
 	this->Detach(_u_shader_id);
 	return *this;
 }
+#endif

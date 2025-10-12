@@ -4,6 +4,7 @@
 */
 #include "gl_program.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 #include "program\gl_prog_linker.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -109,18 +110,22 @@ err_code  CProgram::Create (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
 	if (!!this->Id())
-		return this->m_error <<(err_code)TErrCodes::eObject::eExists = TString().Format(_T("Program object (id=%u) already exists"), this->Id().Get());
+		return this->m_error <<(err_code)TErrCodes::eObject::eExists = TString().Format(_T("Program object (id = %u) already exists"), this->Id().Get());
 
 	procs::CProg& procs = CProgram::Procs();
 	this->Id() << procs.Create();
 	if (0 == this->Id()) {
 		if (procs.Error().Is())
-			return this->m_error = procs.Error();
+			this->m_error = procs.Error();
 		program::CLog log;
-		if (__failed(log.Set(0))) {}
+		if (__failed(log.Set(0))) {} // if the program identifier equals to zero, there is no way to get the creation error detailes;
 	}
 	else
-		this->Shaders() << this->Id(); // this is very important, otherwise no shader attachment will succeed;
+		this->Shaders() << this->Id(); // this is very *important*, otherwise no shader attachment will succeed;
+
+	if (this->Error()) {
+	      __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+	else {__trace_impt_2(_T("The program (id = %u) is created;\n"), this->Id().Get()); }
 
 	return this->Error();
  }
@@ -130,9 +135,9 @@ err_code  CProgram::Delete (void) {
 
 	if (false == !!this->Id())
 		return this->Error();  // returns __s_ok; there is nothing to destroy;
-
+#if (0)
 	CCache(this->Id()).Detach_all(); // it is supposed the shader(s) will be destroyed later than this program, so shader(s) must be detached first;
-
+#endif
 	procs::CProg& procs = CProgram::Procs();
 
 	if (__failed(procs.Delete(this->Id())))
@@ -175,10 +180,11 @@ bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 err_code CProgram::Link (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 	CLinker::Link(this->Id(), this->m_error);
-
+#if (0)
 	if (false == this->Error()) { // linking is successful;
 		this->Shaders().Delete_all();
 	}
+#endif
 	return this->Error();
 }
 

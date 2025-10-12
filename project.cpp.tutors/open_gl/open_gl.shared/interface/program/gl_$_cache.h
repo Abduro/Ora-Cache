@@ -14,7 +14,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 	class CCache : private no_copy {
 	public:
 		CCache (const uint32_t _prog_id = 0); ~CCache (void);
-
+#if (0)
 		static
 		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Attach (const uint32_t _u_shader_id);
@@ -32,21 +32,30 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		static
 		err_code Detach_all (const uint32_t _u_prog_id, CError&); // before deleting shader(s) they (shaders) must be detached;
 		err_code Detach_all (void);
+#endif
+		const
+		shader::CFragment& Fragment (void) const;
+		shader::CFragment& Fragment (void) ;
 
 		TError&  Error (void) const;
 
 		uint32_t ProgId (void) const;      // returns a 'prog_id' value;
 		err_code ProgId (const uint32_t);  // 'prog_id' value is just checked for 0 value and that's all;
+		const
+		shader::CVertex& Vertex (void) const;
+		shader::CVertex& Vertex (void) ;
 
 		CCache& operator <<(const uint32_t _prog_id);
-
+#if (0)
 		CCache& operator +=(const uint32_t _u_shader_id); // it is assumed the program identifier is already set to this linker;
 		CCache& operator -=(const uint32_t _u_shader_id); // detaches the shader from linker (i.e. the program) by '_u_shader_id';
-
+#endif
 	private:
 		mutable
 		CError   m_error;
 		uint32_t m_prog_id;
+		shader::CFragment m_$_frag;
+		shader::CVertex   m_$_vert;
 	};
 
 }}}}

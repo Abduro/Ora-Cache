@@ -36,9 +36,10 @@ shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>__
 	}
 }
 shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
+#if (0)
 	if (true == this->Shader_frag().Is_valid()) this->Shader_frag().Delete();
 	if (true == this->Shader_vert().Is_valid()) this->Shader_vert().Delete();
-
+#endif
 	m_ctx_dev.Destroy();
 }
 
@@ -69,7 +70,7 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 	return (*this)().Error();
 }
-
+#if (0)
 const
 shader::CFragment& shader::CWnd::Shader_frag (void) const { return this->m_frag_shader; }
 shader::CFragment& shader::CWnd::Shader_frag (void)       { return this->m_frag_shader; }
@@ -77,7 +78,7 @@ shader::CFragment& shader::CWnd::Shader_frag (void)       { return this->m_frag_
 const
 shader::CVertex& shader::CWnd::Shader_vert (void) const { return this->m_vert_shader; }
 shader::CVertex& shader::CWnd::Shader_vert (void)       { return this->m_vert_shader; }
-
+#endif
 err_code shader::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
 #if (0)
@@ -97,24 +98,28 @@ err_code shader::CWnd::PostCreate (void) {
 	shader::CCompiler cmpl;
 	shader::CStatus $_status;
 
-	if (false == cmpl.Is_supported()) {
-		return TBase::m_error = cmpl.Error()();
-	}
-	else
-		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
+	// sets resource identifiers for loading shaders' source code;
+	if (__failed(this->m_scene.Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
+	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(this->m_scene.Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
+	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 
-	if (false == this->Shader_frag().Is_valid()) {
-		if (__failed(this->Shader_frag().Create()))
-			return TBase::m_error = this->Shader_frag().Error();
-	}
+	if (__failed(this->m_scene.Prepare()))
+		return TBase::m_error =  this->m_scene.Error();
 
-	if (false == this->Shader_vert().Is_valid()) {
-		if (__failed(this->Shader_vert().Create()))
-			return TBase::m_error = this->Shader_vert().Error();
-	}
+#if (0)
+	if (false) {}
+	else if (__failed(this->m_scene.Prog().Shaders().Fragment().Create())) {
+	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Fragment().Error().Print(TError::e_print::e_req)); }
+	else     __trace_info_2(pc_sz_pat_src, (_pc_sz) CType::To_str (this->m_scene.Prog().Shaders().Fragment().Type()));
 
-	static _pc_sz pc_sz_pat_src = _T("Load source code to '%s' shader succeeded;\n");
-
+	if (false) {}
+	
+	else if (__failed(this->m_scene.Prog().Shaders().Vertex().Create())) {
+	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Vertex().Error().Print(TError::e_print::e_req)); }
+	else     __trace_info_2(pc_sz_pat_src, (_pc_sz) CType::To_str (this->m_scene.Prog().Shaders().Vertex().Type()));
+#endif
+#if (0)
 	if (__failed(this->Shader_frag().Src().Set(IDS_TUTOR_2_SHADER_FRAG_0, this->Shader_frag().Id()))) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Shader_frag().Src().Error().Print(TError::e_print::e_req));
 	}
@@ -186,9 +191,9 @@ err_code shader::CWnd::PostCreate (void) {
 	}
 	else
 		__trace_impt_2(_T("Program object (id=%u) is created;\n"), prog.Id().Get());
-
+#endif
 	static _pc_sz pc_sz_pat_att = _T("Program attaches '%s' shader successfully;\n");
-
+#if (0)
 	if ( __failed(prog.Shaders().Attach(this->Shader_frag().Id())) ) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Error().Print(TError::e_print::e_req)); }
 	else __trace_info_2(pc_sz_pat_att, (_pc_sz) CType::To_str (this->Shader_frag().Type()));
@@ -196,9 +201,9 @@ err_code shader::CWnd::PostCreate (void) {
 	if ( __failed(prog.Shaders().Attach(this->Shader_vert().Id())) ) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Error().Print(TError::e_print::e_req)); }
 	else __trace_info_2(pc_sz_pat_att, (_pc_sz) CType::To_str (this->Shader_vert().Type()));
-
+#endif
 	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked;\n");
-
+#if (0)
 	program::CStatus prog_status(prog.Id());
 	program::CLinker linker(prog.Id());
 
@@ -232,10 +237,12 @@ err_code shader::CWnd::PostCreate (void) {
 	if ( __failed(prog.Shaders().Detach_all())) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
 	else __trace_warn_2(_T("All shaders are detached;\n"));
-#else
+#elsif(0)
 	if ( __failed(prog.Shaders().Delete_all())) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); }
 	else __trace_warn_2(_T("All shaders are deleted;\n"));
+#else
+#endif
 #endif
 	return (*this)().Error();
 }
