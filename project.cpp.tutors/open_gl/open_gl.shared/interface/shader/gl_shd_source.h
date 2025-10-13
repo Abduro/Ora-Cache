@@ -53,20 +53,27 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		static
 		CString  Class (void);
 		const
-		CSrc_Cfg& Gfg (void) const;
-		CSrc_Cfg& Cfg (void) ;   
+		CSrc_Cfg& Cfg (void) const;
+		CSrc_Cfg& Cfg (void) ;
+
+		uint32_t $Id  (void) const;     // returns the shader identifier for which this code sourse belongs to;
+		err_code $Id  (const uint32_t); // sets the shader identifier; returns __s_ok on change, __s_false - no change, otherwise the error code;
 
 		TError&  Error (void) const;
 		_pc_sz   Get (void) const;
+
 		err_code Set (_pc_sz _p_source, const uint32_t _n_shader_id);       // sets the source text to the shader;
 		err_code Set (const uint16_t _res_id, const uint32_t _n_shader_id); // loads source text from the executable resource table string;
 
-	public: CSource& operator = (const CSource&); CSource& operator = (CSource&&) = delete;
+		err_code Set (void); // it is assumed the source cfg is already set;
+
+	public: CSource& operator = (const CSource&); CSource& operator = (CSource&&) = delete; CSource& operator <<(const uint32_t _shader_id);
 	private:
 	mutable
 		CError   m_error ;
 		CString  m_buffer;
-		CSrc_Cfg m_cfg;
+		CSrc_Cfg m_cfg ;
+		uint32_t m_$_id;
 	};
 
 }}}}

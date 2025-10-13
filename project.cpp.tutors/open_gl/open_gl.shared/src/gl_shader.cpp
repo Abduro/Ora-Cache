@@ -52,6 +52,7 @@ err_code CShader::Create (const TType _e_type) {
 	__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	} else {
 	__trace_impt_2(_T("The shader: id=%u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	this->Src() << this->Id();
 	}
 	return this->Error()();
 }

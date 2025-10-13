@@ -14,6 +14,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	public:
 		CScene (void); CScene (const CScene&) = delete; CScene (CScene&&) = delete; ~CScene (void);
 
+		TError&  Destroy (void);
 		TError&  Error (void) const;
 		err_code Prepare (void);
 		const

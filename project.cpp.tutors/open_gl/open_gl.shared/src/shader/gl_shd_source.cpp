@@ -39,9 +39,10 @@ err_code  CSrc_Cfg::ResId  (const uint16_t _res_id, const e_res_types _e_type) {
 		else
 			this->m_error <<__e_inv_arg << TString().Format(_T("#__e_inv_val: '_res_id' (%u) is not found"), _res_id);
 	}
-	else
+	else {
+		this->m_prefer = e_prefer::e_res;
 		this->m_res_id = _res_id;
-
+	}
 	return this->Error();
 }
 
@@ -53,8 +54,12 @@ err_code  CSrc_Cfg::Path   (_pc_sz _p_path) {
 	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
 		return this->m_error <<__e_inv_arg;
 	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
-	if (false == !!::PathFileExists(_p_path)) // ::GetLastError() can be called for additional detals of the errpr;
+	if (false == !!::PathFileExists(_p_path)) // ::GetLastError() can be called for additional detals of the error;
 		this->m_error <<__e_inv_arg << TString().Format(_T("#__e_not_valid: '_p_path' %s does not exist"), _p_path);
+	else {
+		this->m_prefer = e_prefer::e_path;
+		this->m_path = _p_path;
+	}
 
 	return this->Error();
 }
@@ -67,15 +72,30 @@ CSrc_Cfg& CSrc_Cfg::operator <<(_pc_sz _p_path) { this->Path(_p_path); return *t
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSource:: CSource (void) { this->m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
+CSource:: CSource (void) : m_$_id(0) { this->m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
 CSource:: CSource (const CSource& _src) : CSource() { *this = _src; }
 CSource::~CSource (void) {}
 
 const
-CSrc_Cfg& CSource::Gfg (void) const { return m_cfg; }
+CSrc_Cfg& CSource::Cfg (void) const { return m_cfg; }
 CSrc_Cfg& CSource::Cfg (void)       { return m_cfg; }
 
 CString  CSource::Class (void) { return __CLASS__; }
+
+uint32_t CSource::$Id  (void) const { return this->m_$_id; }
+err_code CSource::$Id  (const uint32_t _shader_id) {
+	_shader_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == _shader_id)
+		return this->m_error << __e_inv_arg = _T("#__e_inv_val: '_shader_id' cannot be zero");
+
+	const bool b_changed = _shader_id != this->$Id();
+	if (b_changed)
+		this->m_$_id = _shader_id;
+
+	return this->Error();
+}
 
 TError&  CSource::Error (void) const { return this->m_error; }
 
@@ -117,4 +137,21 @@ err_code CSource::Set (const uint16_t _res_id, const uint32_t _n_shader_id) {
 	return this->Set((_pc_sz) cs_src, _n_shader_id);
 }
 
+err_code CSource::Set (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Cfg().Is_valid()) {
+		return this->m_error <<__e_not_inited = _T("Config is not set");
+	}
+
+	switch (this->Cfg().Prefer()) {
+	case CSrc_Cfg::e_res: this->Set(this->Cfg().ResId(), this->$Id()); break;
+	default:
+		this->m_error << (err_code)TErrCodes::eData::eUnsupport = _T("Not supported");
+	}
+
+	return this->Error();
+}
+
 CSource& CSource::operator = (const CSource& _src) { this->m_buffer = _src.Get(); return *this; }
+CSource& CSource::operator <<(const uint32_t _shader_id) { this->$Id(_shader_id); return *this; }

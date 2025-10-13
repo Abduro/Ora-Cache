@@ -6,7 +6,10 @@
 #include "gl_program.h"
 #include "procs\gl_procs_prog.h"
 #include "procs\gl_procs_shader.h"
+#include "shared.dbg.h"
 #include "shared.preproc.h"
+#include "shader\gl_compiler.h"
+#include "shader\gl_shd_type.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
@@ -117,22 +120,143 @@ using namespace ex_ui::draw::open_gl::_impl;
 
 CCache:: CCache (const uint32_t _prog_id) : m_prog_id(0) { this->m_error>>__CLASS__<<__METHOD__<<__s_ok; if (!!_prog_id) *this<<_prog_id; }
 CCache::~CCache (void) { /*this->Detach_all();*/ }
-#if (0)
-err_code  CCache::Attach (const uint32_t _u_shader_id) {
+
+err_code CCache::Attach (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == this->ProgId()) {
+		this->m_error << (err_code)TErrCodes::eExecute::eState = _T("Program ID is not set");
+		__trace_err_2(_T("%s\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req));
+		return this->Error();
+	}
+
+	static _pc_sz pc_sz_pat_att = _T("Program (id=%u) attaches '%s' shader (id=%u);\n");
+
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+	if ( __failed(this->Attach(shaders[i_]->Id())) ) {
+	     __trace_err_2(_T("%s\n"), (_pc_sz) shaders[i_]->Error().Print(TError::e_print::e_req)); }
+	else __trace_impt_2(pc_sz_pat_att, this->ProgId(), (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
+	}
+
+	return this->Error();
+}
+
+err_code CCache::Attach (const uint32_t _u_shader_id) {
 	return CCache::Attach(_u_shader_id, this->ProgId(), this->m_error);
 }
 
-err_code  CCache::Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError& _err) {
+err_code CCache::Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError& _err) {
 	_u_shader_id; _u_prog_id; _err;
 
 	procs::program::CShaders procs;
 	if (__failed( procs.Attach(_u_prog_id, _u_shader_id)))
 		return _err = procs.Error();
+#if (0)
 	// ToDo: no error is expected, but in any case if the error occurs the shader was attached to the program and in this case the storage cannot be reliable;
 	if (__failed(__get_stg().Insert(_u_prog_id, _u_shader_id))) 
 		_err = __get_stg().Error();
-
+#endif
 	return _err;
+}
+
+err_code CCache::Compile (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader is compiled;\n");
+	static _pc_sz pc_sz_pat_stat = _T("Shader '%s' compiled status: '%s';\n");
+
+	shader::CCompiler cmpl;
+	shader::CStatus $_status;
+	// error C2234: 'shaders': arrays of references are illegal ;
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+		if (shaders[i_]->Error()().Is())
+			continue;
+		cmpl << shaders[i_]->Id();
+		if ( __failed(cmpl.Compile())) {
+			 __trace_err_2(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req)); }
+		else __trace_info_2(pc_sz_pat_cmpl, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()));
+		// checks the compile status of the shader;
+		$_status << shaders[i_]->Id();
+		const bool b_compiled = $_status.Is_compiled();
+		if ($_status.Error() ) {
+		    __trace_err_2(_T("%s\n"), (_pc_sz) $_status.Error().Print(TError::e_print::e_req)); }
+		else {
+			__trace_info_2(pc_sz_pat_stat, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), TString().Bool(b_compiled));
+			if (false == b_compiled) {
+				shader::CLog log;
+				if (__failed(log.Set(shaders[i_]->Id()))) {
+				    __trace_err_2(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
+				else {
+					__trace_warn_2(_T("%s\n"), _T("Compile log:"));
+				    __trace_err(_T("%s"), log.Get());
+				}
+			}
+		}
+	}
+	return this->Error();
+}
+
+err_code CCache::Delete (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	static _pc_sz pc_sz_pat_del = _T("'%s' shader (id=%u) is deleted;\n");
+
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+		if (__succeeded(this->Delete(shaders[i_]->Id()))) // the error is caught by Delete(_u_shader_id) ;
+		   __trace_warn_2(pc_sz_pat_del, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
+	}
+
+	return this->Error();
+}
+
+err_code CCache::Delete (const uint32_t _u_shader_id) {
+	return CCache::Delete(_u_shader_id, this->m_error);
+}
+// https://community.khronos.org/t/correct-way-to-delete-shader-programs/69742 ;
+// https://stackoverflow.com/questions/27937285/when-should-i-call-gldeletebuffers ;
+err_code CCache::Delete (const uint32_t _u_shader_id, CError& _err) {
+	_u_shader_id; _err;
+
+	if (0 == _u_shader_id) {
+		_err << __e_inv_arg = _T("'_u_shader_id' is zero (0)");
+		__trace_err_2(_T("%s\n"), (_pc_sz)_err.Print(TError::e_print::e_req));
+		return _err;
+	}
+
+	procs::CShader procs;
+	
+	if (__failed(procs.Delete(_u_shader_id))) {
+		_err = procs.Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz)_err.Print(TError::e_print::e_req));
+	}
+	return _err;
+}
+
+err_code CCache::Detach (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == this->ProgId()) {
+		this->m_error << (err_code)TErrCodes::eExecute::eState = _T("Program ID is not set");
+		__trace_err_2(_T("%s\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req));
+		return this->Error();
+	}
+
+	static _pc_sz pc_sz_pat_att = _T("'%s' shader (id=%u) is detached from program (id=%u);\n");
+
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+	if ( __failed(this->Detach(shaders[i_]->Id()))) {
+	     __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+	else __trace_warn_2(pc_sz_pat_att, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), this->ProgId());
+	}
+	return this->Error();
 }
 // https://stackoverflow.com/questions/18736773/why-it-is-necessary-to-detach-and-delete-shaders-after-creating-them-on-opengl ;
 err_code CCache::Detach (const uint32_t _u_shader_id) {
@@ -145,44 +269,14 @@ err_code CCache::Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id,
 	procs::program::CShaders procs;
 	if (__failed( procs.Detach(_u_prog_id, _u_shader_id)))
 		return _err = procs.Error();
-
+#if (0)
 	if (__failed(__get_stg().Remove(_u_prog_id, _u_shader_id)))
 		_err = __get_stg().Error();
-
-	return _err;
-}
-// https://community.khronos.org/t/correct-way-to-delete-shader-programs/69742 ;
-// https://stackoverflow.com/questions/27937285/when-should-i-call-gldeletebuffers ;
-err_code  CCache::Delete_all (void) {
-	return CCache::Delete_all (this->ProgId(), this->m_error);
-}
-
-err_code  CCache::Delete_all (const uint32_t _u_prog_id, CError& _err) {
-	_u_prog_id; _err;
-	if (__failed(CCache::Detach_all(_u_prog_id, _err)))
-		return _err;
-
-	TRawCache::iterator prog = __get_stg().Prog(_u_prog_id);
-	if (__get_stg().Error())
-		return _err = __get_stg().Error();
-
-	procs::CShader procs;
-
-	TShaderIds& shaders = prog->second;
-
-	for (TShaderIds::iterator it_ = shaders.begin(); it_ != shaders.end(); ++it_) {
-		if (__failed(procs.Delete(*it_))) {
-			_err = procs.Error(); break;
-		}
-	}
-
+#endif
 	return _err;
 }
 
-err_code  CCache::Detach_all (void) {
-	return  CCache::Detach_all(this->ProgId(), this->m_error);
-}
-
+#if (0)
 err_code  CCache::Detach_all (const uint32_t _u_prog_id, CError& _err) {
 	_u_prog_id; _err;
 	if (false == CProgram::Is_valid(_u_prog_id, _err))
@@ -191,7 +285,7 @@ err_code  CCache::Detach_all (const uint32_t _u_prog_id, CError& _err) {
 	procs::program::CShaders procs;
 
 #if (0)
-	static const uint32_t u_max_count = 32; // Todo: the initial value must be explained;
+	static const uint32_t u_max_count = 32; // it is assumed max number of attached shaders is not grater than 32; if necessary it will be increased;
 
 	uint32_t shader_ids[u_max_count] = {0};
 	uint32_t u_count = 0;
@@ -225,6 +319,24 @@ shader::CFragment& CCache::Fragment (void) const { return this->m_$_frag; }
 shader::CFragment& CCache::Fragment (void)       { return this->m_$_frag; }
 
 TError&  CCache::Error (void) const { return this->m_error; }
+
+err_code CCache::Load  (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	static _pc_sz pc_sz_pat_src = _T("Load source code to '%s' shader succeeded;\n");
+
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex()};
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+		if (__failed(shaders[i_]->Src().Set())) {
+			this->m_error = shaders[i_]->Src().Error();
+			__trace_err_2(_T("%s;\n"), (_pc_sz) shaders[i_]->Src().Error().Print(TError::e_print::e_req));
+		}
+		else
+			__trace_info_2(pc_sz_pat_src, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()));
+	}
+	return this->Error();
+}
 
 uint32_t CCache::ProgId (void) const { return this->m_prog_id; }   
 err_code CCache::ProgId (const uint32_t _prog_id) {

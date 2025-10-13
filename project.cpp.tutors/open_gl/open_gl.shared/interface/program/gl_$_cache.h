@@ -10,14 +10,18 @@
 namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 
 	typedef ::std::set<uint32_t> TShaderIds; // it possibly must be used in order to avoid calling glGetAttachedShaders();
-	// this class is intended to store of shader(s) being used by a program linking;
+	// this class is intended to store of shaders being used by a program linking;
 	class CCache : private no_copy {
 	public:
 		CCache (const uint32_t _prog_id = 0); ~CCache (void);
-#if (0)
+
+		err_code Attach (void);   // attaches all shaders to the program; it is assumed the program identifier is already set;
 		static
 		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Attach (const uint32_t _u_shader_id);
+
+		err_code Compile (void);  // compiles all shaders; it is assumed the shader sources are already set;
+		err_code Detach (void);   // detaches all shaders from the program;
 		static
 		err_code Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Detach (const uint32_t _u_shader_id); // *important:* a shader should be detached from an OpenGL program before being deleted;
@@ -25,19 +29,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		...a shader should be detached from an OpenGL program before being deleted,
 		as the shader object is not truly deleted until it's detached from all programs it's attached to...
 		*/
+		err_code Delete (void);   // deletes all shaders; shaders must be detached first;
 		static
-		err_code Delete_all (const uint32_t _u_prog_id, CError&); // this method is called after the program links these shaders;
-		err_code Delete_all (void);
-
-		static
-		err_code Detach_all (const uint32_t _u_prog_id, CError&); // before deleting shader(s) they (shaders) must be detached;
-		err_code Detach_all (void);
-#endif
+		err_code Delete (const uint32_t _u_shader_id, CError&); // this method is called after the program links these shaders;
+		err_code Delete (const uint32_t _u_shader_id);          // before deleting shader(s) they (shaders) must be detached;
 		const
 		shader::CFragment& Fragment (void) const;
 		shader::CFragment& Fragment (void) ;
 
 		TError&  Error (void) const;
+
+		err_code Load  (void);             // load source code for each shader;
 
 		uint32_t ProgId (void) const;      // returns a 'prog_id' value;
 		err_code ProgId (const uint32_t);  // 'prog_id' value is just checked for 0 value and that's all;

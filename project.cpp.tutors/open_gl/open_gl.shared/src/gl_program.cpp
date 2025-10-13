@@ -6,6 +6,7 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 #include "program\gl_prog_linker.h"
+#include "program\gl_prog_status.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
@@ -118,7 +119,7 @@ err_code  CProgram::Create (void) {
 		if (procs.Error().Is())
 			this->m_error = procs.Error();
 		program::CLog log;
-		if (__failed(log.Set(0))) {} // if the program identifier equals to zero, there is no way to get the creation error detailes;
+		if (__failed(log.Set(0))) {} // if the program identifier equals to zero, there is no way to get the creation error details;
 	}
 	else
 		this->Shaders() << this->Id(); // this is very *important*, otherwise no shader attachment will succeed;
@@ -179,12 +180,32 @@ bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 
 err_code CProgram::Link (void) {
 	this->m_error<<__METHOD__<<__s_ok;
-	CLinker::Link(this->Id(), this->m_error);
-#if (0)
-	if (false == this->Error()) { // linking is successful;
-		this->Shaders().Delete_all();
+
+	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked;\n");
+
+	CStatus prog_status(this->Id());
+	CLinker linker(this->Id());
+
+	if ( __failed(linker.Link()) ) {
+	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); this->m_error = linker.Error(); }
+	else __trace_impt_2(pc_sz_pat_lnk, linker.ProgId());
+
+	// just checks the program link status;
+	const bool b_linked = prog_status.Is_linked();
+	if ( prog_status.Error() ) {
+		__trace_err_2(_T("%s\n"), (_pc_sz) prog_status.Error().Print(TError::e_print::e_req));}
+	else {
+		__trace_info_2(_T("Program (id=%u) link status is '%s';\n"), linker.ProgId(), TString().Bool(b_linked));
+		if (false == b_linked) {
+			program::CLog log;
+			if (__failed( log.Set(this->Id()))) {
+			    __trace_err_2(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
+			else {
+				__trace_warn_2(_T("%s\n"), _T("Link log:"));
+			    __trace_err(_T("%s"), log.Get());
+			}
+		}
 	}
-#endif
 	return this->Error();
 }
 
@@ -197,9 +218,11 @@ err_code CProgram::Validate (void) {
 
 	procs::CProg& procs = CProgram::Procs();
 
-	if (__failed(procs.Validate(this->Id())))
-		return this->m_error = procs.Error();
-
+	if (__failed(procs.Validate(this->Id()))) {
+	    __trace_err_2(_T("%s\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req));
+		this->m_error = procs.Error();
+	}
+	else __trace_info_2(_T("Program (id=%u) is validated;\n"), this->Id().Get());
 	return this->Error();
 }
 

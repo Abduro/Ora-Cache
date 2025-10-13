@@ -15,6 +15,18 @@ using namespace ex_ui::draw::open_gl;
 CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CScene::~CScene (void) {}
 
+TError&  CScene::Destroy (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Prog().Shaders().Detach()))
+		return this->m_error = this->Prog().Shaders().Error();
+
+	if (__failed(this->Prog().Shaders().Delete()))
+		return this->m_error = this->Prog().Shaders().Error();
+
+	return this->Error();
+}
+
 TError&  CScene::Error (void) const { return this->m_error; }
 
 err_code CScene::Prepare (void) {
@@ -32,10 +44,24 @@ err_code CScene::Prepare (void) {
 		return this->m_error = this->Prog().Error();
 
 	if (__failed(this->Prog().Shaders().Fragment().Create()))
-	     return this->m_error = this->Prog().Shaders().Fragment().Error();
+	    return this->m_error = this->Prog().Shaders().Fragment().Error();
 
 	if (__failed(this->Prog().Shaders().Vertex().Create()))
-	     return this->m_error = this->Prog().Shaders().Vertex().Error();
+	    return this->m_error = this->Prog().Shaders().Vertex().Error();
+
+	if (__failed(this->Prog().Shaders().Load()))
+		return this->m_error = this->Prog().Shaders().Error();
+
+	if (__failed(this->Prog().Shaders().Compile()))
+		return this->m_error = this->Prog().Shaders().Error();
+
+	if (__failed(this->Prog().Shaders().Attach()))
+		return this->m_error = this->Prog().Shaders().Error();
+
+	if (__failed(this->Prog().Link()))
+		return this->m_error = this->Prog().Error();
+
+	this->Prog().Validate();
 
 	return this->Error();
 }
