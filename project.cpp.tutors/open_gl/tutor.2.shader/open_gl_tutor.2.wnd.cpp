@@ -6,12 +6,12 @@
 #include "open_gl_tutor.2.res.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
-
+#if (0)
 #include "shader\gl_compiler.h"
 #include "gl_program.h"
 #include "program\gl_prog_linker.h"
 #include "program\gl_prog_status.h"
-
+#endif
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
@@ -95,20 +95,19 @@ err_code shader::CWnd::PostCreate (void) {
 		return this->m_error = ctx_dev.Error();
 	}
 #endif
-	shader::CCompiler cmpl;
-	shader::CStatus $_status;
-
 	// sets resource identifiers for loading shaders' source code;
 	if (__failed(this->m_scene.Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
 	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
 	if (__failed(this->m_scene.Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
 	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
+	this->m_scene.Prog().Attrs().Clr().Name(_T("colorIn"));
+	this->m_scene.Prog().Attrs().Pos().Name(_T("positionIn"));
 
 	if (__failed(this->m_scene.Prepare()))
 		return TBase::m_error =  this->m_scene.Error();
 #define _test_case_lvl 0
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
-	// just for testing purpose;
 	this->m_scene.Destroy();
 #endif
 	return (*this)().Error();

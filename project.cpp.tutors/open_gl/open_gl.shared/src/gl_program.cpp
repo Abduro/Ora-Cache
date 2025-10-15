@@ -22,13 +22,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 using namespace ex_ui::draw::open_gl::_impl;
 
-CAttr::CIndex:: CIndex (const CAttr& _attr_ref) : m_attr_ref(_attr_ref) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CAttr::CIndex:: CIndex (const CAttr& _attr_ref) : m_attr_ref(_attr_ref), m_value(CIndex::_$na) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CAttr::CIndex::~CIndex (void) {}
 
-TError& CAttr::CIndex::Error (void) const { return this->m_error; }
+TError&  CAttr::CIndex::Error (void) const { return this->m_error; }
 
-int32_t CAttr::CIndex::Get (void) const { return CAttr::CIndex::Get (this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), this->m_error); }
-int32_t CAttr::CIndex::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CError& _err) {
+int32_t  CAttr::CIndex::Get (void) const { return this->m_value = CAttr::CIndex::Get (this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), this->m_error); }
+int32_t  CAttr::CIndex::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CError& _err) {
 	_prog_id; _p_att_name; _err;
 	if (0 == _p_att_name || 0 == ::_tcslen(_p_att_name)) {
 		_err <<__e_inv_arg = _T("#__e_inv_arg: attr name is invalid");
@@ -42,7 +42,14 @@ int32_t CAttr::CIndex::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CError&
 	return n_ndx;
 }
 
-err_code CAttr::CIndex::Set (const uint32_t _u_ndx) { return CAttr::CIndex::Set(this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), _u_ndx, this->m_error); }
+err_code CAttr::CIndex::Set (const uint32_t _u_ndx) {
+
+	CAttr::CIndex::Set(this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), _u_ndx, this->m_error);
+	
+	this->m_value = false == this->Error() ? _u_ndx : CIndex::_$na;
+
+	return this->Error();
+}
 err_code CAttr::CIndex::Set (const uint32_t _prog_id, _pc_sz _p_att_name, const uint32_t _u_ndx, CError& _err) {
 	_prog_id; _p_att_name; _err;
 	if (0 == _p_att_name || 0 == ::_tcslen(_p_att_name)) {
@@ -55,13 +62,16 @@ err_code CAttr::CIndex::Set (const uint32_t _prog_id, _pc_sz _p_att_name, const 
 	return _err;
 }
 
+int32_t  CAttr::CIndex::Value (void) const { return this->m_value; }
+int32_t  CAttr::CIndex::operator ()(void) const { return this->Value(); }
+
 /////////////////////////////////////////////////////////////////////////////
 
 CAttr:: CAttr (_pc_sz _p_name) : m_index(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; if (_p_name) *this << _p_name; }
 CAttr::~CAttr (void) {}
 
-TError&  CAttr::Error (void) const { return this->m_error; }
-bool     CAttr::Is_valid (void) const { return false == this->m_name.IsEmpty(); }
+TError& CAttr::Error (void) const { return this->m_error; }
+bool    CAttr::Is_valid (void) const { return false == this->m_name.IsEmpty() && !!this->ProgId()(); }
 
 const
 CAttr::CIndex&  CAttr::Index (void) const { return this->m_index; }
@@ -93,6 +103,117 @@ CAttr&  CAttr::operator <<(const CProgId& _prog_id) { this->ProgId() << _prog_id
 
 /////////////////////////////////////////////////////////////////////////////
 
+CAttrs:: CAttrs (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok; }
+CAttrs::~CAttrs (void) {}
+
+err_code CAttrs::Bind (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid())
+		return this->Error();
+
+	program::CStatus status(this->ProgId());
+
+	if (status.Is_linked()) {
+		this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(_T("The program (id=%u) is not linked;\n"), this->ProgId().Get());
+		__trace_warn_2(_T("The program (id=%u) is linked; binding has no effect;\n"), this->ProgId().Get());
+	}
+
+	static _pc_sz pc_sz_pat_ndx = _T("Binding attr '%s' name to ndx = %d succeeded;\n");
+	CAttr* attrs[] = { &this->Clr(), &this->Pos() };
+
+	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
+		if (__failed(attrs[i_]->Index().Set(i_))) {
+			this->m_error = attrs[i_]->Index().Error();
+			__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+			return this->Error();
+		}
+		else
+			__trace_info_2(pc_sz_pat_ndx, attrs[i_]->Name(), attrs[i_]->Index()());
+	}
+	return this->Error();
+}
+
+err_code CAttrs::Bound (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid())
+		return this->Error();
+
+	program::CStatus status(this->ProgId());
+
+	if (false == status.Is_linked()) {
+		if (status.Error()) {
+			this->m_error = status.Error();
+			__trace_err_2(_T("%s\n"), (_pc_sz) status.Error().Print(TError::e_print::e_req));
+			return this->Error();
+		}
+		this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(_T("The program (id=%u) is not linked;\n"), this->ProgId().Get());
+		__trace_warn_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		return this->Error();
+	}
+
+	static _pc_sz pc_sz_pat_ndx = _T("attr '%s' is bound to ndx = %d;\n");
+
+	CAttr* attrs[] = { &this->Clr(), &this->Pos() };
+
+	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
+		if (0 > attrs[i_]->Index().Get()) {
+			this->m_error = attrs[i_]->Index().Error();
+			__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+			return this->Error();
+		}
+		else
+			__trace_info_2(pc_sz_pat_ndx, attrs[i_]->Name(), attrs[i_]->Index()());
+	}
+	return this->Error();
+}
+
+const
+CAttr&   CAttrs::Clr (void) const { return this->m_clr; }
+CAttr&   CAttrs::Clr (void)       { return this->m_clr; }
+const
+CAttr&   CAttrs::Color (void) const { return this->Clr(); }
+CAttr&   CAttrs::Color (void)       { return this->Clr(); }
+TError&  CAttrs::Error (void) const { return this->m_error; }
+
+bool     CAttrs::Is_valid (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Clr().Is_valid()) {
+		this->m_error <<__e_inv_arg = _T("Color attr is not valid;");
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		return false == this->Error().Is(); // 'false' == 'true' is false;
+	}
+
+	if (false == this->Pos().Is_valid()) {
+		this->m_error <<__e_inv_arg = _T("Position attr is not valid;");
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		return false == this->Error().Is(); // 'false' == 'true' is false;
+	}
+
+	return false == this->Error().Is();     // 'false' == 'false' is 'true';
+}
+
+const
+CAttr&   CAttrs::Pos (void) const { return this->m_pos; }
+CAttr&   CAttrs::Pos (void)       { return this->m_pos; }
+const
+CAttr&   CAttrs::Position (void) const { return this->Pos(); }
+CAttr&   CAttrs::Position (void)       { return this->Pos(); }
+const
+CProgId& CAttrs::ProgId (void) const { return this->m_prog_id; }
+CProgId& CAttrs::ProgId (void)       { return this->m_prog_id; }
+
+CAttrs&  CAttrs::operator <<(const CProgId& _prog_id) {
+	this->Clr() << _prog_id;
+	this->Pos() << _prog_id;
+	this->ProgId() << _prog_id;
+	return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 #define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
 
 CProgram:: CProgram (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
@@ -102,6 +223,10 @@ procs::CProg& CProgram::Procs (void) {
 	static procs::CProg m_fn_cache;
 	return m_fn_cache;
 }
+
+const
+CAttrs&   CProgram::Attrs (void) const { return m_attrs; }
+CAttrs&   CProgram::Attrs (void)       { return m_attrs; }
 
 CString   CProgram::Class (void) { return __CLASS__; }
 
@@ -121,9 +246,11 @@ err_code  CProgram::Create (void) {
 		program::CLog log;
 		if (__failed(log.Set(0))) {} // if the program identifier equals to zero, there is no way to get the creation error details;
 	}
-	else
+	else {
+		this->Attrs() << this->Id();
 		this->Shaders() << this->Id(); // this is very *important*, otherwise no shader attachment will succeed;
-
+		this->Status() << this->Id();
+	}
 	if (this->Error()) {
 	      __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
 	else {__trace_impt_2(_T("The program (id = %u) is created;\n"), this->Id().Get()); }
@@ -145,6 +272,11 @@ err_code  CProgram::Delete (void) {
 		return this->m_error = procs.Error();
 
 	this->Id().Reset();
+
+	this->Attrs().ProgId().Reset();
+	this->Shaders().ProgId().Reset();
+	this->Status().ProgId().Reset();
+
 	return this->Error();
 }
 
@@ -212,6 +344,9 @@ err_code CProgram::Link (void) {
 const
 program::CCache& CProgram::Shaders (void) const { return this->m_shaders; }
 program::CCache& CProgram::Shaders (void)       { return this->m_shaders; }
+const
+program::CStatus& CProgram::Status (void) const { return this->m_status; }
+program::CStatus& CProgram::Status (void)       { return this->m_status; }
 
 err_code CProgram::Validate (void) {
 	this->m_error<<__METHOD__<<__s_ok;

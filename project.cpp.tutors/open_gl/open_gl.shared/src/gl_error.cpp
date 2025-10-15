@@ -75,13 +75,20 @@ using namespace ex_ui::draw::open_gl::_impl_1;
 #define err_ctx_lost   0x0507               // GL_CONTEXT_LOST ;  
 #define err_tbl_large  0x8031               // GL_TABLE_TOO_LARGE ;  
 #pragma endregion
-CError_ex:: CError_ex (void) : TBase(), m_err_code(0) {}
+CError_ex:: CError_ex (void) : TBase(), m_err_code(0) { (const_cast<CError&>((*this)())) >> __CLASS__<<__METHOD__<<__s_ok; }
 CError_ex::~CError_ex (void) {}
 
 #define err_dev_reset  DXGI_ERROR_DEVICE_RESET
 #define err_acc_denied DXGI_ERROR_ACCESS_DENIED
 
 uint32_t  CError_ex::Get_code (void) const {
+	CError& base_ref = const_cast<CError&>((*this)()); base_ref <<__METHOD__<<__s_ok;
+	
+	this->m_err_code = ::glGetError();
+	if (this->m_err_code)
+		base_ref << __e_fail = TString().Format(_T("#error code=%u"), this->m_err_code);
+//		this->Get_last(true); // ToDo: not good approach because there is no any relation between system error codes and opengl errors;
+
 	return this->m_err_code;
 }
 
@@ -89,18 +96,22 @@ uint32_t  CError_ex::Get_code (void) const {
 
 err_code  CError_ex::Get_last (const bool _b_origin) const {
 	_b_origin;
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgeterror?source=docs ;
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgeterror ;
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetError.xhtml ; the same error codes and the error description;
 	// https://lmb.informatik.uni-freiburg.de/people/reisert/opengl/doc/glGetError.html ; it looks like the long story :-D
+
+	CError& base_ref = const_cast<CError&>((*this)());
+
+	base_ref << __METHOD__ << __s_ok;
 
 	bool b_origin_ = _b_origin; // actually this is the custom description of the error, that is assigned here, of course the description text was copied from the offcial websites;
 
 	CString cs_desc;
 	err_code n_result = __e_not_impl;
 
-	CErr_procs procs;
-
-	this->m_err_code  = procs.Get_code(); if (procs.Error()) this->m_err_code = ::glGetError(); // looks like a stupid solution :(
+	CErr_procs procs; // not necessary because ::glGetError() is called from OpenGL library, not from renderer of the graphics card;
+	
+	/*this->m_err_code  = procs.Get_code(); if (procs.Error())*/ this->m_err_code = ::glGetError(); // looks like a stupid solution :(
 
 	if (b_origin_) {
 	switch (this->m_err_code) { // in the most cases of the error occurs the DirectX error code is used; but error description is still kept original;
@@ -122,10 +133,11 @@ err_code  CError_ex::Get_last (const bool _b_origin) const {
 		n_result = (err_code) TErrCodes::eData::eInvalid; cs_desc = TString().Format(_T("#undef: 0x%04x"), this->m_err_code);
 	}}
 
-	CError& base_ref = const_cast<CError&>((*this)());
-	base_ref << n_result;
-	if (b_origin_)
+	if (b_origin_) {
 		base_ref = (_pc_sz) cs_desc;
+	}
+	else
+		base_ref = static_cast<dword>(this->m_err_code); // otherwise the error state is not changed; ToDo: actually this is not system error code;
 
 	return (*this)();
 }

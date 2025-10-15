@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "gl_shader.h"
+#include "program\gl_prog_id.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 
@@ -40,14 +41,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		TError&  Error (void) const;
 
 		err_code Load  (void);             // load source code for each shader;
+		const
+		CProgId& ProgId (void) const;
+		CProgId& ProgId (void) ;
 
-		uint32_t ProgId (void) const;      // returns a 'prog_id' value;
-		err_code ProgId (const uint32_t);  // 'prog_id' value is just checked for 0 value and that's all;
 		const
 		shader::CVertex& Vertex (void) const;
 		shader::CVertex& Vertex (void) ;
 
-		CCache& operator <<(const uint32_t _prog_id);
+		CCache& operator <<(const CProgId&);
 #if (0)
 		CCache& operator +=(const uint32_t _u_shader_id); // it is assumed the program identifier is already set to this linker;
 		CCache& operator -=(const uint32_t _u_shader_id); // detaches the shader from linker (i.e. the program) by '_u_shader_id';
@@ -55,7 +57,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 	private:
 		mutable
 		CError   m_error;
-		uint32_t m_prog_id;
+		CProgId  m_prog_id;
 		shader::CFragment m_$_frag;
 		shader::CVertex   m_$_vert;
 	};

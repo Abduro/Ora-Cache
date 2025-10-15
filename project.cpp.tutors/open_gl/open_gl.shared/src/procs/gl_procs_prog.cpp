@@ -45,9 +45,9 @@ int32_t  CAttr::GetIndex (const uint32_t _prog_id, _pc_sz _p_att_name) {
 
 	CStringA cs_name(_p_att_name);
 
-	p_fun(_prog_id, cs_name.GetString());
+	n_result = p_fun(_prog_id, cs_name.GetString());
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION : {
 			if (false) {}
 			else if (0 == _prog_id) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' cannot be 0"));
@@ -77,7 +77,7 @@ err_code CAttr::SetIndex (const uint32_t _prog_id, _pc_sz _p_att_name, const uin
 
 	p_fun(_prog_id, _u_ndx, cs_name.GetString());
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION : {
 			if (false == CProg().IsProg(_prog_id)) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program"), _prog_id);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_p_att_name' (%s) is invalid"), _p_att_name);
@@ -128,7 +128,7 @@ uint32_t CProg::Create (void){
 	n_result = p_fun();
 
 	if (0 == n_result) {
-		switch (CErr_ex().Get_last(false)) {
+		switch (CErr_ex().Get_code()) {
 		case GL_OUT_OF_MEMORY: CBase::m_error << __e_no_memory = _T("#__e_no_mem: generic error;"); break;
 		default:
 			CBase::m_error << (err_code) TErrCodes::eExecute::eInternal = _T("#__e_inv_oper: a program cannot be created");
@@ -148,7 +148,7 @@ err_code CProg::Delete (const uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is not valid;"), _prog_id);
 	default:;
 	}
@@ -170,7 +170,7 @@ err_code CProg::InfoLog (const uint32_t _prog_id, const int32_t _buf_size, int32
 
 	p_fun(_prog_id, _buf_size, _log_len, _p_log);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program object"), _prog_id); break;
 	case GL_INVALID_VALUE: {
 			if (0 > _buf_size)
@@ -210,7 +210,7 @@ err_code CProg::Params  (const uint32_t _prog_id, const uint32_t _param_id, int3
 
 	p_fun(_prog_id, _param_id, _p_params);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_param_id' (%u) is not accepted;"), _param_id); break;
 	case GL_INVALID_OPERATION: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program;"), _prog_id); break;
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
@@ -236,7 +236,7 @@ err_code CProg::Use (const uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
 	case GL_INVALID_OPERATION : {
 			if (false) {}
@@ -265,7 +265,7 @@ err_code CProg::Validate (const uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program;"), _prog_id); break;
 	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
 	default:;
@@ -313,7 +313,7 @@ err_code CShaders::Attach (const uint32_t _prog_id, const uint32_t _shader_id) {
 
 	p_fun(_prog_id, _shader_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION:
 	case GL_INVALID_VALUE: {
 			if (false) {}
@@ -355,7 +355,7 @@ err_code CShaders::Attached (const uint32_t _prog_id, const uint32_t _u_max_cnt,
 
 	p_fun(_prog_id, _u_max_cnt, _p_count, _p_shaders);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION:
 	case GL_INVALID_VALUE: {
 			if (false) {}
@@ -389,7 +389,7 @@ err_code CShaders::Detach (const uint32_t _prog_id, const uint32_t _shader_id) {
 
 	p_fun(_prog_id, _shader_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION :
 	case GL_INVALID_VALUE : {
 			if (false) {}

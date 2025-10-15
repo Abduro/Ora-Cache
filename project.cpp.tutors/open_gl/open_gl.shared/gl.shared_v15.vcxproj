@@ -230,6 +230,8 @@
     <ClCompile Include="$(_1-0)gl_shd_status.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_type.h" />
     <ClCompile Include="$(_1-0)gl_shd_type.cpp" />
+    <ClInclude Include="$(_0-0)gl_src_parser.h" />
+    <ClCompile Include="$(_1-0)gl_src_parser.cpp" />
     <ClInclude Include="$(_0)gl_version.h" />
     <ClCompile Include="$(_1)gl_version.cpp" />
     <ClInclude Include="$(_0)gl_vertex.h" />

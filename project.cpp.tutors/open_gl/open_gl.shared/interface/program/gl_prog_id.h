@@ -25,7 +25,8 @@ namespace program {
 
 		CProgId& operator <<(const uint32_t _prog_id);
 
-		operator uint32_t (void) const;
+		operator uint32_t (void) const;    // this very often cannot be applied implicitly and requires the use of a cast specifier;
+		uint32_t operator () (void) const; // this works always;
 
 	private:
 		mutable

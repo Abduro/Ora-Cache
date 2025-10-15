@@ -58,8 +58,14 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Prog().Shaders().Attach()))
 		return this->m_error = this->Prog().Shaders().Error();
 
+	if (__failed(this->Prog().Attrs().Bind()))
+		return this->m_error = this->Prog().Attrs().Error();
+
 	if (__failed(this->Prog().Link()))
 		return this->m_error = this->Prog().Error();
+
+	if (__failed(this->Prog().Attrs().Bound()))
+		return this->m_error = this->Prog().Attrs().Error();
 
 	this->Prog().Validate();
 

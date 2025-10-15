@@ -33,7 +33,7 @@ err_code  CCompiler::Compile (uint32_t _shader_id) {
 
 	p_fun(_shader_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_VALUE:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: _shader_id (%u) is not valid;"), _shader_id); break;
 	case GL_INVALID_OPERATION:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: _shader_id (%u) refers to not shader;"), _shader_id); break;
 	default:;
@@ -51,7 +51,7 @@ bool CCompiler::Is_supported (void) const {
 	b_result = param.GetBool(GL_SHADER_COMPILER);
 
 	if (param.Error().Is()) {
-		if (GL_INVALID_ENUM == CError_ex().Get_last(false))
+		if (GL_INVALID_ENUM == CError_ex().Get_code())
 			CBase::m_error << __e_inv_arg = TString().Format(_T("The param id (0x%04x) is undefined"), GL_SHADER_COMPILER);
 		else
 			CBase::m_error = param.Error();
@@ -111,7 +111,7 @@ err_code CLinker::Link (const uint32_t _prog_id){
 
 	p_fun(_prog_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_OPERATION :
 	case GL_INVALID_VALUE : {
 			if (false) {}
@@ -186,7 +186,7 @@ int32_t CParam::GetInt (uint32_t _u_param_id) {
 
 	p_fun(_u_param_id, &n_result);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is invalid;"), _u_param_id);
 	default:;
 	}

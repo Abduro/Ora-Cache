@@ -5,9 +5,11 @@
 #include "gl_prog_id.h"
 #include "gl_procs.h"
 #include "shared.preproc.h"
+#include "procs\gl_procs_prog.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
+using namespace ex_ui::draw::open_gl::procs;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -45,8 +47,8 @@ bool CProgId::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	if (0 == _u_prog_id) {
 		return false == (_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id)).Is();
 	}
+#if (0) // this for getting active (i.e. set by glUseProgram()), it can be applied for check active program identifier ;
 	procs::CParam param;
-
 	const uint32_t n_curr_prog = param.GetInt(__gl_curr_prog); // if a negative result is returned, the input '_u_prog_id' will still be different;
 
 	if (0 == n_curr_prog) {
@@ -56,8 +58,16 @@ bool CProgId::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	else if (_u_prog_id != n_curr_prog) {
 		_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id);
 	}
-
 	return false == _err.Is();
+#else // it is intended for check of program identifier regardless the program of such identifier is active or not;
+	CProg procs;
+	const bool b_valid = procs.IsProg(_u_prog_id);
+	if (false == b_valid)
+		if (procs.Error())
+			_err = procs.Error();
+
+	return b_valid;
+#endif
 }
 
 void CProgId::Reset (void) { this->m_error<<__METHOD__<<__e_not_inited;  this->m_value = 0; }
@@ -65,3 +75,5 @@ void CProgId::Reset (void) { this->m_error<<__METHOD__<<__e_not_inited;  this->m
 CProgId& CProgId::operator <<(const uint32_t _prog_id) { this->Set(_prog_id); return *this; }
 
 CProgId::operator uint32_t (void) const { return this->Get(); }
+
+uint32_t CProgId::operator () (void) const { return this->Get(); }

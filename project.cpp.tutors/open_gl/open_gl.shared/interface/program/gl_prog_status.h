@@ -17,7 +17,10 @@ namespace program {
 		TError&  Error (void) const;
 		static
 		bool     Get (const uint32_t _param_id, const uint32_t _prog_id, CError&);
-		bool     Get (const uint32_t _param_id) const; 
+		bool     Get (const uint32_t _param_id) const;
+		static
+		bool  Is_current(const uint32_t _prog_id, CError&);
+		bool  Is_current(void) const;
 		static
 		bool  Is_linked (const uint32_t _u_prog_id, CError&);
 		bool  Is_linked (void) const;       // if result is 'false' the details can be received by calling the log info function;
@@ -27,6 +30,8 @@ namespace program {
 		const
 		CProgId& ProgId (void) const;
 		CProgId& ProgId (void) ;
+
+		CStatus& operator <<(const CProgId&);
 
 	private:
 		mutable

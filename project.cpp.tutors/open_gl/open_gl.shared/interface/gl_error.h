@@ -37,7 +37,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		 CError_ex (void);
 		~CError_ex (void);
 
-		uint32_t Get_code (void) const; // gets last error code that is returned by OpenGL;
+		uint32_t Get_code (void) const; // *important*: this must be used for getting the last error code that is returned by OpenGL;
 
 		// in the most cases the DirectX error code is used for compliance with operating system error codes: winerror.h ln.55898;
 		// input arg is for keeping original error description i.e. that is defined by OpenGL, but the error may have WinAPI system error desc too;

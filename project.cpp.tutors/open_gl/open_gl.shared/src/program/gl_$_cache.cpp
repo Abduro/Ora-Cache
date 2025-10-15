@@ -137,7 +137,7 @@ err_code CCache::Attach (void) {
 	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
 	if ( __failed(this->Attach(shaders[i_]->Id())) ) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) shaders[i_]->Error().Print(TError::e_print::e_req)); }
-	else __trace_impt_2(pc_sz_pat_att, this->ProgId(), (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
+	else __trace_impt_2(pc_sz_pat_att, this->ProgId().Get(), (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
 	}
 
 	return this->Error();
@@ -254,7 +254,7 @@ err_code CCache::Detach (void) {
 	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
 	if ( __failed(this->Detach(shaders[i_]->Id()))) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
-	else __trace_warn_2(pc_sz_pat_att, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), this->ProgId());
+	else __trace_warn_2(pc_sz_pat_att, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), this->ProgId().Get());
 	}
 	return this->Error();
 }
@@ -338,19 +338,15 @@ err_code CCache::Load  (void) {
 	return this->Error();
 }
 
-uint32_t CCache::ProgId (void) const { return this->m_prog_id; }   
-err_code CCache::ProgId (const uint32_t _prog_id) {
-	_prog_id;
-	if (0 == _prog_id) return this->m_error <<__e_inv_arg;
-	this->m_prog_id = _prog_id;
-
-	return this->Error();
-}
+const
+CProgId& CCache::ProgId (void) const { return this->m_prog_id; }
+CProgId& CCache::ProgId (void)       { return this->m_prog_id; }
 const
 shader::CVertex& CCache::Vertex (void) const { return this->m_$_vert; }
 shader::CVertex& CCache::Vertex (void)       { return this->m_$_vert; }
 
-CCache& CCache::operator <<(const uint32_t _prog_id) { this->ProgId(_prog_id); return *this; }
+CCache& CCache::operator <<(const CProgId& _prog_id) { this->ProgId() << _prog_id; return *this; }
+
 #if (0)
 CCache&  CCache::operator +=(const uint32_t _u_shader_id) {
 	this->Attach(_u_shader_id);
