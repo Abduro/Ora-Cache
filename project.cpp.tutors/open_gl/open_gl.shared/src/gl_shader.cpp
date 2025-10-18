@@ -51,7 +51,7 @@ err_code CShader::Create (const TType _e_type) {
 		this->m_error() = CShader::Procs().Error();
 	__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	} else {
-	__trace_impt_2(_T("The shader: id=%u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	__trace_impt_2(_T("The shader: id = %u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
 	this->Src() << this->Id();
 	}
 	return this->Error()();
@@ -70,7 +70,7 @@ err_code CShader::Delete (void) {
 		return (this->m_error() << (err_code) TErrCodes::eData::eInvalid = TString().Format(_T("The ID=%u is not valid"), this->Id()));
 
 	__trace::Use_con(true);
-	__trace_warn_3(_T("The shader: id=%u, type='%s' is deleted;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	__trace_warn_3(_T("The shader: id = %u, type='%s' is deleted;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
 	this->m_id = 0;
 
 	return this->Error()();

@@ -2,7 +2,7 @@
 #define _GL_PROCS_VERTEX_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Oct-2025 at 12:10:39.867, (UTC+4), Batumi, Monday;
-	This is Ebo Pack OpenGL vertex functions' loader interface declaration file;
+	This is Ebo Pack OpenGL vertex related functions' loader interface declaration file;
 */
 #include "gl_procs_base.h"
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
@@ -15,7 +15,7 @@ namespace vertex {
 	#define GL_UNSIGNED_INT_2_10_10_10_REV  0x8368 // from glcorearb.h ; ToDo: brief desc is required;
 	#define GL_UNSIGNED_INT_10F_11F_11F_REV 0x8C3B // from glcorearb.h ; ToDo: brief desc is required;
 
-	// using enumerations instead of #defines makes easier the selection required value that is pros, but cons the cast is required;
+	// using enumerations instead of #defines makes easier the selection of required value that is pros, but cons the cast is required;
 	enum class e_att_val_int : uint32_t {
 	e_byte  = GL_BYTE , e_u_byte  = GL_UNSIGNED_BYTE ,
 	e_short = GL_SHORT, e_u_short = GL_UNSIGNED_SHORT,
@@ -31,9 +31,40 @@ namespace vertex {
 	};
 	static __inline uint32_t _i_to_f(const e_att_val_float _e_el) { return static_cast<uint32_t>(_e_el);}
 
-	class CAtt : public CBase {
+	class CArray : public CBase {
+	typedef void (__stdcall *pfn_Binding) (uint32_t _arr_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml ;
+	typedef void (__stdcall *pfn_Delete ) (int32_t _n_count, const uint32_t* _p_arrays); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteVertexArrays.xhtml ;
+	typedef void (__stdcall *pfn_Disable) (uint32_t _u_ndx);  // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
+	typedef void (__stdcall *pfn_Enable ) (uint32_t _u_ndx);
+	typedef void (__stdcall *pfn_GetIds ) (int32_t _n_count, uint32_t* _p_ids); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml ;
+	typedef int32_t (__stdcall *pfn_IsArr) (uint32_t _u_arr_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsVertexArray.xhtml ; (no ms windows doc);
+	public:
+		CArray (void); ~CArray (void) = default;
+
+		err_code Bind    (const uint32_t _arr_id); // binds the vertex array object with identifier (aka name) of the array;
+		err_code Delete  (const uint32_t _n_count, const uint32_t* _p_arrays); // deletes vertex array objects;
+		err_code Disable (const uint32_t _u_ndx);  // disables currently bound vertex array object for the operation;
+		err_code Enable  (const uint32_t _u_ndx);  // enables currently bound vertex array object for the operation;
+		err_code GetIds  (const uint32_t _n_count, uint32_t* _p_ids); // generates vertex array object identifiers (aka names) and guarantees that none of the returned names was in use immediately before the call to it ;
+		/* the excerpt from https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsVertexArray.xhtml :
+		return false is cases
+		...if array is zero, or if array is not the name of a vertex array object, or if an error occurs...
+		...if array is a name returned by glGenVertexArrays, by that has not yet been bound through a call to glBindVertexArray...
+		*/
+		bool Is_array (const uint32_t _arr_id); // determines if an identifier (aka name) corresponds to a vertex array object;
 	};
-	
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
+	// surprisingly weird documentation if above article mixes the array of attributes enabling/disabling with the same properties of an attribute itself;
+	class CAttr : public CBase {
+	typedef void (__stdcall *pfn_Disable) (uint32_t _arr_id, uint32_t _n_ndx);
+	typedef void (__stdcall *pfn_Enable ) (uint32_t _arr_id, uint32_t _n_ndx);
+	public:
+		CAttr (void); ~CAttr (void) = default;
+
+		err_code Disable (const uint32_t _arr_id, const uint32_t _n_ndx); // disables an attribute by index and updates state of the vertex array object with _arr_id ;
+		err_code Enable  (const uint32_t _arr_id, const uint32_t _n_ndx); // enables an attribute by index and updates state of the vertex array object with _arr_id ;
+	};
+
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml ;
 	class CAttPtr : public CBase {
 	typedef void (__stdcall *pfn_AttPtr)   (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, uint16_t _b_norm, int32_t _n_stride, const void* _ptr);
@@ -50,31 +81,6 @@ namespace vertex {
 		CAttPtr& operator = (const CAttPtr&) = delete; CAttPtr& operator = (CAttPtr&&) = delete;
 	};
 }
-
-	class CVertex : public CBase {
-	typedef void (__stdcall *pfn_Bind) (uint32_t _arr_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml ;
-	typedef void (__stdcall *pfn_Delete) (int32_t _n_count, const uint32_t* _p_arrays); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteVertexArrays.xhtml ;
-	typedef void (__stdcall *pfn_DisableArrAtt)(uint32_t _arr_id, uint32_t _n_ndx);
-	typedef void (__stdcall *pfn_DisableAttArr)(uint32_t _u_ndx); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
-	typedef void (__stdcall *pfn_EnableArrAtt) (uint32_t _arr_id, uint32_t _n_ndx);
-	typedef void (__stdcall *pfn_EnableAttArr) (uint32_t _u_ndx);
-	typedef void (__stdcall *pfn_GenIds) (int32_t _n_count, uint32_t* _p_ids); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml ;
-	public:
-		CVertex (void); ~CVertex (void) = default;
-
-		err_code Bind (uint32_t _arr_id); // binds the vertex array object with name array ;
-		err_code Delete (int32_t _n_count, const uint32_t* _p_arrays); // deletes vertex array objects ;
-		err_code DisableArrAtt (uint32_t _arr_id, uint32_t _n_ndx);    // disables an attribute by index and updates state of the vertex array object with _arr_id ;
-		err_code DisableAttArr (uint32_t _u_ndx);                      // disables currently bound vertex array object for the operation ;
-		err_code EnableArrAtt  (uint32_t _arr_id, uint32_t _n_ndx);    // enables an attribute by index and updates state of the vertex array object with _arr_id ;
-		err_code EnableAttArr  (uint32_t _u_ndx);                      // enables currently bound vertex array object for the operation ;
-		err_code GenerateIds   (int32_t _n_count, uint32_t* _p_ids);   // generates vertex array object names and guarantees that none of the returned names was in use immediately before the call to it ;
-
-		err_code Get_all (void) ; // gets all functions' pointers at once;
-
-	private:
-		CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;
-	};
 }}}}
 
 #endif/*_GL_PROCS_VERTEX_H_INCLUDED*/

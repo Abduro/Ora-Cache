@@ -138,7 +138,7 @@ CParam:: CParam (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"
 	CBase::m_error.Class(cs_cls, false);
 }
 // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGet.xml ;
-bool    CParam::GetBool (uint32_t _u_param_id) {
+bool    CParam::GetBool (const uint32_t _u_param_id) {
 	_u_param_id;
 	// GL_INVALID_ENUM : _u_param_id has unknown value;
 	CBase::m_error << __METHOD__ << __s_ok;
@@ -155,7 +155,7 @@ bool    CParam::GetBool (uint32_t _u_param_id) {
 	return !!u_result;
 }
 
-float   CParam::GetFloat (uint32_t _u_param_id) {
+float   CParam::GetFloat (const uint32_t _u_param_id) {
 	_u_param_id;
 	// GL_INVALID_ENUM : _u_param_id has unknown value;
 	CBase::m_error << __METHOD__ << __s_ok;
@@ -171,15 +171,15 @@ float   CParam::GetFloat (uint32_t _u_param_id) {
 
 	return f_result;
 }
-
-int32_t CParam::GetInt (uint32_t _u_param_id) {
+// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetintegerv ;
+int32_t CParam::GetInt (const uint32_t _u_param_id) {
 	_u_param_id;
 	// GL_INVALID_ENUM : _u_param_id has unknown value;
 	CBase::m_error << __METHOD__ << __s_ok;
 
 	int32_t n_result = 0;
 
-	pfn_GetFInt p_fun = reinterpret_cast<pfn_GetFInt>(CBase::Get(param_fun_names[2]));
+	pfn_GetInt p_fun = reinterpret_cast<pfn_GetInt>(CBase::Get(param_fun_names[2]));
 	if (nullptr == p_fun) {
 		return n_result;
 	}

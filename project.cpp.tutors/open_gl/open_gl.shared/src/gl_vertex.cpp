@@ -25,8 +25,3 @@ CVertex:: CVertex (void) { this->m_error >>__CLASS__<< __METHOD__<<__e_not_inite
 CVertex::~CVertex (void) {}
 
 TError&  CVertex::Error (void) const { return this->m_error; }
-
-procs::CVertex& CVertex::Procs (void) {
-	static procs::CVertex procs;
-	return procs;
-}

@@ -17,12 +17,18 @@ CScene::~CScene (void) {}
 
 TError&  CScene::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+	// the buffer must be unbound first from the arrays it was bound to;
+	if (__failed(this->Prog().Buffer().Destroy()))
+		return this->m_error = this->Prog().Buffer().Error();
 
 	if (__failed(this->Prog().Shaders().Detach()))
 		return this->m_error = this->Prog().Shaders().Error();
 
 	if (__failed(this->Prog().Shaders().Delete()))
 		return this->m_error = this->Prog().Shaders().Error();
+
+	if (__failed(this->Prog().Delete()))
+		return this->m_error = this->Prog().Error();
 
 	return this->Error();
 }
@@ -42,6 +48,9 @@ err_code CScene::Prepare (void) {
 
 	if (__failed(this->Prog().Create()))
 		return this->m_error = this->Prog().Error();
+
+	if (__failed(this->Prog().Buffer().Create()))
+		return this->m_error = this->Prog().Buffer().Error();
 
 	if (__failed(this->Prog().Shaders().Fragment().Create()))
 	    return this->m_error = this->Prog().Shaders().Fragment().Error();

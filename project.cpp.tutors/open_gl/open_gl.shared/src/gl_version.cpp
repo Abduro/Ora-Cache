@@ -95,9 +95,9 @@ bool   CVer_Att::Value(_pc_sz _p_value) {
 
 CString  CVer_Att::Print (const e_print _e_opt/* = e_print::e_all*/, const bool _b_trace/* = true*/) const {
 	_e_opt; _b_trace;
-	static _pc_sz pc_pat_a = _T("cls::[%s::%s] >> {id=%u(%s);name=%s;value=%s}");
-	static _pc_sz pc_pat_n = _T("cls::[%s] >> {id=%u(%s);name=%s;value=%s}");
-	static _pc_sz pc_pat_r = _T("id=%u(%s);name=%s;value=%s");
+	static _pc_sz pc_pat_a = _T("cls::[%s::%s] >> {id = %u(%s);name=%s;value=%s}");
+	static _pc_sz pc_pat_n = _T("cls::[%s] >> {id = %u(%s);name=%s;value=%s}");
+	static _pc_sz pc_pat_r = _T("id = %u(%s);name=%s;value=%s");
 
 	CString cs_name = this->m_name.IsEmpty() ? _T("#unset") : this->Name ();
 	CString cs_val = this->m_value.IsEmpty() ? _T("#unset") : this->Value();

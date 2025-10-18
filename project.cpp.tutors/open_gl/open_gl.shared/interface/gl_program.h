@@ -5,11 +5,12 @@
 	This is Ebo Pack OpenGL tutorials' shader program base interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_procs.h"
+#include "gl_buffer.h"
 #include "gl_logs.h"
+#include "gl_procs.h"
 #include "procs\gl_procs_prog.h"
-#include "program\gl_prog_id.h"
 #include "program\gl_$_cache.h"
+#include "program\gl_prog_id.h"
 #include "program\gl_prog_status.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
@@ -116,6 +117,9 @@ namespace program {
 		 const
 		 CAttrs& Attrs (void) const;
 		 CAttrs& Attrs (void) ;
+		 const
+		 CBuffer& Buffer (void) const;
+		 CBuffer& Buffer (void) ;
 
 		 static procs::CProg& Procs (void) ;
 		 static CString  Class (void);       // returns this class name for debug purposes;
@@ -146,6 +150,7 @@ namespace program {
 		 program::CStatus& Status (void) const;
 		 program::CStatus& Status (void) ;
 
+		 err_code Use (void);        // sets this program to be current in draw pipeline;
 		 err_code Validate (void);   // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
 
 		 CProgram& operator <<(const CProgId&);
@@ -155,6 +160,7 @@ namespace program {
 		 program::CProgId m_prog_id;
 		 mutable
 		 CError   m_error;
+		 CBuffer  m_buffer;
 		 program::CAttrs  m_attrs;
 		 program::CCache  m_shaders;
 		 program::CStatus m_status;

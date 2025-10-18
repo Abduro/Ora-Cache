@@ -130,7 +130,7 @@ err_code CCache::Attach (void) {
 		return this->Error();
 	}
 
-	static _pc_sz pc_sz_pat_att = _T("Program (id=%u) attaches '%s' shader (id=%u);\n");
+	static _pc_sz pc_sz_pat_att = _T("Program (id = %u) attaches '%s' shader (id = %u);\n");
 
 	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
 
@@ -203,7 +203,7 @@ err_code CCache::Compile (void) {
 err_code CCache::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	static _pc_sz pc_sz_pat_del = _T("'%s' shader (id=%u) is deleted;\n");
+	static _pc_sz pc_sz_pat_del = _T("'%s' shader (id = %u) is deleted;\n");
 
 	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
 
@@ -247,7 +247,7 @@ err_code CCache::Detach (void) {
 		return this->Error();
 	}
 
-	static _pc_sz pc_sz_pat_att = _T("'%s' shader (id=%u) is detached from program (id=%u);\n");
+	static _pc_sz pc_sz_pat_att = _T("'%s' shader (id = %u) is detached from program (id = %u);\n");
 
 	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
 

@@ -25,15 +25,13 @@ namespace vertex {
 		float m_coord[3]; // 0:_x; 1:_y; 2:_z;
 	};
 }
-
+	// https://stackoverflow.com/questions/11821336/what-are-vertex-array-objects ;
 	class CVertex {
 	public:
 		 CVertex (void) ;  CVertex (const CVertex&) = delete; CVertex (CVertex&&) = delete;
 		~CVertex (void) ;
 
 		 TError& Error (void) const;
-		 static
-		 procs::CVertex& Procs (void);
 
 	private:
 		 CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;

@@ -345,7 +345,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	int32_t* p_data = &p_formats;
 
 	while (n_count > 0 && !!p_formats) {
-		cs_fmt_pairs += TString().Format(_T("att #%u: id=%u;val=%u;"), n_fmt_num, &p_data[n_fmt_num + 0], &p_data[n_fmt_num + 1]);
+		cs_fmt_pairs += TString().Format(_T("att #%u: id = %u;val=%u;"), n_fmt_num, &p_data[n_fmt_num + 0], &p_data[n_fmt_num + 1]);
 		n_fmt_num += 1;
 		n_count -= 2;
 	}

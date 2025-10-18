@@ -1,8 +1,9 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Oct-2025 at 12:23:26.137, (UTC+4), Batumi, Monday;
-	This is Ebo Pack OpenGL vertex functions' loader interface implementation file;
+	This is Ebo Pack OpenGL vertex related functions' loader interface implementation file;
 */
 #include "gl_procs_vertex.h"
+#include "gl_procs.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -98,7 +99,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 				GL_INVALID_OPERATION : the size is GL_BGRA and normalized is GL_FALSE ;
 				GL_INVALID_OPERATION : zero is bound to the GL_ARRAY_BUFFER buffer object binding point and the pointer argument is not NULL ;
 			*/
-			switch (CErr_ex().Get_last(false)) {
+			switch (CErr_ex().Get_code()) {
 			case GL_INVALID_ENUM :
 			case GL_INVALID_VALUE: {
 					this->m_error = CInput_Args().Check(_u_ndx, _u_size, _u_type, _n_stride);
@@ -141,6 +142,246 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 using namespace ex_ui::draw::open_gl::_impl;
 
+#define __gl_arr_bound 0x8894 // GL_ARRAY_BUFFER_BINDING;
+#define __gl_max_attrs 0x8869 // GL_MAX_VERTEX_ATTRIBS from glcorearb.h ;
+
+static _pc_sz arr_fun_names[] = {
+	_T("glBindVertexArray"), _T("glDeleteVertexArrays"), _T("glDisableVertexAttribArray"), _T("glEnableVertexAttribArray"), _T("glGenVertexArrays"), _T("glIsVertexArray")
+};
+enum class e_arr_fun_ndx : uint32_t {
+	e_bind = 0x0, e_delete = 0x1, e_disable = 0x2, e_enable = 0x3, e_get_ids = 0x4, e_is_array = 0x5,
+};
+
+vertex::CArray:: CArray (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml ;
+err_code vertex::CArray::Bind (const uint32_t _arr_id) {
+	_arr_id;
+	// GL_INVALID_OPERATION : _arr_id is not zero or is the same with previously returned from a call to glGenVertexArrays ;
+	CBase::m_error << __METHOD__ << __s_ok;
+#if (0)
+	if (0 == _arr_id) // zero (0) is used for unbind operation;
+		return CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_arr_id' (%u) is not valid"), _arr_id);
+#endif
+	pfn_Binding p_fun = reinterpret_cast<pfn_Binding>(CBase::Get(arr_fun_names[(uint32_t)e_arr_fun_ndx::e_bind]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_arr_id);
+
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_OPERATION : {
+			procs::CParam procs;
+			const int32_t n_result = procs.GetInt(__gl_arr_bound);
+			if (procs.Error())
+				return CBase::m_error = procs.Error();
+			if (static_cast<int32_t>(_arr_id) == n_result)
+				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the array of '_arr_id' (%u) is already bound"), _arr_id);
+			else
+				CBase::m_error << (err_code) TErrCodes::eExecute::eInternal = TString().Format(_T("#__e_undef_exception: code is %d"), GL_INVALID_OPERATION);
+		} break;
+	default:;
+	}
+	return CBase::Error();
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteVertexArrays.xhtml ;
+err_code vertex::CArray::Delete (uint32_t _n_count, const uint32_t* _p_arrays) {
+	_n_count; _p_arrays;
+	// ToDo: what does it occur if _p_arrays equal to nullptr?
+	// GL_INVALID_VALUE : _n_count is negative; it cannot occur because the '_n_count' data type is intentionally changed to 'unsigned';
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Delete p_fun = reinterpret_cast<pfn_Delete>(CBase::Get(arr_fun_names[(uint32_t)e_arr_fun_ndx::e_delete]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_n_count, _p_arrays);
+	// useless, but is saved for the implementation style only;
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_VALUE: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_count' has %u invalid value"), _n_count); break;
+	default:;
+	}
+	return CBase::Error();
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
+err_code vertex::CArray::Disable (const uint32_t _u_ndx) {
+	_u_ndx;
+	/* the error codes:
+	GL_INVALID_OPERATION : no vertex array object is bound;
+	GL_INVALID_OPERATION : '_u_ndx' does not refer to existing vertex array object;
+	GL_INVALID_VALUE     : '_u_ndx' is greater than or equal to GL_MAX_VERTEX_ATTRIBS;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Disable p_fun = reinterpret_cast<pfn_Disable>(CBase::Get(arr_fun_names[(uint32_t)e_arr_fun_ndx::e_disable]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_u_ndx);
+
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_OPERATION : {
+			procs::CParam procs;
+			const int32_t n_result = procs.GetInt(__gl_arr_bound);
+			if (procs.Error())
+				return CBase::m_error = procs.Error();
+			if (0 == n_result)
+				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the object by '_u_ndx' (%u) is not bound"), _u_ndx);
+		} break;
+	case GL_INVALID_VALUE : 
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
+// ToDo: it is mostly the copy and paste, requires review this approach due to it is not good;
+err_code vertex::CArray::Enable (const uint32_t _u_ndx) {
+	_u_ndx;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Enable p_fun = reinterpret_cast<pfn_Enable>(CBase::Get(arr_fun_names[(uint32_t)e_arr_fun_ndx::e_enable]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_u_ndx);
+
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_OPERATION : {
+			procs::CParam procs;
+			const int32_t n_result = procs.GetInt(__gl_arr_bound);
+			if (procs.Error())
+				return CBase::m_error = procs.Error();
+			if (0 == n_result)
+				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the object by '_u_ndx' (%u) is not bound"), _u_ndx);
+		} break;
+	case GL_INVALID_VALUE : 
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml ;
+err_code vertex::CArray::GetIds (const uint32_t _n_count, uint32_t* _p_ids) {
+	_n_count; _p_ids;
+	// GL_INVALID_VALUE is generated if _n_count is negative ;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_GetIds p_fun = reinterpret_cast<pfn_GetIds>(CBase::Get(arr_fun_names[(uint32_t)e_arr_fun_ndx::e_get_ids]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_n_count, _p_ids);
+	// useless because the data type of the '_n_count' is intentionally changed to 'unsigned';
+	switch(CErr_ex().Get_code()) {
+	case GL_INVALID_VALUE : 
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_n_count' (%d) has negative value"), _n_count); break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsVertexArray.xhtml ;
+bool vertex::CArray::Is_array (const uint32_t _arr_id) {
+	_arr_id;
+	CBase::m_error <<__METHOD__<<__s_ok;
+
+	if (0 == _arr_id)
+		return false == (CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_arr_id' (%u) is not valid"), _arr_id)).Is();
+
+	pfn_IsArr p_fun = reinterpret_cast<pfn_IsArr>(CBase::Get(arr_fun_names[(uint32_t)e_arr_fun_ndx::e_is_array]));
+	if (nullptr == p_fun) {
+		return false;
+	}
+
+	int32_t n_result = p_fun(_arr_id);
+	if (!!n_result)
+		return true;
+	// this function does not set the error code in case of its failure, but returns 'false' only;
+	// it's necessary to check the array object of which '_arr_id' refers to, otherwise the input array identifier is not valid;
+	procs::CParam procs;
+	n_result = procs.GetInt(__gl_arr_bound); // https://community.khronos.org/t/get-the-currently-bound-vao/69025/2 ;
+	if (procs.Error()) {
+		CBase::m_error = procs.Error(); return false;
+	}
+	if (n_result != static_cast<int32_t>(_arr_id))
+		CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the object '_arr_id' (%u) refers to is not bound"), _arr_id);
+	
+	return n_result == static_cast<int32_t>(_arr_id);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+static _pc_sz attr_fun_names[] = {
+	_T("glDisableVertexArrayAttrib"), _T("glEnableVertexArrayAttrib"),
+};
+enum class e_attr_fun_ndx : uint32_t {
+	e_disable = 0x0, e_enable = 0x1,
+};
+
+vertex::CAttr:: CAttr (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+// basically it's a copy of disabling the attribute array, but for this version of the implementation it's fine;
+err_code vertex::CAttr::Disable (const uint32_t _arr_id, const uint32_t _u_ndx) {
+	_arr_id; _u_ndx;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Disable p_fun = reinterpret_cast<pfn_Disable>(CBase::Get(attr_fun_names[(uint32_t)e_attr_fun_ndx::e_disable]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_arr_id, _u_ndx);
+	// the same check of error code is kept as it was made for disabling an attribute's array;
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_OPERATION : {
+			procs::CParam procs;
+			const int32_t n_result = procs.GetInt(__gl_arr_bound);
+			if (procs.Error())
+				return CBase::m_error = procs.Error();
+			if (0 == n_result)
+				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the array of '_arr_id' (%u) is not bound"), _arr_id);
+		} break;
+	case GL_INVALID_VALUE : 
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+// basically it's a copy of enabling the attribute array, but for this version of the implementation it's fine;
+err_code vertex::CAttr::Enable (const uint32_t _arr_id, const uint32_t _u_ndx) {
+	_arr_id; _u_ndx;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Enable p_fun = reinterpret_cast<pfn_Enable>(CBase::Get(attr_fun_names[(uint32_t)e_attr_fun_ndx::e_enable]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_arr_id, _u_ndx);
+	// the same check of error code is kept as it was made for enabling an attributes' array;
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_OPERATION : {
+			procs::CParam procs;
+			const int32_t n_result = procs.GetInt(__gl_arr_bound);
+			if (procs.Error())
+				return CBase::m_error = procs.Error();
+			if (0 == n_result)
+				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the array of '_arr_id' (%u) is not bound"), _arr_id);
+		} break;
+	case GL_INVALID_VALUE : 
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 static _pc_sz att_ptr_fun_names[] = {
 	_T("glVertexAttribPointer"), _T("glVertexAttribIPointer"), _T("glVertexAttribLPointer")
 };
@@ -165,7 +406,7 @@ err_code CAttPtr::Get (
 	if (CBase::Error())
 		return CBase::Error();
 
-	p_fun(_u_ndx, (int32_t)_u_size, _u_type, int32_t(_b_normalized ? 1 : 0), _u_stride, (const void*)(const LONG_PTR)_u_offset); // ToDo: conversion to void* must be re-viewed;
+	p_fun(_u_ndx, (int32_t)_u_size, _u_type, int32_t(_b_normalized ? 1 : 0), _u_stride, (const void*)(const LONG_PTR)_u_offset);
 
 	CBase::m_error = CErr_Handler().Catch(_u_ndx, _u_size, _u_type, _b_normalized, _u_stride, _u_offset);
 
@@ -187,7 +428,7 @@ err_code CAttPtr::Get_I (const uint32_t _u_ndx, const uint32_t _u_size, const ui
 	if (CBase::Error())
 		return CBase::Error();
 
-	p_fun(_u_ndx, (int32_t)_u_size, _u_type, _u_stride, (const void*)(const LONG_PTR)_u_offset); // ToDo: conversion to void* must be re-viewed;
+	p_fun(_u_ndx, (int32_t)_u_size, _u_type, _u_stride, (const void*)(const LONG_PTR)_u_offset);
 
 	CBase::m_error = CErr_Handler().Catch(_u_ndx, _u_size, _u_type, false, _u_stride, _u_offset);
 
@@ -209,132 +450,9 @@ err_code CAttPtr::Get_L (const uint32_t _u_ndx, const uint32_t _u_size, const ui
 	if (CBase::Error())
 		return CBase::Error();
 
-	p_fun(_u_ndx, (int32_t)_u_size, _u_type, _u_stride, (const void*)(const LONG_PTR)_u_offset); // ToDo: conversion to void* must be re-viewed;
+	p_fun(_u_ndx, (int32_t)_u_size, _u_type, _u_stride, (const void*)(const LONG_PTR)_u_offset);
 
 	CBase::m_error = CErr_Handler().Catch(_u_ndx, _u_size, _u_type, false, _u_stride, _u_offset);
-
-	return CBase::Error();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-static _pc_sz vtx_fun_names[] = {
-	_T("glBindVertexArray"), _T("glDeleteVertexArrays"),
-	_T("glDisableVertexAttribArray"), _T("glDisableVertexArrayAttrib"), _T("glEnableVertexAttribArray"), _T("glEnableVertexArrayAttrib"), _T("glGenVertexArrays")
-};
-
-CVertex:: CVertex (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
-
-// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindVertexArray.xhtml ;
-err_code CVertex::Bind (uint32_t _arr_id) {
-	_arr_id;
-	// GL_INVALID_OPERATION : _arr_id is not zero or is the same with previously returned from a call to glGenVertexArrays ;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_Bind p_fun = reinterpret_cast<pfn_Bind>(CBase::Get(vtx_fun_names[3]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_arr_id);
-
-	return CBase::Error();
-}
-// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteVertexArrays.xhtml ;
-err_code CVertex::Delete (int32_t _n_count, const uint32_t* _p_arrays) {
-	_n_count; _p_arrays;
-	// GL_INVALID_VALUE : _n_count is negative;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_Delete p_fun = reinterpret_cast<pfn_Delete>(CBase::Get(vtx_fun_names[4]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_n_count, _p_arrays);
-
-	return CBase::Error();
-}
-/*
-https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
-the error codes that may be returned by these functions:
-	GL_INVALID_OPERATION is generated by glEnableVertexAttribArray and glDisableVertexAttribArray if no vertex array object is bound.
-	GL_INVALID_OPERATION is generated by glEnableVertexArrayAttrib and glDisableVertexArrayAttrib if vaobj is not the name of an existing vertex array object.
-	GL_INVALID_VALUE is generated if '_u_ndx' is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
-*/
-err_code CVertex::DisableAttArr (uint32_t _u_ndx) {
-	_u_ndx;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_DisableAttArr p_fun = reinterpret_cast<pfn_DisableAttArr>(CBase::Get(vtx_fun_names[5]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_u_ndx);
-
-	return CBase::Error();
-}
-
-err_code CVertex::DisableArrAtt (uint32_t _arr_id, uint32_t _u_ndx) {
-	_arr_id; _u_ndx;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_DisableArrAtt p_fun = reinterpret_cast<pfn_DisableArrAtt>(CBase::Get(vtx_fun_names[6]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_arr_id, _u_ndx);
-
-	return CBase::Error();
-}
-
-err_code CVertex::EnableAttArr (uint32_t _u_ndx) {
-	_u_ndx;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_EnableAttArr p_fun = reinterpret_cast<pfn_EnableAttArr>(CBase::Get(vtx_fun_names[7]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_u_ndx);
-
-	return CBase::Error();
-}
-
-err_code CVertex::EnableArrAtt (uint32_t _arr_id, uint32_t _u_ndx) {
-	_arr_id; _u_ndx;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_EnableArrAtt p_fun = reinterpret_cast<pfn_EnableArrAtt>(CBase::Get(vtx_fun_names[8]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_arr_id, _u_ndx);
-
-	return CBase::Error();
-}
-// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml ;
-err_code CVertex::GenerateIds (int32_t _n_count, uint32_t* _p_ids) {
-	_n_count; _p_ids;
-	// GL_INVALID_VALUE is generated if _n_count is negative ;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	pfn_GenIds p_fun = reinterpret_cast<pfn_GenIds>(CBase::Get(vtx_fun_names[9]));
-	if (nullptr == p_fun)
-		return CBase::Error();
-
-	p_fun(_n_count, _p_ids);
-
-	return CBase::Error();
-}
-
-err_code CVertex::Get_all (void) {
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	for (uint32_t i_ = 0; i_ < _countof(vtx_fun_names); i_++) {
-		if (nullptr == CBase::Get(vtx_fun_names[i_]))
-			break;
-	}
 
 	return CBase::Error();
 }

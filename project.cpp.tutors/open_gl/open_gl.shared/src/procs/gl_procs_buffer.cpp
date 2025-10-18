@@ -65,7 +65,7 @@ err_code CBuffer::Bind (const uint32_t _u_tgt_id, const uint32_t _u_buf_id) {
 
 	p_fun(_u_tgt_id, _u_buf_id);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_tgt_id' (%u) is not accepted"), _u_tgt_id); break;
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_u_buff_id' (%u) is not valid"), _u_buf_id); break;
 	default:;
@@ -91,7 +91,7 @@ err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const
 
 	p_fun(_u_tgt_id, _n_size, _p_data, _u_usage);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM : {
 			if (false){}
 			else if (false == ::is_bind_target(_u_tgt_id)) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_tgt: '_u_tgt_id' (%u) is not accepted"), _u_tgt_id);
@@ -99,7 +99,7 @@ err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: #undef error"));
 		} break;
 	case GL_OUT_OF_MEMORY : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_no_mem: creating data store with size (%I64d) failed"), _n_size); break;
-	case GL_INVALID_OPERATION : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: bound reserved buffer (id=%d)"), 0); break;
+	case GL_INVALID_OPERATION : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: bound reserved buffer (id =  %d)"), 0); break;
 	case GL_INVALID_VALUE : {
 			if (0 > _n_size) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_size' (%I64d) has invalid value"), _n_size);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: #undef error"));
@@ -126,7 +126,7 @@ err_code CBuffer::Delete (const int32_t _n_count, const uint32_t* _p_buffers) {
 
 	p_fun(_n_count, _p_buffers);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_count' (%d) has invalid value"), _n_count); break;
 	default:;
 	}
@@ -150,7 +150,7 @@ err_code CBuffer::GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids) {
 
 	p_fun(_n_count, _p_buf_ids);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_count' (%d) has invalid value"), _n_count); break;
 	default:;
 	}
@@ -172,7 +172,9 @@ bool CBuffer::Is_Buffer (const uint32_t _u_buf_id) {
 		return false;
 
 	const int32_t n_result = p_fun(_u_buf_id);
-
+	/* the excerpt from https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsBuffer.xhtml :
+	A name returned by glGenBuffers, but not yet associated with a buffer object by calling glBindBuffer, is not the name of a buffer object;
+	*/
 	return !!n_result;
 }
 
@@ -197,7 +199,7 @@ err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_size, cons
 
 	p_fun(_u_buf_id, _n_size, _p_data, _u_usage);
 
-	switch (CErr_ex().Get_last(false)) {
+	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM : {
 			if (false == ::is_buf_usage(_u_usage)) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_use: '_u_usage' (%u) is not acceptad"), _u_usage);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: #undef error"));

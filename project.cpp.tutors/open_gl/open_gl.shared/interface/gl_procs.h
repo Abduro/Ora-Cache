@@ -42,18 +42,19 @@ namespace procs {
 	};
 
 	// https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGet.xml ; this document contains all parameter identifiers that is recognized by glGet*();
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetintegerv ;
 	class CParam : public CBase {
 	typedef void   (__stdcall *pfn_GetBool) (uint32_t _u_param_id, uint32_t* _p_result);
 	typedef void   (__stdcall *pfn_GetFloat) (uint32_t _u_param_id, float* _p_result);
-	typedef void   (__stdcall *pfn_GetFInt) (uint32_t _u_param_id, int32_t* _p_result);
+	typedef void   (__stdcall *pfn_GetInt) (uint32_t _u_param_id, int32_t* _p_result);
 	public:
 		CParam (void); ~CParam (void) = default;
 
 		err_code Get_all (void) ;
 
-		bool    GetBool (uint32_t _u_param_id);  // returns parameter value as boolean ;
-		float   GetFloat (uint32_t _u_param_id); // returns parameter value as float number;
-		int32_t GetInt (uint32_t _u_param_id);   // returns parameter value as integer ;
+		bool    GetBool  (const uint32_t _u_param_id); // returns parameter value as boolean ;
+		float   GetFloat (const uint32_t _u_param_id); // returns parameter value as float number;
+		int32_t GetInt   (const uint32_t _u_param_id); // returns parameter value as integer ;
 
 	private:
 		CParam& operator = (const CParam&) = delete; CParam& operator = (CParam&&) = delete;

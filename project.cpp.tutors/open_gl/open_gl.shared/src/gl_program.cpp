@@ -115,8 +115,8 @@ err_code CAttrs::Bind (void) {
 	program::CStatus status(this->ProgId());
 
 	if (status.Is_linked()) {
-		this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(_T("The program (id=%u) is not linked;\n"), this->ProgId().Get());
-		__trace_warn_2(_T("The program (id=%u) is linked; binding has no effect;\n"), this->ProgId().Get());
+		this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(_T("The program (id = %u) is not linked;\n"), this->ProgId().Get());
+		__trace_warn_2(_T("The program (id = %u) is linked; binding has no effect;\n"), this->ProgId().Get());
 	}
 
 	static _pc_sz pc_sz_pat_ndx = _T("Binding attr '%s' name to ndx = %d succeeded;\n");
@@ -148,7 +148,7 @@ err_code CAttrs::Bound (void) {
 			__trace_err_2(_T("%s\n"), (_pc_sz) status.Error().Print(TError::e_print::e_req));
 			return this->Error();
 		}
-		this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(_T("The program (id=%u) is not linked;\n"), this->ProgId().Get());
+		this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(_T("The program (id = %u) is not linked;\n"), this->ProgId().Get());
 		__trace_warn_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 		return this->Error();
 	}
@@ -227,6 +227,9 @@ procs::CProg& CProgram::Procs (void) {
 const
 CAttrs&   CProgram::Attrs (void) const { return m_attrs; }
 CAttrs&   CProgram::Attrs (void)       { return m_attrs; }
+const
+CBuffer&  CProgram::Buffer (void) const { return this->m_buffer; }
+CBuffer&  CProgram::Buffer (void)       { return this->m_buffer; }
 
 CString   CProgram::Class (void) { return __CLASS__; }
 
@@ -290,6 +293,7 @@ bool CProgram::Is_valid (void) const {
 
 bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	_u_prog_id; _err;
+#if (0)
 	static _pc_sz p_sz_pat_err = _T("'_u_prog_id' (%u) is invalid");
 
 	if (0 == _u_prog_id) {
@@ -306,14 +310,16 @@ bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	else if (_u_prog_id != n_curr_prog) {
 		_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id);
 	}
-
 	return false == _err.Is();
+#else
+	return CProgId::Is_valid(_u_prog_id, _err);
+#endif
 }
 
 err_code CProgram::Link (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
-	static _pc_sz pc_sz_pat_lnk = _T("The program (id=%u) is linked;\n");
+	static _pc_sz pc_sz_pat_lnk = _T("The program (id = %u) is linked;\n");
 
 	CStatus prog_status(this->Id());
 	CLinker linker(this->Id());
@@ -327,7 +333,7 @@ err_code CProgram::Link (void) {
 	if ( prog_status.Error() ) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) prog_status.Error().Print(TError::e_print::e_req));}
 	else {
-		__trace_info_2(_T("Program (id=%u) link status is '%s';\n"), linker.ProgId(), TString().Bool(b_linked));
+		__trace_info_2(_T("Program (id = %u) link status is '%s';\n"), linker.ProgId(), TString().Bool(b_linked));
 		if (false == b_linked) {
 			program::CLog log;
 			if (__failed( log.Set(this->Id()))) {
@@ -348,6 +354,20 @@ const
 program::CStatus& CProgram::Status (void) const { return this->m_status; }
 program::CStatus& CProgram::Status (void)       { return this->m_status; }
 
+ err_code CProgram::Use (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Status().Is_current()) {
+		this->m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the program (id = %u) is already used"), this->Id()());
+		return this->Error();
+	}
+
+	if (__failed(CProgram::Procs().Use(this->Id()())))
+		this->m_error = CProgram::Procs().Error();
+
+	return this->Error();
+ }
+
 err_code CProgram::Validate (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
@@ -357,7 +377,7 @@ err_code CProgram::Validate (void) {
 	    __trace_err_2(_T("%s\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req));
 		this->m_error = procs.Error();
 	}
-	else __trace_info_2(_T("Program (id=%u) is validated;\n"), this->Id().Get());
+	else __trace_info_2(_T("Program (id = %u) is validated;\n"), this->Id().Get());
 	return this->Error();
 }
 

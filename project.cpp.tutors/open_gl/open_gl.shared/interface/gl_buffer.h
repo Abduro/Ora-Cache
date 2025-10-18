@@ -17,6 +17,9 @@ namespace data {}
 		TError&  Error (void) const;
 		uint32_t Id (void) const;
 		static
+		bool  Is_bound (const uint32_t _buffer_id, CError&);
+		bool  Is_bound (void) const;
+		static
 		bool  Is_valid (const uint32_t _buffer_id, CError&);
 		bool  Is_valid (void) const; // checks the reference of the buffer identifier to buffer object; in case of failure the error status is updated;
 
