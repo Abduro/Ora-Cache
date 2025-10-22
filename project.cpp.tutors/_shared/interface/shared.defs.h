@@ -30,10 +30,24 @@ namespace shared { namespace defs {
 	CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
 #endif
 
+	class CFormat_Spec {
+	public:
+		enum _spec : uint32_t {
+			e_decimal    , // %f, format float number as is (default) ;
+			e_scientific , // %e, for example, 1.500000e+00;
+			e_hex        , // %a, for example, 0x1;
+		};
+	};
+
+	typedef CFormat_Spec::_spec t_fmt_spec;
+
 	class CString_Ex : public CString { typedef CString TBase;
 	public:
-		_pc_sz Bool (const bool) ; // sets this string value to text: false or true;
-		_pc_sz Format(_pc_sz _p_pattern, ...);
+		_pc_sz Bool (const bool) ; // sets this string value to text: 'false' or 'true';
+		_pc_sz Dword (dword) ;     // sets this string to unsigned long value;
+		_pc_sz Float(float, t_fmt_spec = t_fmt_spec::e_decimal); // https://en.cppreference.com/w/cpp/io/c/fprintf ;
+		_pc_sz Format (_pc_sz _p_pattern, ...);
+		_pc_sz Long (long) ;       // sets this string to long value;
 	};
 	// https://en.wikipedia.org/wiki/Fixed-point_arithmetic ;
 	bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold = 0.0000001f);

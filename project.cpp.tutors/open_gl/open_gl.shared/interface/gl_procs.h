@@ -61,4 +61,8 @@ namespace procs {
 	};
 }}}}
 
+typedef ex_ui::draw::open_gl::procs::CParam TParam;
+
+TParam& __get_procs_param (void);
+
 #endif/*_GL_PROCS_H_INCLUDED*/

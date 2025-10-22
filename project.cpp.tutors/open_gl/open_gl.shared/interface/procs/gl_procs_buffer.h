@@ -6,22 +6,49 @@
 */
 #include "gl_procs_base.h"
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGet.xhtml ;
+	enum class e_bind_state : uint32_t {
+	/* alias     | value    | OpenGL symbolic definition (aka name)  | target object identifier ;
+	-------------+----------+----------------------------------------+--------------------------*/
+	e_array      = 0x8894, // GL_ARRAY_BUFFER_BINDING                | GL_ARRAY_BUFFER;
+	e_counter    = 0x92C1, // GL_ATOMIC_COUNTER_BUFFER_BINDING       |
+	e_draw_indir = 0x8F43, // GL_DRAW_INDIRECT_BUFFER_BINDING        |
+	e_draw_frame = 0x8CA6, // GL_DRAW_FRAMEBUFFER_BINDING            | GL_DRAW_FRAMEBUFFER;
+	e_disp       = 0x90EF, // GL_DISPATCH_INDIRECT_BUFFER_BINDING    | GL_DISPATCH_INDIRECT_BUFFER;
+	e_element    = 0x8895, // GL_ELEMENT_ARRAY_BUFFER_BINDING        | GL_ELEMENT_ARRAY_BUFFER;
+	e_pack       = 0x88ED, // GL_PIXEL_PACK_BUFFER_BINDING           | GL_PIXEL_PACK_BUFFER;
+	e_pipeline   = 0x825A, // GL_PROGRAM_PIPELINE_BINDING            | returns the identifier of the currently bound program pipeline object;
+	e_read       = 0x8F36, // GL_COPY_READ_BUFFER_BINDING            |
+	e_read_frame = 0x8CAA, // GL_READ_FRAMEBUFFER_BINDING            | GL_READ_FRAMEBUFFER;
+	e_render     = 0x8CA7, // GL_RENDERBUFFER_BINDING                | GL_RENDERBUFFER;
+	e_sampler    = 0x8919, // GL_SAMPLER_BINDING                     | returns the identifier of the sampler object currently bound to the active texture unit;
+	e_storage    = 0x90D3, // GL_SHADER_STORAGE_BUFFER_BINDING       | GL_SHADER_STORAGE_BUFFER;
+	e_trans      = 0x8C8F, // GL_TRANSFORM_FEEDBACK_BUFFER_BINDING   |
+	e_uniform    = 0x8A28, // GL_UNIFORM_BUFFER_BINDING              | GL_UNIFORM_BUFFER;
+	e_unpack     = 0x88EF, // GL_PIXEL_UNPACK_BUFFER_BINDING         | GL_PIXEL_UNPACK_BUFFER;
+	e_vertices   = 0x85B5, // GL_VERTEX_ARRAY_BINDING                | returns the identifier of the vertex array object currently bound to the context;
+	e_write      = 0x8F37, // GL_COPY_WRITE_BUFFER_BINDING           |
+	};
+
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml ;
 	enum class e_bind_targets : uint32_t {
-	e_array    = 0x8892, // GL_ARRAY_BUFFER; a vertex attributes;
-	e_counter  = 0x92C0, // GL_ATOMIC_COUNTER_BUFFER; atomic counter storage; ver: 4.2 or greater;
-	e_read     = 0x8F36, // GL_COPY_READ_BUFFER; buffer copy source;
-	e_write    = 0x8F37, // GL_COPY_WRITE_BUFFER; buffer copy destination;
-	e_disp     = 0x90EE, // GL_DISPATCH_INDIRECT_BUFFER; indirect compute dispatch commands; ver: 4.3 or greater;
-	e_draw     = 0x8F3F, // GL_DRAW_INDIRECT_BUFFER; indirect command arguments;
-	e_el_arr   = 0x8893, // GL_ELEMENT_ARRAY_BUFFER; vertex array indices;
-	e_pxl_pk   = 0x88EB, // GL_PIXEL_PACK_BUFFER; pixel read target;
-	e_pxl_unpk = 0x88EC, // GL_PIXEL_UNPACK_BUFFER; texture data source;
-	e_query    = 0x9192, // GL_QUERY_BUFFER; query result buffer; ver: 4.4 or greater;
-	e_$_stg    = 0x90D2, // GL_SHADER_STORAGE_BUFFER; read-write storage for shaders; ver: 4.3 or greater;
-	e_texture  = 0x8C2A, // GL_TEXTURE_BUFFER; texture data buffer;
-	e_trans    = 0x8C8E, // GL_TRANSFORM_FEEDBACK_BUFFER; transform feedback buffer;
-	e_uniform  = 0x8A11, // GL_UNIFORM_BUFFER; uniform block storage;
+	/* alias     | value    | OpenGL symbolic definition (aka name)  | OpenGL ver. | Description ;
+	-------------+----------+----------------------------------------+-------------+-------------*/
+	e__undef     = 0x0000, // no target is set                       |             |
+	e_array      = 0x8892, // GL_ARRAY_BUFFER                        |             | a vertex attributes;
+	e_counter    = 0x92C0, // GL_ATOMIC_COUNTER_BUFFER               |   >= 4.2    | atomic counter storage;
+	e_read       = 0x8F36, // GL_COPY_READ_BUFFER                    |   >= 3.1    | buffer copy source;
+	e_write      = 0x8F37, // GL_COPY_WRITE_BUFFER                   |             | buffer copy destination;
+	e_disp       = 0x90EE, // GL_DISPATCH_INDIRECT_BUFFER            |   >= 4.3    | indirect compute dispatch commands;
+	e_draw       = 0x8F3F, // GL_DRAW_INDIRECT_BUFFER                |             | indirect command arguments;
+	e_el_arr     = 0x8893, // GL_ELEMENT_ARRAY_BUFFER                |             | vertex array indices;
+	e_pxl_pk     = 0x88EB, // GL_PIXEL_PACK_BUFFER                   |             | pixel read target;
+	e_pxl_unpk   = 0x88EC, // GL_PIXEL_UNPACK_BUFFER                 |             | texture data source;
+	e_query      = 0x9192, // GL_QUERY_BUFFER                        |   >= 4.4    | query result buffer;
+	e_$_stg      = 0x90D2, // GL_SHADER_STORAGE_BUFFER               |   >= 4.3    | read-write storage for shaders;
+	e_texture    = 0x8C2A, // GL_TEXTURE_BUFFER                      |   >= 3.1    | texture data buffer;
+	e_trans      = 0x8C8E, // GL_TRANSFORM_FEEDBACK_BUFFER           |             | transform feedback buffer;
+	e_uniform    = 0x8A11, // GL_UNIFORM_BUFFER                      |   >= 3.1    | uniform block storage;
 	};
 
 	bool is_bind_target(const uint32_t _u_tgt_type);
@@ -41,7 +68,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	e_stream_read = 0x88E1, // GL_STREAM_READ ;
 	e_stream_copy = 0x88E2, // GL_STREAM_COPY ;
 	e_static_draw = 0x88E4, // GL_STATIC_DRAW ;
-	e_static_read = 0x88E5, // GL_STATIC_READ ;
+	e_static_read = 0x88E5, // GL_STATIC_READ ; 
 	e_static_copy = 0x88E6, // GL_STATIC_COPY ;
 	e_dyna_draw   = 0x88E8, // GL_DYNAMIC_DRAW;
 	e_dyna_read   = 0x88E9, // GL_DYNAMIC_READ;
@@ -65,7 +92,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	public:
 		CBuffer (void); ~CBuffer (void) = default;
 
-		err_code Bind (const uint32_t _u_tgt_id, const uint32_t _u_buf_id); // binds a buffer object to the specified buffer binding point ;
+		err_code Bind (const uint32_t _u_tgt_id, const uint32_t _u_buf_id); // binds a buffer object to the specified point ;
 		err_code Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const void* _p_data, const uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
 		err_code Delete (const int32_t  _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
 		err_code GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids); // returns _n_count buffer object names in _p_names array ;

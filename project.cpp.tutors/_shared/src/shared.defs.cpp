@@ -88,6 +88,23 @@ _pc_sz  CString_Ex::Bool  (const bool _b_value) {
 	return (_pc_sz)*this;
 }
 
+_pc_sz  CString_Ex::Dword(dword _u_value) {
+	_u_value;
+	TBase::Format(_T("%u"), _u_value);
+	return (_pc_sz)*this;
+}
+
+_pc_sz  CString_Ex::Float (float _f_value, t_fmt_spec _spec) {
+	_f_value; _spec;
+
+//	https://stackoverflow.com/questions/45068641/c-format-code-for-positive-and-negative-float-numbers ;
+	_pc_sz lp_sz_fmt = (t_fmt_spec::e_hex == _spec ? _T("%a") : (t_fmt_spec::e_scientific == _spec ? _T("%+e") : _T("%+f")));
+
+	TBase::Format(lp_sz_fmt, _f_value);
+	
+	return (_pc_sz)*this;
+}
+
 _pc_sz  CString_Ex::Format (_pc_sz _p_pattern, ...) {
 	_p_pattern;
 	if (nullptr == _p_pattern || 0 == ::lstrlen(_p_pattern)) {
@@ -99,6 +116,12 @@ _pc_sz  CString_Ex::Format (_pc_sz _p_pattern, ...) {
 	TBase::FormatV(_p_pattern, args);
 	va_end (args);
 	return TBase::GetString();
+}
+
+_pc_sz  CString_Ex::Long  (long _l_value) {
+	_l_value;
+	TBase::Format(_T("%d"), _l_value);
+	return (_pc_sz)*this;
 }
 
 bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold) {

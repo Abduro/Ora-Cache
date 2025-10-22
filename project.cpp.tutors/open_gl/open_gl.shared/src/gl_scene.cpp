@@ -15,8 +15,17 @@ using namespace ex_ui::draw::open_gl;
 CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CScene::~CScene (void) {}
 
+const
+vertex::CArray&  CScene::Array (void) const { return this->m_array; }
+vertex::CArray&  CScene::Array (void)       { return this->m_array; }
+
 TError&  CScene::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Array().Unbind()))
+		return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Delete()))
+		return this->m_error = this->Array().Error();
 	// the buffer must be unbound first from the arrays it was bound to;
 	if (__failed(this->Prog().Buffer().Destroy()))
 		return this->m_error = this->Prog().Buffer().Error();
@@ -46,17 +55,19 @@ err_code CScene::Prepare (void) {
 	else
 		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
 
+	if (__failed(this->Array().Create()))
+		return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Bind()))
+		return this->m_error = this->Array().Error();
+
 	if (__failed(this->Prog().Create()))
 		return this->m_error = this->Prog().Error();
 
 	if (__failed(this->Prog().Buffer().Create()))
 		return this->m_error = this->Prog().Buffer().Error();
 
-	if (__failed(this->Prog().Shaders().Fragment().Create()))
-	    return this->m_error = this->Prog().Shaders().Fragment().Error();
-
-	if (__failed(this->Prog().Shaders().Vertex().Create()))
-	    return this->m_error = this->Prog().Shaders().Vertex().Error();
+	if (__failed(this->Prog().Shaders().Create()))
+	    return this->m_error = this->Prog().Shaders().Error();
 
 	if (__failed(this->Prog().Shaders().Load()))
 		return this->m_error = this->Prog().Shaders().Error();

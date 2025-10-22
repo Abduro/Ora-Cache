@@ -41,7 +41,7 @@ namespace vertex {
 	public:
 		CArray (void); ~CArray (void) = default;
 
-		err_code Bind    (const uint32_t _arr_id); // binds the vertex array object with identifier (aka name) of the array;
+		err_code Bind    (const uint32_t _arr_id); // binds the vertex array object with identifier (aka name) of the array; in case of _arr_id == 0, unbound process is initiated;
 		err_code Delete  (const uint32_t _n_count, const uint32_t* _p_arrays); // deletes vertex array objects;
 		err_code Disable (const uint32_t _u_ndx);  // disables currently bound vertex array object for the operation;
 		err_code Enable  (const uint32_t _u_ndx);  // enables currently bound vertex array object for the operation;

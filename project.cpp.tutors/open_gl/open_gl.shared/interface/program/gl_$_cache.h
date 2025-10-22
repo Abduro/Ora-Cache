@@ -21,8 +21,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Attach (const uint32_t _u_shader_id);
 
-		err_code Compile (void);  // compiles all shaders; it is assumed the shader sources are already set;
-		err_code Detach (void);   // detaches all shaders from the program;
+		err_code Compile(void);  // compiles all shaders; it is assumed the shader sources are already set;
+		err_code Create (void);  // creates all shaders; it is assumed the program is already created and its identifier is set to each shader;
+		err_code Detach (void);  // detaches all shaders from the program;
 		static
 		err_code Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Detach (const uint32_t _u_shader_id); // *important:* a shader should be detached from an OpenGL program before being deleted;

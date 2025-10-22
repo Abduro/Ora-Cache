@@ -134,6 +134,10 @@ static _pc_sz param_fun_names[] = {
 	_T("glGetBooleanv"), _T("glGetFloatv"), _T("glGetIntegerv")
 };
 
+enum class e_param_fun_ndx : uint32_t {
+	e_bool = 0x0, e_float = 0x1, e_int = 0x2,
+};
+
 CParam:: CParam (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
 	CBase::m_error.Class(cs_cls, false);
 }
@@ -145,12 +149,17 @@ bool    CParam::GetBool (const uint32_t _u_param_id) {
 
 	uint32_t u_result = 0;
 
-	pfn_GetBool p_fun = reinterpret_cast<pfn_GetBool>(CBase::Get(param_fun_names[0]));
+	pfn_GetBool p_fun = reinterpret_cast<pfn_GetBool>(CBase::Get(param_fun_names[(uint32_t)e_param_fun_ndx::e_bool]));
 	if (nullptr == p_fun) { // the error is set by parent class;
 		return !!u_result;
 	}
 
 	p_fun(_u_param_id, &u_result);
+
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
+	default:;
+	}
 
 	return !!u_result;
 }
@@ -162,12 +171,17 @@ float   CParam::GetFloat (const uint32_t _u_param_id) {
 
 	float f_result = 0.0f;
 
-	pfn_GetFloat p_fun = reinterpret_cast<pfn_GetFloat>(CBase::Get(param_fun_names[1]));
+	pfn_GetFloat p_fun = reinterpret_cast<pfn_GetFloat>(CBase::Get(param_fun_names[(uint32_t)e_param_fun_ndx::e_float]));
 	if (nullptr == p_fun) {
 		return f_result;
 	}
 
 	p_fun(_u_param_id, &f_result);
+
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
+	default:;
+	}
 
 	return f_result;
 }
@@ -179,7 +193,7 @@ int32_t CParam::GetInt (const uint32_t _u_param_id) {
 
 	int32_t n_result = 0;
 
-	pfn_GetInt p_fun = reinterpret_cast<pfn_GetInt>(CBase::Get(param_fun_names[2]));
+	pfn_GetInt p_fun = reinterpret_cast<pfn_GetInt>(CBase::Get(param_fun_names[(uint32_t)e_param_fun_ndx::e_int]));
 	if (nullptr == p_fun) {
 		return n_result;
 	}
@@ -187,9 +201,14 @@ int32_t CParam::GetInt (const uint32_t _u_param_id) {
 	p_fun(_u_param_id, &n_result);
 
 	switch (CErr_ex().Get_code()) {
-	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is invalid;"), _u_param_id);
+	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
 	default:;
 	}
 
 	return n_result;
+}
+
+TParam& __get_procs_param (void) {
+	static TParam procs;
+	return procs;
 }

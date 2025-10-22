@@ -7,12 +7,17 @@
 #include "gl_defs.h"
 #include "gl_program.h"
 #include "gl_shader.h"
+#include "gl_vertex.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CScene {
+	using CArray = vertex::CArray;
 	public:
 		CScene (void); CScene (const CScene&) = delete; CScene (CScene&&) = delete; ~CScene (void);
+		const
+		CArray&  Array (void) const;
+		CArray&  Array (void) ;
 
 		TError&  Destroy (void);
 		TError&  Error (void) const;
@@ -26,6 +31,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		mutable
 		CError   m_error;
 		CProgram m_prog ;
+		CArray   m_array;
 	};
 
 }}}

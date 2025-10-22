@@ -5,17 +5,41 @@
 	This is Ebo Pack OpenGL data buffer wrapper interface declaration file;
 */
 #include "gl_defs.h"
+#include "procs\gl_procs_buffer.h"
 namespace ex_ui { namespace draw { namespace open_gl {
-namespace data {}
-	class CBuffer {
+namespace data {
+	class CTarget : private no_copy {
+	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+	private: CTarget (void) = default; ~CTarget (void) = default;
+	public:
+		static CString To_str (const e_bind_targets);
+	};
+}
+	class CBuffer { // https://stackoverflow.com/questions/22123222/what-are-the-effects-of-unbinding-opengl-buffers ;
+	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+	public:
+#if (0)
+		class CBinder { // https://dictionary.cambridge.org/dictionary/english/binder ;
+		public:  CBinder (CBuffer&); ~CBinder (void);
+		private: CBinder (void) = delete; CBinder (const CBinder&) = delete; CBinder (CBinder&&) = delete;
+		private: CBinder& operator = (const CBinder&) = delete;  CBinder& operator = (CBinder&&) = delete;
+			mutable
+			CError   m_error;
+			CBuffer& m_buffer;
+		public:
+			err_code BindTo (const e_bind_targets);
+			TError&  Error (void) const;
+		};
+#endif
 	public:
 		CBuffer (void); CBuffer (const CBuffer&) = delete; CBuffer (CBuffer&&) = delete; ~CBuffer (void);
 
+		err_code BindTo  (const e_bind_targets);
 		err_code Create  (void);
 		err_code Destroy (void);
 
 		TError&  Error (void) const;
-		uint32_t Id (void) const;
+		uint32_t GetId (void) const;
 		static
 		bool  Is_bound (const uint32_t _buffer_id, CError&);
 		bool  Is_bound (void) const;
@@ -28,6 +52,8 @@ namespace data {}
 		mutable
 		CError   m_error;
 		uint32_t m_buf_id;
+
+		e_bind_targets m_target;
 	};
 }}}
 #endif/*_GL_BUFFER_H_INCLUDED*/

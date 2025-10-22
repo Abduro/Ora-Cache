@@ -238,6 +238,20 @@ err_code CCache::Delete (const uint32_t _u_shader_id, CError& _err) {
 	return _err;
 }
 
+err_code CCache::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+		if (__failed(shaders[i_]->Create(shaders[i_]->Type().Get()))) {
+			this->m_error = shaders[i_]->Error(); break;
+		}
+	}
+
+	return this->Error();
+}
+
 err_code CCache::Detach (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
