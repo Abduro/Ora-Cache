@@ -27,6 +27,10 @@ TError&  CScene::Destroy (void) {
 	if (__failed(this->Array().Delete()))
 		return this->m_error = this->Array().Error();
 	// the buffer must be unbound first from the arrays it was bound to;
+	if (this->Prog().Buffer().Is_bound()) {
+	// ToDo: this case requires a clarification;
+	}
+
 	if (__failed(this->Prog().Buffer().Destroy()))
 		return this->m_error = this->Prog().Buffer().Error();
 
@@ -63,9 +67,6 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Prog().Create()))
 		return this->m_error = this->Prog().Error();
 
-	if (__failed(this->Prog().Buffer().Create()))
-		return this->m_error = this->Prog().Buffer().Error();
-
 	if (__failed(this->Prog().Shaders().Create()))
 	    return this->m_error = this->Prog().Shaders().Error();
 
@@ -83,9 +84,17 @@ err_code CScene::Prepare (void) {
 
 	if (__failed(this->Prog().Link()))
 		return this->m_error = this->Prog().Error();
-
+	// this step is not necessary due to of course an attribute's index can be changed by 'location' specifier in shader source script, but nevertheless;
 	if (__failed(this->Prog().Attrs().Bound()))
 		return this->m_error = this->Prog().Attrs().Error();
+
+	if (__failed(this->Prog().Buffer().Create()))
+		return this->m_error = this->Prog().Buffer().Error();
+
+	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+
+	if (__failed(this->Prog().Buffer().BindTo(e_bind_targets::e_array)))
+		return this->m_error = this->Prog().Buffer().Error();
 
 	this->Prog().Validate();
 

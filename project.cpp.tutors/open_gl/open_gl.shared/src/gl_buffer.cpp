@@ -19,7 +19,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 	}
 }}}}
 
-#define __gl_bound_to_arr 0x8894 // GL_ARRAY_BUFFER_BINDING
+#define __gl_bound_to_arr 0x8894 // GL_ARRAY_BUFFER_BINDING;
 
 using namespace ex_ui::draw::open_gl::_impl;
 
@@ -99,6 +99,10 @@ err_code  CBuffer::Create (void) {
 
 	return this->Error();
 }
+
+const
+TData&    CBuffer::Data (void) const { return this->m_data; }
+TData&    CBuffer::Data (void)       { return this->m_data; }
 
 err_code  CBuffer::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;

@@ -222,6 +222,10 @@
     <ClCompile Include="$(_1)gl_scene.cpp" />
     <ClInclude Include="$(_0)gl_shader.h" />
     <ClCompile Include="$(_1)gl_shader.cpp" />
+    <ClInclude Include="$(_0-3)gl_shape.2d.h" />
+    <ClCompile Include="$(_1-3)gl_shape.2d.cpp" />
+    <ClInclude Include="$(_0-3)gl_shape.bs.h" />
+    <ClCompile Include="$(_1-3)gl_shape.bs.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_id.h" />
     <ClCompile Include="$(_1-0)gl_shd_id.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_source.h" />

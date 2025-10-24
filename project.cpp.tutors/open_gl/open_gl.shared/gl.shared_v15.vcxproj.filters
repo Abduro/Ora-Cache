@@ -25,6 +25,12 @@
     <Filter Include="src\procs">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0007}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interface\shapes">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\shapes">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0009}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_buffer.h"><Filter>interface</Filter></ClInclude>
@@ -71,6 +77,10 @@
     <ClCompile Include="$(_1)gl_scene.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_shader.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_shader.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0-3)gl_shape.2d.h"><Filter>interface\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_1-3)gl_shape.2d.cpp"><Filter>src\shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0-3)gl_shape.bs.h"><Filter>interface\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_1-3)gl_shape.bs.cpp"><Filter>src\shapes</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_id.h"><Filter>interface\shader</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_shd_id.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_source.h"><Filter>interface\shader</Filter></ClInclude>

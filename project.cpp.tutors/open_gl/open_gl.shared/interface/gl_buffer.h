@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "procs\gl_procs_buffer.h"
+#include "shapes\gl_shape.bs.h"
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
 	class CTarget : private no_copy {
@@ -15,7 +16,9 @@ namespace data {
 		static CString To_str (const e_bind_targets);
 	};
 }
-	class CBuffer { // https://stackoverflow.com/questions/22123222/what-are-the-effects-of-unbinding-opengl-buffers ;
+	/* note: each buffer for one set of data: for example, setting a position and a color through different sets of data will require two buffers;
+	*/
+	class CBuffer {
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 	public:
 #if (0)
@@ -37,12 +40,15 @@ namespace data {
 		err_code BindTo  (const e_bind_targets);
 		err_code Create  (void);
 		err_code Destroy (void);
+		const
+		TData&   Data (void) const;
+		TData&   Data (void) ;
 
 		TError&  Error (void) const;
 		uint32_t GetId (void) const;
 		static
 		bool  Is_bound (const uint32_t _buffer_id, CError&);
-		bool  Is_bound (void) const;
+		bool  Is_bound (void) const; // https://stackoverflow.com/questions/22123222/what-are-the-effects-of-unbinding-opengl-buffers ;
 		static
 		bool  Is_valid (const uint32_t _buffer_id, CError&);
 		bool  Is_valid (void) const; // checks the reference of the buffer identifier to buffer object; in case of failure the error status is updated;
@@ -52,6 +58,7 @@ namespace data {
 		mutable
 		CError   m_error;
 		uint32_t m_buf_id;
+		TData    m_data;
 
 		e_bind_targets m_target;
 	};
