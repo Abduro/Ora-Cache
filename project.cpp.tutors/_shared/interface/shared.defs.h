@@ -49,9 +49,10 @@ namespace shared { namespace defs {
 		_pc_sz Format (_pc_sz _p_pattern, ...);
 		_pc_sz Long (long) ;       // sets this string to long value;
 	};
+#if (0)
 	// https://en.wikipedia.org/wiki/Fixed-point_arithmetic ;
-	bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold = 0.0000001f);
-
+	bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold = 0.0000001f); // is already defined in color._defs.h
+#endif
 }}
 
 typedef shared::defs::CString_Ex TString;

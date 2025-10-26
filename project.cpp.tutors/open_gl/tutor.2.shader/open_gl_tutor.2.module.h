@@ -21,6 +21,7 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace shader {
 
 #pragma comment(lib, "shared.dbg_v15.lib")    // shared debug outpu/trace console;
 #pragma comment(lib, "shared.gui_v15.lib")    // shared GUI lib for creating main/app window;
+#pragma comment(lib, "shared.clr_v15.lib")    // shared color wrapper for applying to vertices of the shapes;
 
 #pragma comment(lib, "gl.shared_v15.lib")     // OpenGL tutorials shared lib; it is required for usage of shader API;
 #pragma comment(lib, "gl.tutor.2.shader.lib") // this is this tutorial project static library;

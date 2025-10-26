@@ -13,7 +13,7 @@
 namespace ex_ui { namespace draw { namespace open_gl {
 
 namespace shader {
-}
+}	// https://en.wikipedia.org/wiki/Shader ;
 	// https://www.khronos.org/opengl/wiki/shader ;
 	class CShader {
 	public:

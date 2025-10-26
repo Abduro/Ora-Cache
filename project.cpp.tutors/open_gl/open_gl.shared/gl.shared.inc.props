@@ -9,6 +9,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared><!--This is common definitions for all tutorials; -->
+    <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr>
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg>
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--This reference is only for getting fake window interface; -->
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->
@@ -30,7 +31,7 @@
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Dbg)interface\</_3>
     <_4>$(Shared_Gui)interface\</_4>
-    <_5></_5>
+    <_5>$(Shared_Clr)interface\</_5>
     <_6></_6>
     <_7></_7>
     <_8></_8>
@@ -38,7 +39,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3);$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3);$(_2);$(_3);$(_4);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3);$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

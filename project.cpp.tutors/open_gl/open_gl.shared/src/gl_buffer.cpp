@@ -99,11 +99,11 @@ err_code  CBuffer::Create (void) {
 
 	return this->Error();
 }
-
+#if (0)
 const
 TData&    CBuffer::Data (void) const { return this->m_data; }
 TData&    CBuffer::Data (void)       { return this->m_data; }
-
+#endif
 err_code  CBuffer::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 

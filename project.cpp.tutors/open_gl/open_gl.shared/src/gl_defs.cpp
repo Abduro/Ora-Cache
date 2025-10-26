@@ -4,10 +4,11 @@
 */
 #include "gl_defs.h"
 #include "shared.preproc.h"
-
-#pragma comment(lib, "shared.dbg_v15.lib") // it is required for usage of the debug output;
+#if (0)
+#pragma comment(lib, "shared.dbg_v15.lib")  // it is required for usage of the debug output;
 #pragma comment(lib, "shared.trim_v15.lib") // it is required for usage of the error base API;
-
+#pragma comment(lib, "shared.clr_v15.lib")  // this is the color wrapper;
+#endif
 using namespace ex_ui::draw::open_gl;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_0 { void __warning_lnk_4221 (void) {}}}}}

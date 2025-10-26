@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 8-Mar-2012 at 9:59:04pm, GMT+3, Rostov-on-Don, Thursday;
 	This is SfxSOA Client Drawing Service Colour Quad class declaration file.
 	-----------------------------------------------------------------------------
-	Adopted to Ebo Pack color project on 10-Oct-2021 at 4:28:57.0784593 am, UTC+7, Novosibirsk, Sunday;
+	Adopted to Ebo Pack color project on 10-Oct-2021 at 04:28:57.078, UTC+7, Novosibirsk, Sunday;
 */
 #include "color._defs.h"
 #include "color.alpha.h"
