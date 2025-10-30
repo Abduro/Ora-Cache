@@ -99,11 +99,7 @@ err_code  CBuffer::Create (void) {
 
 	return this->Error();
 }
-#if (0)
-const
-TData&    CBuffer::Data (void) const { return this->m_data; }
-TData&    CBuffer::Data (void)       { return this->m_data; }
-#endif
+
 err_code  CBuffer::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -171,4 +167,68 @@ bool  CBuffer::Is_valid (const uint32_t _buffer_id, CError& _err) {
 	const bool b_valid = !!_buffer_id; // the only reason that is taken into account is the buffer identifier value, the buffer binding is ignored;
 #endif
 	return b_valid;
+}
+
+using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+
+e_bind_targets CBuffer::Target (void) const { return this->m_target; }
+const bool     CBuffer::Target (const e_bind_targets e_target) {
+	e_target;
+	const bool b_changed = this->Target() != e_target;
+
+	if (b_changed)
+		this->m_target = e_target;
+
+	return b_changed;
+}
+
+err_code CBuffer::Unbind (void) {
+
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == this->Is_bound())
+		return this->m_error = __s_ok; // Is_bound can generate an error, in order to avoid it the error status is set to __s_ok;
+
+	if (__failed(__get_buf_procs().Bind((uint32_t)this->Target(), 0))) {
+		this->m_error = __get_buf_procs().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+	else {
+		__trace_info_2(_T("The buffer id = %u is unbound from target = '%s';\n"), this->GetId(), (_pc_sz) data::CTarget::To_str(this->Target()));
+	}
+
+	return this->Error();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CBuffer_4_vert:: CBuffer_4_vert (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
+CBuffer_4_vert::~CBuffer_4_vert (void) {}
+
+err_code CBuffer_4_vert::Bind (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	TBase::BindTo(TBase::Target());
+
+	return TBase::Error();
+}
+
+err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
+	_shape;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid())
+		return TBase::m_error <<__e_not_inited = _T("The buffer is not created yet");
+
+	if (false == _shape.Is_valid())
+		return TBase::m_error <<__e_inv_arg = _T("The input shape is not valid");
+
+	const void* const p_vertices = _shape.Cached();
+	if (nullptr == p_vertices)
+		return TBase::m_error <<__e_pointer;
+
+	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(_shape.Size()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
+		return TBase::m_error = __get_buf_procs().Error();
+	}
+
+	return TBase::Error();
 }

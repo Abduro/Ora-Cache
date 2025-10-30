@@ -22,14 +22,6 @@ namespace shared { namespace defs {
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
 
-#if defined WIN64
-	CString __address_of (const void* const _p_fun_or_obj_ptr);
-	CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
-#else
-	CString __address_of (const void* const _p_fun_or_obj_ptr);
-	CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
-#endif
-
 	class CFormat_Spec {
 	public:
 		enum _spec : uint32_t {
@@ -43,6 +35,13 @@ namespace shared { namespace defs {
 
 	class CString_Ex : public CString { typedef CString TBase;
 	public:
+#if defined WIN64
+		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
+		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/, const bool _b_low_case = true) ;
+#else
+		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
+		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/, const bool _b_low_case = true) ;
+#endif
 		_pc_sz Bool (const bool) ; // sets this string value to text: 'false' or 'true';
 		_pc_sz Dword (dword) ;     // sets this string to unsigned long value;
 		_pc_sz Float(float, t_fmt_spec = t_fmt_spec::e_decimal); // https://en.cppreference.com/w/cpp/io/c/fprintf ;

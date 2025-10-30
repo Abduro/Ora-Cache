@@ -118,7 +118,9 @@ err_code CMsgRouter::Unsubscribe (const HWND _h_wnd) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
-	THandlers::iterator it_ = Get_handlers().find(_h_wnd);
+	THandlers& handlers = Get_handlers();
+
+	THandlers::iterator it_ = handlers.find(_h_wnd);
 	if (it_ == Get_handlers().end())
 		return this->m_error << (err_code) TErrCodes::eData::eNotFound;
 

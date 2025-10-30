@@ -36,10 +36,6 @@ shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>__
 	}
 }
 shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
-#if (0)
-	if (true == this->Shader_frag().Is_valid()) this->Shader_frag().Delete();
-	if (true == this->Shader_vert().Is_valid()) this->Shader_vert().Delete();
-#endif
 	m_ctx_dev.Destroy();
 }
 
@@ -70,15 +66,6 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 	return (*this)().Error();
 }
-#if (0)
-const
-shader::CFragment& shader::CWnd::Shader_frag (void) const { return this->m_frag_shader; }
-shader::CFragment& shader::CWnd::Shader_frag (void)       { return this->m_frag_shader; }
-
-const
-shader::CVertex& shader::CWnd::Shader_vert (void) const { return this->m_vert_shader; }
-shader::CVertex& shader::CWnd::Shader_vert (void)       { return this->m_vert_shader; }
-#endif
 err_code shader::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
 #if (0)
@@ -96,21 +83,38 @@ err_code shader::CWnd::PostCreate (void) {
 	}
 #endif
 	// sets resource identifiers for loading shaders' source code;
-	if (__failed(this->m_scene.Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
-	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-	if (__failed(this->m_scene.Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
-	         __trace_err_2(_T("%s\n"), (_pc_sz) this->m_scene.Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
+	         __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
+	         __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 	// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
-	this->m_scene.Prog().Attrs().Clr().Name(_T("colorIn"));
-	this->m_scene.Prog().Attrs().Pos().Name(_T("positionIn"));
+	this->Renderer().Scene().Prog().Attrs().Clr().Name(_T("colorIn"));
+	this->Renderer().Scene().Prog().Attrs().Pos().Name(_T("positionIn"));
 
-	if (__failed(this->m_scene.Prepare()))
-		return TBase::m_error =  this->m_scene.Error();
-#define _test_case_lvl 0
+	if (__failed(this->Renderer().Scene().Prepare()))
+		return TBase::m_error =  this->Renderer().Scene().Error();
+#define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
-	this->m_scene.Destroy();
+	this->Renderer().Scene().Destroy();
 #endif
 	return (*this)().Error();
 }
+
+err_code shader::CWnd::Destroy (void) {
+
+	return TBase::Destroy();
+}
+
+err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
+	_u_code; _w_param; _l_param;
+	if (WM_DESTROY == _u_code) { // this message is very important for required cleaning up of the draw pipeline components, the result is kept as unhandled;
+		this->Renderer().Scene().Destroy();
+	}
+	return TBase::IMsg_OnMessage(_u_code, _w_param, _l_param);
+}
+
+const
+CRenderer&  shader::CWnd::Renderer (void) const { return this->m_renderer; }
+CRenderer&  shader::CWnd::Renderer (void)       { return this->m_renderer; }
 
 }}}}

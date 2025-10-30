@@ -41,9 +41,16 @@ CVertex&    CTriangle::Get (const e_vertices e_vert) {
 	return _impl_4::vert_inv;
 }
 
+bool  CTriangle::Is_valid (void) const { return false == this->m_cache.empty(); }
+
 const
 void* const CTriangle::Cached (void) const {
 	return this->m_cache.data();
+}
+
+// https://stackoverflow.com/questions/17254425/getting-the-size-in-bytes-of-a-vector ;
+uint32_t    CTriangle::Size (void) const {
+	return static_cast<uint32_t>(sizeof(float) * this->m_cache.size());
 }
 
 // https://stackoverflow.com/questions/644673/is-it-more-efficient-to-copy-a-vector-by-reserving-and-copying-or-by-creating-a ;

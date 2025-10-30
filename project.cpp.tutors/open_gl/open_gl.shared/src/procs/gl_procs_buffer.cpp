@@ -118,7 +118,7 @@ err_code CBuffer::Delete (const int32_t _n_count, const uint32_t* _p_buffers) {
 	CBase::m_error << __METHOD__ << __s_ok;
 	// there is no memory check, but just for 0 (zero) and (DWORD)-1 (invalid handle);
 	if (nullptr == _p_buffers || __e_handle == _p_buffers)
-		return CBase::m_error << __e_pointer = TString().Format(_T("#__e_inv_ptr: '_p_buffers' %s is invalid"), (_pc_sz)__address_of(_p_buffers, _T("0x%08x")));
+		return CBase::m_error << __e_pointer = TString().Format(_T("#__e_inv_ptr: '_p_buffers' %s is invalid"), TString()._addr_of(_p_buffers, _T("0x%08x")));
 
 	pfn_Delete p_fun = reinterpret_cast<pfn_Delete>(CBase::Get(buf_fun_names[(uint32_t)e_buf_fun_ndx::e_delete]));
 	if (nullptr == p_fun)
@@ -142,7 +142,7 @@ err_code CBuffer::GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids) {
 
 	// there is no memory check, but just for 0 (zero) and (DWORD)-1 (invalid handle);
 	if (nullptr == _p_buf_ids || __e_handle == _p_buf_ids)
-		return CBase::m_error << __e_pointer = TString().Format(_T("#__e_inv_ptr: '_p_buf_ids' %s is invalid"), (_pc_sz)__address_of(_p_buf_ids, _T("0x%08x")));
+		return CBase::m_error << __e_pointer = TString().Format(_T("#__e_inv_ptr: '_p_buf_ids' %s is invalid"), TString()._addr_of(_p_buf_ids, _T("0x%08x")));
 
 	pfn_GenIds p_fun = reinterpret_cast<pfn_GenIds>(CBase::Get(buf_fun_names[(uint32_t)e_buf_fun_ndx::e_generate]));
 	if (nullptr == p_fun)

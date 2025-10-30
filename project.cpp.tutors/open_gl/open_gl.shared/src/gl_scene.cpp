@@ -25,10 +25,11 @@ TError&  CScene::Destroy (void) {
 	if (__failed(this->Array().Unbind()))
 		return this->m_error = this->Array().Error();
 	if (__failed(this->Array().Delete()))
-		return this->m_error = this->Array().Error();
-	// the buffer must be unbound first from the arrays it was bound to;
-	if (this->Prog().Buffer().Is_bound()) {
-	// ToDo: this case requires a clarification;
+		this->m_error = this->Array().Error();
+
+	// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
+	if (__failed(this->Prog().Buffer().Unbind())) {
+		return this->m_error = this->Prog().Buffer().Error();
 	}
 
 	if (__failed(this->Prog().Buffer().Destroy()))
@@ -92,10 +93,13 @@ err_code CScene::Prepare (void) {
 		return this->m_error = this->Prog().Buffer().Error();
 
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
-
+#if (0)
 	if (__failed(this->Prog().Buffer().BindTo(e_bind_targets::e_array)))
 		return this->m_error = this->Prog().Buffer().Error();
-
+#else
+	if (__failed(this->Prog().Buffer().Bind()))
+		return this->m_error = this->Prog().Buffer().Error();
+#endif
 	this->Prog().Validate();
 
 	return this->Error();

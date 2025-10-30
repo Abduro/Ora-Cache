@@ -31,7 +31,26 @@ using namespace _impl;
 using namespace shared::defs;
 
 void CTrace::Empty_ln (void) {
-	::OutputDebugString(_T(" \n"));
+	::OutputDebugString(_T("\n"));
+}
+
+void CTrace::OnTime (_pc_sz _p_text) {
+	_p_text;
+	// https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime ;
+	SYSTEMTIME sys_time = {0};
+	::GetLocalTime(&sys_time); // returns no error;
+
+	static _pc_sz pc_sz_pat = _T("%04u-%02u-%02u %02u:%02u:%02u.%03u");
+
+	CString cs_format;
+	if (0 == _p_text) {
+		cs_format = TString().Format(_T("Logged at: %s\n"), pc_sz_pat);
+	}
+	else { // the 'else' is not expected but nevertheless; it will look like: [timestamp] the input text;
+		cs_format = TString().Format(_T("[%s] %s"), pc_sz_pat, _p_text);
+	}
+	__trace_warn((_pc_sz) cs_format,
+		sys_time.wYear, sys_time.wMonth, sys_time.wDay, sys_time.wHour, sys_time.wMinute, sys_time.wSecond, sys_time.wMilliseconds);
 }
 
 static bool b_use_con = true;

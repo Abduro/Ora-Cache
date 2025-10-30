@@ -44,7 +44,7 @@ CWindow&  CFrame::Window (void)       { return this->m_owner; }
 /////////////////////////////////////////////////////////////////////////////
 
 CAppWnd:: CAppWnd (void) { TBase::m_error.Class(TString().Format(_T("%s::%s"), (_pc_sz)__CLASS__, TBase::Cls_name()), false); }
-CAppWnd::~CAppWnd (void) { this->Destroy(); }
+CAppWnd::~CAppWnd (void) { if (TBase::Is_valid()) this->Destroy(); }
 
 err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
@@ -124,8 +124,13 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 #endif
 
 err_code CAppWnd::Destroy (void) {
+	/* https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow :
+	   the excerpt from the above article:
+	   ...function first destroys child or owned windows, and then it destroys the parent or owner window...
+	*/
 	this->Frame().Window() = (HWND)nullptr;
-	return TBase::Destroy();
+	return TBase::Destroy(); // nonsense: the main window is already destroyed by the base class message handler;
 }
 
 const

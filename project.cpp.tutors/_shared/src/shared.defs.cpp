@@ -30,50 +30,56 @@ namespace _impl {
 using namespace _impl;
 
 #if defined WIN64
-CString __address_of (const void* const _p_fun_or_obj_ptr) {
-	return __address_of (_p_fun_or_obj_ptr, _T("0x%x"));
+_pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case) {
+	return this->_addr_of (_p_fun_or_obj_ptr, _T("0x%x"), _b_low_case);
 }
 
-CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
+_pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format, const bool _b_low_case) {
 	_p_fun_or_obj_ptr; _p_format;
 
-	CString cs_out = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
-	if (false == cs_out.IsEmpty())
-		return cs_out;
+	(TBase&)*this = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
+	if (false == TBase::IsEmpty())
+		return (_pc_sz)*this;
 
 #if (1)
 	// https://stackoverflow.com/questions/22846721/pointer-outputs  ;
 	const
 	uint64_t* p_address = reinterpret_cast<const uint64_t*>(_p_fun_or_obj_ptr);
 
-	cs_out.Format(!!_p_format ? _p_format : _T("0x%x"), &p_address);
+	((TBase&)*this).Format(!!_p_format ? _p_format : _T("0x%x"), &p_address);
+	// https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class#makelower ;
+	if (_b_low_case)
+		((TBase&)*this).MakeLower();
 
 #else
 	// https://stackoverflow.com/questions/2369541/where-is-p-useful-with-printf ;
-	cs_out.Format(_T("0x%p"), _p_fun_or_obj_ptr);
+	((TBase&)*this).Format(_T("0x%p"), _p_fun_or_obj_ptr);
 #endif
-	return  cs_out;
+	return (_pc_sz)*this;
 }
 
 #else
 
-CString __address_of (const void* const _p_fun_or_obj_ptr) {
-	return __address_of (_p_fun_or_obj_ptr, _T("0x%x"));
+_pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case) {
+	return this->_addr_of (_p_fun_or_obj_ptr, _T("0x%x"), _b_low_case);
 }
 
-CString __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
+_pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format, const bool _b_low_case) {
 	_p_fun_or_obj_ptr;
 
-	CString cs_out = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
-	if (false == cs_out.IsEmpty())
-		return cs_out;
+	(TBase&)*this = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
+	if (false == TBase::IsEmpty())
+		return (_pc_sz)*this;
 
 	const
 	uint32_t* p_address = reinterpret_cast<const uint32_t*>(_p_fun_or_obj_ptr);
 	uint32_t  n_address = (!!p_address ? *p_address : 0);
 
-	cs_out.Format(!!_p_format ? _p_format : _T("0x%x"), n_address);
-	return  cs_out;
+	((TBase&)*this).Format(!!_p_format ? _p_format : _T("0x%x"), n_address);
+	if (_b_low_case)
+		((TBase&)*this).MakeLower();
+
+	return  (_pc_sz)*this;;
 }
 #endif
 

@@ -117,6 +117,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	}
 
 	::Get_app_wnd().Destroy();
-
+	__trace::OnTime();
 	return n_result;
 }

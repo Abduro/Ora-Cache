@@ -23,18 +23,20 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 
 		err_code Compile(void);  // compiles all shaders; it is assumed the shader sources are already set;
 		err_code Create (void);  // creates all shaders; it is assumed the program is already created and its identifier is set to each shader;
-		err_code Detach (void);  // detaches all shaders from the program;
-		static
-		err_code Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
-		err_code Detach (const uint32_t _u_shader_id); // *important:* a shader should be detached from an OpenGL program before being deleted;
 		/*Google AI Overview:
 		...a shader should be detached from an OpenGL program before being deleted,
 		as the shader object is not truly deleted until it's detached from all programs it's attached to...
 		*/
 		err_code Delete (void);   // deletes all shaders; shaders must be detached first;
+#if (0) // it is not necessary because the CShader has its own Delete() method;
 		static
 		err_code Delete (const uint32_t _u_shader_id, CError&); // this method is called after the program links these shaders;
 		err_code Delete (const uint32_t _u_shader_id);          // before deleting shader(s) they (shaders) must be detached;
+#endif
+		err_code Detach (void);  // detaches all shaders from the program;
+		static
+		err_code Detach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
+		err_code Detach (const uint32_t _u_shader_id); // *important:* a shader should be detached from an OpenGL program before being deleted;
 		const
 		shader::CFragment& Fragment (void) const;
 		shader::CFragment& Fragment (void) ;
@@ -64,6 +66,5 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 	};
 
 }}}}
-
 
 #endif/*_GL_$_CACHE_H_INCLUDED*/

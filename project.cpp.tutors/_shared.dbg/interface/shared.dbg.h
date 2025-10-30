@@ -48,7 +48,8 @@ namespace shared { namespace dbg {
 		     e_warn = 0x1, // this is warning category trace prefix: [warn] ; in yellow color;
 		};
 
-		static void Empty_ln (void); // outputs an empty line;
+		static void Empty_ln (void);               // outputs an empty line;
+		static void OnTime   (_pc_sz _p_text = 0); // outputs local time;
 		static void Use_con  (const bool); // changes the output target: if it is set to 'true' outer console is used instead of VS 'debug output'; 
 		static bool Use_con  (void);       // returns the current state of using outer console;
 

@@ -118,8 +118,8 @@ namespace program {
 		 CAttrs& Attrs (void) const;
 		 CAttrs& Attrs (void) ;
 		 const
-		 CBuffer& Buffer (void) const;
-		 CBuffer& Buffer (void) ;
+		 CBuffer_4_vert& Buffer (void) const;
+		 CBuffer_4_vert& Buffer (void) ;
 
 		 static procs::CProg& Procs (void) ;
 		 static CString  Class (void);       // returns this class name for debug purposes;
@@ -160,8 +160,8 @@ namespace program {
 		 program::CProgId m_prog_id;
 		 mutable
 		 CError   m_error;
-		 CBuffer  m_buffer;
-		 program::CAttrs  m_attrs;
+		 CBuffer_4_vert   m_buffer;
+		 program::CAttrs  m_attrs ;
 		 program::CCache  m_shaders;
 		 program::CStatus m_status;
 	};

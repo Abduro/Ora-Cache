@@ -30,10 +30,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		CVertex& C (void) const;
 		CVertex& C (void) ;
 		const
-		CVertex& Get (const e_vertices) const;
-		CVertex& Get (const e_vertices) ;
+		CVertex& Get (const e_vertices) const; // returns a reference to the vertex by corner index; (ro);
+		CVertex& Get (const e_vertices) ;      // returns a reference to the vertex by corner index; (rw);
+
+		bool  Is_valid (void) const;       // returns true is the vector of the cached vertices is not empty;
 		const
 		void* const  Cached (void) const;  // gets pointer to cached vertices' data;
+		uint32_t     Size (void) const;    // gets memory size of all vertices of this shape;
 		err_code     Update (void) ;       // updates cached data for case of one of the vertices' data is changed;
 
 	private: CTriangle& operator = (const CTriangle&) = delete; CTriangle& operator = (CTriangle&&) = delete;

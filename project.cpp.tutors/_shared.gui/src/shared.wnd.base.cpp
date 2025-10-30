@@ -65,11 +65,14 @@ err_code CWndBase::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 	switch (_u_code) {
 	case WM_CREATE : {} break; // does nothing; this->Create() function subscribes to message router in case of success;
 	case WM_CLOSE  : {
+			// the [x] 'Close' window title button is pressed or system menu 'Close' command is selected;
+			// in order to avoid any intermediate steps Destroy() procedure is called directly;
 			// unsubscribes and destroys itself; this base window implementation does not show any prompt;
 			if (__succeeded(this->Destroy()))
 				n_result = __s_ok; // this message is handled;
 		} break;
 	case WM_DESTROY: {
+		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
 		} break;
 	}
 

@@ -7,6 +7,7 @@
 #include "gl_defs.h"
 #include "procs\gl_procs_buffer.h"
 #include "shapes\gl_vertex.h"
+#include "shapes\gl_shape.2d.h"
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
 	class CTarget : private no_copy {
@@ -41,11 +42,7 @@ namespace data {
 		err_code BindTo  (const e_bind_targets); // the excerpt from the doc: ...buffer set to zero effectively unbinds any buffer object previously bound...;
 		err_code Create  (void);
 		err_code Destroy (void);
-#if (0)
-		const
-		TData&   Data (void) const;
-		TData&   Data (void) ;
-#endif
+
 		TError&  Error (void) const;
 		uint32_t GetId (void) const;
 		static
@@ -55,14 +52,30 @@ namespace data {
 		bool  Is_valid (const uint32_t _buffer_id, CError&);
 		bool  Is_valid (void) const; // checks the reference of the buffer identifier to buffer object; in case of failure the error status is updated;
 
-	private:
+		e_bind_targets Target (void) const;
+		const bool     Target (const e_bind_targets); // it can be used by the child class before calling its 'Bind' procedure; returns 'true' in case of change 'target' value;
+
+		err_code Unbind (void) ;
+
+	protected:
 		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator =  (CBuffer&&) = delete;
 		mutable
 		CError   m_error;
 		uint32_t m_buf_id;
-//		TData    m_data;
 
 		e_bind_targets m_target;
+	};
+
+	using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
+
+	class CBuffer_4_vert : public CBuffer { typedef CBuffer TBase;
+	private: CBuffer_4_vert (const CBuffer_4_vert&) = delete; CBuffer_4_vert (CBuffer_4_vert&&) = delete;
+	public : CBuffer_4_vert (void); ~CBuffer_4_vert (void);
+
+		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
+		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
+
+	private: CBuffer_4_vert& operator = (const CBuffer_4_vert&) = delete;  CBuffer_4_vert& operator =  (CBuffer_4_vert&&) = delete;
 	};
 }}}
 #endif/*_GL_BUFFER_H_INCLUDED*/

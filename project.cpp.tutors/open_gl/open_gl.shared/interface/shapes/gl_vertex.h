@@ -79,7 +79,7 @@ namespace vertex {
 		uint32_t   m_index;
 		bool       m_normal; // vertex value(s) normalization flag;
 		uint32_t   m_offset;
-		uint32_t   m_size;   // it would be better to name this variable and the related property to something similar 'count', not size;
+		uint32_t   m_size;   // it would be better to name this variable and the related property to something similar to 'count', not 'size';
 		uint32_t   m_stride; // it sets to sizeof(float) * m_data.size() by default and does not require any change;
 	};
 

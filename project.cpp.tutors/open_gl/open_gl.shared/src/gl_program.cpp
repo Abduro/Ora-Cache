@@ -228,8 +228,8 @@ const
 CAttrs&   CProgram::Attrs (void) const { return m_attrs; }
 CAttrs&   CProgram::Attrs (void)       { return m_attrs; }
 const
-CBuffer&  CProgram::Buffer (void) const { return this->m_buffer; }
-CBuffer&  CProgram::Buffer (void)       { return this->m_buffer; }
+CBuffer_4_vert&  CProgram::Buffer (void) const { return this->m_buffer; }
+CBuffer_4_vert&  CProgram::Buffer (void)       { return this->m_buffer; }
 
 CString   CProgram::Class (void) { return __CLASS__; }
 

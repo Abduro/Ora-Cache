@@ -200,6 +200,20 @@ err_code CCache::Compile (void) {
 	return this->Error();
 }
 
+err_code CCache::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+
+	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+		if (__failed(shaders[i_]->Create(shaders[i_]->Type().Get()))) {
+			this->m_error = shaders[i_]->Error(); break;
+		}
+	}
+
+	return this->Error();
+}
+
 err_code CCache::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -208,13 +222,18 @@ err_code CCache::Delete (void) {
 	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
 
 	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
+#if (0)
 		if (__succeeded(this->Delete(shaders[i_]->Id()))) // the error is caught by Delete(_u_shader_id) ;
 		   __trace_warn_2(pc_sz_pat_del, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
+#else
+		if (__failed(shaders[i_]->Delete()))
+			this->m_error = shaders[i_]->Error();
+#endif
 	}
 
 	return this->Error();
 }
-
+#if (0)
 err_code CCache::Delete (const uint32_t _u_shader_id) {
 	return CCache::Delete(_u_shader_id, this->m_error);
 }
@@ -237,21 +256,7 @@ err_code CCache::Delete (const uint32_t _u_shader_id, CError& _err) {
 	}
 	return _err;
 }
-
-err_code CCache::Create (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
-
-	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
-		if (__failed(shaders[i_]->Create(shaders[i_]->Type().Get()))) {
-			this->m_error = shaders[i_]->Error(); break;
-		}
-	}
-
-	return this->Error();
-}
-
+#endif
 err_code CCache::Detach (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 

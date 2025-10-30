@@ -6,6 +6,7 @@
 */
 #include "gl_shader.h"
 #include "gl_scene.h"
+#include "gl_renderer.h"
 #include "open_gl_tutor.1.wnd.h"
 #include "shared.wnd.fake.h"
 
@@ -25,26 +26,20 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		 CWnd (void);
 		~CWnd (void);
 
+		err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) override final;
+
 		err_code Create (const HWND _h_parent, const t_rect&, const bool _b_visible = true);
-#if (0)
-		const
-		shader::CFragment& Shader_frag (void) const;
-		shader::CFragment& Shader_frag (void) ;
+		err_code Destroy (void);
+		err_code PostCreate (void);
 
 		const
-		shader::CVertex& Shader_vert (void) const;
-		shader::CVertex& Shader_vert (void) ;
-#endif
-		err_code PostCreate (void);
+		CRenderer&  Renderer (void) const;
+		CRenderer&  Renderer (void) ;
 
 	protected:
 		CFakeWnd m_fak_wnd; // message-only window (aka fake) is created in its constructor;
 		context::CDevice  m_ctx_dev;
-#if (0)
-		shader::CFragment m_frag_shader;
-		shader::CVertex   m_vert_shader;
-#endif
-		CScene m_scene;
+		CRenderer m_renderer;
 	};
 
 }}}}

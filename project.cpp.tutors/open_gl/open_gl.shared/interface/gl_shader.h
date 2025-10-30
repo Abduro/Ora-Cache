@@ -42,7 +42,7 @@ namespace shader {
 
 		 const
 		 shader::CType& Type (void) const;
-		 shader::CType& Type (void) ;
+		 shader::CType& Type (void) ;        // *important*: the type can be set *before* creating a shader;
 
 	public:
 		 CShader& operator = (const CShader&); CShader& operator = (CShader&&);

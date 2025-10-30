@@ -166,7 +166,7 @@ err_code  context::CTarget::Set (const HWND _h_wnd) {
 	this->m_dc_src = ::GetDC(_h_wnd);
 //	__empty_ln(); // https://www.allacronyms.com/handle/abbreviated ;
 	__trace_info_3(
-		_T("#ctx_dev : {hndl=%s;src=%s}\n"), (_pc_sz)__address_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : this->Source())
+		_T("#ctx_dev : {hndl=%s;src=%s}\n"), TString()._addr_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : this->Source())
 	);
 
 	return this->Error();
