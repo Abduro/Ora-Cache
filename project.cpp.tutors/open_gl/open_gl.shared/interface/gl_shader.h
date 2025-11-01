@@ -11,7 +11,9 @@
 #include "shader\gl_shd_status.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
-
+	// https://compphys.go.ro/newtonian-gravity/ ; << this is the solar system demo project that is used shadors for calculating rotation and gravity;
+	// https://community.khronos.org/t/floating-point-accuracy-in-glsl/62729/7 ;
+	// https://stackoverflow.com/questions/54058612/differing-floating-point-behaviour-between-uniform-and-constants-in-glsl ;
 namespace shader {
 }	// https://en.wikipedia.org/wiki/Shader ;
 	// https://www.khronos.org/opengl/wiki/shader ;

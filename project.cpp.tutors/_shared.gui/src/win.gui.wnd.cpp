@@ -80,6 +80,17 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 	if (__succeeded(TBase::Create(_p_cls_name, _p_title, this->Layout().Main().Position(), _b_visible, HWND_DESKTOP))) {
 		this->Frame().Window() = TBase::Handle();
 		this->Layout().Main().Target(*this);
+#if (0) // the stupid approach is commented out;
+		// the parent class of this one has successfully created a window and can call the message handler itself,
+		// overriding of the virtual function should work properly, but for better clarity, the handler is called from here;
+		const t_rect& rect = this->Layout().Main().Position();
+		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw ;
+		CREATESTRUCT crt_data = {
+			0, 0, 0, ::GetParent((*this)()), __H(rect), __W(rect), rect.top, rect.left, 0, 0, 0, 0
+		};
+		this->IMsg_OnMessage(WM_CREATE, 0, (l_param)&crt_data);
+#endif
 	}
 	else
 		this->Frame().Window() = HWND_DESKTOP; // the same as (HWND)nullptr;

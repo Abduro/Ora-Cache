@@ -7,6 +7,7 @@
 #include "shared.preproc.h"
 #include "gl_procs.h"
 #include "procs\gl_procs_vertex.h"
+#include "gl_viewport.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vertex;
@@ -188,6 +189,20 @@ CPosition:: CPosition (TVertData& _data) : CData(_data) {
 	CData::m_size = 3;   // x|y|z;
 }
 CPosition::~CPosition (void) {}
+
+void CPosition::Set (const float _x, const float _y, const float _z) {
+	_x; _y; _z;
+	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
+	if (CData::Offset() >= n_size || this->Size() > n_size) // the offset, elements/components' count/size and vertex vector size must be appropriate;
+		return;
+	CData::m_data[0 + CData::Offset()] = _x;
+	CData::m_data[1 + CData::Offset()] = _y;
+	CData::m_data[2 + CData::Offset()] = _z;
+}
+
+void CPosition::Set (const long  _x, const long  _y) {
+	_x; _y;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

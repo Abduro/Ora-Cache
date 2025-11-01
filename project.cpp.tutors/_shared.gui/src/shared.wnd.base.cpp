@@ -196,6 +196,8 @@ bool CWndBase::operator == (const HWND _what) const { return this->Handle() == _
 
 CWndBase::operator const HWND (void) const { return this->Handle(); }
 
+const HWND CWndBase::operator ()(void) const { return this->Handle(); }
+
 /////////////////////////////////////////////////////////////////////////////
 
 CWndBase::CStyles:: CStyles (void) : m_ext(0), m_std(0) {}

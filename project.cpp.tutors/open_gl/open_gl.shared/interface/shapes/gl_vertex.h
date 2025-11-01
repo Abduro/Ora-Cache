@@ -89,11 +89,14 @@ namespace vertex {
 	public:
 		CColor (TVertData&); ~CColor (void);
 	};
-
+	// https://learnopengl.com/Getting-started/Coordinate-Systems ;
 	class CPosition : public CData { typedef CData TData;
 	private: CPosition (void) = delete;
 	public:
 		CPosition (TVertData&); ~CPosition (void);
+
+		void Set (const float _x, const float _y, const float _z = 0.0f); // sets coordinates in local/object 3D space;
+		void Set (const long  _x, const long  _y/*const long  _z = 0*/ ); // converts screen space coordinates to local space;
 	};
 }
 	class CVertex {

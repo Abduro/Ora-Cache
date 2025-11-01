@@ -59,7 +59,9 @@ namespace ex_ui { namespace popup {
 	public:
 		bool operator == (const CWndBase&) const;
 		bool operator == (const HWND) const;
+
 		operator const HWND (void) const;
+		const HWND operator ()(void) const;
 
 		CWndBase& operator = (const CWndBase&) = delete;
 		CWndBase& operator = (CWndBase&&) = delete;

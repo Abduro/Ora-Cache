@@ -67,12 +67,21 @@ bool CViewPort::Is_valid (void) const {
 vertex::CCoord  CViewPort::ToPos (const long _x, const long _y) {
 	_x; _y;
 	if (false == this->Is_valid()) {
-		this->m_error <<__METHOD__<<__e_inv_arg = TString().Format(_T("Input coords are invalid: x=0x%04x, y=0x%04x"), _x, _y);
+		this->m_error <<__METHOD__<<__e_inv_arg = TString().Format(_T("Screen size : x=0x%04x, y=0x%04x"), _x, _y);
 		return vertex::CCoord(); // returns 'empty' or 'default' coord which has x|y = {0};
 	}
+	// ToDo: this requires testing to find out which expression works faster;
+#if (1)
 	// https://discourse.glfw.org/t/converting-between-screen-coordinates-and-pixels/1841/2 ; thanks @dougbinks for good answer;
-
 	return vertex::CCoord(
 		2.0f * (float)_x/(float)this->m_size.cx - 1.0f, 1.0f - 2.0f * (float)_y/(float)this->m_size.cy
 	);
+#else
+	// https://stackoverflow.com/questions/40068191/opengl-screen-to-world-coordinates-conversion ;
+	return vertex::CCoord(
+		2.0f * ((float)_x + 0.5f)/(float)(this->m_size.cx / 2) - 1.0f, 1.0f - ((float)_y + 0.5f)/(float)(this->m_size.cy / 2)
+	);
+#endif
 }
+
+CViewPort&  CViewPort::operator << (const t_rect& _rect) { this->Set(_rect); return *this; }

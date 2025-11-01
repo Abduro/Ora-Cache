@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "gl_scene.h"
+#include "gl_viewport.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
@@ -17,10 +18,14 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		const
 		CScene& Scene (void) const;
 		CScene& Scene (void) ;
+		const
+		CViewPort& View (void) const;
+		CViewPort& View (void) ;
 
 	private: CRenderer& operator = (const CRenderer&) = delete; CRenderer& operator = (CRenderer&&) = delete;
 	mutable  CError m_error;
-		CScene  m_scene;
+		CScene    m_scene;
+		CViewPort m_view ;
 	};
 
 }}}

@@ -143,12 +143,12 @@ namespace docking {
 	// (b) a window in the bottom part of the client area, this is the debug output console; (text mode);
 	class CLayout : public IWaitable_Events {
 	public:
-		class c_main_wnd {
+		class CMainWnd {
 		public:
-			c_main_wnd (void); c_main_wnd (const c_main_wnd&) = delete; c_main_wnd (c_main_wnd&&) = delete; ~c_main_wnd (void) = default;
+			CMainWnd (void); CMainWnd (const CMainWnd&) = delete; CMainWnd (CMainWnd&&) = delete; ~CMainWnd (void) = default;
 			const
-			t_rect&  Clt_area (void) const;
-			t_rect&  Clt_area (void) ;
+			t_rect&  ClientArea (void) const;
+			t_rect&  ClientArea (void) ;
 			const
 			t_rect&  Position (void) const; // returns the reference to the rectangle of the main window position on the screen; (ro);
 			t_rect&  Position (void) ;      // direct changing of the rectangle value(s) does not move window or change its size;
@@ -162,7 +162,7 @@ namespace docking {
 			err_code   Target (const HWND);
 
 		private:
-			c_main_wnd& operator = (const c_main_wnd&) = delete; c_main_wnd& operator = (c_main_wnd&&) = delete;
+			CMainWnd& operator = (const CMainWnd&) = delete; CMainWnd& operator = (CMainWnd&&) = delete;
 			t_rect m_rect_pos; // the main window frame position on the screen in absolute coordinates' system;
 			t_rect m_rect_clt; // the rectangle of the client area of the main window;
 
@@ -194,8 +194,8 @@ namespace docking {
 		 err_code Recalc  (void) ; // re-calculates rectangles of all parts of the main window including its initial window rect too;
 
 		 const
-		 c_main_wnd& Main (void) const; // actually, it is not the pane but the main window sizes themselves;
-		 c_main_wnd& Main (void) ;     
+		 CMainWnd& Main (void) const; // actually, it is not the pane but the main window sizes themselves;
+		 CMainWnd& Main (void) ;     
 
 		 // https://forum.wordreference.com/threads/bottom-lower-and-top-upper.2453408/ ; << good explaining;
 		 // Google AI: 'Top' can be considered more *absolute*, referring to a singular point, whereas 'upper' is relative..."
@@ -215,7 +215,7 @@ namespace docking {
 		 CPane  m_low;
 		 CPane  m_top;
 
-		 c_main_wnd  m_main_wnd; // it is the main window of the tutorial app;
+		 CMainWnd  m_main_wnd; // it is the main window of the tutorial app;
 		 CStdTimer m_wait;
 	};
 

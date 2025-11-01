@@ -13,6 +13,8 @@
 
 #include "win.gui.wnd.h"
 
+#include "shapes\gl_shape.2d.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 using namespace shared::console;
@@ -59,7 +61,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	do {
 		__trace::Use_con(true); // the console window is not created yet; VS debug output is used anyway;
-
+#pragma region __step_0
 		// (0) creating the main window/application at the beginning of this 'journey';
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#2_shader"), true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
@@ -69,7 +71,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 
 		/*const */shared::gui::CLayout& layout = app_wnd.Layout();
-		
+#pragma endregion
+#pragma region __step_1
 		// (1) creates the console output window;
 		if (__failed(_out.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
 			__trace_err_3(_T("%s\n"), (_pc_sz) _out.Error().Print(TError::e_req));
@@ -88,7 +91,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		shared::console::CLayout().Output().HScroll().Set(true);
 
 		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
-
+#pragma endregion
+#pragma region __step_2
 		// (2) creates the context target window;
 		if (__failed(wnd_shader.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req)); // debug output console window is already created;
@@ -100,7 +104,16 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req));
 			break;
 		}
+#pragma endregion
+#pragma region __step_3
+		using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
+		CTriangle triangle;
 
+		triangle.A().Pos().Set(+0.0f, +0.5f);
+		triangle.B().Pos().Set(-0.5f, -0.5f);
+		triangle.B().Pos().Set(+0.5f, -0.5f);
+
+#pragma endregion
 	} while (true == false);
 
 	if (b_error != false) // goes to message loop and waits the app window will be closed;

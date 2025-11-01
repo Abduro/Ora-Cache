@@ -21,7 +21,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 	using CCtxWindow = ex_ui::draw::open_gl::context::CWnd;
 	using CFakeWnd = ex_ui::popup::CMsgWnd;
 
-	class CWnd : public CCtxWindow { typedef CCtxWindow TBase;
+	class CWnd : public CCtxWindow { typedef CCtxWindow TBase; using CDevice = context::CDevice;
 	public:
 		 CWnd (void);
 		~CWnd (void);
@@ -37,8 +37,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		CRenderer&  Renderer (void) ;
 
 	protected:
-		CFakeWnd m_fak_wnd; // message-only window (aka fake) is created in its constructor;
-		context::CDevice  m_ctx_dev;
+		CFakeWnd  m_fak_wnd; // message-only window (aka fake) is created in its constructor;
+		CDevice   m_ctx_dev;
 		CRenderer m_renderer;
 	};
 

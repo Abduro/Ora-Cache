@@ -195,6 +195,72 @@ context::CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+context::CDevice::CMode:: CMode (void) : m_value(e_mode::e__undef), m_hdc(nullptr) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+context::CDevice::CMode:: CMode (const HDC& _h_dc) : CMode() { *this << _h_dc; }
+context::CDevice::CMode::~CMode (void) {}
+
+uint32_t  context::CDevice::CMode::Current (void) const { return this->m_value; }
+TError&   context::CDevice::CMode::Error (void) const { return this->m_error; }
+
+// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
+uint32_t  context::CDevice::CMode::Get (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+	
+	if (false == context::CDevice::Is_DC(this->m_hdc)) {
+		this->m_value = e_mode::e__undef;
+		this->m_error << (err_code) TErrCodes::eObject::eHandle = _T("The device handle is invalid");
+	}
+	else {
+		this->m_value = ::GetGraphicsMode(this->m_hdc);
+		if (e_mode::e__undef == this->m_value)
+			this->m_error.Last();
+	}
+
+	return this->m_value;
+}
+
+// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;
+err_code context::CDevice::CMode::Set (const e_mode _e_value) {
+	_e_value;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == context::CDevice::Is_DC(this->m_hdc)) {
+		this->m_value = e_mode::e__undef;
+		this->m_error << (err_code) TErrCodes::eObject::eHandle = _T("The device handle is invalid");
+	}
+	else if (e_mode::e__undef == ::SetGraphicsMode(this->m_hdc, _e_value)) {
+		this->m_error.Last();
+	}
+	else {
+		this->m_value = _e_value;
+		__trace_impt_3(_T("The device mode of handle = %s is set to '%s';\n"), TString()._addr_of(this->m_hdc, _T("0x%08x")), (_pc_sz) CMode::To_str(_e_value));
+	}
+	return this->Error();
+}
+
+CString context::CDevice::CMode::To_str (void) const {  return CMode::To_str(this->m_value); }
+CString context::CDevice::CMode::To_str (const uint32_t _u_mode) {
+	_u_mode;
+	CString cs_out;
+	switch (_u_mode) {
+	case e_mode::e_advanced  : cs_out = _T("advanced"); break;
+	case e_mode::e_compatible: cs_out = _T("compatible"); break;
+	default: cs_out = _T("#undef");
+	}
+
+	return cs_out;
+}
+
+bool context::CDevice::CMode::IsAdvanced (void) const { return this->m_value == e_mode::e_advanced; }
+bool context::CDevice::CMode::Is_valid (void) const { return this->m_value != e_mode::e__undef; }
+
+context::CDevice::CMode&  context::CDevice::CMode::operator << (const HDC& _h_dc) { this->m_hdc = _h_dc; return *this; }
+context::CDevice::CMode&  context::CDevice::CMode::operator << (const e_mode _e_mode) { this->m_value = _e_mode; return *this; }
+const
+context::CDevice::CMode&  context::CDevice::CMode::operator >> (uint32_t& _n_out) const { _n_out = this->Current(); return *this; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 context::CDevice:: CDevice (void) : CBase() { CBase::m_error <<__CLASS__; }
 
 context::CDevice:: CDevice (const HWND _h_target) : CDevice() { *this << _h_target; }
@@ -237,6 +303,10 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	if (__failed(CBase::Set(_h_target))) {
 		return CBase::Error()();
 	}
+	
+	this->Mode() << CBase::Target().Get();
+	if (__failed(this->Mode().Set(CMode::e_mode::e_advanced)))
+		return this->m_error() = this->Mode().Error();
 
 	PIXELFORMATDESCRIPTOR px_fmt_desc = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
 	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << there is the example of how to do that;
@@ -278,10 +348,26 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	return CBase::Error()();
 }
 
+bool context::CDevice::Is_DC (const HDC _hdc) {
+	_hdc;
+	if (nullptr == _hdc) return false;
+	const dword d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type || OBJ_DC == d_type);
+}
+
+bool context::CDevice::Is_DC_mem (const HDC _hdc) {
+	_hdc;
+	if (nullptr == _hdc) return false;
+	const dword d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type/* || OBJ_DC == d_type*/);
+}
+
+const
+context::CDevice::CMode& context::CDevice::Mode (void) const { return this->m_mode; }
+context::CDevice::CMode& context::CDevice::Mode (void)       { return this->m_mode; }
+
 CDevice& context::CDevice::operator <<(const HWND _h_target) {
 	_h_target;
-	(CBase&)*this << _h_target;
-	this->Create(_h_target); return *this; // for getting the result of creation the error state should be checked;
+	this->Create(_h_target);
+	return *this; // for getting the result of creation the error state should be checked;
 }
 
 /////////////////////////////////////////////////////////////////////////////

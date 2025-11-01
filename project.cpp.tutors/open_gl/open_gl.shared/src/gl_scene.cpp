@@ -22,25 +22,28 @@ vertex::CArray&  CScene::Array (void)       { return this->m_array; }
 TError&  CScene::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Array().Unbind()))
-		return this->m_error = this->Array().Error();
-	if (__failed(this->Array().Delete()))
-		this->m_error = this->Array().Error();
-
-	// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
-	if (__failed(this->Prog().Buffer().Unbind())) {
-		return this->m_error = this->Prog().Buffer().Error();
+	if (this->Array().Is_bound()) {
+		if (__failed(this->Array().Unbind()))
+			return this->m_error = this->Array().Error();
+		if (__failed(this->Array().Delete()))
+			return this->m_error = this->Array().Error();
 	}
 
-	if (__failed(this->Prog().Buffer().Destroy()))
-		return this->m_error = this->Prog().Buffer().Error();
+	// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
+	if (this->Prog().Buffer().Is_bound()) {
+		if (__failed(this->Prog().Buffer().Unbind()))
+			return this->m_error = this->Prog().Buffer().Error();
 
+		if (__failed(this->Prog().Buffer().Destroy()))
+			return this->m_error = this->Prog().Buffer().Error();
+	}
+#if (0) // shaders must be deleted right after linking the program;
 	if (__failed(this->Prog().Shaders().Detach()))
 		return this->m_error = this->Prog().Shaders().Error();
 
 	if (__failed(this->Prog().Shaders().Delete()))
 		return this->m_error = this->Prog().Shaders().Error();
-
+#endif
 	if (__failed(this->Prog().Delete()))
 		return this->m_error = this->Prog().Error();
 
@@ -88,6 +91,11 @@ err_code CScene::Prepare (void) {
 	// this step is not necessary due to of course an attribute's index can be changed by 'location' specifier in shader source script, but nevertheless;
 	if (__failed(this->Prog().Attrs().Bound()))
 		return this->m_error = this->Prog().Attrs().Error();
+	// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
+	if (__failed(this->Prog().Shaders().Detach()))
+		this->m_error = this->Prog().Shaders().Error();
+	else if (__failed(this->Prog().Shaders().Delete()))
+		this->m_error = this->Prog().Shaders().Error();
 
 	if (__failed(this->Prog().Buffer().Create()))
 		return this->m_error = this->Prog().Buffer().Error();

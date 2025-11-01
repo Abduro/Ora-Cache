@@ -63,6 +63,8 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 	}/* else if (__failed(TBase::Ctx().Create(*this, 4, 6))) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Ctx().Error()().Print(TError::e_req));
 	}*/
+	else
+		this->IMsg_OnMessage (WM_SIZE, 0, 0); // just sends the messege identifier, the handler takes all required steps itself;
 
 	return (*this)().Error();
 }
@@ -107,7 +109,18 @@ err_code shader::CWnd::Destroy (void) {
 
 err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
-	if (WM_DESTROY == _u_code) { // this message is very important for required cleaning up of the draw pipeline components, the result is kept as unhandled;
+	switch (_u_code) {
+	// this message is very important for required cleaning up of the draw pipeline components, the result is kept as unhandled;
+	case WM_DESTROY: this->Renderer().Scene().Destroy(); break;
+	case WM_SIZE   :
+	case WM_SIZING :
+		t_rect rect = {0};
+		if (::GetClientRect((*this)(), &rect))  { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+			this->Renderer().View() << rect;
+		}
+		break;
+	}
+	if (WM_DESTROY == _u_code) {
 		this->Renderer().Scene().Destroy();
 	}
 	return TBase::IMsg_OnMessage(_u_code, _w_param, _l_param);

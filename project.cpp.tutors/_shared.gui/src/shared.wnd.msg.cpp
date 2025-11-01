@@ -30,6 +30,16 @@ static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param 
 	_h_wnd; _msg_id; _w_param; _l_param;
 	Router_Safe_Lock();
 	THandlers::iterator it_ = Get_handlers().find(_h_wnd);
+	/*important:
+	  some messages comes from system procedure CreateWindow(), thus the input window handle is not registered yet in handlers,
+	  because the system function does not complete its work yet and not return the control to window class method;
+	  thus, such messages as WM_CREATE, WM_SIZE are not handled by class that creates a window;
+	  it looks like what one of the reasons of existing an ATL::thunk intermediate adapter layer;
+	  solution:
+	  the window creation procedure should call its message handler with the WM_CREATE message identifier immediately after subscribing to this message handler;
+	  final decision:
+	  the procedure that creates a window makes necessary things by direct call the required function(s) without sending a message;
+	*/
 	if (Get_handlers().end() == it_ || nullptr == it_->second)
 		return ::DefWindowProc(_h_wnd, _msg_id, _w_param, _l_param);
 	l_result n_result = 0;
@@ -63,6 +73,8 @@ static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param 
 #endif
 	} break;
 	case WM_MOVING :
+	case WM_SIZE   :
+	case WM_SIZING :
 	case WM_WINDOWPOSCHANGING: {
 		n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
 	} break;

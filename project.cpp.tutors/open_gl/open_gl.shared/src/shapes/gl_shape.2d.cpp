@@ -14,6 +14,7 @@ using namespace _impl_4;
 CTriangle:: CTriangle (void) : CShape() { CString cs_cls = TString().Format(_T("%s::%s"), CShape::m_error.Class(), (_pc_sz)__CLASS__);
 	CShape::m_error.Class(cs_cls, false);
 }
+CTriangle::~CTriangle (void) {}
 
 const
 CVertex&    CTriangle::A (void) const { return this->m_vertices[e_vertices::e_a]; }

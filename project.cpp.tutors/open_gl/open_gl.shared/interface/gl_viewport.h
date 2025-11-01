@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL viewport wrapper interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_vertex.h"
+#include "shapes\gl_vertex.h"
 
 #ifndef __H
 #define __H(rect) (rect.bottom - rect.top)
@@ -20,16 +20,15 @@ struct {
 	uint32_t cy = 0;
 } t_size_u;
 
+#pragma region __refs_f
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ; :: gettig the info of viewport;
 // https://learn.microsoft.com/en-us/windows/win32/opengl/gldepthrange ; :: z-buffer coord value mapping to window client area;
 // https://stackoverflow.com/questions/59262874/how-can-i-use-screen-space-coordinates-directly-with-opengl :: good discussion of coord's precision;
-// https://stackoverflow.com/questions/54058612/differing-floating-point-behaviour-between-uniform-and-constants-in-glsl ;
 // https://stackoverflow.com/questions/37699310/convert-screen-coordinates-to-opengl-coordinates ;
 // https://learnwebgl.brown37.net/08_projections/projections_ortho.html ;
 // https://learnopengl.com/Getting-started/Coordinate-Systems ;
-// https://community.khronos.org/t/floating-point-accuracy-in-glsl/62729/7 ;
 // https://community.khronos.org/t/converting-window-coordinates-to-world-coordinates/16029/8 ;
-
+#pragma endregion
 namespace ex_ui { namespace draw { namespace open_gl {
 	// https://en.wikipedia.org/wiki/Viewport ;
 	// it is supposed the viewport dimensions are the same as target window client area is;
@@ -46,6 +45,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		bool Is_valid (void) const;     // it is assumed the width and height both do not equal to 0, otherwise 'false';
 
 		vertex::CCoord ToPos (const long _x, const long _y) ;
+
+		CViewPort& operator << (const t_rect&);
 
 	private:
 		mutable

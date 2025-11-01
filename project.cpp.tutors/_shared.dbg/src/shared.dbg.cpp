@@ -21,7 +21,7 @@ namespace _impl {
 		switch (_e_cat) {
 		case CTrace::e_category::e_warn: return CString(_T("[warn]"));
 		case CTrace::e_category::e_err : return CString(_T("[error]"));
-		case CTrace::e_category::e_impt: return CString(_T("[info]"));
+		case CTrace::e_category::e_impt: return CString(_T("[impt]"));
 		default:
 			return CString(_T("[info]"));
 		}

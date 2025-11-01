@@ -67,12 +67,60 @@ namespace context {
 	// this is the class declartion of the context compatible with regular GDI context (HDC);
 	class CDevice : public CBase {
 	public:
-		 CDevice (void); CDevice (const HWND _h_target);
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;
+		class CMode {
+		public:
+			enum e_mode : uint32_t {
+			     e__undef     = 0,             // the error mode;
+			     e_advanced   = GM_ADVANCED  , // the mode for the possibility to apply world transformations;
+			     e_compatible = GM_COMPATIBLE, // the mode for the compatibility with 16-bit operating system; (default);
+			};
+		public:
+			 CMode (void); CMode (const HDC&); CMode(const CMode&) = delete; CMode (CMode&&) = delete;
+			~CMode (void);
+
+			uint32_t Current (void) const;       // returns currently saved value of the mode without querying the device object;
+			TError&  Error (void) const;
+
+			uint32_t Get (void) const;           // gets the current graphics' mode which the input device context is in;
+			err_code Set (const e_mode);         // sets the new graphics' mode which the input device context is in;
+
+			bool IsAdvanced (void) const;
+			bool Is_valid (void) const;
+
+			static
+			CString To_str (const uint32_t _u_mode);
+			CString To_str (void) const;
+
+			CMode& operator <<(const HDC&);      // sets the target device context handle for manupulating by its graphical mode;
+			CMode& operator <<(const e_mode);    // sets the the mode value; no query to device context;
+			const
+			CMode& operator >>(uint32_t&) const; // gets the current value;  no query to device context;
+
+		private:
+			CMode& operator = (const CMode&) = delete; CMode& operator = (CMode&&) = delete;
+			mutable
+			uint32_t m_value;
+			mutable
+			CError   m_error;
+			HDC      m_hdc; // this is the context device handle which the graphics mode is received from and can be set to;
+		};
+	public:
+		 CDevice (void); CDevice (const HWND _h_target); // the mode of the HDC will be set automatically to advanced mode if input window handle is valid;
 		~CDevice (void);
 
 		err_code Create (const HWND _h_target); // creates the rendering context that is compatible with input window device context;
+		const
+		CMode&   Mode (void) const;
+		CMode&   Mode (void);
 
 		CDevice& operator <<(const HWND _h_target); // invokes this::Create(...); if the renderer context is already created, it will be destroyed first;
+
+		static bool Is_DC (const HDC);     // returns true if an input handle has proper data type such as: OBJ_DC|OBJ_MEMDC;
+		static bool Is_DC_mem (const HDC); // returns true if an input handle has proper data type is OBJ_MEMDC;
+
+	private: CMode m_mode;
 	};
 }
 	/* The main idea is composed by several steps:
