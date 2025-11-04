@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL vertex buffer functions' loader interface implementation file;
 */
 #include "gl_procs_buffer.h"
+#include "shared.dbg.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -74,8 +75,8 @@ err_code CBuffer::Bind (const uint32_t _u_tgt_id, const uint32_t _u_buf_id) {
 	return CBase::Error();
 }
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
-err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const void* _p_data, const uint32_t _u_usage) {
-	_u_tgt_id; _n_size; _p_data; _u_usage;
+err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage) {
+	_u_tgt_id; _n_bytes; _p_data; _u_usage;
 	/* Possible errors:
 		GL_INVALID_ENUM      : '_u_tgt_id' is not one of the accepted buffer targets;
 		GL_INVALID_VALUE     : '_n_size' is negative;
@@ -89,7 +90,7 @@ err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const
 	if (nullptr == p_fun)
 		return CBase::Error();
 
-	p_fun(_u_tgt_id, _n_size, _p_data, _u_usage);
+	p_fun(_u_tgt_id, _n_bytes, _p_data, _u_usage);
 
 	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM : {
@@ -98,10 +99,10 @@ err_code CBuffer::Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const
 			else if (false == ::is_buf_usage(_u_usage)) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_use: '_u_usage' (%u) is not acceptad"), _u_usage);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: #undef error"));
 		} break;
-	case GL_OUT_OF_MEMORY : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_no_mem: creating data store with size (%I64d) failed"), _n_size); break;
+	case GL_OUT_OF_MEMORY : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_no_mem: creating data store with size (%I64d) failed"), _n_bytes); break;
 	case GL_INVALID_OPERATION : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: bound reserved buffer (id =  %d)"), 0); break;
 	case GL_INVALID_VALUE : {
-			if (0 > _n_size) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_size' (%I64d) has invalid value"), _n_size);
+			if (0 > _n_bytes) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_size' (%I64d) has invalid value"), _n_bytes);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: #undef error"));
 		} break;
 	default:;
@@ -181,8 +182,8 @@ bool CBuffer::Is_Buffer (const uint32_t _u_buf_id) {
 // https://www.reddit.com/r/opengl/comments/aifvjl/glnamedbufferstorage_vs_glbufferdata/ ; as an example;
 // https://www.reddit.com/r/cpp_questions/comments/aik18a/after_two_years_seems_like_i_still_dont/ ; as an example too;
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
-err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_size, const void* _p_data, const uint32_t _u_usage) {
-	_u_buf_id; _n_size; _p_data; _u_usage;
+err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage) {
+	_u_buf_id; _n_bytes; _p_data; _u_usage;
 	/* Possible errors:
 		GL_INVALID_VALUE     : '_n_size' is negative;
 		GL_INVALID_OPERATION : '_u_buf_id' is zero (0) that is the identifier of the reserved buffer object;
@@ -197,7 +198,7 @@ err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_size, cons
 	if (nullptr == p_fun)
 		return CBase::Error();
 
-	p_fun(_u_buf_id, _n_size, _p_data, _u_usage);
+	p_fun(_u_buf_id, _n_bytes, _p_data, _u_usage);
 
 	switch (CErr_ex().Get_code()) {
 	case GL_INVALID_ENUM : {
@@ -211,9 +212,9 @@ err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_size, cons
 				CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_u_buf_id' (%u) does not refer to buffer"), _u_buf_id);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_u_buf_id' (%u) refers to read-only buffer"), _u_buf_id);
 		} break;
-	case GL_OUT_OF_MEMORY : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_no_mem: creating data store with size (%I64d) failed"), _n_size); break;
+	case GL_OUT_OF_MEMORY : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_no_mem: creating data store with size (%I64d) failed"), _n_bytes); break;
 	case GL_INVALID_VALUE : {
-			if (0 > _n_size) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_size' (%I64d) has invalid value"), _n_size);
+			if (0 > _n_bytes) CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_n_size' (%I64d) has invalid value"), _n_bytes);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: #undef error"));
 		} break;
 	default:;
@@ -231,4 +232,17 @@ err_code CBuffer::Get_all (void) {
 	}
 
 	return CBase::Error();
+}
+
+TBufferProcs&  __get_buf_procs (void) {
+	static TBufferProcs procs;
+	static bool b_loaded = false;
+
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+			__trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+			b_loaded = true;
+	}
+	return procs;
 }

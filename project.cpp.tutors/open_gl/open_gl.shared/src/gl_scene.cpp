@@ -70,6 +70,8 @@ err_code CScene::Prepare (void) {
 
 	if (__failed(this->Prog().Create()))
 		return this->m_error = this->Prog().Error();
+	// activates or binds vertex array attributes;
+	this->Array().Attrs() << this->Prog().Id();
 
 	if (__failed(this->Prog().Shaders().Create()))
 	    return this->m_error = this->Prog().Shaders().Error();
@@ -83,19 +85,53 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Prog().Shaders().Attach()))
 		return this->m_error = this->Prog().Shaders().Error();
 
-	if (__failed(this->Prog().Attrs().Bind()))
-		return this->m_error = this->Prog().Attrs().Error();
+	static _pc_sz attr_names[] = {_T("colorIn"), _T("positionIn")};
+
+	// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
+	if (__failed(this->Array().Attrs().Clr().Name(attr_names[0]))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
+	if (__failed(this->Array().Attrs().Pos().Name(attr_names[1]))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
+	// the error may be set by procedure of assigning the name to attribute, just output the error to trace log;
+	if (this->Error()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+
+	// sets attributes' indecise (aka location) before linking the program,
+	// an index of the particular attribute must be the same as in actual vertex: 0 - position; 1 - color;
+	if (__failed(this->Array().Attrs().Clr().Index().Set(1))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
+	if (__failed(this->Array().Attrs().Pos().Index().Set(0))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
+	// the same as above, the error may be set by procedure of setting the index to attribute, just output the error to trace log;
+	if (this->Error()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
 
 	if (__failed(this->Prog().Link()))
 		return this->m_error = this->Prog().Error();
-	// this step is not necessary due to of course an attribute's index can be changed by 'location' specifier in shader source script, but nevertheless;
-	if (__failed(this->Prog().Attrs().Bound()))
-		return this->m_error = this->Prog().Attrs().Error();
+
 	// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
-	if (__failed(this->Prog().Shaders().Detach()))
-		this->m_error = this->Prog().Shaders().Error();
-	else if (__failed(this->Prog().Shaders().Delete()))
-		this->m_error = this->Prog().Shaders().Error();
+	if (false) {}
+	else if (__failed(this->Prog().Shaders().Detach())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
+	else if (__failed(this->Prog().Shaders().Delete())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
+
+	// checks vertex attributes' indices after linking the program and deleting the shaders;
+	// the indices must be the same as them were set before the linking;
+
+	const int32_t n_clr_ndx = this->Array().Attrs().Clr().Index().Get();
+	const int32_t n_pos_ndx = this->Array().Attrs().Pos().Index().Get();
+
+	if (this->Array().Attrs().Clr().Index().Error()) this->m_error = this->Array().Attrs().Clr().Index().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[0], n_clr_ndx); }
+	if (this->Array().Attrs().Pos().Index().Error()) this->m_error = this->Array().Attrs().Pos().Index().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[1], n_pos_ndx); }
+	// the error may be set by any attribute and the error of the first attribute may be overritten by the error of the last attriboute,
+	// but it is not important for this time yet;
+	if (this->Error()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+	// before enabling the attributes the vertex array must be activated, i.e. to be bound;
+	if (__failed(this->Array().Bind())) {
+		return this->m_error = this->Array().Error(); // The array is still inactive, so its attributes will not be enabled successfully;
+	}
+
+	if (__failed(this->Array().Enable(true)))
+		this->m_error = this->Array().Error(); // in case of error to make attributes be enabled it is very possible the setting data to buffer will fail;
 
 	if (__failed(this->Prog().Buffer().Create()))
 		return this->m_error = this->Prog().Buffer().Error();
@@ -108,7 +144,9 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Prog().Buffer().Bind()))
 		return this->m_error = this->Prog().Buffer().Error();
 #endif
-	this->Prog().Validate();
+	if (__succeeded(this->Prog().Validate())) {
+		__trace_info_2(_T("The draw scene is prepared;\n"));
+	}
 
 	return this->Error();
 }

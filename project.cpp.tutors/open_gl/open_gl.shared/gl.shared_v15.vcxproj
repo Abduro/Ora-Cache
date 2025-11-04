@@ -228,6 +228,8 @@
     <ClCompile Include="$(_1-3)gl_shape.2d.cpp" />
     <ClInclude Include="$(_0-3)gl_shape.bs.h" />
     <ClCompile Include="$(_1-3)gl_shape.bs.cpp" />
+    <ClInclude Include="$(_0-0)gl_$_attr.h" />
+    <ClCompile Include="$(_1-0)gl_$_attr.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_id.h" />
     <ClCompile Include="$(_1-0)gl_shd_id.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_source.h" />
@@ -242,6 +244,8 @@
     <ClCompile Include="$(_1)gl_version.cpp" />
     <ClInclude Include="$(_0-3)gl_vertex.h" />
     <ClCompile Include="$(_1-3)gl_vertex.cpp" />
+    <ClInclude Include="$(_0-3)gl_vertex_arr.h" />
+    <ClCompile Include="$(_1-3)gl_vertex_arr.cpp" />
     <ClInclude Include="$(_0)gl_viewport.h" />
     <ClCompile Include="$(_1)gl_viewport.cpp" />
   </ItemGroup>

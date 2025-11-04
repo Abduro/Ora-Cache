@@ -83,6 +83,8 @@
     <ClCompile Include="$(_1-3)gl_shape.2d.cpp"><Filter>src\shapes</Filter></ClCompile>
     <ClInclude Include="$(_0-3)gl_shape.bs.h"><Filter>interface\shapes</Filter></ClInclude>
     <ClCompile Include="$(_1-3)gl_shape.bs.cpp"><Filter>src\shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_$_attr.h"><Filter>interface\shader</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_$_attr.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_id.h"><Filter>interface\shader</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_shd_id.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_source.h"><Filter>interface\shader</Filter></ClInclude>
@@ -97,6 +99,8 @@
     <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0-3)gl_vertex.h"><Filter>interface\shapes</Filter></ClInclude>
     <ClCompile Include="$(_1-3)gl_vertex.cpp"><Filter>src\shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0-3)gl_vertex_arr.h"><Filter>interface\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_1-3)gl_vertex_arr.cpp"><Filter>src\shapes</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_viewport.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_viewport.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

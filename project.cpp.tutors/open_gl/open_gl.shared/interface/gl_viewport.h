@@ -24,10 +24,6 @@ struct {
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ; :: gettig the info of viewport;
 // https://learn.microsoft.com/en-us/windows/win32/opengl/gldepthrange ; :: z-buffer coord value mapping to window client area;
 // https://stackoverflow.com/questions/59262874/how-can-i-use-screen-space-coordinates-directly-with-opengl :: good discussion of coord's precision;
-// https://stackoverflow.com/questions/37699310/convert-screen-coordinates-to-opengl-coordinates ;
-// https://learnwebgl.brown37.net/08_projections/projections_ortho.html ;
-// https://learnopengl.com/Getting-started/Coordinate-Systems ;
-// https://community.khronos.org/t/converting-window-coordinates-to-world-coordinates/16029/8 ;
 #pragma endregion
 namespace ex_ui { namespace draw { namespace open_gl {
 	// https://en.wikipedia.org/wiki/Viewport ;

@@ -4,6 +4,7 @@
 */
 #include "gl_procs_shader.h"
 #include "gl_shd_type.h"
+#include "shared.dbg.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -176,4 +177,16 @@ err_code CShader::Get_all (void) {
 	}
 
 	return CBase::Error();
+}
+
+TShaderProcs&  ::__get_$_procs (void) {
+	static TShaderProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
 }

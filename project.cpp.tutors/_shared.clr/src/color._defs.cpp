@@ -130,7 +130,7 @@ namespace ex_ui { namespace color { namespace rgb {
 /////////////////////////////////////////////////////////////////////////////
 
 float CConvert::ToFloat (const clr_value _value) {
-	const float f_invert = 1.0f / 255.0f; 
+	static const float f_invert = 1.0f / 255.0f; 
 	return _value * f_invert; 
 }
 

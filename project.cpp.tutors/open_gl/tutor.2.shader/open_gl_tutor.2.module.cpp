@@ -109,9 +109,26 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
 		CTriangle triangle;
 
+		triangle.A().Clr().Set(1.0f, 0.0f, 0.0f, 1.0f);
+		triangle.B().Clr().Set(0.0f, 1.0f, 0.0f, 1.0f);
+		triangle.C().Clr().Set(0.0f, 0.0f, 1.0f, 1.0f);
+
+		// for this tutorial direct assigning coordinates to the rectangle vertices is acceptable;
 		triangle.A().Pos().Set(+0.0f, +0.5f);
 		triangle.B().Pos().Set(-0.5f, -0.5f);
-		triangle.B().Pos().Set(+0.5f, -0.5f);
+		triangle.C().Pos().Set(+0.5f, -0.5f);
+
+		if (__failed(triangle.Update())) { // if an error occurs, the method prints it itself;
+			break;
+		}
+
+		using
+		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
+		CBuffer_4_vert& buffer = wnd_shader.Renderer().Scene().Prog().Buffer();
+
+		if (__failed(buffer.SetData(triangle))) {
+			break;
+		}
 
 #pragma endregion
 	} while (true == false);

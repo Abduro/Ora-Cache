@@ -4,6 +4,7 @@
 */
 #include "gl_procs.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::procs;
@@ -141,6 +142,18 @@ enum class e_param_fun_ndx : uint32_t {
 CParam:: CParam (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
 	CBase::m_error.Class(cs_cls, false);
 }
+
+err_code CParam::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(param_fun_names); i_++) {
+		if (nullptr == CBase::Get(param_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
 // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGet.xml ;
 bool    CParam::GetBool (const uint32_t _u_param_id) {
 	_u_param_id;
@@ -208,7 +221,14 @@ int32_t CParam::GetInt (const uint32_t _u_param_id) {
 	return n_result;
 }
 
-TParam& __get_procs_param (void) {
+TParam& __get_param_procs (void) {
 	static TParam procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
 	return procs;
 }

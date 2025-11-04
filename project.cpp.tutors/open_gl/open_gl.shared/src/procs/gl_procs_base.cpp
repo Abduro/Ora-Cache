@@ -55,7 +55,7 @@ PROC procs::CBase::Get (_pc_sz _p_proc_name) {
 			// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress ;
 			p_proc = ::GetProcAddress(h_module, cs_ansi.GetString());
 			if (0 == p_proc) {
-				this->m_error.Last(); this->m_error = TString().Format(_T("Get address of '%s' failed"), _p_proc_name);
+				this->m_error.Last(); this->m_error = TString().Format(_T("Getting the address of '%s' failed"), _p_proc_name);
 			}
 		}
 	}

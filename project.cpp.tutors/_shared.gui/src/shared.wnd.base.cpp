@@ -72,7 +72,7 @@ err_code CWndBase::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 				n_result = __s_ok; // this message is handled;
 		} break;
 	case WM_DESTROY: {
-		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
+			n_result = __s_ok;
 		} break;
 	}
 
@@ -134,13 +134,12 @@ err_code CWndBase::Destroy (void) {
 		return this->Error();   // no error, just returns 'success';
 
 	const bool b_is_top = this->Is_top();
-
-	::Get_router().Unsubscribe(this->Handle());
-
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
 	if (false == !!::DestroyWindow(this->m_h_wnd))
 		return this->m_error.Last();
 	else {
+		::Get_router().Unsubscribe(this->Handle());
+
 		this->m_error << __e_not_inited;
 		this->m_h_wnd = 0;
 

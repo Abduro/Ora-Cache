@@ -11,107 +11,10 @@
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vertex;
+using namespace ex_ui::color::rgb;
 
 #define __gl_arr_bound 0x8894 // GL_ARRAY_BUFFER_BINDING;
-#pragma region _vert_array
-procs::vertex::CArray& __get_procs (void) {
-	static procs::vertex::CArray procs;
-	return procs;
-}
 
-vertex::CArray:: CArray (void) : m_arr_id(0) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
-vertex::CArray::~CArray (void) {}
-
-err_code vertex::CArray::Bind (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
-
-	if (this->Is_bound()) {
-		this->m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("the array of '_arr_id' (%u) is already bound"), this->GetId());
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		return this->Error();
-	}
-	if (__failed(__get_procs().Bind(this->GetId()))) {
-		this->m_error = __get_procs().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-	else {
-		__trace_info_2(_T("The array of id = %u is bound;\n"), this->GetId());
-	}
-	return this->Error();
-}
-
-bool vertex::CArray::Is_bound (void) const {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
-
-	const int32_t n_result = __get_procs_param().GetInt(__gl_arr_bound);
-	if (__get_procs_param().Error()) {
-		this->m_error = __get_procs_param().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		return false;
-	}
-	const bool b_result = this->GetId()== static_cast<uint32_t>(n_result);
-	if (false == b_result)
-		__trace_info_2(_T("the array of '_arr_id' (%u) is not bound;\n"), this->GetId());
-
-	return b_result;
-}
-
-err_code vertex::CArray::Create (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
-
-	if (!!this->GetId()) {
-		this->m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(_T("#__e_inv_state: array (id = %u) already exists"), this->GetId());
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		return this->Error();
-	}
-	if (__failed(__get_procs().GetIds(1, &this->m_arr_id))) {
-		this->m_error = __get_procs().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-	else {
-		__trace_impt_2(_T("The vertex array (id = %u) is created;\n"), this->m_arr_id);
-	}
-	return this->Error();
-}
-
-err_code vertex::CArray::Delete (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
-
-	if (0 == this->GetId())  // if the array is not created yet success is returned and just keeping the silence;
-		return this->Error();
-
-	if (__failed(__get_procs().Delete(1, &this->m_arr_id))) {
-		this->m_error = __get_procs().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-	else {
-		__trace_warn_2(_T("The vertex array (id = %u) is deleted;\n"), this->m_arr_id);
-		this->m_arr_id = 0;
-	}
-	return this->Error();
-}
-
-TError&  vertex::CArray::Error (void) const { return this->m_error; }
-
-uint32_t vertex::CArray::GetId (void) const { return this->m_arr_id; }
-
-err_code vertex::CArray::Unbind (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
-
-	if (false == this->Is_bound()) {
-		__trace_info_2(_T("The array id = %u is not bound;\n"), this->GetId());
-		return this->Error();
-	}
-	if (__failed(__get_procs().Bind(0))) {
-		this->m_error = __get_procs().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-	else
-		__trace_info_2(_T("The array id = %u is unbound;\n"), this->GetId());
-
-	return this->Error();
-}
-#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 #if (1)
 CCoord:: CCoord (const float _x, const float _y, const float _z) : m_coord{_x, _y, _z} {}
@@ -179,10 +82,53 @@ uint32_t  CData::Size  (void) const { return this->m_size; }
 /////////////////////////////////////////////////////////////////////////////
 
 CColor:: CColor (TVertData& _data) : CData(_data) {
-	CData::m_offset = 3 * sizeof(float); // it is the count of the position elements and the size of the data type;
+	CData::m_offset = 3; // it is the count of the position elements and the size of the data type;
 	CData::m_size = 4; // r|g|b|a;
 }
 CColor::~CColor (void) {}
+
+void CColor::Set (const float _r, const float _g, const float _b, const float _a) {
+	_r; _g; _b; _a;
+	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
+	const uint32_t n_req = CData::Offset() + this->Size();
+
+	if (n_req > n_size)
+		return;
+
+	CData::m_data[0 + CData::Offset()] = (0.0f > _r ? 0.0f : (1.0f < _r ? 1.0f : _r));
+	CData::m_data[1 + CData::Offset()] = (0.0f > _g ? 0.0f : (1.0f < _g ? 1.0f : _g));
+	CData::m_data[2 + CData::Offset()] = (0.0f > _b ? 0.0f : (1.0f < _b ? 1.0f : _b));
+	CData::m_data[3 + CData::Offset()] = (0.0f > _a ? 0.0f : (1.0f < _a ? 1.0f : _a));
+}
+
+void CColor::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a) {
+	_r; _g; _b; _a;
+	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
+	const uint32_t n_req = CData::Offset() + this->Size();
+
+	if (n_req > n_size)
+		return;
+
+	// the color channels' sequence: r-g-b-a;
+	CData::m_data[0 + CData::Offset()] = _r;
+	CData::m_data[1 + CData::Offset()] = _g;
+	CData::m_data[2 + CData::Offset()] = _b;
+	CData::m_data[3 + CData::Offset()] = _a;
+}
+
+void CColor::Set (const rgb_color _rgba) {
+	_rgba;
+	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
+	const uint32_t n_req = CData::Offset() + this->Size();
+
+	if (n_req > n_size)
+		return;
+	// the color channels' sequence: r-g-b-a;
+	CData::m_data[0 + CData::Offset()] = CConvert::ToFloat(get_r_value(_rgba));
+	CData::m_data[1 + CData::Offset()] = CConvert::ToFloat(get_g_value(_rgba));
+	CData::m_data[2 + CData::Offset()] = CConvert::ToFloat(get_b_value(_rgba));
+	CData::m_data[3 + CData::Offset()] = CConvert::ToFloat(get_a_value(_rgba));
+}
 
 CPosition:: CPosition (TVertData& _data) : CData(_data) {
 	CData::m_offset = 0; // this value is set by the parent class, but for better readability it is shown here; position's elements start from the beginning of the data vector;
@@ -193,11 +139,14 @@ CPosition::~CPosition (void) {}
 void CPosition::Set (const float _x, const float _y, const float _z) {
 	_x; _y; _z;
 	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
-	if (CData::Offset() >= n_size || this->Size() > n_size) // the offset, elements/components' count/size and vertex vector size must be appropriate;
+	const uint32_t n_req = CData::Offset() + this->Size();
+
+	if (n_req > n_size) // the offset, elements/components' count/size and vertex vector size must be appropriate;
 		return;
-	CData::m_data[0 + CData::Offset()] = _x;
-	CData::m_data[1 + CData::Offset()] = _y;
-	CData::m_data[2 + CData::Offset()] = _z;
+
+	CData::m_data[0 + CData::Offset()] = (-1.0f > _x ? -1.0f : (1.0f < _x ? 1.0f : _x));
+	CData::m_data[1 + CData::Offset()] = (-1.0f > _y ? -1.0f : (1.0f < _y ? 1.0f : _y));
+	CData::m_data[2 + CData::Offset()] = (-1.0f > _z ? -1.0f : (1.0f < _z ? 1.0f : _z));
 }
 
 void CPosition::Set (const long  _x, const long  _y) {

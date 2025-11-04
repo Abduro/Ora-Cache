@@ -5,7 +5,6 @@
 	This is Ebo Pack OpenGL tutorials' shader base interface declaration file;
 */
 #include "gl_defs.h"
-#include "procs\gl_procs_shader.h"
 #include "shader\gl_shd_source.h"
 #include "shader\gl_shd_type.h"
 #include "shader\gl_shd_status.h"
@@ -22,7 +21,6 @@ namespace shader {
 		 CShader (void); CShader (const CShader&); CShader (CShader&&);
 		~CShader (void);
 
-		 static procs::CShader& Procs (void) ;
 		 static CString  Class (void);       // returns this class name for debug purposes;
 
 		 err_code Create (const TType);

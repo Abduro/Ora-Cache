@@ -93,11 +93,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		CBuffer (void); ~CBuffer (void) = default;
 
 		err_code Bind (const uint32_t _u_tgt_id, const uint32_t _u_buf_id); // binds a buffer object to the specified point ;
-		err_code Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_size, const void* _p_data, const uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
+		err_code Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
 		err_code Delete (const int32_t  _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
 		err_code GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids); // returns _n_count buffer object names in _p_names array ;
 		bool  Is_Buffer(const uint32_t _u_buf_id) ;
-		err_code Named (const uint32_t _u_buf_id, const ptrdiff_t _n_size, const void* _p_data, const uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
+		err_code Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
 
 		err_code Get_all (void) ; // gets all functions' pointers at once;
 
@@ -105,5 +105,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator = (CBuffer&&) = delete;
 	};
 }}}}
+
+typedef ex_ui::draw::open_gl::procs::CBuffer  TBufferProcs;
+
+TBufferProcs& __get_buf_procs (void);
 
 #endif/*_GL_PROCS_BUFFER_H_INCLUDED*/

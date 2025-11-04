@@ -8,6 +8,7 @@
 #include "shared.dbg.h"
 
 #include "shader\gl_compiler.h"
+#include "procs\gl_procs_shader.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
@@ -33,11 +34,6 @@ CShader:: CShader (const CShader& _src) : CShader() { *this= _src; }
 CShader:: CShader (CShader&& _victim) : CShader() { *this = _victim; }
 CShader::~CShader (void) { this->Delete(); }
 
-procs::CShader& CShader::Procs (void) {
-	static procs::CShader m_fn_cache;
-	return m_fn_cache;
-}
-
 CString  CShader::Class (void) { return __CLASS__; }
 
 err_code CShader::Create (const TType _e_type) {
@@ -46,9 +42,9 @@ err_code CShader::Create (const TType _e_type) {
 
 	__trace::Use_con(true); // ToDo: possibly it is not necessary and must be removed;
 
-	this->m_id = CShader::Procs().Create(_e_type);
+	this->m_id = __get_$_procs().Create(_e_type);
 	if (0 == this->m_id) {
-		this->m_error() = CShader::Procs().Error();
+		this->m_error() = __get_$_procs().Error();
 	__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	} else {
 	__trace_impt_2(_T("The shader: id = %u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
@@ -63,11 +59,11 @@ err_code CShader::Delete (void) {
 	if (0 == this->m_id)
 		return this->Error()(); // the shader is not created yet; returns no error for such a case;
 
-	if (__failed(CShader::Procs().Delete(this->Id())))
-		return (this->m_error() = CShader::Procs().Error()); // sets function cache error is required, otherwise the state of this shared remains the same;
+	if (__failed(__get_$_procs().Delete(this->Id())))
+		return (this->m_error() = __get_$_procs().Error()); // sets function cache error is required, otherwise the state of this shared remains the same;
 
 	if (GL_INVALID_VALUE == this->Error().Get_last())
-		return (this->m_error() << (err_code) TErrCodes::eData::eInvalid = TString().Format(_T("The ID=%u is not valid"), this->Id()));
+		return (this->m_error() << (err_code) TErrCodes::eData::eInvalid = TString().Format(_T("The shader id = %u is not valid"), this->Id()));
 
 	__trace::Use_con(true);
 	__trace_warn_3(_T("The shader: id = %u, type='%s' is deleted;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
@@ -106,10 +102,10 @@ bool   CShader::Is_valid (const uint32_t _u_shader_id, CError& _err) {
 		_err <<__METHOD__<<__e_inv_arg;
 		return false;
 	}
-	bool b_valid = CShader::Procs().Is_valid(_u_shader_id);
+	bool b_valid = __get_$_procs().Is_valid(_u_shader_id);
 	if (false == b_valid) {
-		if (CShader::Procs().Error().Is())
-			_err = CShader::Procs().Error();
+		if (__get_$_procs().Error().Is())
+			_err = __get_$_procs().Error();
 		else
 			_err <<__e_inv_arg = TString().Format(_T("'_u_shader_id' (%u) does not refer to shader object;"), _u_shader_id);
 	}

@@ -7,6 +7,8 @@
 #include "gl_program.h"
 #include "gl_shader.h"
 
+#include "procs\gl_procs_shader.h"
+
 using namespace ex_ui::draw::open_gl;
 
 CLog_Base:: CLog_Base (void) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
@@ -67,12 +69,11 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 	if (0 == _u_shader_id)
 		return this->m_error() <<__e_inv_arg = TString().Format(_T("Invalid shader id (%u)"), _u_shader_id);
 
-	procs::CShader& procs = CShader::Procs();
 	// (1) gets the shader log length;
 	int32_t n_length = 0;
-	if (__failed(procs.Params(_u_shader_id, GL_INFO_LOG_LEN, &n_length))) {
+	if (__failed(__get_$_procs().Params(_u_shader_id, GL_INFO_LOG_LEN, &n_length))) {
 		this->m_buffer = _T("#error");
-		return this->m_error() = procs.Error();
+		return this->m_error() = __get_$_procs().Error();
 	}
 
 	if (0 == n_length) {
@@ -81,9 +82,9 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 	}
 	// retrieves the actual data from the log;
 	::std::vector<char> buffer(n_length + 1, 0);
-	if (__failed(procs.InfoLog(_u_shader_id, n_length, &n_length, buffer.data()))) {
+	if (__failed(__get_$_procs().InfoLog(_u_shader_id, n_length, &n_length, buffer.data()))) {
 		this->m_buffer = _T("#error");
-		return this->m_error() = procs.Error();
+		return this->m_error() = __get_$_procs().Error();
 	}
 
 	this->m_buffer = buffer.data(); // ATL::CString makes the auto-conversion from 'char' to 'tchar';

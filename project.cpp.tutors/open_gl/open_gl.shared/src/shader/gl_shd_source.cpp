@@ -6,6 +6,8 @@
 #include "gl_shader.h"
 #include "shared.preproc.h"
 
+#include "procs\gl_procs_shader.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 using namespace shared::app;
@@ -118,9 +120,8 @@ err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
 
 	const char* p_buffer = src_a.GetBuffer();
 
-	procs::CShader& procs = CShader::Procs();
-	if (__failed(procs.Source(_u_shader_id, 1, &p_buffer, &n_len)))
-		return this->m_error = procs.Error();
+	if (__failed(__get_$_procs().Source(_u_shader_id, 1, &p_buffer, &n_len)))
+		return this->m_error = __get_$_procs().Error();
 
 	return this->Error();
 }

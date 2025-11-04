@@ -226,8 +226,10 @@ err_code CCache::Delete (void) {
 		if (__succeeded(this->Delete(shaders[i_]->Id()))) // the error is caught by Delete(_u_shader_id) ;
 		   __trace_warn_2(pc_sz_pat_del, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
 #else
-		if (__failed(shaders[i_]->Delete()))
-			this->m_error = shaders[i_]->Error();
+		if (__failed(shaders[i_]->Delete())) {
+			this->m_error = shaders[i_]->Error(); // the shader Delete() operation does not output the error to trace;
+			__trace_err_2(_T("%s\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req));
+		}
 #endif
 	}
 

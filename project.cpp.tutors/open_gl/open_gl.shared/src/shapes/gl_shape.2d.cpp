@@ -50,7 +50,7 @@ void* const CTriangle::Cached (void) const {
 }
 
 // https://stackoverflow.com/questions/17254425/getting-the-size-in-bytes-of-a-vector ;
-uint32_t    CTriangle::Size (void) const {
+uint32_t    CTriangle::Bytes (void) const {
 	return static_cast<uint32_t>(sizeof(float) * this->m_cache.size());
 }
 

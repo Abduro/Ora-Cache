@@ -8,23 +8,6 @@
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 
 namespace program {
-	/*	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttribLocation.xhtml ;
-		the excerpt from the above article:
-		...queries the previously *linked* program object specified by program for the attribute variable specified by name
-		   and returns the index of the generic vertex attribute that is bound to that attribute variable ...
-	*/
-	class CAttr : public CBase {
-	typedef int32_t  (__stdcall *pfn_GetIndex)(uint32_t _prog_id, const char* _p_att_name);
-	typedef void     (__stdcall *pfn_SetIndex)(uint32_t _prog_id, uint32_t _u_ndx, const char* _p_att_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindAttribLocation.xhtml ;
-	public:
-		CAttr (void); ~CAttr (void) = default;
-
-		int32_t  GetIndex (const uint32_t _prog_id, _pc_sz _p_att_name); // returns the location (i.e. the index) of an attribute variable ; *after* the link;
-		err_code SetIndex (const uint32_t _prog_id, _pc_sz _p_att_name, const uint32_t _u_ndx); // sets the index *before* the link, otherwise no effect;
-
-	private:
-		CAttr& operator = (const CAttr&) = delete; CAttr& operator = (CAttr&&) = delete;
-	};
 
 	class CShaders : public CBase {
 	typedef void     (__stdcall *pfn_Attach)   (uint32_t _prog_id, uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glAttachShader.xhtml ;

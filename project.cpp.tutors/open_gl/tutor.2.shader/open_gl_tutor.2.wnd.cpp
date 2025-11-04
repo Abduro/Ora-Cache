@@ -6,19 +6,14 @@
 #include "open_gl_tutor.2.res.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
-#if (0)
-#include "shader\gl_compiler.h"
-#include "gl_program.h"
-#include "program\gl_prog_linker.h"
-#include "program\gl_prog_status.h"
-#endif
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
-shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>__CLASS__;
-
+shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>(TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__));
+#if (0)
 	if (m_fak_wnd.Is_valid() == false) {
 		TBase::m_error = m_fak_wnd.Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
@@ -30,10 +25,11 @@ shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>__
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 
-	if (__failed(CShader::Procs().Get_all())) {
-		TBase::m_error = CShader::Procs().Error();
+	if (__failed(__get_$_procs().Get_all())) {
+		TBase::m_error = __get_$_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
+#endif
 }
 shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
 	m_ctx_dev.Destroy();
@@ -89,9 +85,6 @@ err_code shader::CWnd::PostCreate (void) {
 	         __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
 	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
 	         __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
-	// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
-	this->Renderer().Scene().Prog().Attrs().Clr().Name(_T("colorIn"));
-	this->Renderer().Scene().Prog().Attrs().Pos().Name(_T("positionIn"));
 
 	if (__failed(this->Renderer().Scene().Prepare()))
 		return TBase::m_error =  this->Renderer().Scene().Error();
@@ -111,17 +104,21 @@ err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	_u_code; _w_param; _l_param;
 	switch (_u_code) {
 	// this message is very important for required cleaning up of the draw pipeline components, the result is kept as unhandled;
-	case WM_DESTROY: this->Renderer().Scene().Destroy(); break;
+	case WM_DESTROY:
+		this->Renderer().Scene().Destroy();
+		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
+		break;
 	case WM_SIZE   :
 	case WM_SIZING :
 		t_rect rect = {0};
 		if (::GetClientRect((*this)(), &rect))  { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
 			this->Renderer().View() << rect;
 		}
+		else {
+			TBase::m_error.Last();
+			__trace_err_3(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
+		}
 		break;
-	}
-	if (WM_DESTROY == _u_code) {
-		this->Renderer().Scene().Destroy();
 	}
 	return TBase::IMsg_OnMessage(_u_code, _w_param, _l_param);
 }

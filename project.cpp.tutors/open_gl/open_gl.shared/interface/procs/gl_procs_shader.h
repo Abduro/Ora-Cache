@@ -33,4 +33,6 @@ namespace procs {
 
 }}}}
 
+typedef ex_ui::draw::open_gl::procs::CShader TShaderProcs; TShaderProcs&  __get_$_procs (void);
+
 #endif/*_GL_SHADER_BUFFER_H_INCLUDED*/

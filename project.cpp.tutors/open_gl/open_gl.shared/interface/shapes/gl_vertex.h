@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' shader vertex base interface declaration file;
 */
 #include "gl_defs.h"
-#include "color.rgb.h"
+#include "color._defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
@@ -31,26 +31,6 @@ namespace vertex {
 		float m_coord[3]; // 0:_x; 1:_y; 2:_z;
 	};
 #endif
-	// https://stackoverflow.com/questions/11821336/what-are-vertex-array-objects ;
-	class CArray {
-	public:
-		CArray (void); CArray (const CArray&) = delete; CArray (CArray&&) = delete; ~CArray (void);
-
-		err_code Bind   (void); // perhaps it would be better to replace word 'bind' by 'activate' or 'current';
-		bool  Is_bound  (void) const;
-		err_code Create (void);
-		err_code Delete (void);
-		TError&  Error  (void) const;
-		uint32_t GetId  (void) const;
-		err_code Unbind (void);
-
-	private:
-		CArray& operator = (const CArray&) = delete; CArray& operator = (CArray&&) = delete;
-		mutable
-		CError   m_error;
-		uint32_t m_arr_id;
-	};
-
 	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml ;
 	   the CData class is the wrapper over parameters for calling the one of the functions glVertexAttrib*Pointer();
 	*/
@@ -82,21 +62,25 @@ namespace vertex {
 		uint32_t   m_size;   // it would be better to name this variable and the related property to something similar to 'count', not 'size';
 		uint32_t   m_stride; // it sets to sizeof(float) * m_data.size() by default and does not require any change;
 	};
-
-	class CColor : public CData, public ex_ui::color::rgb::CFloat {
-	using CFltClr = ex_ui::color::rgb::CFloat;
-	private: CColor (void) = delete;
+	// the color channels follow in the sequence: r-g-b-a => offset + ndx[0..3];
+	class CColor : public CData {
+	private: CColor (void) = delete; using CConvert = ex_ui::color::rgb::CConvert; // this class has static method for converting color channel to float value;
 	public:
 		CColor (TVertData&); ~CColor (void);
+
+		void Set (const float _r, const float _g, const float _b, const float _a = 1.0f); // sets color as float value; if the value is out of range [0.0...1.0], the value is set to min or max value of the range;
+		void Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a = 0xff);
+		void Set (const rgb_color);  // sets color in RGBA format; the input value is converted in float value color;
 	};
 	// https://learnopengl.com/Getting-started/Coordinate-Systems ;
+	// the position coordinates value follow in the next sequence: x-y-z => offset + ndx[0..2];
 	class CPosition : public CData { typedef CData TData;
 	private: CPosition (void) = delete;
 	public:
 		CPosition (TVertData&); ~CPosition (void);
 
 		void Set (const float _x, const float _y, const float _z = 0.0f); // sets coordinates in local/object 3D space;
-		void Set (const long  _x, const long  _y/*const long  _z = 0*/ ); // converts screen space coordinates to local space;
+		void Set (const long  _x, const long  _y/*const long  _z = 0*/ ); // converts screen space coordinates to local space; it requires viewport size;
 	};
 }
 	class CVertex {

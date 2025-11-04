@@ -116,8 +116,8 @@ namespace ex_ui { namespace color { namespace rgb {
 		~CConvert (void) = default;
 
 	public:
-		static float     ToFloat (const clr_value); // https://lomont.org/posts/2023/accuratecolorconversions/ ;
-		static clr_value ToValue (const float);
+		static float     ToFloat (const clr_value); // https://lomont.org/posts/2023/accuratecolorconversions/ ; thanks to Chris Lomont;
+		static clr_value ToValue (const float);     // ToDo: does not check input value;
 
 #if defined(_DEBUG)
 #endif

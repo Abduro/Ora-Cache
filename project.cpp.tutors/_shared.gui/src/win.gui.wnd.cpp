@@ -50,6 +50,10 @@ err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 	_u_code; _w_param; _l_param;
 	err_code n_result = __s_false; // not handled;
 
+	if (WM_DESTROY == _u_code) {
+		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
+	}
+
 	if (IMsg_Handler::_n_not_handled == this->Layout().IMsg_OnMessage(_u_code, _w_param, _l_param))
 		n_result = TBase::IMsg_OnMessage(_u_code, _w_param, _l_param); // it is ***mandatory***, otherwise not handled messages will be lost;
 

@@ -7,6 +7,8 @@
 #include "gl_shader.h"
 #include "shared.preproc.h"
 
+#include "procs\gl_procs_shader.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
@@ -48,12 +50,10 @@ CString CType::To_str(const uint32_t _u_type) {
 CType::e_value CType::Get_type (const uint32_t _u_shader_id,  CError& _err) {
 	_u_shader_id;
 
-	procs::CShader& procs = CShader::Procs();
-
 	int32_t n_type = CType::e_value::e_undef;
 
-	if (__failed(procs.Params(_u_shader_id, __gl_shader_type, &n_type))) {
-		_err = procs.Error();
+	if (__failed(__get_$_procs().Params(_u_shader_id, __gl_shader_type, &n_type))) {
+		_err = __get_$_procs().Error();
 	}
 
 	return  CType::e_value(n_type);

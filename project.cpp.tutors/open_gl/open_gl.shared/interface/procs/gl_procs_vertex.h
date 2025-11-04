@@ -52,35 +52,61 @@ namespace vertex {
 		...if array is a name returned by glGenVertexArrays, by that has not yet been bound through a call to glBindVertexArray...
 		*/
 		bool Is_array (const uint32_t _arr_id); // determines if an identifier (aka name) corresponds to a vertex array object;
+
+		err_code Get_all (void) ;
+
+	private:
+		CArray& operator = (const CArray&) = delete; CArray& operator = (CArray&&) = delete;
 	};
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnableVertexAttribArray.xhtml ;
 	// surprisingly weird documentation if above article mixes the array of attributes enabling/disabling with the same properties of an attribute itself;
+	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttribLocation.xhtml ;
+		the excerpt from the above article:
+		...queries the previously *linked* program object specified by program for the attribute variable specified by name
+		   and returns the index of the generic vertex attribute that is bound to that attribute variable ...
+	*/
 	class CAttr : public CBase {
-	typedef void (__stdcall *pfn_Disable) (uint32_t _arr_id, uint32_t _n_ndx);
-	typedef void (__stdcall *pfn_Enable ) (uint32_t _arr_id, uint32_t _n_ndx);
+	typedef void    (__stdcall *pfn_Disable) (uint32_t _arr_id, uint32_t _n_ndx);
+	typedef void    (__stdcall *pfn_Enable ) (uint32_t _arr_id, uint32_t _n_ndx);
+	typedef int32_t (__stdcall *pfn_GetIndex)(uint32_t _prog_id, const char* _p_att_name);
+	typedef void    (__stdcall *pfn_SetIndex)(uint32_t _prog_id, uint32_t _u_ndx, const char* _p_att_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindAttribLocation.xhtml ;
 	public:
 		CAttr (void); ~CAttr (void) = default;
 
-		err_code Disable (const uint32_t _arr_id, const uint32_t _n_ndx); // disables an attribute by index and updates state of the vertex array object with _arr_id ;
-		err_code Enable  (const uint32_t _arr_id, const uint32_t _n_ndx); // enables an attribute by index and updates state of the vertex array object with _arr_id ;
+		err_code Disable  (const uint32_t _arr_id, const uint32_t _n_ndx); // disables an attribute by index and updates state of the vertex array object with _arr_id ;
+		err_code Enable   (const uint32_t _arr_id, const uint32_t _n_ndx); // enables an attribute by index and updates state of the vertex array object with _arr_id ;
+		int32_t  GetIndex (const uint32_t _prog_id, _pc_sz _p_att_name);   // returns the location (i.e. the index) of an attribute variable ; *after* the link;
+		err_code SetIndex (const uint32_t _prog_id, _pc_sz _p_att_name, const uint32_t _u_ndx); // sets the index *before* the link, otherwise no effect;
+
+		err_code Get_all (void) ;
+
+	private:
+		CAttr& operator = (const CAttr&) = delete; CAttr& operator = (CAttr&&) = delete;
 	};
 
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml ;
-	class CAttPtr : public CBase {
+	class CAttrPtr : public CBase {
 	typedef void (__stdcall *pfn_AttPtr)   (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, uint16_t _b_norm, int32_t _n_stride, const void* _ptr);
 	typedef void (__stdcall *pfn_AttPtr_I) (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, int32_t _n_stride, const void* _ptr);
 	typedef void (__stdcall *pfn_AttPtr_L) (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, int32_t _n_stride, const void* _ptr);
 	public:
-		CAttPtr (void); ~CAttPtr (void) = default;
+		CAttrPtr (void); ~CAttrPtr (void) = default;
 		// the input arg 'size' should *not* have 'signed int' data type, because all acceptable values are greater than 0 (zero);
 		// the input arg 'stride' may have value 0 or greater; its data type intentionally is changed to 'unsigned';
 		err_code Get   (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const bool _b_normalized, const uint32_t _u_stride, const uint32_t _u_offset = 0); // defines an array of generic vertex attribute data (signed & unsigned) ;
 		err_code Get_I (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const uint32_t _u_stride, const uint32_t _u_offset = 0); // the integer types GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT, GL_UNSIGNED_SHORT, GL_INT, GL_UNSIGNED_INT ;
 		err_code Get_L (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const uint32_t _u_stride, const uint32_t _u_offset = 0); // specifies state for a generic vertex attribute array associated with a shader attribute variable declared with 64-bit double precision components ;
+
+		err_code Get_all (void) ;
+
 	private:
-		CAttPtr& operator = (const CAttPtr&) = delete; CAttPtr& operator = (CAttPtr&&) = delete;
+		CAttrPtr& operator = (const CAttrPtr&) = delete; CAttrPtr& operator = (CAttrPtr&&) = delete;
 	};
 }
 }}}}
+
+typedef ex_ui::draw::open_gl::procs::vertex::CArray   TVertArrProcs;      TVertArrProcs&  __get_arr_procs (void);
+typedef ex_ui::draw::open_gl::procs::vertex::CAttr    TVertAttrProcs;     TVertAttrProcs& __get_attr_procs (void);
+typedef ex_ui::draw::open_gl::procs::vertex::CAttrPtr TVertAttrPtrProcs;  TVertAttrPtrProcs& __get_attr_ptr_procs (void);
 
 #endif/*_GL_PROCS_VERTEX_H_INCLUDED*/

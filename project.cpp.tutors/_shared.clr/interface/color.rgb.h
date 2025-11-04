@@ -126,6 +126,12 @@ namespace ex_ui { namespace color { namespace rgb {
 
 	typedef ::std::vector<float> clr_float; // the vector needs to contain 4 elements as rgba color model; CQuad::channel is the index;
 
+	/*predefined colors with floats values can be found here:
+	https://web.archive.org/web/20180301041827/https://prideout.net/archive/colors.php ;
+	https://community.khronos.org/t/color-tables/22518/6 ;
+	http://www.rgbtool.com/ ;
+	*/
+
 	// this class is some sort of a replacement for D3DXCOLOR structure ;
 	// https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-d3dxcolor ;
 	class CFloat {

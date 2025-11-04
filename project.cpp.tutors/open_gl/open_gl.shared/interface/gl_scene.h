@@ -8,6 +8,7 @@
 #include "gl_program.h"
 #include "gl_shader.h"
 #include "shapes\gl_vertex.h"
+#include "shapes\gl_vertex_arr.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
