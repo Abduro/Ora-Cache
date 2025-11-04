@@ -12,11 +12,6 @@ using namespace ex_ui::draw::open_gl::context;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
-	procs::CContext& __get_ctx_procs (void) {
-		static procs::CContext procs;
-		return procs;
-	}
-
 }}}}
 
 using namespace ex_ui::draw::open_gl::_impl;
@@ -24,7 +19,7 @@ using namespace ex_ui::draw::open_gl::_impl;
 context::CBase:: CBase (void) : m_drw_ctx(0) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CBase::~CBase (void) { this->Destroy(); }
 
-err_code context::CBase::Destroy(void) {
+err_code context::CBase::Destroy (void) {
 	this->m_error() <<__METHOD__<<__s_ok;
 
 	// (1) destroys the renderer handle first;
@@ -166,7 +161,7 @@ err_code  context::CTarget::Set (const HWND _h_wnd) {
 	this->m_dc_src = ::GetDC(_h_wnd);
 //	__empty_ln(); // https://www.allacronyms.com/handle/abbreviated ;
 	__trace_info_3(
-		_T("#ctx_dev : {hndl=%s;src=%s}\n"), TString()._addr_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : this->Source())
+		_T("#ctx_dev : {handle=%s;src=%s}\n"), TString()._addr_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : this->Source())
 	);
 
 	return this->Error();
@@ -186,12 +181,13 @@ bool   context::CTarget::Source (_pc_sz _p_cls_name) {
 
 context::CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
 	_h_wnd;
-	if (this->Is_valid())
-		this->Free();
-	if (this->Error()) // releasing the source device context handle is failed;
-		return *this;
+	if (this->Is_valid() && __failed(this->Free())) { // releasing the source device context handle is failed;
+		return *this; 
+	}
 	this->Set(_h_wnd); return *this; // for getting the result of retreiving the device context the error state should be checked;
 }
+
+context::CTarget::operator const HWND (void) const { return this->m_target; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -381,31 +377,15 @@ using namespace ex_ui::draw::open_gl::format;
 CContext:: CContext (void) : TBase() { TBase::m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
 CContext::~CContext (void) {}
 
-err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver, const uint32_t _u_gl_miner_ver) {
-	h_target; _u_gl_major_ver; _u_gl_miner_ver;
+err_code   CContext::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver) {
+	_u_gl_major_ver; _u_gl_minor_ver;
 	TBase::m_error() <<__METHOD__<< __s_ok;
-	// (1) Creates the fake window;
-	CFakeWnd fk_wnd;
-	if (fk_wnd.Is_valid() == false)
-		return TBase::m_error() = fk_wnd.Error();
-	// (2) creating the drawing renderer context;
-	context::CDevice dev_ctx;
-	if (__failed(dev_ctx.Create(fk_wnd.m_hWnd)))
-		return TBase::m_error() = dev_ctx.Error()();
-	// (3) creates OpenGL context functions' cache;
 
-	__get_ctx_procs().Get_all();
-
-	if (__get_ctx_procs().Error())
-		return TBase::m_error() = __get_ctx_procs().Error();
-
-	// (4) gets context;
-	// (4.a) get target window context device first;
-
-	TBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
-
-	if (__failed(TBase::Set(h_target)) || false == TBase::Target().Is_valid())
-		return TBase::Error()();
+	if (false == TBase::Target().Is_valid()) {
+		TBase::m_error << (err_code)TErrCodes::eExecute::eState = _T("Target window handle is not set");
+		__trace_err_2(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_print::e_req));
+		return TBase::Error();
+	}
 
 	// (4.b) chooses the pixel format;
 	CAtt_set_pixels pxl_atts; // no error check for this time yet;
@@ -420,22 +400,6 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 		TBase::Target().Get(), pxl_atts.IAtt_Get_Int_Ptr(), nullptr, 1, &p_formats, &n_count
 	);
 
-#define btns_info (MB_OK|MB_ICONINFORMATION)
-#define btns_warn (MB_OK|MB_ICONEXCLAMATION)
-
-//	CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-//	CString cs_fmts = TString().Format(_T("formats: %u; count: %u;"), p_formats, n_count);
-#if (0) // wrong way;
-	CString cs_fmt_pairs;
-	int32_t n_fmt_num = 0;
-	int32_t* p_data = &p_formats;
-
-	while (n_count > 0 && !!p_formats) {
-		cs_fmt_pairs += TString().Format(_T("att #%u: id = %u;val=%u;"), n_fmt_num, &p_data[n_fmt_num + 0], &p_data[n_fmt_num + 1]);
-		n_fmt_num += 1;
-		n_count -= 2;
-	}
-#endif
 	bool b_can_go_ahead = false;
 
 	if (0 == n_result) { // the failure has occurred: the format cannot be chosen for creating the context;
@@ -450,19 +414,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	}
 	else if (nullptr != &p_formats && true == !!n_count) { b_can_go_ahead = true; }
 	else { b_can_go_ahead = true; }
-#if (0)
-	::MessageBox(
-			0, (_pc_sz) cs_fmts,
-			   (_pc_sz) cs_cap , btns_info
-		);
-	::MessageBox(
-			0, (_pc_sz) pxl_atts.Print(),
-			   (_pc_sz) cs_cap , btns_info
-		);
-#else
-//	__trace_info_3(_T("%s\n"), (_pc_sz) cs_fmts);
-//	__trace_info_3(_T("%s\n"), (_pc_sz) cs_cap);
-#endif
+
 	if (false == b_can_go_ahead)
 		return TBase::Error()();
 
@@ -474,7 +426,7 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 	if (false ==!!::SetPixelFormat(TBase::Target().Get(), p_formats, &pfd))
 		return TBase::m_error().Last();
 
-	CAtt_set_ctx ctx_atts(_u_gl_major_ver, _u_gl_miner_ver);
+	CAtt_set_ctx ctx_atts(_u_gl_major_ver, _u_gl_minor_ver);
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
 	this->m_drw_ctx = __get_ctx_procs().CreateCtxAttsArb(TBase::Target().Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
 	if (nullptr == this->m_drw_ctx) {
@@ -483,17 +435,11 @@ err_code   CContext::Create (const HWND h_target, const uint32_t _u_gl_major_ver
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
-#if (0)
-		::MessageBox(
-			0, (_pc_sz) _T("wglMakeCurrent is failed") ,
-			   (_pc_sz) cs_cap , btns_warn
-		);
-#endif
 	}
 
 	if (false == CBase::Error()()) {
 		__trace_impt_3(_T("%s\n"), _T("*result*: success;"));
 	}
 
-	return TBase::Error()();
+	return TBase::Error();
 }

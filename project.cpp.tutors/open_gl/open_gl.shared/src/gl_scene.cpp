@@ -12,12 +12,26 @@
 
 using namespace ex_ui::draw::open_gl;
 
+using CDevice = context::CDevice;
+
+const
+CScene::CDevCtx& CScene::CContext::Device (void) const { return this->m_dev_ctx; }
+CScene::CDevCtx& CScene::CContext::Device (void)       { return this->m_dev_ctx; }
+const
+CScene::CDrwCtx& CScene::CContext::Draw (void) const { return this->m_drw_ctx; }
+CScene::CDrwCtx& CScene::CContext::Draw (void)       { return this->m_drw_ctx; }
+
+/////////////////////////////////////////////////////////////////////////////
+
 CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CScene::~CScene (void) {}
 
 const
 vertex::CArray&  CScene::Array (void) const { return this->m_array; }
 vertex::CArray&  CScene::Array (void)       { return this->m_array; }
+const
+CScene::CContext& CScene::Ctx (void) const { return this->m_ctx; }
+CScene::CContext& CScene::Ctx (void)       { return this->m_ctx; }
 
 TError&  CScene::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -143,6 +157,12 @@ err_code CScene::Prepare (void) {
 #else
 	if (__failed(this->Prog().Buffer().Bind()))
 		return this->m_error = this->Prog().Buffer().Error();
+#endif
+#if (0)
+	if (__failed(this->Ctx().Device().Destroy()))
+		return this->m_error = this->Ctx().Device().Error();
+	if (__failed(this->Ctx().Draw().Create(4, 6)))
+		return this->m_error = this->Ctx().Draw().Error();
 #endif
 	if (__succeeded(this->Prog().Validate())) {
 		__trace_info_2(_T("The draw scene is prepared;\n"));

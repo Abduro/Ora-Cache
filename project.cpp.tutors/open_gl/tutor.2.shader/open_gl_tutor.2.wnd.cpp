@@ -12,19 +12,19 @@ using namespace ex_ui::draw::open_gl::shader;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
-shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>(TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__));
-#if (0)
+shader::CWnd:: CWnd (void) : TBase() { TBase::m_error >>(TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__));
+
 	if (m_fak_wnd.Is_valid() == false) {
 		TBase::m_error = m_fak_wnd.Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 		__trace::Out_2(__trace::e_err, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 
-	if (m_ctx_dev.Error()) {
-		TBase::m_error = m_ctx_dev.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
+	if (__failed(this->Renderer().Scene().Ctx().Device().Create(m_fak_wnd.m_hWnd))) {
+		TBase::m_error = this->Renderer().Scene().Ctx().Device().Error();
+		__trace_err_3(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
-
+#if (0)
 	if (__failed(__get_$_procs().Get_all())) {
 		TBase::m_error = __get_$_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
@@ -32,7 +32,7 @@ shader::CWnd:: CWnd (void) : TBase(), m_ctx_dev(m_fak_wnd) { TBase::m_error >>(T
 #endif
 }
 shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
-	m_ctx_dev.Destroy();
+	this->Renderer().Scene().Ctx().Device().Destroy();
 }
 
 err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
@@ -53,23 +53,23 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 	TBase::Styles().Default_for_kid();
 
-	if (__failed((*this)().Create(
+	if (__failed(TBase::Create(
 		p_cls_name, TString().Format(_T("cls::[%s:%s]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), _rc_wnd_pos, _b_visible, _h_parent
 	))) {
+		return TBase::Error();
 	}/* else if (__failed(TBase::Ctx().Create(*this, 4, 6))) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Ctx().Error()().Print(TError::e_req));
 	}*/
-	else
-		this->IMsg_OnMessage (WM_SIZE, 0, 0); // just sends the messege identifier, the handler takes all required steps itself;
+	this->IMsg_OnMessage (WM_SIZE, 0, 0); // just sends the messege identifier, the handler takes all required steps itself;
 
-	return (*this)().Error();
+	return TBase::Error();
 }
 err_code shader::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
-#if (0)
+#if (0) // fake window and gdi regular device are already created in constructor of this class;
 	if (__failed(TBase::PostCreate()))
 		return TBase::Error();
-#else
+#elsif (true == false)
 	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
 	if (wnd.Is_valid() == false) {
 		return this->m_error = wnd.Error();
@@ -86,13 +86,15 @@ err_code shader::CWnd::PostCreate (void) {
 	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
 	         __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 
+	this->Renderer().Scene().Ctx().Draw().Target() << *this;
+
 	if (__failed(this->Renderer().Scene().Prepare()))
-		return TBase::m_error =  this->Renderer().Scene().Error();
+		return TBase::m_error = this->Renderer().Scene().Error();
 #define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 	this->Renderer().Scene().Destroy();
 #endif
-	return (*this)().Error();
+	return TBase::Error();
 }
 
 err_code shader::CWnd::Destroy (void) {

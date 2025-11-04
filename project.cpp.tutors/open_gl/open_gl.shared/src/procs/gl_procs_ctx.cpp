@@ -4,6 +4,7 @@
 */
 #include "gl_procs_ctx.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::procs;
@@ -114,4 +115,17 @@ err_code CContext::Get_all (void) {
 	}
 
 	return CBase::Error();
+}
+
+TCtxProcs&  ::__get_ctx_procs (void) {
+	static TCtxProcs procs;
+	static bool b_loaded = false;
+
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+			__trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+			b_loaded = true;
+	}
+	return procs;
 }

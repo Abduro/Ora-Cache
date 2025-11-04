@@ -26,6 +26,8 @@ namespace context {
 
 		CTarget& operator <<(const HWND);   // invokes this::Set(...); if the device context is already obtained, it will be released first;
 
+		operator const HWND (void) const;
+
 	protected:
 		mutable
 		CError  m_error;
@@ -137,7 +139,7 @@ namespace context {
 		 CContext (void) ;  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
 		~CContext (void) ;
 
-		 err_code Create (const HWND h_target, const uint32_t _u_gl_major_ver, const uint32_t _u_gl_miner_ver);
+		 err_code Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver); // it is supposed the target window is set and its HDC is already gotten;
 		 err_code Destroy(void);
 
 	private:

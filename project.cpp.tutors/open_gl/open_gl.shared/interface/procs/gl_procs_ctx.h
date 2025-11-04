@@ -26,4 +26,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	};
 
 }}}}
+
+typedef ex_ui::draw::open_gl::procs::CContext  TCtxProcs;  TCtxProcs&  __get_ctx_procs (void);
+
 #endif/*_GL_PROCS_CTX_H_INCLUDED*/

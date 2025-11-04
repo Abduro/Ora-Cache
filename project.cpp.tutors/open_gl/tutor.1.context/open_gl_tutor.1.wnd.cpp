@@ -53,7 +53,7 @@ err_code  context::CWnd::PostCreate (void) {
 	int32_t ver_minor = CVersion().Minor(); if (false == !!ver_minor) ver_minor = 6;
 	// from the other hand the above statement may be incorrect, due to glGetIntegerv() does not work in expected way in comparison with glGetString();
 
-	if (__failed(this->Ctx().Create(*this, ver_major, ver_minor))) {
+	if (__failed(this->Ctx().Create(ver_major, ver_minor))) {
 		return this->Ctx().Error();
 	}
 
