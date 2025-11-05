@@ -14,6 +14,21 @@ using namespace ex_ui::draw::open_gl;
 
 using CDevice = context::CDevice;
 
+CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+err_code CScene::CContext::Clear (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	context::CBase*  ctx_bases[] = { &this->Draw(), &this->Device() };
+
+	for (uint32_t i_ = 0; i_ < _countof(ctx_bases); i_++) {
+		if (__failed(ctx_bases[i_]->Destroy()))
+			this->m_error = ctx_bases[i_]->Error(); // keeps going to the next context; base class outputs error to the trace itself;
+	}
+
+	return this->Error();
+}
+
 const
 CScene::CDevCtx& CScene::CContext::Device (void) const { return this->m_dev_ctx; }
 CScene::CDevCtx& CScene::CContext::Device (void)       { return this->m_dev_ctx; }
@@ -21,14 +36,16 @@ const
 CScene::CDrwCtx& CScene::CContext::Draw (void) const { return this->m_drw_ctx; }
 CScene::CDrwCtx& CScene::CContext::Draw (void)       { return this->m_drw_ctx; }
 
+TError& CScene::CContext::Error (void) const { return this->m_error; }
+
 /////////////////////////////////////////////////////////////////////////////
 
 CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CScene::~CScene (void) {}
 
 const
-vertex::CArray&  CScene::Array (void) const { return this->m_array; }
-vertex::CArray&  CScene::Array (void)       { return this->m_array; }
+vertex::CArrObject&  CScene::Array (void) const { return this->m_array; }
+vertex::CArrObject&  CScene::Array (void)       { return this->m_array; }
 const
 CScene::CContext& CScene::Ctx (void) const { return this->m_ctx; }
 CScene::CContext& CScene::Ctx (void)       { return this->m_ctx; }
@@ -108,9 +125,17 @@ err_code CScene::Prepare (void) {
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
+	/*important:
+	  the attributes' indices are set through source code of vertex shader, the same is for vertex color, it can be set in fragment shader;
+	  but these indices can be applied after program linking only; they can be received by querying the program object;
+	  for this tutorial another way of vertex attribute location is selected:
+	  the indices are set before linking the program, it is assumed the indices are the same as in shaders' source code;
+	  after linking the program the indices are checked for test purpose that they are sill have the same values;
+	*/
 
 	// sets attributes' indecise (aka location) before linking the program,
 	// an index of the particular attribute must be the same as in actual vertex: 0 - position; 1 - color;
+	// also, it is very important: the shader source code can change the location of the attributes and after the program linking those locations will be applied;
 	if (__failed(this->Array().Attrs().Clr().Index().Set(1))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
 	if (__failed(this->Array().Attrs().Pos().Index().Set(0))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
 	// the same as above, the error may be set by procedure of setting the index to attribute, just output the error to trace log;
@@ -139,11 +164,12 @@ err_code CScene::Prepare (void) {
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
+#if (0) // the arreay is already bound by above;
 	// before enabling the attributes the vertex array must be activated, i.e. to be bound;
 	if (__failed(this->Array().Bind())) {
 		return this->m_error = this->Array().Error(); // The array is still inactive, so its attributes will not be enabled successfully;
 	}
-
+#endif
 	if (__failed(this->Array().Enable(true)))
 		this->m_error = this->Array().Error(); // in case of error to make attributes be enabled it is very possible the setting data to buffer will fail;
 
@@ -157,12 +183,6 @@ err_code CScene::Prepare (void) {
 #else
 	if (__failed(this->Prog().Buffer().Bind()))
 		return this->m_error = this->Prog().Buffer().Error();
-#endif
-#if (0)
-	if (__failed(this->Ctx().Device().Destroy()))
-		return this->m_error = this->Ctx().Device().Error();
-	if (__failed(this->Ctx().Draw().Create(4, 6)))
-		return this->m_error = this->Ctx().Draw().Error();
 #endif
 	if (__succeeded(this->Prog().Validate())) {
 		__trace_info_2(_T("The draw scene is prepared;\n"));

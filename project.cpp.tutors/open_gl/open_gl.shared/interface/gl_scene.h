@@ -8,30 +8,35 @@
 #include "gl_context.h"
 #include "gl_program.h"
 #include "gl_shader.h"
-#include "shapes\gl_vertex.h"
-#include "shapes\gl_vertex_arr.h"
+#include "vertex\gl_vertex.h"
+#include "vertex\gl_vertex_arr.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CScene {
 	public:
-	using CArray = vertex::CArray;
+	using CArray = vertex::CArrObject;
 	using CDevCtx = context::CDevice;
 	using CDrwCtx = CContext;
 	public:
 		class CContext {
 		public:
-			CContext (void) = default; CContext (const CContext&) = delete; CContext (CContext&&) = delete; ~CContext (void) = default;
+			CContext (void); CContext (const CContext&) = delete; CContext (CContext&&) = delete; ~CContext (void) = default;
+
+			err_code Clear (void); // destroys target GDI context that is retrieved from particular window handle; is called on window destroy message;
 			const
 			CDevCtx& Device (void) const;
 			CDevCtx& Device (void) ;
 			const
 			CDrwCtx& Draw (void) const;
 			CDrwCtx& Draw (void) ;
+
+			TError&  Error (void) const;
 		private:
 			CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
 			CDevCtx m_dev_ctx;
 			CDrwCtx m_drw_ctx;
+			CError  m_error;
 		};
 	
 	public:

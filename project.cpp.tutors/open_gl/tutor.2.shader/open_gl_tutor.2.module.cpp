@@ -57,7 +57,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	bool b_error = true;
 
 	CAppWnd& app_wnd = ::Get_app_wnd();
-	shader::CWnd wnd_shader; // the draw context window;
+	shader::CWnd $_wnd; // the draw context window;
 
 	do {
 		__trace::Use_con(true); // the console window is not created yet; VS debug output is used anyway;
@@ -94,14 +94,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_2
 		// (2) creates the context target window;
-		if (__failed(wnd_shader.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req)); // debug output console window is already created;
+		if (__failed($_wnd.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) $_wnd.Error().Print(TError::e_req)); // debug output console window is already created;
 		}
 		else
-			layout.Top().Target(wnd_shader);
+			layout.Top().Target($_wnd);
 
-		if (__failed(wnd_shader.PostCreate())) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) wnd_shader.Error().Print(TError::e_req));
+		if (__failed($_wnd.PostCreate())) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) $_wnd.Error().Print(TError::e_req));
 			break;
 		}
 #pragma endregion
@@ -124,7 +124,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		using
 		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
-		CBuffer_4_vert& buffer = wnd_shader.Renderer().Scene().Prog().Buffer();
+		CBuffer_4_vert& buffer = $_wnd.Renderer().Scene().Prog().Buffer();
 
 		if (__failed(buffer.SetData(triangle))) {
 			break;

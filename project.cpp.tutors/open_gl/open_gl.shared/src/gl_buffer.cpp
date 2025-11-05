@@ -97,7 +97,7 @@ err_code  CBuffer::Create (void) {
 
 err_code  CBuffer::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
+#if (0) // no check for binding is required here, the unbinding must be made outside of this procedure;
 	if (false == this->Is_bound()) {
 		if (this->Error()) {
 			__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
@@ -107,7 +107,7 @@ err_code  CBuffer::Destroy (void) {
 			__trace_info_2(_T("The buffer (id = %u) is not bound; nothing to delete;\n"), this->GetId());
 		}
 	}
-
+#endif
 	if (false == this->Is_valid()) // no error this time, just returning the success code;
 		return this->Error();
 
@@ -116,7 +116,7 @@ err_code  CBuffer::Destroy (void) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 	else {
-		__trace_warn_2(_T("The buffer (id = %u) is destroyed;\n"), this->GetId());
+		__trace_warn_2(_T("The buffer (id = %u) is deleted;\n"), this->GetId());
 		this->m_buf_id = 0;
 	}
 	return this->Error();

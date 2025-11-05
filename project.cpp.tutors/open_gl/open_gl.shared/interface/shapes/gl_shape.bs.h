@@ -6,7 +6,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to OpenGL tutorials on 23-Oct-2025 at 20:56:51.657, UTC+4, Batumi, Friday;
 */
-#include "gl_vertex.h"
+#include "vertex\gl_vertex.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 

@@ -504,19 +504,19 @@ static _pc_sz att_ptr_fun_names[] = {
 	_T("glVertexAttribPointer"), _T("glVertexAttribIPointer"), _T("glVertexAttribLPointer")
 };
 enum class e_att_ptr_fun_ndx : uint32_t {
-	e_get_uni = 0x0, e_get_int = 0x1, e_get_float = 0x2,
+	e_set_uni = 0x0, e_set_int = 0x1, e_set_float = 0x2,
 };
 
 CAttrPtr:: CAttrPtr (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
 	CBase::m_error.Class(cs_cls, false);
 }
 
-err_code CAttrPtr::Get (
+err_code CAttrPtr::Set (
 	const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const bool _b_normalized, const uint32_t _u_stride, const uint32_t _u_offset){
 	_u_ndx; _u_size; _u_type; _b_normalized; _u_stride; _u_offset;
 	CBase::m_error << __METHOD__ << __s_ok;
 
-	pfn_AttPtr p_fun = reinterpret_cast<pfn_AttPtr>(CBase::Get(att_ptr_fun_names[(uint32_t)e_att_ptr_fun_ndx::e_get_uni]));
+	pfn_AttPtr p_fun = reinterpret_cast<pfn_AttPtr>(CBase::Get(att_ptr_fun_names[(uint32_t)e_att_ptr_fun_ndx::e_set_uni]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 
@@ -531,11 +531,11 @@ err_code CAttrPtr::Get (
 	return CBase::Error();
 }
 
-err_code CAttrPtr::Get_I (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const uint32_t _u_stride, const uint32_t _u_offset) {
+err_code CAttrPtr::Set_I (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const uint32_t _u_stride, const uint32_t _u_offset) {
 	_u_ndx; _u_size; _u_type; _u_stride; _u_offset;
 	CBase::m_error << __METHOD__ << __s_ok;
 
-	pfn_AttPtr_I p_fun = reinterpret_cast<pfn_AttPtr_I>(CBase::Get(att_ptr_fun_names[(uint32_t)e_att_ptr_fun_ndx::e_get_int]));
+	pfn_AttPtr_I p_fun = reinterpret_cast<pfn_AttPtr_I>(CBase::Get(att_ptr_fun_names[(uint32_t)e_att_ptr_fun_ndx::e_set_int]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 
@@ -553,11 +553,11 @@ err_code CAttrPtr::Get_I (const uint32_t _u_ndx, const uint32_t _u_size, const u
 	return CBase::Error();
 }
 
-err_code CAttrPtr::Get_L (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const uint32_t _u_stride, const uint32_t _u_offset) {
+err_code CAttrPtr::Set_L (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type, const uint32_t _u_stride, const uint32_t _u_offset) {
 	_u_ndx; _u_size; _u_type; _u_stride; _u_offset;
 	CBase::m_error << __METHOD__ << __s_ok;
 
-	pfn_AttPtr_L p_fun = reinterpret_cast<pfn_AttPtr_L>(CBase::Get(att_ptr_fun_names[(uint32_t)e_att_ptr_fun_ndx::e_get_float]));
+	pfn_AttPtr_L p_fun = reinterpret_cast<pfn_AttPtr_L>(CBase::Get(att_ptr_fun_names[(uint32_t)e_att_ptr_fun_ndx::e_set_float]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 

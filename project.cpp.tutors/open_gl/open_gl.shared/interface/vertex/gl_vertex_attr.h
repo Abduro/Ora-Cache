@@ -1,8 +1,8 @@
-#ifndef _GL_VERTEX_ARR_H_INCLUDED
-#define _GL_VERTEX_ARR_H_INCLUDED
+#ifndef _GL_VERTEX_ATTR_H_INCLUDED
+#define _GL_VERTEX_ATTR_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 03-Nov-2025 at 00:45:01.915, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' vertex attributes' array wrapper interface declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 05-Nov-2025 at 19:41:10.221, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack OpenGL tutorials' vertex attributes' wrapper interface declaration file;
 */
 #include "gl_defs.h"
 #include "program\gl_prog_id.h"
@@ -11,8 +11,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 
 	class CAttr {
 	using CProgId = program::CProgId;
-	public:
-		class CIndex { // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttribLocation.xhtml ;
+	public: // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetAttribLocation.xhtml ;
+		class CIndex {
 		private: CIndex (const CIndex&&) = delete; CIndex (CIndex&&) = delete; CIndex (void) = delete;
 		public:
 			static const int32_t _$na = -1;
@@ -27,7 +27,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 			err_code Set (const uint32_t _prog_id, _pc_sz _p_att_name, const uint32_t _u_ndx, CError&); // sets the index to the vertex attr variable;
 			err_code Set (const uint32_t _u_ndx); // sets the index by using attr values; *before* the linking operation, otherwise there is no apply;
 
-			int32_t  Value (void) const;
+			int32_t  Value (void) const; // returns the current value of this index;
 			int32_t  operator ()(void) const;
 
 		private:
@@ -101,35 +101,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CAttr   m_pos;
 		CProgId m_prog_id;
 	};
-
-	// https://stackoverflow.com/questions/11821336/what-are-vertex-array-objects ;
-	class CArray {
-	public:
-		CArray (void); CArray (const CArray&) = delete; CArray (CArray&&) = delete; ~CArray (void);
-
-		const
-		CAttrs&  Attrs (void) const;
-		CAttrs&  Attrs (void) ;
-
-		err_code Bind  (void);        // perhaps it would be better to replace word 'bind' by 'activate' or 'current';
-		bool  Is_bound (void) const;  // returns 'true' if the array is bound;
-		err_code Unbind (void);       // unbinds this array by setting 0 (zero) as identifier of the array being bounded; 
-
-		err_code Enable (const bool); // enables/disables all attributes of this array;
-
-		err_code Create (void);
-		err_code Delete (void);
-		TError&  Error  (void) const;
-		uint32_t GetId  (void) const;
-
-	private:
-		CArray& operator = (const CArray&) = delete; CArray& operator = (CArray&&) = delete;
-		mutable
-		CError   m_error;
-		uint32_t m_arr_id;
-		CAttrs   m_attrs;
-	};
-
 }}}}
 
-#endif/*_GL_VERTEX_ARR_H_INCLUDED*/
+#endif/*_GL_VERTEX_ATTR_H_INCLUDED*/

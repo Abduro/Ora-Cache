@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL viewport wrapper interface declaration file;
 */
 #include "gl_defs.h"
-#include "shapes\gl_vertex.h"
+#include "vertex\gl_vertex.h"
 
 #ifndef __H
 #define __H(rect) (rect.bottom - rect.top)

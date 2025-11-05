@@ -36,9 +36,12 @@ err_code context::CBase::Destroy (void) {
 			this->m_drw_ctx = nullptr;
 	}
 	// (2) destroys device context handle; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc ;
-	if (this->Target().Is_valid())
-		if (__failed(this->Target().Free()))
-			this->m_error() = this->Target().Error();
+	if (__failed(this->Target().Free()))
+		this->m_error() = this->Target().Error();
+
+	if (false == this->Error()) {
+		__trace_info_2(_T("Unbinding renderer ctx and releasing GDI ctx succeeded;\n"));
+	}
 
 	return this->Error()();
 }
@@ -94,24 +97,21 @@ context::CTarget::~CTarget (void) {
 err_code context::CTarget::Free (void) {
 	// https://stackoverflow.com/questions/3945721/win32-why-does-releasedc-say-my-dc-is-not-found ; good answer is >>
 	// https://stackoverflow.com/a/3948202/4325555 ; the excerpt : ...Lots of OpenGl samples do rather (to my mind) weired things with device contexts... ;
-	this->m_error <<__METHOD__<<__s_ok;
-
+	
 	if (this->Is_valid() == false) {
 		this->m_dc_src = nullptr; // for cases when handle of the device context has invalid state, i.e. is closed outside of this class instance;
 		return this->Error();    // returns possibly the error state that is set by this::Is_valid();
 	}
 
-	if (0 == ::ReleaseDC(this->m_target, this->m_dc_src)) {
+	this->m_error <<__METHOD__<<__s_ok;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc ;
+	const int n_result = ::ReleaseDC(this->m_target, this->m_dc_src);
+	if (1 != n_result) {
 		this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Releasing source device context failed");
 		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req));
 	}
-#if (0)
-	class CFakeWnd : public ::ATL::CWindowImpl<CFakeWnd> { typedef ::ATL::CWindowImpl<CFakeWnd> TBase;
-	public:
-		DECLARE_WND_CLASS_EX(_T("open_gl::fake::CWnd"), CS_DBLCLKS | CS_OWNDC, COLOR_ACTIVECAPTION);
-		DECLARE_EMPTY_MSG_MAP();
-	};
-#endif
+	else
+		this->m_dc_src = nullptr;
 
 	return this->Error();
 }

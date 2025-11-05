@@ -58,6 +58,13 @@ bool   CData::Is_normalized (const bool _b_state) {
 	return b_changed;
 }
 
+bool   CData::Is_valid (void) const {
+	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
+	const uint32_t n_req = CData::Offset() + this->Size();
+
+	return !(0 == n_size || 0 == n_req || n_req > n_size);
+}
+
 uint32_t  CData::Offset (void) const { return this->m_offset; }
 bool      CData::Offset (const uint32_t _u_offset) {
 	_u_offset;
@@ -65,6 +72,13 @@ bool      CData::Offset (const uint32_t _u_offset) {
 	if (b_changed)
 		this->m_offset = _u_offset;
 	return b_changed;
+}
+
+err_code  CData::SetPtr (void) const {
+	if (false == this->Is_valid())
+		return __e_inv_arg;	
+
+	return __get_attr_ptr_procs().Set(this->Index(), this->Size(), GL_FLOAT, GL_FALSE, this->Stride(), this->Offset());
 }
 
 uint32_t  CData::Stride (void) const { return this->m_stride; }
@@ -89,10 +103,7 @@ CColor::~CColor (void) {}
 
 void CColor::Set (const float _r, const float _g, const float _b, const float _a) {
 	_r; _g; _b; _a;
-	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
-	const uint32_t n_req = CData::Offset() + this->Size();
-
-	if (n_req > n_size)
+	if (false == CData::Is_valid())
 		return;
 
 	CData::m_data[0 + CData::Offset()] = (0.0f > _r ? 0.0f : (1.0f < _r ? 1.0f : _r));
@@ -103,10 +114,7 @@ void CColor::Set (const float _r, const float _g, const float _b, const float _a
 
 void CColor::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a) {
 	_r; _g; _b; _a;
-	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
-	const uint32_t n_req = CData::Offset() + this->Size();
-
-	if (n_req > n_size)
+	if (false == CData::Is_valid())
 		return;
 
 	// the color channels' sequence: r-g-b-a;
@@ -118,10 +126,7 @@ void CColor::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const ui
 
 void CColor::Set (const rgb_color _rgba) {
 	_rgba;
-	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
-	const uint32_t n_req = CData::Offset() + this->Size();
-
-	if (n_req > n_size)
+	if (false == CData::Is_valid())
 		return;
 	// the color channels' sequence: r-g-b-a;
 	CData::m_data[0 + CData::Offset()] = CConvert::ToFloat(get_r_value(_rgba));
@@ -138,11 +143,8 @@ CPosition::~CPosition (void) {}
 
 void CPosition::Set (const float _x, const float _y, const float _z) {
 	_x; _y; _z;
-	const uint32_t n_size = static_cast<uint32_t>(CData::m_data.size());
-	const uint32_t n_req = CData::Offset() + this->Size();
-
-	if (n_req > n_size) // the offset, elements/components' count/size and vertex vector size must be appropriate;
-		return;
+	if (false == CData::Is_valid())
+		return;	
 
 	CData::m_data[0 + CData::Offset()] = (-1.0f > _x ? -1.0f : (1.0f < _x ? 1.0f : _x));
 	CData::m_data[1 + CData::Offset()] = (-1.0f > _y ? -1.0f : (1.0f < _y ? 1.0f : _y));
@@ -171,6 +173,20 @@ vertex::CPosition& CVertex::Pos (void)       { return this->m_pos; }
 const
 TVertData& CVertex::Raw (void) const { return this->m_data; }
 TVertData& CVertex::Raw (void)       { return this->m_data; }
+
+err_code   CVertex::SetPtrs (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	const CData* p_attrs[] = { &this->Pos(), &this->Clr() };
+	for (uint32_t i_ = 0; i_ < _countof(p_attrs); i_++) {
+		this->m_error << p_attrs[i_]->SetPtr();
+		if (this->m_error) {
+			break;
+		}
+	}
+
+	return this->Error();
+}
 
 uint32_t   CVertex::Size(void) const {
 	return this->Clr().Size() + this->Pos().Size();

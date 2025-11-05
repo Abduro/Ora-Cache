@@ -158,6 +158,7 @@ err_code CBuffer::GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids) {
 
 	return CBase::Error();
 }
+// https://gamedev.stackexchange.com/questions/67169/glisbuffer-unexpected-result ;
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsBuffer.xhtml ;
 bool CBuffer::Is_Buffer (const uint32_t _u_buf_id) {
 	_u_buf_id;

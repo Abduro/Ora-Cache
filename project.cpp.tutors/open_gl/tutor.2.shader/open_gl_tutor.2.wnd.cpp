@@ -32,7 +32,8 @@ shader::CWnd:: CWnd (void) : TBase() { TBase::m_error >>(TString().Format(_T("sh
 #endif
 }
 shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
-	this->Renderer().Scene().Ctx().Device().Destroy();
+	if (this->Renderer().Scene().Ctx().Device().Is_valid())
+	    this->Renderer().Scene().Ctx().Device().Destroy();
 }
 
 err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
@@ -98,18 +99,19 @@ err_code shader::CWnd::PostCreate (void) {
 }
 
 err_code shader::CWnd::Destroy (void) {
-
-	return TBase::Destroy();
+	this->Renderer().Scene().Destroy();     // the error output to the trace is made by the method being called;
+	this->Renderer().Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
+	return __s_ok;
 }
 
 err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
 	switch (_u_code) {
 	// this message is very important for required cleaning up of the draw pipeline components, the result is kept as unhandled;
-	case WM_DESTROY:
-		this->Renderer().Scene().Destroy();
-		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
-		break;
+	case WM_DESTROY: {
+		this->Destroy();
+		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x"))); 
+		} break;
 	case WM_SIZE   :
 	case WM_SIZING :
 		t_rect rect = {0};
@@ -119,8 +121,7 @@ err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		else {
 			TBase::m_error.Last();
 			__trace_err_3(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
-		}
-		break;
+		} break;
 	}
 	return TBase::IMsg_OnMessage(_u_code, _w_param, _l_param);
 }

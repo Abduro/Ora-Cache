@@ -45,11 +45,13 @@ namespace vertex {
 
 		bool   Is_normalized (void) const;   // initial value of this flag is false and is set by default;
 		bool   Is_normalized (const bool);   // returns 'true' in case of normalization flag value change;
+		bool   Is_valid (void) const;        // the offset, elements/components' count/size and vertex data vector size must be appropriate;
 
 		uint32_t  Offset (void) const;       // initial value of the offset is set by color and position classes and does not require any change;
 		bool      Offset (const uint32_t);   // returns 'true' in case of offset value change; the value is set by color and position classes;
-		uint32_t  Stride (void) const;       // it is set by default and does not require any change of stride value;
-		bool      Stride (const uint32_t);   // returns 'true' in case of stride value change;
+		err_code  SetPtr (void) const;       // before calling this method, the child class *must* set the offset and size;
+		uint32_t  Stride (void) const;       // *important*: it is set by default and does *not* require any change of stride value;
+		bool      Stride (const uint32_t);   // *important*: it is supposed the stride value is constant, neveretheless returns 'true' in case of stride value change;
 		uint32_t  Size   (void) const;       // specifies the number of components per generic vertex attribute; must be [1-4] or GL_BGRA;
 
 	protected:
@@ -98,10 +100,11 @@ namespace vertex {
 		CPos&   Pos (void) const;
 		CPos&   Pos (void) ;
 		const
-		TVertData& Raw (void) const; // gives the read-only access to element of the vector;
-		TVertData& Raw (void) ;      // gives the direct access to the vector of data; *important*: the size of the vector must remain the same;
+		TVertData& Raw (void) const;     // gives the read-only access to element of the vector;
+		TVertData& Raw (void) ;          // gives the direct access to the vector of data; *important*: the size of the vector must remain the same;
 
-		uint32_t   Size(void) const; // returns the required number of elements in vertex data; 'stride' is not acceptable in this case, because it returns an offset in number of elements multiplied by data type size;
+		err_code   SetPtrs (void) const; // sets pointers of all attributes;
+		uint32_t   Size (void) const;    // returns the required number of elements in vertex data; 'stride' is not acceptable in this case, because it returns an offset in number of elements multiplied by data type size;
 
 	private:
 		CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;
