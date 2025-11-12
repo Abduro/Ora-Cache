@@ -18,8 +18,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	/**important*:
 	if original function of the OpenGL returns 'void' the wrapper will return 'err_code' for indicating 'success' or 'failure' of loading a function pointer;
 	*/
-
-
 	// ToDo: it would be better in case if the cache is global and static for all functions; it looks very like OpenGL functions do not have the same names;
 	class CBase { // not thread safe yet;
 	public:

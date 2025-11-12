@@ -8,14 +8,15 @@
 #include "gl_context.h"
 #include "gl_program.h"
 #include "gl_shader.h"
-#include "vertex\gl_vertex.h"
-#include "vertex\gl_vertex_arr.h"
+#include "vertex\gl_vertex_arr.obj.h"
+#include "vertex\gl_vertex_attr.h"
+#include "vertex\gl_vertex_data.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CScene {
 	public:
-	using CArray = vertex::CArrObject;
+	using CArray  = vertex::CArrObject;
 	using CDevCtx = context::CDevice;
 	using CDrwCtx = CContext;
 	public:

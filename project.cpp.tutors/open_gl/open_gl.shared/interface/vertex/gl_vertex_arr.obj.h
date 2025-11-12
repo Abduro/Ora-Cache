@@ -1,5 +1,5 @@
-#ifndef _GL_VERTEX_ARR_H_INCLUDED
-#define _GL_VERTEX_ARR_H_INCLUDED
+#ifndef _GL_VERTEX_ARR_OBJ_H_INCLUDED
+#define _GL_VERTEX_ARR_OBJ_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 03-Nov-2025 at 00:45:01.915, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL tutorials' vertex array object wrapper interface declaration file;
@@ -16,8 +16,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CArrObject (void); CArrObject (const CArrObject&) = delete; CArrObject (CArrObject&&) = delete; ~CArrObject (void);
 
 		const
-		CAttrs&  Attrs (void) const;
-		CAttrs&  Attrs (void) ;
+		CAttrArray&  Attrs (void) const;
+		CAttrArray&  Attrs (void) ;
 
 		err_code Bind  (void);        // perhaps it would be better to replace word 'bind' by 'activate' or 'current';
 		bool  Is_bound (void) const;  // returns 'true' if the array is bound;
@@ -35,9 +35,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		mutable
 		CError   m_error;
 		uint32_t m_arr_id;
-		CAttrs   m_attrs;
+		CAttrArray   m_attrs;
 	};
 
 }}}}
 
-#endif/*_GL_VERTEX_ARR_H_INCLUDED*/
+#endif/*_GL_VERTEX_ARR_OBJ_H_INCLUDED*/

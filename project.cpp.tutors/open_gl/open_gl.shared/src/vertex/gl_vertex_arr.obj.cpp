@@ -1,13 +1,14 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 03-Nov-2025 at 00:57:38.067, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' vertex attributes' array wrapper interface implementation file;
+	This is Ebo Pack OpenGL tutorials' vertex array object wrapper interface implementation file;
 */
-#include "gl_vertex_arr.h"
-#include "shared.dbg.h"
-#include "shared.preproc.h"
+#include "gl_vertex_arr.obj.h"
 #include "gl_procs.h"
 #include "procs\gl_procs_vertex.h"
 #include "program\gl_prog_status.h"
+
+#include "shared.dbg.h"
+#include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vertex;
@@ -20,8 +21,8 @@ vertex::CArrObject:: CArrObject (void) : m_arr_id(0) { this->m_error <<__CLASS__
 vertex::CArrObject::~CArrObject (void) {}
 
 const
-vertex::CAttrs&  vertex::CArrObject::Attrs (void) const { return this->m_attrs; }
-vertex::CAttrs&  vertex::CArrObject::Attrs (void)       { return this->m_attrs; }
+CAttrArray& vertex::CArrObject::Attrs (void) const { return this->m_attrs; }
+CAttrArray& vertex::CArrObject::Attrs (void)       { return this->m_attrs; }
 
 err_code vertex::CArrObject::Bind (void) {
 	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
@@ -105,8 +106,8 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
 		const int32_t n_att_ndx = attrs[i_]->Index().Get();
 		if (_b_state) {
-			if (__failed(__get_arr_procs().Enable(n_att_ndx))) {
-				this->m_error = __get_arr_procs().Error();
+			if (__failed(__get_attr_arr_procs().Enable(n_att_ndx))) {
+				this->m_error = __get_attr_arr_procs().Error();
 				__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 			}
 			else {
@@ -114,8 +115,8 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 			}
 		}
 		else {
-			if (__failed(__get_arr_procs().Disable(n_att_ndx))) {
-				this->m_error = __get_arr_procs().Error();
+			if (__failed(__get_attr_arr_procs().Disable(n_att_ndx))) {
+				this->m_error = __get_attr_arr_procs().Error();
 				__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 			}
 			else {

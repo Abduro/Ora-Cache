@@ -6,7 +6,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to OpenGL tutorials on 23-Oct-2025 at 20:56:51.657, UTC+4, Batumi, Friday;
 */
-#include "vertex\gl_vertex.h"
+#include "vertex\gl_vertex_arr.dat.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 
@@ -17,14 +17,16 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 	private: CShape (const CShape&) = delete; CShape (CShape&&) = delete;
 	public : CShape (void); ~CShape (void);
 	public :
-		static const uint32_t n_min_point_count = 3; // a triangle is the simplest figure that can be considered as a shape;
+		static const uint32_t n_min_vertex_count = 3; // a triangle is the simplest figure that can be considered as a shape;
 		static CString Class (void);
 
 		TError&  Error (void) const;
 
 	private: CShape& operator = (const CShape&) = delete; CShape& operator = (CShape&&) = delete;
 	protected:
-		CError m_error;
+		mutable
+		CError      m_error;
+		CVertArray  m_array;
 	};
 
 }}}}

@@ -108,7 +108,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma region __step_3
 		using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
 		CTriangle triangle;
-
+#if (0)
 		triangle.A().Clr().Set(1.0f, 0.0f, 0.0f, 1.0f);
 		triangle.B().Clr().Set(0.0f, 1.0f, 0.0f, 1.0f);
 		triangle.C().Clr().Set(0.0f, 0.0f, 1.0f, 1.0f);
@@ -129,7 +129,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		if (__failed(buffer.SetData(triangle))) {
 			break;
 		}
-
+#endif
 #pragma endregion
 	} while (true == false);
 

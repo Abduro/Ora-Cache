@@ -5,13 +5,353 @@
 #include "gl_procs_prog.h"
 #include "gl_procs.h"
 #include "gl_procs_shader.h"
-#include"shared.preproc.h"
+
+#include "shared.dbg.h"
+#include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::procs;
 using namespace ex_ui::draw::open_gl::procs::program;
 
-#define __gl_curr_prog        0x8B8D // GL_CURRENT_PROGRAM ;
+namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespace _impl {
+
+	using namespace ex_ui::draw::open_gl::procs::program;
+
+	_pc_sz e_iface_to_str (const e_interface _e_iface) {
+		_e_iface;
+		static CString  cs_out;
+		switch (_e_iface) {
+		case e_interface::e_buff_var : cs_out = _T("e_buff_var"); break;
+		case e_interface::e_prog_in  : cs_out = _T("e_prog_in"); break;
+		case e_interface::e_prog_out : cs_out = _T("e_prog_out"); break;
+		case e_interface::e_uniform  : cs_out = _T("e_uniform"); break;
+		default:
+			cs_out.Format(_T("#iface (%u) is #unk"), _e_iface);
+		}
+		return (_pc_sz) cs_out;
+	}
+
+	_pc_sz e_prop_to_str (const e_property _e_prop) {
+		_e_prop;
+		static CString  cs_out;
+		switch (_e_prop) {
+		case e_property::e_arr_size   : cs_out = _T("e_arr_size"); break;
+		case e_property::e_arr_stride : cs_out = _T("e_arr_stride"); break;
+		case e_property::e_type       : cs_out = _T("e_type"); break;
+		default:
+			cs_out.Format(_T("#prop (%u) is #unk"), _e_prop);
+		}
+		return (_pc_sz) cs_out;
+	}
+
+	_pc_sz e_prop_set_to_str (const TRawProps& _props) {
+		_props;
+		static CString cs_out; cs_out.Empty();
+
+		cs_out += _T("{");
+		for (size_t i_ = 0; i_ < _props.size(); i_++) {
+			cs_out += TString().Dword(static_cast<dword>(_props[i_]));
+			if (i_ < _props.size() - 1) cs_out += _T(";");
+		}
+		cs_out += _T("}");
+		return (_pc_sz) cs_out;
+	}
+
+}}}}}
+
+using namespace _impl;
+/////////////////////////////////////////////////////////////////////////////
+
+static _pc_sz iface_fun_names[] = { _T("glGetProgramInterfaceiv") };
+
+enum class e_iface_fun_ndx : uint32_t { e_get = 0x0 };
+
+CInterface:: CInterface (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+
+const ::std::vector<e_property>& CInterface::GetProps (const e_interface _iface) {
+	_iface;
+	static TIface_assoc assoc;
+	if (assoc.empty()) { // one time to set the content;
+		try {
+			assoc.insert(::std::make_pair(e_iface::e_buff_var, ::std::vector<e_prop>{e_prop::e_arr_size, e_prop::e_name_len, e_prop::e_type, e_prop::e_offset, e_prop::e_arr_stride}));
+			assoc.insert(::std::make_pair(e_iface::e_prog_in , ::std::vector<e_prop>{e_prop::e_arr_size, e_prop::e_name_len, e_prop::e_type, e_prop::e_location}));
+		}
+		catch (const ::std::bad_alloc&) {}
+	}
+	TIface_assoc::const_iterator found = assoc.find(_iface);
+	if (assoc.end() == found) {
+		static ::std::vector<e_property> no_props;
+		return no_props;
+	}
+	else
+		return found->second;
+}
+
+const bool CInterface::Is_acceptable (const uint32_t _u_interface) {
+	_u_interface;
+	return (
+	(uint32_t) e_interface::e_buff_var == _u_interface ||
+	(uint32_t) e_interface::e_prog_in  == _u_interface ||
+	(uint32_t) e_interface::e_prog_out == _u_interface ||
+	(uint32_t) e_interface::e_uniform  == _u_interface
+	);
+}
+
+const bool CInterface::Is_related (const e_interface _e_iface, const e_property _e_prop) {
+	_e_iface; _e_prop;
+	return false == CInterface::GetProps(_e_iface).empty();
+}
+
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramInterface.xhtml ;
+err_code CInterface::Get (const uint32_t _prog_id, const e_interface _e_iface, const e_property _e_prop, uint32_t& _u_value) {
+	_prog_id; _e_iface; _e_prop; _u_value;
+	/* Possible errors:
+	GL_INVALID_ENUM      : '_e_iface' is not applicable to '_e_prop';
+	GL_INVALID_OPERATION : '_e_prop|_e_iface' pair is 
+	                        {GL_MAX_NAME_LENGTH|GL_ATOMIC_COUNTER_BUFFER} or
+	                        {GL_MAX_NAME_LENGTH|GL_TRANSFORM_FEEDBACK_BUFFER};
+	GL_INVALID_OPERATION : '_e_prop|_e_iface' pair is
+	                        {GL_MAX_NUM_ACTIVE_VARIABLES|~GL_UNIFORM_BLOCK} or
+	                        {GL_MAX_NUM_ACTIVE_VARIABLES|GL_SHADER_STORAGE_BLOCK} or
+	                        {GL_ATOMIC_COUNTER_BUFFER|GL_TRANSFORM_FEEDBACK_BUFFER};
+	GL_INVALID_OPERATION : '_e_prop|_e_iface' pair is
+	                        {GL_MAX_NAME_LENGTH|GL_ATOMIC_COUNTER_BUFFER}; the such pair may lead to undefined behavior and process termination;
+	GL_INVALID_VALUE     : '_prog_id' is not the identifier of an existing sync object;
+	GL_INVALID_VALUE     : 'bufSize' is zero << ToDo: have to be clear what the 'buffer size' does mean in the context of this function;
+	                        it looks like be related to glGetProgramResource();
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+#if (0)
+	if (false == CInterface::Is_applicable((uint32_t)_e_iface)) {
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_e_iface' value (%u) is not applicable"), _e_iface);
+		return CBase::Error();
+	}
+#endif
+	pfn_Get p_fun = reinterpret_cast<pfn_Get>(CBase::Get(iface_fun_names[(uint32_t)e_iface_fun_ndx::e_get]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_prog_id, (uint32_t)_e_iface, (uint32_t)_e_prop, (int32_t*)&_u_value);
+
+	// not applicable pairs of the property value with the interface one are taking into account yet;
+	switch (CErr_ex().Get_code()) {
+	case GL_INVALID_ENUM : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_e_iface'{'%s' (%u)} is not applicable to '_e_prop'{'%s' (%u)}"), e_iface_to_str(_e_iface), _e_iface, e_prop_to_str(_e_prop), _e_prop); break;
+	case GL_INVALID_OPERATION : {
+			 CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u), '_e_iface' '%s' (%u), '_e_prop' '%s' (%u)"), _prog_id, e_iface_to_str(_e_iface), _e_iface, e_prop_to_str(_e_prop), _e_prop); break;
+		} break;
+	case GL_INVALID_VALUE : {
+			if (false) {}
+			else if (0 == _prog_id) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' cannot be 0"));
+			else if (false == __get_prog_procs().IsProg(_prog_id)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) refers to no program"), _prog_id);
+			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: the mystical buffer size is %u;"), 0);
+		} break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+
+err_code CInterface::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(iface_fun_names); i_++) {
+		if (nullptr == CBase::Get(iface_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TIfaceProcs&  ::__get_iface_procs (void) {
+	static TIfaceProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+const bool CProperty::Is_checked (const e_interface _e_iface, const ::std::vector<e_property>& _props, ::std::vector<e_property>& _error) {
+	_e_iface; _props; _error;
+	bool b_result = false;
+	if (_props.empty())
+		return b_result;
+
+	if (_error.empty() == false)
+	    _error.clear();
+
+	try {
+		for (uint32_t i_ = 0; i_ < static_cast<uint32_t>(_props.size()); i_++) {
+			if (false == CInterface::Is_related(_e_iface, _props[i_]))
+				_error.push_back(_props[i_]);
+		}
+	} catch(const ::std::bad_alloc&){}
+	return b_result = _error.empty();
+}
+
+const ::std::vector<e_interface>& CProperty::Find (const e_property _e_prop) {
+	_e_prop;
+	static TProp_assoc assoc;
+	if (assoc.empty()) { // one time to set the content;
+		try {
+			assoc.insert(::std::make_pair(e_prop::e_arr_size, ::std::vector<e_iface>{e_iface::e_buff_var, e_iface::e_prog_in, e_iface::e_prog_out}));
+			assoc.insert(::std::make_pair(e_prop::e_name_len, ::std::vector<e_iface>{e_iface::e_buff_var, e_iface::e_prog_in, e_iface::e_prog_out}));
+			assoc.insert(::std::make_pair(e_prop::e_type    , ::std::vector<e_iface>{e_iface::e_buff_var, e_iface::e_prog_in, e_iface::e_prog_out}));
+		}
+		catch (const ::std::bad_alloc&) {}
+	}
+	TProp_assoc::const_iterator found = assoc.find(_e_prop);
+	if (assoc.end() == found) {
+		static ::std::vector<e_interface> no_ifaces;
+		return no_ifaces;
+	}
+	else
+		return found->second;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+static _pc_sz res_fun_names[] = { _T("glGetProgramResourceLocation"), _T("glGetProgramResourceiv"), _T("glGetProgramResourceName") };
+
+enum class e_res_fun_ndx : uint32_t { e_get_loc = 0x0, e_get_values = 0x1, e_get_name = 0x2 };
+
+CResource:: CResource (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+
+#define __gl_atom_counter   0x92C0 // GL_ATOMIC_COUNTER_BUFFER;
+#define __gl_trans_feedback 0x8C8E // GL_TRANSFORM_FEEDBACK_BUFFER;
+
+int32_t  CResource::GetLocate (const uint32_t _prog_id, const e_interface _e_iface, const char* _p_att_name) {
+	_prog_id; _e_iface; _p_att_name;
+	/* Possible error codes:
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+	int32_t n_result  = -1;
+
+	return n_result;
+}
+
+err_code CResource::GetName (const uint32_t _prog_id, const e_interface _e_iface, const uint32_t _u_ndx, CString& _name) {
+	_prog_id; _e_iface; _u_ndx; _name;
+	/* Possible error codes:
+	GL_INVALID_ENUM  : '_e_iface' is not one of the accepted interface types.
+	GL_INVALID_ENUM  : '_e_iface' is GL_ATOMIC_COUNTER_BUFFER or GL_TRANSFORM_FEEDBACK_BUFFER,
+	                   since active atomic counter and transform feedback buffer resources are not assigned name strings;
+	GL_INVALID_VALUE : '_prog_id' is not the name of an existing program;
+	GL_INVALID_VALUE : '_u_ndx' is greater than or equal to the number of entries in the active resource list for programInterface;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_GetName p_fun = reinterpret_cast<pfn_GetName>(CBase::Get(res_fun_names[(uint32_t)e_res_fun_ndx::e_get_name]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	const uint32_t n_size = 64;
+	char sz_buffer[n_size] = {0};
+
+	uint32_t u_length = 0; // receives length of the resource; the terminate zero is included;
+
+	p_fun(_prog_id, (uint32_t)_e_iface, _u_ndx, n_size, &u_length, sz_buffer);
+
+	const uint32_t u_err_code = CErr_ex().Get_code();
+	switch (u_err_code) {
+	case GL_INVALID_ENUM  : {
+			if (false) {}
+			else if (false == CInterface::Is_acceptable((uint32_t)_e_iface)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_e_iface' (%u) is not accepted"), _e_iface);
+			else if (__gl_atom_counter == (uint32_t)_e_iface || __gl_trans_feedback == (uint32_t)_e_iface)
+			     CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_enum: '_e_iface' (%u) is not named"), _e_iface);
+			else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: err_code (%u)"), u_err_code);
+		} break;
+	case GL_INVALID_VALUE : {
+			if (false) {}
+			else if (0 == _prog_id) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' cannot be 0"));
+			else if (false == __get_prog_procs().IsProg(_prog_id)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) refers to no program"), _prog_id);
+			else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: err_code (%u)"), u_err_code);
+		} break;
+	default:;
+	}
+
+	if (false == CBase::Error()) {
+		_name = sz_buffer;
+	}
+
+	return CBase::Error();
+}
+
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResource.xhtml ;
+err_code CResource::GetValues (const uint32_t _prog_id, const e_interface _e_iface, const uint32_t _u_ndx, const TRawProps& _e_props, TRawValues& _result) {
+	_prog_id; _e_iface; _u_ndx; _e_props; _result;
+	/* Possible error codes:
+	GL_INVALID_ENUM  : '_e_iface'is not one of the accepted interface types;
+	                   *note*: this case is unavailable due to the input argument value is already set properly by enumeration;
+	GL_INVALID_ENUM  : any value in '_e_prop' is not one of the accepted tokens for the interface '_e_iface';
+	GL_INVALID_VALUE : '_prog_id' doesn't refer to existing program object;
+	GL_INVALID_VALUE : '_e_prop' size is zero;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_GetRes p_fun = reinterpret_cast<pfn_GetRes>(CBase::Get(res_fun_names[(uint32_t)e_res_fun_ndx::e_get_values]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	const uint32_t u_prop_count = static_cast<uint32_t>(_e_props.size());
+	const uint32_t u_result_count = static_cast<uint32_t>(_result.size());
+	uint32_t u_lenght = 0;
+
+	p_fun(_prog_id, (uint32_t)_e_iface, _u_ndx, u_prop_count, (uint32_t*)_e_props.data(), u_result_count, &u_lenght, (int32_t*)_result.data());
+
+	const uint32_t u_err_code = CErr_ex().Get_code();
+	switch (u_err_code) {
+	case GL_INVALID_ENUM  : {
+			TRawProps v_error;
+			if (false) {}
+			else if (false == CProperty::Is_checked(_e_iface, _e_props, v_error)) {
+			     CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_assoc: '_iface' %u('%s') refers to invalid props: %s"), _e_iface, e_iface_to_str(_e_iface), e_prop_set_to_str(v_error));}
+			else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_e_iface' (%u) is not accepted"), _e_iface);
+		} break;
+	case GL_INVALID_VALUE : {
+			if (false) {}
+			else if (0 == _prog_id) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' cannot be 0"));
+			else if (false == __get_prog_procs().IsProg(_prog_id)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) refers to no program"), _prog_id);
+			else if (0 == u_prop_count) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_e_props' set is empty"));
+			else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: err_code (%u)"), u_err_code);
+		} break;
+	default:;
+	}
+
+	return CBase::Error();
+}
+
+err_code CResource::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(res_fun_names); i_++) {
+		if (nullptr == CBase::Get(res_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TResProcs&  ::__get_res_procs (void) {
+	static TResProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +368,8 @@ CProg:: CProg (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"),
 	CBase::m_error.Class(cs_cls, false);
 }
 
-#define __gl_lnk_status    0x8B82 // GL_LINK_STATUS ;
+#define __gl_curr_prog  0x8B8D // GL_CURRENT_PROGRAM ;
+#define __gl_lnk_status 0x8B82 // GL_LINK_STATUS ;
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateProgram.xhtml ;
 uint32_t CProg::Create (void){
@@ -204,6 +545,20 @@ err_code CProg::Get_all (void) {
 	return CBase::Error();
 }
 
+TProgProcs& ::__get_prog_procs (void) {
+	static TProgProcs procs;
+	static bool b_loaded = false;
+	// it is better to try to load all functions in cache at once and to indicate an error of loading if any occurs,
+	// otherwise if the sequence of calls of open_gl draw pipeline procedures is not correct, the global error state will not allow to load procs later;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 static _pc_sz $_fun_names[] = { _T("glAttachShader"), _T("glDetachShader"), _T("glGetAttachedShaders") };
@@ -332,4 +687,29 @@ err_code CShaders::Detach (const uint32_t _prog_id, const uint32_t _shader_id) {
 	default:;
 	}
 	return CBase::Error();
+}
+
+err_code CShaders::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof($_fun_names); i_++) {
+		if (nullptr == CBase::Get($_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TProgShaders& ::__get_$_bind_procs (void) {
+	static TProgShaders procs;
+	static bool b_loaded = false;
+	// it is better to try to load all functions in cache at once and to indicate an error of loading if any occurs,
+	// otherwise if the sequence of calls of open_gl draw pipeline procedures is not correct, the global error state will not allow to load procs later;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
 }

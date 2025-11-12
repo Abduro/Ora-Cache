@@ -4,6 +4,7 @@
 */
 #include "gl_vertex_attr.h"
 #include "gl_procs.h"
+#include "procs\gl_procs_prog.h"
 #include "procs\gl_procs_vertex.h"
 #include "program\gl_prog_status.h"
 
@@ -19,13 +20,20 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
 
 using namespace _impl;
-
-CAttr::CIndex:: CIndex (const CAttr& _attr_ref) : m_attr_ref(_attr_ref), m_value(CIndex::_$na) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+#pragma region __attr_index
+CAttr::CIndex:: CIndex (const CAttr* _attr_ptr) : m_attr_ptr(_attr_ptr), m_value(CIndex::_$na) {
+	this->m_error >>__CLASS__<<__METHOD__<<(this->m_attr_ptr == nullptr ? __e_not_inited : __s_ok);
+}
 CAttr::CIndex::~CIndex (void) {}
 
 TError&  CAttr::CIndex::Error (void) const { return this->m_error; }
 
-int32_t  CAttr::CIndex::Get (void) const { return this->m_value = CAttr::CIndex::Get (this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), this->m_error); }
+int32_t  CAttr::CIndex::Get (void) const {
+	if (false == this->Is_valid()) // invalid value set by the CAttr::CIndex::Is_valid() itself if necessary;
+		return this->Value();
+	else
+		return this->m_value = CAttr::CIndex::Get (this->m_attr_ptr->ProgId(), this->m_attr_ptr->Name(), this->m_error);
+}
 int32_t  CAttr::CIndex::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CError& _err) {
 	_prog_id; _p_att_name; _err;
 	if (0 == _p_att_name || 0 == ::_tcslen(_p_att_name)) {
@@ -40,9 +48,25 @@ int32_t  CAttr::CIndex::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CError
 	return n_ndx;
 }
 
-err_code CAttr::CIndex::Set (const uint32_t _u_ndx) {
+bool CAttr::CIndex::Is_valid (void) const {
+	this->m_error <<__METHOD__ <<__s_ok;
 
-	CAttr::CIndex::Set(this->m_attr_ref.ProgId(), this->m_attr_ref.Name(), _u_ndx, this->m_error);
+	if (nullptr == this->m_attr_ptr) { // checks the attribute pointer first;
+		this->m_value = CIndex::_$na;
+		this->m_error <<__e_pointer;
+	}
+	
+	return false == this->Error();
+}
+
+err_code CAttr::CIndex::Set (const uint32_t _u_ndx) {
+	_u_ndx;
+	if (false == this->Is_valid())
+		return this->Error();
+
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CAttr::CIndex::Set(this->m_attr_ptr->ProgId(), this->m_attr_ptr->Name(), _u_ndx, this->m_error);
 	
 	this->m_value = false == this->Error() ? _u_ndx : CIndex::_$na;
 
@@ -65,11 +89,28 @@ err_code CAttr::CIndex::Set (const uint32_t _prog_id, _pc_sz _p_att_name, const 
 }
 
 int32_t  CAttr::CIndex::Value (void) const { return this->m_value; }
+bool     CAttr::CIndex::Value (const uint32_t _n_ndx) {
+	_n_ndx;
+	if (false == this->Is_valid()) // a pointer to attribute is not set;
+		return false;
+
+	const bool b_changed = this->Value() != (int32_t)_n_ndx; if (b_changed) this->m_value = _n_ndx;
+	return b_changed;
+}
+
 int32_t  CAttr::CIndex::operator ()(void) const { return this->Value(); }
 
-/////////////////////////////////////////////////////////////////////////////
+CAttr::CIndex&  CAttr::CIndex::operator = (const CAttr::CIndex& _src) { *this << _src.m_attr_ptr << _src.Value(); return *this; }
+CAttr::CIndex&  CAttr::CIndex::operator = (CAttr::CIndex&& _victim) { *this = (const CAttr::CIndex&)_victim; return *this; }
+CAttr::CIndex&  CAttr::CIndex::operator <<(const CAttr* _p_attr) { this->m_attr_ptr = _p_attr; return *this; }
+CAttr::CIndex&  CAttr::CIndex::operator <<(const int32_t _n_value) { this->Value(_n_value); return *this; }
 
-CAttr:: CAttr (_pc_sz _p_name) : m_index(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; if (_p_name) *this << _p_name; }
+#pragma endregion
+/////////////////////////////////////////////////////////////////////////////
+#pragma region __vert_attr
+CAttr:: CAttr (_pc_sz _p_name) : m_index(this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; if (_p_name) *this << _p_name; }
+CAttr:: CAttr (const CAttr& _src) : CAttr() { *this = _src; }
+CAttr:: CAttr (CAttr&& _victim) : CAttr() { *this = _victim; }
 CAttr::~CAttr (void) {}
 
 TError& CAttr::Error (void) const { return this->m_error; }
@@ -100,15 +141,24 @@ const
 program::CProgId& CAttr::ProgId (void) const { return this->m_prog_id; }
 program::CProgId& CAttr::ProgId (void)       { return this->m_prog_id; }
 
+CAttr&  CAttr::operator = (const CAttr& _src) {
+	*this << _src.Name(); this->m_prog_id << _src.m_prog_id; this->m_index.Value(_src.m_index.Value());
+	return *this;
+}
+
+CAttr&  CAttr::operator = (CAttr&& _victim) { *this = (const CAttr&) _victim; return *this; }
+
 CAttr&  CAttr::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
 CAttr&  CAttr::operator <<(const CProgId& _prog_id) { this->ProgId() << _prog_id; return *this; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 
-CAttrs:: CAttrs (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok; }
-CAttrs::~CAttrs (void) {}
+CAttrArray:: CAttrArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok; }
+CAttrArray:: CAttrArray (const CAttrArray& _src) : CAttrArray() { *this = _src; }
+CAttrArray:: CAttrArray (CAttrArray&& _victim) : CAttrArray() { *this = _victim; }
+CAttrArray::~CAttrArray (void) {}
 
-err_code CAttrs::Bind (void) {
+err_code CAttrArray::Bind (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false == this->Is_valid())
@@ -136,7 +186,7 @@ err_code CAttrs::Bind (void) {
 	return this->Error();
 }
 
-err_code CAttrs::Bound (void) {
+err_code CAttrArray::Is_bound (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false == this->Is_valid())
@@ -170,16 +220,83 @@ err_code CAttrs::Bound (void) {
 	}
 	return this->Error();
 }
-
 const
-CAttr&   CAttrs::Clr (void) const { return this->m_clr; }
-CAttr&   CAttrs::Clr (void)       { return this->m_clr; }
-const
-CAttr&   CAttrs::Color (void) const { return this->Clr(); }
-CAttr&   CAttrs::Color (void)       { return this->Clr(); }
-TError&  CAttrs::Error (void) const { return this->m_error; }
+CAttr&   CAttrArray::Clr (void) const { return this->m_clr; }
+CAttr&   CAttrArray::Clr (void)       { return this->m_clr; }
 
-bool     CAttrs::Is_valid (void) const {
+err_code CAttrArray::Enum_attrs (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->ProgId().Is_valid()) {
+		this->m_error <<__e_inv_arg << _T("Program id is not set");
+		__trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); return this->Error();
+	}
+
+	int32_t n_count = 0; // actually unsigned integer must be provided because there is no count with value < 0; but original api uses signed int;
+
+	if (__failed(__get_prog_procs().Params(this->ProgId().Get(), (uint32_t)procs::e_prog_params::e_act_attrs, &n_count))) {
+	    this->m_error = __get_prog_procs().Error();
+	    __trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); return this->Error();
+	}
+
+	CString cs_name;
+#if (0)
+	for (int32_t i_ = 0; i_ < n_count; i_++) {
+
+		uint32_t n_size = 0; // how mamy elements/components are contained by this attribute;
+		uint32_t n_type = 0; // the data type of the attribute, enumeration value;
+
+		if (__failed(__get_attr_procs().GetActive(this->ProgId().Get(), i_, n_size, n_type, cs_name))) {
+		    this->m_error = __get_attr_procs().Error();
+		    __trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); break;
+		}
+	}
+#else
+	using e_iface = procs::program::e_iface;
+	using e_prop  = procs::program::e_prop;
+
+	uint32_t u_prop_cnt = 0;
+
+	if (__failed(__get_iface_procs().Get(this->ProgId().Get(), e_iface::e_prog_in, e_prop::e_active_res, u_prop_cnt))) {
+	    this->m_error = __get_attr_procs().Error();
+	    __trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+
+	if (this->m_attrs.empty() == false)
+	    this->m_attrs.clear();
+
+	this->m_error <<__s_ok; // the error that may occur above is already traced, thus the error state resets;
+
+	procs::program::TRawProps v_props{e_prop::e_arr_size, e_prop::e_location, e_prop::e_name_len, e_prop::e_type};
+	procs::program::TRawValues v_values(v_props.size(), 0);
+
+	for (uint32_t i_ = 0; i_ < u_prop_cnt; i_++) {
+		if (false == cs_name.IsEmpty()) cs_name.Empty();
+		if (false) {}
+		else if (__failed(__get_res_procs().GetValues(this->ProgId().Get(), e_iface::e_prog_in, i_, v_props, v_values))) {
+			this->m_error = __get_attr_procs().Error();
+			__trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+		else if (__failed(__get_res_procs().GetName(this->ProgId().Get(), e_iface::e_prog_in, i_, cs_name))) {
+			this->m_error = __get_attr_procs().Error();
+			__trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		}
+		if (this->Error())
+			continue;
+		CAttr attr;
+		attr.Index().Value(v_values[1]);
+		attr.Name((_pc_sz)cs_name);
+		attr.ProgId() << this->ProgId();
+		try {
+			this->m_attrs.push_back(attr);
+		} catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; break; }
+	}
+#endif
+	return this->Error();
+}
+
+TError&  CAttrArray::Error (void) const { return this->m_error; }
+
+bool     CAttrArray::Is_valid (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false == this->Clr().Is_valid()) {
@@ -198,14 +315,12 @@ bool     CAttrs::Is_valid (void) const {
 }
 
 const
-CAttr&   CAttrs::Pos (void) const { return this->m_pos; }
-CAttr&   CAttrs::Pos (void)       { return this->m_pos; }
+CAttr&   CAttrArray::Pos (void) const { return this->m_pos; }
+CAttr&   CAttrArray::Pos (void)       { return this->m_pos; }
+
 const
-CAttr&   CAttrs::Position (void) const { return this->Pos(); }
-CAttr&   CAttrs::Position (void)       { return this->Pos(); }
-const
-program::CProgId& CAttrs::ProgId (void) const { return this->m_prog_id; }
-err_code CAttrs::ProgId (const uint32_t _prog_id) {
+program::CProgId& CAttrArray::ProgId (void) const { return this->m_prog_id; }
+err_code CAttrArray::ProgId (const uint32_t _prog_id) {
 	_prog_id;
 	this->m_error <<__METHOD__<<__s_ok;
 	if (__failed(this->m_prog_id.Set(_prog_id))) {
@@ -218,5 +333,11 @@ err_code CAttrs::ProgId (const uint32_t _prog_id) {
 	return this->Error();
 }
 
-CAttrs&  CAttrs::operator <<(const CProgId& _prog_id) { this->ProgId(_prog_id.Get()); return *this; }
-CAttrs&  CAttrs::operator <<(const uint32_t _prog_id) { this->ProgId(_prog_id); return *this; }
+CAttrArray&  CAttrArray::operator = (const CAttrArray& _src)  { *this << _src.ProgId() << _src.Pos() >> _src.Clr(); return *this; }
+CAttrArray&  CAttrArray::operator = (CAttrArray&& _victim) { *this = (const CAttrArray&)_victim; return *this; }
+
+CAttrArray&  CAttrArray::operator <<(const CProgId& _prog_id) { this->ProgId(_prog_id.Get()); return *this; }
+CAttrArray&  CAttrArray::operator <<(const uint32_t _prog_id) { this->ProgId(_prog_id); return *this; }
+
+CAttrArray&  CAttrArray::operator >>(const CAttr& _clr) { this->Clr() = _clr; return *this; }
+CAttrArray&  CAttrArray::operator <<(const CAttr& _pos) { this->Pos() = _pos; return *this; }

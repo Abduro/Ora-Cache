@@ -8,7 +8,6 @@
 #include "gl_buffer.h"
 #include "gl_logs.h"
 #include "gl_procs.h"
-#include "procs\gl_procs_prog.h"
 #include "program\gl_$_cache.h"
 #include "program\gl_prog_id.h"
 #include "program\gl_prog_status.h"
@@ -27,7 +26,6 @@ namespace program {
 		 CBuffer_4_vert& Buffer (void) const;
 		 CBuffer_4_vert& Buffer (void) ;
 
-		 static procs::CProg& Procs (void) ;
 		 static CString  Class (void);       // returns this class name for debug purposes;
 
 		 err_code Create (void);

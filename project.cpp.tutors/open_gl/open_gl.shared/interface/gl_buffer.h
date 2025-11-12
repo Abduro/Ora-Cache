@@ -6,7 +6,7 @@
 */
 #include "gl_defs.h"
 #include "procs\gl_procs_buffer.h"
-#include "vertex\gl_vertex.h"
+#include "vertex\gl_vertex_data.h"
 #include "shapes\gl_shape.2d.h"
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
@@ -71,10 +71,10 @@ namespace data {
 	class CBuffer_4_vert : public CBuffer { typedef CBuffer TBase;
 	private: CBuffer_4_vert (const CBuffer_4_vert&) = delete; CBuffer_4_vert (CBuffer_4_vert&&) = delete;
 	public : CBuffer_4_vert (void); ~CBuffer_4_vert (void);
-
+#if (0)
 		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
 		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
-
+#endif
 	private: CBuffer_4_vert& operator = (const CBuffer_4_vert&) = delete;  CBuffer_4_vert& operator =  (CBuffer_4_vert&&) = delete;
 	};
 }}}

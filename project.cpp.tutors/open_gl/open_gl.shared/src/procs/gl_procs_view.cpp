@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL viewport functions' loader interface implementation file;
 */
 #include "gl_procs_view.h"
+#include "shared.dbg.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -90,6 +91,29 @@ err_code CDepth::SetRange_F (const float _d_near, const float _d_far) {
 	return CBase::Error();
 }
 
+err_code CDepth::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(depth_fun_names); i_++) {
+		if (nullptr == CBase::Get(depth_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TDepthProcs&  ::__get_depth_procs (void) {
+	static TDepthProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 static _pc_sz view_fun_names[] = {
@@ -142,4 +166,27 @@ err_code CViewport::Set (const int32_t _x, const int32_t _y, const uint32_t _u_w
 	}
 	
 	return CBase::Error();
+}
+
+err_code CViewport::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(view_fun_names); i_++) {
+		if (nullptr == CBase::Get(view_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TViewProcs&  ::__get_view_procs (void) {
+	static TViewProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
 }

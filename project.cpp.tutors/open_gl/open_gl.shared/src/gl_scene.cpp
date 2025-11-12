@@ -94,11 +94,6 @@ err_code CScene::Prepare (void) {
 	else
 		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
 
-	if (__failed(this->Array().Create()))
-		return this->m_error = this->Array().Error();
-	if (__failed(this->Array().Bind()))
-		return this->m_error = this->Array().Error();
-
 	if (__failed(this->Prog().Create()))
 		return this->m_error = this->Prog().Error();
 	// activates or binds vertex array attributes;
@@ -115,7 +110,8 @@ err_code CScene::Prepare (void) {
 
 	if (__failed(this->Prog().Shaders().Attach()))
 		return this->m_error = this->Prog().Shaders().Error();
-
+	// this is predefined names of attributes;
+	// enumerating of the attributes is not done yet;
 	static _pc_sz attr_names[] = {_T("colorIn"), _T("positionIn")};
 
 	// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
@@ -151,6 +147,14 @@ err_code CScene::Prepare (void) {
 	else if (__failed(this->Prog().Shaders().Detach())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
 	else if (__failed(this->Prog().Shaders().Delete())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
 
+	if (__failed(this->Array().Attrs().Enum_attrs()))
+		return this->m_error = this->Array().Attrs().Error(); 
+
+	if (__failed(this->Array().Create()))
+		return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Bind()))
+		return this->m_error = this->Array().Error();
+
 	// checks vertex attributes' indices after linking the program and deleting the shaders;
 	// the indices must be the same as them were set before the linking;
 
@@ -180,7 +184,7 @@ err_code CScene::Prepare (void) {
 #if (0)
 	if (__failed(this->Prog().Buffer().BindTo(e_bind_targets::e_array)))
 		return this->m_error = this->Prog().Buffer().Error();
-#else
+#elsif (false == true)
 	if (__failed(this->Prog().Buffer().Bind()))
 		return this->m_error = this->Prog().Buffer().Error();
 #endif

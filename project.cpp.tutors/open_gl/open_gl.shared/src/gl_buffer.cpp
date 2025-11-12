@@ -198,7 +198,7 @@ err_code CBuffer::Unbind (void) {
 
 CBuffer_4_vert:: CBuffer_4_vert (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
 CBuffer_4_vert::~CBuffer_4_vert (void) {}
-
+#if (0)
 err_code CBuffer_4_vert::Bind (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
@@ -236,3 +236,4 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 
 	return TBase::Error();
 }
+#endif

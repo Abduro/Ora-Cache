@@ -19,6 +19,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		enum e_vertices : uint32_t { 
 		    e_a = 0x0, e_b = 0x1, e_c = 0x2
 		};
+#if (0)
 		// important: do not change neither stride nor offset because they are already set by vertex data itself;
 		const
 		CVertex& A (void) const;
@@ -38,11 +39,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		void* const  Cached (void) const;  // gets pointer to cached vertices' data;
 		uint32_t     Bytes  (void) const;  // gets memory size of all vertices of this shape;
 		err_code     Update (void) ;       // updates cached data for case of one of the vertices' data is changed;
-
+#endif
 	private: CTriangle& operator = (const CTriangle&) = delete; CTriangle& operator = (CTriangle&&) = delete;
 		mutable
 		TVertData m_cache; // the cache vector contains all above vertices as the sequence of the data;
-		CVertex   m_vertices[CShape::n_min_point_count]; // 0 - A; 1 - B; 2 - C;
 	};
 
 }}}}

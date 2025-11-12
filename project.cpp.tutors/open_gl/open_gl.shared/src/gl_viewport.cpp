@@ -9,17 +9,6 @@
 using namespace ex_ui::draw::open_gl;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
-
-	procs::CDepth&  __get_depth_procs(void) {
-		static procs::CDepth procs;
-		return procs;
-	}
-
-	procs::CViewport&  __get_depth_view(void) {
-		static procs::CViewport procs;
-		return procs;
-	}
-
 }}}}
 using namespace ex_ui::draw::open_gl::_impl;
 

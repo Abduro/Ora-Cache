@@ -3,9 +3,12 @@
 	This is Ebo Pack OpenGL program status wrapper interface implementation file;
 */
 #include "gl_prog_status.h"
-#include "gl_procs.h"
-#include "shared.preproc.h"
 #include "gl_program.h"
+
+#include "shared.preproc.h"
+#include "shared.dbg.h"
+
+#include "procs\gl_procs_prog.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
@@ -38,11 +41,10 @@ bool  CStatus::Get (const uint32_t _param_id, const uint32_t _prog_id, CError& _
 	if (__gl_curr_prog == _param_id)
 		return CStatus::Is_current(_prog_id, _err);
 
-	procs::CProg& procs = CProgram::Procs();
 	int32_t n_result = 0;
 
-	if (__failed(procs.Params(_prog_id, _param_id, &n_result)))
-	     return false == (_err = procs.Error()).Is();
+	if (__failed(__get_prog_procs().Params(_prog_id, _param_id, &n_result)))
+	     return false == (_err = __get_prog_procs().Error()).Is();
 	else return !!n_result;
 }
 

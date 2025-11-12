@@ -1,8 +1,8 @@
-#ifndef _GL_VERTEX_H_INCLUDED
-#define _GL_VERTEX_H_INCLUDED
+#ifndef _GL_VERTEX_DATA_H_INCLUDED
+#define _GL_VERTEX_DATA_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Sep-2025 at 21:29:58.844, UTC+4, Batumi, Friday;
-	This is Ebo Pack OpenGL tutorials' shader vertex base interface declaration file;
+	This is Ebo Pack OpenGL tutorials' vertex data base interface declaration file;
 */
 #include "gl_defs.h"
 #include "color._defs.h"
@@ -32,11 +32,11 @@ namespace vertex {
 	};
 #endif
 	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml ;
-	   the CData class is the wrapper over parameters for calling the one of the functions glVertexAttrib*Pointer();
+	   the CFormat class is the wrapper over parameters for calling the one of the functions glVertexAttrib*Pointer();
 	*/
-	class CData {
-	private: CData (void) = delete; CData (const CData&) = delete; CData (CData&&) = delete;
-	public : CData (TVertData&);   ~CData (void);
+	class CFormat {
+	private: CFormat (void) = delete; CFormat (const CFormat&) = delete; CFormat (CFormat&&) = delete;
+	public : CFormat (TVertData&);   ~CFormat (void);
 
 		static CString Class (void);
 
@@ -45,7 +45,7 @@ namespace vertex {
 
 		bool   Is_normalized (void) const;   // initial value of this flag is false and is set by default;
 		bool   Is_normalized (const bool);   // returns 'true' in case of normalization flag value change;
-		bool   Is_valid (void) const;        // the offset, elements/components' count/size and vertex data vector size must be appropriate;
+		bool   Is_valid  (void) const;       // the offset, elements/components' count/size and vertex data vector size must be appropriate;
 
 		uint32_t  Offset (void) const;       // initial value of the offset is set by color and position classes and does not require any change;
 		bool      Offset (const uint32_t);   // returns 'true' in case of offset value change; the value is set by color and position classes;
@@ -55,7 +55,7 @@ namespace vertex {
 		uint32_t  Size   (void) const;       // specifies the number of components per generic vertex attribute; must be [1-4] or GL_BGRA;
 
 	protected:
-		CData& operator = (const CData&) = delete; CData& operator = (CData&&) = delete;
+		CFormat& operator = (const CFormat&) = delete; CFormat& operator = (CFormat&&) = delete;
 		
 		TVertData& m_data ;
 		uint32_t   m_index;
@@ -65,7 +65,7 @@ namespace vertex {
 		uint32_t   m_stride; // it sets to sizeof(float) * m_data.size() by default and does not require any change;
 	};
 	// the color channels follow in the sequence: r-g-b-a => offset + ndx[0..3];
-	class CColor : public CData {
+	class CColor : public CFormat {
 	private: CColor (void) = delete; using CConvert = ex_ui::color::rgb::CConvert; // this class has static method for converting color channel to float value;
 	public:
 		CColor (TVertData&); ~CColor (void);
@@ -76,7 +76,7 @@ namespace vertex {
 	};
 	// https://learnopengl.com/Getting-started/Coordinate-Systems ;
 	// the position coordinates value follow in the next sequence: x-y-z => offset + ndx[0..2];
-	class CPosition : public CData { typedef CData TData;
+	class CPosition : public CFormat { typedef CFormat TData;
 	private: CPosition (void) = delete;
 	public:
 		CPosition (TVertData&); ~CPosition (void);
@@ -85,11 +85,12 @@ namespace vertex {
 		void Set (const long  _x, const long  _y/*const long  _z = 0*/ ); // converts screen space coordinates to local space; it requires viewport size;
 	};
 }
+	// https://wikis.khronos.org/opengl/Vertex_Specification ;
 	class CVertex {
 	using CClr = vertex::CColor;
 	using CPos = vertex::CPosition;
 	public:
-		CVertex (void) ;  CVertex (const CVertex&) = delete; CVertex (CVertex&&) = delete; ~CVertex (void) ;
+		CVertex (TVertData&); CVertex (void) = delete ;  CVertex (const CVertex&) = delete; CVertex (CVertex&&) = delete; ~CVertex (void) ;
 
 		TError& Error (void) const;
 
@@ -103,20 +104,19 @@ namespace vertex {
 		TVertData& Raw (void) const;     // gives the read-only access to element of the vector;
 		TVertData& Raw (void) ;          // gives the direct access to the vector of data; *important*: the size of the vector must remain the same;
 
-		err_code   SetPtrs (void) const; // sets pointers of all attributes;
-		uint32_t   Size (void) const;    // returns the required number of elements in vertex data; 'stride' is not acceptable in this case, because it returns an offset in number of elements multiplied by data type size;
+		uint32_t   Size (void) const;    // returns the required number of elements in vertex data;
 
 	private:
 		CVertex& operator = (const CVertex&) = delete; CVertex& operator = (CVertex&&) = delete;
 		mutable
-		CError    m_error;
-		CClr      m_clr;
-		CPos      m_pos;
-		TVertData m_data;  // the container, i.e. this class, contains data that will be shared between several classes internal or external, but that classes will belong to this container;
+		CError     m_error;
+		CClr       m_clr  ;
+		CPos       m_pos  ;
+		TVertData& m_data ;
 	};
 
 }}}
 
-typedef ex_ui::draw::open_gl::vertex::CData TData;
+typedef ex_ui::draw::open_gl::vertex::CFormat TVertFormat;
 
-#endif/*_GL_VERTEX_H_INCLUDED*/
+#endif/*_GL_VERTEX_DATA_H_INCLUDED*/

@@ -3,10 +3,12 @@
 	This is Ebo Pack OpenGL tutorials' shader program base interface implementation file;
 */
 #include "gl_program.h"
-#include "shared.preproc.h"
-#include "shared.dbg.h"
 #include "program\gl_prog_linker.h"
 #include "program\gl_prog_status.h"
+#include "procs\gl_procs_prog.h"
+
+#include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
@@ -17,20 +19,6 @@ using namespace ex_ui::draw::open_gl::program;
 
 CProgram:: CProgram (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CProgram::~CProgram (void) { this->Delete(); }
-
-procs::CProg& CProgram::Procs (void) {
-	static procs::CProg procs;
-	static bool b_loaded = false;
-	// it is better to try to load all functions in cache at once and to indicate an error of loading if any occurs,
-	// otherwise if the sequence of calls of open_gl draw pipeline procedures is not correct, the global error state will not allow to load procs later;
-	if (false == b_loaded) {
-		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
-		else
-		    b_loaded = true;
-	}
-	return procs;
-}
 
 const
 CBuffer_4_vert&  CProgram::Buffer (void) const { return this->m_buffer; }
@@ -46,11 +34,10 @@ err_code  CProgram::Create (void) {
 	if (!!this->Id())
 		return this->m_error <<(err_code)TErrCodes::eObject::eExists = TString().Format(_T("Program object (id = %u) already exists"), this->Id().Get());
 
-	procs::CProg& procs = CProgram::Procs();
-	this->Id() << procs.Create();
+	this->Id() << __get_prog_procs().Create();
 	if (0 == this->Id()) {
-		if (procs.Error().Is())
-			this->m_error = procs.Error();
+		if (__get_prog_procs().Error().Is())
+			this->m_error = __get_prog_procs().Error();
 		program::CLog log;
 		if (__failed(log.Set(0))) {} // if the program identifier equals to zero, there is no way to get the creation error details;
 	}
@@ -73,11 +60,10 @@ err_code  CProgram::Delete (void) {
 #if (0)
 	CCache(this->Id()).Detach_all(); // it is supposed the shader(s) will be destroyed later than this program, so shader(s) must be detached first;
 #endif
-	procs::CProg& procs = CProgram::Procs();
 
-	if (__failed(procs.Delete(this->Id()))) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req));
-		return this->m_error = procs.Error();
+	if (__failed(__get_prog_procs().Delete(this->Id()))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_prog_procs().Error().Print(TError::e_print::e_req));
+		return this->m_error = __get_prog_procs().Error();
 	}
 	else
 		__trace_warn_2(_T("The program (id = %u) is deleted;\n"), this->Id().Get());
@@ -169,8 +155,8 @@ program::CStatus& CProgram::Status (void)       { return this->m_status; }
 		return this->Error();
 	}
 
-	if (__failed(CProgram::Procs().Use(this->Id()())))
-		this->m_error = CProgram::Procs().Error();
+	if (__failed(__get_prog_procs().Use(this->Id()())))
+		this->m_error = __get_prog_procs().Error();
 
 	return this->Error();
  }
@@ -178,7 +164,7 @@ program::CStatus& CProgram::Status (void)       { return this->m_status; }
 err_code CProgram::Validate (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
-	procs::CProg& procs = CProgram::Procs();
+	procs::CProg& procs = __get_prog_procs();
 
 	if (__failed(procs.Validate(this->Id()))) {
 	    __trace_err_2(_T("%s\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req));

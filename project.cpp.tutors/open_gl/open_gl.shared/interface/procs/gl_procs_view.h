@@ -18,6 +18,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		err_code SetRange_D (const double _d_near, const double _d_far);  // specifies a linear mapping of the normalized depth coordinates in this range to window depth ones;
 		err_code SetRange_F (const float _f_near, const float _f_far);    // this function is the same as above one, and just is the replacement for the other one: GLclampf();
 
+		err_code Get_all (void) ;
+
 	private:
 		CDepth& operator = (const CDepth&) = delete; CDepth& operator = (CDepth&&) = delete;
 	};
@@ -34,9 +36,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		err_code Offset (const float _f_factor, const float _f_unit); // sets the scale and units OpenGL uses to calculate depth values;
 		// https://en.wikipedia.org/wiki/Affine_transformation ;
 		err_code Set (const int32_t _x, const int32_t _y, const uint32_t _u_width, const uint32_t _u_height); // specifies the affine transformation of x and y from normalized device coordinates to window coordinates;
+
+		err_code Get_all (void) ;
+
 	private:
 		CViewport& operator = (const CViewport&) = delete; CViewport& operator = (CViewport&&) = delete;
 	};
 }}}}
+
+typedef ex_ui::draw::open_gl::procs::CDepth TDepthProcs; TDepthProcs&  __get_depth_procs (void);
+typedef ex_ui::draw::open_gl::procs::CViewport TViewProcs; TViewProcs&  __get_view_procs (void);
 
 #endif/*_GL_PROCS_VIEW_H_INCLUDED*/
