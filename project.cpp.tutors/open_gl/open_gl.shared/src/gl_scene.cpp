@@ -132,8 +132,8 @@ err_code CScene::Prepare (void) {
 	// sets attributes' indecise (aka location) before linking the program,
 	// an index of the particular attribute must be the same as in actual vertex: 0 - position; 1 - color;
 	// also, it is very important: the shader source code can change the location of the attributes and after the program linking those locations will be applied;
-	if (__failed(this->Array().Attrs().Clr().Index().Set(1))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
-	if (__failed(this->Array().Attrs().Pos().Index().Set(0))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
+	if (__failed(this->Array().Attrs().Clr().Locate().Set(1))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
+	if (__failed(this->Array().Attrs().Pos().Locate().Set(0))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
 	// the same as above, the error may be set by procedure of setting the index to attribute, just output the error to trace log;
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
@@ -158,11 +158,11 @@ err_code CScene::Prepare (void) {
 	// checks vertex attributes' indices after linking the program and deleting the shaders;
 	// the indices must be the same as them were set before the linking;
 
-	const int32_t n_clr_ndx = this->Array().Attrs().Clr().Index().Get();
-	const int32_t n_pos_ndx = this->Array().Attrs().Pos().Index().Get();
+	const int32_t n_clr_ndx = this->Array().Attrs().Clr().Locate().Get();
+	const int32_t n_pos_ndx = this->Array().Attrs().Pos().Locate().Get();
 
-	if (this->Array().Attrs().Clr().Index().Error()) this->m_error = this->Array().Attrs().Clr().Index().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[0], n_clr_ndx); }
-	if (this->Array().Attrs().Pos().Index().Error()) this->m_error = this->Array().Attrs().Pos().Index().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[1], n_pos_ndx); }
+	if (this->Array().Attrs().Clr().Locate().Error()) this->m_error = this->Array().Attrs().Clr().Locate().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[0], n_clr_ndx); }
+	if (this->Array().Attrs().Pos().Locate().Error()) this->m_error = this->Array().Attrs().Pos().Locate().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[1], n_pos_ndx); }
 	// the error may be set by any attribute and the error of the first attribute may be overritten by the error of the last attriboute,
 	// but it is not important for this time yet;
 	if (this->Error()) {

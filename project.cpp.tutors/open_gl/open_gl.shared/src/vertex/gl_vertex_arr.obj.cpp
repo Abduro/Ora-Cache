@@ -104,7 +104,7 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 	CAttr* attrs[] = { &this->Attrs().Clr(), &this->Attrs().Pos() };
 
 	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
-		const int32_t n_att_ndx = attrs[i_]->Index().Get();
+		const int32_t n_att_ndx = attrs[i_]->Locate().Get();
 		if (_b_state) {
 			if (__failed(__get_attr_arr_procs().Enable(n_att_ndx))) {
 				this->m_error = __get_attr_arr_procs().Error();

@@ -8,12 +8,12 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shapes;
 
-namespace ex_ui { namespace draw { namespace open_gl {namespace _impl_4 { static TVertData v_data; static CVertex vert_inv(v_data); }}}}
+namespace ex_ui { namespace draw { namespace open_gl {namespace _impl_4 { static CVertex vert_inv; }}}}
 using namespace _impl_4;
 
 CTriangle:: CTriangle (void) : CShape() { CString cs_cls = TString().Format(_T("%s::%s"), CShape::m_error.Class(), (_pc_sz)__CLASS__);
 	CShape::m_error.Class(cs_cls, false);
-	CShape::m_array.SetElements(n_min_vertex_count);
+//	CShape::m_array.SetElements(n_min_vertex_count);
 	if (CShape::Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) CShape::Error().Print(TError::e_print::e_req));
 	}

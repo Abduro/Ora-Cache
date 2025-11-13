@@ -12,6 +12,7 @@
 #include <set>            // is used for cache of draw objects' identifiers;
 #include <vector>         // preprocessor wrapper uses this header;
 #include <typeinfo>       // typeinfo >> exception >> vcruntime_exception >> ::std::bad_alloc;
+#include <stdexcept>      // required for std::out_of_range;
 
 #include "sys.err.trim.h" // includes error codes;
 
