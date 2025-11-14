@@ -156,6 +156,11 @@ err_code  context::CTarget::Set (const HWND _h_wnd) {
 		this->m_error << __e_hwnd = _T("Target window handle is invalid");
 		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
+	// for debug purpose only;
+	if (this->m_cls_src.IsEmpty()) {
+		bool b_break = false;
+		b_break = !b_break;
+	}
 
 	this->m_target = _h_wnd;
 	this->m_dc_src = ::GetDC(_h_wnd);
@@ -294,7 +299,8 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	_h_target;
 	CBase::m_error() <<__METHOD__<<__s_ok;
 
-	CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
+	if (nullptr == CBase::Target().Source()) // the source class name can be set outside of this procedure;
+		CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
 
 	if (__failed(CBase::Set(_h_target))) {
 		return CBase::Error()();

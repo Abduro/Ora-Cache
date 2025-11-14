@@ -18,6 +18,8 @@ using namespace ex_ui::draw::open_gl::vertex;
 #pragma region _vert_array
 
 vertex::CArrObject:: CArrObject (void) : m_arr_id(0) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
+vertex::CArrObject:: CArrObject (const CArrObject& _src) : CArrObject() { *this = _src; }
+vertex::CArrObject:: CArrObject (CArrObject&& _victim) : CArrObject() { *this = _victim; }
 vertex::CArrObject::~CArrObject (void) {}
 
 const
@@ -148,4 +150,8 @@ err_code vertex::CArrObject::Unbind (void) {
 
 	return this->Error();
 }
+
+CArrObject& CArrObject::operator = (const CArrObject& _src) { this->Attrs() = _src.Attrs(); return *this; }
+CArrObject& CArrObject::operator = (CArrObject&& _victim) { *this = (const CArrObject&)_victim; return *this; }
+
 #pragma endregion

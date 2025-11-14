@@ -15,13 +15,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	class CVertArray {
 		public:
 		CVertArray (void); CVertArray (const CVertArray&) = delete; CVertArray (CVertArray&&) = delete; ~CVertArray (void);
+		// https://www.allacronyms.com/elements/abbreviated ;
 
-#if (0)
-		uint32_t  GetElements (void) const;              // returns the count of vertex elements' count;
-		err_code  SetElements (const uint32_t _u_count); // sets the count of the vertex elements;
-#endif
 		uint32_t  Count (void) const;    // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
-		err_code  Count (const uint32_t _n_elements);    // sets the number of the required vertices;
+		err_code  Count (const uint32_t _n_elems); // sets the number of the required vertices, i.e. elements;
 		TError&   Error (void) const;
 		const
 		void*     GetData (void) const;  // gets the pointer to vertex array data, this is the data for vertex buffer;
@@ -30,13 +27,13 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		TVertices& Items (void) ;        // gets the reference to vertex collection; (rw)
 
 		err_code  Update (void);         // updates vertex data vector by applying vertices' attribute arrays' data;
-
+	
 	private:
 		CVertArray& operator = (const CVertArray&) = delete; CVertArray& operator = (CVertArray&&) = delete;
 		mutable
 		CError    m_error;
-		TVertices m_items;
-		TVertData m_data ;
+		TVertices m_items;  // this is the set of vertices themselves;
+		TVertData m_data ;  // this is the data for vertex buffer;
 	};
 
 }}}

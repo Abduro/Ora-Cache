@@ -26,7 +26,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 	protected:
 		mutable
 		CError      m_error;
-		CVertArray  m_array;
+		CVertArray  m_vertices;
 	};
 
 }}}}

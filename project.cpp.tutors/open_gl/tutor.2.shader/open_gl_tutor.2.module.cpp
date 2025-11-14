@@ -2,6 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) 0n 26-Aug-2025 at 02:41:05.044, UTC+4, Batumi, Tuesday;
 	This is OpenGL shader creation tutorial module interface implementation file;
 */
+#pragma region __includes
 #include "open_gl_tutor.2.module.h"
 #include "open_gl_tutor.2.res.h"
 
@@ -14,7 +15,7 @@
 #include "win.gui.wnd.h"
 
 #include "shapes\gl_shape.2d.h"
-
+#pragma endregion
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 using namespace shared::console;
@@ -93,13 +94,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
 #pragma endregion
 #pragma region __step_2
-		// (2) creates the context target window;
+		// (2) creates the context target window; the required GDI and draw contexts are also created;
 		if (__failed($_wnd.Create(app_wnd.Handle(), layout.Top().Rect(), true))) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) $_wnd.Error().Print(TError::e_req)); // debug output console window is already created;
 		}
 		else
 			layout.Top().Target($_wnd);
-
+		// (2.a) tries to set shaders source code from this executable resources;
+		//  *important*: no scene preparation is called before setting the shape;
 		if (__failed($_wnd.PostCreate())) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) $_wnd.Error().Print(TError::e_req));
 			break;
@@ -108,16 +110,16 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma region __step_3
 		using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
 		CTriangle triangle;
-#if (0)
-		triangle.A().Clr().Set(1.0f, 0.0f, 0.0f, 1.0f);
-		triangle.B().Clr().Set(0.0f, 1.0f, 0.0f, 1.0f);
-		triangle.C().Clr().Set(0.0f, 0.0f, 1.0f, 1.0f);
+
+		triangle.A().Attrs().Clr().Set(1.0f, 0.0f, 0.0f, 1.0f);
+		triangle.B().Attrs().Clr().Set(0.0f, 1.0f, 0.0f, 1.0f);
+		triangle.C().Attrs().Clr().Set(0.0f, 0.0f, 1.0f, 1.0f);
 
 		// for this tutorial direct assigning coordinates to the rectangle vertices is acceptable;
-		triangle.A().Pos().Set(+0.0f, +0.5f);
-		triangle.B().Pos().Set(-0.5f, -0.5f);
-		triangle.C().Pos().Set(+0.5f, -0.5f);
-
+		triangle.A().Attrs().Pos().Set(+0.0f, +0.5f);
+		triangle.B().Attrs().Pos().Set(-0.5f, -0.5f);
+		triangle.C().Attrs().Pos().Set(+0.5f, -0.5f);
+#if (0)
 		if (__failed(triangle.Update())) { // if an error occurs, the method prints it itself;
 			break;
 		}

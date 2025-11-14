@@ -13,22 +13,23 @@ using namespace _impl_4;
 
 CTriangle:: CTriangle (void) : CShape() { CString cs_cls = TString().Format(_T("%s::%s"), CShape::m_error.Class(), (_pc_sz)__CLASS__);
 	CShape::m_error.Class(cs_cls, false);
-//	CShape::m_array.SetElements(n_min_vertex_count);
+	if (__failed(CShape::m_vertices.Count(n_min_vertex_count)))
+		CShape::m_error = CShape::m_vertices.Error(); else CShape::m_error <<__s_ok;
 	if (CShape::Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) CShape::Error().Print(TError::e_print::e_req));
 	}
 }
 CTriangle::~CTriangle (void) {}
-#if (0)
+
 const
-CVertex&    CTriangle::A (void) const { return this->m_vertices[e_vertices::e_a]; }
-CVertex&    CTriangle::A (void)       { return this->m_vertices[e_vertices::e_a]; }
+CVertex&    CTriangle::A (void) const { if (CShape::m_vertices.Count() > e_vertices::e_a) return CShape::m_vertices.Items().at(e_vertices::e_a); else return vert_inv; }
+CVertex&    CTriangle::A (void)       { if (CShape::m_vertices.Count() > e_vertices::e_a) return CShape::m_vertices.Items().at(e_vertices::e_a); else return vert_inv; }
 const
-CVertex&    CTriangle::B (void) const { return this->m_vertices[e_vertices::e_b]; }
-CVertex&    CTriangle::B (void)       { return this->m_vertices[e_vertices::e_b]; }
+CVertex&    CTriangle::B (void) const { if (CShape::m_vertices.Count() > e_vertices::e_b) return CShape::m_vertices.Items().at(e_vertices::e_b); else return vert_inv; }
+CVertex&    CTriangle::B (void)       { if (CShape::m_vertices.Count() > e_vertices::e_b) return CShape::m_vertices.Items().at(e_vertices::e_b); else return vert_inv; }
 const
-CVertex&    CTriangle::C (void) const { return this->m_vertices[e_vertices::e_c]; }
-CVertex&    CTriangle::C (void)       { return this->m_vertices[e_vertices::e_c]; }
+CVertex&    CTriangle::C (void) const { if (CShape::m_vertices.Count() > e_vertices::e_c) return CShape::m_vertices.Items().at(e_vertices::e_c); else return vert_inv; }
+CVertex&    CTriangle::C (void)       { if (CShape::m_vertices.Count() > e_vertices::e_c) return CShape::m_vertices.Items().at(e_vertices::e_c); else return vert_inv; }
 
 const
 CVertex&    CTriangle::Get (const e_vertices e_vert) const {
@@ -45,13 +46,11 @@ CVertex&    CTriangle::Get (const e_vertices e_vert) {
 	if (e_vertices::e_c == e_vert) return this->C();
 	return _impl_4::vert_inv;
 }
-
+#if (0)
 bool  CTriangle::Is_valid (void) const { return false == this->m_cache.empty(); }
 
 const
-void* const CTriangle::Cached (void) const {
-	return this->m_cache.data();
-}
+void* const CTriangle::Cached (void) const { return this->m_cache.data(); }
 
 // https://stackoverflow.com/questions/17254425/getting-the-size-in-bytes-of-a-vector ;
 uint32_t    CTriangle::Bytes (void) const {
@@ -63,19 +62,22 @@ uint32_t    CTriangle::Bytes (void) const {
 err_code    CTriangle::Update (void) {
 	CShape::m_error <<__METHOD__<<__s_ok;
 
+	if (CShape::n_min_vertex_count != CShape::m_vertices.Count())
+		return CShape::m_error <<__e_not_inited;
+
 	uint32_t n_req_sz_max = 0;
-	for (uint32_t i_ = 0; i_ < CShape::n_min_point_count; i_++) {
+	for (uint32_t i_ = 0; i_ < CShape::n_min_vertex_count; i_++) {
 		if (this->m_vertices[i_].Size() > n_req_sz_max) n_req_sz_max = this->m_vertices[i_].Size();
 	}
 	if (0 == n_req_sz_max)
 		return CShape::m_error <<__e_inv_arg = _T("There is not a single vertex with a predefined size");
 
-	n_req_sz_max *= CShape::n_min_point_count;
+	n_req_sz_max *= CShape::n_min_vertex_count;
 
 	this->m_cache.reserve(n_req_sz_max);
 
 	try {
-		for (uint32_t i_ = 0; i_ < CShape::n_min_point_count; i_++)
+		for (uint32_t i_ = 0; i_ < CShape::n_min_vertex_count; i_++)
 			::std::copy(this->m_vertices[i_].Raw().begin(), this->m_vertices[i_].Raw().end(),
 				::std::back_inserter(this->m_cache));
 	}

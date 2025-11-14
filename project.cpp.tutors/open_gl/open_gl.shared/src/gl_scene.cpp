@@ -94,11 +94,11 @@ err_code CScene::Prepare (void) {
 	else
 		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
 
+#pragma region _1st_step
+	// the step #1: creating shaders, program, shaders' attachment and linking the program;
 	if (__failed(this->Prog().Create()))
 		return this->m_error = this->Prog().Error();
-	// activates or binds vertex array attributes;
-	this->Array().Attrs() << this->Prog().Id();
-
+	
 	if (__failed(this->Prog().Shaders().Create()))
 	    return this->m_error = this->Prog().Shaders().Error();
 
@@ -110,6 +110,14 @@ err_code CScene::Prepare (void) {
 
 	if (__failed(this->Prog().Shaders().Attach()))
 		return this->m_error = this->Prog().Shaders().Error();
+
+	if (__failed(this->Prog().Link()))
+		return this->m_error = this->Prog().Error();
+#pragma endregion
+#if (0)
+	// activates or binds vertex array attributes;
+	this->Array().Attrs() << this->Prog().Id();
+
 	// this is predefined names of attributes;
 	// enumerating of the attributes is not done yet;
 	static _pc_sz attr_names[] = {_T("colorIn"), _T("positionIn")};
@@ -138,9 +146,6 @@ err_code CScene::Prepare (void) {
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
-
-	if (__failed(this->Prog().Link()))
-		return this->m_error = this->Prog().Error();
 
 	// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
 	if (false) {}
@@ -191,7 +196,7 @@ err_code CScene::Prepare (void) {
 	if (__succeeded(this->Prog().Validate())) {
 		__trace_info_2(_T("The draw scene is prepared;\n"));
 	}
-
+#endif
 	return this->Error();
 }
 

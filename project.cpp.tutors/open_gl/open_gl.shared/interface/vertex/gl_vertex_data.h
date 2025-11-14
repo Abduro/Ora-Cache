@@ -42,6 +42,7 @@ namespace vertex {
 		const
 		CAttrArray& Attrs (void) const;
 		CAttrArray& Attrs (void) ;
+
 		TError&     Error (void) const;
 		const
 		TVertData&  Raw (void) const;     // gives the read-only access to element of the vector;

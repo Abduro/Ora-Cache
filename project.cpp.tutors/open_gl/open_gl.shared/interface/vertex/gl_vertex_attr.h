@@ -36,7 +36,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		bool     Value (const uint32_t); // sets the index value; returns 'true' in case of change its value;
 
 	public:
-		CAttr_Location& operator = (const CAttr_Location&); CAttr_Location& operator = (CAttr_Location&&);
+		CAttr_Location& operator = (const CAttr_Location&); CAttr_Location& operator = (CAttr_Location&&); // no move operation, just copying data;
 		CAttr_Location& operator <<(const CProgId&);
 		CAttr_Location& operator <<(const int32_t _n_value);
 		CAttr_Location& operator <<(_pc_sz _attr_name);
@@ -88,7 +88,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CAttr& operator <<(_pc_sz _p_name);
 		CAttr& operator <<(const CProgId&);
 		CAttr& operator <<(const bool _b_norm);
-		CAttr& operator = (const CAttr&); CAttr& operator = (CAttr&&);
+		CAttr& operator = (const CAttr&); CAttr& operator = (CAttr&&); // no move operation, just copying data;
 	protected:
 		CAttr& operator <<(const CLocate&);
 		CAttr& operator <<(const uint32_t _u_size);
@@ -113,8 +113,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CColor (void); CColor (const CColor&); CColor (CColor&&); ~CColor (void) = default;
 
 		CColor& operator = (const CColor&);
-		CColor& operator = (CColor&&);
-		CColor& operator <<(const CAttr*);
+		CColor& operator = (CColor&&);          // no move operation, just copying data;
+
 		// sets color as float value; if the value is out of range [0.0...1.0], the value is set to min or max value of the range;
 		void Set (const float _r, const float _g, const float _b, const float _a = 1.0f);
 		void Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a = 0xff);
@@ -133,8 +133,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CPosition (void); CPosition (const CPosition&); CPosition (CPosition&&); ~CPosition (void) = default;
 
 		CPosition& operator = (const CPosition&);
-		CPosition& operator = (CPosition&&);
-		CPosition& operator <<(const CAttr*);
+		CPosition& operator = (CPosition&&);    // no move operation, just copying data;
 
 		void Set (const float _x, const float _y, const float _z = 0.0f); // sets coordinates in local/object 3D space;
 		void Set (const long  _x, const long  _y/*const long  _z = 0*/ ); // converts screen space coordinates to local space; it requires viewport size;
@@ -172,7 +171,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CProgId& ProgId (void) const;
 		err_code ProgId (const uint32_t); // this method updates the program identifiers of all attributes;
 
-		CAttrArray& operator = (const CAttrArray&); CAttrArray& operator = (CAttrArray&&);
+		uint32_t Size (void) const;  // returns the number of elements of all attributes in this array;
+
+		CAttrArray& operator = (const CAttrArray&); CAttrArray& operator = (CAttrArray&&); // no move operation, just copying data;
 		CAttrArray& operator <<(const CProgId&);
 		CAttrArray& operator <<(const uint32_t _prog_id);
 		CAttrArray& operator <<(const CColor&);

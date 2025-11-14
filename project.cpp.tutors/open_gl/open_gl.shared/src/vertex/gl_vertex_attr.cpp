@@ -64,8 +64,8 @@ int32_t  CAttr_Location::Get (const uint32_t _prog_id, _pc_sz _p_att_name, CErro
 
 err_code CAttr_Location::Set (const uint32_t _u_ndx) {
 	_u_ndx;
-	if (false == this->Is_valid())
-		return this->Error();
+//	if (false == this->Is_valid())
+//		return this->Error();
 
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -243,9 +243,8 @@ void CColor::Set (const rgb_color _rgba) {
 	TBase::m_data[3] = CConvert::ToFloat(get_a_value(_rgba));
 }
 
-CColor&  CColor::operator = (const CColor& _src) { _src; return *this; }
-CColor&  CColor::operator = (CColor&& _victim) { _victim; return *this; }
-CColor&  CColor::operator <<(const CAttr*) { return *this; }
+CColor&  CColor::operator = (const CColor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+CColor&  CColor::operator = (CColor&& _victim) { *this = (const CColor&)_victim; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -279,9 +278,8 @@ void CPosition::Set (const long  _x, const long  _y) {
 	_x; _y;
 }
 
-CPosition&  CPosition::operator = (const CPosition& _src) { _src; return *this; }
-CPosition&  CPosition::operator = (CPosition&& _victim) { _victim; return *this; }
-CPosition&  CPosition::operator <<(const CAttr*) { return *this; }
+CPosition&  CPosition::operator = (const CPosition& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPosition&)_victim; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -462,6 +460,8 @@ err_code CAttrArray::ProgId (const uint32_t _prog_id) {
 
 	return this->Error();
 }
+
+uint32_t CAttrArray::Size (void) const { return this->Clr().Size() + this->Pos().Size(); }
 
 CAttrArray&  CAttrArray::operator = (const CAttrArray& _src)  {
 	*this << _src.ProgId() << _src.Clr() << _src.Pos(); return *this;

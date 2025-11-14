@@ -12,7 +12,7 @@ using namespace ex_ui::draw::open_gl::shader;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
-shader::CWnd:: CWnd (void) : TBase() { TBase::m_error >>(TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__));
+shader::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
 
 	if (m_fak_wnd.Is_valid() == false) {
 		TBase::m_error = m_fak_wnd.Error();
@@ -20,8 +20,11 @@ shader::CWnd:: CWnd (void) : TBase() { TBase::m_error >>(TString().Format(_T("sh
 		__trace::Out_2(__trace::e_err, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 
-	if (__failed(this->Renderer().Scene().Ctx().Device().Create(m_fak_wnd.m_hWnd))) {
-		TBase::m_error = this->Renderer().Scene().Ctx().Device().Error();
+	context::CDevice& dev_ref = this->Renderer().Scene().Ctx().Device();
+	dev_ref.Target().Source((_pc_sz)cs_cls);
+
+	if (__failed(dev_ref.Create(m_fak_wnd.m_hWnd))) {
+		TBase::m_error = dev_ref.Error();
 		__trace_err_3(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 #if (0)
@@ -87,10 +90,13 @@ err_code shader::CWnd::PostCreate (void) {
 	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
 	         __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 
+	CString cs_cls = TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
+	this->Renderer().Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
 	this->Renderer().Scene().Ctx().Draw().Target() << *this;
-
+#if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
 	if (__failed(this->Renderer().Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
+#endif
 #define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 	this->Renderer().Scene().Destroy();

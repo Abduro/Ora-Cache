@@ -37,8 +37,7 @@ CVertex::~CVertex (void) {}
 const
 CAttrArray& CVertex::Attrs (void) const { return this->m_attrs; }
 CAttrArray& CVertex::Attrs (void)       { return this->m_attrs; }
-
-TError&   CVertex::Error (void) const { return this->m_error; }
+TError&     CVertex::Error (void) const { return this->m_error; }
 
 const
 TVertData& CVertex::Raw (void) const { return this->m_data; }
@@ -79,9 +78,7 @@ err_code   CVertex::Update (void) {
 	return this->Error();
 }
 
-uint32_t   CVertex::Size(void) const {
-	return this->Attrs().Clr().Size() + this->Attrs().Pos().Size();
-}
+uint32_t   CVertex::Size(void) const { return this->Attrs().Size(); }
 
 CVertex&   CVertex::operator = (const CVertex& _src) { this->Attrs() = _src.Attrs(); this->m_data = _src.m_data;  return *this; }
 CVertex&   CVertex::operator = (CVertex&& _victim) { *this = (const CVertex&)_victim; return *this; }

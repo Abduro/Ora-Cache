@@ -19,7 +19,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		enum e_vertices : uint32_t { 
 		    e_a = 0x0, e_b = 0x1, e_c = 0x2
 		};
-#if (0)
+
 		// important: do not change neither stride nor offset because they are already set by vertex data itself;
 		const
 		CVertex& A (void) const;
@@ -33,7 +33,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		const
 		CVertex& Get (const e_vertices) const; // returns a reference to the vertex by corner index; (ro);
 		CVertex& Get (const e_vertices) ;      // returns a reference to the vertex by corner index; (rw);
-
+#if (0)
 		bool  Is_valid (void) const;       // returns true is the vector of the cached vertices is not empty;
 		const
 		void* const  Cached (void) const;  // gets pointer to cached vertices' data;
