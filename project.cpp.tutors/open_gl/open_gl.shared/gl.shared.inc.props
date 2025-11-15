@@ -41,7 +41,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3);$(_0-4);$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3);$(_1-4);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(Shared);$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3);$(_0-4);$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3);$(_1-4);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

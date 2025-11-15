@@ -44,8 +44,9 @@ namespace vertex {
 		CAttrArray& Attrs (void) ;
 
 		TError&     Error (void) const;
+		const bool  Is_valid (void) const;
 		const
-		TVertData&  Raw (void) const;     // gives the read-only access to element of the vector;
+		TVertData&  Raw (void) const;     // gives the read-only access to elements of the vector;
 		TVertData&  Raw (void) ;          // gives the direct access to the vector of data; *important*: the size of the vector must remain the same;
 
 		uint32_t    Size (void) const;    // returns the required number of elements in vertex data;

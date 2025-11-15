@@ -39,6 +39,10 @@ CAttrArray& CVertex::Attrs (void) const { return this->m_attrs; }
 CAttrArray& CVertex::Attrs (void)       { return this->m_attrs; }
 TError&     CVertex::Error (void) const { return this->m_error; }
 
+const bool  CVertex::Is_valid (void) const {
+	return !!this->Size() && this->Size() == static_cast<uint32_t>(this->m_data.size()); // attributes' array validity is not necessary to check possibly;
+}
+
 const
 TVertData& CVertex::Raw (void) const { return this->m_data; }
 TVertData& CVertex::Raw (void)       { return this->m_data; }

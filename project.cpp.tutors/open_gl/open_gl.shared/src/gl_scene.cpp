@@ -114,9 +114,16 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Prog().Link()))
 		return this->m_error = this->Prog().Error();
 #pragma endregion
-#if (0)
-	// activates or binds vertex array attributes;
+#pragma region __2nd_step
+	// the step #2: configuring vertex attributes;
 	this->Array().Attrs() << this->Prog().Id();
+	if (__failed(this->Array().Attrs().Enum_attrs())) {
+		return this->m_error = this->Array().Attrs().Error();
+	}
+
+#pragma endregion
+#if (0)
+	
 
 	// this is predefined names of attributes;
 	// enumerating of the attributes is not done yet;

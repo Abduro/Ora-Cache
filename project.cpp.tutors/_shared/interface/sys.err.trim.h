@@ -10,6 +10,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to FakeGPS driver project on 13-Dec-2019 at 10:19:37a, UTC+7, Novosibirsk, Friday;
 */
+#include <atlstr.h>
 #include <comdef.h> // https://learn.microsoft.com/en-us/cpp/cpp/com-error-class ;
 #include <map>
 
@@ -29,6 +30,7 @@
 
 namespace shared { namespace sys_core {
 
+	using CString = ATL::CString;
 	using namespace shared::types;
 
 	struct CLang {

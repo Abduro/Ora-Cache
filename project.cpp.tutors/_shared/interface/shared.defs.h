@@ -19,6 +19,7 @@
 namespace shared { namespace defs {
 
 	using namespace shared::types;
+	using CString = ::ATL::CAtlString;
 
 	using CError = shared::sys_core::CError;
 	using TError = const CError;

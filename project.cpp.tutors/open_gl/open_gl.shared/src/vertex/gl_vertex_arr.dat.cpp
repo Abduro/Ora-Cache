@@ -10,8 +10,15 @@
 
 using namespace ex_ui::draw::open_gl;
 
+CVertex virt_vex;
+
 CVertArray:: CVertArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
 CVertArray::~CVertArray (void) {}
+
+// https://stackoverflow.com/questions/17254425/getting-the-size-in-bytes-of-a-vector ;
+uint32_t     CVertArray::Bytes (void) const {
+	return static_cast<uint32_t>(sizeof(float) * static_cast<uint32_t>(this->m_data.size()));
+}
 
 uint32_t CVertArray::Count (void) const { return static_cast<uint32_t>(this->m_items.size()); }
 err_code CVertArray::Count (const uint32_t _n_elems) {
@@ -28,6 +35,9 @@ err_code CVertArray::Count (const uint32_t _n_elems) {
 
 	return this->Error();
 }
+const
+CVertex&  CVertArray::Get (const uint32_t _u_ndx) const { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }
+CVertex&  CVertArray::Get (const uint32_t _u_ndx)       { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }     
 
 const
 void*    CVertArray::GetData (void) const { return this->m_data.data(); }
@@ -54,6 +64,16 @@ TError&  CVertArray::Error (void) const { return this->m_error; }
 const
 TVertices& CVertArray::Items (void) const { return this->m_items; }
 TVertices& CVertArray::Items (void)       { return this->m_items; }
+
+bool  CVertArray::Is_valid (void) const {
+	uint32_t u_req = 0;
+
+	for (uint32_t i_ = 0; i_ < this->Count(); i_++)
+		u_req += this->m_items.at(i_).Size();
+
+	return static_cast<uint32_t>(this->m_data.size()) == u_req && u_req > 0;
+}
+
 #if (0)
 err_code CVertArray::Set_ptrs (const vertex::TRawAttrs& _attrs) {
 	_attrs;
@@ -65,6 +85,7 @@ err_code CVertArray::Set_ptrs (const vertex::TRawAttrs& _attrs) {
 	return this->Error();
 }
 #endif
+// https://stackoverflow.com/questions/644673/is-it-more-efficient-to-copy-a-vector-by-reserving-and-copying-or-by-creating-a ;
 err_code   CVertArray::Update (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -78,19 +99,27 @@ err_code   CVertArray::Update (void) {
 		}
 	} catch (const ::std::bad_alloc& _err) { return this->m_error <<__e_no_memory = (_pc_sz) CString(_err.what()); }
 
-	TVertData::iterator p_target = this->m_data.begin() + 1;
+	TVertData::iterator p_target = this->m_data.begin() + 0;
 
 	for (uint32_t i_ = 0; i_ < this->Count(); i_++) {
-		if (__failed(this->Items().at(i_).Update())) {
-			this->m_error = this->Items().at(i_).Error();
+
+		CVertex& vex = this->Items().at(i_);
+
+		if (__failed(vex.Update())) {
+			this->m_error = vex.Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req)); break;
 		}
 		try {
-			::std::copy(this->Items().at(i_).Raw().begin() + 1,
-			            this->Items().at(i_).Raw().begin() + 1 + this->Items().at(i_).Size(), p_target);
-			p_target += this->Items().at(i_).Size();
+			::std::copy(vex.Raw().begin() + 0,
+			            vex.Raw().end()
+			          /*vex.Raw().begin() + vex.Size()*/, p_target);
+			if (this->Count() - 1 > i_)
+				p_target += vex.Size();
 
-		} catch (const ::std::bad_alloc&) { this->m_error <<__e_no_memory; break; }
+		} catch (const ::std::bad_alloc& _err) {
+			this->m_error <<__e_no_memory = CString(_err.what()); break;
+			__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req));
+		}
 	}
 
 	return this->Error();

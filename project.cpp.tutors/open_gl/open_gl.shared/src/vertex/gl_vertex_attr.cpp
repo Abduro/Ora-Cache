@@ -198,6 +198,7 @@ CColor:: CColor (void) : TBase() {
 	TBase::m_offset = CPosition::Stride(); // it is the count of the position elements and the size of the data type;
 	TBase::m_size   = CColor::Channels();  // r|g|b|a;
 	TBase::m_stride = CColor::Stride();
+	TBase::m_type   = CColor::Type();
 	try {
 	TBase::m_data.resize(TBase::m_size, 0.0f); TBase::m_data.reserve(TBase::m_size);
 	} catch (const ::std::bad_alloc&) { TBase::m_error << __e_no_memory; }
@@ -253,6 +254,7 @@ CPosition:: CPosition (void) : TBase() {
 	TBase::m_offset = 0; // position goes first, no offset;
 	TBase::m_size   = CPosition::Points();
 	TBase::m_stride = CPosition::Stride();
+	TBase::m_type   = CPosition::Type();
 	try {
 	TBase::m_data.resize(TBase::m_size, 0.0f); TBase::m_data.reserve(TBase::m_size);
 	} catch (const ::std::bad_alloc&) { TBase::m_error << __e_no_memory; }
@@ -364,7 +366,7 @@ err_code CAttrArray::Enum_attrs (void) {
 		this->m_error <<__e_inv_arg << _T("Program id is not set");
 		__trace_err_2 (_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); return this->Error();
 	}
-
+#if (0)
 	int32_t n_count = 0; // actually unsigned integer must be provided because there is no count with value < 0; but original api uses signed int;
 
 	if (__failed(__get_prog_procs().Params(this->ProgId().Get(), (uint32_t)procs::e_prog_params::e_act_attrs, &n_count))) {
@@ -373,7 +375,7 @@ err_code CAttrArray::Enum_attrs (void) {
 	}
 
 	CString cs_name;
-#if (0)
+
 	for (int32_t i_ = 0; i_ < n_count; i_++) {
 
 		uint32_t n_size = 0; // how mamy elements/components are contained by this attribute;
@@ -385,6 +387,8 @@ err_code CAttrArray::Enum_attrs (void) {
 		}
 	}
 #else
+	CString cs_name;
+
 	using e_iface = procs::program::e_iface;
 	using e_prop  = procs::program::e_prop;
 

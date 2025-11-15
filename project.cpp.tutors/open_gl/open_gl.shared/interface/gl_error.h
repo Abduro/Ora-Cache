@@ -9,6 +9,7 @@
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
+	using namespace ATL;
 	using namespace shared::defs;
 
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/error-handling ;

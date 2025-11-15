@@ -19,6 +19,7 @@
 namespace ex_ui { namespace color {
 
 	using namespace shared::types;
+	using CString = ::ATL::CString;
 	using CError = shared::sys_core::CError;
 	using TError = const CError;
 	// https://stackoverflow.com/questions/2745074/fast-ceiling-of-an-integer-division-in-c-c/2745086#2745086 ;

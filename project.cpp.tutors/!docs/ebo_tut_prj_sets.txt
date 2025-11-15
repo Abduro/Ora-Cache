@@ -38,6 +38,36 @@ Multi-threaded (/MT)        set for {Release} configuration
 
 :: A couple more things:
 :: Project Properties >> C/C++ >> General >>
-:: Debug Information Format => Program Database (/Zi) ; for all config and platforms;
-:: Support Just My Code Debugging => Yes (/JMC) ; for all config and platforms;
+:: Debug Information Format => Program Database (/Zi) ; for all configs and platforms;
+:: Support Just My Code Debugging => Yes (/JMC) ; for all configs and platforms;
 
+:: Managing pre-compiled headers;
+:: Taking into account the some projects' codebase is frequently changed, the project build efficiency should be taken into consideration;
+:: The steps which are required for setting using pre-compiled headers are the following:
+
+:: step #1: creating the pre-compiled header (*.h) file and its implementation (*.cpp);
+:: these files can be placed in shared folder for easy including those files to a project configuration;
+
+:: step #2: configuring a project file; it is necessary to specify the option of using header files:
+
+for each configuration put the following options as in the example below:
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>                       <!--this set the option of using pre-compiled header file to 'on';-->
+      <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>  <!--this explicitely set the pre-compiled header file name ;-->
+      <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles> <!--this is for do *not* including healder file to source files, it will be made automatically;-->
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+and finally, that is very important, it is required to specify the implementation of the pre-compiled header files, otherwise it won't be created:
+
+  <ItemGroup>
+    <ClInclude Include="$(Shared)shared.std.afx.h" />
+    <ClCompile Include="$(Shared)shared.std.afx.cpp" >
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>

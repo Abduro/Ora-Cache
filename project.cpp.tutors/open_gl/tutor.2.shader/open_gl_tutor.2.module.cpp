@@ -108,6 +108,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		}
 #pragma endregion
 #pragma region __step_3
+		// (3) creates a rectangle shape and initializes it with colors and coordinates of its vertices;
 		using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
 		CTriangle triangle;
 
@@ -119,10 +120,16 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		triangle.A().Attrs().Pos().Set(+0.0f, +0.5f);
 		triangle.B().Attrs().Pos().Set(-0.5f, -0.5f);
 		triangle.C().Attrs().Pos().Set(+0.5f, -0.5f);
-#if (0)
+
 		if (__failed(triangle.Update())) { // if an error occurs, the method prints it itself;
 			break;
 		}
+#pragma endregion
+#pragma region __step_4
+		// (4) sets vertex attributes array to vertex array object;
+		$_wnd.Renderer().Scene().Prepare();
+#if (0)
+		$_wnd.Renderer().Scene().Array().Attrs() = triangle.A().Attrs();
 
 		using
 		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
