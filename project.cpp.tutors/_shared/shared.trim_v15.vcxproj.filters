@@ -13,6 +13,13 @@
     <Filter Include="src\error">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0013}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_prec">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0014}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)shared.std.afx.h"><Filter>_prec</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.std.afx.cpp"><Filter>_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)shared.defs.h"><Filter>interface</Filter></ClInclude>
@@ -32,6 +39,8 @@
     <ClCompile Include="$(_1)sys.err.format.cpp"><Filter>src\error</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.gen.time.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.gen.time.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.registry.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.registry.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.sync_obj.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.sync_obj.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

@@ -60,6 +60,9 @@ for each configuration put the following options as in the example below:
     </ClCompile>
   </ItemDefinitionGroup>
 
+the forcing to include pre-compiled header file can be made by project properties dialog:
+C/C++ >> Advanced >> Forced Include Files => shared._std_afx.h;%(ForcedIncludeFiles) ;
+
 and finally, that is very important, it is required to specify the implementation of the pre-compiled header files, otherwise it won't be created:
 
   <ItemGroup>
@@ -71,3 +74,5 @@ and finally, that is very important, it is required to specify the implementatio
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
+
+:: the end of story;
