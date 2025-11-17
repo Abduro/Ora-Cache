@@ -13,9 +13,41 @@ namespace shared { namespace sys_core { namespace storage {
 
 	class CReg_router {
 	public:
+		class CRoot {
+		public:
+			enum e_renderer : uint32_t { // the renderer identifier changes the root path of the tutorials;
+			     e_direct_x = 0x0,
+				 e_open_gl  = 0x1,       // default value for this version of the implementation;
+			};
+		public:
+			CRoot (void); CRoot (const CRoot&) = delete; CRoot (CRoot&&) = delete; ~CRoot (void) = default;
+
+			const
+			HKEY    Key  (void) const;
+			_pc_sz  Path (void) const;              // returns the root path without renderer identifier;
+			CString Path (const e_renderer) const;  // returns the root path to the renderer key by input renderer value;
+
+			e_renderer Renderer (void) const;       // returns currently set renderer identifier;
+			const bool Renderer (const e_renderer); // sets current renderer identifier; returns 'true' in case of value change;
+
+		private:
+			CRoot& operator = (const CRoot&) = delete; CRoot& operator = (CRoot&&) = delete;
+		};
+
 		class CShaders {
 		public:
+			// https://en.wikipedia.org/wiki/Shader ;
+			enum e_types : uint32_t { // this enumeration is an abstraction from the constant values of OpenGL and DirectX shader types;
+			e__undef    = 0x0,
+			e_fragment  = 0x2, // fragment shaders, also known as pixel shaders, compute color and other attributes of each 'fragment' (a single output pixel);
+			e_vertex    = 0x6, // transforms each vertex's 3D position in virtual space to the 2D coordinate at which it appears on the screen;
+			};
+		public:
 			CShaders (void) ; CShaders (const CShaders&) = delete; CShaders (CShaders&&) = delete; ~CShaders (void) = default;
+
+			CString  Path (const e_types) const;    // returns the path to specified type of shader;
+			_pc_sz   Root (void) const;             // gets root key path for all shader types;
+
 		private:
 			CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
 		};
@@ -23,16 +55,38 @@ namespace shared { namespace sys_core { namespace storage {
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
 		~CReg_router (void) ;
 
-		HKEY Root (void) const;
+		const
+		CRoot&  Root (void) const;
+		CRoot&  Root (void) ;
+		const
+		CShaders& Shaders (void) const;
+		CShaders& Shaders (void) ;
 
 	private:
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
-	private:
-		HKEY m_root;
+
+		CRoot    m_root;
+		CShaders m_shaders;
 	};
 
-	CReg_router&  Get_router (void);  // returns the reference to the singleton of the router object;
+	class CRegistry {
+	using e_shaders = CReg_router::CShaders::e_types;
+	public:
+		 CRegistry (void); CRegistry (const CRegistry&) = delete; CRegistry (CRegistry&&) = delete;
+		~CRegistry (void);
+
+		TError&  Error (void) const;
+
+		CString  Value (const e_shaders, _pc_sz _p_name) const; // if empty string is returned, the error occurs;
+
+		CRegistry& operator = (const CRegistry&) = delete;
+		CRegistry& operator = (CRegistry&&) = delete;
+
+	private:
+		mutable
+		CError   m_error;
+	};
 
 	class CRegKey_Ex {
 	public:
@@ -109,4 +163,12 @@ namespace shared { namespace sys_core { namespace storage {
 		friend class CValue;
 	};
 }}}
+
+typedef shared::sys_core::storage::CRegKey_Ex TRegKeyEx;
+typedef TRegKeyEx::CCache TKeyCache;
+typedef TRegKeyEx::CValue TKeyValue;
+
+shared::sys_core::storage::CReg_router&  Get_router (void); // returns the reference to the singleton of the router object;
+shared::sys_core::storage::CRegistry&  Get_registry (void); // returns the reference to the singleton of the registry object;
+
 #endif/*_SYS_REGISTRY_H_INCLUDED*/

@@ -4,13 +4,20 @@
 */
 #include "gl_shd_source.h"
 #include "gl_shader.h"
+#include "shared.dbg.h"
 #include "shared.preproc.h"
+#include "sys.registry.h"
 
 #include "procs\gl_procs_shader.h"
+
+#pragma warning(disable: 4702)
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 using namespace shared::app;
+using namespace shared::sys_core::storage;
+
+using e_shaders = CReg_router::CShaders::e_types;
 
 CSrc_Cfg:: CSrc_Cfg (void) : m_prefer(e_prefer::e_undef), m_res_id(0) {
 	this->m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
@@ -49,20 +56,34 @@ err_code  CSrc_Cfg::ResId  (const uint16_t _res_id, const e_res_types _e_type) {
 }
 
 _pc_sz    CSrc_Cfg::Path   (void) const { return (_pc_sz)this->m_path; }
-err_code  CSrc_Cfg::Path   (_pc_sz _p_path) {
-	_p_path;
+err_code  CSrc_Cfg::Path   (const $Type _e_type) {
+	_e_type;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
-		return this->m_error <<__e_inv_arg;
-	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
-	if (false == !!::PathFileExists(_p_path)) // ::GetLastError() can be called for additional detals of the error;
-		this->m_error <<__e_inv_arg << TString().Format(_T("#__e_not_valid: '_p_path' %s does not exist"), _p_path);
-	else {
-		this->m_prefer = e_prefer::e_path;
-		this->m_path = _p_path;
+	e_shaders e_shader = e_shaders::e__undef;
+
+	// only supported shader types is considered as correct ones;
+	switch (_e_type) {
+	case $Type::e_fragment: e_shader = e_shaders::e_fragment; break;
+	case $Type::e_vertex  : e_shader = e_shaders::e_vertex; break;
+	default:
+		return this->m_error <<__e_inv_arg = TString().Format(_T("Unsupported shader type '%s'"), (_pc_sz) CType::To_str((uint32_t)_e_type));
 	}
 
+	CString cs_path = Get_registry().Value(e_shader, _T("source"));
+	if (cs_path.IsEmpty()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) Get_registry().Error().Print(TError::e_print::e_req));
+		return this->m_error = Get_registry().Error();
+	}
+#if (1)
+	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
+	if (false == !!::PathFileExists((_pc_sz) cs_path)) // ::GetLastError() can be called for additional detals of the error;
+		this->m_error <<__e_inv_arg << TString().Format(_T("#__e_not_valid: '_p_path' %s does not exist"), (_pc_sz)cs_path);
+	else {
+		this->m_prefer = e_prefer::e_path;
+		this->m_path = cs_path;
+	}
+#endif
 	return this->Error();
 }
 
@@ -70,7 +91,7 @@ CSrc_Cfg& CSrc_Cfg::operator = (const CSrc_Cfg& _src) { *this << _src.Prefer() <
 
 CSrc_Cfg& CSrc_Cfg::operator <<(const e_prefer _e_mode) { this->Prefer(_e_mode); return *this; }
 CSrc_Cfg& CSrc_Cfg::operator <<(const uint16_t _res_id) { this->m_res_id = _res_id; return *this; }
-CSrc_Cfg& CSrc_Cfg::operator <<(_pc_sz _p_path) { this->Path(_p_path); return *this; }
+CSrc_Cfg& CSrc_Cfg::operator <<(_pc_sz _p_path) { this->m_path = _p_path; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

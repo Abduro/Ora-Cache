@@ -7,11 +7,112 @@
 
 using namespace shared::sys_core::storage;
 
-HKEY CReg_router::Root (void) const { return this->m_root; }
+#define TutorialRootKey HKEY_CURRENT_USER
 
-CReg_router&  Get_router (void) {
+/////////////////////////////////////////////////////////////////////////////
+
+using e_renderer = CReg_router::CRoot::e_renderer;
+using e_shaders  = CReg_router::CShaders::e_types;
+
+namespace shared { namespace sys_core { namespace storage { namespace _impl {
+
+	static e_renderer e_current = e_renderer::e_open_gl;
+	static CString cs_$_root;
+
+}}}}
+
+CReg_router::CRoot:: CRoot (void) {}
+const
+HKEY    CReg_router::CRoot::Key  (void) const { static HKEY h_key = TutorialRootKey; return h_key; }
+_pc_sz  CReg_router::CRoot::Path (void) const { static _pc_sz p_path = _T("Software\\ebo::pack\\tutorials"); return p_path; }
+
+CString CReg_router::CRoot::Path (const e_renderer _renderer) const {
+	_renderer;
+	CString cs_path;
+
+	if (e_renderer::e_direct_x == _renderer) cs_path.Format(_T("%s\\direct_x"), CReg_router::CRoot::Path());
+	if (e_renderer::e_open_gl  == _renderer) cs_path.Format(_T("%s\\open_gl"), CReg_router::CRoot::Path());
+
+	return  cs_path;
+}
+
+e_renderer CReg_router::CRoot::Renderer (void) const { return _impl::e_current; }
+const bool CReg_router::CRoot::Renderer (const e_renderer _e_curr) {
+	_e_curr;
+	const bool b_changed = this->Renderer() != _e_curr;
+	if (b_changed) {
+		_impl::e_current = _e_curr;
+		_impl::cs_$_root = _T("");  // must be set by shaders' class itself;
+	}
+	return b_changed;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CReg_router::CShaders:: CShaders (void) {}
+
+CString CReg_router::CShaders::Path (const e_shaders _shader) const {
+	_shader;
+	CString cs_path;
+
+	if (e_shaders::e_fragment == _shader) cs_path.Format(_T("%s\\$_fragment"), this->Root());
+	if (e_shaders::e_vertex   == _shader) cs_path.Format(_T("%s\\$_vertex"), this->Root());
+
+	return  cs_path;
+}
+
+_pc_sz  CReg_router::CShaders::Root (void) const {
+
+	if (_impl::cs_$_root.IsEmpty()) {
+		_impl::cs_$_root.Format(_T("%s\\shaders"), (_pc_sz) Get_router().Root().Path(Get_router().Root().Renderer()));
+	}
+	return (_pc_sz)_impl::cs_$_root;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CReg_router:: CReg_router (void) {}
+CReg_router::~CReg_router (void) {}
+const
+CReg_router::CRoot&  CReg_router::Root (void) const { return this->m_root; }
+CReg_router::CRoot&  CReg_router::Root (void)       { return this->m_root; }
+const
+CReg_router::CShaders& CReg_router::Shaders (void) const { return this->m_shaders; }
+CReg_router::CShaders& CReg_router::Shaders (void)       { return this->m_shaders; }
+
+CReg_router& ::Get_router (void) {
 	static CReg_router router;
 	return router;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CRegistry:: CRegistry (void) { this->m_error >> __CLASS__ << __METHOD__ << __s_ok; }
+CRegistry::~CRegistry (void) {}
+
+TError&  CRegistry::Error (void) const { return this->m_error; }
+
+CString  CRegistry::Value (const e_shaders _e_shader, _pc_sz _p_name) const {
+	_e_shader; _p_name;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (e_shaders::e__undef == _e_shader) {
+		this->m_error <<__e_inv_arg = _T("No shader type is specified");
+		return CString();
+	}
+
+	CRegKey_Ex reg_key;
+
+	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_router().Shaders().Path(_e_shader), _p_name);
+	if (cs_value.IsEmpty())
+		this->m_error = reg_key.Error();
+
+	return  cs_value;
+}
+
+CRegistry& ::Get_registry (void) {
+	static CRegistry registry;
+	return registry;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -93,16 +194,16 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_key_path, _pc_sz _p_name) {
 
 	m_the_key[(long)0] <<__METHOD__<<__s_ok; // not readable assignment to error object;
 	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
-		m_the_key.m_error << __e_inv_arg = _T("Input registry key path/name is invalid"); return CString();
+		m_the_key.m_error << __e_inv_arg = _T("Input registry key path is invalid"); return CString();
 	}
 	else
 		(*this)() << _p_key_path; // puts the path to the cache;
 
 	LSTATUS n_result = __s_ok;
 	if (nullptr == m_the_key()){
-		n_result = m_the_key().Open(Get_router().Root(), (_pc_sz) _p_key_path);
+		n_result = m_the_key().Open(Get_router().Root().Key(), (_pc_sz) _p_key_path);
 		if (!!n_result) {
-			m_the_key.m_error = dword(n_result); return CString();
+			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), (_pc_sz)_p_key_path); return CString();
 		}
 	}
 	return this->GetString(_p_name);

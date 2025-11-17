@@ -23,7 +23,7 @@ namespace shader {
 
 		 static CString  Class (void);       // returns this class name for debug purposes;
 
-		 err_code Create (const TType);
+		 err_code Create (const $Type);
 		 err_code Delete (void);             // deleting shader must be called after linking the program that uses this shader; the shader must be detached first;
 
 		 TErr_ex& Error (void) const;

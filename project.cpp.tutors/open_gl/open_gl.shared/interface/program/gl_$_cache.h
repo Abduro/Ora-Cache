@@ -16,7 +16,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 	public:
 		CCache (const uint32_t _prog_id = 0); ~CCache (void);
 
-		err_code Attach (void);   // attaches all shaders to the program; it is assumed the program identifier is already set;
+		err_code Attach (void);  // attaches all shaders to the program; it is assumed the program identifier is already set;
 		static
 		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Attach (const uint32_t _u_shader_id);
@@ -27,7 +27,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		...a shader should be detached from an OpenGL program before being deleted,
 		as the shader object is not truly deleted until it's detached from all programs it's attached to...
 		*/
-		err_code Delete (void);   // deletes all shaders; shaders must be detached first;
+		err_code Delete (void);  // deletes all shaders; shaders must be detached first;
 #if (0) // it is not necessary because the CShader has its own Delete() method;
 		static
 		err_code Delete (const uint32_t _u_shader_id, CError&); // this method is called after the program links these shaders;
@@ -43,7 +43,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 
 		TError&  Error (void) const;
 
-		err_code Load  (void);             // load source code for each shader;
+		err_code Load  (void);   // load source code for each shader;
 		const
 		CProgId& ProgId (void) const;
 		CProgId& ProgId (void) ;

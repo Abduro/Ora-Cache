@@ -5,9 +5,9 @@
 	This is Ebo Pack OpenGL tutorials' shader window interface declaration file;
 */
 #include "gl_context.h"
-#include "gl_shader.h"
-#include "gl_scene.h"
 #include "gl_renderer.h"
+#include "gl_scene.h"
+#include "gl_shader.h"
 #include "shared.wnd.fake.h"
 #include "shared.wnd.base.h" 
 

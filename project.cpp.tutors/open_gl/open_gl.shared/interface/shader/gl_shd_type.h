@@ -53,6 +53,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
 }}}}
 
-typedef ex_ui::draw::open_gl::shader::CType::e_value TType;
+typedef ex_ui::draw::open_gl::shader::CType::e_value $Type;
 
 #endif/*_GL_SHD_TYPE_H_INCLUDED*/

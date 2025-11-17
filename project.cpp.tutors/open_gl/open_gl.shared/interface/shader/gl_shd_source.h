@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "win.app.res.h"
+#include "shader\gl_shd_type.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
@@ -31,7 +32,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		err_code  ResId  (const uint16_t, const e_res_types); // checks the availability of resources in the executable file that created this process;
 
 		_pc_sz    Path   (void) const;
-		err_code  Path   (_pc_sz);
+		err_code  Path   (const $Type);    // the path to source file for particular type of shader is loaded from system registry;
 
 		CSrc_Cfg& operator <<(const e_prefer);
 		CSrc_Cfg& operator <<(const uint16_t);

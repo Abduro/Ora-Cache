@@ -36,7 +36,7 @@ CShader::~CShader (void) { this->Delete(); }
 
 CString  CShader::Class (void) { return __CLASS__; }
 
-err_code CShader::Create (const TType _e_type) {
+err_code CShader::Create (const $Type _e_type) {
 	_e_type;
 	this->m_error() <<__METHOD__<<__s_ok;
 
@@ -130,7 +130,7 @@ CShader& CShader::operator = (const CShader& _src) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CFragment:: CFragment (void) : TBase() { TBase::m_error >>__CLASS__; TBase::Type().Set(TType::e_fragment); }
+CFragment:: CFragment (void) : TBase() { TBase::m_error >>__CLASS__; TBase::Type().Set($Type::e_fragment); }
 CFragment::~CFragment (void) {}
 
 err_code CFragment::Create (void) {
@@ -142,7 +142,7 @@ err_code CFragment::Create (void) {
 	return TBase::Error();
 }
 
-CVertex:: CVertex (void) : TBase() { TBase::m_error >>__CLASS__; TBase::Type().Set(TType::e_vertex); }
+CVertex:: CVertex (void) : TBase() { TBase::m_error >>__CLASS__; TBase::Type().Set($Type::e_vertex); }
 CVertex::~CVertex (void) {}
 
 err_code CVertex::Create (void) {

@@ -17,7 +17,7 @@ CType:: CType (const CType& _src) : CType() { *this = _src; }
 
 TErr_ex& CType::Error (void) const { return this->m_error; }
 
-TType   CType::Get (void) const { return this->m_value; }
+$Type   CType::Get (void) const { return this->m_value; }
 bool    CType::Set (const e_value _e_type) {
 	_e_type;
 	const bool b_changed = this->Get() != _e_type;
