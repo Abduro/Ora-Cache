@@ -7,6 +7,7 @@
 #include <atlbase.h>
 #include <atlwin.h>
 #include <atlstr.h>
+#include <atlfile.h>      // for loading disk file, e.g. shader source code;
 #include <cstdint>        // for declareing and/or defining data types such as: uint32_t for example;
 #include <map>            // window message router uses this header;
 #include <set>            // is used for cache of draw objects' identifiers;

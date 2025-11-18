@@ -28,7 +28,7 @@ TError&   CSrc_Cfg::Error (void) const { return this->m_error; }
 
 bool CSrc_Cfg::Is_valid (void) const {
 	return ((e_prefer::e_res == this->Prefer() && !!this->ResId()) ||
-	        (e_prefer::e_path == this->Prefer() &&  this->m_path.IsEmpty() == false));
+	        (e_prefer::e_file == this->Prefer() &&  this->m_path.IsEmpty() == false));
 }
 
 CSrc_Cfg::e_prefer CSrc_Cfg::Prefer (void) const { return m_prefer; }
@@ -55,8 +55,8 @@ err_code  CSrc_Cfg::ResId  (const uint16_t _res_id, const e_res_types _e_type) {
 	return this->Error();
 }
 
-_pc_sz    CSrc_Cfg::Path   (void) const { return (_pc_sz)this->m_path; }
-err_code  CSrc_Cfg::Path   (const $Type _e_type) {
+_pc_sz    CSrc_Cfg::Path (void) const { return (_pc_sz)this->m_path; }
+err_code  CSrc_Cfg::Path (const $Type _e_type) {
 	_e_type;
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -75,17 +75,28 @@ err_code  CSrc_Cfg::Path   (const $Type _e_type) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) Get_registry().Error().Print(TError::e_print::e_req));
 		return this->m_error = Get_registry().Error();
 	}
+	return this->Path((_pc_sz) cs_path);
+}
+err_code  CSrc_Cfg::Path (_pc_sz _p_path) {
+	_p_path;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_path || 0 == ::_tcslen(_p_path))
+		return this->m_error <<__e_inv_arg = _T("The file path is empty");
+
 #if (1)
 	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsa ;
-	if (false == !!::PathFileExists((_pc_sz) cs_path)) // ::GetLastError() can be called for additional detals of the error;
-		this->m_error <<__e_inv_arg << TString().Format(_T("#__e_not_valid: '_p_path' %s does not exist"), (_pc_sz)cs_path);
+	if (false == !!::PathFileExists(_p_path)) // ::GetLastError() can be called for additional detals of the error;
+		this->m_error <<__e_inv_arg << TString().Format(_T("#__e_not_valid: '_p_path' %s does not exist"), _p_path);
 	else {
-		this->m_prefer = e_prefer::e_path;
-		this->m_path = cs_path;
+		this->m_prefer = e_prefer::e_file;
+		this->m_path = _p_path;
 	}
 #endif
+
 	return this->Error();
 }
+
 
 CSrc_Cfg& CSrc_Cfg::operator = (const CSrc_Cfg& _src) { *this << _src.Prefer() << _src.ResId() << _src.Path(); return *this; }
 
@@ -124,6 +135,23 @@ TError&  CSource::Error (void) const { return this->m_error; }
 
 _pc_sz   CSource::Get (void) const { return (_pc_sz)this->m_buffer; }
 
+err_code CSource::Set (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Cfg().Is_valid()) {
+		return this->m_error <<__e_not_inited = _T("Config is not set");
+	}
+
+	switch (this->Cfg().Prefer()) {
+	case CSrc_Cfg::e_res: this->Load(this->Cfg().ResId(), this->$Id()); break;
+	case CSrc_Cfg::e_file: this->Load(this->Cfg().Path(), this->$Id()); break;
+	default:
+		this->m_error << (err_code)TErrCodes::eData::eUnsupport = _T("Not supported");
+	}
+
+	return this->Error();
+}
+
 err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
 	_p_source; _u_shader_id;
 	this->m_error <<__METHOD__<<__s_ok;
@@ -142,16 +170,16 @@ err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
 	const char* p_buffer = src_a.GetBuffer();
 
 	if (__failed(__get_$_procs().Source(_u_shader_id, 1, &p_buffer, &n_len)))
-		return this->m_error = __get_$_procs().Error();
+		this->m_error = __get_$_procs().Error();
 
 	return this->Error();
 }
 
-err_code CSource::Set (const uint16_t _res_id, const uint32_t _n_shader_id) {
+err_code CSource::Load (const uint16_t _res_id, const uint32_t _n_shader_id) {
 	_res_id; _n_shader_id;
 	this->m_error <<__METHOD__<<__s_ok;
 	if (0 == _res_id)
-		return this->m_error << __e_inv_arg = _T("String resource identifier is invalid");
+		return this->m_error << __e_inv_arg = TString().Format(_T("String resource identifier (%u) is invalid"), _res_id);
 
 	CString cs_src;
 	cs_src.LoadString(_res_id);
@@ -159,18 +187,34 @@ err_code CSource::Set (const uint16_t _res_id, const uint32_t _n_shader_id) {
 	return this->Set((_pc_sz) cs_src, _n_shader_id);
 }
 
-err_code CSource::Set (void) {
+err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
+	_p_path; _u_shader_id;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (false == this->Cfg().Is_valid()) {
-		return this->m_error <<__e_not_inited = _T("Config is not set");
-	}
+	::ATL::CAtlFile file_;
 
-	switch (this->Cfg().Prefer()) {
-	case CSrc_Cfg::e_res: this->Set(this->Cfg().ResId(), this->$Id()); break;
-	default:
-		this->m_error << (err_code)TErrCodes::eData::eUnsupport = _T("Not supported");
-	}
+	err_code h_result = __s_ok;
+	ULONGLONG ul_size = 0;
+
+	if (__failed(h_result = file_.Create(_p_path, FILE_READ_DATA, FILE_SHARE_READ, OPEN_EXISTING))) return this->m_error << h_result;
+	if (__failed(h_result = file_.Seek(0, FILE_BEGIN))) return this->m_error << h_result;
+	if (__failed(h_result = file_.GetSize(ul_size))) return this->m_error << h_result;
+
+	if (this->m_buffer.IsEmpty() == false)
+		this->m_buffer.ReleaseBuffer();
+
+	CStringA src_a;
+
+	if (__failed(h_result = file_.Read(src_a.GetBuffer(static_cast<int>(ul_size)), static_cast<uint32_t>(ul_size)))) return this->m_error << h_result;
+
+	int32_t n_len = src_a.GetLength();
+
+	const char* p_buffer = src_a.GetBuffer();
+
+	if (__failed(__get_$_procs().Source(_u_shader_id, 1, &p_buffer, &n_len)))
+		this->m_error = __get_$_procs().Error();
+	else
+		this->m_buffer = src_a; // just making the copy; it is not necessary, but for debug puposes only;
 
 	return this->Error();
 }
