@@ -12,7 +12,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	protected:
 		CLog_Base (void); ~CLog_Base (void);
 	public:
-		TErr_ex& Error (void) const;
+		TError& Error (void) const;   // the error class being returned needs to be as the reference to the base error class, otherwise it's possible do not detect the error on the caller side;
 
 		_pc_sz   Get (void) const;    // returns log info string stored in the buffer ;
 

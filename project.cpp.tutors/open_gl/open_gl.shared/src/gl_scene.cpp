@@ -113,18 +113,21 @@ err_code CScene::Prepare (void) {
 
 	if (__failed(this->Prog().Link()))
 		return this->m_error = this->Prog().Error();
+
+	// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
+	if (false) {}
+	else if (__failed(this->Prog().Shaders().Detach())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
+	else if (__failed(this->Prog().Shaders().Delete())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
+
 #pragma endregion
 #pragma region __2nd_step
+#if (1)
 	// the step #2: configuring vertex attributes;
 	this->Array().Attrs() << this->Prog().Id();
 	if (__failed(this->Array().Attrs().Enum_attrs())) {
-		return this->m_error = this->Array().Attrs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Array().Attrs().Error().Print(TError::e_print::e_req));
 	}
-
-#pragma endregion
-#if (0)
-	
-
+#else
 	// this is predefined names of attributes;
 	// enumerating of the attributes is not done yet;
 	static _pc_sz attr_names[] = {_T("colorIn"), _T("positionIn")};
@@ -136,6 +139,12 @@ err_code CScene::Prepare (void) {
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
+#endif
+	if (__failed(this->Array().Create())) return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Bind())) return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Enable(true))) this->m_error = this->Array().Error();
+#pragma endregion
+#if (0)
 	/*important:
 	  the attributes' indices are set through source code of vertex shader, the same is for vertex color, it can be set in fragment shader;
 	  but these indices can be applied after program linking only; they can be received by querying the program object;
@@ -143,7 +152,6 @@ err_code CScene::Prepare (void) {
 	  the indices are set before linking the program, it is assumed the indices are the same as in shaders' source code;
 	  after linking the program the indices are checked for test purpose that they are sill have the same values;
 	*/
-
 	// sets attributes' indecise (aka location) before linking the program,
 	// an index of the particular attribute must be the same as in actual vertex: 0 - position; 1 - color;
 	// also, it is very important: the shader source code can change the location of the attributes and after the program linking those locations will be applied;
@@ -153,19 +161,6 @@ err_code CScene::Prepare (void) {
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
-
-	// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
-	if (false) {}
-	else if (__failed(this->Prog().Shaders().Detach())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
-	else if (__failed(this->Prog().Shaders().Delete())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
-
-	if (__failed(this->Array().Attrs().Enum_attrs()))
-		return this->m_error = this->Array().Attrs().Error(); 
-
-	if (__failed(this->Array().Create()))
-		return this->m_error = this->Array().Error();
-	if (__failed(this->Array().Bind()))
-		return this->m_error = this->Array().Error();
 
 	// checks vertex attributes' indices after linking the program and deleting the shaders;
 	// the indices must be the same as them were set before the linking;
@@ -180,30 +175,22 @@ err_code CScene::Prepare (void) {
 	if (this->Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
-#if (0) // the arreay is already bound by above;
-	// before enabling the attributes the vertex array must be activated, i.e. to be bound;
-	if (__failed(this->Array().Bind())) {
-		return this->m_error = this->Array().Error(); // The array is still inactive, so its attributes will not be enabled successfully;
-	}
 #endif
-	if (__failed(this->Array().Enable(true)))
-		this->m_error = this->Array().Error(); // in case of error to make attributes be enabled it is very possible the setting data to buffer will fail;
-
 	if (__failed(this->Prog().Buffer().Create()))
 		return this->m_error = this->Prog().Buffer().Error();
 
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
-#if (0)
+#if (1)
 	if (__failed(this->Prog().Buffer().BindTo(e_bind_targets::e_array)))
 		return this->m_error = this->Prog().Buffer().Error();
-#elsif (false == true)
+#else
 	if (__failed(this->Prog().Buffer().Bind()))
 		return this->m_error = this->Prog().Buffer().Error();
 #endif
 	if (__succeeded(this->Prog().Validate())) {
-		__trace_info_2(_T("The draw scene is prepared;\n"));
+		__trace_impt_2(_T("The draw scene is prepared;\n"));
 	}
-#endif
+
 	return this->Error();
 }
 

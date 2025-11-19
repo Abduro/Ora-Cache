@@ -99,6 +99,8 @@ int32_t  CAttr_Location::Value (void) const { return this->m_value; }
 bool     CAttr_Location::Value (const uint32_t _n_ndx) {
 	_n_ndx;
 	const bool b_changed = this->Value() != (int32_t)_n_ndx; if (b_changed) this->m_value = _n_ndx;
+	if (b_changed && _n_ndx != CAttr_Location::_$na)
+		this->m_error <<__METHOD__<<__s_ok;
 	return b_changed;
 }
 
@@ -164,7 +166,17 @@ uint32_t CAttr::Offset (void) const { return this->m_offset; }
 
 const
 program::CProgId& CAttr::ProgId (void) const { return this->m_prog_id; }
-program::CProgId& CAttr::ProgId (void)       { return this->m_prog_id; }
+err_code CAttr::ProgId (const uint32_t _prog_id) {
+	_prog_id;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (__failed(this->m_prog_id.Set(_prog_id))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->m_prog_id.Error().Print(TError::e_print::e_req))
+		return this->m_error = this->m_prog_id.Error();
+	}
+	this->Locate().ProgId().Set(_prog_id);
+
+	return this->Error();
+}
 
 uint32_t CAttr::Size (void) const { return this->m_size; }
 uint32_t CAttr::Type (void) const { return this->m_type; }
@@ -181,7 +193,7 @@ CAttr&  CAttr::operator = (const CAttr& _src) {
 CAttr&  CAttr::operator = (CAttr&& _victim) { *this = (const CAttr&) _victim; return *this; }
 
 CAttr&  CAttr::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
-CAttr&  CAttr::operator <<(const CProgId& _prog_id) { this->ProgId() << _prog_id; return *this; }
+CAttr&  CAttr::operator <<(const CProgId& _prog_id) { this->ProgId(_prog_id.Get()); return *this; }
 
 CAttr&  CAttr::operator <<(const bool _b_norm)     { this->Is_normal(_b_norm); return *this; }
 CAttr&  CAttr::operator <<(const CLocate& _locate) { this->Locate() = _locate; return *this; }
@@ -405,6 +417,7 @@ err_code CAttrArray::Enum_attrs (void) {
 	procs::program::TRawValues v_values(v_props.size(), 0);
 
 	for (uint32_t i_ = 0; i_ < u_prop_cnt; i_++) {
+
 		if (false == cs_name.IsEmpty()) cs_name.Empty();
 		if (false) {}
 		else if (__failed(__get_res_procs().GetValues(this->ProgId().Get(), e_iface::e_prog_in, i_, v_props, v_values))) {
@@ -418,8 +431,8 @@ err_code CAttrArray::Enum_attrs (void) {
 			continue;
 
 		switch (v_values[1]) {
-		case 0: { this->Pos().Name((_pc_sz)cs_name); } break;  // the position attribute is expected;
-		case 1: { this->Clr().Name((_pc_sz)cs_name); } break;  // the color attribute is expected;
+		case 0: { this->Pos().Name((_pc_sz)cs_name); this->Pos().Locate().Value(v_values[1]); } break;  // the position attribute is expected;
+		case 1: { this->Clr().Name((_pc_sz)cs_name); this->Clr().Locate().Value(v_values[1]); } break;  // the color attribute is expected;
 		}
 	}
 #endif
@@ -459,8 +472,8 @@ err_code CAttrArray::ProgId (const uint32_t _prog_id) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->m_prog_id.Error().Print(TError::e_print::e_req))
 		return this->m_error = this->m_prog_id.Error();
 	}
-	this->Clr().ProgId().Set(_prog_id);
-	this->Pos().ProgId().Set(_prog_id);
+	this->Clr().ProgId(_prog_id);
+	this->Pos().ProgId(_prog_id);
 
 	return this->Error();
 }

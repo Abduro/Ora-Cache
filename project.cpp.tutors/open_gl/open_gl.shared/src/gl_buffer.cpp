@@ -198,7 +198,7 @@ err_code CBuffer::Unbind (void) {
 
 CBuffer_4_vert:: CBuffer_4_vert (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
 CBuffer_4_vert::~CBuffer_4_vert (void) {}
-#if (0)
+#if (1)
 err_code CBuffer_4_vert::Bind (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
@@ -217,22 +217,25 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 	if (false == _shape.Is_valid())
 		return TBase::m_error <<__e_inv_arg = _T("The input shape is not valid");
 
-	const void* const p_vertices = _shape.Cached();
+	const CVertArray& v_arr = _shape.Vertices();
+
+	const void* const p_vertices = v_arr.GetData();
 	if (nullptr == p_vertices)
 		return TBase::m_error <<__e_pointer;
+
 #if (0)
-	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(_shape.Bytes()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
+	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(v_arr.Bytes()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_buf_procs().Error().Print(TError::e_print::e_req));
 		return TBase::m_error = __get_buf_procs().Error();
 	}
 #else
-	if (__failed(__get_buf_procs().Named(this->GetId(), static_cast<ptrdiff_t>(_shape.Bytes()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
+	if (__failed(__get_buf_procs().Named(this->GetId(), static_cast<ptrdiff_t>(v_arr.Bytes()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_buf_procs().Error().Print(TError::e_print::e_req));
 		return TBase::m_error = __get_buf_procs().Error();
 	}
 #endif
 	else
-		__trace_info_2(_T("The shape data of size = %u (bytes) is set;\n"), _shape.Bytes());
+		__trace_info_2(_T("The shape data of size = %u (bytes) is set;\n"), v_arr.Bytes());
 
 	return TBase::Error();
 }

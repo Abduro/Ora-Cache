@@ -106,10 +106,10 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 	CAttr* attrs[] = { &this->Attrs().Clr(), &this->Attrs().Pos() };
 
 	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
-		const int32_t n_att_ndx = attrs[i_]->Locate().Get();
+		const int32_t n_att_ndx = attrs[i_]->Locate().Value();
 		if (_b_state) {
-			if (__failed(__get_attr_arr_procs().Enable(n_att_ndx))) {
-				this->m_error = __get_attr_arr_procs().Error();
+			if (__failed(__get_attr_procs().Enable(this->GetId(), n_att_ndx))) {
+				this->m_error = __get_attr_procs().Error();
 				__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 			}
 			else {
@@ -117,8 +117,8 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 			}
 		}
 		else {
-			if (__failed(__get_attr_arr_procs().Disable(n_att_ndx))) {
-				this->m_error = __get_attr_arr_procs().Error();
+			if (__failed(__get_attr_procs().Disable(this->GetId(), n_att_ndx))) {
+				this->m_error = __get_attr_procs().Error();
 				__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 			}
 			else {

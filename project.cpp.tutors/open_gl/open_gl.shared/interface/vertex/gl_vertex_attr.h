@@ -78,7 +78,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		uint32_t  Offset (void) const;    // initial value of the offset is set by color and position classes and does not require any change;
 		const
 		CProgId&  ProgId (void) const;
-		CProgId&  ProgId (void) ;
+		err_code  ProgId (const uint32_t);
 
 		uint32_t  Size  (void) const;     // specifies the number of components per generic vertex attribute; must be [1-4] or GL_BGRA;
 		uint32_t  Type  (void) const;     // returns data type of this attribute, e.g. GL_FLOAT, GL_UNSIGNED_INT, etc.; by default is GL_FLOAT;

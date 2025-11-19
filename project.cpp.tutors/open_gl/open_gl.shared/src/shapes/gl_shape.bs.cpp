@@ -16,3 +16,6 @@ CShape::~CShape (void) {}
 CString  CShape::Class (void) { return __CLASS__; }
 
 TError&  CShape::Error (void) const { return this->m_error; }
+
+const
+CVertArray&  CShape::Vertices (void) const { return this->m_vertices; }

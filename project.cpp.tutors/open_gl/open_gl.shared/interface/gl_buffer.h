@@ -71,7 +71,7 @@ namespace data {
 	class CBuffer_4_vert : public CBuffer { typedef CBuffer TBase;
 	private: CBuffer_4_vert (const CBuffer_4_vert&) = delete; CBuffer_4_vert (CBuffer_4_vert&&) = delete;
 	public : CBuffer_4_vert (void); ~CBuffer_4_vert (void);
-#if (0)
+#if (1)
 		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
 		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
 #endif

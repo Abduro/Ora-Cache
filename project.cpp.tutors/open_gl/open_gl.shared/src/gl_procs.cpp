@@ -34,7 +34,9 @@ err_code  CCompiler::Compile (uint32_t _shader_id) {
 
 	p_fun(_shader_id);
 
-	switch (CErr_ex().Get_code()) {
+	const uint32_t err_code = CErr_ex().Get_code();
+
+	switch (err_code) {
 	case GL_INVALID_VALUE:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: _shader_id (%u) is not valid;"), _shader_id); break;
 	case GL_INVALID_OPERATION:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: _shader_id (%u) refers to not shader;"), _shader_id); break;
 	default:;

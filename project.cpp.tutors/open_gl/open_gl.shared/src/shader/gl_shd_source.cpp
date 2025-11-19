@@ -186,7 +186,7 @@ err_code CSource::Load (const uint16_t _res_id, const uint32_t _n_shader_id) {
 
 	return this->Set((_pc_sz) cs_src, _n_shader_id);
 }
-
+// https://stackoverflow.com/questions/52282990/what-does-cstringgetbuffer-with-no-size-parameter-do << good discussion;
 err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
 	_p_path; _u_shader_id;
 	this->m_error <<__METHOD__<<__s_ok;

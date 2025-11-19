@@ -130,7 +130,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		$_wnd.Renderer().Scene().Prepare();
 #if (0)
 		$_wnd.Renderer().Scene().Array().Attrs() = triangle.A().Attrs();
-
+#endif
 		using
 		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
 		CBuffer_4_vert& buffer = $_wnd.Renderer().Scene().Prog().Buffer();
@@ -138,7 +138,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		if (__failed(buffer.SetData(triangle))) {
 			break;
 		}
-#endif
 #pragma endregion
 	} while (true == false);
 

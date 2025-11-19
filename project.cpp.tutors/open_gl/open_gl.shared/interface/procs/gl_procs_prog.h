@@ -24,13 +24,13 @@ namespace program {
 	/* alias     | value    | OpenGL symbolic name | brief description ;
 	-------------+----------+----------------------+-------------------*/
 	e_active_res = 0x92F5, // GL_ACTIVE_RESOURCES  | the number of resources in the active resource list for particular interface;
-	e_arr_size   = 0x92FB, // GL_ARRAY_SIZE        | a single integer identifying the number of active array elements of an active variable; (in)
-	e_arr_stride = 0x92FE, // GL_ARRAY_STRIDE      | a single integer identifying the stride between array elements in an active variable; (out)
-	e_loc_index  = 0x930F, // GL_LOCATION_INDEX    | a single integer identifying the fragment color index of an active fragment shader output variable;
-	e_location   = 0x930E, // GL_LOCATION          | a single integer identifying the assigned location for an active uniform, input, output, or subroutine uniform variable;
-	e_name_len   = 0x92F9, // GL_NAME_LENGTH       | a single integer identifying the length of the name string associated with an active variable;
-	e_offset     = 0x92FC, // GL_OFFSET            | a single integer identifying the offset of an active variable ;
-	e_type       = 0x92FA, // GL_TYPE              | a single integer identifying the type of an active variable; (in)
+	e_arr_size   = 0x92FB, // GL_ARRAY_SIZE        | the number of active array elements of an active variable; (in)
+	e_arr_stride = 0x92FE, // GL_ARRAY_STRIDE      | the stride between array elements in an active variable; (out)
+	e_loc_index  = 0x930F, // GL_LOCATION_INDEX    | the fragment color index of an active fragment shader output variable;
+	e_location   = 0x930E, // GL_LOCATION          | the assigned location for an active uniform, input, output, or subroutine uniform variable;
+	e_name_len   = 0x92F9, // GL_NAME_LENGTH       | the length of the name string associated with an active variable;
+	e_offset     = 0x92FC, // GL_OFFSET            | the offset of an active variable ;
+	e_type       = 0x92FA, // GL_TYPE              | the type of an active variable; (in)
 	};
 	typedef e_property e_prop;
 	typedef ::std::map<e_interface, ::std::vector<e_property>> TIface_assoc;

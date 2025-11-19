@@ -21,15 +21,19 @@ err_code CCompiler::Compile (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (false == this->ShaderId())
-		return this->m_error <<__e_not_inited = _T("Shader id is not valid");
+	const uint32_t $_id = this->ShaderId();
+
+	if (0 == $_id)
+		return this->m_error <<__e_not_inited = TString().Format(_T("Shader id (%d) is not valid"), $_id);
 
 	procs::CCompiler& procs = CCompiler::Procs();
 
-	if (__failed(procs.Compile(this->ShaderId()))) {
-		this->Log().Set(this->ShaderId());        // gets log info for this complilation; the log error code can be retrieved by direct call to log error; 
+	if (__failed(procs.Compile($_id))) {
 		return this->m_error = procs.Error();
 	}
+
+	if (__failed(this->Log().Set($_id))) // gets log info for this complilation in any case; the log error code can be retrieved by direct call to log error; 
+		this->m_error = this->Log().Error();
 
 	return this->Error();
 }

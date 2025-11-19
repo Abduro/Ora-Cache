@@ -21,6 +21,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		static CString Class (void);
 
 		TError&  Error (void) const;
+		const
+		CVertArray&  Vertices (void) const;
 
 	private: CShape& operator = (const CShape&) = delete; CShape& operator = (CShape&&) = delete;
 	protected:
