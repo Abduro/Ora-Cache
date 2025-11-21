@@ -100,14 +100,16 @@ _pc_sz  CString_Ex::Dword(dword _u_value) {
 	return (_pc_sz)*this;
 }
 
-_pc_sz  CString_Ex::Float (float _f_value, t_fmt_spec _spec) {
-	_f_value; _spec;
-
+_pc_sz  CString_Ex::Float (float _f_value, t_fmt_spec _spec, _pc_sz _p_format) {
+	_f_value; _spec; _p_format;
+//	https://stackoverflow.com/questions/29200635/convert-float-to-string-with-precision-number-of-decimal-digits-specified ;
 //	https://stackoverflow.com/questions/45068641/c-format-code-for-positive-and-negative-float-numbers ;
-	_pc_sz lp_sz_fmt = (t_fmt_spec::e_hex == _spec ? _T("%a") : (t_fmt_spec::e_scientific == _spec ? _T("%+e") : _T("%+f")));
-
-	TBase::Format(lp_sz_fmt, _f_value);
-	
+	if (t_fmt_spec::e_decimal == _spec && !!_p_format)
+		TBase::Format(_p_format, _f_value);
+	else {
+		_pc_sz lp_sz_fmt = (t_fmt_spec::e_hex == _spec ? _T("%a") : (t_fmt_spec::e_scientific == _spec ? _T("%+e") : _T("%+f")));
+		TBase::Format(lp_sz_fmt, _f_value);
+	}
 	return (_pc_sz)*this;
 }
 

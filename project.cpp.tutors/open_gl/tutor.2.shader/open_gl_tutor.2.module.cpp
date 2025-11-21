@@ -35,7 +35,9 @@ err_code CShaderModule::PreMessageLoop (int nShowCmd) {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
+/*
+	api-ms-win-core-synch-l1-2-0 cannot be loaded >> access violation error may occur in case when this solution must be re-built;
+*/
 INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpstrCmdLine, INT nCmdShow) {
 	hInstance; hPrevInstance; lpstrCmdLine; nCmdShow;
 
@@ -150,6 +152,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 		else {
+			$_wnd.Renderer().Draw(); // perhaps this function must check for changing the draw data before draw it;
 			::Sleep(10);
 		}
 	}

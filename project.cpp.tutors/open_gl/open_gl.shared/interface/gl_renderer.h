@@ -14,6 +14,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	private: CRenderer (const CRenderer&) = delete;  CRenderer (CRenderer&&) = delete;
 	public : CRenderer (void); ~CRenderer (void);
 
+		err_code Draw (void) const;
+
 		TError& Error (void) const;
 		const
 		CScene& Scene (void) const;
