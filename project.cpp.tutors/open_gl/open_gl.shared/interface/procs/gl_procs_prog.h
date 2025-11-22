@@ -95,6 +95,8 @@ namespace program {
 		err_code Detach  (const uint32_t _prog_id, const uint32_t _shader_id); // detaches a shader object from a program object to which it is attached ;
 		err_code Attached(const uint32_t _prog_id, const uint32_t _u_max_cnt, uint32_t* _p_count, uint32_t* _p_shaders); // returns the identifiers of the shader objects attached to a program object;
 
+		bool  Is_active  (const uint32_t _shader_type); // requests the program object about shaders that being attached this time, so they are active;
+
 		err_code Get_all (void);
 
 	private:

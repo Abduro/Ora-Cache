@@ -21,6 +21,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		static CString Class (void);
 
 		TError&  Error (void) const;
+		uint32_t Primitive (void) const;
 		const
 		CVertArray&  Vertices (void) const;
 
@@ -29,6 +30,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		mutable
 		CError      m_error;
 		CVertArray  m_vertices;
+		uint32_t    m_prim_mode; // this is the primitive's draw mode that is required for how the renderer should draw this shape;
 	};
 
 }}}}

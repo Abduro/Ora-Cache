@@ -241,7 +241,7 @@ TBufferProcs&  __get_buf_procs (void) {
 
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-			__trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+			__trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 			b_loaded = true;
 	}

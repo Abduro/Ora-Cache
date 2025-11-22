@@ -141,6 +141,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			break;
 		}
 #pragma endregion
+#pragma region __step_5
+		// (5) sets renderer cfg values;
+		$_wnd.Renderer().Cfg().Count(triangle.Vertices().Count());
+		$_wnd.Renderer().Cfg().Primitive(triangle.Primitive());
+		$_wnd.Renderer().Cfg().StartAt(0);
+#pragma endregion
 	} while (true == false);
 
 	if (b_error != false) // goes to message loop and waits the app window will be closed;

@@ -10,9 +10,32 @@
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
+	class CRender_Cfg : private no_copy {
+	public:
+		CRender_Cfg (void); ~CRender_Cfg (void) = default;
+
+		uint32_t Count (void) const;              // returns how many vertices must be drawn;
+		bool     Count (const uint32_t);          // returns 'true' in case of count number of vertices is changed;
+
+		uint32_t Primitive (void) const;          // returns the draw mode value, i.e. what type of primitives must be drawn; procs::CPrimitives::e_others::e_points is default;
+		bool     Primitive (const uint32_t);      // returns 'true' in case of draw mode value is changed;
+
+		uint32_t StartAt (void) const;            // returns the vertex arrey index to start from for drawing;
+		bool     StartAt (const uint32_t _u_ndx); // returns 'true' in case of start index value change;
+
+	private:
+		uint32_t m_count_ndx;
+		uint32_t m_prim_mode;
+		uint32_t m_start_ndx;
+	};
+
 	class CRenderer {
 	private: CRenderer (const CRenderer&) = delete;  CRenderer (CRenderer&&) = delete;
 	public : CRenderer (void); ~CRenderer (void);
+
+		const
+		CRender_Cfg&  Cfg (void) const;
+		CRender_Cfg&  Cfg (void) ;
 
 		err_code Draw (void) const;
 
@@ -26,8 +49,9 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	private: CRenderer& operator = (const CRenderer&) = delete; CRenderer& operator = (CRenderer&&) = delete;
 	mutable  CError m_error;
-		CScene    m_scene;
-		CViewPort m_view ;
+		CScene      m_scene;
+		CViewPort   m_view ;
+		CRender_Cfg m_cfg;
 	};
 
 }}}

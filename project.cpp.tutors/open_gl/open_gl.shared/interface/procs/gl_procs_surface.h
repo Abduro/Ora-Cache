@@ -35,6 +35,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	};
 	// https://registry.khronos.org/OpenGL/specs/gl/glspec44.core.pdf#page=328;
 	// https://wikis.khronos.org/opengl/primitive ;
+	// it is supposed the primitive types have different values and it's separated to different enums by primitives' category;
 	class CPrimitives : private no_copy {
 	public:
 		enum class e_line : uint32_t {
@@ -48,34 +49,40 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		};
 
 		enum class e_others : uint32_t {
-		e_patches   = 0x000E, // GL_PATCHES               |
-		e_points    = 0x0000, // GL_POINTS                |
+		/* alias    | value    | OpenGL symbolic def      | brief description ;
+		------------+----------+--------------------------+--------------------------*/
+		e_patches   = 0x000E, // GL_PATCHES               | this is a primitive with a user-defined number of vertices; these primitives can be used in tessellation shader only;
+		e_points    = 0x0000, // GL_POINTS                | each individual vertex in the stream is interpreted as a point; points that have a texture mapped onto them are often called 'point sprites';
 		};
 
 		enum class e_triangle : uint32_t {
 		/* alias    | value    | OpenGL symbolic def      | brief description ;
 		------------+----------+--------------------------+--------------------------*/
-		e_adjacency = 0x000C, // GL_TRIANGLES_ADJACENCY   |
-		e_fan       = 0x0006, // GL_TRIANGLE_FAN          |
-		e_strip     = 0x0005, // GL_TRIANGLE_STRIP        |
-		e_strip_adj = 0x000D, // GL_TRIANGLE_STRIP_ADJACENCY | 
-		e_triangles = 0x0004, // GL_TRIANGLES             |
+		e_adjacency = 0x000C, // GL_TRIANGLES_ADJACENCY   | uses 6 vertices per triangle to define not only the triangle but also its neighboring faces, which is useful for tasks like tessellation and advanced geometry processing;
+		e_fan       = 0x0006, // GL_TRIANGLE_FAN          | a set of primitives that draws a connected series of triangles using a single central vertex;  modern approaches often favor using indexed GL_TRIANGLES; // https://en.wikipedia.org/wiki/Triangle_fan ;
+		e_strip     = 0x0005, // GL_TRIANGLE_STRIP        | primary reason to use triangle strips is to reduce the amount of data needed to create a series of triangles; https://en.wikipedia.org/wiki/Triangle_strip ;
+		e_strip_adj = 0x000D, // GL_TRIANGLE_STRIP_ADJACENCY | is used for drawing a series of connected triangles with adjacency information, primarily in conjunction with a geometry shader;
+		e_triangles = 0x0004, // GL_TRIANGLES             | a primitive formed by 3 vertices;
 		};
+
+		static CString To_str (const uint32_t _prom_id);
 	};
 
 	class CRenderer : public CBase {
-		typedef void (__stdcall pfnDrawArrays) (const uint32_t _u_mode, const uint32_t _u_start_ndx, const uint32_t _u_count); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml ;
+		typedef void (__stdcall *pfnDrawArrays) (const uint32_t _u_mode, const uint32_t _u_start_ndx, const uint32_t _u_count); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml ;
 	public:
-
 		CRenderer (void); ~CRenderer (void) = default;
 
-		err_code  DrawArrays ();
+		err_code  DrawArrays (const uint32_t _prog_id, const uint32_t _u_mode, const uint32_t _u_start_ndx, const uint32_t _u_count); // draws a figure in specified mode; 'prog_id' is checked by getting active shaders enum;
+
+		err_code Get_all (void) ;
 
 	private:
 		CRenderer& operator = (const CRenderer&) = delete; CRenderer& operator = (CRenderer&&) = delete;
 	};
 }}}}
 
-typedef ex_ui::draw::open_gl::procs::CEraser  TEraserProcs; TEraserProcs& __get_eraser_procs (void);
+typedef ex_ui::draw::open_gl::procs::CEraser   TEraserProcs; TEraserProcs& __get_eraser_procs (void);
+typedef ex_ui::draw::open_gl::procs::CRenderer TRenderProcs; TRenderProcs& __get_render_procs (void);
 
 #endif/*_GL_SURFACE_H_INCLUDED*/

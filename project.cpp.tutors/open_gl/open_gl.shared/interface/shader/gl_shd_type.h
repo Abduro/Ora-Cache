@@ -8,27 +8,21 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
-#pragma region __shader_types
-/* copied from glcorearb.h */
-#define __t_compute    0x91B9 // GL_COMPUTE_SHADER ;
-#define __t_fragment   0x8B30 // GL_FRAGMENT_SHADER ;
-#define __t_geometry   0x8DD9 // GL_GEOMETRY_SHADER ;
-#define __t_tess_ctrl  0x8E88 // GL_TESS_CONTROL_SHADER ;
-#define __t_tess_eval  0x8E87 // GL_TESS_EVALUATION_SHADER ;
-#define __t_vertex     0x8B31 // GL_VERTEX_SHADER ;
-#pragma endregion
 	// https://en.wikipedia.org/wiki/Shader ;
 	class CType {
 	public:
-		enum e_value : uint16_t {    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
-		     e_undef     = 0x0,
-		     e_compute   = __t_compute  ,
-		     e_fragment  = __t_fragment , // for manipulating properties such as position, color and texture coordinates, but cannot create new vertices;
-		     e_geometry  = __t_geometry , // for generating new graphics primitives;
-		     e_tess_ctrl = __t_tess_ctrl,
-		     e_tess_eval = __t_tess_eval,
-		     e_vertex    = __t_vertex   , // https://www.khronos.org/opengl/wiki/Vertex_Shader ;
+		enum e_value : uint16_t { // this enumeration must be declared in procs loader class;
+		/* alias    | value    | OpenGL symbolic def       | brief description ;
+		------------+----------+---------------------------+-------------------*/
+		e_undef     = 0x0000,  // the type is not set;     |
+		e_compute   = 0x91B9,  // GL_COMPUTE_SHADER        | for additional stages in animation or lighting algorithms (e.g. tiled forward rendering);
+		e_fragment  = 0x8B30,  // GL_FRAGMENT_SHADER       | for manipulating properties such as position, color and texture coordinates, but cannot create new vertices;
+		e_geometry  = 0x8DD9,  // GL_GEOMETRY_SHADER       | for generating new graphics primitives; executed after vertex shaders;
+		e_tess_ctrl = 0x8E88,  // GL_TESS_CONTROL_SHADER   | tessellation control shader (also known as hull shader);
+		e_tess_eval = 0x8E87,  // GL_TESS_EVALUATION_SHADER| evaluation shader (also known as domain shader); 
+		e_vertex    = 0x8B31,  // GL_VERTEX_SHADER         | transforms vertex's 3D position in virtual space to the 2D coords of the screen (as well as a depth value for the Z-buffer); https://www.khronos.org/opengl/wiki/Vertex_Shader ;
 		};
+		/* tesselation shaders are for simpler meshes to be subdivided into finer meshes at run-time; for viewing camera to allow active level-of-detail scaling;*/
 		CType (void); CType (const CType&); CType (CType&&) = delete; ~CType (void) = default;
 
 		TErr_ex& Error (void) const;

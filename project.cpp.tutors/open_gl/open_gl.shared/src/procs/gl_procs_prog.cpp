@@ -169,7 +169,7 @@ TIfaceProcs&  ::__get_iface_procs (void) {
 	static bool b_loaded = false;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}
@@ -346,7 +346,7 @@ TResProcs&  ::__get_res_procs (void) {
 	static bool b_loaded = false;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}
@@ -552,7 +552,7 @@ TProgProcs& ::__get_prog_procs (void) {
 	// otherwise if the sequence of calls of open_gl draw pipeline procedures is not correct, the global error state will not allow to load procs later;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}
@@ -623,15 +623,17 @@ err_code CShaders::Attached (const uint32_t _prog_id, const uint32_t _u_max_cnt,
 	if (nullptr == _p_count) return CBase::m_error <<__e_pointer = _T("'_p_count' is nullptr");
 	if (nullptr == _p_shaders) return CBase::m_error <<__e_pointer = _T("'_p_shaders' is nullptr");
 
-	pfn_Attached p_fun = reinterpret_cast<pfn_Attached>(CBase::Get($_fun_names[(uint32_t)e_$_fun_ndx::e_attach]));
+	pfn_Attached p_fun = reinterpret_cast<pfn_Attached>(CBase::Get($_fun_names[(uint32_t)e_$_fun_ndx::e_attached]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 
 	p_fun(_prog_id, _u_max_cnt, _p_count, _p_shaders);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
 
-	switch (CErr_ex().Get_code()) {
-	case GL_INVALID_OPERATION:
-	case GL_INVALID_VALUE: {
+	switch (u_err_code) {
+	case GL_INVALID_OPERATION :
+	case GL_INVALID_VALUE : {
 			if (false) {}
 			else if (0 == _prog_id) CBase::m_error <<__e_inv_arg << TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id);
 			else if (0 == _u_max_cnt) CBase::m_error <<__e_inv_arg << TString().Format(_T("#__e_inv_val: '_u_max_cnt' (%u) is invalid;"), _u_max_cnt); // ToDo: not sure that this is correct regarding the 0 value;
@@ -640,7 +642,9 @@ err_code CShaders::Attached (const uint32_t _prog_id, const uint32_t _u_max_cnt,
 					CBase::m_error <<__e_inv_arg << TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) is invalid;"), _prog_id);
 			}
 		} break;
-	default:;
+	default:
+		if (!!u_err_code)
+			CBase::m_error << __e_fail = TString().Format(_T("#__e_undef: error code (%d)"), u_err_code);
 	}
 
 	return CBase::Error();
@@ -662,8 +666,10 @@ err_code CShaders::Detach (const uint32_t _prog_id, const uint32_t _shader_id) {
 		return CBase::Error();
 
 	p_fun(_prog_id, _shader_id);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
 
-	switch (CErr_ex().Get_code()) {
+	switch (u_err_code) {
 	case GL_INVALID_OPERATION :
 	case GL_INVALID_VALUE : {
 			if (false) {}
@@ -684,9 +690,19 @@ err_code CShaders::Detach (const uint32_t _prog_id, const uint32_t _shader_id) {
 				CBase::m_error <<(err_code)TErrCodes::eExecute::eOperate = TString().Format(_T("#__e_inv_oper: '_shader_id' (%u) is not attached to '_prog_id' (%u);"), _shader_id, _prog_id);
 			}
 		} break;
-	default:;
+	default:
+		if (!!u_err_code)
+			CBase::m_error << __e_fail = TString().Format(_T("#__e_undef: error code (%d)"), u_err_code);
 	}
 	return CBase::Error();
+}
+
+bool  CShaders::Is_active  (const uint32_t _shader_type) {
+	_shader_type;
+	if (0 == _shader_type)
+		return CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: shader type %u"), _shader_type);
+
+	return false;
 }
 
 err_code CShaders::Get_all (void) {
@@ -707,7 +723,7 @@ TProgShaders& ::__get_$_bind_procs (void) {
 	// otherwise if the sequence of calls of open_gl draw pipeline procedures is not correct, the global error state will not allow to load procs later;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}

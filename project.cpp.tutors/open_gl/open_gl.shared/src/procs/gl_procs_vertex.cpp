@@ -272,7 +272,7 @@ TVertArrProcs&  ::__get_arr_procs (void) {
 	static bool b_loaded = false;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}
@@ -468,7 +468,7 @@ TVertAttrProcs&  ::__get_attr_procs (void) {
 	static bool b_loaded = false;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}
@@ -565,7 +565,7 @@ TAttrArrProcs&  ::__get_attr_arr_procs (void) {
 	static bool b_loaded = false;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}
@@ -665,7 +665,7 @@ TVertAttrPtrProcs&  ::__get_attr_ptr_procs (void) {
 	static bool b_loaded = false;
 	if (false == b_loaded) {
 		if (__failed(procs.Get_all())) {
-		    __trace_err_2(_T("%s\n;"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
 		else
 		    b_loaded = true;
 	}

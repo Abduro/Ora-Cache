@@ -4,15 +4,18 @@
 */
 #include "gl_$_cache.h"
 #include "gl_program.h"
-#include "procs\gl_procs_prog.h"
-#include "procs\gl_procs_shader.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 #include "shader\gl_compiler.h"
 #include "shader\gl_shd_type.h"
 
+#include "procs\gl_procs_prog.h"
+#include "procs\gl_procs_shader.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
+
+#define __gl_shader_type 0x8B4F
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
@@ -158,6 +161,42 @@ err_code CCache::Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id,
 	if (__failed(__get_stg().Insert(_u_prog_id, _u_shader_id))) 
 		_err = __get_stg().Error();
 #endif
+	return _err;
+}
+
+err_code CCache::Attached (::std::vector<$Type>& _types) const {
+	this->m_error <<__METHOD__<<__s_ok;
+	return CCache::Attached(this->ProgId(), _types, this->m_error);
+}
+
+err_code CCache::Attached (const uint32_t _prog_id, ::std::vector<$Type>& _v_types, CError& _err) {
+	_prog_id; _v_types; _err;
+
+	static const uint32_t u_max_count = 32; // it is assumed max number of attached shaders is not grater than 32; if necessary it can be increased;
+
+	uint32_t shader_ids[u_max_count] = {0};
+	uint32_t u_count = 0;
+
+	if (false == _v_types.empty())
+		_v_types.clear();
+
+	if (__failed(__get_$_bind_procs().Attached(_prog_id, u_max_count, &u_count, shader_ids)))
+		return _err = __get_$_bind_procs().Error();
+
+	for (uint32_t i_ = 0; i_ < u_count; i_++) {
+
+		int32_t n_type = 0;
+		err_code err_ = __get_$_procs().Params(shader_ids[i_], __gl_shader_type, &n_type);
+
+		if (__failed(err_)) {
+			_err = __get_$_procs().Error(); break;
+		}
+		try {
+			_v_types.push_back(($Type)n_type); // doesn't care about proper conversion unsigned int to enum element this time;
+		}
+		catch (const ::std::bad_alloc&) { _err <<__e_no_memory; break; }
+	}
+
 	return _err;
 }
 

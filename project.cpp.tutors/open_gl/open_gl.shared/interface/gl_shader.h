@@ -29,7 +29,7 @@ namespace shader {
 		 TErr_ex& Error (void) const;
 		 uint32_t Id (void) const;
 
-		 bool     Is_attached (bool) ;       // sets current attachment state; returns 'true' in case of state chabged;
+		 bool     Is_attached (bool) ;       // sets current attachment state; returns 'true' in case of state changed;
 		 bool     Is_attached (void) const;  // gets current attachment state of this shaper;
 		 bool     Is_compiled (void) const;  // checks compilation status of the shader; the shader::CStatus::Is_compiled actually is called;
 		 bool     Is_valid (void) const;     // checks the validity of the shaper but after its compilation only, otherwise it returns 'false';

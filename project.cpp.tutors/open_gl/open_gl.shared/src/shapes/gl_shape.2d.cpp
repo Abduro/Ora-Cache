@@ -4,6 +4,7 @@
 */
 #include "gl_shape.2d.h"
 #include "shared.preproc.h"
+#include "procs\gl_procs_surface.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shapes;
@@ -12,6 +13,9 @@ namespace ex_ui { namespace draw { namespace open_gl {namespace _impl_4 {}}}}
 using namespace _impl_4;
 
 CTriangle:: CTriangle (void) : CShape() { CString cs_cls = TString().Format(_T("%s::%s"), CShape::m_error.Class(), (_pc_sz)__CLASS__);
+
+	CShape::m_prim_mode = (uint32_t) procs::CPrimitives::e_triangle::e_triangles;
+
 	CShape::m_error.Class(cs_cls, false);
 	if (__failed(CShape::m_vertices.Count(n_min_vertex_count)))
 		CShape::m_error = CShape::m_vertices.Error(); else CShape::m_error <<__s_ok;

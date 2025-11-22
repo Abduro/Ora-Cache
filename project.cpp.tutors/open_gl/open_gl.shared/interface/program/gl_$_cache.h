@@ -20,6 +20,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 		static
 		err_code Attach (const uint32_t _u_shader_id, const uint32_t _u_prog_id, CError&);
 		err_code Attach (const uint32_t _u_shader_id);
+		/* it looks like the shader identifiers being attached to the program must be retrieved first,
+		   and then shader type must be queried on each shader identifier;
+		   otherwise queying shader types may be inconcistent with actual shader objects if their identifiers are taken into account;
+		*/
+		static
+		err_code Attached (const uint32_t _prog_id, ::std::vector<$Type>&, CError&);
+		err_code Attached (::std::vector<$Type>&) const; // gets the enumeration of the shader types that being atteched;
 
 		err_code Compile(void);  // compiles all shaders; it is assumed the shader sources are already set;
 		err_code Create (void);  // creates all shaders; it is assumed the program is already created and its identifier is set to each shader;
@@ -66,5 +73,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 	};
 
 }}}}
+
+typedef ex_ui::draw::open_gl::program::CCache T$Cache;
 
 #endif/*_GL_$_CACHE_H_INCLUDED*/
