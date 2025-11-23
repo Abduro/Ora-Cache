@@ -157,8 +157,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::TranslateMessage( &msg );
 			::DispatchMessage ( &msg );
 		}
-		else {
-			$_wnd.Renderer().Draw(); // perhaps this function must check for changing the draw data before draw it;
+		else if (false == b_error) {
+			if (__failed($_wnd.Renderer().Draw())) // perhaps this function must check for changing the draw data before draw it;
+				b_error = true;
 			::Sleep(10);
 		}
 	}

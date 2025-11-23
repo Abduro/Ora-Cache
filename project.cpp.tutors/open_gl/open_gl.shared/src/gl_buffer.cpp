@@ -223,7 +223,7 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 	if (nullptr == p_vertices)
 		return TBase::m_error <<__e_pointer;
 
-#if (0)
+#if (1)
 	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(v_arr.Bytes()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_buf_procs().Error().Print(TError::e_print::e_req));
 		return TBase::m_error = __get_buf_procs().Error();

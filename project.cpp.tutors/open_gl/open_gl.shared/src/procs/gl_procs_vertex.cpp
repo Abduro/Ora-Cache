@@ -524,6 +524,10 @@ err_code CAttrArray::Disable (const uint32_t _u_ndx) {
 // ToDo: it is mostly the copy and paste, requires review this approach due to it is not good;
 err_code CAttrArray::Enable (const uint32_t _u_ndx) {
 	_u_ndx;
+	/* Possible error codes:
+	GL_INVALID_OPERATION : if no vertex array object is bound;
+	GL_INVALID_VALUE     : '_u_ndx' is greater than or equal to GL_MAX_VERTEX_ATTRIBS;
+	*/
 	CBase::m_error << __METHOD__ << __s_ok;
 
 	pfn_Enable p_fun = reinterpret_cast<pfn_Enable>(CBase::Get(attr_arr_fun_names[(uint32_t)e_attr_arr_fun_ndx::e_enable]));
@@ -531,19 +535,21 @@ err_code CAttrArray::Enable (const uint32_t _u_ndx) {
 		return CBase::Error();
 
 	p_fun(_u_ndx);
-
-	switch (CErr_ex().Get_code()) {
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
 	case GL_INVALID_OPERATION : {
 			procs::CParam procs;
 			const int32_t n_result = procs.GetInt(__gl_arr_bound);
 			if (procs.Error())
 				return CBase::m_error = procs.Error();
 			if (0 == n_result)
-				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the object by '_u_ndx' (%u) is not bound"), _u_ndx);
+				CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: there is no bound array"));
 		} break;
 	case GL_INVALID_VALUE : 
 		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
-	default:;
+	default:
+		if (u_err_code) CBase::m_error <<__e_fail = TString().Format(_T("#__undef: err_code = %d"), u_err_code);
 	}
 
 	return CBase::Error();

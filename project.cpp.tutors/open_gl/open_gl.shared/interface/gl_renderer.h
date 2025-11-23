@@ -37,7 +37,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CRender_Cfg&  Cfg (void) const;
 		CRender_Cfg&  Cfg (void) ;
 
-		err_code Draw (void) const;
+		err_code Draw (void) ;
 
 		TError& Error (void) const;
 		const

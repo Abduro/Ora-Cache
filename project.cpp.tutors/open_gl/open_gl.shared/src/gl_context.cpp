@@ -314,7 +314,7 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << there is the example of how to do that;
 	px_fmt_desc.nSize      = sizeof(PIXELFORMATDESCRIPTOR);
 	px_fmt_desc.nVersion   = 1;
-	px_fmt_desc.dwFlags    = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL/* | PFD_DOUBLEBUFFER*/;
+	px_fmt_desc.dwFlags    = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 	px_fmt_desc.iPixelType = PFD_TYPE_RGBA;
 	px_fmt_desc.cColorBits = 32; // colordepth of the framebuffer;
 	px_fmt_desc.cAlphaBits = 8;  // the number of bits for the stencilbuffer;

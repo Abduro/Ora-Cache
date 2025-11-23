@@ -51,7 +51,7 @@ const
 CRender_Cfg&  CRenderer::Cfg (void) const { return this->m_cfg; }
 CRender_Cfg&  CRenderer::Cfg (void)       { return this->m_cfg; }
 
-err_code    CRenderer::Draw (void) const {
+err_code    CRenderer::Draw (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (__failed(::__get_eraser_procs().All(e_clear_ops::e_color|e_clear_ops::e_depth))) {
@@ -59,12 +59,17 @@ err_code    CRenderer::Draw (void) const {
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
 
+	if (false == this->Scene().Array().Is_bound())
+	if (__failed(this->Scene().Array().Bind())) {
+		return this->m_error = this->Scene().Array().Error();
+	}
+
 	if (__failed(__get_render_procs().DrawArrays(this->Scene().Prog().Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_render_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_render_procs().Error();
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
-	if (false == !!::SwapBuffers(this->Scene().Ctx().Device().Target().Get())) {
+	if (false == !!::SwapBuffers(this->Scene().Ctx().Draw().Target().Get())) {
 		this->m_error.Last();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}

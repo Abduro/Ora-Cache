@@ -176,6 +176,17 @@ err_code CScene::Prepare (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 #endif
+	if (__succeeded(this->Prog().Validate())) { // a possible error trace is made in the procedure being called;
+		__trace_impt_2(_T("The draw scene is prepared;\n"));
+	}
+	else
+		return this->m_error = this->Prog().Error();
+
+	if (__failed(this->Prog().Use())) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Prog().Error().Print(TError::e_print::e_req));
+		return this->m_error = this->Prog().Error();
+	}
+
 	if (__failed(this->Prog().Buffer().Create()))
 		return this->m_error = this->Prog().Buffer().Error();
 
@@ -187,10 +198,6 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Prog().Buffer().Bind()))
 		return this->m_error = this->Prog().Buffer().Error();
 #endif
-	if (__succeeded(this->Prog().Validate())) {
-		__trace_impt_2(_T("The draw scene is prepared;\n"));
-	}
-
 	return this->Error();
 }
 
