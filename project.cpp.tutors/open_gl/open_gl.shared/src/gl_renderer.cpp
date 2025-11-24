@@ -44,7 +44,7 @@ bool     CRender_Cfg::StartAt (const uint32_t _u_ndx) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CRenderer:: CRenderer (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CRenderer:: CRenderer (void) : m_b_allowed (false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CRenderer::~CRenderer (void) {}
 
 const
@@ -53,6 +53,20 @@ CRender_Cfg&  CRenderer::Cfg (void)       { return this->m_cfg; }
 
 err_code    CRenderer::Draw (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_allowed())
+		return this->Error();
+
+	if (false == this->Scene().Prog().Status().Is_current()) {
+	if (__failed(this->Scene().Prog().Use())) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Prog().Error().Print(TError::e_print::e_req));
+		return this->m_error = this->Scene().Prog().Error();
+	}}
+
+	if (__failed(::__get_eraser_procs().Clr(1.000f, 0.647f, 0.000f, 1.0f))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
+		return this->m_error = ::__get_eraser_procs().Error();
+	}
 
 	if (__failed(::__get_eraser_procs().All(e_clear_ops::e_color|e_clear_ops::e_depth))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
@@ -64,7 +78,7 @@ err_code    CRenderer::Draw (void) {
 		return this->m_error = this->Scene().Array().Error();
 	}
 
-	if (__failed(__get_render_procs().DrawArrays(this->Scene().Prog().Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
+	if (__failed(::__get_render_procs().DrawArrays(this->Scene().Prog().Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_render_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_render_procs().Error();
 	}
@@ -78,6 +92,12 @@ err_code    CRenderer::Draw (void) {
 }
 
 TError&     CRenderer::Error (void) const { return this->m_error; }
+
+bool  CRenderer::Is_allowed (void) const  { return this->m_b_allowed; }
+bool  CRenderer::Is_allowed (const bool _b_state) {
+	_b_state;
+	const bool b_changed = this->Is_allowed() != _b_state; if (b_changed) this->m_b_allowed = _b_state; return b_changed;
+}
 const
 CScene&     CRenderer::Scene (void) const { return this->m_scene; }
 CScene&     CRenderer::Scene (void)       { return this->m_scene; }

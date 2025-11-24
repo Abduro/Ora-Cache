@@ -182,11 +182,6 @@ err_code CScene::Prepare (void) {
 	else
 		return this->m_error = this->Prog().Error();
 
-	if (__failed(this->Prog().Use())) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Prog().Error().Print(TError::e_print::e_req));
-		return this->m_error = this->Prog().Error();
-	}
-
 	if (__failed(this->Prog().Buffer().Create()))
 		return this->m_error = this->Prog().Buffer().Error();
 

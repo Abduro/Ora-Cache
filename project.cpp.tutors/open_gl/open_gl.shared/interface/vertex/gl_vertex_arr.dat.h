@@ -34,6 +34,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 		bool   Is_valid (void) const;    // returns true in case of vertex buffer data size equals to sum of attributes' sizes;
 
+		err_code  Set_ptrs (void) const; // it is assumed that each vertex has the same attribute set, i.e. the pos and color attributes;
+
 		err_code  Update (void);         // updates vertex data vector by applying vertices' attribute arrays' data;
 	
 	private:

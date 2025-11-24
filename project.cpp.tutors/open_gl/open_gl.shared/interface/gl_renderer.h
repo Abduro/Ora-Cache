@@ -40,6 +40,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		err_code Draw (void) ;
 
 		TError& Error (void) const;
+
+		bool  Is_allowed (void) const; // returns the value of the flag for the availability of the drawing operation; by default is set to 'false';
+		bool  Is_allowed (const bool); // sets the flag value of the availability of the drawing operation; e.g. is set to 'false' on app exit process;
+
 		const
 		CScene& Scene (void) const;
 		CScene& Scene (void) ;
@@ -52,6 +56,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CScene      m_scene;
 		CViewPort   m_view ;
 		CRender_Cfg m_cfg;
+		bool  m_b_allowed; 
 	};
 
 }}}

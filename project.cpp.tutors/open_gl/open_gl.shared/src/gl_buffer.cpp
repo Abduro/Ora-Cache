@@ -234,8 +234,11 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 		return TBase::m_error = __get_buf_procs().Error();
 	}
 #endif
-	else
-		__trace_info_2(_T("The shape data of size = %u (bytes) is set;\n"), v_arr.Bytes());
+	if (__failed(v_arr.Set_ptrs())) {
+		return TBase::m_error = v_arr.Error();
+	}
+
+	__trace_info_2(_T("The shape data of size = %u (bytes) is set;\n"), v_arr.Bytes());
 
 	return TBase::Error();
 }

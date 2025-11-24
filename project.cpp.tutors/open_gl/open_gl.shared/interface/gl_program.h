@@ -42,7 +42,7 @@ namespace program {
 			(b) program status; glGetProgramiv() is used by CStatus::Get();
 		 */
 		 static
-		 bool Is_valid (const uint32_t _n_prog_id, CError&); // there is not way to check program identifier as it can be made for shader;
+		 bool Is_valid (const uint32_t _n_prog_id, CError&); // there is not way to check program identifier as it can be made for shader; the comment must be clarified;
 		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
 
 		 err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());

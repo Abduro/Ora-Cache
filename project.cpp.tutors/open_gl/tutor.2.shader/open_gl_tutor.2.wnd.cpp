@@ -70,20 +70,26 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 }
 err_code shader::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
-#if (0) // fake window and gdi regular device are already created in constructor of this class;
-	if (__failed(TBase::PostCreate()))
-		return TBase::Error();
-#elsif (true == false)
-	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
-	if (wnd.Is_valid() == false) {
-		return this->m_error = wnd.Error();
-	}
 
-	context::CDevice ctx_dev(wnd);
-	if (ctx_dev.Error()) {
-		return this->m_error = ctx_dev.Error();
+	// at the first step the opengl draw renderer must be created;
+	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
+
+	CString cs_cls = TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
+	this->Renderer().Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
+	this->Renderer().Scene().Ctx().Draw().Target() << *this;
+	if (__failed(this->Renderer().Scene().Ctx().Draw().Create(4, 6))) { // ToDo: the version numbers (major & minor) must be set from version query not hardcoded;
+		this->m_error = this->Renderer().Scene().Ctx().Draw().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
+	}
+#if (0)
+	// the fake window and its device handle can not be destroyed at this time; because not all opengl functions are loaded yet;
+	context::CDevice& dev_ref = this->Renderer().Scene().Ctx().Device();
+	if (__failed(dev_ref.Destroy())) {
+		this->m_error = dev_ref.Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
 	}
 #endif
+
 #if (0)
 	// for better debugging and in order do not re-compile the executable, this section is disabled;
 	// sets resource identifiers for loading shaders' source code;
@@ -99,28 +105,12 @@ err_code shader::CWnd::PostCreate (void) {
 	if (__failed(prog.Shaders().Vertex().Src().Cfg().Path($Type::e_vertex)))
 	    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 #endif
-	CString cs_cls = TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
-	this->Renderer().Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
-	this->Renderer().Scene().Ctx().Draw().Target() << *this;
-	if (__failed(this->Renderer().Scene().Ctx().Draw().Create(4, 6))) { // ToDo: the version numbers (major & minor) must be set from version query not hardcoded;
-		this->m_error = this->Renderer().Scene().Ctx().Draw().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
-	}
+	
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
 	if (__failed(this->Renderer().Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
 #endif
-	// the fake window and its device handle may be destroyed at this time, this window device context must be used in draw operations;
-	context::CDevice& dev_ref = this->Renderer().Scene().Ctx().Device();
-	if (__failed(dev_ref.Destroy())) {
-		this->m_error = dev_ref.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
-	}
-	// creates target device from this window handle;
-	if (__failed(dev_ref.Create(TBase::Handle()))) {
-		this->m_error = dev_ref.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
-	}
+	this->Renderer().Is_allowed(true);     // allows the draw opereation of the renderer;
 
 #define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
@@ -130,6 +120,7 @@ err_code shader::CWnd::PostCreate (void) {
 }
 
 err_code shader::CWnd::Destroy (void) {
+	this->Renderer().Is_allowed(false);     // stops draw operation of the renderer;
 	this->Renderer().Scene().Destroy();     // the error output to the trace is made by the method being called;
 	this->Renderer().Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
 	return __s_ok;
@@ -142,6 +133,17 @@ err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	case WM_DESTROY: {
 		this->Destroy();
 		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x"))); 
+		} break;
+	case WM_PAINT  : { // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; returned result: 0 - handled; otherwise not handled;
+			PAINTSTRUCT ps = {0};
+			const HDC h_dc = ::BeginPaint(TBase::Handle(), &ps);
+			::FillRect(h_dc, &ps.rcPaint, (HBRUSH) (COLOR_ACTIVEBORDER + 1));
+			::EndPaint(TBase::Handle(), &ps);
+
+			if (__failed(this->Renderer().Draw()))
+				__trace_err_3(_T("%s;\n"), (_pc_sz) this->Renderer().Error().Print(TError::e_req));
+
+			return 0; // in any case, this message is considered as handled one;
 		} break;
 	case WM_SIZE   :
 	case WM_SIZING :

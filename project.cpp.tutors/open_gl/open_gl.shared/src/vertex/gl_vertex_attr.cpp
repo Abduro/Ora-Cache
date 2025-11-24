@@ -297,7 +297,10 @@ CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPositi
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAttrArray:: CAttrArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok; }
+CAttrArray:: CAttrArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
+	// sets directly default location values for both attributes;
+	 this->Pos().Locate().Value(0); this->Clr().Locate().Value(1);
+}
 CAttrArray:: CAttrArray (const CAttrArray& _src) : CAttrArray() { *this = _src; }
 CAttrArray:: CAttrArray (CAttrArray&& _victim) : CAttrArray() { *this = _victim; }
 CAttrArray::~CAttrArray (void) {}
@@ -370,6 +373,17 @@ err_code CAttrArray::Is_bound (void) {
 const
 CColor&  CAttrArray::Clr (void) const { return this->m_clr; }
 CColor&  CAttrArray::Clr (void)       { return this->m_clr; }
+
+uint32_t CAttrArray::Count (void) const { return 2; } // the position and color together make 2;
+const
+CAttr&   CAttrArray::Item (const uint32_t _ndx) const {
+	_ndx;
+	if (0 == _ndx) return this->Pos();
+	if (1 == _ndx) return this->Clr();
+
+	static CAttr na_attr;
+	return na_attr;
+}
 
 err_code CAttrArray::Enum_attrs (void) {
 	this->m_error <<__METHOD__<<__s_ok;

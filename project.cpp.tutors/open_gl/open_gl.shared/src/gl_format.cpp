@@ -313,7 +313,7 @@ CAtt_set_pixels:: CAtt_set_pixels (void) : TBase() {
 //	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp    , _gl_true, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
 	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CBuffer::e_double , _gl_true, (_pc_sz) arb::CBuffer::To_str(arb::CBuffer::e_double)));
 //	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_exchange , arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_exchange)));
-//	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel    , arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
+	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CType::e_pixel    , arb::CType::e_rgba, (_pc_sz) arb::CType::To_str(arb::CType::e_pixel)));
 //	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CAccel::e_supp    , arb::CAccel::e_full, (_pc_sz) arb::CAccel::To_str(arb::CAccel::e_supp)));
 //	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CSwap::e_method   , arb::CSwap::e_copy, (_pc_sz) arb::CSwap::To_str(arb::CSwap::e_method)));
 	if (__is_okay(n_result)) n_result = TBase::Append(CAtt(arb::CColor::e_alpha   ,  8, (_pc_sz) arb::CColor::To_str(arb::CColor::e_alpha)));

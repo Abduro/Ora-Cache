@@ -157,6 +157,7 @@ program::CStatus& CProgram::Status (void)       { return this->m_status; }
 
 	if (__failed(__get_prog_procs().Use(this->Id()())))
 		this->m_error = __get_prog_procs().Error();
+	else __trace_info_2(_T("Program (id = %u) is in use;\n"), this->Id().Get());
 
 	return this->Error();
  }

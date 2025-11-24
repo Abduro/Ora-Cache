@@ -74,12 +74,23 @@ bool  CVertArray::Is_valid (void) const {
 	return static_cast<uint32_t>(this->m_data.size()) == u_req && u_req > 0;
 }
 
-#if (0)
-err_code CVertArray::Set_ptrs (const vertex::TRawAttrs& _attrs) {
-	_attrs;
+#if (1)
+err_code CVertArray::Set_ptrs (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	for (size_t i_ = 0; i_ < _attrs.size(); i_++) {
+	if (this->Items().empty()) {
+		return this->m_error <<__e_not_inited = _T("The vertex array has no items");
+	}
+
+	const vertex::CAttrArray& att_aray = this->Items().at(0).Attrs();
+
+	for (uint32_t i_ = 0; i_ < att_aray.Count(); i_++) {
+		const vertex::CAttr& attr = att_aray.Item(i_);
+
+		if (__failed(__get_attr_ptr_procs().Set(attr.Locate().Value(), attr.Size(), attr.Type(), attr.Is_normal(), attr.Stride(), attr.Offset()))) {
+			this->m_error = __get_attr_ptr_procs().Error();
+			__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req)); break;
+		}
 	}
 
 	return this->Error();

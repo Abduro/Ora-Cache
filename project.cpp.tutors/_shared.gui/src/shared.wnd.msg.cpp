@@ -78,6 +78,9 @@ static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param 
 	case WM_WINDOWPOSCHANGING: {
 		n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
 	} break;
+	case WM_PAINT  : { // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; l_param and w_param are not used;
+		n_result = it_->second->IMsg_OnMessage(_msg_id, 0, 0);
+	} break;
 #if (0)
 	case WM_SYSCOMMAND : { // https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syscommand ;
 		n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);

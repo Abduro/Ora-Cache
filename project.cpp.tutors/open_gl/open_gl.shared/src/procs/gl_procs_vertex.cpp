@@ -481,7 +481,7 @@ static _pc_sz attr_arr_fun_names[] = {
 	_T("glDisableVertexAttribArray"), _T("glEnableVertexAttribArray")
 };
 enum class e_attr_arr_fun_ndx : uint32_t {
-	e_disable = 0x2, e_enable = 0x3
+	e_disable = 0x0, e_enable = 0x1
 };
 
 CAttrArray::CAttrArray (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);

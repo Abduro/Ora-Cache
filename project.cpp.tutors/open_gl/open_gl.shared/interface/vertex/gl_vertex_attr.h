@@ -159,6 +159,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CColor&  Clr (void) const;   // playing with property names;
 		CColor&  Clr (void) ;
 
+		uint32_t Count (void) const; // returns a number of elements in this attribute array; it is suetable to make the abstraction from particular attr specifics;
+		const
+		CAttr&   Item (const uint32_t _ndx) const; // if the input index value is greater than attributes' count - 1, the reference to invalid attr object is returned;
+
 		err_code Enum_attrs (void) ; // enumerates all attributes that are linked to the program;
 
 		TError&  Error (void) const;

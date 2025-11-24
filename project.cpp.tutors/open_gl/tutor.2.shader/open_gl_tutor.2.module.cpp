@@ -62,6 +62,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	CAppWnd& app_wnd = ::Get_app_wnd();
 	shader::CWnd $_wnd; // the draw context window;
 
+	using
+	CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
+	CTriangle triangle;
+
 	do {
 		__trace::Use_con(true); // the console window is not created yet; VS debug output is used anyway;
 #pragma region __step_0
@@ -111,9 +115,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_3
 		// (3) creates a rectangle shape and initializes it with colors and coordinates of its vertices;
-		using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
-		CTriangle triangle;
-
 		triangle.A().Attrs().Clr().Set(1.0f, 0.0f, 0.0f, 1.0f);
 		triangle.B().Attrs().Clr().Set(0.0f, 1.0f, 0.0f, 1.0f);
 		triangle.C().Attrs().Clr().Set(0.0f, 0.0f, 1.0f, 1.0f);
@@ -157,7 +158,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::TranslateMessage( &msg );
 			::DispatchMessage ( &msg );
 		}
-		else if (false == b_error) {
+		if (false == b_error) {
 			if (__failed($_wnd.Renderer().Draw())) // perhaps this function must check for changing the draw data before draw it;
 				b_error = true;
 			::Sleep(10);
