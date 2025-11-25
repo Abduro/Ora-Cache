@@ -401,6 +401,7 @@ CFloat&  CFloat::operator <<(const clr_type _clr) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+CHex:: CHex (_pc_sz _p_value) : CHex() { *this << _p_value; }
 CHex:: CHex (clr_type _type) : m_color(_type) {}
 CHex:: CHex (const CHex& _src) : CHex() { *this = _src; }
 CHex::~CHex (void) {}
@@ -417,6 +418,9 @@ CHex& CHex::operator <<(const clr_type _type) { this->Color() = _type; return *t
 CHex& CHex::operator <<(const CQuad& _color) { this->Color() = _color; return *this; }
 
 CHex& CHex::operator <<(_pc_sz _p_val) { this->Set(_p_val); return *this; }
+const
+CQuad& CHex::operator ()(void) const { return this->m_color; }
+CHex::operator clr_type (void) const { return (*this)().ToRgbA(); }
 
 /////////////////////////////////////////////////////////////////////////////
 #if defined (_DEBUG)

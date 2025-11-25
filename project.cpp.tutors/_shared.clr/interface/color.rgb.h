@@ -178,6 +178,7 @@ namespace ex_ui { namespace color { namespace rgb {
 	class CHex {
 	public:
 		 CHex (clr_type = 0);
+		 CHex (_pc_sz _p_value);
 		 CHex (const CHex& );
 		 CHex (CHex&&) = delete;
 		~CHex (void);
@@ -200,6 +201,9 @@ namespace ex_ui { namespace color { namespace rgb {
 		CHex&  operator <<(_pc_sz _p_val) ;
 		CHex&  operator <<(const clr_type);
 		CHex&  operator <<(const CQuad&)  ;
+		const
+		CQuad& operator ()(void) const;
+		operator clr_type (void) const;
 
 	private:
 		CQuad  m_color;

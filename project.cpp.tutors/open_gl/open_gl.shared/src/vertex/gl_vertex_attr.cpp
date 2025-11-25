@@ -493,6 +493,7 @@ err_code CAttrArray::ProgId (const uint32_t _prog_id) {
 }
 
 uint32_t CAttrArray::Size (void) const { return this->Clr().Size() + this->Pos().Size(); }
+uint32_t CAttrArray::Stride (void) const { return this->Clr().Stride() + this->Pos().Stride(); }
 
 CAttrArray&  CAttrArray::operator = (const CAttrArray& _src)  {
 	*this << _src.ProgId() << _src.Clr() << _src.Pos(); return *this;

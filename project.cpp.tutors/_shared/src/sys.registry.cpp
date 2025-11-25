@@ -11,6 +11,7 @@ using namespace shared::sys_core::storage;
 
 /////////////////////////////////////////////////////////////////////////////
 
+using e_element  = CReg_router::CTheme::e_element;
 using e_renderer = CReg_router::CRoot::e_renderer;
 using e_shaders  = CReg_router::CShaders::e_types;
 
@@ -18,10 +19,11 @@ namespace shared { namespace sys_core { namespace storage { namespace _impl {
 
 	static e_renderer e_current = e_renderer::e_open_gl;
 	static CString cs_$_root;
+	static CString cs_theme;
 
 }}}}
 
-CReg_router::CRoot:: CRoot (void) {}
+CReg_router::CRoot::CRoot (void) {}
 const
 HKEY    CReg_router::CRoot::Key  (void) const { static HKEY h_key = TutorialRootKey; return h_key; }
 _pc_sz  CReg_router::CRoot::Path (void) const { static _pc_sz p_path = _T("Software\\ebo::pack\\tutorials"); return p_path; }
@@ -49,7 +51,7 @@ const bool CReg_router::CRoot::Renderer (const e_renderer _e_curr) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CReg_router::CShaders:: CShaders (void) {}
+CReg_router::CShaders::CShaders (void) {}
 
 CString CReg_router::CShaders::Path (const e_shaders _shader) const {
 	_shader;
@@ -71,6 +73,37 @@ _pc_sz  CReg_router::CShaders::Root (void) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
+CReg_router::CTheme::CTheme (void) {}
+
+CString CReg_router::CTheme::Path (const e_element _element) const {
+	_element;
+	CString cs_path;
+
+	if (e_element::e_bkgnd  == _element) cs_path.Format(_T("%s"), this->Root());
+	if (e_element::e_border == _element) cs_path.Format(_T("%s"), this->Root());
+
+	return  cs_path;
+}
+
+_pc_sz  CReg_router::CTheme::Root (void) const {
+
+	if (_impl::cs_theme.IsEmpty()) {
+		_impl::cs_theme.Format(_T("%s\\theme"), (_pc_sz) Get_router().Root().Path(Get_router().Root().Renderer()));
+	}
+	return (_pc_sz)_impl::cs_theme;
+}
+
+_pc_sz  CReg_router::CTheme::To_str (const e_element _element) {
+	static CString cs_out;
+
+	if (e_element::e_bkgnd == _element) cs_out = _T("bkgnd");
+	if (e_element::e_border == _element) cs_out = _T("border");
+
+	return (_pc_sz) cs_out; // if it is empty, then the '(default)' value is meant;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CReg_router:: CReg_router (void) {}
 CReg_router::~CReg_router (void) {}
 const
@@ -79,6 +112,9 @@ CReg_router::CRoot&  CReg_router::Root (void)       { return this->m_root; }
 const
 CReg_router::CShaders& CReg_router::Shaders (void) const { return this->m_shaders; }
 CReg_router::CShaders& CReg_router::Shaders (void)       { return this->m_shaders; }
+const
+CReg_router::CTheme&  CReg_router::Theme (void) const { return this->m_theme; }
+CReg_router::CTheme&  CReg_router::Theme (void)       { return this->m_theme; }
 
 CReg_router& ::Get_router (void) {
 	static CReg_router router;
@@ -91,6 +127,18 @@ CRegistry:: CRegistry (void) { this->m_error >> __CLASS__ << __METHOD__ << __s_o
 CRegistry::~CRegistry (void) {}
 
 TError&  CRegistry::Error (void) const { return this->m_error; }
+
+CString  CRegistry::Value (const e_element& _element) const {
+	_element;
+
+	CRegKey_Ex reg_key;
+
+	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_router().Theme().Path(_element), CReg_router::CTheme::To_str(_element));
+	if (cs_value.IsEmpty())
+		this->m_error = reg_key.Error();
+
+	return  cs_value;
+}
 
 CString  CRegistry::Value (const e_shaders _e_shader, _pc_sz _p_name) const {
 	_e_shader; _p_name;

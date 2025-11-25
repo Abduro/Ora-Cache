@@ -175,7 +175,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CProgId& ProgId (void) const;
 		err_code ProgId (const uint32_t); // this method updates the program identifiers of all attributes;
 
-		uint32_t Size (void) const;  // returns the number of elements of all attributes in this array;
+		uint32_t Size (void) const;    // returns the number of elements of all attributes in this array;
+		uint32_t Stride (void) const;  // returns the number of bytes of all attributes of this array;
 
 		CAttrArray& operator = (const CAttrArray&); CAttrArray& operator = (CAttrArray&&); // no move operation, just copying data;
 		CAttrArray& operator <<(const CProgId&);

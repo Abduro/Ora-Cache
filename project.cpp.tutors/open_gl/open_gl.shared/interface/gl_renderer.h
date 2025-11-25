@@ -7,12 +7,13 @@
 #include "gl_defs.h"
 #include "gl_scene.h"
 #include "gl_viewport.h"
+#include "color._defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
-
-	class CRender_Cfg : private no_copy {
+namespace render {
+	class CCfg : private no_copy {
 	public:
-		CRender_Cfg (void); ~CRender_Cfg (void) = default;
+		CCfg (void); ~CCfg (void) = default;
 
 		uint32_t Count (void) const;              // returns how many vertices must be drawn;
 		bool     Count (const uint32_t);          // returns 'true' in case of count number of vertices is changed;
@@ -29,13 +30,26 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		uint32_t m_start_ndx;
 	};
 
+	class CTheme : private no_copy {
+	public:
+		CTheme (void); ~CTheme (void) = default;
+
+		const rgb_color Bkgnd_rgb (void) const;
+		const v_color&  Bkgnd_flt (void) const;
+
+	private:
+		mutable v_color m_bkgnd;
+	};
+}
 	class CRenderer {
+	using CCfg = render::CCfg;
+	using CTheme = render::CTheme;
 	private: CRenderer (const CRenderer&) = delete;  CRenderer (CRenderer&&) = delete;
 	public : CRenderer (void); ~CRenderer (void);
 
 		const
-		CRender_Cfg&  Cfg (void) const;
-		CRender_Cfg&  Cfg (void) ;
+		CCfg& Cfg (void) const;
+		CCfg& Cfg (void) ;
 
 		err_code Draw (void) ;
 
@@ -48,14 +62,18 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CScene& Scene (void) const;
 		CScene& Scene (void) ;
 		const
+		CTheme& Theme (void) const;
+		CTheme& Theme (void) ;
+		const
 		CViewPort& View (void) const;
 		CViewPort& View (void) ;
 
 	private: CRenderer& operator = (const CRenderer&) = delete; CRenderer& operator = (CRenderer&&) = delete;
 	mutable  CError m_error;
 		CScene      m_scene;
+		CTheme      m_theme;
 		CViewPort   m_view ;
-		CRender_Cfg m_cfg;
+		CCfg  m_cfg;
 		bool  m_b_allowed; 
 	};
 

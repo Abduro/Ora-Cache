@@ -3,11 +3,11 @@
     layout(location = 1) in  vec4 colorIn;    // the same as above comment;
     out vec4 fragementColor;
 
-//  uniform mat4 projection = mat4(1.0);
-//  uniform mat4 model = mat4(1.0);
+    uniform mat4 projection = mat4(1.0);
+    uniform mat4 model = mat4(1.0);
 
     void main() {
-//      gl_Position = projection * model * vec4(positionIn, 1.0f);
-        gl_Position = vec4(positionIn, 1.0);
+        gl_Position = projection * model * vec4(positionIn, 1.0f);
+//      gl_Position = vec4(positionIn, 1.0);
         fragementColor = colorIn;
     }

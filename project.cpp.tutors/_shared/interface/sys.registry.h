@@ -51,6 +51,25 @@ namespace shared { namespace sys_core { namespace storage {
 		private:
 			CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
 		};
+
+		class CTheme {
+		public:
+			enum e_element : uint32_t {
+			e_bkgnd  = 0x0, // background color;
+			e_border = 0x1, // border color (any state of the control that the border belongs to);
+			};
+			CTheme (void) ; CTheme (const CTheme&) = delete; CTheme (CTheme&&) = delete; ~CTheme (void) = default;
+
+			CString Path (const e_element) const; // returns the registry path to the color value of the element specified;
+			_pc_sz  Root (void) const;
+
+			static
+			_pc_sz  To_str (const e_element);
+
+		private:
+			CTheme& operator = (const CTheme&) = delete; CTheme& operator = (CTheme&&) = delete;
+		};
+
 	public:
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
 		~CReg_router (void) ;
@@ -61,6 +80,9 @@ namespace shared { namespace sys_core { namespace storage {
 		const
 		CShaders& Shaders (void) const;
 		CShaders& Shaders (void) ;
+		const
+		CTheme& Theme (void) const;
+		CTheme& Theme (void) ;
 
 	private:
 		CReg_router& operator = (const CReg_router&) = delete;
@@ -68,16 +90,19 @@ namespace shared { namespace sys_core { namespace storage {
 
 		CRoot    m_root;
 		CShaders m_shaders;
+		CTheme   m_theme;
 	};
 
 	class CRegistry {
 	using e_shaders = CReg_router::CShaders::e_types;
+	using e_element = CReg_router::CTheme::e_element;
 	public:
 		 CRegistry (void); CRegistry (const CRegistry&) = delete; CRegistry (CRegistry&&) = delete;
 		~CRegistry (void);
 
 		TError&  Error (void) const;
 
+		CString  Value (const e_element&) const;  // returns color value (hex) of element specified; 
 		CString  Value (const e_shaders, _pc_sz _p_name) const; // if empty string is returned, the error occurs;
 
 		CRegistry& operator = (const CRegistry&) = delete;

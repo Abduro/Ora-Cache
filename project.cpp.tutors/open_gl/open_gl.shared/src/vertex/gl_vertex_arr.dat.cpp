@@ -86,8 +86,15 @@ err_code CVertArray::Set_ptrs (void) const {
 
 	for (uint32_t i_ = 0; i_ < att_aray.Count(); i_++) {
 		const vertex::CAttr& attr = att_aray.Item(i_);
-
-		if (__failed(__get_attr_ptr_procs().Set(attr.Locate().Value(), attr.Size(), attr.Type(), attr.Is_normal(), attr.Stride(), attr.Offset()))) {
+#if (0)
+		const uint32_t u_locate = attr.Locate().Value(); u_locate;
+		const uint32_t u_size   = attr.Size(); u_size;
+		const uint32_t u_type   = attr.Type(); u_type;
+		const bool b_normalized = attr.Is_normal(); b_normalized;
+		const uint32_t u_stride = att_aray.Stride();
+		const uint32_t u_offset = attr.Offset(); u_offset;
+#endif
+		if (__failed(__get_attr_ptr_procs().Set(attr.Locate().Value(), attr.Size(), attr.Type(), attr.Is_normal(), att_aray.Stride(), attr.Offset()))) {
 			this->m_error = __get_attr_ptr_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req)); break;
 		}

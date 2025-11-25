@@ -4,19 +4,26 @@
 */
 #include "gl_renderer.h"
 #include "shared.preproc.h"
+#include "sys.registry.h"
+#include "color.rgb.h"
 
 #include "procs\gl_procs_surface.h"
 
 using namespace ex_ui::draw::open_gl;
+using namespace shared::sys_core::storage;
+using namespace ex_ui::color::rgb;
 
 using e_clear_ops = procs::CEraser::e_clear_ops;
+using CConvert    = ex_ui::color::rgb::CConvert; // this class has static method for converting color channel to float value;
+using CHex = ex_ui::color::rgb::CHex;
+using e_element = CReg_router::CTheme::e_element;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CRender_Cfg:: CRender_Cfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
+render::CCfg:: CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
 
-uint32_t CRender_Cfg::Count (void) const { return this->m_count_ndx; }
-bool     CRender_Cfg::Count (const uint32_t _n_count) {
+uint32_t render::CCfg::Count (void) const { return this->m_count_ndx; }
+bool     render::CCfg::Count (const uint32_t _n_count) {
 	_n_count;
 	const bool b_changed = (this->Count() != _n_count);
 	if (b_changed)
@@ -24,8 +31,8 @@ bool     CRender_Cfg::Count (const uint32_t _n_count) {
 	return b_changed;
 }
 
-uint32_t CRender_Cfg::Primitive (void) const { return this->m_prim_mode; }
-bool     CRender_Cfg::Primitive (const uint32_t _u_mode) {
+uint32_t render::CCfg::Primitive (void) const { return this->m_prim_mode; }
+bool     render::CCfg::Primitive (const uint32_t _u_mode) {
 	_u_mode;
 	const bool b_changed = (this->Primitive() != _u_mode);
 	if (b_changed)
@@ -33,8 +40,8 @@ bool     CRender_Cfg::Primitive (const uint32_t _u_mode) {
 	return b_changed;
 }
 
-uint32_t CRender_Cfg::StartAt (void) const { return this->m_start_ndx; }
-bool     CRender_Cfg::StartAt (const uint32_t _u_ndx) {
+uint32_t render::CCfg::StartAt (void) const { return this->m_start_ndx; }
+bool     render::CCfg::StartAt (const uint32_t _u_ndx) {
 	_u_ndx;
 	const bool b_changed = (this->StartAt() != _u_ndx);
 	if (b_changed)
@@ -42,14 +49,33 @@ bool     CRender_Cfg::StartAt (const uint32_t _u_ndx) {
 	return b_changed;
 }
 
+render::CTheme::CTheme (void) : m_bkgnd(4, 0.0f) {}
+
+const rgb_color render::CTheme::Bkgnd_rgb (void) const { return (rgb_color)CHex((_pc_sz)Get_registry().Value(e_element::e_bkgnd)); }
+const v_color&  render::CTheme::Bkgnd_flt (void) const {
+
+	const rgb_color clr = this->Bkgnd_rgb();
+
+	if (0 < this->m_bkgnd.size()) {
+		this->m_bkgnd.at(0) = CConvert::CConvert::ToFloat(get_r_value(clr));
+		if (1 < this->m_bkgnd.size()) {
+			this->m_bkgnd.at(1) = CConvert::CConvert::ToFloat(get_g_value(clr));
+			if (2 < this->m_bkgnd.size()) {
+				this->m_bkgnd.at(2) = CConvert::CConvert::ToFloat(get_b_value(clr));
+				if (3 < this->m_bkgnd.size()) {
+					this->m_bkgnd.at(3) = CConvert::CConvert::ToFloat(get_a_value(clr)); // it is not necessary because it eaquals to 0 always;
+					this->m_bkgnd.at(3) = 1.0f;
+	}	}	}	}
+	return this->m_bkgnd;
+}
 /////////////////////////////////////////////////////////////////////////////
 
 CRenderer:: CRenderer (void) : m_b_allowed (false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CRenderer::~CRenderer (void) {}
 
 const
-CRender_Cfg&  CRenderer::Cfg (void) const { return this->m_cfg; }
-CRender_Cfg&  CRenderer::Cfg (void)       { return this->m_cfg; }
+render::CCfg&  CRenderer::Cfg (void) const { return this->m_cfg; }
+render::CCfg&  CRenderer::Cfg (void)       { return this->m_cfg; }
 
 err_code    CRenderer::Draw (void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -63,7 +89,12 @@ err_code    CRenderer::Draw (void) {
 		return this->m_error = this->Scene().Prog().Error();
 	}}
 
-	if (__failed(::__get_eraser_procs().Clr(1.000f, 0.647f, 0.000f, 1.0f))) {
+	const v_color& clr_bkgnd = this->Theme().Bkgnd_flt();
+	if (4 > clr_bkgnd.size()) {
+		return this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: the float color vector size = %u"), clr_bkgnd.size());
+	}
+
+	if (__failed(::__get_eraser_procs().Clr(clr_bkgnd.at(0), clr_bkgnd.at(1), clr_bkgnd.at(2), clr_bkgnd.at(3)))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
@@ -101,6 +132,9 @@ bool  CRenderer::Is_allowed (const bool _b_state) {
 const
 CScene&     CRenderer::Scene (void) const { return this->m_scene; }
 CScene&     CRenderer::Scene (void)       { return this->m_scene; }
+const
+render::CTheme&  CRenderer::Theme (void) const { return this->m_theme; }
+render::CTheme&  CRenderer::Theme (void)       { return this->m_theme; }
 const
 CViewPort&  CRenderer::View (void) const  { return this->m_view; }
 CViewPort&  CRenderer::View (void)        { return this->m_view; }
