@@ -9,8 +9,9 @@
 */
 #include "shared.defs.h"
 #include <conio.h>
-#include <stdio.h>    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/printf-printf-l-wprintf-wprintf-l ;
+#include <stdio.h>        // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/printf-printf-l-wprintf-wprintf-l ;
 #include <iostream>
+#include <consoleapi2.h>  // for CONSOLE_SCREEN_BUFFER_INFOEX;
 
 namespace shared { namespace console {
 

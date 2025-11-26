@@ -14,6 +14,7 @@ namespace shared { namespace console { namespace _impl {
 	// https://learn.microsoft.com/en-us/windows/console/console-screen-buffers?redirectedfrom=MSDN#_win32_character_attributes ;
 	// https://stackoverflow.com/questions/8621578/do-windows-console-color-values-have-official-names-constants-associated-with/49929936#49929936 ;
 #pragma endregion
+	/*this is for setting background and forground of the *text* output;*/
 	class c_fg_clrs { c_fg_clrs (void) = default; ~c_fg_clrs (void) = default;
 	public:
 		typedef enum e_fg_clrs : uint16_t
@@ -39,8 +40,9 @@ namespace shared { namespace console { namespace _impl {
 
 	class c_bkg_clrs {
 	public:
-		typedef enum e_bkg_clrs 
+		typedef enum e_bkg_clrs : uint16_t
 		{
+			e_black        = 0x00, // 0000 0000 ; BACKGROUND_BLACK ;
 			e_navyblue     = 0x10, // 0001 0000 ; BACKGROUND_BLUE ;
 			e_green        = 0x20, // 0010 0000 ; BACKGROUND_GREEN ;
 			e_teal         = 0x30, // 0011 0000 ; BACKGROUND_GREEN | BACKGROUND_BLUE ;

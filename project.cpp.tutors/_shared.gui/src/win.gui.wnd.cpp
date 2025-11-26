@@ -4,6 +4,8 @@
 */
 #include "win.gui.wnd.h"
 #include "shared.dbg.h"
+#include "shared.theme.h"
+#include "color._defs.h"
 
 using namespace shared::gui;
 
@@ -52,6 +54,26 @@ err_code  CAppWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_para
 
 	if (WM_DESTROY == _u_code) {
 		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
+	}
+	if (WM_PAINT == _u_code) {
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
+		class CBrush {
+		public:
+			 CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
+			~CBrush (void) { if (this->m_brush){ ::DeleteObject(this->m_brush); this->m_brush = nullptr; }}
+			HBRUSH  Get (void) const { return this->m_brush; }
+		private:
+			HBRUSH m_brush;
+		};
+
+		// https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; returned result: 0 - handled; otherwise not handled;
+		PAINTSTRUCT ps = {0};
+		const HDC h_dc = ::BeginPaint(TBase::Handle(), &ps);
+		::FillRect(h_dc, &ps.rcPaint, CBrush(::Get_theme().Border()).Get());
+		::EndPaint(TBase::Handle(), &ps);
+
+		n_result = 0;
 	}
 
 	if (IMsg_Handler::_n_not_handled == this->Layout().IMsg_OnMessage(_u_code, _w_param, _l_param))

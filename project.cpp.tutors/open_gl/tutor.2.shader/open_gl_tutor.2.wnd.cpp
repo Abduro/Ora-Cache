@@ -135,11 +135,12 @@ err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		__trace_warn_3(_T("The window handle = %s is being destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x"))); 
 		} break;
 	case WM_PAINT  : { // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; returned result: 0 - handled; otherwise not handled;
+#if (0)
 			PAINTSTRUCT ps = {0};
 			const HDC h_dc = ::BeginPaint(TBase::Handle(), &ps);
 			::FillRect(h_dc, &ps.rcPaint, (HBRUSH) (COLOR_ACTIVEBORDER + 1));
 			::EndPaint(TBase::Handle(), &ps);
-
+#endif
 			if (__failed(this->Renderer().Draw()))
 				__trace_err_3(_T("%s;\n"), (_pc_sz) this->Renderer().Error().Print(TError::e_req));
 

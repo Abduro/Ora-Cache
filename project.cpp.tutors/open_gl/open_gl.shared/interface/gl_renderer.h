@@ -7,7 +7,7 @@
 #include "gl_defs.h"
 #include "gl_scene.h"
 #include "gl_viewport.h"
-#include "color._defs.h"
+#include "shared.theme.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace render {
@@ -29,21 +29,11 @@ namespace render {
 		uint32_t m_prim_mode;
 		uint32_t m_start_ndx;
 	};
-
-	class CTheme : private no_copy {
-	public:
-		CTheme (void); ~CTheme (void) = default;
-
-		const rgb_color Bkgnd_rgb (void) const;
-		const v_color&  Bkgnd_flt (void) const;
-
-	private:
-		mutable v_color m_bkgnd;
-	};
 }
+	using CTheme = shared::gui::theme::CTheme;
+
 	class CRenderer {
 	using CCfg = render::CCfg;
-	using CTheme = render::CTheme;
 	private: CRenderer (const CRenderer&) = delete;  CRenderer (CRenderer&&) = delete;
 	public : CRenderer (void); ~CRenderer (void);
 
@@ -61,9 +51,6 @@ namespace render {
 		const
 		CScene& Scene (void) const;
 		CScene& Scene (void) ;
-		const
-		CTheme& Theme (void) const;
-		CTheme& Theme (void) ;
 		const
 		CViewPort& View (void) const;
 		CViewPort& View (void) ;

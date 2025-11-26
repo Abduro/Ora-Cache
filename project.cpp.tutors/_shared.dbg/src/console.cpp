@@ -29,7 +29,7 @@ namespace shared { namespace console  { namespace _impl {
 	class CScreenBuffer {
 		CScreenBuffer (const CScreenBuffer&) = delete; CScreenBuffer (CScreenBuffer&&) = delete;
 	public:
-		CScreenBuffer (void) : m_info{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+		CScreenBuffer (void) : m_info{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; } ~CScreenBuffer(void) {}
 		TError&  Error(void) const { return this->m_error; }
 
 		const
@@ -63,9 +63,78 @@ namespace shared { namespace console  { namespace _impl {
 		mutable TScrBufInfo m_info;
 	};
 
+	class CScreenBufferEx {
+		 CScreenBufferEx (const CScreenBufferEx&) = delete; CScreenBufferEx (CScreenBufferEx&&) = delete;
+	public:
+		 CScreenBufferEx (void) : m_info_ex{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; this->m_info_ex.cbSize = sizeof(TScrBufInfoEx); }
+		~CScreenBufferEx (void) {}
+		TError&  Error(void) const { return this->m_error; }
+
+		err_code Get (void) const {
+			this->m_error >>__METHOD__<<__s_ok;
+			
+			// https://learn.microsoft.com/en-us/windows/console/getconsolescreenbufferinfoex ;
+			if (0 == ::GetConsoleScreenBufferInfoEx (__out_handle, &this->m_info_ex))
+				this->m_error.Last();
+
+			return this->Error();
+		}
+
+		err_code Set (void) {
+			// https://learn.microsoft.com/en-us/windows/console/setconsolescreenbufferinfoex ;
+			::SetConsoleScreenBufferInfoEx(__out_handle, &m_info_ex);
+			return this->Error();
+		}
+
+		const
+		TScrBufInfoEx& Ref (void) const { return this->m_info_ex; }
+		TScrBufInfoEx& Ref (void)       { return this->m_info_ex; }
+
+		operator const TScrBufInfoEx& (void) const { return this->Ref(); }
+		operator       TScrBufInfoEx& (void)       { return this->Ref(); }
+
+		TScrBufInfoEx    operator ()  (void) { this->Get(); return this->m_info_ex; }
+
+	private:
+		CScreenBufferEx& operator = (const CScreenBufferEx&) = delete; CScreenBufferEx& operator = (CScreenBufferEx&&) = delete;
+		mutable CError m_error;
+		mutable TScrBufInfoEx m_info_ex;
+	};
+
 }}}
 
 using namespace shared::console::_impl;
+
+/////////////////////////////////////////////////////////////////////////////
+/* regardless the class fields are initialized by zero,
+   the error state indicates the class is still not initialized, i.e. neither Color() nor Index() is called yet;
+*/
+CFormat::CBkgnd:: CBkgnd (void) : m_clr_ref(0), m_clr_ndx(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CFormat::CBkgnd::~CBkgnd (void) {}
+
+TError& CFormat::CBkgnd::Error (void) const { return this->m_error; }
+
+colorref CFormat::CBkgnd::Color (void) const { return this->m_clr_ref; }
+
+err_code CFormat::CBkgnd::Color (const colorref _clr) {
+	_clr;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CScreenBufferEx buffer_ex;
+	
+	if (__failed(buffer_ex.Get()))
+		return this->m_error = buffer_ex.Error();
+
+	TScrBufInfoEx&  info_set = buffer_ex.Ref();
+	info_set.ColorTable[0] = _clr;
+
+	if (__failed(buffer_ex.Set()))
+		this->m_error = buffer_ex.Error();
+	else
+		this->m_clr_ref;
+
+	return this->Error();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

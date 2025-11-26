@@ -4,7 +4,7 @@
     This is sound-bin-trans receiver desktop console application manifest file.
     ============================================================================
     Adopted to ms.win shell extension gui test project on 17-Nov-2024 at 09:13:27.921, UTC+4, Batumi, Sunday;
-    Adopted to Ebo Pack DirectX & OpenGL tutorials' shared GUI project on 04-Sep at , UTC+4, Batumi, Thursday;
+    Adopted to Ebo Pack DirectX & OpenGL tutorials' shared GUI project on 04-Sep-2025 at 16:56:52.314, UTC+4, Batumi, Thursday;
   -->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity

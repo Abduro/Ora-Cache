@@ -16,7 +16,6 @@ using namespace ex_ui::color::rgb;
 using e_clear_ops = procs::CEraser::e_clear_ops;
 using CConvert    = ex_ui::color::rgb::CConvert; // this class has static method for converting color channel to float value;
 using CHex = ex_ui::color::rgb::CHex;
-using e_element = CReg_router::CTheme::e_element;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -49,25 +48,6 @@ bool     render::CCfg::StartAt (const uint32_t _u_ndx) {
 	return b_changed;
 }
 
-render::CTheme::CTheme (void) : m_bkgnd(4, 0.0f) {}
-
-const rgb_color render::CTheme::Bkgnd_rgb (void) const { return (rgb_color)CHex((_pc_sz)Get_registry().Value(e_element::e_bkgnd)); }
-const v_color&  render::CTheme::Bkgnd_flt (void) const {
-
-	const rgb_color clr = this->Bkgnd_rgb();
-
-	if (0 < this->m_bkgnd.size()) {
-		this->m_bkgnd.at(0) = CConvert::CConvert::ToFloat(get_r_value(clr));
-		if (1 < this->m_bkgnd.size()) {
-			this->m_bkgnd.at(1) = CConvert::CConvert::ToFloat(get_g_value(clr));
-			if (2 < this->m_bkgnd.size()) {
-				this->m_bkgnd.at(2) = CConvert::CConvert::ToFloat(get_b_value(clr));
-				if (3 < this->m_bkgnd.size()) {
-					this->m_bkgnd.at(3) = CConvert::CConvert::ToFloat(get_a_value(clr)); // it is not necessary because it eaquals to 0 always;
-					this->m_bkgnd.at(3) = 1.0f;
-	}	}	}	}
-	return this->m_bkgnd;
-}
 /////////////////////////////////////////////////////////////////////////////
 
 CRenderer:: CRenderer (void) : m_b_allowed (false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
@@ -89,7 +69,7 @@ err_code    CRenderer::Draw (void) {
 		return this->m_error = this->Scene().Prog().Error();
 	}}
 
-	const v_color& clr_bkgnd = this->Theme().Bkgnd_flt();
+	const v_color& clr_bkgnd = ::Get_theme().Bkgnd_flt();
 	if (4 > clr_bkgnd.size()) {
 		return this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: the float color vector size = %u"), clr_bkgnd.size());
 	}
@@ -132,9 +112,6 @@ bool  CRenderer::Is_allowed (const bool _b_state) {
 const
 CScene&     CRenderer::Scene (void) const { return this->m_scene; }
 CScene&     CRenderer::Scene (void)       { return this->m_scene; }
-const
-render::CTheme&  CRenderer::Theme (void) const { return this->m_theme; }
-render::CTheme&  CRenderer::Theme (void)       { return this->m_theme; }
 const
 CViewPort&  CRenderer::View (void) const  { return this->m_view; }
 CViewPort&  CRenderer::View (void)        { return this->m_view; }

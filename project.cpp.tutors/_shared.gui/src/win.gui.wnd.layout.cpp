@@ -249,7 +249,7 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 
 bool     CLayout::Is_valid (void) const { return this->Bottom().Is_valid() && this->Main().Is_valid() && this->Top().Is_valid(); }
 
-err_code CLayout::Recalc  (void) {
+err_code CLayout::Recalc (void) {
 
 	err_code n_result = __s_ok;
 
@@ -257,40 +257,39 @@ err_code CLayout::Recalc  (void) {
 	t_rect rc_client  = layout::CPrimary().Centered(layout::t_size_u{uint32_t(layout::CRatios().Get().at(0).cx), uint32_t(layout::CRatios().Get().at(0).cy)});
 
 	this->Main().ClientArea() = rc_client; // sets the main window client area rectangle;
-	this->Main().Is_locked(true);        // it is set to 'true' by default, but nevertheless;
-
-	// (1.a) calculates the rectangles of the child windows;
-
-	const long n_part  = __H(rc_client) / 3;
-	this->Top().Rect() = { 0, 0, __W(rc_client), __H(rc_client) - n_part };
+	this->Main().Is_locked(true);          // it is set to 'true' by default, but nevertheless;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrect ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex ;
 
-	t_rect rc_pos =  rc_client;
+	t_rect rc_pos = rc_client;
 
 	if (false == !!::AdjustWindowRect(&rc_pos, ::Get_app_wnd().Styles().Std(), false)) {
 		__trace_err_3(_T("%s\n"), (_pc_sz) CError(__CLASS__, __METHOD__, __LastErrToHresult()).Print(TError::e_req)); // just for indicating the error state and continue;
 	}
 	this->Main().Position() = rc_pos; // sets main window position on the screen by already converted rectangle;
 
-	// the console window requires the rectangle in screen coordinates not in the client area one;
-	this->Bottom().Rect() = { rc_pos.left, rc_pos.bottom - n_part, rc_pos.right, rc_pos.bottom };
+	// (1.a) calculates the rectangles of the child windows;
+
+	const long n_part  = __H(rc_client) / 3;
 
 	// (2) sets the rectangles to the child windows;
 	// (2.a) to the window that is at the bottom area, i.e. to the debug output console window;
-#if (1)
+
+	// the console window requires the rectangle in screen coordinates not in the client area one;
+	this->Bottom().Rect() = { rc_pos.left, rc_pos.bottom - n_part, rc_pos.right, rc_pos.bottom };
+
 	// ToDo: setting the child windows' sizes requires the review, it very looks like such approach must be removed or at least be changed;
 	this->Bottom().Size().Height().Set(__H(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
 	this->Bottom().Size().Width().Set(__W(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
 
 	// (2.b) to the window that is at the top area, i.e. to the draw context window;
+	const long u_gap = 7; // ToDo: requires the automatical calculation, not the hard coded one;
+
+	this->Top().Rect() = { 0, 0, __W(rc_client), __H(rc_client) - n_part + u_gap };
 
 	this->Top().Size().Height().Set(__H(this->Top().Rect()), docking::CValue::e_ctrl::e_fixed);
 	this->Top().Size().Width().Set(__W(this->Top().Rect()), docking::CValue::e_ctrl::e_fixed);
-#else
-#endif
-	// this procedure is ended, all child windows has appropriate rectangles;
 
 	return n_result;
 }

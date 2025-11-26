@@ -93,6 +93,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 
+		shared::console::CFormat::CBkgnd con_bkg;
+		con_bkg.Color(::Get_theme().Bkgnd_rgb());
 		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
 		layout.Update();
 		shared::console::CLayout().Output().HScroll().Set(true);
