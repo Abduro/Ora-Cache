@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0002}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000C0006}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,23 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -84,29 +88,30 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
+    <LibName>gl.tutor.3.camera</LibName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
     <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,12 +127,15 @@
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -137,13 +145,15 @@
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -155,7 +165,6 @@
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -193,82 +202,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="$(_0)gl_buffer.h" />
-    <ClCompile Include="$(_1)gl_buffer.cpp" />
-    <ClInclude Include="$(_0-1)gl_$_cache.h" />
-    <ClCompile Include="$(_1-1)gl_$_cache.cpp" />
-    <ClInclude Include="$(_0-0)gl_compiler.h" />
-    <ClCompile Include="$(_1-0)gl_compiler.cpp" />
-    <ClInclude Include="$(_0)gl_context.h" />
-    <ClCompile Include="$(_1)gl_context.cpp" />
-    <ClInclude Include="$(_0)gl_defs.h" />
-    <ClCompile Include="$(_1)gl_defs.cpp" />
-    <ClInclude Include="$(_0)gl_error.h" />
-    <ClCompile Include="$(_1)gl_error.cpp" />
-    <ClInclude Include="$(_0)gl_format.h" />
-    <ClCompile Include="$(_1)gl_format.cpp" />
-    <ClInclude Include="$(_0)gl_procs.h" />
-    <ClCompile Include="$(_1)gl_procs.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_base.h" />
-    <ClCompile Include="$(_1-2)gl_procs_base.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_buffer.h" />
-    <ClCompile Include="$(_1-2)gl_procs_buffer.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_ctx.h" />
-    <ClCompile Include="$(_1-2)gl_procs_ctx.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_prog.h" />
-    <ClCompile Include="$(_1-2)gl_procs_prog.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_shader.h" />
-    <ClCompile Include="$(_1-2)gl_procs_shader.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_surface.h" />
-    <ClCompile Include="$(_1-2)gl_procs_surface.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_vertex.h" />
-    <ClCompile Include="$(_1-2)gl_procs_vertex.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_view.h" />
-    <ClCompile Include="$(_1-2)gl_procs_view.cpp" />
-    <ClInclude Include="$(_0)gl_logs.h" />
-    <ClCompile Include="$(_1)gl_logs.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_id.h" />
-    <ClCompile Include="$(_1-1)gl_prog_id.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_linker.h" />
-    <ClCompile Include="$(_1-1)gl_prog_linker.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_status.h" />
-    <ClCompile Include="$(_1-1)gl_prog_status.cpp" />
-    <ClInclude Include="$(_0)gl_program.h" />
-    <ClCompile Include="$(_1)gl_program.cpp" />
-    <ClInclude Include="$(_0)gl_renderer.h" />
-    <ClCompile Include="$(_1)gl_renderer.cpp" />
-    <ClInclude Include="$(_0)gl_scene.h" />
-    <ClCompile Include="$(_1)gl_scene.cpp" />
-    <ClInclude Include="$(_0)gl_shader.h" />
-    <ClCompile Include="$(_1)gl_shader.cpp" />
-    <ClInclude Include="$(_0-3)gl_shape.2d.h" />
-    <ClCompile Include="$(_1-3)gl_shape.2d.cpp" />
-    <ClInclude Include="$(_0-3)gl_shape.bs.h" />
-    <ClCompile Include="$(_1-3)gl_shape.bs.cpp" />
-    <ClInclude Include="$(_0-0)gl_$_attr.h" />
-    <ClCompile Include="$(_1-0)gl_$_attr.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_id.h" />
-    <ClCompile Include="$(_1-0)gl_shd_id.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_source.h" />
-    <ClCompile Include="$(_1-0)gl_shd_source.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_status.h" />
-    <ClCompile Include="$(_1-0)gl_shd_status.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_type.h" />
-    <ClCompile Include="$(_1-0)gl_shd_type.cpp" />
-    <ClInclude Include="$(_0-0)gl_src_parser.h" />
-    <ClCompile Include="$(_1-0)gl_src_parser.cpp" />
-    <ClInclude Include="$(_0)gl_version.h" />
-    <ClCompile Include="$(_1)gl_version.cpp" />
-    <ClInclude Include="$(_0-4)gl_vertex_data.h" />
-    <ClCompile Include="$(_1-4)gl_vertex_data.cpp" />
-    <ClInclude Include="$(_0-4)gl_vertex_arr.dat.h" />
-    <ClCompile Include="$(_1-4)gl_vertex_arr.dat.cpp" />
-    <ClInclude Include="$(_0-4)gl_vertex_arr.obj.h" />
-    <ClCompile Include="$(_1-4)gl_vertex_arr.obj.cpp" />
-    <ClInclude Include="$(_0-4)gl_vertex_attr.h" />
-    <ClCompile Include="$(_1-4)gl_vertex_attr.cpp" />
-    <ClInclude Include="$(_0)gl_viewport.h" />
-    <ClCompile Include="$(_1)gl_viewport.cpp" />
+    <ClInclude Include="open_gl_tutor.3.wnd.h" />
+    <ClCompile Include="open_gl_tutor.3.wnd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
@@ -277,8 +212,14 @@
     <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
     </ProjectReference>
+    <ProjectReference Include="$(Shared_Clr)shared.clr_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000D0001}</Project>
+    </ProjectReference>
     <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Shared_GL)gl.shared_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

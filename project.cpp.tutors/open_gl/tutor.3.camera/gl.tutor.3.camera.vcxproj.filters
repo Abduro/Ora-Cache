@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\icons">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0063}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="open_gl_tutor.3.module.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="open_gl_tutor.3.module.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="gl.tutor.3.camera.manifest"><Filter>interface</Filter></Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="open_gl_tutor.3.res.h"><Filter>src\resources</Filter></ClInclude>
+    <ResourceCompile Include="open_gl_tutor.3.res.rc"><Filter>src\resources</Filter></ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
+  </ItemGroup>
+</Project>

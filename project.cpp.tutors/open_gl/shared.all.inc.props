@@ -12,7 +12,7 @@
     <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg><!--This is the node of debug output console wrapper;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the node of GUI rich app window composition;-->
-   <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
+    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(Shared)</Root><!--This the parent node of the OpenGL tutorials' solution, not for tutorial projects;-->

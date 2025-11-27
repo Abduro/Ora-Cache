@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 27-Nov-2025 at 00:12:20.526, UTC+4, Batumi,Thursday;
+	This is Ebo pack OpenGL camera tutorial include headers' property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <!--Required include paths are defined in tutor.all.inc.props; it is included to this project too;-->
+    <None Condition="'$(None)'==''"></None>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0></_0>
+    <_1></_1>
+    <_2></_2>
+    <_3></_3>
+    <_4></_4>
+    <_5></_5>
+    <_6></_6>
+    <_7></_7>
+    <_8></_8>
+    <_9></_9>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>
