@@ -44,19 +44,25 @@ namespace ex_ui { namespace popup {
 	interface IKbrd_Handler {
 
 		virtual TError& IKbrd_Error (void) const = 0;
-
+		// https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes ;
+		enum class e_pref_keys : uint32_t {
+			e_down  = VK_DOWN  , // arrow key : 'down' ;
+			e_left  = VK_LEFT  , // arrow key : 'left' ;
+			e_right = VK_RIGHT , // arrow key : 'right';
+			e_up    = VK_UP    , // arrow key : 'up';
+		};
 		/* https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown :
 		   _v_key    : the virtual key code;
 		   _b_repeat : indicates the long pressing the particular key;
 		   _b_extend : the key being pressed is on the extended part of the keyboard;
-
-		   https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes ;
 		*/
 		virtual err_code IKbrd_OnKeyDown (const uint32_t _v_key, const bool _b_repeat, const bool _b_extend) {
 			_v_key; _b_repeat; _b_extend;
 			// __s_ok: handled; __s_false = not handled; otherwise the error code;
 			return __s_false;
 		}
+
+		static CString To_str (const uint32_t _v_key);
 	};
 
 	class CKbrdRouter : public IMsg_Handler {

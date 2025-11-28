@@ -131,6 +131,22 @@ TMsgRouter& Get_router (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+CString  IKbrd_Handler::To_str(const uint32_t _v_key) {
+	_v_key;
+	CString cs_out;
+
+	switch (_v_key) {
+	case (uint32_t) e_pref_keys::e_down  : cs_out = TString().Format(_T("$arr_down (0x%02x)") , _v_key); break;
+	case (uint32_t) e_pref_keys::e_left  : cs_out = TString().Format(_T("$arr_left (0x%02x)") , _v_key); break;
+	case (uint32_t) e_pref_keys::e_right : cs_out = TString().Format(_T("$arr_right (0x%02x)"), _v_key); break;
+	case (uint32_t) e_pref_keys::e_up    : cs_out = TString().Format(_T("$arr_up (0x%02x)"), _v_key); break;
+	default:
+		cs_out.Format(_T("v_key (0x%02x)"), _v_key);
+	}
+
+	return  cs_out;
+}
+
 CKbrdRouter::CKbrdRouter (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 err_code CKbrdRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
@@ -142,7 +158,7 @@ err_code CKbrdRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_p
 
 	// https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input ;
 
-	const uint32_t v_key = static_cast<uint32_t>(_u_code);
+	const uint32_t v_key = static_cast<uint32_t>(_w_param);
 	const uint16_t u_flags = static_cast<uint16_t>(HIWORD(_l_param));
 	const bool b_repeat = !!LOWORD(_l_param);
 	const bool b_extend = !!(u_flags & KF_EXTENDED);

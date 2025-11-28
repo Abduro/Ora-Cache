@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="interface">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0071}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_prec">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0072}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)math.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.defs.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

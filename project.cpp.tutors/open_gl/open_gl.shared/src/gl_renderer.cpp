@@ -57,6 +57,7 @@ TError&  CRenderer::IKbrd_Error (void) const { return this->Error(); }
 
 err_code CRenderer::IKbrd_OnKeyDown (const uint32_t _v_key, const bool _b_repeat, const bool _b_extend) {
 	_v_key; _b_repeat; _b_extend;
+	__trace_info_2(_T("%s;\n"), (_pc_sz) IKbrd_Handler::To_str(_v_key));
 	return __s_false;
 }
 
