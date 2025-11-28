@@ -64,13 +64,13 @@ namespace shared { namespace console {
 	class CFormat {
 	private: CFormat (const CFormat&) = delete; CFormat (CFormat&&) = delete;
 	public : CFormat (void); ~CFormat (void) ;
-		class CBkgnd {
+		class CBkgnd { // https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c ;
 		using e_back_ndx = CColor::e_back_ndx;
 		private: CBkgnd (const CBkgnd&) = delete; CBkgnd (CBkgnd&&) = delete;
 		public : CBkgnd (void); ~CBkgnd (void);
 		
 			TError& Error (void) const;
-
+			// https://stackoverflow.com/a/46656810/4325555 ; good example of how to set rgb color to background of the console output;
 			colorref Color (void) const;      // gets background color that is currently set to console output;
 			err_code Color (const colorref);  // sets background color to console output;
 

@@ -50,8 +50,15 @@ bool     render::CCfg::StartAt (const uint32_t _u_ndx) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CRenderer:: CRenderer (void) : m_b_allowed (false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-CRenderer::~CRenderer (void) {}
+CRenderer:: CRenderer (void) : m_b_allowed (false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; ::Get_kbrd().Subscribe(this); }
+CRenderer::~CRenderer (void) { ::Get_kbrd().Unsubscribe(this); }
+
+TError&  CRenderer::IKbrd_Error (void) const { return this->Error(); }
+
+err_code CRenderer::IKbrd_OnKeyDown (const uint32_t _v_key, const bool _b_repeat, const bool _b_extend) {
+	_v_key; _b_repeat; _b_extend;
+	return __s_false;
+}
 
 const
 render::CCfg&  CRenderer::Cfg (void) const { return this->m_cfg; }

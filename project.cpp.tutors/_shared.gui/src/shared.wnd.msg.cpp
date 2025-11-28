@@ -11,20 +11,17 @@ using namespace ex_ui::popup;
 
 using CSyncObject = shared::sys_core::CSyncObject;
 
-CSyncObject& SafeGuardRef(void)
-{
-	static CSyncObject crt_sect;
-	return crt_sect;
-}
+CSyncObject& MsgGuardRef(void) { static CSyncObject crt_sect; return crt_sect; }
+CSyncObject& MsgKbrdRef(void) { static CSyncObject crt_sect; return crt_sect; }
 
-#define Router_Safe_Lock() Safe_Lock(SafeGuardRef());
+#define Kbrd_Safe_Lock() Safe_Lock(MsgKbrdRef());
+#define Router_Safe_Lock() Safe_Lock(MsgGuardRef());
 
 typedef ::std::map<const HWND, IMsg_Handler*> THandlers; // the reference to handle interface cannot be used here;
+typedef ::std::set<const IKbrd_Handler*> TKbrdHandlers;
 
-THandlers& Get_handlers (void) {
-	static THandlers handlers;
-	return handlers;
-}
+THandlers& Get_handlers (void) { static THandlers handlers; return handlers; }
+TKbrdHandlers& Get_kbrds (void) { static TKbrdHandlers handlers; return handlers; }
 
 static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param _w_param, l_param _l_param)  {
 	_h_wnd; _msg_id; _w_param; _l_param;
@@ -50,35 +47,18 @@ static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param 
 	case WM_CLOSE   :
 	case WM_DESTROY : {
 		n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
-#if (0)
-		#define btns_info (MB_OK|MB_ICONINFORMATION)
-
-		CString cs_cap = TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		CString cs_msg ;
-
-		switch (_msg_id) {
-		case WM_CREATE : cs_msg = _T("wm_create"); break;
-		case WM_CLOSE  : cs_msg = _T("wm_close"); break;
-		case WM_DESTROY: cs_msg = _T("wm_destroy"); break;
-		default:
-			cs_msg = _T("#undef");
-		}
-
-		cs_msg.Format (_T("On message=%s"), (_pc_sz)cs_msg);
-
-		::MessageBox(
-				0, (_pc_sz) cs_msg,
-					(_pc_sz) cs_cap , btns_info
-			);
-#endif
 	} break;
-	case WM_MOVING :
-	case WM_SIZE   :
-	case WM_SIZING :
+//	case WM_CHAR    :
+	case WM_KEYDOWN : {
+		n_result = ::Get_kbrd().IMsg_OnMessage(_msg_id, _w_param, _l_param); // implicit conversion of h_result to l_result is not good;
+	} break;
+	case WM_MOVING  :
+	case WM_SIZE    :
+	case WM_SIZING  :
 	case WM_WINDOWPOSCHANGING: {
 		n_result = it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param);
 	} break;
-	case WM_PAINT  : { // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; l_param and w_param are not used;
+	case WM_PAINT   : { // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; l_param and w_param are not used;
 		n_result = it_->second->IMsg_OnMessage(_msg_id, 0, 0);
 	} break;
 #if (0)
@@ -144,9 +124,93 @@ err_code CMsgRouter::Unsubscribe (const HWND _h_wnd) {
 	return this->Error();
 }
 
+TMsgRouter& Get_router (void) {
+	static TMsgRouter router;
+	return router;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-TRouter&  Get_router (void) {
-	static TRouter router;
-	return router;
+CKbrdRouter::CKbrdRouter (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+err_code CKbrdRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
+	_u_code; _w_param; _l_param;
+
+	Kbrd_Safe_Lock();
+
+	err_code n_result = __s_false; // the message is not handled;
+
+	// https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input ;
+
+	const uint32_t v_key = static_cast<uint32_t>(_u_code);
+	const uint16_t u_flags = static_cast<uint16_t>(HIWORD(_l_param));
+	const bool b_repeat = !!LOWORD(_l_param);
+	const bool b_extend = !!(u_flags & KF_EXTENDED);
+
+	TKbrdHandlers& handlers = Get_kbrds();
+
+	for (TKbrdHandlers::iterator it_ = handlers.begin(); it_ != handlers.end(); ++it_) {
+		if (nullptr == *it_)
+			continue;
+		const IKbrd_Handler* p_handler = *it_;
+		n_result = const_cast<IKbrd_Handler*>(p_handler)->IKbrd_OnKeyDown(v_key, b_repeat, b_extend);
+		if (__s_ok == n_result)
+			break;
+		else if (__s_false == n_result)
+			continue;
+		else {
+			this->m_error = p_handler->IKbrd_Error(); break;
+		}
+	}
+
+	return n_result;
+}
+
+TError&  CKbrdRouter::Error (void) const { return this->m_error; }
+
+err_code CKbrdRouter::Subscribe (const IKbrd_Handler* _p_handler) {
+	_p_handler;
+
+	Kbrd_Safe_Lock();
+
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_handler)
+		return this->m_error <<__e_pointer;
+
+	TKbrdHandlers::const_iterator it_ = Get_kbrds().find(_p_handler);
+	if (it_ != Get_kbrds().end())
+		return this->m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(_T("The handler = %s is already subscribed"), TString()._addr_of(_p_handler, _T("0x%08x")));
+
+	try {
+		Get_kbrds().insert(_p_handler);
+	}
+	catch (const ::std::bad_alloc&) {
+		this->m_error << __e_no_memory;
+	}
+
+	return this->Error();
+}
+
+err_code CKbrdRouter::Unsubscribe (const IKbrd_Handler* _p_handler) {
+	_p_handler;
+
+	Kbrd_Safe_Lock();
+
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TKbrdHandlers& handlers = Get_kbrds();
+
+	TKbrdHandlers::iterator it_ = handlers.find(_p_handler);
+	if (it_ == handlers.end())
+		return this->m_error << (err_code) TErrCodes::eData::eNotFound = TString().Format(_T("The handler = %s is not found"), TString()._addr_of(_p_handler, _T("0x%08x")));;
+
+	handlers.erase(it_);
+
+	return this->Error();
+}
+
+TKbrdRouter& ::Get_kbrd (void) {
+	static TKbrdRouter kbrd_router;
+	return kbrd_router;
 }

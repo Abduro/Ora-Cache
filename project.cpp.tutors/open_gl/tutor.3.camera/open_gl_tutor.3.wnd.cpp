@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 26-Aug-2025 at 03:01:10.215, UTC+4, Batumi, Tuesday;
-	This is Ebo Pack OpenGL tutorials' shader window interface implementation file;
+	This is Ebo Pack OpenGL tutorials' camera window interface implementation file;
 	-----------------------------------------------------------------------------
 	Adopted to OpenGL tutorials' camera project on 27-Nov-2025 at 00:42:54.941, UTC+4, Batumi, Thursday;
 */
@@ -10,11 +10,11 @@
 #include "shared.dbg.h"
 
 using namespace ex_ui::draw::open_gl;
-using namespace ex_ui::draw::open_gl::shader;
+using namespace ex_ui::draw::open_gl::camera;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
+namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
-shader::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
+camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
 
 	if (this->m_fak_wnd.Is_valid() == false) {
 		TBase::m_error = m_fak_wnd.Error();
@@ -36,12 +36,12 @@ shader::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("sha
 	}
 #endif
 }
-shader::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
+camera::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
 	if (this->Renderer().Scene().Ctx().Device().Is_valid())
 	    this->Renderer().Scene().Ctx().Device().Destroy();
 }
 
-err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
+err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
 	_h_parent; _rc_wnd_pos; _b_visible;
 	TBase::m_error << __METHOD__ << __s_ok;
 
@@ -70,13 +70,13 @@ err_code shader::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 	return TBase::Error();
 }
-err_code shader::CWnd::PostCreate (void) {
+err_code camera::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	// at the first step the opengl draw renderer must be created;
 	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
 
-	CString cs_cls = TString().Format(_T("shader::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
+	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
 	this->Renderer().Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
 	this->Renderer().Scene().Ctx().Draw().Target() << *this;
 	if (__failed(this->Renderer().Scene().Ctx().Draw().Create(4, 6))) { // ToDo: the version numbers (major & minor) must be set from version query not hardcoded;
@@ -100,7 +100,7 @@ err_code shader::CWnd::PostCreate (void) {
 	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
 	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 #else
-	// sets the option of the shader source configuration to use external shader source files;
+	// sets the option of the camera source configuration to use external camera source files;
 	CProgram& prog = this->Renderer().Scene().Prog();
 	if (__failed(prog.Shaders().Fragment().Src().Cfg().Path($Type::e_fragment)))
 	    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
@@ -121,14 +121,14 @@ err_code shader::CWnd::PostCreate (void) {
 	return TBase::Error();
 }
 
-err_code shader::CWnd::Destroy (void) {
+err_code camera::CWnd::Destroy (void) {
 	this->Renderer().Is_allowed(false);     // stops draw operation of the renderer;
 	this->Renderer().Scene().Destroy();     // the error output to the trace is made by the method being called;
 	this->Renderer().Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
 	return __s_ok;
 }
 
-err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
+err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
 	switch (_u_code) {
 	// this message is very important for required cleaning up of the draw pipeline components, the result is kept as unhandled;
@@ -163,7 +163,7 @@ err_code shader::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 }
 
 const
-CRenderer&  shader::CWnd::Renderer (void) const { return this->m_renderer; }
-CRenderer&  shader::CWnd::Renderer (void)       { return this->m_renderer; }
+CRenderer&  camera::CWnd::Renderer (void) const { return this->m_renderer; }
+CRenderer&  camera::CWnd::Renderer (void)       { return this->m_renderer; }
 
 }}}}

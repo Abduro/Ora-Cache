@@ -193,7 +193,7 @@ typedef shared::sys_core::storage::CRegKey_Ex TRegKeyEx;
 typedef TRegKeyEx::CCache TKeyCache;
 typedef TRegKeyEx::CValue TKeyValue;
 
-shared::sys_core::storage::CReg_router&  Get_router (void); // returns the reference to the singleton of the router object;
+shared::sys_core::storage::CReg_router&  Get_reg_router (void); // returns the reference to the singleton of the router object;
 shared::sys_core::storage::CRegistry&  Get_registry (void); // returns the reference to the singleton of the registry object;
 
 #endif/*_SYS_REGISTRY_H_INCLUDED*/

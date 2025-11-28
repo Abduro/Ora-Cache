@@ -67,8 +67,6 @@ END
 	a missing newline character (\n) after a preprocessor directive or comment can cause subsequent lines to be interpreted incorrectly.
 */
 
-STRINGTABLE {}
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST

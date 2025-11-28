@@ -11,7 +11,7 @@
 
 namespace ex_ui { namespace color { namespace rgb {
 
-	using namespace shared::types; // is declared in 'shared.types.h';
+	using namespace ex_ui::color;
 
 	using TPercent = TPct_Flt;
 	// perhaps it would be better to consider RGBQUAD as the base for this class:

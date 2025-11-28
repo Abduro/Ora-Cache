@@ -41,10 +41,44 @@ namespace ex_ui { namespace popup {
 		friend CMsgRouter& Get_router(void); // it is not necessary for the current implementation of this class;
 	};
 
+	interface IKbrd_Handler {
+
+		virtual TError& IKbrd_Error (void) const = 0;
+
+		/* https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown :
+		   _v_key    : the virtual key code;
+		   _b_repeat : indicates the long pressing the particular key;
+		   _b_extend : the key being pressed is on the extended part of the keyboard;
+
+		   https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes ;
+		*/
+		virtual err_code IKbrd_OnKeyDown (const uint32_t _v_key, const bool _b_repeat, const bool _b_extend) {
+			_v_key; _b_repeat; _b_extend;
+			// __s_ok: handled; __s_false = not handled; otherwise the error code;
+			return __s_false;
+		}
+	};
+
+	class CKbrdRouter : public IMsg_Handler {
+	public:
+		CKbrdRouter (void); ~CKbrdRouter (void) = default;
+
+		err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) override final;
+
+		TError& Error (void) const;
+
+		err_code Subscribe (const IKbrd_Handler*);
+		err_code Unsubscribe (const IKbrd_Handler*);
+
+	private:
+		CError m_error;
+
+		CKbrdRouter (const CKbrdRouter&) = delete; CKbrdRouter (CKbrdRouter&&) = delete;
+		CKbrdRouter& operator = (const CKbrdRouter&) = delete;  CKbrdRouter& operator = (CKbrdRouter&&) = delete;
+	};
 }}
 
-typedef ex_ui::popup::CMsgRouter TRouter;
-
-TRouter& Get_router (void);
+typedef ex_ui::popup::CKbrdRouter TKbrdRouter; TKbrdRouter& Get_kbrd (void);
+typedef ex_ui::popup::CMsgRouter TMsgRouter; TMsgRouter& Get_router (void);
 
 #endif/*_SHARED_WND_MSG_H_INCLUDED*/

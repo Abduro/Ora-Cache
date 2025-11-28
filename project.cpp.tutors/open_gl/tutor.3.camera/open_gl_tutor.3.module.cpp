@@ -19,7 +19,7 @@
 #include "shapes\gl_shape.2d.h"
 #pragma endregion
 using namespace ex_ui::draw::open_gl;
-using namespace ex_ui::draw::open_gl::shader;
+using namespace ex_ui::draw::open_gl::camera;
 using namespace shared::console;
 using namespace shared::gui;
 
@@ -109,7 +109,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) cam_wnd.Error().Print(TError::e_req)); // debug output console window is already created;
 		}
 		else
-			layout.Top().Target($_wnd);
+			layout.Top().Target(cam_wnd);
 		// (2.a) tries to set shaders source code from this executable resources;
 		//  *important*: no scene preparation is called before setting the shape;
 		if (__failed(cam_wnd.PostCreate())) {
@@ -163,7 +163,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 		if (false == b_error) {
-			if (__failed($_wnd.Renderer().Draw())) // perhaps this function must check for changing the draw data before draw it;
+			if (__failed(cam_wnd.Renderer().Draw())) // perhaps this function must check for changing the draw data before draw it;
 				b_error = true;
 			::Sleep(10);
 		}

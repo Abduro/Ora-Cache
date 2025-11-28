@@ -7,6 +7,8 @@
 #include "gl_defs.h"
 #include "gl_scene.h"
 #include "gl_viewport.h"
+
+#include "shared.wnd.msg.h"
 #include "shared.theme.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
@@ -30,12 +32,17 @@ namespace render {
 		uint32_t m_start_ndx;
 	};
 }
+
+	using IKbrd_Handler = ex_ui::popup::IKbrd_Handler;
 	using CTheme = shared::gui::theme::CTheme;
 
-	class CRenderer {
+	class CRenderer : public IKbrd_Handler {
 	using CCfg = render::CCfg;
 	private: CRenderer (const CRenderer&) = delete;  CRenderer (CRenderer&&) = delete;
 	public : CRenderer (void); ~CRenderer (void);
+
+		TError&  IKbrd_Error (void) const;
+		err_code IKbrd_OnKeyDown (const uint32_t _v_key, const bool _b_repeat, const bool _b_extend) override final;
 
 		const
 		CCfg& Cfg (void) const;

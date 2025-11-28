@@ -109,7 +109,8 @@ bool CQuad::Is (void) const { return this->ToRgbA() != clr_max; }
 const bool  CQuad::Is(void) const {
 	return this->m_valid;
 }
-      bool& CQuad::Is(void)       { return this->m_valid; }
+
+bool& CQuad::Is(void) { return this->m_valid; }
 #endif
 #ifdef _DEBUG
 CString CQuad::Print (const e_print e_opt) const {

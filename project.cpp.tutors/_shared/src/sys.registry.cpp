@@ -66,7 +66,7 @@ CString CReg_router::CShaders::Path (const e_shaders _shader) const {
 _pc_sz  CReg_router::CShaders::Root (void) const {
 
 	if (_impl::cs_$_root.IsEmpty()) {
-		_impl::cs_$_root.Format(_T("%s\\shaders"), (_pc_sz) Get_router().Root().Path(Get_router().Root().Renderer()));
+		_impl::cs_$_root.Format(_T("%s\\shaders"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
 	}
 	return (_pc_sz)_impl::cs_$_root;
 }
@@ -88,7 +88,7 @@ CString CReg_router::CTheme::Path (const e_element _element) const {
 _pc_sz  CReg_router::CTheme::Root (void) const {
 
 	if (_impl::cs_theme.IsEmpty()) {
-		_impl::cs_theme.Format(_T("%s\\theme"), (_pc_sz) Get_router().Root().Path(Get_router().Root().Renderer()));
+		_impl::cs_theme.Format(_T("%s\\theme"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
 	}
 	return (_pc_sz)_impl::cs_theme;
 }
@@ -116,7 +116,7 @@ const
 CReg_router::CTheme&  CReg_router::Theme (void) const { return this->m_theme; }
 CReg_router::CTheme&  CReg_router::Theme (void)       { return this->m_theme; }
 
-CReg_router& ::Get_router (void) {
+CReg_router& ::Get_reg_router (void) {
 	static CReg_router router;
 	return router;
 }
@@ -133,7 +133,7 @@ CString  CRegistry::Value (const e_element& _element) const {
 
 	CRegKey_Ex reg_key;
 
-	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_router().Theme().Path(_element), CReg_router::CTheme::To_str(_element));
+	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_reg_router().Theme().Path(_element), CReg_router::CTheme::To_str(_element));
 	if (cs_value.IsEmpty())
 		this->m_error = reg_key.Error();
 
@@ -151,7 +151,7 @@ CString  CRegistry::Value (const e_shaders _e_shader, _pc_sz _p_name) const {
 
 	CRegKey_Ex reg_key;
 
-	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_router().Shaders().Path(_e_shader), _p_name);
+	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_reg_router().Shaders().Path(_e_shader), _p_name);
 	if (cs_value.IsEmpty())
 		this->m_error = reg_key.Error();
 
@@ -249,7 +249,7 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_key_path, _pc_sz _p_name) {
 
 	LSTATUS n_result = __s_ok;
 	if (nullptr == m_the_key()){
-		n_result = m_the_key().Open(Get_router().Root().Key(), (_pc_sz) _p_key_path);
+		n_result = m_the_key().Open(Get_reg_router().Root().Key(), (_pc_sz) _p_key_path);
 		if (!!n_result) {
 			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), (_pc_sz)_p_key_path); return CString();
 		}
