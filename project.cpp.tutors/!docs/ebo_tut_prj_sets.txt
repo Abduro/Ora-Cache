@@ -75,4 +75,11 @@ and finally, that is very important, it is required to specify the implementatio
     </ClCompile>
   </ItemGroup>
 
+:: some projects' link operation may throw the exception:
+error LNK2019: unresolved external symbol _WinMain@16 referenced in function ___tmainCRTStartup
+this is the question how to solve this error:
+https://stackoverflow.com/questions/6626397/error-lnk2019-unresolved-external-symbol-winmain16-referenced-in-function ;
+this is the answer:
+https://stackoverflow.com/a/8732076/4325555 ;
+Properties -> Linker -> Command line >> /ENTRY:"mainCRTStartup" ;
 :: the end of story;

@@ -2,9 +2,78 @@
 #define __MATH_DEFS_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 29-Nov-2025 at 03:10:43.568, UTC+4, Batumi, Saturday;
-	This is Ebo Pack OpenGL tutorials' vector and matrix interface declaration file;
+	This is Ebo Pack OpenGL tutorials' geometry generic elements' interface declaration file;
 */
+#include "shared.defs.h"
+
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
+
+	using namespace shared::defs;
+
+	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;
+	// https://learn.microsoft.com/en-us/cpp/cpp/user-defined-literals-cpp ;
+
+	typedef ::std::array<float, 2ul> t_set_2;
+	typedef ::std::vector<float>  t_dyna_set;
+
+namespace _2d {
+
+	enum class e_index : uint32_t {
+		_0 = 0,
+		_1 = 1,
+	};
+
+	// the array is good for fixed size containers or data sets, but what's about inheritance: e.g. point_3d is inherited from from point_2d;
+	// https://stackoverflow.com/questions/42238712/change-array-size-c ;
+
+	class CPoint {
+	public:
+		CPoint (void); CPoint (const CPoint&); CPoint (CPoint&&); ~CPoint (void);
+		CPoint (const float _x, const float _y);
+
+		const
+		float  x (void) const;
+		float& x (void) ;
+		void   x (const float);
+		const
+		float  y (void) const;
+		float& y (void) ;
+		void   y (const float);
+
+		void  Set (const float _x, const float _y);
+
+	public:
+		CPoint& operator = (const CPoint&);
+		CPoint& operator = (CPoint&&);       // no swap values operation yeat, just copying;
+		CPoint& operator <<(const float _x);
+		CPoint& operator >>(const float _y);
+
+		float&  operator [](const e_index);
+
+	protected:
+		float m_x, m_y;
+	};
+}
+namespace _3d {
+	class CPoint : public _2d::CPoint { typedef _2d::CPoint TBase;
+	public:
+		CPoint (void); CPoint (const CPoint&); CPoint (CPoint&&); ~CPoint (void);
+		CPoint (const float _x, const float _y,  const float _z);
+
+		const
+		float  z (void) const;
+		float& z (void) ;
+		void   z (const float);
+
+	public:
+		CPoint& operator = (const CPoint&);
+		CPoint& operator = (CPoint&&); 
+		CPoint& operator ^ (const float _z);
+
+	protected:
+		float m_z;
+	};
+}
 }}}}
 
 #endif/*__MATH_DEFS_H_INCLUDED*/

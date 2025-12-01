@@ -10,7 +10,8 @@
 	[tutors]  : {00000C13-EEEE-BBBB-6667-100000000001} << the sub-root of the tutorial projects;
 	[DirecX]  : {00000C13-EEEE-BBBB-6667-100000000003} << the sub-root for DirectX tutorials;
 	[OpenGL]  : {00000C13-EEEE-BBBB-6667-100000000002} << the sub-root for OpenGL tutorials;
-		open_gl.shared  : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project for OpenGL tutorials;
+		open_gl.math    : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
+		open_gl.shared  : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;
 
 	[tutor.0.fake] : {00000C13-EEEE-BBBB-6667-100000000020} << the node of the fake window project tutorial;
 	   gl.tutor.0.fake    : {00000C13-EEEE-BBBB-6667-0000000B0003} << the tutorial for creating OpenGL context based on fake window;
