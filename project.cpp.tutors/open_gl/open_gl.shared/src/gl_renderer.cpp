@@ -70,7 +70,9 @@ err_code    CRenderer::Draw (void) {
 
 	if (false == this->Is_allowed())
 		return this->Error();
-
+#if (0)
+	this->View().Grid().Draw();
+#endif
 	if (false == this->Scene().Prog().Status().Is_current()) {
 	if (__failed(this->Scene().Prog().Use())) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Prog().Error().Print(TError::e_print::e_req));
