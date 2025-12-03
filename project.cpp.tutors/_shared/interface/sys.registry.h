@@ -70,6 +70,50 @@ namespace shared { namespace sys_core { namespace storage {
 			CTheme& operator = (const CTheme&) = delete; CTheme& operator = (CTheme&&) = delete;
 		};
 
+		class CViewport {
+		public:
+			class CGrid {
+			public:
+				class CCell {
+				public:
+					enum e_values : uint32_t {
+					e_height = 0x0,
+					e_width  = 0x1,
+					};
+				public:
+					CCell (void); CCell (const CCell&) = delete; CCell (CCell&&) = delete; ~CCell (void) = default;
+
+					_pc_sz  Root (void) const;
+					CString Value (const e_values) const; // gets value name for input enumeration element;
+
+				private:
+					CCell& operator = (const CCell&) = delete; CCell& operator = (CCell&&) = delete;
+				};
+			public:
+				CGrid (void); CGrid (const CGrid&) = delete; CGrid (CGrid&&) = delete; ~CGrid (void) = default;
+				const
+				CCell& Cell (void) const;
+				CCell& Cell (void) ;
+				_pc_sz Root (void) const;
+
+				_pc_sz Clr_name (void) const; // returns grid lines color value name;
+
+			private:
+				CGrid& operator = (const CGrid&) = delete; CGrid& operator = (CGrid&&) = delete;
+				CCell  m_cell;
+			};
+		public:
+			CViewport (void); CViewport (const CViewport&) = delete; CViewport (CViewport&&) = delete; ~CViewport (void) = default;
+			const
+			CGrid&   Grid (void) const;
+			CGrid&   Grid (void) ;
+			_pc_sz   Root (void) const;  // gets root key path of the viewport component;
+
+		private:
+			CViewport& operator = (const CViewport&) = delete; CViewport& operator = (CViewport&&) = delete;
+			CGrid m_grid;
+		};
+
 	public:
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
 		~CReg_router (void) ;
@@ -83,14 +127,18 @@ namespace shared { namespace sys_core { namespace storage {
 		const
 		CTheme& Theme (void) const;
 		CTheme& Theme (void) ;
+		const
+		CViewport& Viewport (void) const;
+		CViewport& Viewport (void) ;
 
 	private:
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
 
-		CRoot    m_root;
-		CShaders m_shaders;
-		CTheme   m_theme;
+		CRoot     m_root;
+		CShaders  m_shaders;
+		CTheme    m_theme;
+		CViewport m_v_port;
 	};
 
 	class CRegistry {
@@ -140,6 +188,9 @@ namespace shared { namespace sys_core { namespace storage {
 			const
 			CCache& Cache (void) const;
 			CCache& Cache (void) ;
+
+			uint32_t GetDword (_pc_sz _p_name);
+			uint32_t GetDword (_pc_sz _p_key_path, _pc_sz _p_name);
 
 			CString GetString (_pc_sz _p_name); // it is assumed the key is already open; empty value name means (default);
 			CString GetString (_pc_sz _p_key_path, _pc_sz _p_name)/* const*/; // returns empty string in case of error;

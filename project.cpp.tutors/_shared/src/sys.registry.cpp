@@ -104,6 +104,64 @@ _pc_sz  CReg_router::CTheme::To_str (const e_element _element) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+using CCell = CReg_router::CViewport::CViewport::CGrid::CCell;
+using CGrid = CReg_router::CViewport::CViewport::CGrid;
+using CViewport = CReg_router::CViewport;
+
+CCell::CCell (void) {}
+
+_pc_sz CCell::Root (void) const {
+
+	static CString cs_cell;
+
+	if (cs_cell.IsEmpty()) {
+		cs_cell.Format(_T("%s\\cell"), (_pc_sz) Get_reg_router().Viewport().Grid().Root());
+	}
+	return (_pc_sz)cs_cell;
+}
+
+CString CCell::Value (const e_values _e_value) const {
+	_e_value;
+	if (e_values::e_height == _e_value) return CString(_T("height"));
+	if (e_values::e_width == _e_value) return CString(_T("width"));
+
+	return CString(_T("")); // this is '(default)' value name;
+}
+
+CGrid::CGrid (void) {}
+const
+CCell& CGrid::Cell (void) const { return m_cell; }
+CCell& CGrid::Cell (void)       { return m_cell; }
+
+_pc_sz CGrid::Clr_name (void) const { static _pc_sz p_clr_name = _T("color"); return p_clr_name; }
+
+_pc_sz CGrid::Root (void) const {
+
+	static CString cs_grid;
+
+	if (cs_grid.IsEmpty()) {
+		cs_grid.Format(_T("%s\\grid"), (_pc_sz) Get_reg_router().Viewport().Root());
+	}
+	return (_pc_sz)cs_grid;
+}
+
+CViewport::CViewport (void) {}
+const
+CGrid& CViewport::Grid (void) const { return this->m_grid; }
+CGrid& CViewport::Grid (void)       { return this->m_grid; }
+
+_pc_sz CViewport::Root (void) const {
+
+	static CString cs_viewport;
+
+	if (cs_viewport.IsEmpty()) {
+		cs_viewport.Format(_T("%s\\viewport"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
+	}
+	return (_pc_sz) cs_viewport;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CReg_router:: CReg_router (void) {}
 CReg_router::~CReg_router (void) {}
 const
@@ -115,6 +173,9 @@ CReg_router::CShaders& CReg_router::Shaders (void)       { return this->m_shader
 const
 CReg_router::CTheme&  CReg_router::Theme (void) const { return this->m_theme; }
 CReg_router::CTheme&  CReg_router::Theme (void)       { return this->m_theme; }
+const
+CReg_router::CViewport& CReg_router::Viewport (void) const { return this->m_v_port; }
+CReg_router::CViewport& CReg_router::Viewport (void)       { return this->m_v_port; }
 
 CReg_router& ::Get_reg_router (void) {
 	static CReg_router router;
@@ -215,6 +276,43 @@ CRegKey_Ex::CValue:: CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
 const
 CRegKey_Ex::CCache& CRegKey_Ex::CValue::Cache (void) const { return this->m_cache; }
 CRegKey_Ex::CCache& CRegKey_Ex::CValue::Cache (void)       { return this->m_cache; }
+
+uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
+	_p_name;
+	if (nullptr == m_the_key()){
+		m_the_key.m_error <<__METHOD__<< __e_not_inited; return 0u;
+	}
+	else
+		(*this)() >> _p_name;  // puts the name to the cache;
+
+	dword d_value  = 0;
+	LSTATUS n_result = m_the_key().QueryDWORDValue((_pc_sz) _p_name, d_value);
+	if (!!n_result) {
+		(m_the_key.m_error = dword(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
+		return 0u;
+	}
+	else
+		return static_cast<uint32_t>(d_value);
+}
+
+uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_key_path, _pc_sz _p_name) {
+	_p_key_path; _p_name;
+	m_the_key[(long)0] <<__METHOD__<<__s_ok;
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
+		m_the_key.m_error << __e_inv_arg = _T("Input registry key path is invalid"); return 0u;
+	}
+	else
+		(*this)() << _p_key_path; // puts the path to the cache;
+
+	LSTATUS n_result = __s_ok;
+	if (nullptr == m_the_key()){
+		n_result = m_the_key().Open(Get_reg_router().Root().Key(), (_pc_sz) _p_key_path);
+		if (!!n_result) {
+			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), (_pc_sz)_p_key_path); return 0u;
+		}
+	}
+	return this->GetDword(_p_name);
+}
 
 CString CRegKey_Ex::CValue::GetString (_pc_sz _p_name) {
 	_p_name;
