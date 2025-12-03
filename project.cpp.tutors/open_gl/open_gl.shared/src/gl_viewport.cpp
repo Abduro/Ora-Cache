@@ -29,8 +29,16 @@ uint32_t view::CGrid::CCell::Width  (void) const { return this->m_size.cx; }
 bool     view::CGrid::CCell::Width  (const uint32_t _u_val) { if (this->Width()  != _u_val) { this->m_size.cx = _u_val; return true; } else return false; }
 
 bool   view::CGrid::CCell::Is_valid (void) const { return this->Height() && this->Width(); }
-
-bool   view::CGrid::CCell::Set (const uint32_t _u_width, const uint32_t _u_height) {
+bool   view::CGrid::CCell::Is_valid (const t_size_u& _u_size, CError& _err) {
+	_u_size; _err;
+	if (0 == _u_size.cx || 0 == _u_size.cy) {
+		_err <<__e_not_inited = TString().Format(_T("#__e_not_init: cell size {w=%u;h=%u} is invalid"), _u_size.cx, _u_size.cy);
+	}
+	return false == _err;
+}
+const
+t_size_u& view::CGrid::CCell::Get (void) const { return this->m_size; }
+bool      view::CGrid::CCell::Set (const uint32_t _u_width, const uint32_t _u_height) {
 	_u_width; _u_height;
 	bool b_changed = false;
 
@@ -132,21 +140,73 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	_u_size;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (0 == _u_size.cx || 0 == _u_size.cy)
-		return this->m_error <<__e_inv_arg;
+	if (CViewPort::Is_valid(_u_size, this->m_error) == false)
+		return this->Error();
 
-	if (false == this->Cell().Is_valid())
-		return this->m_error <<__e_not_inited = TString().Format(_T("#__e_not_init: cell size {w=%u;h=%u} is not valid"), this->Cell().Width(), this->Cell().Height());
+	const t_size_u& c_size = this->Cell().Get();
 
-	const t_point pt_center = {
+	if (false == view::CGrid::CCell::Is_valid(c_size, this->m_error))
+		return this->Error();
+
+	t_point pt_center = {
 		static_cast<long>(_u_size.cx / 2), static_cast<long>(_u_size.cy / 2)
-	};
+	}; pt_center;
+
+	::std::set<uint32_t> x_markers;
+	::std::set<uint32_t> y_markers;
+
+	uint32_t iter = 0;
 
 	try {
-		if (this->m_vertices.Items().empty() == false)
-			this->m_vertices.Items().clear();
+		x_markers.insert(pt_center.x);
+		y_markers.insert(pt_center.y);
+
+		uint32_t x_iter = _u_size.cx / 2;
+
+		// (1) marks line x-coords;
+		// (1.a) from the center to the left side;
+		while (x_iter - c_size.cx > 0) { x_markers.insert(x_iter -= c_size.cx); }
+		// (1.b) from the center to the right side;
+		x_iter = _u_size.cx / 2;
+		while (x_iter + c_size.cx < _u_size.cx) { x_markers.insert(x_iter += c_size.cx); }
+
+		uint32_t y_iter = _u_size.cy / 2;
+
+		// (2) marks line y-coords;
+		// (2.a) from the center to the top side;
+		while (y_iter - c_size.cy > 0) { y_markers.insert(y_iter -= c_size.cy); }
+		// (2.b) from the center to the bottom side;
+		y_iter = _u_size.cy / 2;
+		while (y_iter + c_size.cy < _u_size.cy) { y_markers.insert(y_iter += c_size.cy); }
+
+		// (3) calculates the number of required vertices for drawing grid lines;
+		const uint32_t u_count = static_cast<uint32_t>((x_markers.size() + y_markers.size())) * 2;
+
+		this->m_vert_dat.resize (u_count * 3);
+		this->m_vert_dat.reserve(u_count * 3);
+
+		t_set_3 coord = {0.0f};
+
+		if (__failed(this->m_vertices.Count(u_count))) {
+			return this->m_error = this->m_vertices.Error();
+		}
+
+		// (4) creates vertices for horizontal lines;
+		for (::std::set<uint32_t>::const_iterator it_y = y_markers.begin(); it_y != y_markers.end(); ++it_y) {
+		// (4.a) gets the left side point of the line;
+			CViewPort::ToPos(_u_size, 0, *it_y, coord, this->m_error);
+			this->m_vert_dat.at(iter++) = coord.at(0);
+			this->m_vert_dat.at(iter++) = coord.at(1);
+			this->m_vert_dat.at(iter++) = coord.at(2);
+		// (4.b) gets the right side point of the line;
+			CViewPort::ToPos(_u_size, _u_size.cx, *it_y, coord, this->m_error);
+			this->m_vert_dat.at(iter++) = coord.at(0);
+			this->m_vert_dat.at(iter++) = coord.at(1);
+			this->m_vert_dat.at(iter++) = coord.at(2);
+		}
 	}
 	catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; }
+	catch (const ::std::out_of_range&) { this->m_error << __e_no_memory = TString().Format(_T("#__e_out_of_range: ndx = %u; vec.size = %u"), iter, this->m_vert_dat.size()); }
 
 	return this->Error();
 }
@@ -194,31 +254,45 @@ err_code CViewPort::Set (const t_rect& _rect) {
 }
 
 bool CViewPort::Is_valid (void) const {
-	return this->m_size.cy != 0 && this->m_size.cx != 0;
+	return CViewPort::Is_valid(this->m_size, this->m_error);
 }
-
+bool CViewPort::Is_valid (const t_size_u& _u_size, CError& _err) {
+	_u_size; _err;
+	if (0 == _u_size.cx || 0 == _u_size.cy) {
+		_err <<__METHOD__<<__e_inv_arg = TString().Format(_T("#__e_inv_size: cx=0x%04x, cy=0x%04x"), _u_size.cx, _u_size.cy);
+		return false;
+	}
+	else return true;
+}
 const
 view::CGrid& CViewPort::Grid (void) const { return this->m_grid; }
 view::CGrid& CViewPort::Grid (void)       { return this->m_grid; }
 
 vertex::CCoord  CViewPort::ToPos (const long _x, const long _y) {
 	_x; _y;
-	if (false == this->Is_valid()) {
-		this->m_error <<__METHOD__<<__e_inv_arg = TString().Format(_T("Screen size : x=0x%04x, y=0x%04x"), _x, _y);
-		return vertex::CCoord(); // returns 'empty' or 'default' coord which has x|y = {0};
-	}
+	t_set_3 coord{0.0f};
+	CViewPort::ToPos(this->m_size, _x, _y, coord,this->m_error);
+	if (this->Error())
+		return vertex::CCoord(); // returns 'empty' or 'default' coord which has x|y|z = {0.0f};
+	else
+		return vertex::CCoord(coord[0], coord[1], coord[2]);
+}
+
+err_code CViewPort::ToPos (const t_size_u& _u_size, const uint32_t _in_x, const uint32_t _in_y, t_set_3& _pos_out, CError& _err) {
+	_u_size; _in_x; _in_y; _pos_out; _err;
+	if (CViewPort::Is_valid(_u_size, _err) == false)
+		return _err;
 	// ToDo: this requires testing to find out which expression works faster;
 #if (1)
 	// https://discourse.glfw.org/t/converting-between-screen-coordinates-and-pixels/1841/2 ; thanks @dougbinks for good answer;
-	return vertex::CCoord(
-		2.0f * (float)_x/(float)this->m_size.cx - 1.0f, 1.0f - 2.0f * (float)_y/(float)this->m_size.cy
-	);
+	_pos_out[0] = 2.0f * (float)_in_x/(float)_u_size.cx - 1.0f; // x;
+	_pos_out[1] = 1.0f - 2.0f * (float)_in_y/(float)_u_size.cy; // y;
+	_pos_out[2] = 0.0f; // z;
 #else
 	// https://stackoverflow.com/questions/40068191/opengl-screen-to-world-coordinates-conversion ;
-	return vertex::CCoord(
-		2.0f * ((float)_x + 0.5f)/(float)(this->m_size.cx / 2) - 1.0f, 1.0f - ((float)_y + 0.5f)/(float)(this->m_size.cy / 2)
-	);
+	_pos_out = {2.0f * ((float)_in_x + 0.5f)/(float)(_u_size.cx / 2) - 1.0f, 1.0f - ((float)_in_y + 0.5f)/(float)(_u_size.cy / 2), 0.0f};
 #endif
+	return _err;
 }
 
 CViewPort&  CViewPort::operator << (const t_rect& _rect) { this->Set(_rect); return *this; }

@@ -13,8 +13,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/user-defined-literals-cpp ;
 
-	typedef ::std::array<float, 2ul> t_set_2;
-	typedef ::std::vector<float>  t_dyna_set;
+	typedef ::std::array<float, 2u> t_set_2;
+	typedef ::std::vector<float> t_dyna_set;
 
 namespace _2d {
 
