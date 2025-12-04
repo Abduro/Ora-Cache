@@ -8,6 +8,7 @@
 #include "procs\gl_procs_buffer.h"
 #include "vertex\gl_vertex_data.h"
 #include "shapes\gl_shape.2d.h"
+
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
 	class CTarget : private no_copy {
@@ -16,12 +17,32 @@ namespace data {
 	public:
 		static CString To_str (const e_bind_targets);
 	};
+
+	class CCfg : private no_copy {
+	public:
+		CCfg (void); ~CCfg (void) = default;
+
+		uint32_t Count (void) const;              // returns how many vertices must be drawn;
+		bool     Count (const uint32_t);          // returns 'true' in case of count number of vertices is changed;
+
+		uint32_t Primitive (void) const;          // returns the draw mode value, i.e. what type of primitives must be drawn; procs::CPrimitives::e_others::e_points is default;
+		bool     Primitive (const uint32_t);      // returns 'true' in case of draw mode value is changed;
+
+		uint32_t StartAt (void) const;            // returns the vertex arrey index to start from for drawing;
+		bool     StartAt (const uint32_t _u_ndx); // returns 'true' in case of start index value change;
+
+	private:
+		uint32_t m_count_ndx;
+		uint32_t m_prim_mode;
+		uint32_t m_start_ndx;
+	};
 }
 	/* note: each buffer for one set of data: for example, setting a position and a color through different sets of data will require two buffers;
 	   https://gamedev.stackexchange.com/questions/90471/should-unbind-buffers << explanation of the correct order of creation and use of the drawing pipeline;
 	*/
 	class CBuffer {
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+	using CCfg = data::CCfg;
 	public:
 #if (0)
 		class CBinder { // https://dictionary.cambridge.org/dictionary/english/binder ;
@@ -43,6 +64,10 @@ namespace data {
 		err_code Create  (void);
 		err_code Destroy (void);
 
+		const
+		CCfg& Cfg (void) const;
+		CCfg& Cfg (void) ;
+
 		TError&  Error (void) const;
 		uint32_t GetId (void) const;
 		static
@@ -62,7 +87,7 @@ namespace data {
 		mutable
 		CError   m_error;
 		uint32_t m_buf_id;
-
+		CCfg  m_cfg;
 		e_bind_targets m_target;
 	};
 
@@ -74,6 +99,7 @@ namespace data {
 #if (1)
 		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
 		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
+		err_code SetData (const TVertData&); // sets vertex data vector directly;
 #endif
 	private: CBuffer_4_vert& operator = (const CBuffer_4_vert&) = delete;  CBuffer_4_vert& operator =  (CBuffer_4_vert&&) = delete;
 	};

@@ -27,6 +27,7 @@ namespace shared { namespace gui { namespace theme {
 		CTheme& operator = (const CTheme&) = delete; CTheme& operator = (CTheme&&) = delete;
 		mutable v_color m_bkgnd;
 		mutable CError  m_error;
+		mutable bool  m_is_read;
 	};
 
 }}}

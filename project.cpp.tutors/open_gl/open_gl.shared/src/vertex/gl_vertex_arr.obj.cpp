@@ -43,7 +43,9 @@ err_code vertex::CArrObject::Bind (void) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 	else {
+#if (0)
 		__trace_info_2(_T("The array (id = %u) is bound;\n"), this->GetId());
+#endif
 	}
 	return this->Error();
 }
@@ -58,9 +60,10 @@ bool vertex::CArrObject::Is_bound (void) const {
 		return false;
 	}
 	const bool b_result = this->GetId()== static_cast<uint32_t>(n_result);
+#if (0)
 	if (false == b_result)
 		__trace_info_2(_T("the array of '_arr_id' (%u) is not bound;\n"), this->GetId());
-
+#endif
 	return b_result;
 }
 
@@ -106,6 +109,10 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 	CAttr* attrs[] = { &this->Attrs().Clr(), &this->Attrs().Pos() };
 #if (1)
 	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
+
+		if (false == attrs[i_]->Is_used())
+			continue;
+
 		const int32_t n_att_ndx = attrs[i_]->Locate().Value();
 		if (_b_state) {
 			if ( __failed(__get_attr_arr_procs().Enable(n_att_ndx))) {

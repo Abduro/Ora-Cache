@@ -74,6 +74,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		// https://www.allacronyms.com/NORM/normalized ;
 		bool   Is_normal(void) const;     // returns flag of requirement to normalize attribute values;
 		bool   Is_normal(const bool);     // sets the value of the normalization flag; by default is set to 'false'; returns 'true' if flag value changed;
+		bool   Is_used  (void) const;     // returns 'true' in case this attr is used or is applicable; by default is set to 'true';
+		bool   Is_used  (const bool);     // sets attr usage flag for inclusion or exclusion this attr from consideration;
 
 		uint32_t  Offset (void) const;    // initial value of the offset is set by color and position classes and does not require any change;
 		const
@@ -100,6 +102,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CLocate   m_index;
 		CString   m_name ;
 		bool      m_norm ;   // the value of the normalization required to convert this attribute value(s);
+		bool      m_used ;
 		CProgId   m_prog_id;
 		uint32_t  m_size ;   // it would be better to name this variable and the related property to something similar to 'count', not 'size';
 		uint32_t  m_type ;

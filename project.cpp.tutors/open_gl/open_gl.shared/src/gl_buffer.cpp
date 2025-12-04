@@ -7,6 +7,7 @@
 #include "shared.preproc.h"
 #include "gl_procs.h"
 #include "procs\gl_procs_buffer.h"
+#include "procs\gl_procs_surface.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::data;
@@ -17,6 +18,37 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 #define __gl_bound_to_arr 0x8894 // GL_ARRAY_BUFFER_BINDING;
 
 using namespace ex_ui::draw::open_gl::_impl;
+
+/////////////////////////////////////////////////////////////////////////////
+
+data::CCfg:: CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
+
+uint32_t data::CCfg::Count (void) const { return this->m_count_ndx; }
+bool     data::CCfg::Count (const uint32_t _n_count) {
+	_n_count;
+	const bool b_changed = (this->Count() != _n_count);
+	if (b_changed)
+		this->m_count_ndx = _n_count;
+	return b_changed;
+}
+
+uint32_t data::CCfg::Primitive (void) const { return this->m_prim_mode; }
+bool     data::CCfg::Primitive (const uint32_t _u_mode) {
+	_u_mode;
+	const bool b_changed = (this->Primitive() != _u_mode);
+	if (b_changed)
+		this->m_prim_mode = _u_mode;
+	return b_changed;
+}
+
+uint32_t data::CCfg::StartAt (void) const { return this->m_start_ndx; }
+bool     data::CCfg::StartAt (const uint32_t _u_ndx) {
+	_u_ndx;
+	const bool b_changed = (this->StartAt() != _u_ndx);
+	if (b_changed)
+		this->m_start_ndx = _u_ndx;
+	return b_changed;
+}
 
 CString  CTarget::To_str (const e_bind_targets _e_target) {
 	_e_target;
@@ -122,6 +154,10 @@ err_code  CBuffer::Destroy (void) {
 	return this->Error();
 }
 
+const
+data::CCfg& CBuffer::Cfg (void) const { return this->m_cfg; }
+data::CCfg& CBuffer::Cfg (void)       { return this->m_cfg; }
+
 TError&   CBuffer::Error (void) const { return this->m_error; }
 
 uint32_t  CBuffer::GetId (void) const { return this->m_buf_id; }
@@ -198,7 +234,7 @@ err_code CBuffer::Unbind (void) {
 
 CBuffer_4_vert:: CBuffer_4_vert (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
 CBuffer_4_vert::~CBuffer_4_vert (void) {}
-#if (1)
+
 err_code CBuffer_4_vert::Bind (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
@@ -219,12 +255,14 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 
 	const CVertArray& v_arr = _shape.Vertices();
 
-	const void* const p_vertices = v_arr.GetData();
+	const void* const p_vertices = v_arr.Data_Ptr();
 	if (nullptr == p_vertices)
 		return TBase::m_error <<__e_pointer;
 
+	const uint32_t u_bytes = static_cast<uint32_t>(sizeof(float) * v_arr.Data_Ref().size());
+
 #if (1)
-	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(v_arr.Bytes()), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
+	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(u_bytes), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_buf_procs().Error().Print(TError::e_print::e_req));
 		return TBase::m_error = __get_buf_procs().Error();
 	}
@@ -242,4 +280,29 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 
 	return TBase::Error();
 }
-#endif
+
+err_code CBuffer_4_vert::SetData (const TVertData& _v_data) {
+	_v_data;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (_v_data.empty()) {
+		TBase::m_error <<__e_inv_arg = _T("#__e_inv_arg: vertex data vector is empty");
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		return this->Error();
+	}
+
+	if (false == this->Is_valid()) {
+		TBase::m_error <<__e_not_inited = _T("#__e_mot_init: the buffer is not created");
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		return this->Error();
+	}
+
+	const uint32_t u_bytes = static_cast<uint32_t>(sizeof(float) * _v_data.size());
+
+	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(u_bytes), _v_data.data(), (uint32_t)procs::e_buf_usage::e_static_draw))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_buf_procs().Error().Print(TError::e_print::e_req));
+		return TBase::m_error = __get_buf_procs().Error();
+	}
+
+	return TBase::Error();
+}

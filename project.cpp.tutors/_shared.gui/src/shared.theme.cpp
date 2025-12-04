@@ -12,10 +12,13 @@ using namespace ex_ui::color::rgb;
 
 using e_element = CReg_router::CTheme::e_element;
 
-CTheme::CTheme (void) : m_bkgnd(4, 0.0f) {}
+CTheme::CTheme (void) : m_bkgnd(4, 0.0f), m_is_read(false) {}
 
 const rgb_color CTheme::Bkgnd_rgb (void) const { return (rgb_color)CHex((_pc_sz)Get_registry().Value(e_element::e_bkgnd)); }
 const v_color&  CTheme::Bkgnd_flt (void) const {
+
+	if (this->m_is_read)
+		return this->m_bkgnd;
 
 	const rgb_color clr = this->Bkgnd_rgb();
 
@@ -29,6 +32,7 @@ const v_color&  CTheme::Bkgnd_flt (void) const {
 					this->m_bkgnd.at(3) = CConvert::CConvert::ToFloat(get_a_value(clr)); // it is not necessary because it eaquals to 0 always;
 					this->m_bkgnd.at(3) = 1.0f;
 	}	}	}	}
+	this->m_is_read = true;
 	return this->m_bkgnd;
 }
 

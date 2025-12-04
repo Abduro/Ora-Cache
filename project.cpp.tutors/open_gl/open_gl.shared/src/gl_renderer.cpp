@@ -93,7 +93,7 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
-
+#if (1)
 	if (false == this->Scene().Array().Is_bound())
 	if (__failed(this->Scene().Array().Bind())) {
 		return this->m_error = this->Scene().Array().Error();
@@ -103,6 +103,7 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_render_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_render_procs().Error();
 	}
+#endif
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
 	if (false == !!::SwapBuffers(this->Scene().Ctx().Draw().Target().Get())) {
 		this->m_error.Last();

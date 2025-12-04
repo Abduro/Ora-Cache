@@ -40,7 +40,9 @@ CVertex&  CVertArray::Get (const uint32_t _u_ndx) const { if (_u_ndx < this->Cou
 CVertex&  CVertArray::Get (const uint32_t _u_ndx)       { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }     
 
 const
-void*    CVertArray::GetData (void) const { return this->m_data.data(); }
+void*     CVertArray::Data_Ptr (void) const { return this->m_data.data(); }
+const TVertData& CVertArray::Data_Ref (void) const { return this->m_data; }
+
 #if (0)
 uint32_t CVertArray::GetElements (void) const { return static_cast<uint32_t>(this->m_data.size()); }
 err_code CVertArray::SetElements (const uint32_t _n_elements) {
@@ -135,8 +137,9 @@ err_code   CVertArray::Update (void) {
 				p_target += vex.Size();
 
 		} catch (const ::std::bad_alloc& _err) {
-			this->m_error <<__e_no_memory = CString(_err.what()); break;
+			this->m_error <<__e_no_memory = CString(_err.what());
 			__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req));
+			break;
 		}
 	}
 

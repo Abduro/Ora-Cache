@@ -112,6 +112,9 @@ err_code camera::CWnd::PostCreate (void) {
 	if (__failed(this->Renderer().Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
 #endif
+	if (__failed(this->Renderer().View().Grid().Create()))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().View().Grid().Error().Print(TError::e_print::e_req));
+
 	this->Renderer().Is_allowed(true);     // allows the draw opereation of the renderer;
 
 #define _test_case_lvl -1
@@ -123,6 +126,8 @@ err_code camera::CWnd::PostCreate (void) {
 
 err_code camera::CWnd::Destroy (void) {
 	this->Renderer().Is_allowed(false);     // stops draw operation of the renderer;
+	if (__failed(this->Renderer().View().Grid().Destroy()))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().View().Grid().Error().Print(TError::e_print::e_req));
 	this->Renderer().Scene().Destroy();     // the error output to the trace is made by the method being called;
 	this->Renderer().Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
 	return __s_ok;

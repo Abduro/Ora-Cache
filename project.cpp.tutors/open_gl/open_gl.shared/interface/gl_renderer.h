@@ -32,7 +32,6 @@ namespace render {
 		uint32_t m_start_ndx;
 	};
 }
-
 	using IKbrd_Handler = ex_ui::popup::IKbrd_Handler;
 	using CTheme = shared::gui::theme::CTheme;
 

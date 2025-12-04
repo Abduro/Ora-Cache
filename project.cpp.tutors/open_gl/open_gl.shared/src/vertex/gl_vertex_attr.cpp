@@ -116,7 +116,7 @@ CAttr_Location& CAttr_Location::operator <<(_pc_sz _attr_name) { this->Attr_name
 
 using e_att_val_float = ex_ui::draw::open_gl::procs::vertex::e_att_val_float;
 
-CAttr:: CAttr (_pc_sz _p_name) : m_size(0), m_type(0), m_norm(false), m_stride (0), m_offset(0) {
+CAttr:: CAttr (_pc_sz _p_name) : m_size(0), m_type(0), m_norm(false), m_stride (0), m_offset(0), m_used(true) {
 	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;
 	if (_p_name) *this << _p_name;
 	m_data.resize(0, 0.0f);
@@ -138,6 +138,8 @@ bool    CAttr::Is_valid (void) const {
 
 bool  CAttr::Is_normal(void) const { return this->m_norm; }
 bool  CAttr::Is_normal(const bool _b_norm) { const bool b_changed = this->Is_normal() != _b_norm; if (b_changed) this->m_norm = _b_norm; return b_changed; }
+bool  CAttr::Is_used  (void) const { return this->m_used; }
+bool  CAttr::Is_used  (const bool _b_used) { const bool b_changed = this->Is_used() != _b_used; if (b_changed) this->m_used = _b_used; return b_changed; }
 
 const
 TLocation&  CAttr::Locate (void) const { return this->m_index; }

@@ -121,8 +121,75 @@ view::CGrid:: CGrid (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*th
 view::CGrid::~CGrid (void) {}
 
 const
+view::CArrObj&   view::CGrid::Array  (void) const { return this->m_arr_obj; }
+view::CArrObj&   view::CGrid::Array  (void)       { return this->m_arr_obj; }
+
+const
+view::CVertBuff& view::CGrid::Buffer (void) const { return this->m_vert_buf; }
+view::CVertBuff& view::CGrid::Buffer (void)       { return this->m_vert_buf; }
+const
 view::CGrid::CCell& view::CGrid::Cell (void) const { return this->m_cell; }
 view::CGrid::CCell& view::CGrid::Cell (void)       { return this->m_cell; }
+
+err_code view::CGrid::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	/*
+	- glBindVertexArray(m_vaoID[1]);
+
+	+ glGenBuffers(1, &m_vboID[2]);
+
+	+ glBindBuffer(GL_ARRAY_BUFFER, m_vboID[2]);
+	+ glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), vert2, GL_STATIC_DRAW);
+	- glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
+	- glEnableVertexAttribArray(0);
+	*/
+
+	this->Array().Attrs().Clr().Is_used(false);
+	this->Array().Attrs().Pos().Is_used(true);
+
+	this->Array().Attrs().Pos().Name(_T("$grid::pos"));
+
+	if (__failed(this->Array().Create())) return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Bind())) return this->m_error = this->Array().Error();
+	if (__failed(this->Array().Enable(true))) this->m_error = this->Array().Error();
+
+	if (this->Buffer().Is_valid() == false)
+		if (__failed(this->Buffer().Create())) {
+			return this->m_error = this->Buffer().Error();
+		}
+
+	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+
+	if (__failed(this->Buffer().BindTo(e_bind_targets::e_array)))
+		return this->m_error = this->Buffer().Error();
+
+	if (__failed(this->Buffer().SetData(this->m_vert_dat)))
+		this->m_error = this->Buffer().Error();
+
+	return this->Error();
+}
+
+err_code view::CGrid::Destroy (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Array().Is_bound()) {
+		if (__failed(this->Array().Unbind()))
+			return this->m_error = this->Array().Error();
+	}
+	if (__failed(this->Array().Delete()))
+		return this->m_error = this->Array().Error();
+
+	if (this->Buffer().Is_bound()) {
+		if (__failed(this->Buffer().Unbind()))
+			return this->m_error = this->Buffer().Error();
+	}
+
+	if (__failed(this->Buffer().Destroy())) {
+		return this->m_error = this->Buffer().Error();
+	}
+
+	return this->Error();
+}
 
 const
 view::CColor& view::CGrid::Clr (void) const { return this->m_color; }
@@ -252,9 +319,12 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 			this->m_vert_dat.at(iter++) = coord.at(2);
 		}
 	}
-	catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; }
-	catch (const ::std::out_of_range&) { this->m_error << __e_no_memory = TString().Format(_T("#__e_out_of_range: ndx = %u; vec.size = %u"), iter, this->m_vert_dat.size()); }
-
+	catch (const ::std::bad_alloc&) { return this->m_error << __e_no_memory; }
+	catch (const ::std::out_of_range&) { return this->m_error << __e_no_memory = TString().Format(_T("#__e_out_of_range: ndx = %u; vec.size = %u"), iter, this->m_vert_dat.size()); }
+#if (0) // at this point the buffer is not created yet;
+	if (__failed(this->Buffer().SetData(this->m_vert_dat)))
+		this->m_error = this->Buffer().Error();
+#endif
 	return this->Error();
 }
 

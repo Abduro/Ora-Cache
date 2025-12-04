@@ -14,6 +14,7 @@ using namespace ex_ui::draw::open_gl;
 
 using CDevice = context::CDevice;
 
+#pragma region CScene::CContext
 CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 err_code CScene::CContext::Clear (void) {
@@ -37,7 +38,7 @@ CScene::CDrwCtx& CScene::CContext::Draw (void) const { return this->m_drw_ctx; }
 CScene::CDrwCtx& CScene::CContext::Draw (void)       { return this->m_drw_ctx; }
 
 TError& CScene::CContext::Error (void) const { return this->m_error; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 
 CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
@@ -56,18 +57,17 @@ TError&  CScene::Destroy (void) {
 	if (this->Array().Is_bound()) {
 		if (__failed(this->Array().Unbind()))
 			return this->m_error = this->Array().Error();
-		if (__failed(this->Array().Delete()))
-			return this->m_error = this->Array().Error();
 	}
+	if (__failed(this->Array().Delete()))
+		return this->m_error = this->Array().Error();
 
 	// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
 	if (this->Prog().Buffer().Is_bound()) {
 		if (__failed(this->Prog().Buffer().Unbind()))
 			return this->m_error = this->Prog().Buffer().Error();
-
-		if (__failed(this->Prog().Buffer().Destroy()))
-			return this->m_error = this->Prog().Buffer().Error();
 	}
+	if (__failed(this->Prog().Buffer().Destroy()))
+			return this->m_error = this->Prog().Buffer().Error();
 #if (0) // shaders must be deleted right after linking the program;
 	if (__failed(this->Prog().Shaders().Detach()))
 		return this->m_error = this->Prog().Shaders().Error();

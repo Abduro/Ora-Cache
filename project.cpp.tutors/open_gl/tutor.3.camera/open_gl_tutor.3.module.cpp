@@ -53,7 +53,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	int32_t n_result = __s_ok;
 
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
-	::DefWindowProc(NULL, 0, 0, 0L);
+	::DefWindowProc(nullptr, 0, 0, 0L);
 
 	MSG msg = {0};
 
@@ -142,6 +142,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
 		CBuffer_4_vert& buffer = cam_wnd.Renderer().Scene().Prog().Buffer();
 
+		// (4.a) sets buffer cfg values;
+		buffer.Cfg().Count(triangle.Vertices().Count());
+		buffer.Cfg().Primitive(triangle.Primitive());
+		buffer.Cfg().StartAt(0);
+
 		if (__failed(buffer.SetData(triangle))) {
 			break;
 		}
@@ -163,8 +168,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 		if (false == b_error) {
-			if (__failed(cam_wnd.Renderer().Draw())) // perhaps this function must check for changing the draw data before draw it;
+			if (__failed(cam_wnd.Renderer().Draw()))   // perhaps this function must check for changing the draw data before draw it;
 				b_error = true;
+			else
+				cam_wnd.Renderer().Is_allowed(false);  // the window is not sized and there is no action on changing draw mode;
 			::Sleep(10);
 		}
 	}

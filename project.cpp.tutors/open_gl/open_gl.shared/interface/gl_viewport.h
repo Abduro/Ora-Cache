@@ -5,8 +5,10 @@
 	This is Ebo Pack OpenGL viewport wrapper interface declaration file;
 */
 #include "gl_defs.h"
+#include "gl_buffer.h"
 #include "vertex\gl_vertex_data.h"
 #include "vertex\gl_vertex_arr.dat.h"
+#include "vertex\gl_vertex_arr.obj.h"
 #include "color._defs.h"
 
 typedef
@@ -42,7 +44,10 @@ namespace view {
 		float m_rgba[4];
 	};
 
-	using CVertArr = CVertArray;
+	using CArrObj   = vertex::CArrObject;
+	using CVertArr  = CVertArray;
+	using CVertBuff = CBuffer_4_vert;
+
 	class CGrid : private no_copy {
 	public:
 		class CCell : private no_copy {
@@ -68,12 +73,22 @@ namespace view {
 		CGrid (void); ~CGrid (void);
 
 		const
+		CArrObj&    Array  (void) const;
+		CArrObj&    Array  (void) ;
+
+		const
+		CVertBuff&  Buffer (void) const;
+		CVertBuff&  Buffer (void) ;
+		const
 		CCell& Cell (void) const;
 		CCell& Cell (void) ;
 
 		const
 		CColor& Clr (void) const;
 		CColor& Clr (void) ;
+
+		err_code Create (void);
+		err_code Destroy (void);
 #if (0)
 		void Default (void); // sets default values for grid size, draw step and grid color;
 #endif
@@ -88,8 +103,10 @@ namespace view {
 		CCell  m_cell ;  // cell dimensions: height|width;
 		CError m_error;
 		CColor m_color;
+		CArrObj   m_arr_obj ;
 		CVertArr  m_vertices;
 		TVertData m_vert_dat;
+		CVertBuff m_vert_buf;
 	};
 }
 	typedef ::std::array<float, 3u> t_set_3; // x|y|z;
