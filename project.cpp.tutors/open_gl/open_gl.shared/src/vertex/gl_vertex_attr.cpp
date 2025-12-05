@@ -132,8 +132,8 @@ TError& CAttr::Error (void) const { return this->m_error; }
 bool    CAttr::Is_valid (void) const {
 	const uint32_t n_size = static_cast<uint32_t>(this->m_data.size());
 	const uint32_t n_req = this->Offset() + this->Size();
-
-	return false == this->m_name.IsEmpty() && !!this->ProgId()() && !(0 == n_size || 0 == n_req || n_req > n_size);
+	// some operations over vertex data do not require the usage of the program itself, so prog_id should be excluded from the criteria of making validity;
+	return false == this->m_name.IsEmpty() /*&& !!this->ProgId()() */&& !(0 == n_size || 0 == n_req || n_req > n_size);
 }
 
 bool  CAttr::Is_normal(void) const { return this->m_norm; }

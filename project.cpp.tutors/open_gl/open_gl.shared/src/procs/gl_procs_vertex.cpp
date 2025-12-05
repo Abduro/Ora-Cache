@@ -580,6 +580,88 @@ TAttrArrProcs&  ::__get_attr_arr_procs (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+static _pc_sz att_mod_fun_names[] = {
+	_T("glVertexAttrib3f"), _T("glVertexAttrib4f")
+};
+enum class e_att_mod_fun_ndx : uint32_t {
+	e_3_f = 0x0, e_4_f = 0x1
+};
+
+CAttrMod:: CAttrMod (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+
+err_code CAttrMod::Modify_f3 (const uint32_t _u_ndx, const float _f_0, const float _f_1, const float _f_2) {
+	_u_ndx; _f_0; _f_1; _f_2;
+	/* Possible error codes:
+	GL_INVALID_VALUE : '_u_ndx' is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_3f p_fun = reinterpret_cast<pfn_3f>(CBase::Get(att_mod_fun_names[(uint32_t)e_att_mod_fun_ndx::e_3_f]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_u_ndx, _f_0, _f_1, _f_2);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
+	case GL_INVALID_OPERATION : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
+	default:
+		if (u_err_code) CBase::m_error <<__e_fail = TString().Format(_T("#__undef: err_code = %d"), u_err_code);
+	}
+
+	return CBase::Error();
+}
+
+err_code CAttrMod::Modify_f4 (const uint32_t _u_ndx, const float _f_0, const float _f_1, const float _f_2, const float _f_3) {
+	_u_ndx; _f_0; _f_1; _f_2; _f_3;
+	/* Possible error codes:
+	GL_INVALID_VALUE : '_u_ndx' is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_4f p_fun = reinterpret_cast<pfn_4f>(CBase::Get(att_mod_fun_names[(uint32_t)e_att_mod_fun_ndx::e_4_f]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_u_ndx, _f_0, _f_1, _f_2, _f_3);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
+	case GL_INVALID_OPERATION : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_u_ndx' (%u) is beyond the max acceptable value"), _u_ndx); break;
+	default:
+		if (u_err_code) CBase::m_error <<__e_fail = TString().Format(_T("#__undef: err_code = %d"), u_err_code);
+	}
+
+	return CBase::Error();
+}
+
+err_code vertex::CAttrMod::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(att_mod_fun_names); i_++) {
+		if (nullptr == CBase::Get(att_mod_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TVertAttrModProcs&  ::__get_attr_mod_procs (void) {
+	static TVertAttrModProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 static _pc_sz att_ptr_fun_names[] = {
 	_T("glVertexAttribPointer"), _T("glVertexAttribIPointer"), _T("glVertexAttribLPointer")
 };

@@ -70,14 +70,6 @@ err_code    CRenderer::Draw (void) {
 
 	if (false == this->Is_allowed())
 		return this->Error();
-#if (0)
-	this->View().Grid().Draw();
-#endif
-	if (false == this->Scene().Prog().Status().Is_current()) {
-	if (__failed(this->Scene().Prog().Use())) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Prog().Error().Print(TError::e_print::e_req));
-		return this->m_error = this->Scene().Prog().Error();
-	}}
 
 	const v_color& clr_bkgnd = ::Get_theme().Bkgnd_flt();
 	if (4 > clr_bkgnd.size()) {
@@ -88,17 +80,33 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
+	/* setting e_clear_ops::e_depth for clean operation requires:
+	...ensure depth testing is enabled (glEnable(GL_DEPTH_TEST)) and clear the depth buffer, at the beginning of each frame to correctly handle overlapping geometry...
+	*/
+	using e_caps = TCapsProcs::e_caps;
+	if (__failed(::__get_caps_procs().Enable(true, e_caps::e_depth_tst))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_caps_procs().Error().Print(TError::e_print::e_req));
+		return this->m_error = ::__get_caps_procs().Error();
+	}
 
 	if (__failed(::__get_eraser_procs().All(e_clear_ops::e_color|e_clear_ops::e_depth))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
-#if (1)
+#if (0)
+	this->View().Grid().Draw();
+#endif
+	if (false == this->Scene().Prog().Status().Is_current()) {
+	if (__failed(this->Scene().Prog().Use())) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Prog().Error().Print(TError::e_print::e_req));
+		return this->m_error = this->Scene().Prog().Error();
+	}}
+//	this->Scene().Array().Unbind(); the triangle vertex buffer is not drawn in suxh case;
 	if (false == this->Scene().Array().Is_bound())
 	if (__failed(this->Scene().Array().Bind())) {
 		return this->m_error = this->Scene().Array().Error();
 	}
-
+#if (1)
 	if (__failed(::__get_render_procs().DrawArrays(this->Scene().Prog().Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_render_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_render_procs().Error();
@@ -110,6 +118,8 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 
+	this->Scene().Array().Unbind();
+	
 	return this->Error();
 }
 

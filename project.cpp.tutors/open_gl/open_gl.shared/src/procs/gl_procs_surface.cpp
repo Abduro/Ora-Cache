@@ -58,6 +58,112 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 }}}}}
 using namespace _impl;
 
+static _pc_sz caps_fun_names[] = {
+	_T("glDisable"), _T("glDisablei"), _T("glEnable"), _T("glEnablei")
+};
+
+enum class e_caps_fun_ndx : uint32_t {
+	e_disable = 0x0, e_disable_ndx = 0x1, e_enable = 0x2, e_enable_ndx = 0x3
+};
+
+CCapability:: CCapability (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
+	CBase::m_error.Class(cs_cls, false);
+}
+
+err_code CCapability::Enable (const bool _b_mode, const uint32_t _u_cap) {
+	_b_mode; _u_cap;
+	/* Possible error code(s):
+	GL_INVALID_ENUM  : '_u_cap' is not one of the acceptable values;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	if (true == _b_mode) {
+		pfn_Enable p_fun = reinterpret_cast<pfn_Enable>(CBase::Get(caps_fun_names[(uint32_t)e_caps_fun_ndx::e_enable]));
+		if (nullptr == p_fun)
+			return CBase::Error();
+	
+		p_fun(_u_cap);
+	} else {
+		pfn_Disable p_fun = reinterpret_cast<pfn_Disable>(CBase::Get(caps_fun_names[(uint32_t)e_caps_fun_ndx::e_disable]));
+		if (nullptr == p_fun)
+			return CBase::Error();
+	
+		p_fun(_u_cap);
+	}
+
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ){
+	case GL_INVALID_ENUM :
+		CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: %s (%d)"), _u_cap); break;
+	default:
+		if (!!u_err_code) // this is the good idea to check error code anyway, otherwise the error may throw the error code that is not specified in docs;
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+	}
+	return CBase::Error();
+}
+
+err_code CCapability::Enable (const bool _b_mode, const uint32_t _u_ndx, const uint32_t _u_cap) {
+	_b_mode; _u_ndx; _u_cap;
+	/* Possible error code(s):
+	GL_INVALID_ENUM  : '_u_cap' is not one of the acceptable values;
+	GL_INVALID_VALUE : '_u_ndx" is greater than or equal to the number of indexed capabilities;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	if (true == _b_mode) {
+		pfn_Enable_Ndx p_fun = reinterpret_cast<pfn_Enable_Ndx>(CBase::Get(caps_fun_names[(uint32_t)e_caps_fun_ndx::e_enable_ndx]));
+		if (nullptr == p_fun)
+			return CBase::Error();
+	
+		p_fun(_u_ndx, _u_cap);
+
+	} else {
+		pfn_Disable_Ndx p_fun = reinterpret_cast<pfn_Disable_Ndx>(CBase::Get(caps_fun_names[(uint32_t)e_caps_fun_ndx::e_disable_ndx]));
+		if (nullptr == p_fun)
+			return CBase::Error();
+	
+		p_fun(_u_ndx, _u_cap);
+	}
+
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ){
+	case GL_INVALID_ENUM : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: (%d)"), _u_cap); break;
+	case GL_INVALID_VALUE: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_ndx: (%d)"), _u_ndx); break;
+	default:
+		if (!!u_err_code) // this is the good idea to check error code anyway, otherwise the error may throw the error code that is not specified in docs;
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+	}
+	return CBase::Error();
+}
+
+err_code CCapability::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(caps_fun_names); i_++) {
+		if (nullptr == CBase::Get(caps_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TCapsProcs&  ::__get_caps_procs (void) {
+	static TCapsProcs procs;
+	static bool b_loaded = false;
+
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+			__trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+			b_loaded = true;
+	}
+	return procs;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 static _pc_sz erase_fun_names[] = {
 	_T("glClear"), _T("glClearColor"), _T("glClearDepthf"), _T("glClearStencil")
 };
@@ -83,13 +189,15 @@ err_code CEraser::All (const uint32_t _u_mask) {
 
 	p_fun(_u_mask);
 
-	const uint32_t u_result = CErr_ex().Get_code();
-
-	switch(u_result) {
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
 	case GL_INVALID_VALUE : {
 		const uint32_t u_unk = _get_unk_flag_value(_u_mask);
 		CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_u_mask' has unknown flag value (%u)"), u_unk); } break;
-	default:;
+	default:
+		if (!!u_err_code) // this is the good idea to check error code anyway, otherwise the error may throw the error code that is not specified in docs;
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
 	}
 
 	return CBase::Error();
@@ -199,7 +307,7 @@ CRenderer:: CRenderer (void) : CBase() { CString cs_cls = TString().Format(_T("%
 }
 
 err_code CRenderer::DrawArrays (const uint32_t _prog_id, const uint32_t _u_mode, const uint32_t _u_start_ndx, const uint32_t _u_count) {
-	_u_mode; _u_start_ndx; _u_count;
+	_prog_id; _u_mode; _u_start_ndx; _u_count;
 	/* Possible error codes:
 	GL_INVALID_ENUM      : '_u_mode' has value that is not an accepted for the mode;
 	GL_INVALID_OPERATION : a non-zero buffer object name is bound to an enabled array and the buffer object's data store is currently mapped;
@@ -207,10 +315,10 @@ err_code CRenderer::DrawArrays (const uint32_t _prog_id, const uint32_t _u_mode,
 	GL_INVALID_VALUE     : '_u_count' has negative value;
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
-
+#if (0)
 	if (0 == _prog_id)
 		return CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_prog_id' (%u) is invalid"), _prog_id);
-
+#endif
 	pfnDrawArrays p_fun = reinterpret_cast<pfnDrawArrays>(CBase::Get(render_fun_names[(uint32_t)e_render_fun_ndx::e_arrays]));
 	if (nullptr == p_fun)
 		return CBase::Error();

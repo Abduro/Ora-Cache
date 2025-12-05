@@ -4,6 +4,8 @@
 */
 #include "gl_viewport.h"
 #include "shared.preproc.h"
+#include "procs\gl_procs_surface.h"
+#include "procs\gl_procs_vertex.h"
 #include "procs\gl_procs_view.h"
 #include "sys.registry.h"
 #include "color.rgb.h"
@@ -133,21 +135,11 @@ view::CGrid::CCell& view::CGrid::Cell (void)       { return this->m_cell; }
 
 err_code view::CGrid::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	/*
-	- glBindVertexArray(m_vaoID[1]);
-
-	+ glGenBuffers(1, &m_vboID[2]);
-
-	+ glBindBuffer(GL_ARRAY_BUFFER, m_vboID[2]);
-	+ glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), vert2, GL_STATIC_DRAW);
-	- glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
-	- glEnableVertexAttribArray(0);
-	*/
-
+	
 	this->Array().Attrs().Clr().Is_used(false);
 	this->Array().Attrs().Pos().Is_used(true);
-
 	this->Array().Attrs().Pos().Name(_T("$grid::pos"));
+	this->Array().Attrs().Pos().Locate().Value(0);
 
 	if (__failed(this->Array().Create())) return this->m_error = this->Array().Error();
 	if (__failed(this->Array().Bind())) return this->m_error = this->Array().Error();
@@ -165,6 +157,11 @@ err_code view::CGrid::Create (void) {
 
 	if (__failed(this->Buffer().SetData(this->m_vert_dat)))
 		this->m_error = this->Buffer().Error();
+
+	if (__failed(CVertArr::Set_ptrs(this->Array().Attrs().Pos(), this->m_error))) {}
+	if (__failed(this->Array().Enable(true))) {
+		this->m_error = this->Array().Error();
+	}
 
 	return this->Error();
 }
@@ -229,6 +226,31 @@ err_code view::CGrid::Draw (void) {
 
 	return n_result;
 }
+#else
+err_code view::CGrid::Draw (void) {
+	err_code n_result = __s_ok;
+
+	using e_line = procs::CPrimitives::e_line;
+
+	this->Array().Bind();
+	if (__failed(::__get_attr_mod_procs().Modify_f4(1, this->Clr().Get_r(), this->Clr().Get_g(), this->Clr().Get_b(), this->Clr().Get_a()))) {
+		this->m_error = ::__get_attr_mod_procs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
+	}
+
+	const vertex::CAttr& a_pos = this->Array().Attrs().Pos();
+	if (false == a_pos.Is_valid()) // the attr size is checked in order to avoid the division by 0;
+		return this->m_error <<__e_inv_arg = _T("#__e_inv_param: attr 'a_pos' is not valid"); // this is essential error, thus interrupt this function;
+
+	if (__failed(::__get_render_procs().DrawArrays(0, (uint32_t) e_line::e_lines, 0,  (uint32_t) this->m_vert_dat.size()/a_pos.Size()))) {
+		this->m_error = ::__get_render_procs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
+	}
+
+	this->Array().Unbind();
+
+	return n_result;
+}
 #endif
 
 TError& view::CGrid::Error (void) const { return this->m_error; }
@@ -288,10 +310,6 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 
 		t_set_3 coord = {0.0f};
 
-		if (__failed(this->m_vertices.Count(u_count))) {
-			return this->m_error = this->m_vertices.Error();
-		}
-
 		// (4) creates vertices for horizontal lines;
 		for (::std::set<uint32_t>::const_iterator it_y = y_markers.begin(); it_y != y_markers.end(); ++it_y) {
 		// (4.a) gets the left side point of the line;
@@ -328,8 +346,6 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	return this->Error();
 }
 
-const
-view::CVertArr& view::CGrid::Vertices (void) const { return this->m_vertices; }
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 #pragma region CViewport

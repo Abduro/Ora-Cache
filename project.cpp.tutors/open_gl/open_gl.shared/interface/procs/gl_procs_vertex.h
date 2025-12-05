@@ -117,6 +117,25 @@ namespace vertex {
 		CAttrArray& operator = (const CAttrArray&) = delete; CAttrArray& operator = (CAttrArray&&) = delete;
 	};
 
+	// https://dictionaryblog.cambridge.org/2019/07/24/evolving-and-disrupting-verbs-meaning-change/ ;
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttrib.xhtml ;
+	// https://github.com/abbrcode/abbreviations-in-code ;
+
+	class CAttrMod : public CBase {
+	typedef void (__stdcall *pfn_3f) (uint32_t _u_ndx, float _f_0, float _f_1, float _f_2);
+	typedef void (__stdcall *pfn_4f) (uint32_t _u_ndx, float _f_0, float _f_1, float _f_2, float _f_3);
+	public:
+		CAttrMod (void); ~CAttrMod (void) = default;
+
+		err_code Modify_f3 (const uint32_t _u_ndx, const float _f_0, const float _f_1, const float _f_2);
+		err_code Modify_f4 (const uint32_t _u_ndx, const float _f_0, const float _f_1, const float _f_2, const float _f_3);
+
+		err_code Get_all (void) ;
+
+	private:
+		CAttrMod& operator = (const CAttrMod&) = delete; CAttrMod& operator = (CAttrMod&&) = delete;
+	};
+
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml ;
 	class CAttrPtr : public CBase {
 	typedef void (__stdcall *pfn_AttPtr)   (uint32_t _u_ndx, int32_t _n_size, uint32_t _u_type, uint16_t _b_norm, int32_t _n_stride, const void* _ptr);
@@ -141,6 +160,7 @@ namespace vertex {
 typedef ex_ui::draw::open_gl::procs::vertex::CArray     TVertArrProcs;      TVertArrProcs&  __get_arr_procs (void);
 typedef ex_ui::draw::open_gl::procs::vertex::CAttr      TVertAttrProcs;     TVertAttrProcs& __get_attr_procs (void);
 typedef ex_ui::draw::open_gl::procs::vertex::CAttrArray TAttrArrProcs;      TAttrArrProcs&  __get_attr_arr_procs (void);
+typedef ex_ui::draw::open_gl::procs::vertex::CAttrMod   TVertAttrModProcs;  TVertAttrModProcs& __get_attr_mod_procs (void);
 typedef ex_ui::draw::open_gl::procs::vertex::CAttrPtr   TVertAttrPtrProcs;  TVertAttrPtrProcs& __get_attr_ptr_procs (void);
 
 #endif/*_GL_PROCS_VERTEX_H_INCLUDED*/

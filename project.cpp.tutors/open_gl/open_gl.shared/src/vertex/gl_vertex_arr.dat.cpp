@@ -76,7 +76,6 @@ bool  CVertArray::Is_valid (void) const {
 	return static_cast<uint32_t>(this->m_data.size()) == u_req && u_req > 0;
 }
 
-#if (1)
 err_code CVertArray::Set_ptrs (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -88,6 +87,8 @@ err_code CVertArray::Set_ptrs (void) const {
 
 	for (uint32_t i_ = 0; i_ < att_aray.Count(); i_++) {
 		const vertex::CAttr& attr = att_aray.Item(i_);
+		if (false == attr.Is_used())
+			continue;
 #if (0)
 		const uint32_t u_locate = attr.Locate().Value(); u_locate;
 		const uint32_t u_size   = attr.Size(); u_size;
@@ -104,7 +105,20 @@ err_code CVertArray::Set_ptrs (void) const {
 
 	return this->Error();
 }
-#endif
+
+err_code  CVertArray::Set_ptrs (const vertex::CAttr& _attr, CError& _err) {
+	_attr; _err;
+	if (false == _attr.Is_valid()) return _err <<__e_inv_arg;
+	if (false == _attr.Is_used()) return _err <<__e_inv_arg;
+
+	if (__failed(__get_attr_ptr_procs().Set(_attr.Locate().Value(), _attr.Size(), _attr.Type(), _attr.Is_normal(), _attr.Stride(), _attr.Offset()))) {
+	    _err = __get_attr_ptr_procs().Error();
+	    __trace_err_2(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
+	}
+
+	return _err;
+}
+
 // https://stackoverflow.com/questions/644673/is-it-more-efficient-to-copy-a-vector-by-reserving-and-copying-or-by-creating-a ;
 err_code   CVertArray::Update (void) {
 	this->m_error <<__METHOD__<<__s_ok;

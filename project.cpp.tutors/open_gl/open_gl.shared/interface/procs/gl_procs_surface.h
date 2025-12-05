@@ -7,17 +7,47 @@
 #include "gl_procs_base.h"
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/gl_ClipDistance.xhtml :: GL_CLIP_DISTANCE0 + i;
+	// https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glLight.xml :: GL_LIGHT0 + i;
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glenable :: complete list of input parameters with the description;
+
+	class CCapability : public CBase {
+	typedef void (__stdcall *pfn_Enable )     (const uint32_t _u_cap); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnable.xhtml ;
+	typedef void (__stdcall *pfn_Enable_Ndx)  (const uint32_t _u_ndx, const uint32_t _u_cap); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnable.xhtml ;
+	typedef void (__stdcall *pfn_Disable)     (const uint32_t _u_cap); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnable.xhtml ;
+	typedef void (__stdcall *pfn_Disable_Ndx) (const uint32_t _u_ndx, const uint32_t _u_cap); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glEnable.xhtml ;
+	public:
+		enum e_caps : uint32_t {
+		/* alias    | value    | OpenGL symbolic def      | brief description ;
+		------------+----------+--------------------------+--------------------------*/
+		e_blend     = 0x0BE2, // GL_BLEND                 | blends the computed fragment color values with the values in the color buffers, allowing for transparency effects; glBlendFunc();
+		e_cull_face = 0x0B44, // GL_CULL_FACE             | enables face culling, which discards polygons based on their winding order (back-facing polygons); glCullFace();
+		e_depth_tst = 0x0B71, // GL_DEPTH_TEST            | does depth testing, which discards fragments that are behind other fragments, ensuring correct rendering order; glDepthFunc(), glDepthRange();
+		e_line_smth = 0x0B20, // GL_LINE_SMOOTH           | draws lines with correct filtering, otherwise, draw aliased lines; glLineWidth();
+		};
+		CCapability (void); ~CCapability (void) = default;
+
+		err_code Enable (const bool _b_mode, const uint32_t _u_cap);
+		err_code Enable (const bool _b_mode, const uint32_t _u_ndx, const uint32_t _u_cap);
+
+		err_code Get_all (void) ;
+
+	private:
+		CCapability& operator = (const CCapability&) = delete; CCapability& operator = (CCapability&&) = delete;
+	};
+
 	// the 'surface' class name is just the alias for different types of buffers;
 	class CEraser : public CBase {
 	typedef void (__stdcall *pfnAll) (const uint32_t _u_mask); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glClear.xml ;
 	typedef void (__stdcall *pfnClr) (const float _r, const float _g, const float _b, const float _a); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glClearColor.xml ;
 	typedef void (__stdcall *pfnDepth) (const float _f_z); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glClearDepthf.xml ;
+	typedef void (__stdcall *pfnEnable) (const uint32_t _u_flag);
 	typedef void (__stdcall *pfnStencil) (const uint32_t _u_ndx); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glClearStencil.xml ;
 	public:
 		enum e_clear_ops : uint32_t {
 		e__undef  = 0x0,
-		e_color   = GL_COLOR_BUFFER_BIT,   // indicates the buffers currently enabled for color writing;
-		e_depth   = GL_DEPTH_BUFFER_BIT,   // indicates the depth buffer;
+		e_color   = GL_COLOR_BUFFER_BIT  , // indicates the buffers currently enabled for color writing;
+		e_depth   = GL_DEPTH_BUFFER_BIT  , // indicates the depth buffer;
 		e_stencil = GL_STENCIL_BUFFER_BIT, // indicates the stencil buffer;
 		};
 	public:
@@ -82,7 +112,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	};
 }}}}
 
-typedef ex_ui::draw::open_gl::procs::CEraser   TEraserProcs; TEraserProcs& __get_eraser_procs (void);
-typedef ex_ui::draw::open_gl::procs::CRenderer TRenderProcs; TRenderProcs& __get_render_procs (void);
+typedef ex_ui::draw::open_gl::procs::CCapability TCapsProcs;   TCapsProcs&   __get_caps_procs (void);
+typedef ex_ui::draw::open_gl::procs::CEraser     TEraserProcs; TEraserProcs& __get_eraser_procs (void);
+typedef ex_ui::draw::open_gl::procs::CRenderer   TRenderProcs; TRenderProcs& __get_render_procs (void);
 
 #endif/*_GL_SURFACE_H_INCLUDED*/

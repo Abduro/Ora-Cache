@@ -96,15 +96,12 @@ namespace view {
 		TError& Error (void) const;
 
 		err_code   Update (const t_size_u& _u_size); // recalculates all vertices for input size of the draw area;
-		const
-		CVertArr&  Vertices (void) const;
 
 	private:
 		CCell  m_cell ;  // cell dimensions: height|width;
 		CError m_error;
 		CColor m_color;
 		CArrObj   m_arr_obj ;
-		CVertArr  m_vertices;
 		TVertData m_vert_dat;
 		CVertBuff m_vert_buf;
 	};
