@@ -12,8 +12,6 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::camera;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
-
 camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
 
 	if (this->m_fak_wnd.Is_valid() == false) {
@@ -91,7 +89,6 @@ err_code camera::CWnd::PostCreate (void) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
 	}
 #endif
-
 #if (0)
 	// for better debugging and in order do not re-compile the executable, this section is disabled;
 	// sets resource identifiers for loading shaders' source code;
@@ -100,12 +97,7 @@ err_code camera::CWnd::PostCreate (void) {
 	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
 	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 #else
-	// sets the option of the camera source configuration to use external camera source files;
-	CProgram& prog = this->Renderer().Scene().Prog();
-	if (__failed(prog.Shaders().Fragment().Src().Cfg().Path($Type::e_fragment)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-	if (__failed(prog.Shaders().Vertex().Src().Cfg().Path($Type::e_vertex)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	// loading external files of shaders' sources is moved to program_enum::load();
 #endif
 	
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
@@ -143,14 +135,27 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		} break;
 	case WM_PAINT  : { // https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; returned result: 0 - handled; otherwise not handled;
 #if (0)
-			PAINTSTRUCT ps = {0};
-			const HDC h_dc = ::BeginPaint(TBase::Handle(), &ps);
-			::FillRect(h_dc, &ps.rcPaint, (HBRUSH) (COLOR_ACTIVEBORDER + 1));
-			::EndPaint(TBase::Handle(), &ps);
-#endif
-			if (__failed(this->Renderer().Draw()))
-				__trace_err_3(_T("%s;\n"), (_pc_sz) this->Renderer().Error().Print(TError::e_req));
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
+		class CBrush {
+		public:
+			 CBrush (const rgb_color _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
+			~CBrush (void) { if (this->m_brush){ ::DeleteObject(this->m_brush); this->m_brush = nullptr; }}
+			HBRUSH  Get (void) const { return this->m_brush; }
+		private:
+			HBRUSH m_brush;
+		};
 
+		// https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint ; returned result: 0 - handled; otherwise not handled;
+		PAINTSTRUCT ps = {0};
+		const HDC h_dc = ::BeginPaint(TBase::Handle(), &ps);
+		::FillRect(h_dc, &ps.rcPaint, CBrush(::Get_theme().Border()).Get());
+		::EndPaint(TBase::Handle(), &ps);
+#els (true == false) // if this is able then something goes wrong way: binding of required object(s) is dropped out and triangle goes away;
+		this->Renderer().Is_allowed(true);
+		if (__failed(this->Renderer().Draw()))
+			__trace_err_3(_T("%s;\n"), (_pc_sz) this->Renderer().Error().Print(TError::e_req));
+#endif
 			return 0; // in any case, this message is considered as handled one;
 		} break;
 	case WM_SIZE   :
@@ -170,5 +175,3 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 const
 CRenderer&  camera::CWnd::Renderer (void) const { return this->m_renderer; }
 CRenderer&  camera::CWnd::Renderer (void)       { return this->m_renderer; }
-
-}}}}

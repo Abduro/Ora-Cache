@@ -138,9 +138,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #if (0)
 		cam_wnd.Renderer().Scene().Array().Attrs() = triangle.A().Attrs();
 #endif
+		using e_prog_ndx = CProg_enum::e_prog_ndx;
 		using
 		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
-		CBuffer_4_vert& buffer = cam_wnd.Renderer().Scene().Prog().Buffer();
+		CBuffer_4_vert& buffer = cam_wnd.Renderer().Scene().Progs().Get(e_prog_ndx::e_tria).Buffer();
 
 		// (4.a) sets buffer cfg values;
 		buffer.Cfg().Count(triangle.Vertices().Count());
@@ -167,12 +168,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::TranslateMessage( &msg );
 			::DispatchMessage ( &msg );
 		}
-		if (false == b_error) {
+		if (false == b_error /*&& cam_wnd.Renderer().Is_allowed()*/) {
 			if (__failed(cam_wnd.Renderer().Draw()))   // perhaps this function must check for changing the draw data before draw it;
 				b_error = true;
 			else
 				cam_wnd.Renderer().Is_allowed(false);  // the window is not sized and there is no action on changing draw mode;
-			::Sleep(10);
+			::Sleep(100);
 		}
 	}
 

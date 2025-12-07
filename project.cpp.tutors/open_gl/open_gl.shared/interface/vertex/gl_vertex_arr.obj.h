@@ -26,6 +26,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		err_code  Unbind (void);          // unbinds this array by setting 0 (zero) as identifier of the array being bounded; 
 
 		err_code  Enable (const bool);    // enables/disables all attributes of this array;
+		err_code  Enable (const bool, const uint32_t _att_ndx);
 
 		err_code  Create (void);
 		err_code  Delete (void);

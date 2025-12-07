@@ -71,7 +71,7 @@ void view::CColor::Set (const rgb_color _rgba) {
 	this->m_rgba[0] = CConvert::ToFloat(get_r_value(_rgba));
 	this->m_rgba[1] = CConvert::ToFloat(get_g_value(_rgba));
 	this->m_rgba[2] = CConvert::ToFloat(get_b_value(_rgba));
-	this->m_rgba[3] = /*CConvert::ToFloat(get_a_value(_rgba))*/ 1.0f; // ToDo: it is required to save the alpha value in registry too;
+	this->m_rgba[3] = /*CConvert::ToFloat(get_a_value(_rgba))*/ 0.0f; // ToDo: it is required to save the alpha value in registry too;
 }
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,9 @@ err_code view::CGrid::Draw (void) {
 	using e_line = procs::CPrimitives::e_line;
 
 	this->Array().Bind();
-	if (__failed(::__get_attr_mod_procs().Modify_f4(1, this->Clr().Get_r(), this->Clr().Get_g(), this->Clr().Get_b(), this->Clr().Get_a()))) {
+//	this->Array().Enable(false, this->Array().Attrs().Clr().Locate().Value());
+
+	if (__failed(::__get_attr_mod_procs().Modify_f4(0, this->Clr().Get_r(), this->Clr().Get_g(), this->Clr().Get_b(), this->Clr().Get_a()))) {
 		this->m_error = ::__get_attr_mod_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
 	}
@@ -356,7 +358,7 @@ CViewPort::~CViewPort (void) {}
 
 TError& CViewPort::Error(void) const { return this->m_error; }
 
-t_size  CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
+t_size    CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
 t_size_u& CViewPort::Get (void) {
 	return this->m_size;
 }

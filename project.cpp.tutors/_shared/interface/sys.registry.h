@@ -45,8 +45,9 @@ namespace shared { namespace sys_core { namespace storage {
 		public:
 			CShaders (void) ; CShaders (const CShaders&) = delete; CShaders (CShaders&&) = delete; ~CShaders (void) = default;
 
-			CString  Path (const e_types) const;    // returns the path to specified type of shader;
-			_pc_sz   Root (void) const;             // gets root key path for all shader types;
+			CString  Name (const e_types) const;    // returns the value name for input shader type; 
+			CString  Path (_pc_sz _p_object) const; // returns the path to shaders of the object by its name;
+			_pc_sz   Root (void) const; // gets root key path for all shader types;
 
 		private:
 			CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
@@ -150,8 +151,8 @@ namespace shared { namespace sys_core { namespace storage {
 
 		TError&  Error (void) const;
 
-		CString  Value (const e_element&) const;  // returns color value (hex) of element specified; 
-		CString  Value (const e_shaders, _pc_sz _p_name) const; // if empty string is returned, the error occurs;
+		CString  Value (const e_element) const;  // returns color value (hex) of element specified; 
+		CString  Value (_pc_sz _p_object, const e_shaders) const; // returns the path to the shader source file; if empty string is returned, the error occurs;
 
 		CRegistry& operator = (const CRegistry&) = delete;
 		CRegistry& operator = (CRegistry&&) = delete;

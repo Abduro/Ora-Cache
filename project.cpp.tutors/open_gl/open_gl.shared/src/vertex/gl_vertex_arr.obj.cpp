@@ -43,7 +43,7 @@ err_code vertex::CArrObject::Bind (void) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 	else {
-#if (0)
+#if (1)
 		__trace_info_2(_T("The array (id = %u) is bound;\n"), this->GetId());
 #endif
 	}
@@ -114,17 +114,7 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 			continue;
 
 		const int32_t n_att_ndx = attrs[i_]->Locate().Value();
-		if (_b_state) {
-			if ( __failed(__get_attr_arr_procs().Enable(n_att_ndx))) {
-			     this->m_error = __get_attr_procs().Error();
-			     __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
-			else __trace_info_2(_T("The attr (ndx = %u) of the array (id = %u) is enabled;\n"), n_att_ndx, this->GetId()); }
-		else {
-			if ( __failed(__get_attr_arr_procs().Disable(n_att_ndx))) {
-			     this->m_error = __get_attr_procs().Error();
-			     __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
-			else __trace_info_2(_T("The attr (ndx = %u) of the array (id = %u) is disabled;\n"), n_att_ndx, this->GetId());
-		}
+		this->Enable(_b_state, n_att_ndx);
 	}
 #elif (true == false)
 	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
@@ -158,6 +148,24 @@ err_code vertex::CArrObject::Enable (const bool _b_state) {
 		__trace_info_2(_T("The array: id = %u, ndx = %u is enabled;\n"), this->GetId(), _arr_ndx);
 	}
 #endif
+	return this->Error();
+}
+
+err_code vertex::CArrObject::Enable (const bool _b_state, const uint32_t _att_ndx) {
+	_b_state; _att_ndx;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (_b_state) {
+		if ( __failed(__get_attr_arr_procs().Enable(_att_ndx))) {
+			    this->m_error = __get_attr_procs().Error();
+			    __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+		else __trace_info_2(_T("The attr (ndx = %u) of the array (id = %u) is enabled;\n"), _att_ndx, this->GetId()); }
+	else {
+		if ( __failed(__get_attr_arr_procs().Disable(_att_ndx))) {
+			    this->m_error = __get_attr_procs().Error();
+			    __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+		else __trace_info_2(_T("The attr (ndx = %u) of the array (id = %u) is disabled;\n"), _att_ndx, this->GetId());
+	}
 	return this->Error();
 }
 

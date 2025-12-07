@@ -53,13 +53,19 @@ const bool CReg_router::CRoot::Renderer (const e_renderer _e_curr) {
 
 CReg_router::CShaders::CShaders (void) {}
 
-CString CReg_router::CShaders::Path (const e_shaders _shader) const {
-	_shader;
-	CString cs_path;
+CString CReg_router::CShaders::Name (const e_types _e_type) const {
+	_e_type;
+	CString cs_out;
 
-	if (e_shaders::e_fragment == _shader) cs_path.Format(_T("%s\\$_fragment"), this->Root());
-	if (e_shaders::e_vertex   == _shader) cs_path.Format(_T("%s\\$_vertex"), this->Root());
+	if (e_types::e_fragment == _e_type) cs_out = _T("$_fragment");
+	if (e_types::e_vertex == _e_type) cs_out = _T("$_vertex");
 
+	return  cs_out;
+}
+
+CString CReg_router::CShaders::Path (_pc_sz _p_object) const {
+	_p_object;
+	CString cs_path; cs_path.Format(_T("%s\\%s"), this->Root(), _p_object);
 	return  cs_path;
 }
 
@@ -189,7 +195,7 @@ CRegistry::~CRegistry (void) {}
 
 TError&  CRegistry::Error (void) const { return this->m_error; }
 
-CString  CRegistry::Value (const e_element& _element) const {
+CString  CRegistry::Value (const e_element _element) const {
 	_element;
 
 	CRegKey_Ex reg_key;
@@ -201,18 +207,21 @@ CString  CRegistry::Value (const e_element& _element) const {
 	return  cs_value;
 }
 
-CString  CRegistry::Value (const e_shaders _e_shader, _pc_sz _p_name) const {
-	_e_shader; _p_name;
+CString  CRegistry::Value (_pc_sz _p_object, const e_shaders _e_type) const {
+	_p_object; _e_type;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (e_shaders::e__undef == _e_shader) {
+	if (e_shaders::e__undef == _e_type) {
 		this->m_error <<__e_inv_arg = _T("No shader type is specified");
 		return CString();
 	}
 
+	using CShaders = CReg_router::CShaders;
+	CShaders& shaders = Get_reg_router().Shaders();
+
 	CRegKey_Ex reg_key;
 
-	CString cs_value = reg_key.Value().GetString((_pc_sz) Get_reg_router().Shaders().Path(_e_shader), _p_name);
+	CString cs_value = reg_key.Value().GetString((_pc_sz) shaders.Path(_p_object), (_pc_sz) shaders.Name(_e_type));
 	if (cs_value.IsEmpty())
 		this->m_error = reg_key.Error();
 

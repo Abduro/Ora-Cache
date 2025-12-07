@@ -83,12 +83,13 @@ err_code    CRenderer::Draw (void) {
 	/* setting e_clear_ops::e_depth for clean operation requires:
 	...ensure depth testing is enabled (glEnable(GL_DEPTH_TEST)) and clear the depth buffer, at the beginning of each frame to correctly handle overlapping geometry...
 	*/
+#if (0)
 	using e_caps = TCapsProcs::e_caps;
 	if (__failed(::__get_caps_procs().Enable(true, e_caps::e_depth_tst))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_caps_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_caps_procs().Error();
 	}
-
+#endif
 	if (__failed(::__get_eraser_procs().All(e_clear_ops::e_color|e_clear_ops::e_depth))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
@@ -96,18 +97,22 @@ err_code    CRenderer::Draw (void) {
 #if (0)
 	this->View().Grid().Draw();
 #endif
-	if (false == this->Scene().Prog().Status().Is_current()) {
-	if (__failed(this->Scene().Prog().Use())) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Prog().Error().Print(TError::e_print::e_req));
-		return this->m_error = this->Scene().Prog().Error();
+
+	using e_prog_ndx = CProg_enum::e_prog_ndx;
+
+	if (false == this->Scene().Progs().Get(e_prog_ndx::e_tria).Status().Is_current()) {
+	if (__failed(this->Scene().Progs().Get(e_prog_ndx::e_tria).Use())) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Progs().Get(e_prog_ndx::e_tria).Error().Print(TError::e_print::e_req));
+		return this->m_error = this->Scene().Progs().Get(e_prog_ndx::e_tria).Error();
 	}}
-//	this->Scene().Array().Unbind(); the triangle vertex buffer is not drawn in suxh case;
+#if (1)
+//	this->Scene().Array().Unbind(); the triangle vertex buffer is not drawn in such case;
 	if (false == this->Scene().Array().Is_bound())
 	if (__failed(this->Scene().Array().Bind())) {
 		return this->m_error = this->Scene().Array().Error();
 	}
-#if (1)
-	if (__failed(::__get_render_procs().DrawArrays(this->Scene().Prog().Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
+
+	if (__failed(::__get_render_procs().DrawArrays(this->Scene().Progs().Get(e_prog_ndx::e_tria).Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_render_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_render_procs().Error();
 	}

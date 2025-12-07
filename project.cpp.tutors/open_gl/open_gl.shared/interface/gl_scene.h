@@ -19,6 +19,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	using CArray  = vertex::CArrObject;
 	using CDevCtx = context::CDevice;
 	using CDrwCtx = CContext;
+	using CProgs  = CProg_enum;
 	public:
 		class CContext {
 		public:
@@ -53,16 +54,16 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		TError&  Error (void) const;
 		err_code Prepare (void);
 		const
-		CProgram& Prog (void) const;
-		CProgram& Prog (void) ;
+		CProgs&  Progs (void) const;
+		CProgs&  Progs (void) ;
 
 	private:
 		CScene& operator = (const CScene&) = delete; CScene& operator =  (CScene&&) = delete;
 		mutable
-		CError   m_error;
-		CProgram m_prog ;
-		CArray   m_array;
-		CContext m_ctx;
+		CError     m_error;
+		CProg_enum m_progs;
+		CArray     m_array;
+		CContext   m_ctx;
 	};
 
 }}}

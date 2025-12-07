@@ -61,22 +61,8 @@ TError&  CScene::Destroy (void) {
 	if (__failed(this->Array().Delete()))
 		return this->m_error = this->Array().Error();
 
-	// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
-	if (this->Prog().Buffer().Is_bound()) {
-		if (__failed(this->Prog().Buffer().Unbind()))
-			return this->m_error = this->Prog().Buffer().Error();
-	}
-	if (__failed(this->Prog().Buffer().Destroy()))
-			return this->m_error = this->Prog().Buffer().Error();
-#if (0) // shaders must be deleted right after linking the program;
-	if (__failed(this->Prog().Shaders().Detach()))
-		return this->m_error = this->Prog().Shaders().Error();
-
-	if (__failed(this->Prog().Shaders().Delete()))
-		return this->m_error = this->Prog().Shaders().Error();
-#endif
-	if (__failed(this->Prog().Delete()))
-		return this->m_error = this->Prog().Error();
+	if (__failed(this->Progs().Delete()))
+		return this->m_error = this->Progs().Error();
 
 	return this->Error();
 }
@@ -96,34 +82,19 @@ err_code CScene::Prepare (void) {
 
 #pragma region _1st_step
 	// the step #1: creating shaders, program, shaders' attachment and linking the program;
-	if (__failed(this->Prog().Create()))
-		return this->m_error = this->Prog().Error();
+	if (__failed(this->Progs().Create()))
+		return this->m_error = this->Progs().Error();
 	
-	if (__failed(this->Prog().Shaders().Create()))
-	    return this->m_error = this->Prog().Shaders().Error();
+	if (__failed(this->Progs().Load()))
+		return this->m_error = this->Progs().Error();
 
-	if (__failed(this->Prog().Shaders().Load()))
-		return this->m_error = this->Prog().Shaders().Error();
-
-	if (__failed(this->Prog().Shaders().Compile()))
-		return this->m_error = this->Prog().Shaders().Error();
-
-	if (__failed(this->Prog().Shaders().Attach()))
-		return this->m_error = this->Prog().Shaders().Error();
-
-	if (__failed(this->Prog().Link()))
-		return this->m_error = this->Prog().Error();
-
-	// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
-	if (false) {}
-	else if (__failed(this->Prog().Shaders().Detach())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
-	else if (__failed(this->Prog().Shaders().Delete())) this->m_error = this->Prog().Shaders().Error(); // the error is output to trace by the shaders' cache;
-
+	if (__failed(this->Progs().Build()))
+		return this->m_error = this->Progs().Error();
 #pragma endregion
 #pragma region __2nd_step
 #if (1)
 	// the step #2: configuring vertex attributes;
-	this->Array().Attrs() << this->Prog().Id();
+	this->Array().Attrs() << this->Progs().Get(CProgs::e_tria).Id();
 	if (__failed(this->Array().Attrs().Enum_attrs())) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Array().Attrs().Error().Print(TError::e_print::e_req));
 	}
@@ -176,26 +147,26 @@ err_code CScene::Prepare (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 #endif
-	if (__succeeded(this->Prog().Validate())) { // a possible error trace is made in the procedure being called;
-		__trace_impt_2(_T("The draw scene is prepared;\n"));
-	}
-	else
-		return this->m_error = this->Prog().Error();
 
-	if (__failed(this->Prog().Buffer().Create()))
-		return this->m_error = this->Prog().Buffer().Error();
+#if (0) // needs to be moved to the programs enumerator class;
+	if (__failed(prog.Buffer().Create()))
+		return this->m_error = prog.Buffer().Error();
 
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 #if (1)
-	if (__failed(this->Prog().Buffer().BindTo(e_bind_targets::e_array)))
-		return this->m_error = this->Prog().Buffer().Error();
+	if (__failed(prog.Buffer().BindTo(e_bind_targets::e_array)))
+		return this->m_error = prog.Buffer().Error();
 #else
-	if (__failed(this->Prog().Buffer().Bind()))
-		return this->m_error = this->Prog().Buffer().Error();
+	if (__failed(prog.Buffer().Bind()))
+		return this->m_error = prog.Buffer().Error();
 #endif
+#endif
+	if (false == this->Error())
+		__trace_impt_2(_T("The draw scene is prepared;\n"));
+
 	return this->Error();
 }
 
 const
-CProgram& CScene::Prog (void) const { return this->m_prog; }
-CProgram& CScene::Prog (void)       { return this->m_prog; }
+CScene::CProgs& CScene::Progs (void) const { return this->m_progs; }
+CScene::CProgs& CScene::Progs (void)       { return this->m_progs; }

@@ -9,12 +9,14 @@
 
 #include "shared.preproc.h"
 #include "shared.dbg.h"
+#include "sys.registry.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
 
 /////////////////////////////////////////////////////////////////////////////
 
+#pragma region CProgram{}
 #define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
 
 CProgram:: CProgram (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
@@ -176,3 +178,130 @@ err_code CProgram::Validate (void) {
 }
 
 CProgram& CProgram::operator <<(const CProgId& _prog_id) { this->Id() << _prog_id; return *this; }
+
+#pragma endregion
+
+namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
+
+	static CProgram inv_prog;
+
+}}}}
+using namespace _impl;
+
+CProg_enum:: CProg_enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CProg_enum::~CProg_enum (void) {}
+
+err_code CProg_enum::Build (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
+		CProgram& prog = this->Get((e_prog_ndx)i_);
+
+		if (__failed(prog.Shaders().Compile())) {
+			this->m_error = prog.Shaders().Error(); break;
+		}
+		if (__failed(prog.Shaders().Attach())) {
+			this->m_error = prog.Shaders().Error(); break;
+		}
+		if (__failed(prog.Link())) {
+			this->m_error = prog.Error(); break;
+		}
+	}
+
+	return this->Error();
+}
+
+err_code CProg_enum::Clear (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
+		CProgram& prog = this->Get((e_prog_ndx)i_);
+		// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
+		if (false) {}
+		else if (__failed(prog.Shaders().Detach())) this->m_error = prog.Shaders().Error(); // the error is output to trace by the shaders' cache;
+		else if (__failed(prog.Shaders().Delete())) this->m_error = prog.Shaders().Error(); // the error is output to trace by the shaders' cache;
+	}
+
+	return this->Error();
+}
+
+err_code CProg_enum::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
+		CProgram& prog = this->Get((e_prog_ndx)i_);
+		if (__failed(prog.Create())) {
+			this->m_error = prog.Error(); break;
+		}
+		if (__failed(prog.Shaders().Create())) {
+			this->m_error = prog.Shaders().Error(); break;
+		}
+		if (__succeeded(prog.Validate())) { // a possible error trace is made in the procedure being called;
+		}
+		else {
+			this->m_error = prog.Error(); break;
+		}
+	}
+
+	return this->Error();
+}
+
+err_code CProg_enum::Delete (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
+		CProgram& prog = this->Get((e_prog_ndx)i_);
+		// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
+		if (prog.Buffer().Is_bound()) {
+			if (__failed(prog.Buffer().Unbind()))
+				this->m_error = prog.Buffer().Error(); // no break on error; just continue;
+		}
+		if (__failed(prog.Buffer().Destroy())) {
+			this->m_error = prog.Buffer().Error();     // no break on error; just continue;
+		}
+#if (0) // shaders must be deleted right after linking the program;
+		if (__failed(prog.Shaders().Detach()))
+			return this->m_error = prog.Shaders().Error();
+
+		if (__failed(prog.Shaders().Delete()))
+			return this->m_error = prog.Shaders().Error();
+#endif
+		if (__failed(prog.Delete()))
+			this->m_error = prog.Error(); // no break on error; just continue;
+	}
+
+	return this->Error();
+}
+
+TError&  CProg_enum::Error (void) const { return this->m_error; }
+
+const
+CProgram&   CProg_enum::Get (const e_prog_ndx _ndx) const {
+	_ndx;
+	if (e_prog_ndx::e_grid == _ndx) return this->m_progs[_ndx];
+	if (e_prog_ndx::e_tria == _ndx) return this->m_progs[_ndx];
+	return _impl::inv_prog;
+}
+
+CProgram&   CProg_enum::Get (const e_prog_ndx _ndx) {
+	_ndx;
+	if (e_prog_ndx::e_grid == _ndx) return this->m_progs[_ndx];
+	if (e_prog_ndx::e_tria == _ndx) return this->m_progs[_ndx];
+	return _impl::inv_prog;
+}
+
+err_code    CProg_enum::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;
+	static _pc_sz p_object[] = {_T("grid.1"), _T("triangle.1")};
+
+	for (uint32_t i_ = 0; i_ < CProg_enum::u_count && i_ < _countof(p_object); i_++) {
+		CProgram& prog = this->Get((e_prog_ndx)i_);
+		if (__failed(prog.Shaders().Fragment().Src().Cfg().Path(p_object[i_], prog.Shaders().Fragment().Type().Get())))
+		    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+		if (__failed(prog.Shaders().Vertex().Src().Cfg().Path(p_object[i_], prog.Shaders().Vertex().Type().Get())))
+	        __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	}
+
+	return this->Error();
+}

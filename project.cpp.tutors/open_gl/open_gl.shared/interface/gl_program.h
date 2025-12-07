@@ -68,6 +68,35 @@ namespace program {
 		 program::CCache  m_shaders;
 		 program::CStatus m_status;
 	};
+
+	class CProg_enum {
+	public:
+		enum e_prog_ndx : uint32_t {
+		     e_grid = 0x0,
+		     e_tria = 0x1,
+		};
+		static const uint32_t u_count = e_prog_ndx::e_tria + 1;
+	public:
+		CProg_enum (void); CProg_enum (const CProg_enum&) = delete; CProg_enum (CProg_enum&&) = delete; ~CProg_enum (void);
+
+		err_code  Build (void);  // builds the programs: compiles shaders and links the each program of this enumeration;
+		err_code  Clear (void);  // detaches shaders and delets them;
+
+		err_code  Create (void); // creates program objects;
+		err_code  Delete (void); // deletes program objects;
+		TError&   Error  (void) const;
+
+		const
+		CProgram& Get (const e_prog_ndx) const; // if the input index is out of range the reference to invalid program object is returned; (ro)
+		CProgram& Get (const e_prog_ndx) ;	    // if the input index is out of range the reference to invalid program object is returned; (rw)
+
+		err_code  Load (void); // loads shaders' source files by paths which specified in the registry;
+
+	private:
+		CProg_enum& operator = (const CProg_enum&) = delete;
+		CError   m_error;
+		CProgram m_progs[CProg_enum::u_count];
+	};
 }}}
 
 #endif/*_GL_PROGRAM_H_INCLUDED*/

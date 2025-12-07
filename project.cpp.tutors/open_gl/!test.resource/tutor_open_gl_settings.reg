@@ -8,11 +8,13 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders]
 
-[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders\$_fragment]
-"source"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\$_fragment.glsl"
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders\grid.1]
+"$_fragment"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\03_grid.clr"
+"$_vertex"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\03_grid.vex"
 
-[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders\$_vertex]
-"source"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\$_vertex.glsl"
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders\triangle.1]
+"$_fragment"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\02_triangle.clr"
+"$_vertex"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\02_triangle.vex"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\theme]
 "border"="#FFB900"
