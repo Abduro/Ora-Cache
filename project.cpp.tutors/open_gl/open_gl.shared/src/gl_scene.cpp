@@ -13,6 +13,7 @@
 using namespace ex_ui::draw::open_gl;
 
 using CDevice = context::CDevice;
+using CArrObjs = CScene::CArrObjs;
 
 #pragma region CScene::CContext
 CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
@@ -45,21 +46,15 @@ CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; 
 CScene::~CScene (void) {}
 
 const
-vertex::CArrObject&  CScene::Array (void) const { return this->m_array; }
-vertex::CArrObject&  CScene::Array (void)       { return this->m_array; }
+CArrObjs& CScene::ArrObjs (void) const { return this->m_arr_objs; }
+CArrObjs& CScene::ArrObjs (void)       { return this->m_arr_objs; }     
+
 const
 CScene::CContext& CScene::Ctx (void) const { return this->m_ctx; }
 CScene::CContext& CScene::Ctx (void)       { return this->m_ctx; }
 
 TError&  CScene::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
-	if (this->Array().Is_bound()) {
-		if (__failed(this->Array().Unbind()))
-			return this->m_error = this->Array().Error();
-	}
-	if (__failed(this->Array().Delete()))
-		return this->m_error = this->Array().Error();
 
 	if (__failed(this->Progs().Delete()))
 		return this->m_error = this->Progs().Error();
@@ -92,61 +87,10 @@ err_code CScene::Prepare (void) {
 		return this->m_error = this->Progs().Error();
 #pragma endregion
 #pragma region __2nd_step
-#if (1)
-	// the step #2: configuring vertex attributes;
-	this->Array().Attrs() << this->Progs().Get(CProgs::e_tria).Id();
-	if (__failed(this->Array().Attrs().Enum_attrs())) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Array().Attrs().Error().Print(TError::e_print::e_req));
-	}
-#else
-	// this is predefined names of attributes;
-	// enumerating of the attributes is not done yet;
-	static _pc_sz attr_names[] = {_T("colorIn"), _T("positionIn")};
-
-	// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
-	if (__failed(this->Array().Attrs().Clr().Name(attr_names[0]))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
-	if (__failed(this->Array().Attrs().Pos().Name(attr_names[1]))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
-	// the error may be set by procedure of assigning the name to attribute, just output the error to trace log;
-	if (this->Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-#endif
-	if (__failed(this->Array().Create())) return this->m_error = this->Array().Error();
-	if (__failed(this->Array().Bind())) return this->m_error = this->Array().Error();
-	if (__failed(this->Array().Enable(true))) this->m_error = this->Array().Error();
+	// the step #2: configuring vertex attributes and creating vertex attribute objects;
+	if (__failed(this->Progs().Attrs().Init())) { this->m_error = this->Progs().Attrs().Error(); } // does nothing with the error;
+	if (__failed(this->ArrObjs().Create())) { this->m_error = this->Progs().Attrs().Error(); }     // does nothing with the error;
 #pragma endregion
-#if (0)
-	/*important:
-	  the attributes' indices are set through source code of vertex shader, the same is for vertex color, it can be set in fragment shader;
-	  but these indices can be applied after program linking only; they can be received by querying the program object;
-	  for this tutorial another way of vertex attribute location is selected:
-	  the indices are set before linking the program, it is assumed the indices are the same as in shaders' source code;
-	  after linking the program the indices are checked for test purpose that they are sill have the same values;
-	*/
-	// sets attributes' indecise (aka location) before linking the program,
-	// an index of the particular attribute must be the same as in actual vertex: 0 - position; 1 - color;
-	// also, it is very important: the shader source code can change the location of the attributes and after the program linking those locations will be applied;
-	if (__failed(this->Array().Attrs().Clr().Locate().Set(1))) /*return*/ this->m_error = this->Array().Attrs().Clr().Error();
-	if (__failed(this->Array().Attrs().Pos().Locate().Set(0))) /*return*/ this->m_error = this->Array().Attrs().Pos().Error();
-	// the same as above, the error may be set by procedure of setting the index to attribute, just output the error to trace log;
-	if (this->Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-
-	// checks vertex attributes' indices after linking the program and deleting the shaders;
-	// the indices must be the same as them were set before the linking;
-
-	const int32_t n_clr_ndx = this->Array().Attrs().Clr().Locate().Get();
-	const int32_t n_pos_ndx = this->Array().Attrs().Pos().Locate().Get();
-
-	if (this->Array().Attrs().Clr().Locate().Error()) this->m_error = this->Array().Attrs().Clr().Locate().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[0], n_clr_ndx); }
-	if (this->Array().Attrs().Pos().Locate().Error()) this->m_error = this->Array().Attrs().Pos().Locate().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[1], n_pos_ndx); }
-	// the error may be set by any attribute and the error of the first attribute may be overritten by the error of the last attriboute,
-	// but it is not important for this time yet;
-	if (this->Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-	}
-#endif
 
 #if (0) // needs to be moved to the programs enumerator class;
 	if (__failed(prog.Buffer().Create()))

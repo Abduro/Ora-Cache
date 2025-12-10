@@ -261,10 +261,10 @@
     <ClCompile Include="$(_1)gl_version.cpp" />
     <ClInclude Include="$(_0-4)gl_vertex_data.h" />
     <ClCompile Include="$(_1-4)gl_vertex_data.cpp" />
-    <ClInclude Include="$(_0-4)gl_vertex_arr.dat.h" />
-    <ClCompile Include="$(_1-4)gl_vertex_arr.dat.cpp" />
-    <ClInclude Include="$(_0-4)gl_vertex_arr.obj.h" />
-    <ClCompile Include="$(_1-4)gl_vertex_arr.obj.cpp" />
+    <ClInclude Include="$(_0)gl_vertex_arr.dat.h" />
+    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp" />
+    <ClInclude Include="$(_0)gl_vertex_arr.obj.h" />
+    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp" />
     <ClInclude Include="$(_0-4)gl_vertex_attr.h" />
     <ClCompile Include="$(_1-4)gl_vertex_attr.cpp" />
     <ClInclude Include="$(_0)gl_viewport.h" />

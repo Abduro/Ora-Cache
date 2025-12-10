@@ -5,17 +5,23 @@
 	This is Ebo Pack OpenGL tutorials' generic vertex data array interface declaration file; 
 */
 #include "gl_defs.h"
-#include "gl_vertex_attr.h"
-#include "gl_vertex_data.h"
+#include "vertex\gl_vertex_attr.h"
+#include "vertex\gl_vertex_data.h"
+#include "gl_buffer.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	typedef ::std::vector<CVertex> TVertices; // the seperate vertex collection, not the data for vertex buffer;
 
 	class CVertArray {
-		using CAttr = vertex::CAttr;
-		public:
+	public:
+		using CAttr   = vertex::CAttr;
+		using CBuffer = vertex::CBuffer;
+	public:
 		CVertArray (void); CVertArray (const CVertArray&) = delete; CVertArray (CVertArray&&) = delete; ~CVertArray (void);
+		const
+		CBuffer&  Buffer (void) const;
+		CBuffer&  Buffer (void) ;
 
 		uint32_t  Bytes (void) const;    // gets memory size of all vertices of this shape;
 
@@ -48,6 +54,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CError    m_error;
 		TVertices m_items;  // this is the set of vertices themselves;
 		TVertData m_data ;  // this is the data for vertex buffer;
+		CBuffer   m_buffer;
 	};
 
 }}}

@@ -20,7 +20,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 using namespace ex_ui::draw::open_gl::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region vertex::cls::CCfg{}
 data::CCfg:: CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
 
 uint32_t data::CCfg::Count (void) const { return this->m_count_ndx; }
@@ -73,19 +73,19 @@ CString  CTarget::To_str (const e_bind_targets _e_target) {
 	}
 	return  cs_out;
 }
-
+#pragma endregion
 #if (0)
-CBuffer::CBinder:: CBinder (CBuffer& _buf) : m_buffer(_buf) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-CBuffer::CBinder::~CBinder (void) {}
+CBuffer_Base::CBinder:: CBinder (CBuffer_Base& _buf) : m_buffer(_buf) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CBuffer_Base::CBinder::~CBinder (void) {}
 
-TError&  CBuffer::CBinder::Error (void) const { return this->m_error; }
+TError&  CBuffer_Base::CBinder::Error (void) const { return this->m_error; }
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-CBuffer:: CBuffer (void) : m_buf_id(0), m_target(e_bind_targets::e__undef) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-CBuffer::~CBuffer (void) {}
+CBuffer_Base:: CBuffer_Base (void) : m_buf_id(0), m_target(e_bind_targets::e__undef) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CBuffer_Base::~CBuffer_Base (void) {}
 
-err_code  CBuffer::BindTo (const e_bind_targets _e_target) {
+err_code  CBuffer_Base::BindTo (const e_bind_targets _e_target) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (e_bind_targets::e__undef == _e_target) {
@@ -112,7 +112,7 @@ err_code  CBuffer::BindTo (const e_bind_targets _e_target) {
 	return this->Error();
 }
 
-err_code  CBuffer::Create (void) {
+err_code  CBuffer_Base::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (!!this->GetId())
@@ -127,7 +127,7 @@ err_code  CBuffer::Create (void) {
 	return this->Error();
 }
 
-err_code  CBuffer::Destroy (void) {
+err_code  CBuffer_Base::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 #if (0) // no check for binding is required here, the unbinding must be made outside of this procedure;
 	if (false == this->Is_bound()) {
@@ -155,19 +155,19 @@ err_code  CBuffer::Destroy (void) {
 }
 
 const
-data::CCfg& CBuffer::Cfg (void) const { return this->m_cfg; }
-data::CCfg& CBuffer::Cfg (void)       { return this->m_cfg; }
+data::CCfg& CBuffer_Base::Cfg (void) const { return this->m_cfg; }
+data::CCfg& CBuffer_Base::Cfg (void)       { return this->m_cfg; }
 
-TError&   CBuffer::Error (void) const { return this->m_error; }
+TError&   CBuffer_Base::Error (void) const { return this->m_error; }
 
-uint32_t  CBuffer::GetId (void) const { return this->m_buf_id; }
+uint32_t  CBuffer_Base::GetId (void) const { return this->m_buf_id; }
 
-bool  CBuffer::Is_bound (void) const {
-	return CBuffer::Is_bound(this->GetId(), this->m_error);
+bool  CBuffer_Base::Is_bound (void) const {
+	return CBuffer_Base::Is_bound(this->GetId(), this->m_error);
 }
 
 // https://stackoverflow.com/questions/70884233/opengl-get-currently-bound-vertex-buffer-and-index-buffer ;
-bool  CBuffer::Is_bound (const uint32_t _buffer_id, CError& _err) {
+bool  CBuffer_Base::Is_bound (const uint32_t _buffer_id, CError& _err) {
 	_buffer_id; _err;
 	if (0 == _buffer_id)
 		return false == (_err << __e_inv_arg = _T("#__e_inv_val: '_buffer_id' cannot be set to zero (0)")).Is(); // 'false' does not equal to 'true';
@@ -181,11 +181,11 @@ bool  CBuffer::Is_bound (const uint32_t _buffer_id, CError& _err) {
 	return (n_result == static_cast<int32_t>(_buffer_id));
 }
 
-bool  CBuffer::Is_valid (void) const {
-	return CBuffer::Is_valid(this->GetId(), this->m_error);
+bool  CBuffer_Base::Is_valid (void) const {
+	return CBuffer_Base::Is_valid(this->GetId(), this->m_error);
 }
 
-bool  CBuffer::Is_valid (const uint32_t _buffer_id, CError& _err) {
+bool  CBuffer_Base::Is_valid (const uint32_t _buffer_id, CError& _err) {
 	_buffer_id; _err;
 #if (0)
 	const bool b_valid = __get_buf_procs().Is_Buffer(_buffer_id);
@@ -202,8 +202,8 @@ bool  CBuffer::Is_valid (const uint32_t _buffer_id, CError& _err) {
 
 using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 
-e_bind_targets CBuffer::Target (void) const { return this->m_target; }
-const bool     CBuffer::Target (const e_bind_targets e_target) {
+e_bind_targets CBuffer_Base::Target (void) const { return this->m_target; }
+const bool     CBuffer_Base::Target (const e_bind_targets e_target) {
 	e_target;
 	const bool b_changed = this->Target() != e_target;
 
@@ -213,7 +213,7 @@ const bool     CBuffer::Target (const e_bind_targets e_target) {
 	return b_changed;
 }
 
-err_code CBuffer::Unbind (void) {
+err_code CBuffer_Base::Unbind (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 	if (false == this->Is_bound())
@@ -232,18 +232,18 @@ err_code CBuffer::Unbind (void) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CBuffer_4_vert:: CBuffer_4_vert (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
-CBuffer_4_vert::~CBuffer_4_vert (void) {}
+vertex::CBuffer:: CBuffer (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
+vertex::CBuffer::~CBuffer (void) {}
 
-err_code CBuffer_4_vert::Bind (void) {
+err_code vertex::CBuffer::Bind (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	TBase::BindTo(TBase::Target());
 
 	return TBase::Error();
 }
-
-err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
+#if (0)
+err_code vertex::CBuffer::SetData (const CTriangle& _shape) {
 	_shape;
 	TBase::m_error <<__METHOD__<<__s_ok;
 
@@ -280,8 +280,8 @@ err_code CBuffer_4_vert::SetData (const CTriangle& _shape) {
 
 	return TBase::Error();
 }
-
-err_code CBuffer_4_vert::SetData (const TVertData& _v_data) {
+#endif
+err_code vertex::CBuffer::SetData (const TVertData& _v_data) {
 	_v_data;
 	TBase::m_error <<__METHOD__<<__s_ok;
 

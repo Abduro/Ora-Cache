@@ -140,15 +140,15 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #endif
 		using e_prog_ndx = CProg_enum::e_prog_ndx;
 		using
-		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
-		CBuffer_4_vert& buffer = cam_wnd.Renderer().Scene().Progs().Get(e_prog_ndx::e_tria).Buffer();
+		CBuffer = ex_ui::draw::open_gl::vertex::CBuffer;
+		CBuffer& buffer = cam_wnd.Renderer().Scene().Progs().Get(e_prog_ndx::e_tria).Buffer();
 
 		// (4.a) sets buffer cfg values;
 		buffer.Cfg().Count(triangle.Vertices().Count());
 		buffer.Cfg().Primitive(triangle.Primitive());
 		buffer.Cfg().StartAt(0);
 
-		if (__failed(buffer.SetData(triangle))) {
+		if (__failed(buffer.SetData(triangle.Vertices().Data_Ref()))) {
 			break;
 		}
 #pragma endregion

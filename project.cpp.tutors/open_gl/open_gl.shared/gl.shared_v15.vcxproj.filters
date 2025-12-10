@@ -114,10 +114,10 @@
     <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0-4)gl_vertex_data.h"><Filter>interface\vertex</Filter></ClInclude>
     <ClCompile Include="$(_1-4)gl_vertex_data.cpp"><Filter>src\vertex</Filter></ClCompile>
-    <ClInclude Include="$(_0-4)gl_vertex_arr.dat.h"><Filter>interface\vertex</Filter></ClInclude>
-    <ClCompile Include="$(_1-4)gl_vertex_arr.dat.cpp"><Filter>src\vertex</Filter></ClCompile>
-    <ClInclude Include="$(_0-4)gl_vertex_arr.obj.h"><Filter>interface\vertex</Filter></ClInclude>
-    <ClCompile Include="$(_1-4)gl_vertex_arr.obj.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex_arr.dat.h"><Filter>interface\vertex</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex_arr.obj.h"><Filter>interface\vertex</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp"><Filter>src\vertex</Filter></ClCompile>
     <ClInclude Include="$(_0-4)gl_vertex_attr.h"><Filter>interface\vertex</Filter></ClInclude>
     <ClCompile Include="$(_1-4)gl_vertex_attr.cpp"><Filter>src\vertex</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_viewport.h"><Filter>interface</Filter></ClInclude>

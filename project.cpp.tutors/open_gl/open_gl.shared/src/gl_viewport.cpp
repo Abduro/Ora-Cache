@@ -123,19 +123,20 @@ view::CGrid:: CGrid (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*th
 view::CGrid::~CGrid (void) {}
 
 const
-view::CArrObj&   view::CGrid::Array  (void) const { return this->m_arr_obj; }
-view::CArrObj&   view::CGrid::Array  (void)       { return this->m_arr_obj; }
+view::CArrObj& view::CGrid::Array  (void) const { return this->m_arr_obj; }
+view::CArrObj& view::CGrid::Array  (void)       { return this->m_arr_obj; }
 
 const
-view::CVertBuff& view::CGrid::Buffer (void) const { return this->m_vert_buf; }
-view::CVertBuff& view::CGrid::Buffer (void)       { return this->m_vert_buf; }
+view::CBuffer& view::CGrid::Buffer (void) const { return this->m_vert_buf; }
+view::CBuffer& view::CGrid::Buffer (void)       { return this->m_vert_buf; }
+
 const
 view::CGrid::CCell& view::CGrid::Cell (void) const { return this->m_cell; }
 view::CGrid::CCell& view::CGrid::Cell (void)       { return this->m_cell; }
 
 err_code view::CGrid::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	
+#if (0)	
 	this->Array().Attrs().Clr().Is_used(false);
 	this->Array().Attrs().Pos().Is_used(true);
 	this->Array().Attrs().Pos().Name(_T("$grid::pos"));
@@ -162,7 +163,7 @@ err_code view::CGrid::Create (void) {
 	if (__failed(this->Array().Enable(true))) {
 		this->m_error = this->Array().Error();
 	}
-
+#endif
 	return this->Error();
 }
 
@@ -239,7 +240,7 @@ err_code view::CGrid::Draw (void) {
 		this->m_error = ::__get_attr_mod_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
 	}
-
+#if (0)
 	const vertex::CAttr& a_pos = this->Array().Attrs().Pos();
 	if (false == a_pos.Is_valid()) // the attr size is checked in order to avoid the division by 0;
 		return this->m_error <<__e_inv_arg = _T("#__e_inv_param: attr 'a_pos' is not valid"); // this is essential error, thus interrupt this function;
@@ -250,7 +251,7 @@ err_code view::CGrid::Draw (void) {
 	}
 
 	this->Array().Unbind();
-
+#endif
 	return n_result;
 }
 #endif

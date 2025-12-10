@@ -155,23 +155,25 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 	public:
 		CAttrArray (void); ~CAttrArray (void); CAttrArray (const CAttrArray&); CAttrArray (CAttrArray&&);
 
-		err_code Bind (void);        // binds program's attributes with its declaration in shaper's source code; can be called *before* linking;
-		err_code Is_bound(void);     // returns indices of the attributes *after* linking the program;
+		err_code Bind (void);         // binds program's attributes with its declaration in shaper's source code; can be called *before* linking;
+		err_code Is_bound(void);      // returns indices of the attributes *after* linking the program;
 
 		const
-		CColor&  Clr (void) const;   // playing with property names;
+		CColor&  Clr (void) const;    // playing with property names;
 		CColor&  Clr (void) ;
 
-		uint32_t Count (void) const; // returns a number of elements in this attribute array; it is suetable to make the abstraction from particular attr specifics;
+		uint32_t Count (void) const;  // returns a number of elements in this attribute array; it is suetable to make the abstraction from particular attr specifics;
 		const
 		CAttr&   Item (const uint32_t _ndx) const; // if the input index value is greater than attributes' count - 1, the reference to invalid attr object is returned;
 
-		err_code Enum_attrs (void) ; // enumerates all attributes that are linked to the program;
+		err_code Enable (const bool); // enables/disables all attributes of this array;
+		err_code Enable (const bool, const uint32_t _att_ndx);
+		err_code Enum_attrs (void) ;  // enumerates all attributes that are linked to the program;
 
 		TError&  Error (void) const;
-		bool  Is_valid (void) const; // checks each attribute for its validity;
+		bool  Is_valid (void) const;  // checks each attribute for its validity;
 		const
-		CPosition& Pos (void) const; // playing with property names;
+		CPosition& Pos (void) const;  // playing with property names;
 		CPosition& Pos (void) ;
 		
 		const

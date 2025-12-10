@@ -204,7 +204,7 @@ CAttr&  CAttr::operator >>(const uint32_t _u_type) { this->m_type = _u_type; ret
 
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region CColor{}
 using CConvert = ex_ui::color::rgb::CConvert; // this class has static method for converting color channel to float value;
 
 CColor:: CColor (void) : TBase() {
@@ -260,9 +260,9 @@ void CColor::Set (const rgb_color _rgba) {
 
 CColor&  CColor::operator = (const CColor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CColor&  CColor::operator = (CColor&& _victim) { *this = (const CColor&)_victim; return *this; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region CPosition{}
 CPosition:: CPosition (void) : TBase() {
 	TBase::m_error >>__CLASS__<<__s_ok;
 	TBase::m_offset = 0; // position goes first, no offset;
@@ -296,7 +296,7 @@ void CPosition::Set (const long  _x, const long  _y) {
 
 CPosition&  CPosition::operator = (const CPosition& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPosition&)_victim; return *this; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 
 CAttrArray:: CAttrArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
@@ -377,14 +377,72 @@ CColor&  CAttrArray::Clr (void) const { return this->m_clr; }
 CColor&  CAttrArray::Clr (void)       { return this->m_clr; }
 
 uint32_t CAttrArray::Count (void) const { return 2; } // the position and color together make 2;
-const
-CAttr&   CAttrArray::Item (const uint32_t _ndx) const {
-	_ndx;
-	if (0 == _ndx) return this->Pos();
-	if (1 == _ndx) return this->Clr();
 
-	static CAttr na_attr;
-	return na_attr;
+err_code CAttrArray::Enable (const bool _b_state) {
+	_b_state;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CAttr* attrs[] = { &this->Clr(), &this->Pos() };
+#if (1)
+	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
+
+		if (false == attrs[i_]->Is_used())
+			continue;
+
+		const int32_t n_att_ndx = attrs[i_]->Locate().Value();
+		this->Enable(_b_state, n_att_ndx);
+	}
+#elif (true == false)
+	for (uint32_t i_ = 0; i_ < _countof(attrs); i_++) {
+		const int32_t n_att_ndx = attrs[i_]->Locate().Value();
+		if (_b_state) {
+			if (__failed(__get_attr_procs().Enable(this->GetId(), n_att_ndx))) {
+				this->m_error = __get_attr_procs().Error();
+				__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+			}
+			else {
+				__trace_info_2(_T("The attr (ndx = %u) of the array (id = %u) is enabled;\n"), n_att_ndx, this->GetId());
+			}
+		}
+		else {
+			if (__failed(__get_attr_procs().Disable(this->GetId(), n_att_ndx))) {
+				this->m_error = __get_attr_procs().Error();
+				__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+			}
+			else {
+				__trace_info_2(_T("The attr (ndx = %u) of the array (id = %u) is disabled;\n"), n_att_ndx, this->GetId());
+			}
+		}
+	}
+#elif (false == true) // the code snippet below is incorrect;
+	const uint32_t _arr_ndx = this->GetId();
+	if (__failed(__get_attr_arr_procs().Enable(_arr_ndx))) {
+		this->m_error = __get_attr_arr_procs().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+	else {
+		__trace_info_2(_T("The array: id = %u, ndx = %u is enabled;\n"), this->GetId(), _arr_ndx);
+	}
+#endif
+	return this->Error();
+}
+
+err_code CAttrArray::Enable (const bool _b_state, const uint32_t _att_ndx) {
+	_b_state; _att_ndx;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (_b_state) {
+		if ( __failed(__get_attr_arr_procs().Enable(_att_ndx))) {
+			    this->m_error = __get_attr_procs().Error();
+			    __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+		else __trace_info_2(_T("The attr (ndx = %u) of the prog (id = %u) is enabled;\n"), _att_ndx, this->ProgId().Get()); }
+	else {
+		if ( __failed(__get_attr_arr_procs().Disable(_att_ndx))) {
+			    this->m_error = __get_attr_procs().Error();
+			    __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+		else __trace_info_2(_T("The attr (ndx = %u) of the prog (id = %u) is disabled;\n"), _att_ndx, this->ProgId().Get());
+	}
+	return this->Error();
 }
 
 err_code CAttrArray::Enum_attrs (void) {
@@ -474,7 +532,15 @@ bool     CAttrArray::Is_valid (void) const {
 
 	return false == this->Error().Is();     // 'false' == 'false' is 'true';
 }
+const
+CAttr&   CAttrArray::Item (const uint32_t _ndx) const {
+	_ndx;
+	if (0 == _ndx) return this->Pos();
+	if (1 == _ndx) return this->Clr();
 
+	static CAttr na_attr;
+	return na_attr;
+}
 const
 CPosition& CAttrArray::Pos (void) const { return this->m_pos; }
 CPosition& CAttrArray::Pos (void)       { return this->m_pos; }

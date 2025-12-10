@@ -105,7 +105,7 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Progs().Get(e_prog_ndx::e_tria).Error().Print(TError::e_print::e_req));
 		return this->m_error = this->Scene().Progs().Get(e_prog_ndx::e_tria).Error();
 	}}
-#if (1)
+#if (0)
 //	this->Scene().Array().Unbind(); the triangle vertex buffer is not drawn in such case;
 	if (false == this->Scene().Array().Is_bound())
 	if (__failed(this->Scene().Array().Bind())) {
@@ -123,7 +123,7 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 
-	this->Scene().Array().Unbind();
+//	this->Scene().Array().Unbind();
 	
 	return this->Error();
 }

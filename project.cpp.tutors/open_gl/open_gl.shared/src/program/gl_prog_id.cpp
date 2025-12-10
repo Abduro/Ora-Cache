@@ -23,6 +23,10 @@ err_code  CProgId::Set (const uint32_t _u_value) {
 	_u_value;
 	this->m_error<<__METHOD__<<__s_ok;
 
+	if (0 == _u_value) {
+		this->Reset();
+		return this->Error();
+	}
 	if (false == CProgId::Is_valid(_u_value, this->m_error))
 		return this->Error();
 

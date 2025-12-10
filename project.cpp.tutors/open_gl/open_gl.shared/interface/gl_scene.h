@@ -8,7 +8,7 @@
 #include "gl_context.h"
 #include "gl_program.h"
 #include "gl_shader.h"
-#include "vertex\gl_vertex_arr.obj.h"
+#include "gl_vertex_arr.obj.h"
 #include "vertex\gl_vertex_attr.h"
 #include "vertex\gl_vertex_data.h"
 
@@ -16,10 +16,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CScene {
 	public:
-	using CArray  = vertex::CArrObject;
-	using CDevCtx = context::CDevice;
-	using CDrwCtx = CContext;
-	using CProgs  = CProg_enum;
+	using CDevCtx  = context::CDevice;
+	using CDrwCtx  = CContext;
+	using CArrObjs = vertex::CArrObj_enum;
+	using CProgs   = CProg_enum;
 	public:
 		class CContext {
 		public:
@@ -43,15 +43,16 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	
 	public:
 		CScene (void); CScene (const CScene&) = delete; CScene (CScene&&) = delete; ~CScene (void);
+
 		const
-		CArray&  Array (void) const;
-		CArray&  Array (void) ;
+		CArrObjs& ArrObjs (void) const; // returns the reference to vertex array objects (aka vao); (ro)
+		CArrObjs& ArrObjs (void) ;      // returns the reference to vertex array objects (aka vao); (rw)
 		const
 		CContext& Ctx (void) const;
 		CContext& Ctx (void) ;
 
 		TError&  Destroy (void);
-		TError&  Error (void) const;
+		TError&  Error   (void) const;
 		err_code Prepare (void);
 		const
 		CProgs&  Progs (void) const;
@@ -59,11 +60,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	private:
 		CScene& operator = (const CScene&) = delete; CScene& operator =  (CScene&&) = delete;
-		mutable
+		CArrObjs   m_arr_objs;
+		CContext   m_ctx;
 		CError     m_error;
 		CProg_enum m_progs;
-		CArray     m_array;
-		CContext   m_ctx;
 	};
 
 }}}

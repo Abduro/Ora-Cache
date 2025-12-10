@@ -204,9 +204,17 @@ err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
 	if (this->m_buffer.IsEmpty() == false)
 		this->m_buffer.ReleaseBuffer();
 
-	CStringA src_a;
+	char buffer[4096] = {0};
 
-	if (__failed(h_result = file_.Read(src_a.GetBuffer(static_cast<int>(ul_size)), static_cast<uint32_t>(ul_size)))) return this->m_error << h_result;
+	CStringA src_a;
+//	in such case of using dynamically allocated buffer of the string class, src_a.GetLength() returns 0 (zero) that is not 'true';
+//	if (__failed(h_result = file_.Read(src_a.GetBuffer(static_cast<int>(ul_size)), static_cast<uint32_t>(ul_size)))) return this->m_error << h_result;
+	if (__failed(h_result = file_.Read(buffer, _countof(buffer)))) this->m_error << h_result;
+//	the error is generated: 'the end of file is reached', that means the received buffer is greater than the length of data being read; stupid error;
+	if (this->Error().Result() == __DwordToHresult(ERROR_HANDLE_EOF))
+		this->m_error << __s_ok; // does not care, the buffer size is greater that is required, that's fine;
+
+	src_a = buffer;
 
 	int32_t n_len = src_a.GetLength();
 

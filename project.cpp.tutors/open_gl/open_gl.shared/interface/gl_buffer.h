@@ -7,7 +7,6 @@
 #include "gl_defs.h"
 #include "procs\gl_procs_buffer.h"
 #include "vertex\gl_vertex_data.h"
-#include "shapes\gl_shape.2d.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
@@ -40,25 +39,25 @@ namespace data {
 	/* note: each buffer for one set of data: for example, setting a position and a color through different sets of data will require two buffers;
 	   https://gamedev.stackexchange.com/questions/90471/should-unbind-buffers << explanation of the correct order of creation and use of the drawing pipeline;
 	*/
-	class CBuffer {
+	class CBuffer_Base {
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 	using CCfg = data::CCfg;
 	public:
 #if (0)
 		class CBinder { // https://dictionary.cambridge.org/dictionary/english/binder ;
-		public:  CBinder (CBuffer&); ~CBinder (void);
+		public:  CBinder (CBuffer_Base&); ~CBinder (void);
 		private: CBinder (void) = delete; CBinder (const CBinder&) = delete; CBinder (CBinder&&) = delete;
 		private: CBinder& operator = (const CBinder&) = delete;  CBinder& operator = (CBinder&&) = delete;
 			mutable
 			CError   m_error;
-			CBuffer& m_buffer;
+			CBuffer_Base& m_buffer;
 		public:
 			err_code BindTo (const e_bind_targets);
 			TError&  Error (void) const;
 		};
 #endif
 	public:
-		CBuffer (void); CBuffer (const CBuffer&) = delete; CBuffer (CBuffer&&) = delete; ~CBuffer (void);
+		CBuffer_Base (void); CBuffer_Base (const CBuffer_Base&) = delete; CBuffer_Base (CBuffer_Base&&) = delete; ~CBuffer_Base (void);
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml ;
 		err_code BindTo  (const e_bind_targets); // the excerpt from the doc: ...buffer set to zero effectively unbinds any buffer object previously bound...;
 		err_code Create  (void);
@@ -83,25 +82,24 @@ namespace data {
 		err_code Unbind (void) ;
 
 	protected:
-		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator =  (CBuffer&&) = delete;
+		CBuffer_Base& operator = (const CBuffer_Base&) = delete; CBuffer_Base& operator =  (CBuffer_Base&&) = delete;
 		mutable
 		CError   m_error;
 		uint32_t m_buf_id;
-		CCfg  m_cfg;
+		CCfg     m_cfg;
 		e_bind_targets m_target;
 	};
 
-	using CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
-
-	class CBuffer_4_vert : public CBuffer { typedef CBuffer TBase;
-	private: CBuffer_4_vert (const CBuffer_4_vert&) = delete; CBuffer_4_vert (CBuffer_4_vert&&) = delete;
-	public : CBuffer_4_vert (void); ~CBuffer_4_vert (void);
+namespace vertex {
+	class CBuffer : public CBuffer_Base { typedef CBuffer_Base TBase;
+	private: CBuffer (const CBuffer&) = delete; CBuffer (CBuffer&&) = delete;
+	public : CBuffer (void); ~CBuffer (void);
 #if (1)
 		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
-		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
+//		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
 		err_code SetData (const TVertData&); // sets vertex data vector directly;
 #endif
-	private: CBuffer_4_vert& operator = (const CBuffer_4_vert&) = delete;  CBuffer_4_vert& operator =  (CBuffer_4_vert&&) = delete;
+	private: CBuffer& operator = (const CBuffer&) = delete;  CBuffer& operator =  (CBuffer&&) = delete;
 	};
-}}}
+}}}}
 #endif/*_GL_BUFFER_H_INCLUDED*/

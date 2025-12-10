@@ -12,8 +12,14 @@ using namespace ex_ui::draw::open_gl;
 
 CVertex virt_vex;
 
+using CBuffer = CVertArray::CBuffer;
+
 CVertArray:: CVertArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
 CVertArray::~CVertArray (void) {}
+
+const
+CBuffer&     CVertArray::Buffer (void) const { return this->m_buffer; }
+CBuffer&     CVertArray::Buffer (void)       { return this->m_buffer; }
 
 // https://stackoverflow.com/questions/17254425/getting-the-size-in-bytes-of-a-vector ;
 uint32_t     CVertArray::Bytes (void) const {

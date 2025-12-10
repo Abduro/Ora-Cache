@@ -11,25 +11,35 @@
 #include "program\gl_$_cache.h"
 #include "program\gl_prog_id.h"
 #include "program\gl_prog_status.h"
+#include "gl_vertex_arr.obj.h"
+#include "vertex\gl_vertex_attr.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace program {
 }
 	class CProgram  {
-	using CProgId = program::CProgId;
-	using CStatus = program::CStatus;
+	public:
+	using CAttrArr = vertex::CAttrArray;
+	using CArrObj  = vertex::CArrObject; // vertex array object is not dependable on program itself, but it depends on attributes the program shaders define;
+	using CBuffer  = vertex::CBuffer ;
+	using CCache   = program::CCache ;
+	using CProgId  = program::CProgId;
+	using CStatus  = program::CStatus;
 	public:
 		 CProgram (void) ;  CProgram (const CProgram&) = delete; CProgram (CProgram&&) = delete;
 		~CProgram (void) ;
 
 		 const
-		 CBuffer_4_vert& Buffer (void) const;
-		 CBuffer_4_vert& Buffer (void) ;
+		 CAttrArr& Attrs (void) const; // gets the reference to the attribute array that is dependable on program shaders; (ro)
+		 CAttrArr& Attrs (void) ;      // gets the reference to the attribute array that is dependable on program shaders; (rw)
+		 const
+		 CBuffer& Buffer (void) const;
+		 CBuffer& Buffer (void) ;
 
-		 static CString  Class (void);       // returns this class name for debug purposes;
+		 static CString  Class (void); // returns this class name for debug purposes;
 
 		 err_code Create (void);
-		 err_code Delete (void);
+		 err_code Delete (void);       // deletes the attribute object first afterwards the program object itself;
 
 		 TError&  Error (void) const;
 
@@ -48,11 +58,11 @@ namespace program {
 		 err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());
 
 		 const
-		 program::CCache& Shaders (void) const;
-		 program::CCache& Shaders (void) ;
+		 CCache& Shaders (void) const;
+		 CCache& Shaders (void) ;
 		 const
-		 program::CStatus& Status (void) const;
-		 program::CStatus& Status (void) ;
+		 CStatus& Status (void) const;
+		 CStatus& Status (void) ;
 
 		 err_code Use (void);        // sets this program to be current in draw pipeline;
 		 err_code Validate (void);   // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
@@ -61,12 +71,13 @@ namespace program {
 
 	private:
 		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
-		 program::CProgId m_prog_id;
 		 mutable
 		 CError   m_error;
-		 CBuffer_4_vert   m_buffer;
-		 program::CCache  m_shaders;
-		 program::CStatus m_status;
+		 CAttrArr m_attrs;
+		 CBuffer  m_buffer ;
+		 CCache   m_shaders;
+		 CProgId  m_prog_id;
+		 CStatus  m_status ;
 	};
 
 	class CProg_enum {
@@ -75,15 +86,32 @@ namespace program {
 		     e_grid = 0x0,
 		     e_tria = 0x1,
 		};
-		static const uint32_t u_count = e_prog_ndx::e_tria + 1;
+		static const uint32_t u_count = e_prog_ndx::e_tria + 1; // the number of the programs is pre-defined and can be increased if necessary;
+		class CAttrs {
+		private: CAttrs (const CAttrs&) = delete; CAttrs (CAttrs&&) = delete; friend class CProg_enum;
+		private: CAttrs& operator = (const CAttrs&) = delete; CAttrs& operator = (CAttrs&&) = delete;
+		public:
+			CAttrs (CProg_enum* = 0); ~CAttrs (void);
+
+			TError&  Error (void) const;
+			err_code Init  (void); // after getting program build success, program shaders' attributes must be initialized;
+
+		private:
+			CError   m_error;
+			CProg_enum* m_progs;
+		};
 	public:
 		CProg_enum (void); CProg_enum (const CProg_enum&) = delete; CProg_enum (CProg_enum&&) = delete; ~CProg_enum (void);
 
-		err_code  Build (void);  // builds the programs: compiles shaders and links the each program of this enumeration;
-		err_code  Clear (void);  // detaches shaders and delets them;
+		const
+		CAttrs&   Attrs (void) const;
+		CAttrs&   Attrs (void);
 
-		err_code  Create (void); // creates program objects;
-		err_code  Delete (void); // deletes program objects;
+		err_code  Build (void);    // builds the programs: compiles shaders and links the each program of this enumeration;
+		err_code  Clear (void);    // detaches shaders and delets them;
+
+		err_code  Create (void);   // creates program objects;
+		err_code  Delete (void);   // deletes program objects;
 		TError&   Error  (void) const;
 
 		const
@@ -94,6 +122,7 @@ namespace program {
 
 	private:
 		CProg_enum& operator = (const CProg_enum&) = delete;
+		CAttrs   m_attrs;
 		CError   m_error;
 		CProgram m_progs[CProg_enum::u_count];
 	};

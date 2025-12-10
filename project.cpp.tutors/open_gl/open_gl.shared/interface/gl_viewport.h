@@ -7,8 +7,8 @@
 #include "gl_defs.h"
 #include "gl_buffer.h"
 #include "vertex\gl_vertex_data.h"
-#include "vertex\gl_vertex_arr.dat.h"
-#include "vertex\gl_vertex_arr.obj.h"
+#include "gl_vertex_arr.dat.h"
+#include "gl_vertex_arr.obj.h"
 #include "color._defs.h"
 
 typedef
@@ -44,9 +44,9 @@ namespace view {
 		float m_rgba[4];
 	};
 
-	using CArrObj   = vertex::CArrObject;
-	using CVertArr  = CVertArray;
-	using CVertBuff = CBuffer_4_vert;
+	using CArrObj  = vertex::CArrObject;
+	using CVertArr = CVertArray;
+	using CBuffer  = vertex::CBuffer;
 
 	class CGrid : private no_copy {
 	public:
@@ -73,12 +73,12 @@ namespace view {
 		CGrid (void); ~CGrid (void);
 
 		const
-		CArrObj&    Array  (void) const;
-		CArrObj&    Array  (void) ;
+		CArrObj&  Array  (void) const;
+		CArrObj&  Array  (void) ;
 
 		const
-		CVertBuff&  Buffer (void) const;
-		CVertBuff&  Buffer (void) ;
+		CBuffer&  Buffer (void) const;
+		CBuffer&  Buffer (void) ;
 		const
 		CCell& Cell (void) const;
 		CCell& Cell (void) ;
@@ -98,12 +98,12 @@ namespace view {
 		err_code   Update (const t_size_u& _u_size); // recalculates all vertices for input size of the draw area;
 
 	private:
-		CCell  m_cell ;  // cell dimensions: height|width;
-		CError m_error;
-		CColor m_color;
-		CArrObj   m_arr_obj ;
+		CCell     m_cell ;     // cell dimensions: height|width;
+		CError    m_error;
+		CColor    m_color;
+		CArrObj   m_arr_obj ;  // vertex array object;
 		TVertData m_vert_dat;
-		CVertBuff m_vert_buf;
+		CBuffer   m_vert_buf;
 	};
 }
 	typedef ::std::array<float, 3u> t_set_3; // x|y|z;
