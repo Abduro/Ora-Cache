@@ -21,7 +21,6 @@ namespace program {
 	public:
 	using CAttrArr = vertex::CAttrArray;
 	using CArrObj  = vertex::CArrObject; // vertex array object is not dependable on program itself, but it depends on attributes the program shaders define;
-	using CBuffer  = vertex::CBuffer ;
 	using CCache   = program::CCache ;
 	using CProgId  = program::CProgId;
 	using CStatus  = program::CStatus;
@@ -32,9 +31,6 @@ namespace program {
 		 const
 		 CAttrArr& Attrs (void) const; // gets the reference to the attribute array that is dependable on program shaders; (ro)
 		 CAttrArr& Attrs (void) ;      // gets the reference to the attribute array that is dependable on program shaders; (rw)
-		 const
-		 CBuffer& Buffer (void) const;
-		 CBuffer& Buffer (void) ;
 
 		 static CString  Class (void); // returns this class name for debug purposes;
 
@@ -74,7 +70,6 @@ namespace program {
 		 mutable
 		 CError   m_error;
 		 CAttrArr m_attrs;
-		 CBuffer  m_buffer ;
 		 CCache   m_shaders;
 		 CProgId  m_prog_id;
 		 CStatus  m_status ;

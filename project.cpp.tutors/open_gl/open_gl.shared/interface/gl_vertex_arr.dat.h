@@ -23,12 +23,13 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CBuffer&  Buffer (void) const;
 		CBuffer&  Buffer (void) ;
 
-		uint32_t  Bytes (void) const;    // gets memory size of all vertices of this shape;
+		uint32_t  Bytes  (void) const;    // gets memory size of all vertices of this shape;
 
 		// https://www.allacronyms.com/elements/abbreviated ;
-		uint32_t  Count (void) const;    // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
-		err_code  Count (const uint32_t _n_elems);   // sets the number of the required vertices, i.e. elements;
-		TError&   Error (void) const;
+		uint32_t  Count  (void) const;    // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
+		err_code  Count  (const uint32_t _n_elems);  // sets the number of the required vertices, i.e. elements;
+		err_code  Create (void);                     // creates the vertex data buffer;
+		TError&   Error  (void) const;
 
 		const void*      Data_Ptr (void) const;      // gets the pointer to vertex array data, this is the data for vertex buffer;
 		const TVertData& Data_Ref (void) const;      // gets the reference to the vertex data array;

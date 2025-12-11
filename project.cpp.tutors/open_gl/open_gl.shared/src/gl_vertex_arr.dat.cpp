@@ -41,6 +41,17 @@ err_code CVertArray::Count (const uint32_t _n_elems) {
 
 	return this->Error();
 }
+
+err_code CVertArray::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Buffer().Create())) {
+		this->m_error = this->Buffer().Error();
+	}
+
+	return this->Error();
+}
+
 const
 CVertex&  CVertArray::Get (const uint32_t _u_ndx) const { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }
 CVertex&  CVertArray::Get (const uint32_t _u_ndx)       { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }     

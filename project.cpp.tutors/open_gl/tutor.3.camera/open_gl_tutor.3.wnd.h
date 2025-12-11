@@ -7,9 +7,6 @@
 	Adopted to OpenGL tutorials' camera project on 27-Nov-2025 at 00:36:54.670, UTC+4, Batumi, Thursday;
 */
 #include "gl_context.h"
-#include "gl_renderer.h"
-#include "gl_scene.h"
-#include "gl_shader.h"
 #include "shared.wnd.fake.h"
 #include "shared.wnd.base.h" 
 
@@ -33,13 +30,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 		err_code Destroy (void);
 		err_code PostCreate (void);
 
-		const
-		CRenderer&  Renderer (void) const;
-		CRenderer&  Renderer (void) ;
-
 	protected:
 		CFakeWnd  m_fak_wnd; // message-only window (aka fake) is created in its constructor;
-		CRenderer m_renderer;
 	};
 
 }}}}

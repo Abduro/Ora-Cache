@@ -141,3 +141,7 @@ CScene&     CRenderer::Scene (void)       { return this->m_scene; }
 const
 CViewPort&  CRenderer::View (void) const  { return this->m_view; }
 CViewPort&  CRenderer::View (void)        { return this->m_view; }
+
+TRenderer&  ::Get_renderer (void) {
+	static TRenderer renderer; return renderer;
+}

@@ -66,7 +66,7 @@ TError&  CScene::Error (void) const { return this->m_error; }
 
 err_code CScene::Prepare (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
+#if (0) // it should be called as soon as possible, just right after creating fake window device context;
 	shader::CCompiler cmpl;
 	if (false == cmpl.Is_supported()) {
 		 __trace_err_2(_T("%s\n"), (_pc_sz) cmpl.Error().Print(TError::e_print::e_req));
@@ -74,7 +74,7 @@ err_code CScene::Prepare (void) {
 	}
 	else
 		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
-
+#endif
 #pragma region _1st_step
 	// the step #1: creating shaders, program, shaders' attachment and linking the program;
 	if (__failed(this->Progs().Create()))

@@ -72,4 +72,6 @@ namespace render {
 
 }}}
 
+typedef ex_ui::draw::open_gl::CRenderer TRenderer; TRenderer&  Get_renderer (void);
+
 #endif/*_GL_RENDERER_H_INCLUDED*/

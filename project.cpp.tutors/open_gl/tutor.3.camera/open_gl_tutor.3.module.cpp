@@ -9,6 +9,8 @@
 #include "open_gl_tutor.3.res.h"
 
 #include "shared.dbg.h"
+#include "shared.theme.h"
+#include "gl_renderer.h"
 #include "gl_version.h"
 
 #include "console.h"
@@ -67,6 +69,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	using
 	CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
 	CTriangle triangle;
+
+	TRenderer& renderer = ::Get_renderer();
 
 	do {
 		__trace::Use_con(true); // the console window is not created yet; VS debug output is used anyway;
@@ -134,14 +138,15 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_4
 		// (4) sets vertex attributes array to vertex array object;
-		cam_wnd.Renderer().Scene().Prepare();
+		renderer.Scene().Prepare();
 #if (0)
-		cam_wnd.Renderer().Scene().Array().Attrs() = triangle.A().Attrs();
+		renderer.Scene().Array().Attrs() = triangle.A().Attrs();
 #endif
+#if (0)
 		using e_prog_ndx = CProg_enum::e_prog_ndx;
 		using
 		CBuffer = ex_ui::draw::open_gl::vertex::CBuffer;
-		CBuffer& buffer = cam_wnd.Renderer().Scene().Progs().Get(e_prog_ndx::e_tria).Buffer();
+		CBuffer& buffer = renderer.Scene().Progs().Get(e_prog_ndx::e_tria).Buffer();
 
 		// (4.a) sets buffer cfg values;
 		buffer.Cfg().Count(triangle.Vertices().Count());
@@ -151,12 +156,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		if (__failed(buffer.SetData(triangle.Vertices().Data_Ref()))) {
 			break;
 		}
+#endif
 #pragma endregion
 #pragma region __step_5
 		// (5) sets renderer cfg values;
-		cam_wnd.Renderer().Cfg().Count(triangle.Vertices().Count());
-		cam_wnd.Renderer().Cfg().Primitive(triangle.Primitive());
-		cam_wnd.Renderer().Cfg().StartAt(0);
+		renderer.Cfg().Count(triangle.Vertices().Count());
+		renderer.Cfg().Primitive(triangle.Primitive());
+		renderer.Cfg().StartAt(0);
 #pragma endregion
 	} while (true == false);
 
@@ -169,10 +175,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 		if (false == b_error /*&& cam_wnd.Renderer().Is_allowed()*/) {
-			if (__failed(cam_wnd.Renderer().Draw()))   // perhaps this function must check for changing the draw data before draw it;
+			if (__failed(renderer.Draw()))   // perhaps this function must check for changing the draw data before draw it;
 				b_error = true;
 			else
-				cam_wnd.Renderer().Is_allowed(false);  // the window is not sized and there is no action on changing draw mode;
+				renderer.Is_allowed(false);  // the window is not sized and there is no action on changing draw mode;
 			::Sleep(100);
 		}
 	}

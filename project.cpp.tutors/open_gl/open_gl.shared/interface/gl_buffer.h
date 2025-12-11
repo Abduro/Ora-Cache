@@ -96,7 +96,6 @@ namespace vertex {
 	public : CBuffer (void); ~CBuffer (void);
 #if (1)
 		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
-//		err_code SetData (const CTriangle&); // sets the pointer to triangle vertex array;
 		err_code SetData (const TVertData&); // sets vertex data vector directly;
 #endif
 	private: CBuffer& operator = (const CBuffer&) = delete;  CBuffer& operator =  (CBuffer&&) = delete;

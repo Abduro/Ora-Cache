@@ -84,6 +84,10 @@ err_code CArrObject::Create (void) {
 		this->m_error = __get_arr_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
+	else if (__failed(this->VertArray().Create())) {
+		this->m_error = this->VertArray().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
 	else {
 		__trace_impt_2(_T("The vertex array object (id = %u) is created;\n"), this->m_arr_id);
 	}

@@ -9,6 +9,11 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
+#include "gl_renderer.h"
+#include "gl_scene.h"
+#include "gl_shader.h"
+#include "shader\gl_compiler.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::camera;
 
@@ -20,7 +25,7 @@ camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("cam
 		__trace::Out_2(__trace::e_err, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
 	}
 
-	context::CDevice& dev_ref = this->Renderer().Scene().Ctx().Device();
+	context::CDevice& dev_ref = ::Get_renderer().Scene().Ctx().Device();
 	dev_ref.Target().Source((_pc_sz)cs_cls);
 
 	if (__failed(dev_ref.Create(m_fak_wnd.m_hWnd))) {
@@ -35,8 +40,8 @@ camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("cam
 #endif
 }
 camera::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
-	if (this->Renderer().Scene().Ctx().Device().Is_valid())
-	    this->Renderer().Scene().Ctx().Device().Destroy();
+	if (::Get_renderer().Scene().Ctx().Device().Is_valid())
+	    ::Get_renderer().Scene().Ctx().Device().Destroy();
 }
 
 err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
@@ -71,19 +76,29 @@ err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 err_code camera::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
 
+	shader::CCompiler cmpl;
+	if (false == cmpl.Is_supported()) {
+		 __trace_err_2(_T("%s\n"), (_pc_sz) cmpl.Error().Print(TError::e_print::e_req));
+		return this->m_error = cmpl.Error();
+	}
+	else
+		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
+
 	// at the first step the opengl draw renderer must be created;
 	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
 
+	TRenderer& renderer = Get_renderer();
+
 	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
-	this->Renderer().Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
-	this->Renderer().Scene().Ctx().Draw().Target() << *this;
-	if (__failed(this->Renderer().Scene().Ctx().Draw().Create(4, 6))) { // ToDo: the version numbers (major & minor) must be set from version query not hardcoded;
-		this->m_error = this->Renderer().Scene().Ctx().Draw().Error();
+	renderer.Scene().Ctx().Draw().Target() << *this;
+	renderer.Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
+	if (__failed(renderer.Scene().Ctx().Draw().Create(4, 6))) { // ToDo: the version numbers (major & minor) must be set from version query not hardcoded;
+		this->m_error = renderer.Scene().Ctx().Draw().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
 	}
 #if (0)
 	// the fake window and its device handle can not be destroyed at this time; because not all opengl functions are loaded yet;
-	context::CDevice& dev_ref = this->Renderer().Scene().Ctx().Device();
+	context::CDevice& dev_ref = renderer.Scene().Ctx().Device();
 	if (__failed(dev_ref.Destroy())) {
 		this->m_error = dev_ref.Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
@@ -92,36 +107,39 @@ err_code camera::CWnd::PostCreate (void) {
 #if (0)
 	// for better debugging and in order do not re-compile the executable, this section is disabled;
 	// sets resource identifiers for loading shaders' source code;
-	if (__failed(this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 #else
 	// loading external files of shaders' sources is moved to program_enum::load();
 #endif
 	
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
-	if (__failed(this->Renderer().Scene().Prepare()))
+	if (__failed(renderer.Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
 #endif
-	if (__failed(this->Renderer().View().Grid().Create()))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().View().Grid().Error().Print(TError::e_print::e_req));
+	if (__failed(renderer.View().Grid().Create()))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
 
-	this->Renderer().Is_allowed(true);     // allows the draw opereation of the renderer;
+	renderer.Is_allowed(true);     // allows the draw opereation of the renderer;
 
 #define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
-	this->Renderer().Scene().Destroy();
+	renderer.Scene().Destroy();
 #endif
 	return TBase::Error();
 }
 
 err_code camera::CWnd::Destroy (void) {
-	this->Renderer().Is_allowed(false);     // stops draw operation of the renderer;
-	if (__failed(this->Renderer().View().Grid().Destroy()))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().View().Grid().Error().Print(TError::e_print::e_req));
-	this->Renderer().Scene().Destroy();     // the error output to the trace is made by the method being called;
-	this->Renderer().Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
+
+	TRenderer& renderer = ::Get_renderer();
+
+	renderer.Is_allowed(false);     // stops draw operation of the renderer;
+	if (__failed(renderer.View().Grid().Destroy()))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
+	renderer.Scene().Destroy();     // the error output to the trace is made by the method being called;
+	renderer.Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
 	return __s_ok;
 }
 
@@ -152,9 +170,9 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		::FillRect(h_dc, &ps.rcPaint, CBrush(::Get_theme().Border()).Get());
 		::EndPaint(TBase::Handle(), &ps);
 #els (true == false) // if this is able then something goes wrong way: binding of required object(s) is dropped out and triangle goes away;
-		this->Renderer().Is_allowed(true);
-		if (__failed(this->Renderer().Draw()))
-			__trace_err_3(_T("%s;\n"), (_pc_sz) this->Renderer().Error().Print(TError::e_req));
+		::Get_renderer().Is_allowed(true);
+		if (__failed(::Get_renderer().Draw()))
+			__trace_err_3(_T("%s;\n"), (_pc_sz) ::Get_renderer().Error().Print(TError::e_req));
 #endif
 			return 0; // in any case, this message is considered as handled one;
 		} break;
@@ -162,7 +180,7 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	case WM_SIZING :
 		t_rect rect = {0};
 		if (::GetClientRect((*this)(), &rect))  { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
-			this->Renderer().View() << rect;
+			::Get_renderer().View() << rect;
 		}
 		else {
 			TBase::m_error.Last();
@@ -171,7 +189,3 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	}
 	return TBase::IMsg_OnMessage(_u_code, _w_param, _l_param);
 }
-
-const
-CRenderer&  camera::CWnd::Renderer (void) const { return this->m_renderer; }
-CRenderer&  camera::CWnd::Renderer (void)       { return this->m_renderer; }

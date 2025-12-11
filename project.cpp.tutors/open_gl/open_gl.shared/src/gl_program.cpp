@@ -16,7 +16,6 @@ using namespace ex_ui::draw::open_gl::program;
 
 using CArrObj  = CProgram::CArrObj ;
 using CAttrArr = CProgram::CAttrArr;
-using CBuffer  = CProgram::CBuffer ;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,9 +28,6 @@ CProgram::~CProgram (void) { this->Delete(); }
 const
 CAttrArr&  CProgram::Attrs (void) const { return this->m_attrs; }
 CAttrArr&  CProgram::Attrs (void)       { return this->m_attrs; }
-const
-CBuffer&  CProgram::Buffer (void) const { return this->m_buffer; }
-CBuffer&  CProgram::Buffer (void)       { return this->m_buffer; }
 
 CString   CProgram::Class (void) { return __CLASS__; }
 
@@ -334,6 +330,7 @@ err_code CProg_enum::Delete (void) {
 
 	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
 		CProgram& prog = this->Get((e_prog_ndx)i_);
+#if (0) // a buffer is not program attribute anymore;
 		// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
 		if (prog.Buffer().Is_bound()) {
 			if (__failed(prog.Buffer().Unbind()))
@@ -342,6 +339,7 @@ err_code CProg_enum::Delete (void) {
 		if (__failed(prog.Buffer().Destroy())) {
 			this->m_error = prog.Buffer().Error();     // no break on error; just continue;
 		}
+#endif
 #if (0) // shaders must be deleted right after linking the program;
 		if (__failed(prog.Shaders().Detach()))
 			return this->m_error = prog.Shaders().Error();

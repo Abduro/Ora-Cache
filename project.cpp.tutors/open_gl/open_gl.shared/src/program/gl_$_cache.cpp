@@ -203,8 +203,8 @@ err_code CCache::Attached (const uint32_t _prog_id, ::std::vector<$Type>& _v_typ
 err_code CCache::Compile (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader is compiled;\n");
-	static _pc_sz pc_sz_pat_stat = _T("Shader '%s' compiled status: '%s';\n");
+	static _pc_sz pc_sz_pat_cmpl = _T("Source code of '%s' shader (id = %u) is compiled;\n");
+	static _pc_sz pc_sz_pat_stat = _T("Shader '%s' (id = %u) compiled status: '%s';\n");
 
 	shader::CCompiler cmpl;
 	shader::CStatus $_status;
@@ -217,14 +217,14 @@ err_code CCache::Compile (void) {
 		cmpl << shaders[i_]->Id();
 		if ( __failed(cmpl.Compile())) {
 			 __trace_err_2(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req)); }
-		else __trace_info_2(pc_sz_pat_cmpl, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()));
+		else __trace_info_2(pc_sz_pat_cmpl, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
 		// checks the compile status of the shader;
 		$_status << shaders[i_]->Id();
 		const bool b_compiled = $_status.Is_compiled();
 		if ($_status.Error() ) {
 		    __trace_err_2(_T("%s\n"), (_pc_sz) $_status.Error().Print(TError::e_print::e_req)); }
 		else {
-			__trace_info_2(pc_sz_pat_stat, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), TString().Bool(b_compiled));
+			__trace_info_2(pc_sz_pat_stat, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), TString().Bool(b_compiled));
 			if (false == b_compiled) {
 				shader::CLog log;
 				if (__failed(log.Set(shaders[i_]->Id()))) {
@@ -383,7 +383,7 @@ TError&  CCache::Error (void) const { return this->m_error; }
 err_code CCache::Load  (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	static _pc_sz pc_sz_pat_src = _T("Load source code to '%s' shader succeeded;\n");
+	static _pc_sz pc_sz_pat_src = _T("Load source code to '%s' shader (id = %u) succeeded;\n");
 
 	CShader* shaders[] = { &this->Fragment(), &this->Vertex()};
 
@@ -393,7 +393,7 @@ err_code CCache::Load  (void) {
 			__trace_err_2(_T("%s;\n"), (_pc_sz) shaders[i_]->Src().Error().Print(TError::e_print::e_req));
 		}
 		else
-			__trace_info_2(pc_sz_pat_src, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()));
+			__trace_info_2(pc_sz_pat_src, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
 	}
 	return this->Error();
 }
