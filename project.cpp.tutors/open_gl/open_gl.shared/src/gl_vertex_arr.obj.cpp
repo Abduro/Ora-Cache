@@ -123,6 +123,21 @@ TError&  CArrObject::Error (void) const { return this->m_error; }
 
 uint32_t CArrObject::GetId (void) const { return this->m_arr_id; }
 
+err_code CArrObject::SetData (const TVertData& _v_data) {
+	_v_data;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (__failed(this->Bind())) return this->Error(); // (1) tries to bind this vertex array object first;
+	if (__failed(this->VertArray().Buffer().Bind())) return this->m_error = this->VertArray().Buffer().Error(); // (2) the buffer binding;
+	if (__failed(this->VertArray().Buffer().SetData(_v_data))) return this->m_error = this->VertArray().Buffer().Error(); // (3) defining the data format;
+	if (__failed(this->VertArray().Set_ptrs())) return this->m_error = this->VertArray().Error(); // (4) setting the vertex attributes' pointers;
+
+	// it is assumed that the vertex position and vertex color attributes are used; it is not a very good assumption, but it is suitable for this version of the implementation;
+	if (__failed(::__get_attr_arr_procs().Enable(0))) return this->m_error = ::__get_attr_arr_procs().Error();
+//	if (__failed(::__get_attr_arr_procs().Enable(1))) return this->m_error = ::__get_attr_arr_procs().Error();
+
+	return this->Error();
+}
+
 err_code CArrObject::Unbind (void) {
 	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
 
@@ -159,7 +174,7 @@ err_code CArrObj_enum::Create (void) {
 		CArrObj& object = this->Get((CArrObj_enum::e_arr_ndx)i_);
 
 		if (__failed(object.Create())) { this->m_error = object.Error(); break; }
-		if (__failed(object.Bind()))   { this->m_error = object.Error(); break; }
+	//	if (__failed(object.Bind()))   { this->m_error = object.Error(); break; }
 	}
 
 	return this->Error();

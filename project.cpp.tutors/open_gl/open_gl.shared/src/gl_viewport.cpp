@@ -277,7 +277,7 @@ err_code view::CGrid::Draw (void) {
 	using e_prog = CProg_enum::e_prog_ndx;
 	using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
 
-#if (0)
+#if (1)
 	if (__failed(::__get_attr_mod_procs().Modify_f4(0, this->Clr().Get_r(), this->Clr().Get_g(), this->Clr().Get_b(), this->Clr().Get_a()))) {
 		this->m_error = ::__get_attr_mod_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
@@ -286,14 +286,14 @@ err_code view::CGrid::Draw (void) {
 
 	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(e_prog::e_grid);
 	
-	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid);
+	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid); vao;
 	const CVertArray& vexes = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid).VertArray();
 
 	if (vexes.Is_valid() == false)
 		return n_result = vexes.Error();
 
-	if (__failed(vao.Bind()))
-		return n_result = vao.Error();
+//	if (__failed(vao.Bind()))
+//		return n_result = vao.Error();
 
 	if (__failed(::__get_render_procs().DrawArrays(prog.Id().Get(), (uint32_t) e_line::e_lines, 0, vexes.Count()))) {
 		this->m_error = ::__get_render_procs().Error();
@@ -371,10 +371,13 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	if (__failed(vert_arr.Update())) {
 		return this->m_error = vert_arr.Buffer().Error();
 	}
-
+#if (0)
 	if (__failed(vert_arr.Buffer().SetData(vert_arr.Data_ref())))
 		this->m_error = vert_arr.Buffer().Error();
-
+#else
+	if (__failed(renderer.Scene().ArrObjs().Get(e_arr_ndx::e_grid).SetData(vert_arr.Data_ref())))
+		this->m_error =renderer.Scene().ArrObjs().Get(e_arr_ndx::e_grid).Error();
+#endif
 	return this->Error();
 }
 

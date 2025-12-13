@@ -47,7 +47,7 @@ err_code CVertArray::Create (void) {
 
 	if (false) {}
 	else if (__failed(this->Buffer().Create())) { this->m_error = this->Buffer().Error(); }
-	else if (__failed(this->Buffer().Bind())) { this->m_error = this->Buffer().Error(); }
+//	else if (__failed(this->Buffer().Bind())) { this->m_error = this->Buffer().Error(); }
 
 	return this->Error();
 }

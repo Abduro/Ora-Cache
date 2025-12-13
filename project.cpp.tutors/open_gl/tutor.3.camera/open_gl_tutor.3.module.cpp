@@ -142,7 +142,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		using CBuffer   = vertex::CBuffer;
 
 		if (__failed(renderer.Scene().Prepare())) break;
-
+#if (0)
 		CBuffer& buffer = renderer.Scene().ArrObjs().Get(e_arr_ndx::e_tria).VertArray().Buffer();
 
 		// (4.a) sets buffer cfg values;
@@ -153,6 +153,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		if (__failed(buffer.SetData(triangle.Vertices().Data_ref()))) {
 			break;
 		}
+#endif
 #pragma endregion
 #pragma region __step_5
 		// (5) sets renderer cfg values;

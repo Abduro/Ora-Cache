@@ -81,7 +81,7 @@ namespace program {
 		     e_grid = 0x0,
 		     e_tria = 0x1,
 		};
-		static const uint32_t u_count = e_prog_ndx::e_tria + 1; // the number of the programs is pre-defined and can be increased if necessary;
+		static const uint32_t u_count = e_prog_ndx::e_tria/* + 1*/; // the number of the programs is pre-defined and can be increased if necessary;
 		class CAttrs {
 		private: CAttrs (const CAttrs&) = delete; CAttrs (CAttrs&&) = delete; friend class CProg_enum;
 		private: CAttrs& operator = (const CAttrs&) = delete; CAttrs& operator = (CAttrs&&) = delete;

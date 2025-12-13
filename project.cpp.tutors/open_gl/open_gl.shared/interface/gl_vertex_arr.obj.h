@@ -28,7 +28,14 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		err_code  Delete (void);
 		TError&   Error  (void) const;
 		uint32_t  GetId  (void) const;
-
+		/* the requirements:
+		(1) vertex array object binding; the object defines vertex array data through attributes by using glBindVertexArray();
+		(2) the buffer binding through glBindBuffer();
+		(3) defining the data format through glBufferData();
+		(4) setting vertex array pointers by using glVertexAttribPointer();
+		(5) enabling vertex array attributes through glEnableVertexAttribArray();
+		*/
+		err_code  SetData (const TVertData&);
 		const
 		CVertDat& VertArray (void) const; // gets the reference to vertex array data; (ro)
 		CVertDat& VertArray (void) ;      // gets the reference to vertex array data; (rw)
@@ -48,7 +55,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		     e_grid = 0x0,
 		     e_tria = 0x1,
 		};
-		static const uint32_t u_count = e_arr_ndx::e_tria + 1; // the predefined number of the vertex array objects is the same as programs have, but it may be different;
+		static const uint32_t u_count = e_arr_ndx::e_tria/* + 1*/; // the predefined number of the vertex array objects is the same as programs have, but it may be different;
 	public:
 		CArrObj_enum (void); CArrObj_enum (const CArrObj_enum&) = delete; CArrObj_enum (CArrObj_enum&&) = delete; ~CArrObj_enum (void);
 

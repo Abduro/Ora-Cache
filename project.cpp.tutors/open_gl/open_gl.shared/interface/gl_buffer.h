@@ -82,7 +82,7 @@ namespace data {
 		err_code Unbind (void) ;
 
 	protected:
-		CBuffer_Base& operator = (const CBuffer_Base&) = delete; CBuffer_Base& operator =  (CBuffer_Base&&) = delete;
+		CBuffer_Base& operator = (const CBuffer_Base&) = delete; CBuffer_Base& operator = (CBuffer_Base&&) = delete;
 		mutable
 		CError   m_error;
 		uint32_t m_buf_id;
@@ -94,10 +94,10 @@ namespace vertex {
 	class CBuffer : public CBuffer_Base { typedef CBuffer_Base TBase;
 	private: CBuffer (const CBuffer&) = delete; CBuffer (CBuffer&&) = delete;
 	public : CBuffer (void); ~CBuffer (void);
-#if (1)
+
 		err_code Bind (void);                // binds this buffer to the already predefined target, i.e. GL_ARRAY_BUFFER;
-		err_code SetData (const TVertData&); // sets vertex data vector directly;
-#endif
+		err_code SetData (const TVertData&); // sets vertex data vector directly; not recommended;
+
 	private: CBuffer& operator = (const CBuffer&) = delete;  CBuffer& operator =  (CBuffer&&) = delete;
 	};
 }}}}
