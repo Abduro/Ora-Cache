@@ -31,8 +31,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		err_code  Create (void);                     // creates the vertex data buffer;
 		TError&   Error  (void) const;
 
-		const void*      Data_Ptr (void) const;      // gets the pointer to vertex array data, this is the data for vertex buffer;
-		const TVertData& Data_Ref (void) const;      // gets the reference to the vertex data array;
+		const void*      Data_ptr (void) const;      // gets the pointer to vertex array data, this is the data for vertex buffer;
+		const TVertData& Data_ref (void) const;      // gets the reference to the vertex data array;
 
 		const
 		CVertex&  Get (const uint32_t _u_ndx) const; // returns the reference to the vertex object by index, in case if the index is out of range, the ref to virtual vertex is returned; 
@@ -42,7 +42,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		TVertices& Items (void) const;   // gets the reference to vertex collection; (ro)
 		TVertices& Items (void) ;        // gets the reference to vertex collection; (rw)
 
-		bool   Is_valid (void) const;    // returns true in case of vertex buffer data size equals to sum of attributes' sizes;
+		bool    Is_valid (void) const;   // returns true in case of vertex buffer data size equals to sum of attributes' sizes;
 		static
 		err_code  Set_ptrs (const CAttr&, CError&);
 		err_code  Set_ptrs (void) const; // it is assumed that each vertex has the same attribute set, i.e. the pos and color attributes;

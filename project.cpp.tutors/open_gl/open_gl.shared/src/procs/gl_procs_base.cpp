@@ -30,9 +30,11 @@ PROC procs::CBase::Get (_pc_sz _p_proc_name) {
 	if (nullptr == _p_proc_name || 0 == ::_tcslen(_p_proc_name)) {
 		this->m_error <<__METHOD__<< __e_inv_arg; return nullptr;
 	}
-	TProcCache::const_iterator found_ = this->m_cached.find(_p_proc_name);
-	if (found_ != this->m_cached.end())
-		return found_->second;
+	if (this->m_cached.empty() == false) {
+		TProcCache::const_iterator found_ = this->m_cached.find(_p_proc_name);
+		if (found_ != this->m_cached.end())
+			return found_->second;
+	}
 
 	CStringA cs_ansi(_p_proc_name);
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglgetprocaddress?source=docs ;

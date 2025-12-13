@@ -12,17 +12,18 @@ using namespace shared::sys_core;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSyncObject::CSyncObject(void) // throw() // no XP support
+CSyncObject::CSyncObject(void) : m_deleted(false) // throw() // no XP support
 {
 #if (0)
 	__try
 	{
 #endif
 	// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsection
-	//	::InitializeCriticalSection(&m_sec);
+	// ::InitializeCriticalSection(&m_sec);
 	// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsectionandspincount
-	const BOOL b_result = ::InitializeCriticalSectionAndSpinCount(&m_sec, 0x400);
-	if (b_result == FALSE) {}
+	const
+	bool b_result = !!::InitializeCriticalSectionAndSpinCount(&m_sec, 0x400);
+	if ( b_result == false) {}
 #if (0)
 	}
 	__except(STATUS_NO_MEMORY == ::GetExceptionCode())
@@ -32,14 +33,17 @@ CSyncObject::CSyncObject(void) // throw() // no XP support
 
 CSyncObject::~CSyncObject(void)
 {
+	this->m_deleted = true;
 	::DeleteCriticalSection(&m_sec);
 //	::memset((void*)&m_sec, 0, sizeof(CRITICAL_SECTION));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSyncObject::Lock (void) const
-{
+void CSyncObject::Lock (void) const {
+
+	if (this->m_deleted)
+		return;
 	__try {
 		::EnterCriticalSection(&m_sec);
 	}
@@ -48,10 +52,15 @@ void CSyncObject::Lock (void) const
 }
 
 bool CSyncObject::TryLock (void) const {
+	if (this->m_deleted)
+		return false;
 	return !!::TryEnterCriticalSection(&m_sec);
 }
 
 void CSyncObject::Unlock (void) const {
+
+	if (this->m_deleted)
+		return;
 	__try {
 		::LeaveCriticalSection(&m_sec);
 	}

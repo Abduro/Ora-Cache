@@ -70,12 +70,12 @@ err_code    CRenderer::Draw (void) {
 
 	if (false == this->Is_allowed())
 		return this->Error();
-
+	// (1) gets the background color from the registry;
 	const v_color& clr_bkgnd = ::Get_theme().Bkgnd_flt();
 	if (4 > clr_bkgnd.size()) {
 		return this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: the float color vector size = %u"), clr_bkgnd.size());
 	}
-
+	// (1.a) sets the color for using by background eraser;
 	if (__failed(::__get_eraser_procs().Clr(clr_bkgnd.at(0), clr_bkgnd.at(1), clr_bkgnd.at(2), clr_bkgnd.at(3)))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
@@ -90,14 +90,15 @@ err_code    CRenderer::Draw (void) {
 		return this->m_error = ::__get_caps_procs().Error();
 	}
 #endif
+	// (1.b) applies the background color that is saved in the registry; the same color is also applied to the console of the debug output;
 	if (__failed(::__get_eraser_procs().All(e_clear_ops::e_color|e_clear_ops::e_depth))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
-#if (0)
+	// (2) draw the viewport grid;
 	this->View().Grid().Draw();
-#endif
 
+#if (0)
 	using e_prog_ndx = CProg_enum::e_prog_ndx;
 
 	if (false == this->Scene().Progs().Get(e_prog_ndx::e_tria).Status().Is_current()) {
@@ -105,6 +106,7 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Progs().Get(e_prog_ndx::e_tria).Error().Print(TError::e_print::e_req));
 		return this->m_error = this->Scene().Progs().Get(e_prog_ndx::e_tria).Error();
 	}}
+#endif
 #if (0)
 //	this->Scene().Array().Unbind(); the triangle vertex buffer is not drawn in such case;
 	if (false == this->Scene().Array().Is_bound())

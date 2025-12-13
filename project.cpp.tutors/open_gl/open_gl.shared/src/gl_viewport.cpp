@@ -4,11 +4,15 @@
 */
 #include "gl_viewport.h"
 #include "shared.preproc.h"
+
 #include "procs\gl_procs_surface.h"
 #include "procs\gl_procs_vertex.h"
 #include "procs\gl_procs_view.h"
+
 #include "sys.registry.h"
 #include "color.rgb.h"
+
+#include "gl_renderer.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::color::rgb;
@@ -21,6 +25,68 @@ using namespace ex_ui::color::rgb;
 #endif
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
+
+	typedef ::std::set<uint32_t> t_markers; // it is the marker data type for positioning horizontal and vertical grid dividers/lines in window client area coords;
+
+	class CMarkers {
+	private: CMarkers (const CMarkers&) = delete; CMarkers (CMarkers&&) = delete;
+	private: CMarkers& operator = (const CMarkers&) = delete; CMarkers& operator = (CMarkers&&) = delete;
+	public:
+		CMarkers (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; } ~CMarkers (void) = default;
+
+		err_code Count (const t_size_u& _view_size, const t_size_u& _cell_size) {
+			_view_size; _cell_size;
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (CViewPort::Is_valid(_view_size, this->m_error) == false) {
+				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+				return this->Error();
+			}
+
+			if (false == view::CGrid::CCell::Is_valid(_cell_size, this->m_error)) {
+				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+				return this->Error();
+			}
+
+			t_point pt_center = {
+				static_cast<long>(_view_size.cx / 2), static_cast<long>(_view_size.cy / 2)
+			};
+
+			this->m_x_mrks.insert(pt_center.x);
+			this->m_y_mrks.insert(pt_center.y);
+
+			int32_t x_iter = _view_size.cx / 2;
+
+			// (1) marks line x-coords;
+			// (1.a) from the center to the left side;
+			while (x_iter - (int32_t)_cell_size.cx > 0) { this->m_x_mrks.insert(x_iter -= (int32_t)_cell_size.cx); }
+			// (1.b) from the center to the right side;
+			x_iter = _view_size.cx / 2;
+			while (x_iter + _cell_size.cx < _view_size.cx) { this->m_x_mrks.insert(x_iter += (int32_t)_cell_size.cx); }
+
+			int32_t y_iter = _view_size.cy / 2;
+
+			// (2) marks line y-coords;
+			// (2.a) from the center to the top side;
+			while (y_iter - (int32_t)_cell_size.cy > 0) { m_y_mrks.insert(y_iter -= (int32_t)_cell_size.cy); }
+			// (2.b) from the center to the bottom side;
+			y_iter = _view_size.cy / 2;
+			while (y_iter + _cell_size.cy < _view_size.cy) { m_y_mrks.insert(y_iter += (int32_t)_cell_size.cy); }
+
+			return this->Error();
+		}
+
+		TError& Error (void) const { return this->m_error; }
+
+		const t_markers&  Get_horz (void) const { return this->m_y_mrks; }
+		const t_markers&  Get_vert (void) const { return this->m_x_mrks; }
+
+	private:
+		CError    m_error;
+		t_markers m_x_mrks; // markers of vertical lines by x-axis;
+		t_markers m_y_mrks; // markers of horizontal lines by y-axis;
+	};
+
 }}}}
 using namespace ex_ui::draw::open_gl::_impl;
 
@@ -40,10 +106,10 @@ view::CColor:: CColor (void) : m_rgba{0.0f} {
 }
 view::CColor::~CColor (void) {}
 
-float view::CColor::Get_a (void) const { return this->m_rgba[3]; }
-float view::CColor::Get_b (void) const { return this->m_rgba[2]; }
-float view::CColor::Get_g (void) const { return this->m_rgba[1]; }
-float view::CColor::Get_r (void) const { return this->m_rgba[0]; }
+float view::CColor::Get_a (void) const { return this->m_rgba[3]; } const float& view::CColor::A (void) const { return this->m_rgba[3]; }
+float view::CColor::Get_b (void) const { return this->m_rgba[2]; } const float& view::CColor::B (void) const { return this->m_rgba[2]; }
+float view::CColor::Get_g (void) const { return this->m_rgba[1]; } const float& view::CColor::G (void) const { return this->m_rgba[1]; }
+float view::CColor::Get_r (void) const { return this->m_rgba[0]; } const float& view::CColor::R (void) const { return this->m_rgba[0]; }
 
 void view::CColor::Set (const float _r, const float _g, const float _b, const float _a) {
 	_r; _g; _b; _a;
@@ -123,14 +189,6 @@ view::CGrid:: CGrid (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*th
 view::CGrid::~CGrid (void) {}
 
 const
-view::CArrObj& view::CGrid::Array  (void) const { return this->m_arr_obj; }
-view::CArrObj& view::CGrid::Array  (void)       { return this->m_arr_obj; }
-
-const
-view::CBuffer& view::CGrid::Buffer (void) const { return this->m_vert_buf; }
-view::CBuffer& view::CGrid::Buffer (void)       { return this->m_vert_buf; }
-
-const
 view::CGrid::CCell& view::CGrid::Cell (void) const { return this->m_cell; }
 view::CGrid::CCell& view::CGrid::Cell (void)       { return this->m_cell; }
 
@@ -169,29 +227,13 @@ err_code view::CGrid::Create (void) {
 
 err_code view::CGrid::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
-	if (this->Array().Is_bound()) {
-		if (__failed(this->Array().Unbind()))
-			return this->m_error = this->Array().Error();
-	}
-	if (__failed(this->Array().Delete()))
-		return this->m_error = this->Array().Error();
-
-	if (this->Buffer().Is_bound()) {
-		if (__failed(this->Buffer().Unbind()))
-			return this->m_error = this->Buffer().Error();
-	}
-
-	if (__failed(this->Buffer().Destroy())) {
-		return this->m_error = this->Buffer().Error();
-	}
-
 	return this->Error();
 }
 
 const
 view::CColor& view::CGrid::Clr (void) const { return this->m_color; }
 view::CColor& view::CGrid::Clr (void)       { return this->m_color; }
+
 #if (0)
 void view::CGrid::Default (void) {
 	this->Clr().Set(0.5f, 0.5f, 0.5f, 1.0f);
@@ -232,26 +274,32 @@ err_code view::CGrid::Draw (void) {
 	err_code n_result = __s_ok;
 
 	using e_line = procs::CPrimitives::e_line;
+	using e_prog = CProg_enum::e_prog_ndx;
+	using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
 
-	this->Array().Bind();
-//	this->Array().Enable(false, this->Array().Attrs().Clr().Locate().Value());
-
+#if (0)
 	if (__failed(::__get_attr_mod_procs().Modify_f4(0, this->Clr().Get_r(), this->Clr().Get_g(), this->Clr().Get_b(), this->Clr().Get_a()))) {
 		this->m_error = ::__get_attr_mod_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
 	}
-#if (0)
-	const vertex::CAttr& a_pos = this->Array().Attrs().Pos();
-	if (false == a_pos.Is_valid()) // the attr size is checked in order to avoid the division by 0;
-		return this->m_error <<__e_inv_arg = _T("#__e_inv_param: attr 'a_pos' is not valid"); // this is essential error, thus interrupt this function;
+#endif
 
-	if (__failed(::__get_render_procs().DrawArrays(0, (uint32_t) e_line::e_lines, 0,  (uint32_t) this->m_vert_dat.size()/a_pos.Size()))) {
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(e_prog::e_grid);
+	
+	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid);
+	const CVertArray& vexes = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid).VertArray();
+
+	if (vexes.Is_valid() == false)
+		return n_result = vexes.Error();
+
+	if (__failed(vao.Bind()))
+		return n_result = vao.Error();
+
+	if (__failed(::__get_render_procs().DrawArrays(prog.Id().Get(), (uint32_t) e_line::e_lines, 0, vexes.Count()))) {
 		this->m_error = ::__get_render_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
 	}
 
-	this->Array().Unbind();
-#endif
 	return n_result;
 }
 #endif
@@ -262,90 +310,71 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	_u_size;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (CViewPort::Is_valid(_u_size, this->m_error) == false) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		return this->Error();
+	CMarkers markers;
+	// (1);(2): calculates markets' places and its count for horizontal and vertical lines of the grid;
+	if (__failed(markers.Count(_u_size, this->Cell().Get()))) {
+		return this->m_error = markers.Error();
 	}
 
-	const t_size_u& c_size = this->Cell().Get();
+	using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
+	using CBuffer   = vertex::CBuffer;
 
-	if (false == view::CGrid::CCell::Is_valid(c_size, this->m_error)) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		return this->Error();
+	TRenderer& renderer  = ::Get_renderer();
+	CVertArray& vert_arr = renderer.Scene().ArrObjs().Get(e_arr_ndx::e_grid).VertArray();
+
+	// (3) calculates the number of required vertices for drawing grid lines;
+	const uint32_t u_count = static_cast<uint32_t>((markers.Get_horz().size() + markers.Get_vert().size())) * 2;
+
+	if (__failed(vert_arr.Count(u_count ))) {
+		return this->m_error = vert_arr.Error();
 	}
 
-	t_point pt_center = {
-		static_cast<long>(_u_size.cx / 2), static_cast<long>(_u_size.cy / 2)
-	}; pt_center;
+	view::CColor& clr = this->Clr();
 
-	::std::set<uint32_t> x_markers;
-	::std::set<uint32_t> y_markers;
-
-	uint32_t iter = 0;
+	t_set_3 coord = {0.0f};
+	uint32_t u_ndx = 0;
 
 	try {
-		x_markers.insert(pt_center.x);
-		y_markers.insert(pt_center.y);
+		// (4) creates vertices for horizontal lines from the left to the right sides of the grid; 
+		for (t_markers::const_iterator it_y = markers.Get_horz().begin(); it_y != markers.Get_horz().end(); ++it_y) {
 
-		int32_t x_iter = _u_size.cx / 2;
-
-		// (1) marks line x-coords;
-		// (1.a) from the center to the left side;
-		while (x_iter - (int32_t)c_size.cx > 0) { x_markers.insert(x_iter -= (int32_t)c_size.cx); }
-		// (1.b) from the center to the right side;
-		x_iter = _u_size.cx / 2;
-		while (x_iter + c_size.cx < _u_size.cx) { x_markers.insert(x_iter += (int32_t)c_size.cx); }
-
-		int32_t y_iter = _u_size.cy / 2;
-
-		// (2) marks line y-coords;
-		// (2.a) from the center to the top side;
-		while (y_iter - (int32_t)c_size.cy > 0) { y_markers.insert(y_iter -= (int32_t)c_size.cy); }
-		// (2.b) from the center to the bottom side;
-		y_iter = _u_size.cy / 2;
-		while (y_iter + c_size.cy < _u_size.cy) { y_markers.insert(y_iter += (int32_t)c_size.cy); }
-
-		// (3) calculates the number of required vertices for drawing grid lines;
-		const uint32_t u_count = static_cast<uint32_t>((x_markers.size() + y_markers.size())) * 2;
-
-		this->m_vert_dat.resize (u_count * 3);
-		this->m_vert_dat.reserve(u_count * 3);
-
-		t_set_3 coord = {0.0f};
-
-		// (4) creates vertices for horizontal lines;
-		for (::std::set<uint32_t>::const_iterator it_y = y_markers.begin(); it_y != y_markers.end(); ++it_y) {
 		// (4.a) gets the left side point of the line;
 			CViewPort::ToPos(_u_size, 0, *it_y, coord, this->m_error);
-			this->m_vert_dat.at(iter++) = coord.at(0);
-			this->m_vert_dat.at(iter++) = coord.at(1);
-			this->m_vert_dat.at(iter++) = coord.at(2);
+			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
+			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
+			u_ndx += 1;
+
 		// (4.b) gets the right side point of the line;
 			CViewPort::ToPos(_u_size, _u_size.cx, *it_y, coord, this->m_error);
-			this->m_vert_dat.at(iter++) = coord.at(0);
-			this->m_vert_dat.at(iter++) = coord.at(1);
-			this->m_vert_dat.at(iter++) = coord.at(2);
+			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
+			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
+			u_ndx += 1;
 		}
-		// (5) creates vertices for vertical lines;
-		for (::std::set<uint32_t>::const_iterator it_x = x_markers.begin(); it_x != x_markers.end(); ++it_x) {
-		// (4.a) gets the top side point of the line;
+		// (5) creates vertices for vertical lines from the top to the bottom sides of the grid;
+		for (::std::set<uint32_t>::const_iterator it_x = markers.Get_vert().begin(); it_x != markers.Get_vert().end(); ++it_x) {
+		// (5.a) gets the top side point of the line;
 			CViewPort::ToPos(_u_size, *it_x, 0, coord, this->m_error);
-			this->m_vert_dat.at(iter++) = coord.at(0);
-			this->m_vert_dat.at(iter++) = coord.at(1);
-			this->m_vert_dat.at(iter++) = coord.at(2);
-		// (4.b) gets the bottom side point of the line;
+			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
+			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
+			u_ndx += 1;
+
+		// (5.b) gets the bottom side point of the line;
 			CViewPort::ToPos(_u_size, *it_x, _u_size.cy, coord, this->m_error);
-			this->m_vert_dat.at(iter++) = coord.at(0);
-			this->m_vert_dat.at(iter++) = coord.at(1);
-			this->m_vert_dat.at(iter++) = coord.at(2);
+			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
+			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
+			u_ndx += 1;
 		}
 	}
 	catch (const ::std::bad_alloc&) { return this->m_error << __e_no_memory; }
-	catch (const ::std::out_of_range&) { return this->m_error << __e_no_memory = TString().Format(_T("#__e_out_of_range: ndx = %u; vec.size = %u"), iter, this->m_vert_dat.size()); }
-#if (0) // at this point the buffer is not created yet;
-	if (__failed(this->Buffer().SetData(this->m_vert_dat)))
-		this->m_error = this->Buffer().Error();
-#endif
+	catch (const ::std::out_of_range&) { return this->m_error << __e_no_memory = TString().Format(_T("#__e_out_of_range: ndx = %u; vec.size = %u"), u_ndx, vert_arr.Count()); }
+
+	if (__failed(vert_arr.Update())) {
+		return this->m_error = vert_arr.Buffer().Error();
+	}
+
+	if (__failed(vert_arr.Buffer().SetData(vert_arr.Data_ref())))
+		this->m_error = vert_arr.Buffer().Error();
+
 	return this->Error();
 }
 
@@ -359,44 +388,6 @@ CViewPort::~CViewPort (void) {}
 
 TError& CViewPort::Error(void) const { return this->m_error; }
 
-t_size    CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
-t_size_u& CViewPort::Get (void) {
-	return this->m_size;
-}
-
-err_code CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
-	_u_width; _u_height;
-	this->m_error << __METHOD__<<__s_ok;
-
-	if (0 == _u_height) return this->m_error << __e_inv_arg = _T("#__inv_arg: height cannot be 0 (zero)");
-	if (0 == _u_width) return this->m_error << __e_inv_arg = _T("#__inv_arg: width cannot be 0 (zero)");
-
-	this->m_size.cy = _u_height;
-	this->m_size.cx = _u_width ;
-
-	if (__failed(this->Grid().Update(this->m_size))) {
-		this->m_error = this->Grid().Error();
-	}
-
-	return this->Error();
-}
-
-err_code CViewPort::Set (const t_rect& _rect) {
-	_rect;
-	this->m_error << __METHOD__<<__s_ok;
-	if (::IsRectEmpty(&_rect))
-		return this->m_error <<__e_inv_arg;
-
-	this->m_size.cy = __H(_rect);
-	this->m_size.cx = __W(_rect);
-
-	if (__failed(this->Grid().Update(this->m_size))) {
-		this->m_error = this->Grid().Error();
-	}
-
-	return this->Error();
-}
-
 bool CViewPort::Is_valid (void) const {
 	return CViewPort::Is_valid(this->m_size, this->m_error);
 }
@@ -408,9 +399,50 @@ bool CViewPort::Is_valid (const t_size_u& _u_size, CError& _err) {
 	}
 	else return true;
 }
+
+t_size    CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
+t_size_u& CViewPort::Get (void) {
+	return this->m_size;
+}
+
 const
 view::CGrid& CViewPort::Grid (void) const { return this->m_grid; }
 view::CGrid& CViewPort::Grid (void)       { return this->m_grid; }
+
+err_code CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
+	_u_width; _u_height;
+	this->m_error << __METHOD__<<__s_ok;
+
+	if (0 == _u_height) return this->m_error << __e_inv_arg = _T("#__inv_arg: height cannot be 0 (zero)");
+	if (0 == _u_width) return this->m_error << __e_inv_arg = _T("#__inv_arg: width cannot be 0 (zero)");
+
+	this->m_size.cy = _u_height;
+	this->m_size.cx = _u_width ;
+#if (0) // this function is for setting the size of this viewport and no more;
+	if (__failed(this->Grid().Update(this->m_size))) {
+		this->m_error = this->Grid().Error();
+	}
+#endif
+	return this->Error();
+}
+
+err_code CViewPort::Set (const t_rect& _rect) {
+	_rect;
+	this->m_error << __METHOD__<<__s_ok;
+	if (::IsRectEmpty(&_rect))
+		return this->m_error <<__e_inv_arg = TString().Format(_T("#__inv_arg: empty rect = {w:%04d|h:%04d}"), __W(_rect), __H(_rect));
+#if (0) // it is not the point for updating the grid, because this function is intended for setting the size of viewport only;
+	this->m_size.cy = __H(_rect);
+	this->m_size.cx = __W(_rect);
+
+	if (__failed(this->Grid().Update(this->m_size))) {
+		this->m_error = this->Grid().Error();
+	}
+#else
+	this->Set(__W(_rect), __H(_rect));
+#endif
+	return this->Error();
+}
 
 vertex::CCoord  CViewPort::ToPos (const long _x, const long _y) {
 	_x; _y;
@@ -437,6 +469,16 @@ err_code CViewPort::ToPos (const t_size_u& _u_size, const uint32_t _in_x, const 
 	_pos_out = {2.0f * ((float)_in_x + 0.5f)/(float)(_u_size.cx / 2) - 1.0f, 1.0f - ((float)_in_y + 0.5f)/(float)(_u_size.cy / 2), 0.0f};
 #endif
 	return _err;
+}
+
+err_code CViewPort::Update (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Grid().Update(this->m_size))) {
+		this->m_error = this->Grid().Error();
+	}
+
+	return this->Error();
 }
 
 CViewPort&  CViewPort::operator << (const t_rect& _rect) { this->Set(_rect); return *this; }

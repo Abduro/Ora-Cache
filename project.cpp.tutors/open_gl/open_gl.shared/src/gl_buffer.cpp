@@ -259,7 +259,7 @@ err_code vertex::CBuffer::SetData (const CTriangle& _shape) {
 	if (nullptr == p_vertices)
 		return TBase::m_error <<__e_pointer;
 
-	const uint32_t u_bytes = static_cast<uint32_t>(sizeof(float) * v_arr.Data_Ref().size());
+	const uint32_t u_bytes = static_cast<uint32_t>(sizeof(float) * v_arr.Data_ref().size());
 
 #if (1)
 	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(u_bytes), p_vertices, (uint32_t)procs::e_buf_usage::e_static_draw))) {
@@ -298,11 +298,14 @@ err_code vertex::CBuffer::SetData (const TVertData& _v_data) {
 	}
 
 	const uint32_t u_bytes = static_cast<uint32_t>(sizeof(float) * _v_data.size());
-
+	/**important*: before setting the data to buffer it must be bound, otherwise:
+	   [error] cls::[CError]>>{code=87;result=0x80070057;desc='#__e_inv_oper: bound reserved buffer (id = 0)';context=CBase::CBuffer::Data()};
+	*/
 	if (__failed(__get_buf_procs().Data((uint32_t)TBase::Target(), static_cast<ptrdiff_t>(u_bytes), _v_data.data(), (uint32_t)procs::e_buf_usage::e_static_draw))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) __get_buf_procs().Error().Print(TError::e_print::e_req));
 		return TBase::m_error = __get_buf_procs().Error();
 	}
+	else __trace_info_2(_T("The buffer (id = %u) is set to %u (bytes);\n"), TBase::GetId(), u_bytes);
 
 	return TBase::Error();
 }

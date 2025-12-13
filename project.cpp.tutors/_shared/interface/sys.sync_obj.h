@@ -20,14 +20,9 @@ namespace shared { namespace sys_core {
 		the truth cannot be always the truth;
 	*/
 	class CSyncObject {
-	protected:
-		mutable
-		crt_section m_sec;
-
 	public:
-		virtual
-		~CSyncObject(void);
 		 CSyncObject(void);
+		~CSyncObject(void); // learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-deletecriticalsection ;
 
 	public:
 		void Lock   (void) const;
@@ -37,6 +32,9 @@ namespace shared { namespace sys_core {
 	private:  // non-copyable;
 		CSyncObject(const CSyncObject&) = delete;
 		CSyncObject& operator= (const CSyncObject&) = delete;
+	protected:
+		mutable crt_section m_sec;
+		volatile bool m_deleted;
 	};
 
 	template<typename TLocker>

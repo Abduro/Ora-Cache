@@ -179,8 +179,8 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	case WM_SIZE   :
 	case WM_SIZING :
 		t_rect rect = {0};
-		if (::GetClientRect((*this)(), &rect))  { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
-			::Get_renderer().View() << rect;
+		if (::GetClientRect((*this)(), &rect)) { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+			::Get_renderer().View() << rect;     // at this point the open_gl components/wrappers are not ready yet, thus only storing the rect of the view is possible;
 		}
 		else {
 			TBase::m_error.Last();

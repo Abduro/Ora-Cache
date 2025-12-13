@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL generic scene wrapper interface implementation file;
 */
 #include "gl_scene.h"
+#include "gl_renderer.h"
 #include "program\gl_prog_linker.h"
 #include "program\gl_prog_status.h"
 #include "shader\gl_compiler.h"
@@ -92,19 +93,9 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->ArrObjs().Create())) { this->m_error = this->Progs().Attrs().Error(); }     // does nothing with the error;
 #pragma endregion
 
-#if (0) // needs to be moved to the programs enumerator class;
-	if (__failed(prog.Buffer().Create()))
-		return this->m_error = prog.Buffer().Error();
+	if (__failed(::Get_renderer().View().Update()))
+		this->m_error = ::Get_renderer().View().Error();
 
-	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
-#if (1)
-	if (__failed(prog.Buffer().BindTo(e_bind_targets::e_array)))
-		return this->m_error = prog.Buffer().Error();
-#else
-	if (__failed(prog.Buffer().Bind()))
-		return this->m_error = prog.Buffer().Error();
-#endif
-#endif
 	if (false == this->Error())
 		__trace_impt_2(_T("The draw scene is prepared;\n"));
 

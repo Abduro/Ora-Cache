@@ -5,10 +5,7 @@
 	This is Ebo Pack OpenGL viewport wrapper interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_buffer.h"
 #include "vertex\gl_vertex_data.h"
-#include "gl_vertex_arr.dat.h"
-#include "gl_vertex_arr.obj.h"
 #include "color._defs.h"
 
 typedef
@@ -29,10 +26,10 @@ namespace view {
 	public:
 		CColor (void); CColor (const CColor&) = delete; CColor (CColor&&) = delete; ~CColor (void);
 
-		float Get_a (void) const;
-		float Get_b (void) const;
-		float Get_g (void) const;
-		float Get_r (void) const;
+		float Get_a (void) const; const float& A (void) const;
+		float Get_b (void) const; const float& B (void) const;
+		float Get_g (void) const; const float& G (void) const;
+		float Get_r (void) const; const float& R (void) const;
 
 		// sets color as float value; if the value is out of range [0.0...1.0], the value is set to min or max value of the range;
 		void Set (const float _r, const float _g, const float _b, const float _a = 1.0f);
@@ -44,10 +41,7 @@ namespace view {
 		float m_rgba[4];
 	};
 
-	using CArrObj  = vertex::CArrObject;
-	using CVertArr = CVertArray;
-	using CBuffer  = vertex::CBuffer;
-
+	// this grid classes uses the program, vertex array object and vertex array data which are managed by draw scene of the renderer object;
 	class CGrid : private no_copy {
 	public:
 		class CCell : private no_copy {
@@ -73,37 +67,27 @@ namespace view {
 		CGrid (void); ~CGrid (void);
 
 		const
-		CArrObj&  Array  (void) const;
-		CArrObj&  Array  (void) ;
+		CCell&   Cell (void) const;
+		CCell&   Cell (void) ;
 
 		const
-		CBuffer&  Buffer (void) const;
-		CBuffer&  Buffer (void) ;
-		const
-		CCell& Cell (void) const;
-		CCell& Cell (void) ;
+		CColor&  Clr (void) const;
+		CColor&  Clr (void) ;
 
-		const
-		CColor& Clr (void) const;
-		CColor& Clr (void) ;
-
-		err_code Create (void);
+		err_code Create  (void);
 		err_code Destroy (void);
 #if (0)
 		void Default (void); // sets default values for grid size, draw step and grid color;
 #endif
-		err_code Draw (void);
-		TError& Error (void) const;
+		err_code Draw  (void);
+		TError&  Error (void) const;
 
-		err_code   Update (const t_size_u& _u_size); // recalculates all vertices for input size of the draw area;
+		err_code Update(const t_size_u& _u_size); // recalculates all vertices for input size of the draw area;
 
 	private:
-		CCell     m_cell ;     // cell dimensions: height|width;
-		CError    m_error;
-		CColor    m_color;
-		CArrObj   m_arr_obj ;  // vertex array object;
-		TVertData m_vert_dat;
-		CBuffer   m_vert_buf;
+		CCell    m_cell ;    // cell dimensions: height|width;
+		CError   m_error;
+		CColor   m_color;
 	};
 }
 	typedef ::std::array<float, 3u> t_set_3; // x|y|z;
@@ -133,6 +117,7 @@ namespace view {
 		// the conversion for screen coordinates is made for x|y values, z-coord has always 0.0f value;
 		static
 		err_code ToPos (const t_size_u& _u_size, const uint32_t _in_x, const uint32_t _in_y, t_set_3& _pos_out, CError&);
+		err_code Update (void);         // updates the viewport grid layout;
 
 		CViewPort& operator << (const t_rect&);
 

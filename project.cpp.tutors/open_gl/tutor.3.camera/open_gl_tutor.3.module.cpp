@@ -138,25 +138,21 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_4
 		// (4) sets vertex attributes array to vertex array object;
-		renderer.Scene().Prepare();
-#if (0)
-		renderer.Scene().Array().Attrs() = triangle.A().Attrs();
-#endif
-#if (0)
-		using e_prog_ndx = CProg_enum::e_prog_ndx;
-		using
-		CBuffer = ex_ui::draw::open_gl::vertex::CBuffer;
-		CBuffer& buffer = renderer.Scene().Progs().Get(e_prog_ndx::e_tria).Buffer();
+		using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
+		using CBuffer   = vertex::CBuffer;
+
+		if (__failed(renderer.Scene().Prepare())) break;
+
+		CBuffer& buffer = renderer.Scene().ArrObjs().Get(e_arr_ndx::e_tria).VertArray().Buffer();
 
 		// (4.a) sets buffer cfg values;
 		buffer.Cfg().Count(triangle.Vertices().Count());
 		buffer.Cfg().Primitive(triangle.Primitive());
 		buffer.Cfg().StartAt(0);
 
-		if (__failed(buffer.SetData(triangle.Vertices().Data_Ref()))) {
+		if (__failed(buffer.SetData(triangle.Vertices().Data_ref()))) {
 			break;
 		}
-#endif
 #pragma endregion
 #pragma region __step_5
 		// (5) sets renderer cfg values;

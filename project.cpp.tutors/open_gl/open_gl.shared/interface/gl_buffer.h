@@ -59,8 +59,8 @@ namespace data {
 	public:
 		CBuffer_Base (void); CBuffer_Base (const CBuffer_Base&) = delete; CBuffer_Base (CBuffer_Base&&) = delete; ~CBuffer_Base (void);
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBindBuffer.xhtml ;
-		err_code BindTo  (const e_bind_targets); // the excerpt from the doc: ...buffer set to zero effectively unbinds any buffer object previously bound...;
-		err_code Create  (void);
+		err_code BindTo  (const e_bind_targets);  // the excerpt from the doc: ...buffer set to zero effectively unbinds any buffer object previously bound...;
+		err_code Create  (void);                  // generates the buffer identifier, nothing more;
 		err_code Destroy (void);
 
 		const

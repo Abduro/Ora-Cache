@@ -60,10 +60,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	private:
 		CScene& operator = (const CScene&) = delete; CScene& operator =  (CScene&&) = delete;
-		CArrObjs   m_arr_objs;
-		CContext   m_ctx;
-		CError     m_error;
-		CProg_enum m_progs;
+		CArrObjs m_arr_objs;
+		CContext m_ctx;
+		CError   m_error;
+		CProgs   m_progs;
 	};
 
 }}}

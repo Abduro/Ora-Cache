@@ -32,7 +32,7 @@ enum e_params : uint32_t {
 CShader:: CShader (void) : m_id(0), m_attached(false) { this->m_error() >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CShader:: CShader (const CShader& _src) : CShader() { *this= _src; }
 CShader:: CShader (CShader&& _victim) : CShader() { *this = _victim; }
-CShader::~CShader (void) { this->Delete(); }
+CShader::~CShader (void) {/* this->Delete(); the shader object must be deleted *before* destructing this object; */}
 
 CString  CShader::Class (void) { return __CLASS__; }
 
