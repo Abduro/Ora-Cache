@@ -127,7 +127,7 @@ err_code  CBuffer_Base::Create (void) {
 	return this->Error();
 }
 
-err_code  CBuffer_Base::Destroy (void) {
+err_code  CBuffer_Base::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 #if (0) // no check for binding is required here, the unbinding must be made outside of this procedure;
 	if (false == this->Is_bound()) {

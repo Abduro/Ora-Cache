@@ -17,10 +17,11 @@
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace program {
 }
-	class CProgram  {
+	using e_object = CPipeline::e_targets;
+
+	class CProgram : public CPipeline {
 	public:
 	using CAttrArr = vertex::CAttrArray;
-	using CArrObj  = vertex::CArrObject; // vertex array object is not dependable on program itself, but it depends on attributes the program shaders define;
 	using CCache   = program::CCache ;
 	using CProgId  = program::CProgId;
 	using CStatus  = program::CStatus;
@@ -54,46 +55,40 @@ namespace program {
 		 err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());
 
 		 const
-		 CCache& Shaders (void) const;
-		 CCache& Shaders (void) ;
+		 CCache&   Shaders (void) const;
+		 CCache&   Shaders (void) ;
 		 const
-		 CStatus& Status (void) const;
-		 CStatus& Status (void) ;
+		 CStatus&  Status (void) const;
+		 CStatus&  Status (void) ;
 
-		 err_code Use (void);        // sets this program to be current in draw pipeline;
-		 err_code Validate (void);   // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
+		 err_code  Use (void);       // sets this program to be current in draw pipeline;
+		 err_code  Validate (void);  // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
 
 		 CProgram& operator <<(const CProgId&);
 
 	private:
 		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
 		 mutable
-		 CError   m_error;
-		 CAttrArr m_attrs;
-		 CCache   m_shaders;
-		 CProgId  m_prog_id;
-		 CStatus  m_status ;
+		 CError    m_error;
+		 CAttrArr  m_attrs;
+		 CCache    m_shaders;
+		 CProgId   m_prog_id;
+		 CStatus   m_status ;
 	};
 
 	class CProg_enum {
 	public:
-		enum e_prog_ndx : uint32_t {
-		     e_grid = 0x0,
-		     e_tria = 0x1,
-		};
-		static const uint32_t u_count = e_prog_ndx::e_tria/* + 1*/; // the number of the programs is pre-defined and can be increased if necessary;
-		class CAttrs {
-		private: CAttrs (const CAttrs&) = delete; CAttrs (CAttrs&&) = delete; friend class CProg_enum;
-		private: CAttrs& operator = (const CAttrs&) = delete; CAttrs& operator = (CAttrs&&) = delete;
+		class CAttrs : private no_copy {
+		public: using CProgs = CProg_enum;
 		public:
-			CAttrs (CProg_enum* = 0); ~CAttrs (void);
+			CAttrs (CProgs* = 0); ~CAttrs (void);
 
 			TError&  Error (void) const;
 			err_code Init  (void); // after getting program build success, program shaders' attributes must be initialized;
 
 		private:
 			CError   m_error;
-			CProg_enum* m_progs;
+			CProgs*  m_progs;
 		};
 	public:
 		CProg_enum (void); CProg_enum (const CProg_enum&) = delete; CProg_enum (CProg_enum&&) = delete; ~CProg_enum (void);
@@ -110,16 +105,19 @@ namespace program {
 		TError&   Error  (void) const;
 
 		const
-		CProgram& Get (const e_prog_ndx) const; // if the input index is out of range the reference to invalid program object is returned; (ro)
-		CProgram& Get (const e_prog_ndx) ;	    // if the input index is out of range the reference to invalid program object is returned; (rw)
+		CProgram& Get (const e_object) const; // gets the reference to the program by target object enum; (ro)
+		CProgram& Get (const e_object) ;	  // gets the reference to the program by target object enum; (rw)
 
 		err_code  Load (void); // loads shaders' source files by paths which specified in the registry;
+		const
+		CProgram& Ref (const uint32_t _u_ndx) const; // if the input index is out of range the reference to invalid program object is returned; (ro)
+		CProgram& Ref (const uint32_t _u_ndx) ;      // if the input index is out of range the reference to invalid program object is returned; (rw)
 
 	private:
 		CProg_enum& operator = (const CProg_enum&) = delete;
 		CAttrs   m_attrs;
 		CError   m_error;
-		CProgram m_progs[CProg_enum::u_count];
+		CProgram m_progs[CPipeline::u_tgt_count];
 	};
 }}}
 

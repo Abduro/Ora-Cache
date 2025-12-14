@@ -13,7 +13,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	typedef ::std::vector<CVertex> TVertices; // the seperate vertex collection, not the data for vertex buffer;
 
-	class CVertArray {
+	class CVertArray : public CPipeline {
 	public:
 		using CAttr   = vertex::CAttr;
 		using CBuffer = vertex::CBuffer;
@@ -28,7 +28,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		// https://www.allacronyms.com/elements/abbreviated ;
 		uint32_t  Count  (void) const;    // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
 		err_code  Count  (const uint32_t _n_elems);  // sets the number of the required vertices, i.e. elements;
-		err_code  Create (void);                     // creates the vertex data buffer;
+		err_code  Create (void);                     // creates the vertex data buffer (aka wbo);
+		err_code  Delete (void);                     // deletes the vertex data buffer (aka wbo);
 		TError&   Error  (void) const;
 
 		const void*      Data_ptr (void) const;      // gets the pointer to vertex array data, this is the data for vertex buffer;
@@ -44,11 +45,15 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 		bool    Is_valid (void) const;   // returns true in case of vertex buffer data size equals to sum of attributes' sizes;
 		
+		err_code  Set (const uint32_t _prog_id);     // sets program identifier to vertices attributes' arrays;
+
 		static
 		err_code  Set_ptrs (const CAttr&, CError&);
-		err_code  Set_ptrs (void) const; // it is assumed that each vertex has the same attribute set, i.e. the pos and color attributes;
+		err_code  Set_ptrs (void) const; // it is assumed that each vertex has the same attribute set, i.e. the position and color attributes;
 
 		err_code  Update (void);         // updates vertex data vector by applying vertices' attribute arrays' data;
+
+		CVertArray& operator << (const uint32_t _prog_id);
 	
 	private:
 		CVertArray& operator = (const CVertArray&) = delete; CVertArray& operator = (CVertArray&&) = delete;

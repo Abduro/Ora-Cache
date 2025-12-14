@@ -137,7 +137,7 @@ void view::CColor::Set (const rgb_color _rgba) {
 	this->m_rgba[0] = CConvert::ToFloat(get_r_value(_rgba));
 	this->m_rgba[1] = CConvert::ToFloat(get_g_value(_rgba));
 	this->m_rgba[2] = CConvert::ToFloat(get_b_value(_rgba));
-	this->m_rgba[3] = /*CConvert::ToFloat(get_a_value(_rgba))*/ 0.0f; // ToDo: it is required to save the alpha value in registry too;
+	this->m_rgba[3] = /*CConvert::ToFloat(get_a_value(_rgba))*/ 1.0f; // ToDo: it is required to save the alpha value in registry too;
 }
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
@@ -274,20 +274,18 @@ err_code view::CGrid::Draw (void) {
 	err_code n_result = __s_ok;
 
 	using e_line = procs::CPrimitives::e_line;
-	using e_prog = CProg_enum::e_prog_ndx;
-	using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
 
-#if (1)
+#if (0)
 	if (__failed(::__get_attr_mod_procs().Modify_f4(0, this->Clr().Get_r(), this->Clr().Get_g(), this->Clr().Get_b(), this->Clr().Get_a()))) {
 		this->m_error = ::__get_attr_mod_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
 	}
 #endif
 
-	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(e_prog::e_grid);
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(e_object::e_grid);
 	
-	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid); vao;
-	const CVertArray& vexes = ::Get_renderer().Scene().ArrObjs().Get(e_arr_ndx::e_grid).VertArray();
+	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjs().Get(e_object::e_grid); vao;
+	const CVertArray& vexes = ::Get_renderer().Scene().ArrObjs().Get(e_object::e_grid).VertArray();
 
 	if (vexes.Is_valid() == false)
 		return n_result = vexes.Error();
@@ -315,12 +313,10 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	if (__failed(markers.Count(_u_size, this->Cell().Get()))) {
 		return this->m_error = markers.Error();
 	}
-
-	using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
-	using CBuffer   = vertex::CBuffer;
+	using CBuffer = vertex::CBuffer;
 
 	TRenderer& renderer  = ::Get_renderer();
-	CVertArray& vert_arr = renderer.Scene().ArrObjs().Get(e_arr_ndx::e_grid).VertArray();
+	CVertArray& vert_arr = renderer.Scene().ArrObjs().Get(e_object::e_grid).VertArray();
 
 	// (3) calculates the number of required vertices for drawing grid lines;
 	const uint32_t u_count = static_cast<uint32_t>((markers.Get_horz().size() + markers.Get_vert().size())) * 2;
@@ -375,8 +371,8 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	if (__failed(vert_arr.Buffer().SetData(vert_arr.Data_ref())))
 		this->m_error = vert_arr.Buffer().Error();
 #else
-	if (__failed(renderer.Scene().ArrObjs().Get(e_arr_ndx::e_grid).SetData(vert_arr.Data_ref())))
-		this->m_error =renderer.Scene().ArrObjs().Get(e_arr_ndx::e_grid).Error();
+	if (__failed(renderer.Scene().ArrObjs().Get(e_object::e_grid).SetData(vert_arr.Data_ref())))
+		this->m_error =renderer.Scene().ArrObjs().Get(e_object::e_grid).Error();
 #endif
 	return this->Error();
 }

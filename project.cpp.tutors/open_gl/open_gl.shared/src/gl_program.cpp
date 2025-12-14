@@ -14,7 +14,6 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
 
-using CArrObj  = CProgram::CArrObj ;
 using CAttrArr = CProgram::CAttrArr;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -29,11 +28,11 @@ const
 CAttrArr&  CProgram::Attrs (void) const { return this->m_attrs; }
 CAttrArr&  CProgram::Attrs (void)       { return this->m_attrs; }
 
-CString   CProgram::Class (void) { return __CLASS__; }
+CString    CProgram::Class (void) { return __CLASS__; }
 
-TError&   CProgram::Error (void) const { return this->m_error; }
+TError&    CProgram::Error (void) const { return this->m_error; }
 
-err_code  CProgram::Create (void) {
+err_code   CProgram::Create (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
 	if (!!this->Id())
@@ -58,7 +57,7 @@ err_code  CProgram::Create (void) {
 	return this->Error();
  }
 
-err_code  CProgram::Delete (void) {
+err_code   CProgram::Delete (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
 	if (false == !!this->Id())
@@ -206,8 +205,8 @@ err_code CAttrs::Init (void) {
 	if (nullptr == this->m_progs)
 		return this->m_error <<__e_not_inited;
 
-	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
-		CProgram& prog = this->m_progs->Get((CProg_enum::e_prog_ndx)i_);
+	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
+		CProgram& prog = this->m_progs->Ref(i_);
 #if (1)
 		prog.Attrs() << prog.Id(); // ToDo: it should be not necessary;
 		if (__failed(prog.Attrs().Enum_attrs())) {
@@ -263,7 +262,10 @@ err_code CAttrs::Init (void) {
 	return this->Error();
 }
 
-CProg_enum:: CProg_enum (void) : m_attrs(this) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CProg_enum:: CProg_enum (void) : m_attrs(this) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+	m_progs[0].Target(e_object::e_grid);
+	m_progs[1].Target(e_object::e_tria);
+}
 CProg_enum::~CProg_enum (void) {}
 
 const
@@ -273,8 +275,8 @@ CAttrs&  CProg_enum::Attrs (void)       { return this->m_attrs; }
 err_code CProg_enum::Build (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
-		CProgram& prog = this->Get((e_prog_ndx)i_);
+	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
+		CProgram& prog = this->Ref(i_);
 
 		if (__failed(prog.Shaders().Compile())) {
 			this->m_error = prog.Shaders().Error(); break;
@@ -298,8 +300,8 @@ err_code CProg_enum::Build (void) {
 err_code CProg_enum::Clear (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
-		CProgram& prog = this->Get((e_prog_ndx)i_);
+	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
+		CProgram& prog = this->Ref(i_);
 		// https://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader ;
 		if (false) {}
 		else if (__failed(prog.Shaders().Detach())) this->m_error = prog.Shaders().Error(); // the error is output to trace by the shaders' cache;
@@ -312,8 +314,8 @@ err_code CProg_enum::Clear (void) {
 err_code CProg_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
-		CProgram& prog = this->Get((e_prog_ndx)i_);
+	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
+		CProgram& prog = this->Ref(i_);
 		if (__failed(prog.Create())) {
 			this->m_error = prog.Error(); break;
 		}
@@ -328,8 +330,8 @@ err_code CProg_enum::Create (void) {
 err_code CProg_enum::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	for (uint32_t i_ = 0; i_ < CProg_enum::u_count; i_++) {
-		CProgram& prog = this->Get((e_prog_ndx)i_);
+	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
+		CProgram& prog = this->Ref(i_);
 #if (0) // a buffer is not program attribute anymore;
 		// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
 		if (prog.Buffer().Is_bound()) {
@@ -356,17 +358,17 @@ err_code CProg_enum::Delete (void) {
 
 TError&  CProg_enum::Error (void) const { return this->m_error; }
 const
-CProgram&   CProg_enum::Get (const e_prog_ndx _ndx) const {
-	_ndx;
-	if (e_prog_ndx::e_grid == _ndx) return this->m_progs[_ndx];
-	if (e_prog_ndx::e_tria == _ndx) return this->m_progs[_ndx];
+CProgram&   CProg_enum::Get (const e_object _u_target) const {
+	_u_target;
+	if (e_object::e_grid == _u_target) return this->m_progs[0];
+	if (e_object::e_tria == _u_target) return this->m_progs[1];
 	return _impl::inv_prog;
 }
 
-CProgram&   CProg_enum::Get (const e_prog_ndx _ndx) {
-	_ndx;
-	if (e_prog_ndx::e_grid == _ndx) return this->m_progs[_ndx];
-	if (e_prog_ndx::e_tria == _ndx) return this->m_progs[_ndx];
+CProgram&   CProg_enum::Get (const e_object _u_target) {
+	_u_target;
+	if (e_object::e_grid == _u_target) return this->m_progs[0];
+	if (e_object::e_tria == _u_target) return this->m_progs[1];
 	return _impl::inv_prog;
 }
 
@@ -375,8 +377,8 @@ err_code    CProg_enum::Load (void) {
 	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;
 	static _pc_sz p_object[] = {_T("grid.1"), _T("triangle.1")};
 
-	for (uint32_t i_ = 0; i_ < CProg_enum::u_count && i_ < _countof(p_object); i_++) {
-		CProgram& prog = this->Get((e_prog_ndx)i_);
+	for (uint32_t i_ = 0; i_ < _countof(this->m_progs) && i_ < _countof(p_object); i_++) {
+		CProgram& prog = this->m_progs[i_];
 		if (__failed(prog.Shaders().Fragment().Src().Cfg().Path(p_object[i_], prog.Shaders().Fragment().Type().Get())))
 		    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
 		if (__failed(prog.Shaders().Vertex().Src().Cfg().Path(p_object[i_], prog.Shaders().Vertex().Type().Get())))
@@ -387,3 +389,7 @@ err_code    CProg_enum::Load (void) {
 
 	return this->Error();
 }
+
+const
+CProgram& CProg_enum::Ref (const uint32_t _u_ndx) const { if (_countof(this->m_progs) > _u_ndx) return this->m_progs[_u_ndx]; else return _impl::inv_prog; }
+CProgram& CProg_enum::Ref (const uint32_t _u_ndx)       { if (_countof(this->m_progs) > _u_ndx) return this->m_progs[_u_ndx]; else return _impl::inv_prog; }

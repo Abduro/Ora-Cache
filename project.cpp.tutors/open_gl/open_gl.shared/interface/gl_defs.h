@@ -28,6 +28,24 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		 no_copy& operator = (const no_copy&) = delete;
 		 no_copy& operator = (no_copy&&) = delete;
 	};
+
+	class CPipeline : private no_copy {
+	public:
+		CPipeline (void); ~CPipeline (void);
+		enum e_targets : uint32_t {
+		e_none = 0x0, // due to this element the enumeration other elements cannot be used as indices for getting an item from array of open_gl wrappers;
+		e_grid = 0x1,
+		e_tria = 0x2,
+		};
+		static const uint32_t u_tgt_count = e_targets::e_tria - 1;
+	public:
+		using e_object = CPipeline::e_targets;
+
+		e_object  Target (void) const;     // gets pipeline target object;
+		bool      Target (const e_object); // sets pipeline target object; returns 'true' in case of target object value change;
+	protected:
+		e_object  m_target ;
+	};
 }}}
 
 #endif/*_GL_DEFS_H_INCLUDED*/

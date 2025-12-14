@@ -138,8 +138,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_4
 		// (4) sets vertex attributes array to vertex array object;
-		using e_arr_ndx = vertex::CArrObj_enum::e_arr_ndx;
-		using CBuffer   = vertex::CBuffer;
+		using CBuffer = vertex::CBuffer;
 
 		if (__failed(renderer.Scene().Prepare())) break;
 #if (0)

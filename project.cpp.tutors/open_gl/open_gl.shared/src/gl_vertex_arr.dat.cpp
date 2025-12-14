@@ -18,16 +18,16 @@ CVertArray:: CVertArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_
 CVertArray::~CVertArray (void) {}
 
 const
-CBuffer&     CVertArray::Buffer (void) const { return this->m_buffer; }
-CBuffer&     CVertArray::Buffer (void)       { return this->m_buffer; }
+CBuffer&   CVertArray::Buffer (void) const { return this->m_buffer; }
+CBuffer&   CVertArray::Buffer (void)       { return this->m_buffer; }
 
 // https://stackoverflow.com/questions/17254425/getting-the-size-in-bytes-of-a-vector ;
-uint32_t     CVertArray::Bytes (void) const {
+uint32_t   CVertArray::Bytes (void) const {
 	return static_cast<uint32_t>(sizeof(float) * static_cast<uint32_t>(this->m_data.size()));
 }
 
-uint32_t CVertArray::Count (void) const { return static_cast<uint32_t>(this->m_items.size()); }
-err_code CVertArray::Count (const uint32_t _n_elems) {
+uint32_t   CVertArray::Count (void) const { return static_cast<uint32_t>(this->m_items.size()); }
+err_code   CVertArray::Count (const uint32_t _n_elems) {
 	_n_elems;
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -42,7 +42,7 @@ err_code CVertArray::Count (const uint32_t _n_elems) {
 	return this->Error();
 }
 
-err_code CVertArray::Create (void) {
+err_code   CVertArray::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false) {}
@@ -52,12 +52,20 @@ err_code CVertArray::Create (void) {
 	return this->Error();
 }
 
-const
-CVertex&  CVertArray::Get (const uint32_t _u_ndx) const { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }
-CVertex&  CVertArray::Get (const uint32_t _u_ndx)       { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }     
+err_code   CVertArray::Delete (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Buffer().Delete())) { this->m_error = this->Buffer().Error(); }
+
+	return this->Error();
+}
 
 const
-void*     CVertArray::Data_ptr (void) const { return this->m_data.data(); }
+CVertex&   CVertArray::Get (const uint32_t _u_ndx) const { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }
+CVertex&   CVertArray::Get (const uint32_t _u_ndx)       { if (_u_ndx < this->Count()) return this->m_items.at(_u_ndx); return ::virt_vex; }     
+
+const
+void*      CVertArray::Data_ptr (void) const { return this->m_data.data(); }
 const TVertData& CVertArray::Data_ref (void) const { return this->m_data; }
 
 #if (0)
@@ -79,7 +87,7 @@ err_code CVertArray::SetElements (const uint32_t _n_elements) {
 	return this->Error();
 }
 #endif
-TError&  CVertArray::Error (void) const { return this->m_error; }
+TError&    CVertArray::Error (void) const { return this->m_error; }
 const
 TVertices& CVertArray::Items (void) const { return this->m_items; }
 TVertices& CVertArray::Items (void)       { return this->m_items; }
@@ -93,11 +101,25 @@ bool  CVertArray::Is_valid (void) const {
 	return static_cast<uint32_t>(this->m_data.size()) == u_req && u_req > 0;
 }
 
-err_code CVertArray::Set_ptrs (void) const {
+err_code   CVertArray::Set (const uint32_t _prog_id) {
+	_prog_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	for (uint32_t i_ = 0; i_ < this->Count(); i_++) {
+		CVertex& vex = this->Get(i_);
+		if (__failed(vex.Attrs().ProgId(_prog_id))) {
+			this->m_error = vex.Attrs().Error(); break;
+		}
+	}
+
+	return this->Error();
+}
+
+err_code   CVertArray::Set_ptrs (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (this->Items().empty()) {
-		return this->m_error <<__e_not_inited = _T("The vertex array has no items");
+		return this->m_error <<__e_not_inited = _T("#__e_inv_val: the vertex array has no items");
 	}
 
 	const vertex::CAttrArray& att_aray = this->Items().at(0).Attrs();
@@ -106,7 +128,7 @@ err_code CVertArray::Set_ptrs (void) const {
 		const vertex::CAttr& attr = att_aray.Item(i_);
 		if (false == attr.Is_used())
 			continue;
-#if (0)
+#if defined(_DEBUG)
 		const uint32_t u_locate = attr.Locate().Value(); u_locate;
 		const uint32_t u_size   = attr.Size(); u_size;
 		const uint32_t u_type   = attr.Type(); u_type;
@@ -118,12 +140,16 @@ err_code CVertArray::Set_ptrs (void) const {
 			this->m_error = __get_attr_ptr_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req)); break;
 		}
+		// each attribute must be enabled;
+		if (__failed(::__get_attr_arr_procs().Enable(attr.Locate().Value()))) {
+			this->m_error = ::__get_attr_arr_procs().Error(); break;
+		}
 	}
 
 	return this->Error();
 }
 
-err_code  CVertArray::Set_ptrs (const vertex::CAttr& _attr, CError& _err) {
+err_code   CVertArray::Set_ptrs (const vertex::CAttr& _attr, CError& _err) {
 	_attr; _err;
 	if (false == _attr.Is_valid()) return _err <<__e_inv_arg;
 	if (false == _attr.Is_used()) return _err <<__e_inv_arg;
@@ -176,3 +202,5 @@ err_code   CVertArray::Update (void) {
 
 	return this->Error();
 }
+
+CVertArray& CVertArray::operator << (const uint32_t _prog_id) { this->Set(_prog_id); return *this; }
