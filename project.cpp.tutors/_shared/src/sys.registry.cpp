@@ -23,6 +23,93 @@ namespace shared { namespace sys_core { namespace storage { namespace _impl {
 
 }}}}
 
+/////////////////////////////////////////////////////////////////////////////
+
+using CCtx  = CReg_router::CCtx;
+using CVersion = CCtx::CVersion;
+
+CCtx::CCtx (void) {}
+
+_pc_sz CCtx::Root (void) const {
+
+	static CString cs_root;
+
+	if (cs_root.IsEmpty()) {
+		cs_root.Format(_T("%s\\context"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
+	}
+
+	return (_pc_sz) cs_root;
+}
+const
+CVersion& CCtx::Version (void) const { return this->m_version; }
+
+CVersion::CVersion (void) {}
+
+CString CVersion::Name (const e_values _e_value) const {
+	_e_value;
+	if (e_values::e_core  == _e_value) return CString(_T("core"));
+	if (e_values::e_major == _e_value) return CString(_T("major"));
+	if (e_values::e_minor == _e_value) return CString(_T("minor"));
+
+	return CString(_T("")); // this is '(default)' value name;
+}
+
+_pc_sz  CVersion::Root (void) const {
+
+	static CString cs_root;
+
+	if (cs_root.IsEmpty()) {
+		cs_root.Format(_T("%s\\version"), ::Get_reg_router().Ctx().Root());
+	}
+
+	return (_pc_sz) cs_root;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+using CCell = CReg_router::CViewport::CViewport::CGrid::CCell;
+using CGrid = CReg_router::CViewport::CViewport::CGrid;
+using CViewport = CReg_router::CViewport;
+
+CCell::CCell (void) {}
+
+CString CCell::Name (const e_values _e_value) const {
+	_e_value;
+	if (e_values::e_height == _e_value) return CString(_T("height"));
+	if (e_values::e_width == _e_value) return CString(_T("width"));
+
+	return CString(_T("")); // this is '(default)' value name;
+}
+
+_pc_sz CCell::Root (void) const {
+
+	static CString cs_cell;
+
+	if (cs_cell.IsEmpty()) {
+		cs_cell.Format(_T("%s\\cell"), (_pc_sz) Get_reg_router().Viewport().Grid().Root());
+	}
+	return (_pc_sz)cs_cell;
+}
+
+CGrid::CGrid (void) {}
+const
+CCell& CGrid::Cell (void) const { return m_cell; }
+CCell& CGrid::Cell (void)       { return m_cell; }
+
+_pc_sz CGrid::Clr_name (void) const { static _pc_sz p_clr_name = _T("color"); return p_clr_name; }
+
+_pc_sz CGrid::Root (void) const {
+
+	static CString cs_grid;
+
+	if (cs_grid.IsEmpty()) {
+		cs_grid.Format(_T("%s\\grid"), (_pc_sz) Get_reg_router().Viewport().Root());
+	}
+	return (_pc_sz)cs_grid;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 CReg_router::CRoot::CRoot (void) {}
 const
 HKEY    CReg_router::CRoot::Key  (void) const { static HKEY h_key = TutorialRootKey; return h_key; }
@@ -110,47 +197,6 @@ _pc_sz  CReg_router::CTheme::To_str (const e_element _element) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-using CCell = CReg_router::CViewport::CViewport::CGrid::CCell;
-using CGrid = CReg_router::CViewport::CViewport::CGrid;
-using CViewport = CReg_router::CViewport;
-
-CCell::CCell (void) {}
-
-_pc_sz CCell::Root (void) const {
-
-	static CString cs_cell;
-
-	if (cs_cell.IsEmpty()) {
-		cs_cell.Format(_T("%s\\cell"), (_pc_sz) Get_reg_router().Viewport().Grid().Root());
-	}
-	return (_pc_sz)cs_cell;
-}
-
-CString CCell::Value (const e_values _e_value) const {
-	_e_value;
-	if (e_values::e_height == _e_value) return CString(_T("height"));
-	if (e_values::e_width == _e_value) return CString(_T("width"));
-
-	return CString(_T("")); // this is '(default)' value name;
-}
-
-CGrid::CGrid (void) {}
-const
-CCell& CGrid::Cell (void) const { return m_cell; }
-CCell& CGrid::Cell (void)       { return m_cell; }
-
-_pc_sz CGrid::Clr_name (void) const { static _pc_sz p_clr_name = _T("color"); return p_clr_name; }
-
-_pc_sz CGrid::Root (void) const {
-
-	static CString cs_grid;
-
-	if (cs_grid.IsEmpty()) {
-		cs_grid.Format(_T("%s\\grid"), (_pc_sz) Get_reg_router().Viewport().Root());
-	}
-	return (_pc_sz)cs_grid;
-}
-
 CViewport::CViewport (void) {}
 const
 CGrid& CViewport::Grid (void) const { return this->m_grid; }
@@ -170,6 +216,8 @@ _pc_sz CViewport::Root (void) const {
 
 CReg_router:: CReg_router (void) {}
 CReg_router::~CReg_router (void) {}
+
+const   CCtx& CReg_router::Ctx (void) const { return this->m_ctx; }
 const
 CReg_router::CRoot&  CReg_router::Root (void) const { return this->m_root; }
 CReg_router::CRoot&  CReg_router::Root (void)       { return this->m_root; }

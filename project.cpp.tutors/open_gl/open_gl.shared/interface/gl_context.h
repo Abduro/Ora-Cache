@@ -136,14 +136,39 @@ namespace context {
 
 	class CContext : public context::CBase { typedef context::CBase TBase;
 	public:
-		 CContext (void) ;  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
-		~CContext (void) ;
+		class CVersion { // for setting the version attributes that may be different by value in comparison with OpenGL installed on the OS;
+		public:
+			CVersion (void) ; CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete; ~CVersion (void) = default;
 
-		 err_code Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver); // it is supposed the target window is set and its HDC is already gotten;
-		 err_code Destroy(void);
+			TError&  Error (void) const;
+			/*the version info is loaded from the system registry;*/
+			uint32_t Major (void) const;
+			uint32_t Minor (void) const;
+			bool  Use_core (void) const;
+
+			err_code Load  (void);  // reads all values related to context version from the system registry;
+
+		private:
+			CVersion& operator = (const CVersion&) = delete;
+			CVersion& operator = (CVersion&&) = delete;
+			mutable CError m_error;
+
+			uint32_t  m_major, m_minor;
+			bool      m_use_core;
+		};
+	public:
+		 CContext (void);  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
+		~CContext (void);
+
+		 err_code  Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver); // it is supposed the target window is set and its HDC is already gotten;
+		 err_code  Destroy (void);
+
+		 const
+		 CVersion& Version (void) const;
 
 	private:
 		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
+		 CVersion  m_ver;
 	};
 }}}
 

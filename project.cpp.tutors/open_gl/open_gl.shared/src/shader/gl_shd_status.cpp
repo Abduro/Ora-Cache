@@ -23,14 +23,17 @@ const
 shader::CShaderId&  CStatus::ShaderId (void) const { return this->m_shd_id; }
 shader::CShaderId&  CStatus::ShaderId (void)       { return this->m_shd_id; }
 
-#define __gl_cmpl_status  0x8B81 // GL_COMPILE_STATUS;
-
 bool  CStatus::Get (const uint32_t _param_id) const {
 	return CStatus::Get(_param_id, this->ShaderId(), this->m_error);
 }
+
+using e_param_types = procs::CShader::e_param_types;
+
 bool  CStatus::Get (const uint32_t _param_id, const uint32_t _shader_id, CError& _err) {
 	_param_id; _shader_id; _err;
-	if (__gl_cmpl_status != _param_id) { _err << __e_inv_arg = TString().Format(_T("#__e_inv_arg: '_param_id' (%u) is unknown")); return false; }
+	if (e_param_types::e_compiled != _param_id) {
+		_err << __e_inv_arg = TString().Format(_T("#__e_inv_arg: '_param_id' (%u) is unknown")); return false;
+	}
 
 	if (false == CShaderId::Is_valid(_shader_id, _err))
 		return false;
@@ -46,7 +49,7 @@ bool  CStatus::Is_compiled (void) const {
 	return CStatus::Is_compiled(this->ShaderId(), this->m_error);
 }
 bool  CStatus::Is_compiled (const uint32_t _shader_id, CError& _err) {
-	return CStatus::Get(__gl_cmpl_status, _shader_id, _err);
+	return CStatus::Get(procs::CShader::e_param_types::e_compiled, _shader_id, _err);
 }
 
 CStatus& CStatus::operator <<(const uint32_t _shader_id) { this->ShaderId() << _shader_id; return *this; }

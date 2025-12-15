@@ -209,30 +209,27 @@ err_code CCache::Compile (void) {
 	shader::CCompiler cmpl;
 	shader::CStatus $_status;
 	// error C2234: 'shaders': arrays of references are illegal ;
-	CShader* shaders[] = { &this->Fragment(), &this->Vertex() };
+	CShader* shaders[] = { &this->Vertex(), &this->Fragment() };
 
 	for (uint32_t i_ = 0; i_ < _countof(shaders); i_++) {
 		if (shaders[i_]->Error()().Is())
 			continue;
 		cmpl << shaders[i_]->Id();
-		if ( __failed(cmpl.Compile())) {
-			 __trace_err_2(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req)); }
-		else __trace_info_2(pc_sz_pat_cmpl, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id());
-		// checks the compile status of the shader;
-		$_status << shaders[i_]->Id();
-		const bool b_compiled = $_status.Is_compiled();
-		if ($_status.Error() ) {
-		    __trace_err_2(_T("%s\n"), (_pc_sz) $_status.Error().Print(TError::e_print::e_req)); }
+		if (__failed(cmpl.Compile())) { // there is no need to check compilation status of the shader source code if error already occurs;
+			__trace_err_2(_T("%s\n"), (_pc_sz)cmpl.Error().Print(TError::e_print::e_req));
+			__trace_warn_2(pc_sz_pat_stat, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), TString().Bool(false));
+			continue;
+		}
 		else {
-			__trace_info_2(pc_sz_pat_stat, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), TString().Bool(b_compiled));
-			if (false == b_compiled) {
-				shader::CLog log;
-				if (__failed(log.Set(shaders[i_]->Id()))) {
-				    __trace_err_2(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
-				else {
-					__trace_warn_2(_T("%s\n"), _T("Compile log:"));
-				    __trace_err(_T("%s"), log.Get());
-				}
+			__trace_info_2(pc_sz_pat_cmpl, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id()); // the compiler works;
+			// checks the compile status of the shader;
+			$_status << shaders[i_]->Id();
+			const bool b_compiled = $_status.Is_compiled();
+			if ($_status.Error() ) { // the error can occur in one of the procedure wrappers;
+				__trace_err_2(_T("%s\n"), (_pc_sz) $_status.Error().Print(TError::e_print::e_req));
+			}
+			else {
+				__trace_info_2(pc_sz_pat_stat, (_pc_sz) shader::CType::To_str (shaders[i_]->Type()), shaders[i_]->Id(), TString().Bool(b_compiled));
 			}
 		}
 	}

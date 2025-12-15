@@ -16,11 +16,21 @@ namespace procs {
 	typedef void     (__stdcall *pfn_Params) (uint32_t _shader_id, uint32_t _param_type, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetShaderiv.xml ;
 	typedef void     (__stdcall *pfn_Source) (uint32_t _shader_id, int32_t _n_count, const char** const _p_string, const int32_t* _p_length); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glShaderSource.xhtml ;
 	public:
+		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetShader.xhtml ;
+		enum e_param_types : uint32_t {
+		/* alias     | value    | OpenGL symbolic defs    | brief description ;
+		-------------+----------+-------------------------+--------------------------*/
+		e_compiled   = 0x8B81, // GL_COMPILE_STATUS       | returns 'true' if the last compile operation on shader was successful, and 'false' otherwise;
+		e_deleted    = 0x8B80, // GL_DELETE_STATUS        | returns 'true' if shader is currently flagged for deletion, and 'false' otherwise;
+		e_info_len   = 0x8B84, // GL_INFO_LOG_LENGTH      | returns the number of characters in the information log for shader including the null termination character;
+		e_src_len    = 0x8B88, // GL_SHADER_SOURCE_LENGTH | returns the length of the concatenation of the source strings that make up the shader source for the shader, including the null termination character;
+		e_$_type     = 0x8B4F, // GL_SHADER_TYPE          | returns GL_VERTEX_SHADER, GL_GEOMETRY_SHADER and GL_FRAGMENT_SHADER if shader is one of those types;
+		};
 		CShader (void); ~CShader (void) = default;
 
 		uint32_t Create  (const uint32_t _u_type);    // creates an empty shader object and returns a non-zero value by which it can be referenced ;
 		err_code Delete  (const uint32_t _shader_id); // frees the memory and invalidates the name associated with the shader object specified by _shader_id ;
-		err_code InfoLog (const uint32_t _shader_id, const int32_t _n_max_len, int32_t* _p_log_len, char* _p_log); // returns the information log for the specified shader object ;
+		err_code InfoLog (const uint32_t _shader_id, const uint32_t _u_max_len, int32_t* _p_log_len, char* _p_log); // returns the information log for the specified shader object ;
 		bool   Is_valid  (const uint32_t _shader_id); //  determines if _shader_id corresponds to a shader object, i.e. returns 'true' if the shader object with such identifier exists;
 		err_code Params  (const uint32_t _shader_id, const uint32_t _param_type, int32_t* _p_params); // returns a parameter from a shader object ; the error object is updated in case of this function failure;
 		err_code Source  (const uint32_t _shader_id, const int32_t _n_count, const char** const _p_string, const int32_t* _p_length); // sets the source code in shader to the source code in the array of strings specified by _p_string ;

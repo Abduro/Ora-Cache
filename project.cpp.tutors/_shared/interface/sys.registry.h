@@ -13,6 +13,35 @@ namespace shared { namespace sys_core { namespace storage {
 
 	class CReg_router {
 	public:
+		class CCtx {
+		public:
+			class CVersion {
+			public:
+				enum e_values : uint32_t {
+				e_core  = 0x0, // the core flag;
+				e_major = 0x1, // the major version of the context;
+				e_minor = 0x2, // the minor version of the context;
+				};
+				CVersion (void); CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete; ~CVersion (void) = default;
+
+				CString Name (const e_values) const; // gets value name for input enumeration element;
+				_pc_sz  Root (void) const;           // gets root key path for context version properties/sub-keys;
+				
+
+			private:
+				CVersion& operator = (const CVersion&) = delete; CVersion& operator = (CVersion&&) = delete;
+			};
+		public:
+			CCtx (void); CCtx (const CCtx&) = delete; CCtx (CCtx&&) = delete; ~CCtx (void) = default;
+
+			_pc_sz Root (void) const; // gets root key path for context properties/sub-keys;
+			const
+			CVersion& Version (void) const;
+
+		private:
+			CCtx& operator = (const CCtx&) = delete; CCtx& operator = (CCtx&&) = delete;
+			CVersion m_version;
+		};
 		class CRoot {
 		public:
 			enum e_renderer : uint32_t { // the renderer identifier changes the root path of the tutorials;
@@ -84,8 +113,8 @@ namespace shared { namespace sys_core { namespace storage {
 				public:
 					CCell (void); CCell (const CCell&) = delete; CCell (CCell&&) = delete; ~CCell (void) = default;
 
+					CString Name (const e_values) const; // gets value name for input enumeration element;
 					_pc_sz  Root (void) const;
-					CString Value (const e_values) const; // gets value name for input enumeration element;
 
 				private:
 					CCell& operator = (const CCell&) = delete; CCell& operator = (CCell&&) = delete;
@@ -118,7 +147,7 @@ namespace shared { namespace sys_core { namespace storage {
 	public:
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
 		~CReg_router (void) ;
-
+		const   CCtx& Ctx (void) const; // there is no need to returns the reference to non-constant object;
 		const
 		CRoot&  Root (void) const;
 		CRoot&  Root (void) ;
@@ -136,7 +165,8 @@ namespace shared { namespace sys_core { namespace storage {
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
 
-		CRoot     m_root;
+		CCtx   m_ctx ;
+		CRoot  m_root;
 		CShaders  m_shaders;
 		CTheme    m_theme;
 		CViewport m_v_port;

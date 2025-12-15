@@ -148,11 +148,11 @@ view::CGrid::CCell:: CCell (void) : m_size{0u} {
 	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
 
 	TRegKeyEx reg_key;
-	m_size.cx = reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Value(CRegCell::e_width));
+	m_size.cx = reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_width));
 	if (reg_key.Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
 	}
-	m_size.cy = reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Value(CRegCell::e_height));
+	m_size.cy = reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_height));
 	if (reg_key.Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
 	}
@@ -338,6 +338,8 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 			CViewPort::ToPos(_u_size, 0, *it_y, coord, this->m_error);
 			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
 			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
+
+		//	vert_arr.Get(u_ndx).Attrs().Clr().Is_used(false);
 			u_ndx += 1;
 
 		// (4.b) gets the right side point of the line;

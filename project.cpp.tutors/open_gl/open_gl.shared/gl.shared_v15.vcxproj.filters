@@ -76,6 +76,8 @@
     <ClCompile Include="$(_1-2)gl_procs_shader.cpp"><Filter>src\procs</Filter></ClCompile>
     <ClInclude Include="$(_0-2)gl_procs_surface.h"><Filter>interface\procs</Filter></ClInclude>
     <ClCompile Include="$(_1-2)gl_procs_surface.cpp"><Filter>src\procs</Filter></ClCompile>
+    <ClInclude Include="$(_0-2)gl_procs_uniform.h"><Filter>interface\procs</Filter></ClInclude>
+    <ClCompile Include="$(_1-2)gl_procs_uniform.cpp"><Filter>src\procs</Filter></ClCompile>
     <ClInclude Include="$(_0-2)gl_procs_vertex.h"><Filter>interface\procs</Filter></ClInclude>
     <ClCompile Include="$(_1-2)gl_procs_vertex.cpp"><Filter>src\procs</Filter></ClCompile>
     <ClInclude Include="$(_0-2)gl_procs_view.h"><Filter>interface\procs</Filter></ClInclude>

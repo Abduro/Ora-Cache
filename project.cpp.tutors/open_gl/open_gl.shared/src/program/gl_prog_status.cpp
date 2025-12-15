@@ -22,9 +22,6 @@ CStatus:: CStatus (const uint32_t _prog_id) : m_prog_id(_prog_id) { this->m_erro
 CStatus::~CStatus (void) {}
 
 TError&   CStatus::Error (void) const { return this->m_error; }
-const
-program::CProgId&  CStatus::ProgId (void) const { return this->m_prog_id; }
-program::CProgId&  CStatus::ProgId (void)       { return this->m_prog_id; }
 
 bool  CStatus::Get (const uint32_t _param_id) const {
 	return CStatus::Get(_param_id, this->ProgId(), this->m_error);
@@ -48,31 +45,27 @@ bool  CStatus::Get (const uint32_t _param_id, const uint32_t _prog_id, CError& _
 	else return !!n_result;
 }
 
+uint32_t CStatus::GetActiveProg (CError& _err) {
+	_err;
+	uint32_t u_prog_id = abs(__get_param_procs().GetInt(__gl_curr_prog));
+
+	if (__get_param_procs().Error())
+		_err = __get_param_procs().Error();
+
+	return u_prog_id;
+}
+
 bool  CStatus::Is_current (void) const {
 	return CStatus::Is_current(this->ProgId().Get(), this->m_error);
 }
 
 bool  CStatus::Is_current (const uint32_t _prog_id, CError& _err) {
 	_prog_id; _err;
-	procs::CParam param;
-	const uint32_t n_curr_prog = param.GetInt(__gl_curr_prog); // if a negative result is returned, the input '_u_prog_id' will still be different;
-
-	bool b_current = false;
-
+	
 	if (false == CProgId::Is_valid(_prog_id, _err))
-		return b_current;
+		return false;
 
-	if (0 == n_curr_prog) {
-		if (param.Error())
-			return false == (_err = param.Error()).Is(); // Error.Is() returns 'true' in such case, thus 'false' == 'true' is valid return result;
-	}
-	else if (_prog_id != n_curr_prog) { // this means no error occurred, but current program has different identifier;
-//		_err << __e_inv_arg = TString().Format(_T("'_prog_id' (%u) is invalid"), _prog_id);
-	}
-	else
-		b_current = true;
-
-	return b_current;
+	return _prog_id == CStatus::GetActiveProg(_err);
 }
 
 bool  CStatus::Is_linked (void) const {
@@ -88,6 +81,11 @@ bool  CStatus::Is_valid  (void) const {
 bool  CStatus::Is_valid  (const uint32_t _u_prog_id, CError& _err) {
 	return CStatus::Get(__gl_valid_status, _u_prog_id, _err);
 }
+
+const
+program::CProgId&  CStatus::ProgId (void) const { return this->m_prog_id; }
+program::CProgId&  CStatus::ProgId (void)       { return this->m_prog_id; }
+
 
 CStatus&  CStatus::operator <<(const CProgId& _prog_id) {
 	this->ProgId() << _prog_id;

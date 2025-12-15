@@ -92,7 +92,11 @@ err_code camera::CWnd::PostCreate (void) {
 	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
 	renderer.Scene().Ctx().Draw().Target() << *this;
 	renderer.Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
-	if (__failed(renderer.Scene().Ctx().Draw().Create(4, 6))) { // ToDo: the version numbers (major & minor) must be set from version query not hardcoded;
+
+	const uint32_t u_major = renderer.Scene().Ctx().Draw().Version().Major();
+	const uint32_t u_minor = renderer.Scene().Ctx().Draw().Version().Minor();
+
+	if (__failed(renderer.Scene().Ctx().Draw().Create(u_major, u_minor))) {
 		this->m_error = renderer.Scene().Ctx().Draw().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
 	}

@@ -18,6 +18,8 @@ namespace program {
 		static
 		bool     Get (const uint32_t _param_id, const uint32_t _prog_id, CError&);
 		bool     Get (const uint32_t _param_id) const;
+
+		static  uint32_t GetActiveProg (CError&); // returns the prog_id of currently active program, otherwise 0 (zero) is returned;
 		static
 		bool  Is_current(const uint32_t _prog_id, CError&);
 		bool  Is_current(void) const;

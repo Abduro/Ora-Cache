@@ -6,6 +6,7 @@
 #include "procs\gl_procs_ctx.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
+#include "sys.registry.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::context;
@@ -16,6 +17,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 using namespace ex_ui::draw::open_gl::_impl;
 
+#pragma region cls::context::CBase{}
 context::CBase:: CBase (void) : m_drw_ctx(0) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CBase::~CBase (void) { this->Destroy(); }
 
@@ -85,9 +87,9 @@ CBase& context::CBase::operator <<(const HWND _h_wnd) {
 		return *this;
 	this->Set(_h_wnd); return *this;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::context::CTarget{}
 context::CTarget:: CTarget (void) :  m_dc_src(0), m_target(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CTarget:: CTarget (const HWND _h_wnd) : CTarget() { *this << _h_wnd; }
 context::CTarget::~CTarget (void) {
@@ -193,9 +195,9 @@ context::CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
 }
 
 context::CTarget::operator const HWND (void) const { return this->m_target; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::context::CDevice::CMode{}
 context::CDevice::CMode:: CMode (void) : m_value(e_mode::e__undef), m_hdc(nullptr) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CDevice::CMode:: CMode (const HDC& _h_dc) : CMode() { *this << _h_dc; }
 context::CDevice::CMode::~CMode (void) {}
@@ -259,9 +261,9 @@ context::CDevice::CMode&  context::CDevice::CMode::operator << (const HDC& _h_dc
 context::CDevice::CMode&  context::CDevice::CMode::operator << (const e_mode _e_mode) { this->m_value = _e_mode; return *this; }
 const
 context::CDevice::CMode&  context::CDevice::CMode::operator >> (uint32_t& _n_out) const { _n_out = this->Current(); return *this; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::context::CDevice{}
 context::CDevice:: CDevice (void) : CBase() { CBase::m_error <<__CLASS__; }
 
 context::CDevice:: CDevice (const HWND _h_target) : CDevice() { *this << _h_target; }
@@ -371,7 +373,7 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 	this->Create(_h_target);
 	return *this; // for getting the result of creation the error state should be checked;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 
 #include "shared.wnd.fake.h"
@@ -448,4 +450,33 @@ err_code   CContext::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_g
 	}
 
 	return TBase::Error();
+}
+
+using CRegVer  = shared::sys_core::storage::CReg_router::CCtx::CVersion;
+using CVersion = CContext::CVersion;
+
+const
+CVersion& CContext::Version (void) const { return this->m_ver; }
+
+CVersion::CVersion (void) : m_major(0), m_minor (0), m_use_core(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; this->Load(); }
+
+TError&   CVersion::Error (void) const { return this->m_error; }
+
+uint32_t  CVersion::Major (void) const { return this->m_major; }
+uint32_t  CVersion::Minor (void) const { return this->m_minor; }
+
+bool   CVersion::Use_core (void) const { return this->m_use_core; }
+
+err_code  CVersion::Load  (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	const CRegVer& ver = ::Get_reg_router().Ctx().Version();
+
+	TRegKeyEx reg_key;
+	this->m_major = reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_major)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	this->m_minor = reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_minor)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+
+	this->m_use_core = !!reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_core));
+	if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+
+	return this->Error();
 }

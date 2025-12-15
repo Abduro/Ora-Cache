@@ -1,5 +1,5 @@
 ::*important*:
-:: in the project file each node <ItemDefinitionGroup>/<ClCompile> must contain <PreprocessorDefinitions> sub-node for working prerocessor defs properly:
+:: in the project file each node <ItemDefinitionGroup>/<ClCompile> must contain <PreprocessorDefinitions> sub-node for working preprocessor defs properly:
 :: for example:
 
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

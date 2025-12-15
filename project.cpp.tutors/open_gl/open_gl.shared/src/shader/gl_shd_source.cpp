@@ -195,7 +195,7 @@ err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
 	::ATL::CAtlFile file_;
 
 	err_code h_result = __s_ok;
-	ULONGLONG ul_size = 0;
+	uint64_t ul_size = 0;
 
 	if (__failed(h_result = file_.Create(_p_path, FILE_READ_DATA, FILE_SHARE_READ, OPEN_EXISTING))) return this->m_error << h_result;
 	if (__failed(h_result = file_.Seek(0, FILE_BEGIN))) return this->m_error << h_result;
@@ -205,25 +205,26 @@ err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
 		this->m_buffer.ReleaseBuffer();
 
 	char buffer[4096] = {0};
+	const uint32_t u_len = ((0xffff & ul_size) > _countof(buffer) ? _countof(buffer) : (0xffff & ul_size));
 
-	CStringA src_a;
+//	CStringA src_a;
 //	in such case of using dynamically allocated buffer of the string class, src_a.GetLength() returns 0 (zero) that is not 'true';
 //	if (__failed(h_result = file_.Read(src_a.GetBuffer(static_cast<int>(ul_size)), static_cast<uint32_t>(ul_size)))) return this->m_error << h_result;
-	if (__failed(h_result = file_.Read(buffer, _countof(buffer)))) this->m_error << h_result;
-//	the error is generated: 'the end of file is reached', that means the received buffer is greater than the length of data being read; stupid error;
-	if (this->Error().Result() == __DwordToHresult(ERROR_HANDLE_EOF))
-		this->m_error << __s_ok; // does not care, the buffer size is greater that is required, that's fine;
+	if (__failed(h_result = file_.Read(buffer, u_len))) this->m_error << h_result;
+//	the error is generated: 'the end of file is reached', that means the received buffer is greater than the length of data being read;
+//	if (this->Error().Result() == __DwordToHresult(ERROR_HANDLE_EOF))
+//		this->m_error << __s_ok; // does not care, the buffer size is greater that is required, that's fine;
 
-	src_a = buffer;
+//	src_a = buffer;
 
-	int32_t n_len = src_a.GetLength();
+	int32_t n_len = u_len;
 
-	const char* p_buffer = src_a.GetBuffer();
+	const char* p_buffer = buffer;
 
 	if (__failed(__get_$_procs().Source(_u_shader_id, 1, &p_buffer, &n_len)))
 		this->m_error = __get_$_procs().Error();
 	else
-		this->m_buffer = src_a; // just making the copy; it is not necessary, but for debug puposes only;
+		this->m_buffer = buffer; // just making the copy; it is not necessary, but for debug puposes only;
 
 	return this->Error();
 }

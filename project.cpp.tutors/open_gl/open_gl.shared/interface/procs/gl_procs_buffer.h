@@ -99,7 +99,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		bool  Is_Buffer(const uint32_t _u_buf_id) ;
 		err_code Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
 
-		err_code Get_all (void) ; // gets all functions' pointers at once;
+		err_code Get_all (void); // gets all functions' pointers at once;
 
 	private:
 		CBuffer& operator = (const CBuffer&) = delete; CBuffer& operator = (CBuffer&&) = delete;

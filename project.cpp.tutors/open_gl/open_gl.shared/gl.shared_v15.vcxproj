@@ -221,6 +221,8 @@
     <ClCompile Include="$(_1-2)gl_procs_shader.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_surface.h" />
     <ClCompile Include="$(_1-2)gl_procs_surface.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_uniform.h" />
+    <ClCompile Include="$(_1-2)gl_procs_uniform.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_vertex.h" />
     <ClCompile Include="$(_1-2)gl_procs_vertex.cpp" />
     <ClInclude Include="$(_0-2)gl_procs_view.h" />

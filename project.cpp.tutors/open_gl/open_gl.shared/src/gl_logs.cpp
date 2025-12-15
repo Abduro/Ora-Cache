@@ -18,7 +18,7 @@ CLog_Base::~CLog_Base (void) {}
 TError&  CLog_Base::Error (void) const { return this->m_error(); }
 _pc_sz   CLog_Base::Get (void) const { return (_pc_sz) this->m_buffer; }
 
-#define GL_INFO_LOG_LEN    0x8B84
+using e_param_types = procs::CShader::e_param_types;
 /////////////////////////////////////////////////////////////////////////////
 
 program::CLog:: CLog (void) : TBase() {
@@ -34,7 +34,7 @@ err_code program::CLog::Set (const uint32_t _u_prog_id) {
 
 	// (1) gets the shader log length;
 	int32_t n_length = 0;
-	if (__failed(__get_prog_procs().Params(_u_prog_id, GL_INFO_LOG_LEN, &n_length))) {
+	if (__failed(__get_prog_procs().Params(_u_prog_id, e_param_types::e_info_len, &n_length))) {
 		this->m_buffer = _T("#error");
 		return this->m_error() = __get_prog_procs().Error();
 	}
@@ -72,7 +72,7 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 
 	// (1) gets the shader log length;
 	int32_t n_length = 0;
-	if (__failed(__get_$_procs().Params(_u_shader_id, GL_INFO_LOG_LEN, &n_length))) {
+	if (__failed(__get_$_procs().Params(_u_shader_id, e_param_types::e_info_len, &n_length))) {
 		this->m_buffer = _T("#error");
 		return TBase::m_error() = __get_$_procs().Error();
 	}
@@ -93,6 +93,8 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 	// ToDo: this is temporary solution and will be replaced with the better one later;
  	this->m_buffer.Replace(_T("error"), _T("  error")); // makes an indentation at the beginning of each error line;
 	this->m_buffer.Replace(_T("   "), _T(" "));         // replaces the sequence of 3 (three) whitespaces by one;
+
+	this->m_buffer.TrimRight();
 
 	TBase::m_error() << __e_fail = (_pc_sz) this->m_buffer;
 
