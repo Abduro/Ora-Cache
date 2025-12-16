@@ -112,6 +112,8 @@
     <ClCompile Include="$(_1-0)gl_shd_type.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_src_parser.h"><Filter>interface\shader</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_src_parser.cpp"><Filter>src\shader</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_uniform.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_uniform.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_version.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0-4)gl_vertex_data.h"><Filter>interface\vertex</Filter></ClInclude>

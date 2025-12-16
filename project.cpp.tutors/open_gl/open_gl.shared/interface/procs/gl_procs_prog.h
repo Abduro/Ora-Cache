@@ -102,20 +102,41 @@ namespace program {
 	private:
 		CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
 	};
-}
+
 	// https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetProgramiv.xml ;
+	enum class e_attr_params : uint32_t {
+	/* alias          | value    | OpenGL symbolic name           | brief description ;
+	------------------+----------+--------------------------------+-------------------*/
+	e_active          = 0x8B87, // GL_ACTIVE_ATTRIBUTES           | the number of active attribute variables for program; 
+	e_name_max_len    = 0x8B8A, // GL_ACTIVE_ATTRIBUTE_MAX_LENGTH | the length of the longest active attribute name for program;
+	};
+
+	enum class e_status_params : uint32_t {
+	/* alias          | value    | OpenGL symbolic name           | brief description ;
+	------------------+----------+--------------------------------+-------------------*/
+	e_deleted         = 0x8B80, // GL_DELETE_STATUS               | a program is currently flagged for deletion;
+	e_linked          = 0x8B82, // GL_LINK_STATUS                 | the last link operation on program was successful or not;
+	e_valid           = 0x8B83, // GL_VALIDATE_STATUS             | the last validation operation on program was successful, or isn't;
+	e_info_log_len    = 0x8B84, // GL_INFO_LOG_LENGTH             | the number of characters in the information log for program; 
+	};
+
+	enum class e_uniform_params : uint32_t {
+	/* alias          | value    | OpenGL symbolic name           | brief description ;
+	------------------+----------+--------------------------------+-------------------*/
+	e_active          = 0x8B86, // GL_ACTIVE_UNIFORMS             | the number of active uniform variables for program;
+	e_name_max_len    = 0x8B87, // GL_ACTIVE_UNIFORM_MAX_LENGTH   | the length of the longest active attribute name for program;
+	// not used yet: GL_ACTIVE_UNIFORM_BLOCKS, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH;
+	};
+
+	// not used yet:
+	// GL_ACTIVE_ATOMIC_COUNTER_BUFFERS, GL_COMPUTE_WORK_GROUP_SIZE, GL_PROGRAM_BINARY_LENGTH;
+	// GL_TRANSFORM_FEEDBACK_BUFFER_MODE, GL_TRANSFORM_FEEDBACK_VARYINGS, GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH;
+	// GL_GEOMETRY_VERTICES_OUT, GL_GEOMETRY_INPUT_TYPE, GL_GEOMETRY_OUTPUT_TYPE;
+}
 	enum class e_prog_params : uint32_t {
 	/* alias          | value    | OpenGL symbolic name           | brief description ;
 	------------------+----------+--------------------------------+-------------------*/
-	e_act_attrs       = 0x8B87, // GL_ACTIVE_ATTRIBUTES           | the number of active attribute variables for program; 
-	e_attr_name_max   = 0x8B8A, // GL_ACTIVE_ATTRIBUTE_MAX_LENGTH | the length of the longest active attribute name for program;
-	e_act_uniforms    = 0x8B86, // GL_ACTIVE_UNIFORMS             | the number of active uniform variables for program;
-	e_act_uniform     = 0x8B87, // GL_ACTIVE_UNIFORM_MAX_LENGTH   | the length of the longest active attribute name for program;
 	e_attach_shaders  = 0x8B85, // GL_ATTACHED_SHADERS            | the number of shader objects attached to program;
-	e_delete_status   = 0x8B80, // GL_DELETE_STATUS               | a program is currently flagged for deletion;
-	e_log_info_len    = 0x8B84, // GL_INFO_LOG_LENGTH             | the number of characters in the information log for program; 
-	e_lnk_status      = 0x8B82, // GL_LINK_STATUS                 | the last link operation on program was successful or not; 
-	e_valid_status    = 0x8B83, // GL_VALIDATE_STATUS             | the last validation operation on program was successful, or isn't;
 	};
 
 	class CProg : public CBase {
@@ -123,7 +144,7 @@ namespace program {
 	typedef void     (__stdcall *pfn_Delete)   (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteProgram.xhtml ;
 	typedef void     (__stdcall *pfn_InfoLog)  (uint32_t _prog_id, int32_t _buf_size, int32_t* _log_len, char* _p_log); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramInfoLog.xhtml ;
 	typedef uint32_t (__stdcall *pfn_IsProg)   (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsProgram.xhtml ;
-	typedef void     (__stdcall *pfn_Params)   (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetProgramiv.xml ;
+	typedef void     (__stdcall *pfn_Params)   (uint32_t _prog_id, uint32_t _param_id, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgram.xhtml ;
 	typedef void     (__stdcall *pfn_Use)      (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUseProgram.xhtml ;
 	typedef void     (__stdcall *pfn_Validate) (uint32_t _prog_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml ;
 	public:
@@ -131,9 +152,9 @@ namespace program {
 
 		uint32_t Create  (void);  // creates an empty program object and returns a non-zero value by which it can be referenced ;
 		err_code Delete  (const uint32_t _prog_id);  // frees the memory and invalidates the name associated with the program object specified by _prog_id ;
-		err_code InfoLog (const uint32_t _prog_id, const int32_t _buf_size, int32_t* _log_len, char* _p_log); // returns the information log for the specified program object ;
+		err_code InfoLog (const uint32_t _prog_id, const int32_t _buf_size, uint32_t* _log_len, char* _p_log); // returns the information log for the specified program object ;
 		bool     IsProg  (const uint32_t _prog_id);  // determines '_prog_id' refers to a program object or doesn't;
-		err_code Params  (const uint32_t _prog_id, const uint32_t _param_id, int32_t* _p_params); // returns the requested object parameter ;
+		err_code Params  (const uint32_t _prog_id, const uint32_t _param_id, uint32_t* _p_params); // returns the requested object parameter, the pointer data type is intentionally changed to 'unsigned';
 		err_code Use (const uint32_t _prog_id);      // installs the program object specified by program as part of current rendering state ;
 		err_code Validate (const uint32_t _prog_id); // checks to see whether the executables contained in program can execute given the current OpenGL state ;
 

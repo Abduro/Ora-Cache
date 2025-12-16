@@ -27,6 +27,8 @@ namespace vars {
 	public:
 		CUni_value (void); ~CUni_value (void) = default;
 
+		err_code Get_all (void);
+
 		err_code Set_4f (const int32_t _n_locate, const t_uniform_4f&);
 
 	private:
@@ -34,6 +36,7 @@ namespace vars {
 	};
 }}}}}
 
-typedef ex_ui::draw::open_gl::procs::vars::CUniform  TUniformProcs; TUniformProcs& __get_uni_procs (void);
+typedef ex_ui::draw::open_gl::procs::vars::CUniform    TUniformProcs;  TUniformProcs&  __get_uni_procs (void);
+typedef ex_ui::draw::open_gl::procs::vars::CUni_value  TUniValueProcs; TUniValueProcs& __get_uni_val_procs (void);
 
 #endif/*_GL_PROCS_UNIFORM_H_INCLUDED*/

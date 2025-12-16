@@ -50,7 +50,7 @@ namespace procs {
 	public:
 		CParam (void); ~CParam (void) = default;
 
-		err_code Get_all (void) ;
+		err_code Get_all (void);
 
 		bool    GetBool  (const uint32_t _u_param_id); // returns parameter value as boolean ;
 		float   GetFloat (const uint32_t _u_param_id); // returns parameter value as float number;

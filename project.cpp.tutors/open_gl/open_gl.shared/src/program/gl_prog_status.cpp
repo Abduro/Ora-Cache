@@ -38,11 +38,11 @@ bool  CStatus::Get (const uint32_t _param_id, const uint32_t _prog_id, CError& _
 	if (__gl_curr_prog == _param_id)
 		return CStatus::Is_current(_prog_id, _err);
 
-	int32_t n_result = 0;
+	uint32_t u_result = 0;
 
-	if (__failed(__get_prog_procs().Params(_prog_id, _param_id, &n_result)))
+	if (__failed(__get_prog_procs().Params(_prog_id, _param_id, &u_result)))
 	     return false == (_err = __get_prog_procs().Error()).Is();
-	else return !!n_result;
+	else return !!u_result;
 }
 
 uint32_t CStatus::GetActiveProg (CError& _err) {

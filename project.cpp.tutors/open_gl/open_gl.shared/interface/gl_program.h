@@ -108,6 +108,9 @@ namespace program {
 		CProgram& Get (const e_object) const; // gets the reference to the program by target object enum; (ro)
 		CProgram& Get (const e_object) ;	  // gets the reference to the program by target object enum; (rw)
 
+		const
+		CProgram& GetActive (void) const;     // gets the reference to the currently active program, if there's no such one, the reference to invalid program is returned;
+
 		err_code  Load (void); // loads shaders' source files by paths which specified in the registry;
 		const
 		CProgram& Ref (const uint32_t _u_ndx) const; // if the input index is out of range the reference to invalid program object is returned; (ro)
@@ -115,8 +118,9 @@ namespace program {
 
 	private:
 		CProg_enum& operator = (const CProg_enum&) = delete;
-		CAttrs   m_attrs;
+		mutable
 		CError   m_error;
+		CAttrs   m_attrs;
 		CProgram m_progs[CPipeline::u_tgt_count];
 	};
 }}}

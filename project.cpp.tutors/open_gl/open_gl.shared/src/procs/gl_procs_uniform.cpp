@@ -73,7 +73,7 @@ err_code CUniform::Get_all (void) {
 	return CBase::Error();
 }
 
-TUniformProcs&  __get_uni_procs (void) {
+TUniformProcs&  ::__get_uni_procs (void) {
 	static TUniformProcs procs;
 	static bool b_loaded = false;
 
@@ -97,6 +97,17 @@ enum class e_uni_val_fun_ndx : uint32_t {
 
 CUni_value::CUni_value (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
 	CBase::m_error.Class(cs_cls, false);
+}
+
+err_code CUni_value::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(uni_val_fun_names); i_++) {
+		if (nullptr == CBase::Get(uni_val_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
 }
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;
@@ -125,7 +136,7 @@ err_code CUni_value::Set_4f (const int32_t _n_locate, const t_uniform_4f& _arr_v
 			if (false == CBase::Error()) // no error occurs in getting active program identifier;
 				CBase::m_error << (err_code)TErrCodes::eExecute::eState = _T("#__e_inv_state: no program is active");
 		}
-		else
+		else // the error definition requires more details but for this version of the implementation generic error context is okay;
 			CBase::m_error << (err_code)TErrCodes::eData::eInvalid = TString().Format(_T("#__e_inv_data: '_n_locate' (%d) or number of array elements (4) does not match the shader code"), _n_locate);
 
 	} break;
@@ -134,6 +145,19 @@ err_code CUni_value::Set_4f (const int32_t _n_locate, const t_uniform_4f& _arr_v
 			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
 	}
 	return CBase::Error();
+}
+
+TUniValueProcs&  ::__get_uni_val_procs (void) {
+	static TUniValueProcs procs;
+	static bool b_loaded = false;
+
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+			__trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+			b_loaded = true;
+	}
+	return procs;
 }
 
 #pragma endregion

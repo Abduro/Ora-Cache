@@ -372,6 +372,24 @@ CProgram&   CProg_enum::Get (const e_object _u_target) {
 	return _impl::inv_prog;
 }
 
+const
+CProgram&   CProg_enum::GetActive (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	const uint32_t u_prog_id = program::CStatus::GetActiveProg(this->m_error);
+	if (this->Error() || 0 == u_prog_id) {
+		if (this->Error())
+			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		return _impl::inv_prog; // there is no active program or the error occurs in procedure wrapper;
+	}
+
+	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++)
+		if (u_prog_id == this->Ref(i_).Id().Get())
+			return this->Ref(i_);
+
+	return _impl::inv_prog; // there is no active program from existing ones;
+}
+
 err_code    CProg_enum::Load (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;

@@ -23,8 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!test.resource", "!test.res
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{00000C13-EEEE-BBBB-6667-100000000210}"
 	ProjectSection(SolutionItems) = preProject
-		!test.resource\shaders\03_grid.fs = !test.resource\shaders\03_grid.fs
-		!test.resource\shaders\03_grid.vs = !test.resource\shaders\03_grid.vs
+		!test.resource\shaders\__read_me.txt   = !test.resource\shaders\__read_me.txt
+		!test.resource\shaders\03_grid.fs.glsl = !test.resource\shaders\03_grid.fs.glsl
+		!test.resource\shaders\03_grid.vs.glsl = !test.resource\shaders\03_grid.vs.glsl
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tutor.0.fake", "tutor.0.fake", "{00000C13-EEEE-BBBB-6667-100000000020}"

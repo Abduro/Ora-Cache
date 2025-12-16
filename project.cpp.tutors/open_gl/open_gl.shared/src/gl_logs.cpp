@@ -33,19 +33,19 @@ err_code program::CLog::Set (const uint32_t _u_prog_id) {
 		return TBase::Error();
 
 	// (1) gets the shader log length;
-	int32_t n_length = 0;
-	if (__failed(__get_prog_procs().Params(_u_prog_id, e_param_types::e_info_len, &n_length))) {
+	uint32_t u_length = 0;
+	if (__failed(__get_prog_procs().Params(_u_prog_id, e_param_types::e_info_len, &u_length))) {
 		this->m_buffer = _T("#error");
 		return this->m_error() = __get_prog_procs().Error();
 	}
 
-	if (0 == n_length) {
+	if (0 == u_length) {
 		this->m_buffer = _T("#no_info");
 		return this->Error();
 	}
 	// (2) retrieves the actual data from the log;
-	::std::vector<char> buffer(n_length + 1, 0);
-	if (__failed(__get_prog_procs().InfoLog(_u_prog_id, n_length, &n_length, buffer.data()))) {
+	::std::vector<char> buffer(u_length + 1, 0);
+	if (__failed(__get_prog_procs().InfoLog(_u_prog_id, u_length, &u_length, buffer.data()))) {
 		this->m_buffer = _T("#error");
 		return this->m_error() = __get_prog_procs().Error();
 	}

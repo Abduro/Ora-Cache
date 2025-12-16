@@ -8,11 +8,13 @@
 #include "procs\gl_procs_surface.h"
 #include "procs\gl_procs_vertex.h"
 #include "procs\gl_procs_view.h"
+#include "procs\gl_procs_uniform.h"
 
 #include "sys.registry.h"
 #include "color.rgb.h"
 
 #include "gl_renderer.h"
+#include "gl_uniform.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::color::rgb;
@@ -374,7 +376,37 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 		this->m_error = vert_arr.Buffer().Error();
 #else
 	if (__failed(renderer.Scene().ArrObjs().Get(e_object::e_grid).SetData(vert_arr.Data_ref())))
-		this->m_error =renderer.Scene().ArrObjs().Get(e_object::e_grid).Error();
+		this->m_error = renderer.Scene().ArrObjs().Get(e_object::e_grid).Error();
+	else {
+		CProgram& prog = renderer.Scene().Progs().Get(e_object::e_grid); // the program reference cannot be 'const' or 'read-only' due to the program needs to be activated;
+		const int32_t clr_ndx = ::__get_uni_procs().Locate(prog.Id().Get(), _T("clr_line_in"));
+		if (::__get_uni_procs().Error()) {
+			this->m_error = ::__get_uni_procs().Error();
+			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+			return this->Error();
+		}
+		// before setting the color value to uniform variable of the fragment shader the programm must be active, otherwise the error is generated;
+		if (false == prog.Status().Is_current())
+			if (__failed(prog.Use())) {
+				this->m_error = prog.Error();
+				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+				return this->Error();
+			}
+#if (1) // for usniform vars test case only;
+		using CUni_enum = vars::CUniform_enum; CUni_enum u_vars;
+		const uint32_t var_count = u_vars.Count();
+		if (u_vars.Error()) {
+			return this->m_error = u_vars.Error();
+		}
+#endif
+	//	using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f clr_4f{clr.R(), clr.G(), clr.B(), clr.A()};
+
+		if (__failed(::__get_uni_val_procs().Set_4f(clr_ndx, {clr.R(), clr.G(), clr.B(), clr.A()}))) {
+			this->m_error = ::__get_uni_val_procs().Error();
+			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+			return this->Error();
+		}
+	}
 #endif
 	return this->Error();
 }
