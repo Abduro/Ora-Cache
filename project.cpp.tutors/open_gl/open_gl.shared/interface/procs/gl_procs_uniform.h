@@ -21,15 +21,17 @@ namespace vars {
 	};
 
 	typedef ::std::array<float, 4u> t_uniform_4f;
-
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;
 	class CUni_value : public CBase {
-	typedef void (__stdcall *pfn_Set_4f) (const int32_t _n_locate, const uint32_t _u_count, const float* _p_value); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;
+	typedef void (__stdcall *pfn_Set_4fs) (const int32_t _n_locate, float _f_0, float _f_1, float _f_2, float _f_3); // for setting scalar values;
+	typedef void (__stdcall *pfn_Set_4fv) (const int32_t _n_locate, const uint32_t _u_count, const float* _p_value); // for setting values to vector and matrix;
 	public:
 		CUni_value (void); ~CUni_value (void) = default;
 
 		err_code Get_all (void);
 
-		err_code Set_4f (const int32_t _n_locate, const t_uniform_4f&);
+		err_code Set_4fs (const int32_t _n_locate, const t_uniform_4f&); // for setting scalar values;
+		err_code Set_4fv (const int32_t _n_locate, const t_uniform_4f&); // for setting vector values;
 
 	private:
 		CUni_value& operator = (const CUni_value&) = delete; CUni_value& operator = (CUni_value&&) = delete;

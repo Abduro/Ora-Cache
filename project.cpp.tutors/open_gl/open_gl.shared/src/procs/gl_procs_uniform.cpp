@@ -89,10 +89,10 @@ TUniformProcs&  ::__get_uni_procs (void) {
 #pragma endregion
 #pragma region cls::proc::vars::CUni_value{}
 
-static _pc_sz uni_val_fun_names[] = { _T("glUniform4fv") };
+static _pc_sz uni_val_fun_names[] = { _T("glUniform4f"), _T("glUniform4fv") };
 
 enum class e_uni_val_fun_ndx : uint32_t {
-	e_set_4f = 0x0
+	e_set_4f_scalar = 0x0, e_set_4f_vec = 0x1
 };
 
 CUni_value::CUni_value (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
@@ -111,7 +111,44 @@ err_code CUni_value::Get_all (void) {
 }
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;
-err_code CUni_value::Set_4f (const int32_t _n_locate, const t_uniform_4f& _arr_values) {
+err_code CUni_value::Set_4fs (const int32_t _n_locate, const t_uniform_4f& _arr_values) {
+	_n_locate; _arr_values;
+	/* Possible error code(s):
+	GL_INVALID_OPERATION : there is no current program object;
+	GL_INVALID_OPERATION : '_n_locate' is an invalid uniform location for the current program object and location is not equal to -1;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	if (4 != _arr_values.size())
+		return CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arr: '_arr_values' size is (%d), must be (4)"), _arr_values.size());
+
+	pfn_Set_4fs p_fun = reinterpret_cast<pfn_Set_4fs>(CBase::Get(uni_val_fun_names[(uint32_t)e_uni_val_fun_ndx::e_set_4f_scalar]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_n_locate, _arr_values.at(0), _arr_values.at(1), _arr_values.at(2), _arr_values.at(3));
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
+	case GL_INVALID_OPERATION : {
+		if (false) {}
+		else if (0 == program::CStatus::GetActiveProg(CBase::m_error)) {
+			if (false == CBase::Error()) // no error occurs in getting active program identifier;
+				CBase::m_error << (err_code)TErrCodes::eExecute::eState = _T("#__e_inv_state: no program is active");
+		}
+		else // the error definition requires more details but for this version of the implementation generic error context is okay;
+			CBase::m_error << (err_code)TErrCodes::eData::eInvalid = TString().Format(_T("#__e_inv_data: '_n_locate' (%d) is not valid"), _n_locate);
+
+	} break;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+	}
+	return CBase::Error();
+}
+
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;
+err_code CUni_value::Set_4fv (const int32_t _n_locate, const t_uniform_4f& _arr_values) {
 	_n_locate; _arr_values;
 	/* Possible error code(s):
 	GL_INVALID_OPERATION : there is no current program object;
@@ -122,7 +159,7 @@ err_code CUni_value::Set_4f (const int32_t _n_locate, const t_uniform_4f& _arr_v
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
 
-	pfn_Set_4f p_fun = reinterpret_cast<pfn_Set_4f>(CBase::Get(uni_val_fun_names[(uint32_t)e_uni_val_fun_ndx::e_set_4f]));
+	pfn_Set_4fv p_fun = reinterpret_cast<pfn_Set_4fv>(CBase::Get(uni_val_fun_names[(uint32_t)e_uni_val_fun_ndx::e_set_4f_scalar]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 

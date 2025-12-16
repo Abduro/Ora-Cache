@@ -139,7 +139,7 @@ void view::CColor::Set (const rgb_color _rgba) {
 	this->m_rgba[0] = CConvert::ToFloat(get_r_value(_rgba));
 	this->m_rgba[1] = CConvert::ToFloat(get_g_value(_rgba));
 	this->m_rgba[2] = CConvert::ToFloat(get_b_value(_rgba));
-	this->m_rgba[3] = /*CConvert::ToFloat(get_a_value(_rgba))*/ 1.0f; // ToDo: it is required to save the alpha value in registry too;
+	this->m_rgba[3] = /*CConvert::ToFloat(get_a_value(_rgba))*/ 0.5f; // ToDo: it is required to save the alpha value in registry too;
 }
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
@@ -346,8 +346,8 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 
 		// (4.b) gets the right side point of the line;
 			CViewPort::ToPos(_u_size, _u_size.cx, *it_y, coord, this->m_error);
-			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
 			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
+			vert_arr.Get(u_ndx).Attrs().Clr().Set(/*clr.R()*/0.01f, clr.G(), clr.B(), clr.A());
 			u_ndx += 1;
 		}
 		// (5) creates vertices for vertical lines from the top to the bottom sides of the grid;
@@ -361,7 +361,7 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 		// (5.b) gets the bottom side point of the line;
 			CViewPort::ToPos(_u_size, *it_x, _u_size.cy, coord, this->m_error);
 			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
-			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.R(), clr.G(), clr.B(), clr.A());
+			vert_arr.Get(u_ndx).Attrs().Clr().Set(/*clr.R()*/0.01f, clr.G(), clr.B(), clr.A());
 			u_ndx += 1;
 		}
 	}
@@ -400,12 +400,13 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 		}
 #endif
 	//	using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f clr_4f{clr.R(), clr.G(), clr.B(), clr.A()};
-
-		if (__failed(::__get_uni_val_procs().Set_4f(clr_ndx, {clr.R(), clr.G(), clr.B(), clr.A()}))) {
+#if (1)
+		if (__failed(::__get_uni_val_procs().Set_4fs(clr_ndx, {clr.R(), clr.G(), clr.B(), clr.A()}))) {
 			this->m_error = ::__get_uni_val_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 			return this->Error();
 		}
+#endif
 	}
 #endif
 	return this->Error();
