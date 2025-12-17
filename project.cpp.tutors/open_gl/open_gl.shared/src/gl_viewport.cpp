@@ -143,7 +143,7 @@ void view::CColor::Set (const rgb_color _rgba) {
 }
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-#pragma region CGrid::CCell
+#pragma region cls::CViewport::CGrid::CCell {}
 view::CGrid::CCell:: CCell (void) : m_size{0u} {
 
 	using CRegCell = shared::sys_core::storage::CReg_router::CViewport::CGrid::CCell;
@@ -186,7 +186,7 @@ bool      view::CGrid::CCell::Set (const uint32_t _u_width, const uint32_t _u_he
 	return b_changed;
 }
 #pragma endregion
-#pragma region CGrid
+#pragma region cls::CViewport::CGrid {}
 view::CGrid:: CGrid (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*this->Default();*/ }
 view::CGrid::~CGrid (void) {}
 
@@ -286,8 +286,8 @@ err_code view::CGrid::Draw (void) {
 
 	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(e_object::e_grid);
 	
-	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjs().Get(e_object::e_grid); vao;
-	const CVertArray& vexes = ::Get_renderer().Scene().ArrObjs().Get(e_object::e_grid).VertArray();
+	vertex::CArrObject& vao = ::Get_renderer().Scene().ArrObjects().Get(e_object::e_grid); vao;
+	const CVertArray& vexes = ::Get_renderer().Scene().ArrObjects().Get(e_object::e_grid).VertArray();
 
 	if (vexes.Is_valid() == false)
 		return n_result = vexes.Error();
@@ -300,6 +300,12 @@ err_code view::CGrid::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); // no return by this error;
 	}
 
+	if (__failed(vertex::CArrObject::Unbind(this->m_error))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+	if (__failed(CProgram::Unused(this->m_error))) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
 	return n_result;
 }
 #endif
@@ -318,7 +324,8 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	using CBuffer = vertex::CBuffer;
 
 	TRenderer& renderer  = ::Get_renderer();
-	CVertArray& vert_arr = renderer.Scene().ArrObjs().Get(e_object::e_grid).VertArray();
+	vertex::CArrObject& vao = renderer.Scene().ArrObjects().Get(e_object::e_grid);
+	CVertArray& vert_arr = vao.VertArray();
 
 	// (3) calculates the number of required vertices for drawing grid lines;
 	const uint32_t u_count = static_cast<uint32_t>((markers.Get_horz().size() + markers.Get_vert().size())) * 2;
@@ -375,8 +382,8 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	if (__failed(vert_arr.Buffer().SetData(vert_arr.Data_ref())))
 		this->m_error = vert_arr.Buffer().Error();
 #else
-	if (__failed(renderer.Scene().ArrObjs().Get(e_object::e_grid).SetData(vert_arr.Data_ref())))
-		this->m_error = renderer.Scene().ArrObjs().Get(e_object::e_grid).Error();
+	if (__failed(vao.SetData(vert_arr.Data_ref())))
+		this->m_error = vao.Error();
 	else {
 		CProgram& prog = renderer.Scene().Progs().Get(e_object::e_grid); // the program reference cannot be 'const' or 'read-only' due to the program needs to be activated;
 		const int32_t clr_ndx = ::__get_uni_procs().Locate(prog.Id().Get(), _T("clr_line_in"));
@@ -414,7 +421,7 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-#pragma region CViewport
+#pragma region cls::CViewport {}
 CViewPort:: CViewPort (const uint32_t _u_width, const uint32_t _u_height) : m_size{_u_width, _u_height} {
 	this->m_error >>__CLASS__<<__METHOD__<<(this->Is_valid() ? __s_ok : __e_not_inited);
 }

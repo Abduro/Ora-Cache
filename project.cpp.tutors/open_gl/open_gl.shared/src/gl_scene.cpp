@@ -14,7 +14,7 @@
 using namespace ex_ui::draw::open_gl;
 
 using CDevice = context::CDevice;
-using CArrObjs = CScene::CArrObjs;
+using CArrObjects = CScene::CArrObjects;
 
 #pragma region CScene::CContext
 CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
@@ -47,8 +47,8 @@ CScene:: CScene (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; 
 CScene::~CScene (void) {}
 
 const
-CArrObjs& CScene::ArrObjs (void) const { return this->m_arr_objs; }
-CArrObjs& CScene::ArrObjs (void)       { return this->m_arr_objs; }     
+CArrObjects& CScene::ArrObjects (void) const { return this->m_objects; }
+CArrObjects& CScene::ArrObjects (void)       { return this->m_objects; }     
 
 const
 CScene::CContext& CScene::Ctx (void) const { return this->m_ctx; }
@@ -90,7 +90,7 @@ err_code CScene::Prepare (void) {
 #pragma region __2nd_step
 	// the step #2: configuring vertex attributes and creating vertex attribute objects;
 	if (__failed(this->Progs().Attrs().Init())) { this->m_error = this->Progs().Attrs().Error(); } // does nothing with the error;
-	if (__failed(this->ArrObjs().Create())) { this->m_error = this->Progs().Attrs().Error(); }     // does nothing with the error;
+	if (__failed(this->ArrObjects().Create())) { this->m_error = this->Progs().Attrs().Error(); }  // does nothing with the error;
 #pragma endregion
 
 	if (__failed(::Get_renderer().View().Update()))

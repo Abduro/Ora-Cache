@@ -30,6 +30,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		const
 		CVertex& C (void) const;
 		CVertex& C (void) ;
+
+		err_code Draw (void);
+
 		const
 		CVertex& Get (const e_vertices) const; // returns a reference to the vertex by corner index; (ro);
 		CVertex& Get (const e_vertices) ;      // returns a reference to the vertex by corner index; (rw);
@@ -41,5 +44,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 	};
 
 }}}}
+
+typedef ex_ui::draw::open_gl::shapes::CTriangle TTriangle; TTriangle& Get_Tria_2d (void);  // this stupid name of the function is okay for now;
 
 #endif/*_GL_SHAPE_2D_H_INCLUDED*/

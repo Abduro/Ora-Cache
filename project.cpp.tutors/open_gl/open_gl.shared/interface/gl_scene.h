@@ -18,7 +18,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	public:
 	using CDevCtx  = context::CDevice;
 	using CDrwCtx  = CContext;
-	using CArrObjs = vertex::CArrObj_enum;
+	using CArrObjects = vertex::CArrObj_enum;
 	using CProgs   = CProg_enum;
 	public:
 		class CContext {
@@ -45,8 +45,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CScene (void); CScene (const CScene&) = delete; CScene (CScene&&) = delete; ~CScene (void);
 
 		const
-		CArrObjs& ArrObjs (void) const; // returns the reference to vertex array objects (aka vao); (ro)
-		CArrObjs& ArrObjs (void) ;      // returns the reference to vertex array objects (aka vao); (rw)
+		CArrObjects& ArrObjects (void) const; // returns the reference to vertex array objects (aka vao); (ro)
+		CArrObjects& ArrObjects (void) ;      // returns the reference to vertex array objects (aka vao); (rw)
 		const
 		CContext& Ctx (void) const;
 		CContext& Ctx (void) ;
@@ -60,10 +60,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	private:
 		CScene& operator = (const CScene&) = delete; CScene& operator =  (CScene&&) = delete;
-		CArrObjs m_arr_objs;
-		CContext m_ctx;
-		CError   m_error;
-		CProgs   m_progs;
+		CArrObjects m_objects;
+		CContext    m_ctx;
+		CError      m_error;
+		CProgs      m_progs;
 	};
 
 }}}

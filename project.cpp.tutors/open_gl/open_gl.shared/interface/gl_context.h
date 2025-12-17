@@ -151,8 +151,7 @@ namespace context {
 		private:
 			CVersion& operator = (const CVersion&) = delete;
 			CVersion& operator = (CVersion&&) = delete;
-			mutable CError m_error;
-
+			CError    m_error;
 			uint32_t  m_major, m_minor;
 			bool      m_use_core;
 		};

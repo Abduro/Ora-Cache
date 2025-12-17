@@ -37,7 +37,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		e_grid = 0x1,
 		e_tria = 0x2,
 		};
-		static const uint32_t u_tgt_count = e_targets::e_tria - 1;
+		static const uint32_t u_tgt_count = e_targets::e_tria - 0;
 	public:
 		using e_object = CPipeline::e_targets;
 

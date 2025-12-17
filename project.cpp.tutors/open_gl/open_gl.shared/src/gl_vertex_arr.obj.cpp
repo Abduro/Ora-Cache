@@ -146,7 +146,8 @@ err_code CArrObject::SetData (const TVertData& _v_data) {
 	return this->Error();
 }
 
-err_code CArrObject::Unbind (void) {
+err_code CArrObject::Unbind (CError& _err) {
+#if (0)
 	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
 
 	if (false == this->Is_bound()) {
@@ -159,8 +160,14 @@ err_code CArrObject::Unbind (void) {
 	}
 	else
 		__trace_info_2(_T("The vertex array object (id = %u) is unbound;\n"), this->GetId());
-
 	return this->Error();
+#else
+	if (__failed(__get_arr_procs().Bind(0))) {
+		_err = __get_arr_procs().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
+	}
+	return _err;
+#endif
 }
 
 const

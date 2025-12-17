@@ -86,7 +86,6 @@ const
 program::CProgId&  CStatus::ProgId (void) const { return this->m_prog_id; }
 program::CProgId&  CStatus::ProgId (void)       { return this->m_prog_id; }
 
-
 CStatus&  CStatus::operator <<(const CProgId& _prog_id) {
 	this->ProgId() << _prog_id;
 	return *this;

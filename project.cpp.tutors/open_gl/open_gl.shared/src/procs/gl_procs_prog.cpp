@@ -511,7 +511,13 @@ err_code CProg::Use (const uint32_t _prog_id){
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
 	case GL_INVALID_OPERATION : {
 			if (false) {}
-			else if (0 == _prog_id) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' cannot be 0"));
+			else if (0 == _prog_id) {
+				/* the excerpt from https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUseProgram.xhtml :
+				...if program is zero, then the current rendering state refers to an invalid program object and the results of shader execution are undefined.
+				   However, this is *not* an error...
+				   CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' cannot be 0"));
+				*/
+			}
 			else if (false == this->IsProg(_prog_id)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program"), _prog_id);
 			else CBase::m_error << (err_code) TErrCodes::eExecute::eOperate
 				= TString().Format(_T("#__e_inv_oper: the program of '_prog_id' (%u) is out of current state or feedback mode is active"), _prog_id);

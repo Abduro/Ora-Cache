@@ -3,6 +3,8 @@
 	This is Ebo Pack OpenGL tutorials' draw renderer interface implementation file;
 */
 #include "gl_renderer.h"
+#include "shapes\gl_shape.bs.h"
+
 #include "shared.preproc.h"
 #include "sys.registry.h"
 #include "color.rgb.h"
@@ -18,36 +20,66 @@ using CConvert    = ex_ui::color::rgb::CConvert; // this class has static method
 using CHex = ex_ui::color::rgb::CHex;
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma region cls::render::CCfg{}
+render::CCfg:: CCfg (void) : m_opts{0}, m_flags{false} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; this->Load();
+	m_opts[1] = (uint32_t)procs::CPrimitives::e_others::e_points;
+}
 
-render::CCfg:: CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
-
-uint32_t render::CCfg::Count (void) const { return this->m_count_ndx; }
+uint32_t render::CCfg::Count (void) const { return this->m_opts[0]; }
 bool     render::CCfg::Count (const uint32_t _n_count) {
 	_n_count;
 	const bool b_changed = (this->Count() != _n_count);
 	if (b_changed)
-		this->m_count_ndx = _n_count;
+		this->m_opts[0] = _n_count;
 	return b_changed;
 }
 
-uint32_t render::CCfg::Primitive (void) const { return this->m_prim_mode; }
+TError&  render::CCfg::Error (void) const { return this->m_error; }
+
+bool render::CCfg::Is_drawable (const CPipeline::e_object _target) const {
+	_target;
+	if (e_object::e_grid == _target) return this->m_flags[0];
+	if (e_object::e_tria == _target) return this->m_flags[1];
+	return false;
+}
+
+err_code  render::CCfg::Load  (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using CRegDraw = shared::sys_core::storage::CReg_router::CDraw;
+	using e_draw   = CRegDraw::e_targets;
+	const CRegDraw& draw = ::Get_reg_router().Draw();
+
+	TRegKeyEx reg_key;
+	this->m_flags[0] = reg_key.Value().GetDword(draw.Root(), (_pc_sz) draw.Name(e_draw::e_grid)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	this->m_flags[1] = reg_key.Value().GetDword(draw.Root(), (_pc_sz) draw.Name(e_draw::e_tria)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+
+	if (reg_key.Error()) {
+		this->m_error = reg_key.Error();
+	}
+
+	return this->Error();
+}
+
+uint32_t render::CCfg::Primitive (void) const { return this->m_opts[1]; }
 bool     render::CCfg::Primitive (const uint32_t _u_mode) {
 	_u_mode;
 	const bool b_changed = (this->Primitive() != _u_mode);
 	if (b_changed)
-		this->m_prim_mode = _u_mode;
+		this->m_opts[1] = _u_mode;
 	return b_changed;
 }
 
-uint32_t render::CCfg::StartAt (void) const { return this->m_start_ndx; }
+uint32_t render::CCfg::StartAt (void) const { return this->m_opts[2]; }
 bool     render::CCfg::StartAt (const uint32_t _u_ndx) {
 	_u_ndx;
 	const bool b_changed = (this->StartAt() != _u_ndx);
 	if (b_changed)
-		this->m_start_ndx = _u_ndx;
+		this->m_opts[2] = _u_ndx;
 	return b_changed;
 }
 
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 
 CRenderer:: CRenderer (void) : m_b_allowed (false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; ::Get_kbrd().Subscribe(this); }
@@ -95,30 +127,12 @@ err_code    CRenderer::Draw (void) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}
-	// (2) draw the viewport grid;
+	// (2) draws the viewport grid;
 	this->View().Grid().Draw();
 
-#if (0)
-	using e_prog_ndx = CProg_enum::e_prog_ndx;
+	// (3) draws the triangle;
+//	::Get_shapes().Get(e_object::e_tria).Draw();
 
-	if (false == this->Scene().Progs().Get(e_prog_ndx::e_tria).Status().Is_current()) {
-	if (__failed(this->Scene().Progs().Get(e_prog_ndx::e_tria).Use())) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Scene().Progs().Get(e_prog_ndx::e_tria).Error().Print(TError::e_print::e_req));
-		return this->m_error = this->Scene().Progs().Get(e_prog_ndx::e_tria).Error();
-	}}
-#endif
-#if (0)
-//	this->Scene().Array().Unbind(); the triangle vertex buffer is not drawn in such case;
-	if (false == this->Scene().Array().Is_bound())
-	if (__failed(this->Scene().Array().Bind())) {
-		return this->m_error = this->Scene().Array().Error();
-	}
-
-	if (__failed(::__get_render_procs().DrawArrays(this->Scene().Progs().Get(e_prog_ndx::e_tria).Id().Get(), this->Cfg().Primitive(), this->Cfg().StartAt(), this->Cfg().Count()))) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_render_procs().Error().Print(TError::e_print::e_req));
-		return this->m_error = ::__get_render_procs().Error();
-	}
-#endif
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
 	if (false == !!::SwapBuffers(this->Scene().Ctx().Draw().Target().Get())) {
 		this->m_error.Last();

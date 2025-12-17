@@ -42,6 +42,22 @@ namespace shared { namespace sys_core { namespace storage {
 			CCtx& operator = (const CCtx&) = delete; CCtx& operator = (CCtx&&) = delete;
 			CVersion m_version;
 		};
+
+		class CDraw {
+		public:
+			enum e_targets : uint32_t {
+			e_grid = 0x0,
+			e_tria = 0x1,
+			};
+			CDraw (void); CDraw (const CDraw&) = delete; CDraw (CDraw&&) = delete; ~CDraw (void) = default;
+
+			CString Name (const e_targets) const; // gets value name for input enumeration element;
+			_pc_sz  Root (void) const;            // gets root key path for drawable objects;
+
+		private:
+			CDraw& operator = (const CDraw&) = delete; CDraw& operator = (CDraw&&) = delete;
+		};
+
 		class CRoot {
 		public:
 			enum e_renderer : uint32_t { // the renderer identifier changes the root path of the tutorials;
@@ -147,10 +163,11 @@ namespace shared { namespace sys_core { namespace storage {
 	public:
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&);
 		~CReg_router (void) ;
-		const   CCtx& Ctx (void) const; // there is no need to returns the reference to non-constant object;
+		const  CCtx&  Ctx  (void) const;  // there is no need to returns the reference to non-constant object;
+		const  CDraw& Draw (void) const;  // gets info of what shape/view to draw;
 		const
-		CRoot&  Root (void) const;
-		CRoot&  Root (void) ;
+		CRoot& Root (void) const;
+		CRoot& Root (void) ;
 		const
 		CShaders& Shaders (void) const;
 		CShaders& Shaders (void) ;
@@ -166,6 +183,7 @@ namespace shared { namespace sys_core { namespace storage {
 		CReg_router& operator = (CReg_router&&) = delete;
 
 		CCtx   m_ctx ;
+		CDraw  m_draw;
 		CRoot  m_root;
 		CShaders  m_shaders;
 		CTheme    m_theme;

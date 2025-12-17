@@ -68,8 +68,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	using
 	CTriangle = ex_ui::draw::open_gl::shapes::CTriangle;
-	CTriangle triangle;
-
+	CTriangle& triangle = ::Get_Tria_2d();
 	TRenderer& renderer = ::Get_renderer();
 
 	do {
@@ -122,12 +121,17 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		}
 #pragma endregion
 #pragma region __step_3
-		// (3) creates a rectangle shape and initializes it with colors and coordinates of its vertices;
+		// (3) updates draw scene;
+		if (__failed(renderer.Scene().Prepare())) break;
+#pragma endregion
+#pragma region __step_4
+		// (4) sets vertex position and color attributes of the triangle shape;
+		// (4.a) sets vertex colors;
 		triangle.A().Attrs().Clr().Set(1.0f, 0.0f, 0.0f, 1.0f);
 		triangle.B().Attrs().Clr().Set(0.0f, 1.0f, 0.0f, 1.0f);
 		triangle.C().Attrs().Clr().Set(0.0f, 0.0f, 1.0f, 1.0f);
 
-		// for this tutorial direct assigning coordinates to the rectangle vertices is acceptable;
+		// (4.b) sets vertex positions;
 		triangle.A().Attrs().Pos().Set(+0.0f, +0.5f);
 		triangle.B().Attrs().Pos().Set(-0.5f, -0.5f);
 		triangle.C().Attrs().Pos().Set(+0.5f, -0.5f);
@@ -136,27 +140,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			break;
 		}
 #pragma endregion
-#pragma region __step_4
-		// (4) sets vertex attributes array to vertex array object;
-		using CBuffer = vertex::CBuffer;
-
-		if (__failed(renderer.Scene().Prepare())) break;
-#if (0)
-		CBuffer& buffer = renderer.Scene().ArrObjs().Get(e_arr_ndx::e_tria).VertArray().Buffer();
-
-		// (4.a) sets buffer cfg values;
-		buffer.Cfg().Count(triangle.Vertices().Count());
-		buffer.Cfg().Primitive(triangle.Primitive());
-		buffer.Cfg().StartAt(0);
-
-		if (__failed(buffer.SetData(triangle.Vertices().Data_ref()))) {
-			break;
-		}
-#endif
-#pragma endregion
 #pragma region __step_5
 		// (5) sets renderer cfg values;
-		renderer.Cfg().Count(triangle.Vertices().Count());
+		renderer.Cfg().Count(triangle.VertArray().Count());
 		renderer.Cfg().Primitive(triangle.Primitive());
 		renderer.Cfg().StartAt(0);
 #pragma endregion

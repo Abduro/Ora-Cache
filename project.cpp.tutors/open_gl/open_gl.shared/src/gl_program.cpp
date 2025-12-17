@@ -168,6 +168,23 @@ program::CStatus& CProgram::Status (void)       { return this->m_status; }
 	return this->Error();
  }
 
+ err_code CProgram::Unused (CError& _err) {
+	_err;
+	if (__failed(__get_prog_procs().Use(0))) {
+		_err = __get_prog_procs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz)_err.Print(TError::e_print::e_req));
+		return _err;
+	}
+	// in order to confirm there is no active/in-use program;
+	const uint32_t u_curr_id = program::CStatus::GetActiveProg(_err);
+	if (_err)
+		return _err;
+	if (0 == u_curr_id) {__trace_info_2(_T("No program is in use;\n")); }
+	else __trace_warn_2(_T("The program (id = %u) stil be in use;\n"), u_curr_id);
+
+	return _err;
+}
+
 err_code  CProgram::Validate (void) {
 	this->m_error<<__METHOD__<<__s_ok;
 
@@ -371,7 +388,6 @@ CProgram&   CProg_enum::Get (const e_object _u_target) {
 	if (e_object::e_tria == _u_target) return this->m_progs[1];
 	return _impl::inv_prog;
 }
-
 const
 CProgram&   CProg_enum::GetActive (void) const {
 	this->m_error <<__METHOD__<<__s_ok;

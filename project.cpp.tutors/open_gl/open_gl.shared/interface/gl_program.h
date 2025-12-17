@@ -63,6 +63,8 @@ namespace program {
 
 		 err_code  Use (void);       // sets this program to be current in draw pipeline;
 		 err_code  Validate (void);  // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
+		 static
+		 err_code  Unused (CError&); // makes any currently active/in-use program to be unused by calling 'use' operation to 'default' program with identifier 0 (zero);
 
 		 CProgram& operator <<(const CProgId&);
 

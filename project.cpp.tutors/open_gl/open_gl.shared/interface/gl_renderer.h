@@ -20,6 +20,11 @@ namespace render {
 		uint32_t Count (void) const;              // returns how many vertices must be drawn;
 		bool     Count (const uint32_t);          // returns 'true' in case of count number of vertices is changed;
 
+		TError&  Error (void) const;
+		err_code Load  (void);                    // loads draw flags from the registry;
+
+		bool Is_drawable (const e_object) const;  // returns the flag of drawing option of the particular drawable object;
+
 		uint32_t Primitive (void) const;          // returns the draw mode value, i.e. what type of primitives must be drawn; procs::CPrimitives::e_others::e_points is default;
 		bool     Primitive (const uint32_t);      // returns 'true' in case of draw mode value is changed;
 
@@ -27,9 +32,9 @@ namespace render {
 		bool     StartAt (const uint32_t _u_ndx); // returns 'true' in case of start index value change;
 
 	private:
-		uint32_t m_count_ndx;
-		uint32_t m_prim_mode;
-		uint32_t m_start_ndx;
+		uint32_t m_opts [3];    // 0 - count; 1 - primitive; 2 - start at;
+		bool     m_flags[CPipeline::u_tgt_count];
+		CError   m_error;
 	};
 }
 	using IKbrd_Handler = ex_ui::popup::IKbrd_Handler;

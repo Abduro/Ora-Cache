@@ -24,7 +24,7 @@ namespace shared { namespace sys_core { namespace storage { namespace _impl {
 }}}}
 
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CReg_router::CCtx{}
 using CCtx  = CReg_router::CCtx;
 using CVersion = CCtx::CVersion;
 
@@ -65,8 +65,37 @@ _pc_sz  CVersion::Root (void) const {
 	return (_pc_sz) cs_root;
 }
 
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CReg_router::CDraw{}
 
+using CDraw = CReg_router::CDraw;
+using e_targets = CDraw::e_targets;
+
+CDraw::CDraw (void) {}
+
+CString CDraw::Name (const e_targets _target) const {
+	_target;
+	if (e_targets::e_grid == _target) return CString(_T("grid.1"));
+	if (e_targets::e_tria == _target) return CString(_T("triangle.1"));
+
+	return CString(_T("")); // this is '(default)' value name;
+}
+
+_pc_sz CDraw::Root (void) const {
+
+	static CString cs_root;
+
+	if (cs_root.IsEmpty()) {
+		cs_root.Format(_T("%s\\renderer\\draw"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
+	}
+
+	return (_pc_sz) cs_root;
+}
+
+#pragma endregion
+/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CReg_router::CViewport::CGrid{}
 using CCell = CReg_router::CViewport::CViewport::CGrid::CCell;
 using CGrid = CReg_router::CViewport::CViewport::CGrid;
 using CViewport = CReg_router::CViewport;
@@ -107,9 +136,9 @@ _pc_sz CGrid::Root (void) const {
 	}
 	return (_pc_sz)cs_grid;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CReg_router::CRoot{}
 CReg_router::CRoot::CRoot (void) {}
 const
 HKEY    CReg_router::CRoot::Key  (void) const { static HKEY h_key = TutorialRootKey; return h_key; }
@@ -135,9 +164,9 @@ const bool CReg_router::CRoot::Renderer (const e_renderer _e_curr) {
 	}
 	return b_changed;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CReg_router::CSheders{}
 CReg_router::CShaders::CShaders (void) {}
 
 CString CReg_router::CShaders::Name (const e_types _e_type) const {
@@ -163,9 +192,9 @@ _pc_sz  CReg_router::CShaders::Root (void) const {
 	}
 	return (_pc_sz)_impl::cs_$_root;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CReg_router::CTheme{}
 CReg_router::CTheme::CTheme (void) {}
 
 CString CReg_router::CTheme::Path (const e_element _element) const {
@@ -194,9 +223,9 @@ _pc_sz  CReg_router::CTheme::To_str (const e_element _element) {
 
 	return (_pc_sz) cs_out; // if it is empty, then the '(default)' value is meant;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CReg_router::CViewport{}
 CViewport::CViewport (void) {}
 const
 CGrid& CViewport::Grid (void) const { return this->m_grid; }
@@ -211,13 +240,14 @@ _pc_sz CViewport::Root (void) const {
 	}
 	return (_pc_sz) cs_viewport;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CReg_router{}
 CReg_router:: CReg_router (void) {}
 CReg_router::~CReg_router (void) {}
 
-const   CCtx& CReg_router::Ctx (void) const { return this->m_ctx; }
+const   CCtx&  CReg_router::Ctx (void) const { return this->m_ctx; }
+const   CDraw& CReg_router::Draw (void) const { return this->m_draw; }
 const
 CReg_router::CRoot&  CReg_router::Root (void) const { return this->m_root; }
 CReg_router::CRoot&  CReg_router::Root (void)       { return this->m_root; }
@@ -235,9 +265,9 @@ CReg_router& ::Get_reg_router (void) {
 	static CReg_router router;
 	return router;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CRegistry{}
 CRegistry:: CRegistry (void) { this->m_error >> __CLASS__ << __METHOD__ << __s_ok; }
 CRegistry::~CRegistry (void) {}
 
@@ -280,9 +310,9 @@ CRegistry& ::Get_registry (void) {
 	static CRegistry registry;
 	return registry;
 }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CRegKey_Ex::CCache{}
 CRegKey_Ex::CCache:: CCache (_pc_sz _p_path, _pc_sz _p_name) { *this << _p_path >> _p_name; }
 
 bool   CRegKey_Ex::CCache::Is (void) const { return this->m_path.IsEmpty() == false; }
@@ -325,9 +355,9 @@ bool   CRegKey_Ex::CCache::Set (_pc_sz _p_path, _pc_sz _p_name) {
 
 CRegKey_Ex::CCache& CRegKey_Ex::CCache::operator << (_pc_sz _p_path) { this->Path(_p_path); return *this; }
 CRegKey_Ex::CCache& CRegKey_Ex::CCache::operator >> (_pc_sz _p_name) { this->Name(_p_name); return *this; }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CRegKey_Ex::CValue{}
 CRegKey_Ex::CValue:: CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
 
 const
@@ -417,13 +447,11 @@ CRegKey_Ex::CCache&  CRegKey_Ex::CValue::operator ()(void) const { return this->
 CRegKey_Ex::CCache&  CRegKey_Ex::CValue::operator ()(void)       { return this->m_cache; }
 
 CRegKey_Ex::CValue::operator _pc_sz (void) /*const*/ { return this->GetString((*this)().Path(), (*this)().Name()); }
-
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
-
+#pragma region cls::CRegKey_Ex{}
 CRegKey_Ex:: CRegKey_Ex (void) : m_value(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CRegKey_Ex::~CRegKey_Ex (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 TError& CRegKey_Ex::Error (void) const { return this->m_error; }
 const
@@ -437,3 +465,5 @@ CRegKey& CRegKey_Ex::operator ()(void) { return this->m_key; }
 const
 CRegKey_Ex::CValue&  CRegKey_Ex::operator [](_pc_sz _not_used) const { _not_used; return this->Value(); }
 CRegKey_Ex::CValue&  CRegKey_Ex::operator [](_pc_sz _not_used)       { _not_used; return this->Value(); }
+
+#pragma endregion

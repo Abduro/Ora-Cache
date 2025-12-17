@@ -28,7 +28,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		TError&   Error  (void) const;
 		uint32_t  GetId  (void) const;
 
-		bool    Is_bound (void) const;  // returns 'true' if the array is bound;
+		bool    Is_bound (void) const;    // returns 'true' if the array is bound;
 		/* the requirements:
 		(1) vertex array object binding; the object defines vertex array data through attributes by using glBindVertexArray();
 		(2) the buffer binding through glBindBuffer();
@@ -41,7 +41,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		CVertDat& VertArray (void) const; // gets the reference to vertex array data; (ro)
 		CVertDat& VertArray (void) ;      // gets the reference to vertex array data; (rw)
 
-		err_code  Unbind (void);          // unbinds this array by setting 0 (zero) as identifier of the array being bounded;
+		static
+		err_code  Unbind (CError&) ;      // unbinds any array by binding the 'default' array with 0 (zero) identifier;
 
 	private:
 		mutable
