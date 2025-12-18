@@ -37,7 +37,7 @@ err_code CArrObject::Bind (void) {
 		this->m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("the array of '_arr_id' (%u) is already bound"), this->GetId());
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 #else
-		__trace_warn(_T("The vertex array object (id = %u) is already bound;\n"), this->GetId());
+		__trace_warn_2(_T("The vertex array object (id = %u) is already bound;\n"), this->GetId());
 #endif
 		return this->Error();
 	}
@@ -113,13 +113,19 @@ uint32_t CArrObject::GetId (void) const { return this->m_arr_id; }
 bool     CArrObject::Is_bound (void) const {
 	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
 
+	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGet.xhtml
+	   the excerpt from the above article:
+	   ...returns a single value, the name of the buffer object currently bound to the target GL_ARRAY_BUFFER.
+	      If no buffer object is bound to this target, 0 is returned....
+	   the following block of the code is incorrect and must be fixed;
+	*/
 	const int32_t n_result = __get_param_procs().GetInt(__gl_arr_bound);
 	if (__get_param_procs().Error()) {
 		this->m_error = __get_param_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 		return false;
 	}
-	const bool b_result = this->GetId()== static_cast<uint32_t>(n_result);
+	const bool b_result = this->GetId() == static_cast<uint32_t>(n_result);
 #if (0)
 	if (false == b_result)
 		__trace_info_2(_T("the vertex array object of '_arr_id' (%u) is not bound;\n"), this->GetId());
@@ -147,6 +153,11 @@ err_code CArrObject::SetData (const TVertData& _v_data) {
 	if (__failed(::__get_attr_arr_procs().Enable(0))) return this->m_error = ::__get_attr_arr_procs().Error();
 	if (__failed(::__get_attr_arr_procs().Enable(1))) return this->m_error = ::__get_attr_arr_procs().Error();
 #endif
+//	Unbinding the buffer must be made first, otherwise the error occurs :
+//	[error] cls::[CTriangle].Draw()>>cls::[CError]>>{code=5023;result=0x8007139f;desc='#__e_inv_oper: vertex buffer is mapped';context=CBase::CRenderer::DrawArrays()};
+//	that means: vertex array object is unbound, thus the vertex buffers sets to read-only access;
+	if (__failed(CArrObject::Unbind(this->m_error))) {} // (6) sets the currently bound vao to 'default' one, i.e. no bound vertex array object;
+
 	return this->Error();
 }
 

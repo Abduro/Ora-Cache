@@ -31,7 +31,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		CVertex& C (void) const;
 		CVertex& C (void) ;
 
-		err_code Draw (void);
+		err_code Draw (void) override final;
 
 		const
 		CVertex& Get (const e_vertices) const; // returns a reference to the vertex by corner index; (ro);

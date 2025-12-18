@@ -214,7 +214,7 @@ const bool     CBuffer_Base::Target (const e_bind_targets e_target) {
 }
 
 err_code CBuffer_Base::Unbind (void) {
-
+#if (1)
 	this->m_error <<__METHOD__<<__s_ok;
 	if (false == this->Is_bound())
 		return this->m_error = __s_ok; // Is_bound can generate an error, in order to avoid it the error status is set to __s_ok;
@@ -228,6 +228,14 @@ err_code CBuffer_Base::Unbind (void) {
 	}
 
 	return this->Error();
+#else
+	if (__failed(__get_buf_procs().Bind((uint32_t)this->Target(), 0))) {
+		this->m_error = __get_buf_procs().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+
+	return _err;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -127,8 +127,6 @@ err_code    CRenderer::Draw (void) {
 		this->m_error.Last();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
-
-//	this->Scene().Array().Unbind();
 	
 	return this->Error();
 }

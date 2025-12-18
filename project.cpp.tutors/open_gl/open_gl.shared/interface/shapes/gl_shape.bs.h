@@ -22,13 +22,12 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 	public :
 		static const uint32_t n_min_vertex_count = 3; // a triangle is the simplest figure that can be considered as a shape;
 		static _pc_sz Class (void);
+		// virtual methods go first;
+		virtual err_code Draw  (void);
+		virtual err_code Prepare (void);
 
-		err_code Draw  (void);
 		TError&  Error (void) const;
-
-		err_code Prepare (void);
 		uint32_t Primitive (void) const;
-
 		const
 		CVertArray&  VertArray (void) const;
 		CVertArray&  VertArray (void) ;
