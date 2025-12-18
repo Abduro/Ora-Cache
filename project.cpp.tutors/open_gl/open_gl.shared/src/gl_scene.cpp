@@ -76,6 +76,7 @@ err_code CScene::Prepare (void) {
 	else
 		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
 #endif
+	::Get_renderer().Cfg().Print();
 #pragma region _1st_step
 	// the step #1: creating shaders, program, shaders' attachment and linking the program;
 	if (__failed(this->Progs().Create()))

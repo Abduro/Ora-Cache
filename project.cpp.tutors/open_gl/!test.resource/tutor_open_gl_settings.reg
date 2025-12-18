@@ -6,11 +6,24 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl]
 
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\context]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\context\version]
+"major"=dword:00000004
+"minor"=dword:00000006
+"core"=dword:00000000
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\renderer]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\renderer\draw]
+"grid.1"=dword:00000000
+"triangle.1"=dword:00000000
+
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders\grid.1]
-"$_fragment"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\03_grid.clr"
-"$_vertex"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\03_grid.vex"
+"$_fragment"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\03_grid.fs.glsl"
+"$_vertex"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\03_grid.vs.glsl"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\shaders\triangle.1]
 "$_fragment"="D:\\Abu\\Ora-Cache.work\\project.cpp.tutors\\open_gl\\!test.resource\\shaders\\02_triangle.clr"
@@ -23,9 +36,9 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\viewport]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\viewport\grid]
-"color"="#303030"
+"color"="#663300"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\open_gl\viewport\grid\cell]
 "height"=dword:00000032
-"width"=dword:00000032
+"width"=dword:0000004b
 

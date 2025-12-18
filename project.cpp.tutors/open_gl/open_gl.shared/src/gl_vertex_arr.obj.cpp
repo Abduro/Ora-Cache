@@ -22,7 +22,7 @@ using namespace _impl;
 
 using CVertDat = CArrObject::CVertDat;
 
-#pragma region cls::CArrObject
+#pragma region cls::CArrObject{}
 
 CArrObject:: CArrObject (void) : m_arr_id(0) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
 CArrObject:: CArrObject (const CArrObject& _src) : CArrObject() { *this = _src; }
@@ -130,6 +130,10 @@ bool     CArrObject::Is_bound (void) const {
 err_code CArrObject::SetData (const TVertData& _v_data) {
 	_v_data;
 	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == this->GetId() || false == ::Get_renderer().Cfg().Is_drawable(this->Target()))
+		return this->Error();
+
 	if (__failed(this->Bind())) return this->Error(); // (1) tries to bind this vertex array object first;
 	if (__failed(this->VertArray().Buffer().Bind())) return this->m_error = this->VertArray().Buffer().Error(); // (2) the buffer binding;
 
@@ -188,9 +192,12 @@ CArrObj_enum::~CArrObj_enum (void) {}
 err_code CArrObj_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CArrObject& object = this->Ref(i_);
-
+		if (false == cfg.Is_drawable(object.Target()))
+			continue;
 		if (__failed(object.Create())) { this->m_error = object.Error(); break; }
 	//	if (__failed(object.Bind()))   { this->m_error = object.Error(); break; }
 	}

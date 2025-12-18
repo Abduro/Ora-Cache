@@ -56,6 +56,8 @@
     <ClCompile Include="$(_1)gl_context.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_drawable.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_drawable.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_error.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_error.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_format.h"><Filter>interface</Filter></ClInclude>

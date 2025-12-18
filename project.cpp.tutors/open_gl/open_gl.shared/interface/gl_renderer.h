@@ -28,6 +28,8 @@ namespace render {
 		uint32_t Primitive (void) const;          // returns the draw mode value, i.e. what type of primitives must be drawn; procs::CPrimitives::e_others::e_points is default;
 		bool     Primitive (const uint32_t);      // returns 'true' in case of draw mode value is changed;
 
+		void     Print (const e_print = e_print::e_no_ns) const; // outputs to thace the drawable settings;
+
 		uint32_t StartAt (void) const;            // returns the vertex arrey index to start from for drawing;
 		bool     StartAt (const uint32_t _u_ndx); // returns 'true' in case of start index value change;
 

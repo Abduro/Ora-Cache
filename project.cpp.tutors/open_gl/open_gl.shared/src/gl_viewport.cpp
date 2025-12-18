@@ -316,6 +316,10 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 	_u_size;
 	this->m_error <<__METHOD__<<__s_ok;
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+	if (false == cfg.Is_drawable(e_object::e_grid))
+			return this->Error();
+
 	CMarkers markers;
 	// (1);(2): calculates markets' places and its count for horizontal and vertical lines of the grid;
 	if (__failed(markers.Count(_u_size, this->Cell().Get()))) {

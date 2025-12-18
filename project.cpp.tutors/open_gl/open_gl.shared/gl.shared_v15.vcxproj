@@ -203,6 +203,8 @@
     <ClCompile Include="$(_1)gl_context.cpp" />
     <ClInclude Include="$(_0)gl_defs.h" />
     <ClCompile Include="$(_1)gl_defs.cpp" />
+    <ClInclude Include="$(_0)gl_drawable.h" />
+    <ClCompile Include="$(_1)gl_drawable.cpp" />
     <ClInclude Include="$(_0)gl_error.h" />
     <ClCompile Include="$(_1)gl_error.cpp" />
     <ClInclude Include="$(_0)gl_format.h" />

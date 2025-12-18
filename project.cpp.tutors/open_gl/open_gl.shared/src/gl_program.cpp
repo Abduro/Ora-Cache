@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' shader program base interface implementation file;
 */
 #include "gl_program.h"
+#include "gl_renderer.h"
 #include "program\gl_prog_linker.h"
 #include "program\gl_prog_status.h"
 #include "procs\gl_procs_prog.h"
@@ -222,8 +223,12 @@ err_code CAttrs::Init (void) {
 	if (nullptr == this->m_progs)
 		return this->m_error <<__e_not_inited;
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CProgram& prog = this->m_progs->Ref(i_);
+		if (false == cfg.Is_drawable(prog.Target()))
+			continue;
 #if (1)
 		prog.Attrs() << prog.Id(); // ToDo: it should be not necessary;
 		if (__failed(prog.Attrs().Enum_attrs())) {
@@ -292,9 +297,12 @@ CAttrs&  CProg_enum::Attrs (void)       { return this->m_attrs; }
 err_code CProg_enum::Build (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CProgram& prog = this->Ref(i_);
-
+		if (false == cfg.Is_drawable(prog.Target()))
+			continue;
 		if (__failed(prog.Shaders().Compile())) {
 			this->m_error = prog.Shaders().Error(); break;
 		}
@@ -331,8 +339,12 @@ err_code CProg_enum::Clear (void) {
 err_code CProg_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CProgram& prog = this->Ref(i_);
+		if (false == cfg.Is_drawable(prog.Target()))
+			continue;
 		if (__failed(prog.Create())) {
 			this->m_error = prog.Error(); break;
 		}
@@ -347,8 +359,12 @@ err_code CProg_enum::Create (void) {
 err_code CProg_enum::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CProgram& prog = this->Ref(i_);
+		if (false == cfg.Is_drawable(prog.Target()))
+			continue;
 #if (0) // a buffer is not program attribute anymore;
 		// it is not necessary to check a binding of the buffer, it makes itself, just unbind it;
 		if (prog.Buffer().Is_bound()) {
@@ -411,8 +427,12 @@ err_code    CProg_enum::Load (void) {
 	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;
 	static _pc_sz p_object[] = {_T("grid.1"), _T("triangle.1")};
 
+	const render::CCfg& cfg = ::Get_renderer().Cfg();
+
 	for (uint32_t i_ = 0; i_ < _countof(this->m_progs) && i_ < _countof(p_object); i_++) {
 		CProgram& prog = this->m_progs[i_];
+		if (false == cfg.Is_drawable(prog.Target()))
+			continue;
 		if (__failed(prog.Shaders().Fragment().Src().Cfg().Path(p_object[i_], prog.Shaders().Fragment().Type().Get())))
 		    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
 		if (__failed(prog.Shaders().Vertex().Src().Cfg().Path(p_object[i_], prog.Shaders().Vertex().Type().Get())))
