@@ -158,7 +158,9 @@ program::CStatus& CProgram::Status (void)       { return this->m_status; }
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (this->Status().Is_current()) {
+#if (0)
 		this->m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the program (id = %u) is already used"), this->Id()());
+#endif
 		return this->Error();
 	}
 

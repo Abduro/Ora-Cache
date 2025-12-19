@@ -14,6 +14,7 @@ namespace ex_ui { namespace color { namespace rgb {
 	using namespace ex_ui::color;
 
 	using TPercent = TPct_Flt;
+	// https://www.abbreviations.com/abbreviation/Channel >> chan ;
 	// perhaps it would be better to consider RGBQUAD as the base for this class:
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad ;
 	class CQuad	{
@@ -21,6 +22,7 @@ namespace ex_ui { namespace color { namespace rgb {
 		enum channel : uint32_t { // strictly speaking, alpha value is not an rgb color channel, but just a transparency value;
 			r = 0, g = 1, b = 2, a = 3, _count = a + 1 
 		};
+		static const uint32_t u_chan_cnt = 4;
 	public:
 		 CQuad (clr_value _r = 0, clr_value _g = 0, clr_value _b = 0, clr_value _a = 0); // initiates color to "absolute" black emptiness by default;
 		 CQuad (clr_type  _color);                   // no separate assigning alpha value, it is supposed that input color already has the required one;
@@ -124,7 +126,8 @@ namespace ex_ui { namespace color { namespace rgb {
 #endif
 	};
 
-	typedef ::std::vector<float> clr_float; // the vector needs to contain 4 elements as rgba color model; CQuad::channel is the index;
+	using e_rgba = CQuad::channel;
+	typedef ::std::array<float, 4u> clr_float; // the vector needs to contain 4 elements as rgba color model; CQuad::channel is the index;
 
 	/*predefined colors with floats values can be found here:
 	https://web.archive.org/web/20180301041827/https://prideout.net/archive/colors.php ;
@@ -142,17 +145,20 @@ namespace ex_ui { namespace color { namespace rgb {
 		~CFloat (void) = default;
 
 	public:
-		float A (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
-		float B (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
-		float G (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
-		float R (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float Get_a (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float Get_b (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float Get_g (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
+		float Get_r (void) const;         // gets value of color channel as float; the value is in range {0.0f, 1.0f};
 
-		clr_float  Get (void) const;  // gets a float value of rgba color as a vector of 4 elements;
+		clr_float  Get (void) const;      // gets the copy of float value of rgba color as an array of 4 elements;
+		const
+		clr_float& Ref (void) const;
+		clr_float& Ref (void) ;
 
-		bool A (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-		bool B (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-		bool G (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-		bool R (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool Set_a (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool Set_b (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool Set_g (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
+		bool Set_r (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
@@ -164,13 +170,16 @@ namespace ex_ui { namespace color { namespace rgb {
 
 	public:
 		CFloat&  operator <<(const clr_type);
+		const
+		float&   operator [] (const e_rgba) const; // gets the reference to the value of the specified color channel; (ro)
+		float&   operator [] (const e_rgba) ;      // gets the reference to the value of the specified color channel; (rw)
 
 	private:
 		CFloat&  operator = (const CFloat&) = delete;
 		CFloat&  operator = (CFloat&&) = delete;
 
 	private:
-		float  m_value[CQuad::channel::_count];
+		clr_float  m_rgba; // 0:r|1:g|2:b|3:a - the color array indices;
 	};
 
 	// https://stackoverflow.com/questions/14375156/how-to-convert-a-rgb-color-value-to-an-hexadecimal-value-in-c >> just as an example;

@@ -3,10 +3,11 @@
 	This is Ebo Pack OpenGL data buffer wrapper interface implementation file;
 */
 #include "gl_buffer.h"
+#include "gl_procs.h"
+
 #include "shared.dbg.h"
 #include "shared.preproc.h"
-#include "gl_procs.h"
-#include "procs\gl_procs_buffer.h"
+
 #include "procs\gl_procs_surface.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -212,9 +213,8 @@ const bool     CBuffer_Base::Target (const e_bind_targets e_target) {
 
 	return b_changed;
 }
-
+#if (0)
 err_code CBuffer_Base::Unbind (void) {
-#if (1)
 	this->m_error <<__METHOD__<<__s_ok;
 	if (false == this->Is_bound())
 		return this->m_error = __s_ok; // Is_bound can generate an error, in order to avoid it the error status is set to __s_ok;
@@ -228,15 +228,18 @@ err_code CBuffer_Base::Unbind (void) {
 	}
 
 	return this->Error();
+}
 #else
-	if (__failed(__get_buf_procs().Bind((uint32_t)this->Target(), 0))) {
-		this->m_error = __get_buf_procs().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+err_code CBuffer_Base::Unbind (const procs::e_bind_targets _e_target, CError& _err) {
+	_e_target; _err;
+	if (__failed(__get_buf_procs().Bind((uint32_t)_e_target, 0))) {
+		_err = __get_buf_procs().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
 	}
 
 	return _err;
-#endif
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

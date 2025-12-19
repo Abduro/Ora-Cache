@@ -117,7 +117,6 @@ bool     CArrObject::Is_bound (void) const {
 	   the excerpt from the above article:
 	   ...returns a single value, the name of the buffer object currently bound to the target GL_ARRAY_BUFFER.
 	      If no buffer object is bound to this target, 0 is returned....
-	   the following block of the code is incorrect and must be fixed;
 	*/
 	const int32_t n_result = __get_param_procs().GetInt(__gl_arr_bound);
 	if (__get_param_procs().Error()) {
@@ -157,6 +156,7 @@ err_code CArrObject::SetData (const TVertData& _v_data) {
 //	[error] cls::[CTriangle].Draw()>>cls::[CError]>>{code=5023;result=0x8007139f;desc='#__e_inv_oper: vertex buffer is mapped';context=CBase::CRenderer::DrawArrays()};
 //	that means: vertex array object is unbound, thus the vertex buffers sets to read-only access;
 	if (__failed(CArrObject::Unbind(this->m_error))) {} // (6) sets the currently bound vao to 'default' one, i.e. no bound vertex array object;
+	if (__failed(CBuffer_Base::Unbind(this->VertArray().Buffer().Target(), this->m_error))) {}
 
 	return this->Error();
 }

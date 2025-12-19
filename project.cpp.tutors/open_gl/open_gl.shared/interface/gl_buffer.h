@@ -5,8 +5,8 @@
 	This is Ebo Pack OpenGL data buffer wrapper interface declaration file;
 */
 #include "gl_defs.h"
-#include "procs\gl_procs_buffer.h"
 #include "vertex\gl_vertex_data.h"
+#include "procs\gl_procs_buffer.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
@@ -79,7 +79,12 @@ namespace data {
 		e_bind_targets Target (void) const;
 		const bool     Target (const e_bind_targets); // it can be used by the child class before calling its 'Bind' procedure; returns 'true' in case of change 'target' value;
 
+#if (0)
 		err_code Unbind (void) ;
+#else
+		static
+		err_code Unbind (const procs::e_bind_targets, CError&);
+#endif
 
 	protected:
 		CBuffer_Base& operator = (const CBuffer_Base&) = delete; CBuffer_Base& operator = (CBuffer_Base&&) = delete;

@@ -9,6 +9,7 @@
 using namespace ex_ui::color::rgb;
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CQuad{}
 
 CQuad:: CQuad (clr_value _r, clr_value _g, clr_value _b, clr_value _a) : m_value{_r, _g, _b, _a}, m_valid(true){}
 CQuad:: CQuad (clr_type _color) : CQuad() { this->Set(_color); }
@@ -163,7 +164,9 @@ bool CQuad::operator != (rgb_color _color) const { return this->Is_equal_to(_col
 bool CQuad::operator == (const CQuad& _quad) const { return this->Is_equal_to(_quad) == true ; }
 bool CQuad::operator != (const CQuad& _quad) const { return this->Is_equal_to(_quad) == false; }
 
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
+#pragma region cls::Color{}
 
 CColor:: CColor (void) : TBase() {}
 CColor:: CColor (clr_type _color) : TBase(_color) {}
@@ -297,50 +300,50 @@ CString CColor::Print (const e_print e_opt) const {
 }
 #endif
 
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CFloat{}
 
-CFloat:: CFloat (void) : m_value{0.0f} {}
+CFloat:: CFloat (void) : m_rgba{0.0f} {}
 CFloat:: CFloat (const clr_type _clr) : CFloat() { *this << _clr; }
-CFloat:: CFloat (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a) : CFloat() {
-	this->Set(_r_g_b_a(_r,_g,_b,_a));
-}
+CFloat:: CFloat (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a) : CFloat() { this->Set(_r_g_b_a(_r,_g,_b,_a)); }
 
 /////////////////////////////////////////////////////////////////////////////
 
 using e_ndx = CQuad::channel;
 
-float CFloat::A (void) const { return this->m_value[e_ndx::a]; }
-float CFloat::B (void) const { return this->m_value[e_ndx::b]; }
-float CFloat::G (void) const { return this->m_value[e_ndx::g]; }
-float CFloat::R (void) const { return this->m_value[e_ndx::r]; }
+float CFloat::Get_a (void) const { return this->m_rgba[e_ndx::a]; }
+float CFloat::Get_b (void) const { return this->m_rgba[e_ndx::b]; }
+float CFloat::Get_g (void) const { return this->m_rgba[e_ndx::g]; }
+float CFloat::Get_r (void) const { return this->m_rgba[e_ndx::r]; }
 
-clr_float CFloat::Get (void) const {
-	const clr_float v_result = {this->R(), this->G(), this->B(), this->A()};
-	return v_result;
+clr_float  CFloat::Get (void) const { return this->m_rgba; }
+const
+clr_float& CFloat::Ref (void) const { return this->m_rgba; }
+clr_float& CFloat::Ref (void)       { return this->m_rgba; }
+
+bool CFloat::Set_a (const clr_value _u_value) {
+	_u_value;
+	const float f_value   = CConvert::ToFloat(_u_value);
+	const bool  b_changed = !Is_equal(this->Get_a(), f_value); if (b_changed) this->m_rgba[e_ndx::a] = f_value;  return b_changed;
 }
 
-bool CFloat::A (const clr_value _u_value) {
+bool CFloat::Set_b (const clr_value _u_value) {
 	_u_value;
-	const float f_value  = CConvert::ToFloat(_u_value);
-	const bool b_changed = !Is_equal(this->A(), f_value); if (b_changed) this->m_value[e_ndx::a] = f_value;  return b_changed;
+	const float f_value   = CConvert::ToFloat(_u_value);
+	const bool  b_changed = !Is_equal(this->Get_b(), f_value); if (b_changed) this->m_rgba[e_ndx::b] = f_value;  return b_changed;
 }
 
-bool CFloat::B (const clr_value _u_value) {
+bool CFloat::Set_g (const clr_value _u_value) {
 	_u_value;
-	const float f_value  = CConvert::ToFloat(_u_value);
-	const bool b_changed = !Is_equal(this->B(), f_value); if (b_changed) this->m_value[e_ndx::b] = f_value;  return b_changed;
+	const float f_value   = CConvert::ToFloat(_u_value);
+	const bool  b_changed = !Is_equal(this->Get_g(), f_value); if (b_changed) this->m_rgba[e_ndx::g] = f_value;  return b_changed;
 }
 
-bool CFloat::G (const clr_value _u_value) {
+bool CFloat::Set_r (const clr_value _u_value) {
 	_u_value;
-	const float f_value  = CConvert::ToFloat(_u_value);
-	const bool b_changed = !Is_equal(this->G(), f_value); if (b_changed) this->m_value[e_ndx::g] = f_value;  return b_changed;
-}
-
-bool CFloat::R (const clr_value _u_value) {
-	_u_value;
-	const float f_value  = CConvert::ToFloat(_u_value);
-	const bool b_changed = !Is_equal(this->R(), f_value); if (b_changed) this->m_value[e_ndx::r] = f_value;  return b_changed;
+	const float f_value   = CConvert::ToFloat(_u_value);
+	const bool  b_changed = !Is_equal(this->Get_r(), f_value); if (b_changed) this->m_rgba[e_ndx::r] = f_value;  return b_changed;
 }
 
 #if defined(_DEBUG)
@@ -350,10 +353,10 @@ CString  CFloat::Print (const e_print _e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{r:%s;g:%s;b:%s;a:%s};");
 	static _pc_sz pc_sz_pat_r = _T("r:%s;g:%s;b:%s;a:%s");
 
-	CString cs_a = TString().Float(this->A());
-	CString cs_b = TString().Float(this->B());
-	CString cs_g = TString().Float(this->G());
-	CString cs_r = TString().Float(this->R());
+	CString cs_a = TString().Float(this->Get_a());
+	CString cs_b = TString().Float(this->Get_b());
+	CString cs_g = TString().Float(this->Get_g());
+	CString cs_r = TString().Float(this->Get_r());
 
 	CString cs_out;
 	if (e_print::e_all   == _e_opt)
@@ -379,28 +382,30 @@ CString  CFloat::Print (const e_print _e_opt) const {
 bool CFloat::Set (const clr_type _clr) {
 	_clr;
 	bool b_changed = false;
-	if (this->A(get_a_value(_clr))) b_changed = true;
-	if (this->B(get_b_value(_clr))) b_changed = true;
-	if (this->G(get_g_value(_clr))) b_changed = true;
-	if (this->R(get_r_value(_clr))) b_changed = true;
+	if (this->Set_a (get_a_value(_clr))) b_changed = true;
+	if (this->Set_b (get_b_value(_clr))) b_changed = true;
+	if (this->Set_g (get_g_value(_clr))) b_changed = true;
+	if (this->Set_r (get_r_value(_clr))) b_changed = true;
 	return b_changed;
 }
 
 clr_type CFloat::ToRgb  (void) const {
-	return CQuad(CConvert::ToValue(this->R()), CConvert::ToValue(this->G()), CConvert::ToValue(this->B()), rgb_val_max).ToRgb();
+	return CQuad(CConvert::ToValue(this->Get_r()), CConvert::ToValue(this->Get_g()), CConvert::ToValue(this->Get_b()), rgb_val_max).ToRgb();
 }
 clr_type CFloat::ToRgbA (void) const {
-	return CQuad(CConvert::ToValue(this->R()), CConvert::ToValue(this->G()), CConvert::ToValue(this->B()), CConvert::ToValue(this->A())).ToRgbA();
+	return CQuad(CConvert::ToValue(this->Get_r()), CConvert::ToValue(this->Get_g()), CConvert::ToValue(this->Get_b()), CConvert::ToValue(this->Get_a())).ToRgbA();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CFloat&  CFloat::operator <<(const clr_type _clr) {
-	this->Set(_clr);
-	return *this;
-}
+CFloat&  CFloat::operator <<(const clr_type _clr) { this->Set(_clr); return *this; }
+const
+float&   CFloat::operator [] (const e_rgba _chan) const { switch (_chan) { case e_rgba::a: case e_rgba::b: case e_rgba::g: case e_rgba::r: return this->m_rgba[_chan]; default: static float f_na = 0.0f; return f_na; }}
+float&   CFloat::operator [] (const e_rgba _chan)       { switch (_chan) { case e_rgba::a: case e_rgba::b: case e_rgba::g: case e_rgba::r: return this->m_rgba[_chan]; default: static float f_na = 0.0f; return f_na; }}     
 
+#pragma endregion
 /////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CHex{}
 
 CHex:: CHex (_pc_sz _p_value) : CHex() { *this << _p_value; }
 CHex:: CHex (clr_type _type) : m_color(_type) {}
@@ -517,3 +522,5 @@ bool CHex::Set (_pc_sz _p_val) {
 
 	return b_changed;
 }
+
+#pragma endregion
