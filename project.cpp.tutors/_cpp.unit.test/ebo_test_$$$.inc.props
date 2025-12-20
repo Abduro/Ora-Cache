@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 4-Apr-2024 at 10:09:08.1756163, UTC+7, Novosibirsk, Wednesday;
+	This is Ebo pack shared library unit test project include property page declaration file;
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Adopted to Ebo Pack OpenGL tutorial projects on 20-Dec-2025 at 22:02:28.750, UTC+4, Batumi, Saturday;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\_shared\</Shared>
+    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
+    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>interface\</_0>
+    <_1>src\</_1>
+    <_2>$(Shared)interface\</_2>
+    <_3>$(Shared_Dbg)interface\</_3>
+    <_4></_4>
+    <_5></_5>
+    <_6></_6>
+    <_7></_7>
+    <_8></_8>
+    <_9></_9>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

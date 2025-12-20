@@ -4,9 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Aug-2025 at 12:15:35.482, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack tutorial shared definitions' declaration file;
 */
-#include <atlbase.h>
+#include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/csimplestringt ;
 #include <atlwin.h>
-#include <atlstr.h>
+#include <atlstr.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class ;
 #include <atlfile.h>      // for loading disk file, e.g. shader source code;
 #include <cstdint>        // for declareing and/or defining data types such as: uint32_t for example;
 #include <array>          // for using fixed-size data sets;
@@ -36,9 +36,11 @@ namespace shared { namespace defs {
 	};
 
 	typedef CFormat_Spec::_spec t_fmt_spec;
+	typedef ::std::vector<CString> TParts;
 
 	class CString_Ex : public CString { typedef CString TBase;
 	public:
+		// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
 #if defined WIN64
 		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
 		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/, const bool _b_low_case = true) ;

@@ -6,10 +6,38 @@
 */
 #include "math.defs.h"
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
-
 	// it is not right approach to call every data sets (fixed or dynamic size) to be a vector;
+	struct s_vec_2 {
+		s_vec_2 (void);
+		s_vec_2 (const float _x, const float _y);
 
+		s_vec_2& operator = (const s_vec_2&);
+
+		float x, y;
+	};
+
+	struct s_vec_3 : public s_vec_2 {
+		s_vec_3 (void);
+		s_vec_3 (const float _x, const float _y, const float _z);
+
+		s_vec_3& operator = (const s_vec_3&);
+
+		float z;
+	};
+
+	struct s_vec_4 : public s_vec_3 {
+		s_vec_4 (void);
+		s_vec_4 (const float _x, const float _y, const float _z, const float _w);
+
+		s_vec_4& operator = (const s_vec_4&);
+
+		float w;
+	};
 
 }}}}
+
+typedef ex_ui::draw::open_gl::math::s_vec_2 vec_2;
+typedef ex_ui::draw::open_gl::math::s_vec_3 vec_3;
+typedef ex_ui::draw::open_gl::math::s_vec_4 vec_4;
 
 #endif/*__MATH_VECTOR_H_INCLUDED*/

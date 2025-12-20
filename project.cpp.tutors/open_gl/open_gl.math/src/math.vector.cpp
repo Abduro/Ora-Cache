@@ -5,3 +5,28 @@
 #include "math.vector.h"
 
 using namespace ex_ui::draw::open_gl::math;
+
+#pragma region s_vec_2{}
+
+s_vec_2::s_vec_2 (void) : x(0.0f), y(0.0f) {}
+s_vec_2::s_vec_2 (const float _x, const float _y) : x(_x), y(_y) {}
+
+s_vec_2& s_vec_2::operator = (const s_vec_2& _src) { this->x = _src.x; this->y = _src.y; return *this; }
+
+#pragma endregion
+#pragma region s_vec_3{}
+
+s_vec_3::s_vec_3 (void) : s_vec_2(), z(0.0f) {}
+s_vec_3::s_vec_3 (const float _x, const float _y, const float _z) : s_vec_2(_x, _y), z(_z) {}
+
+s_vec_3& s_vec_3::operator = (const s_vec_3& _src) { (s_vec_2&)*this = (const s_vec_2&)_src; this->z = _src.z; return *this; }
+
+#pragma endregion
+#pragma region s_vec_4{}
+
+s_vec_4::s_vec_4 (void) : s_vec_3(), w(0.0f) {}
+s_vec_4::s_vec_4 (const float _x, const float _y, const float _z, const float _w) : s_vec_3(_x, _y, _z), w(_w) {}
+
+s_vec_4& s_vec_4::operator = (const s_vec_4& _src) { (s_vec_3&)*this = (const s_vec_3&)_src; this->w = _src.w; return *this; }
+
+#pragma endregion

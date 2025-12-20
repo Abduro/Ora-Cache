@@ -4,11 +4,16 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 29-Nov-2025 at 03:10:43.568, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL tutorials' geometry generic elements' interface declaration file;
 */
+#include <functional>
 #include "shared.defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	using namespace shared::defs;
+	/*
+	what is a vector: it is at least two values reflecting a tendency of change;
+	but in the terminology of OpenGL it is just a name of the data container, not a notion of 2d/3d space;
+	*/
 
 	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/user-defined-literals-cpp ;
@@ -31,20 +36,14 @@ namespace _2d {
 		CPoint (void); CPoint (const CPoint&); CPoint (CPoint&&); ~CPoint (void);
 		CPoint (const float _x, const float _y);
 
-		const
-		float  x (void) const;
-		float& x (void) ;
-		void   x (const float);
-		const
-		float  y (void) const;
-		float& y (void) ;
-		void   y (const float);
+		const float x (void) const; float& x (void); void x (const float);
+		const float y (void) const; float& y (void); void y (const float);
 
 		void  Set (const float _x, const float _y);
 
 	public:
 		CPoint& operator = (const CPoint&);
-		CPoint& operator = (CPoint&&);       // no swap values operation yeat, just copying;
+		CPoint& operator = (CPoint&&);       // no swap values operation yet, just copying;
 		CPoint& operator <<(const float _x);
 		CPoint& operator >>(const float _y);
 
@@ -60,10 +59,7 @@ namespace _3d {
 		CPoint (void); CPoint (const CPoint&); CPoint (CPoint&&); ~CPoint (void);
 		CPoint (const float _x, const float _y,  const float _z);
 
-		const
-		float  z (void) const;
-		float& z (void) ;
-		void   z (const float);
+		const float z (void) const; float& z (void); void z (const float);
 
 	public:
 		CPoint& operator = (const CPoint&);

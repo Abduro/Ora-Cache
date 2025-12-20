@@ -116,6 +116,7 @@ err_code    CRenderer::Draw (void) {
 		return this->Error();
 	// (1) draws the background first;
 	if (__failed(CBkgnd().Draw())) {}
+
 	// (2) draws the viewport grid;
 	if (this->Cfg().Is_drawable(e_object::e_grid)) this->View().Grid().Draw();
 
