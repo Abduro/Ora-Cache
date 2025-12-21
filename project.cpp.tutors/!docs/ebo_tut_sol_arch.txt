@@ -12,7 +12,8 @@
 	[OpenGL]  : {00000C13-EEEE-BBBB-6667-100000000002} << the sub-root for OpenGL tutorials;
 		[!test.cases]   : {00000C13-EEEE-BBBB-6667-100000000100} << the sub-root for test cases project(s);
 			[core]  : {00000C13-EEEE-BBBB-6667-100000000110} << the sub-root for core project(s) of the test cases;
-				ebo_test_$$$ : {00000C13-EEEE-BBBB-6667-C00000060000} << the shared core project of test cases;
+		ebo_test_$$$    : {00000C13-EEEE-BBBB-6667-C00000060000} << the shared core project of test cases;
+		ebo_test_$m$    : {00000C13-EEEE-BBBB-6667-C00000060001} << the unit test project for shared project of OpenGL basic math lib;
  
 		[!test.resource]  : {00000C13-EEEE-BBBB-6667-100000000200} << the sub-root for test cases resources;
 			[shaders] : {00000C13-EEEE-BBBB-6667-100000000210} << the sub-root for shaders' files;

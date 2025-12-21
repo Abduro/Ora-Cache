@@ -1,0 +1,31 @@
+<Project>
+	<!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory -->
+	<PropertyGroup>
+		<!-- For non-SDK projects that import this file and then import Microsoft.Common.props,
+		     tell Microsoft.Common.props not to import Directory.Build.props again.
+		     https://github.com/dotnet/samples/blob/main/Directory.Build.props ;
+		-->
+		<ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
+		<!-- Enable .NET code analysis (this is necessary for projects that target 3.1 or earlier). -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<!--
+		     https://stackoverflow.com/questions/3311212/how-to-configure-the-intermediate-output-directory-in-c-sharp ;
+		     https://stackoverflow.com/questions/815056/move-intermediates-directory-on-c-sharp-projects-in-visual-studio ;
+
+		     ToDo: if project file is saved by VS, it is often possible VS writes ouput path directly to project file;
+
+		     https://stackoverflow.com/questions/76286138/c-sharp-projects-importing-a-props-file-ignores-output-type ;
+		     https://stackoverflow.com/questions/635346/prebuild-event-in-visual-studio-replacing-solutiondir-with-undefined ;
+		     https://github.com/dotnet/msbuild/issues/5011 ; << $(SolutionDir) is not recognizable by MSBuild tool; 
+		-->
+		<SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
+		<BaseOutputPath>$(SolutionDir)..\..\!bin__</BaseOutputPath>
+		<!--BaseOutputPath>$(MSBuildProjectDirectory)\!bin__</BaseOutputPath-->
+		<OutputPath>$(BaseOutputPath)\$(Platform)\$(Configuration)\tutorials</OutputPath>
+		<BaseIntermediateOutputPath>$(SolutionDir)..\..\!can_be_safely_removed__</BaseIntermediateOutputPath>
+		<!--BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\!can_be_safely_removed__</BaseIntermediateOutputPath-->
+		<IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Platform)\$(Configuration)\tutorials\$(ProjectName)</IntermediateOutputPath>  
+	</PropertyGroup>
+</Project>

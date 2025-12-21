@@ -10,7 +10,7 @@
 	the runtime of libraries being tested and this test project must be the same:
 	   - Multi-threaded Debug (/MTd) ;
 */
-#pragma comment(lib, "sys.shared_v15.lib") // this is the shared base lib project of Ebo pack solution that is adopted to Stroke Over projects;
+#pragma comment(lib, "shared.trim_v15.lib") // this is the shared base lib project of Ebo pack solution that is adopted to Stroke Over projects;
 
 namespace ebo { namespace boo { namespace test {
 
