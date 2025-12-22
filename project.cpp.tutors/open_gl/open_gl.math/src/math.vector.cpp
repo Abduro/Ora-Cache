@@ -11,6 +11,8 @@ using namespace ex_ui::draw::open_gl::math;
 s_vec_2::s_vec_2 (void) : x(0.0f), y(0.0f) {}
 s_vec_2::s_vec_2 (const float _x, const float _y) : x(_x), y(_y) {}
 
+s_vec_2& s_vec_2::Set (const float _x, const float _y) { _x; _y; this->x = _x; this->y = _y;  return *this; }
+
 s_vec_2& s_vec_2::operator = (const s_vec_2& _src) { this->x = _src.x; this->y = _src.y; return *this; }
 
 #pragma endregion
@@ -18,6 +20,11 @@ s_vec_2& s_vec_2::operator = (const s_vec_2& _src) { this->x = _src.x; this->y =
 
 s_vec_3::s_vec_3 (void) : s_vec_2(), z(0.0f) {}
 s_vec_3::s_vec_3 (const float _x, const float _y, const float _z) : s_vec_2(_x, _y), z(_z) {}
+
+s_vec_3& s_vec_3::Set (const float _x, const float _y, const float _z) {
+	s_vec_2::Set(_x, _y);
+	this->z = _z; return *this;
+}
 
 s_vec_3& s_vec_3::operator = (const s_vec_3& _src) { (s_vec_2&)*this = (const s_vec_2&)_src; this->z = _src.z; return *this; }
 

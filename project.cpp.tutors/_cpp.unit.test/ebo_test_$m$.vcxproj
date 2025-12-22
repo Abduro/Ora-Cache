@@ -224,6 +224,8 @@
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
   </ItemGroup>
   <ItemGroup>
 <!--<ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
@@ -234,6 +236,9 @@
     </ProjectReference>!-->
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(GL_Math)gl.math_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0007}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

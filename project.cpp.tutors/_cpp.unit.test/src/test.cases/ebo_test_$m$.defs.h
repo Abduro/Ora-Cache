@@ -7,7 +7,7 @@
 #include "_log.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
-
+	using namespace ebo::boo::test;
 }}}}}
 
 #pragma comment(lib, "gl.math_v15.lib")      // this project is being tested by this unit test project;

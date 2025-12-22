@@ -3,3 +3,5 @@
 	This is Ebo Pack OpenGL math lib common definitions' uint test interface implementation file; 
 */
 #include "ebo_test_$m$.defs.h"
+
+using namespace ebo::boo::test::open_gl::math;

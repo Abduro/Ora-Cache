@@ -11,6 +11,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2 (void);
 		s_vec_2 (const float _x, const float _y);
 
+		s_vec_2& Set (const float _x, const float _y);
 		s_vec_2& operator = (const s_vec_2&);
 
 		float x, y;
@@ -20,6 +21,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_3 (void);
 		s_vec_3 (const float _x, const float _y, const float _z);
 
+		s_vec_3& Set (const float _x, const float _y, const float _z);
 		s_vec_3& operator = (const s_vec_3&);
 
 		float z;
