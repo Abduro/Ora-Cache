@@ -4,7 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 29-Nov-2025 at 03:10:43.568, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL tutorials' geometry generic elements' interface declaration file;
 */
+#include <algorithm>
 #include <functional>
+#include <cmath>
 #include "shared.defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
