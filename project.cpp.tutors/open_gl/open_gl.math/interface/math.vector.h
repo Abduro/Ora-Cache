@@ -19,8 +19,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	struct s_vec_3 : public s_vec_2 {
 		s_vec_3 (void);
+		s_vec_3 (const float _values[3]);     // values are assigned in the following order: x|y|z;
 		s_vec_3 (const float _x, const float _y, const float _z);
 
+		s_vec_3& Set (const float values[3]); // values are assigned in the following order: x|y|z;
 		s_vec_3& Set (const float _x, const float _y, const float _z);
 		s_vec_3& operator = (const s_vec_3&);
 
@@ -29,8 +31,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	struct s_vec_4 : public s_vec_3 {
 		s_vec_4 (void);
+		s_vec_4 (const float _values[4]);     // values are assigned in the following order: x|y|z|w;
 		s_vec_4 (const float _x, const float _y, const float _z, const float _w);
 
+		s_vec_4& Set (const float values[4]); // values are assigned in the following order: x|y|z|w;
+		s_vec_4& Set (const float _x, const float _y, const float _z, const float _w);
 		s_vec_4& operator = (const s_vec_4&);
 
 		float w;
