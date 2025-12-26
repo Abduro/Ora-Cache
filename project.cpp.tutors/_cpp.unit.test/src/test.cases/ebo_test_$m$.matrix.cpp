@@ -316,11 +316,40 @@ const
 t_rot4x4& c_rot_4x4::ref (void) const { return this->m_rot4x4; }
 t_rot4x4& c_rot_4x4::ref (void)       { return this->m_rot4x4; }
 
-void      c_rot_4x4::Rotate_x (void) {
+void c_rot_4x4::Rotate_free (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
 	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+
+	this->m_b_verb = false; // disables trace output to test console temporarily;
+	this->Set();
+
+	c_vec3 axis(0.5f, 0.5f, 0.5f, false);
+
+	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; axis = %s");
+
+	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
+
+	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_], (_pc_sz) axis.To_str() );
+
+		this->ref().Do(f_angels[i_], axis.ref());
+
+		_out() += _T("the matrix *after* rotate:");
+		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+	}
+	_out()();
+}
+
+void c_rot_4x4::Rotate_x (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += _T("the matrix *before* rotate:");
+
+	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+
+	this->m_b_verb = false; // disables trace output to test console temporarily;
+	this->Set();
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
 
@@ -334,6 +363,82 @@ void      c_rot_4x4::Rotate_x (void) {
 		_out() += _T("the matrix *after* rotate:");
 		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
 	}
+	_out()();
+}
+
+void c_rot_4x4::Rotate_y (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += _T("the matrix *before* rotate:");
+
+	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+
+	this->m_b_verb = false; // disables trace output to test console temporarily;
+	this->Set();
+
+	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
+
+	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
+
+	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_]);
+
+		this->ref().On_y(f_angels[i_]);
+
+		_out() += _T("the matrix *after* rotate:");
+		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+	}
+	_out()();
+}
+
+void c_rot_4x4::Rotate_z (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += _T("the matrix *before* rotate:");
+
+	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+
+	this->m_b_verb = false; // disables trace output to test console temporarily;
+	this->Set();
+
+	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
+
+	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
+
+	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_]);
+
+		this->ref().On_z(f_angels[i_]);
+
+		_out() += _T("the matrix *after* rotate:");
+		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+	}
+	_out()();
+}
+
+void c_rot_4x4::Set (void) {
+
+	if (this->m_b_verb) { // if this method is called indirectly, this data output is not required;
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += _T("the matrix *initial* state entries:");
+
+	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	}
+	c_vec4
+	col_0(0.0f, 0.1f, 0.2f, 1.0f, false),
+	col_1(0.4f, 0.5f, 0.6f, 1.0f, false),
+	col_2(0.7f, 0.8f, 0.9f, 1.0f, false),
+	col_3(0.5f, 0.5f, 0.5f, 1.0f, false);
+
+	_out() += TString().Format(_T("col_#_0: %s"), (_pc_sz) col_0.To_str());
+	_out() += TString().Format(_T("col_#_1: %s"), (_pc_sz) col_1.To_str());
+	_out() += TString().Format(_T("col_#_2: %s"), (_pc_sz) col_2.To_str());
+	_out() += TString().Format(_T("col_#_3: %s"), (_pc_sz) col_3.To_str());
+
+	this->ref().Cols().Set(col_0.ref(), col_1.ref(), col_2.ref(), col_3.ref());
+
+	_out() += _T("the matrix *after* setting data:");
+	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+
+	if (this->m_b_verb) // if this method is called indirectly, the trace output may not be required yet;
 	_out()();
 }
 

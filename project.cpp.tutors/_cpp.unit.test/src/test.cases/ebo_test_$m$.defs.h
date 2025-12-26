@@ -8,6 +8,12 @@
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
+	/*
+	...when a number with an infinite binary representation is stored in a float (which has a fixed, 32-bit size), it must be rounded to the nearest representable value...
+	1.0f is shown as 0.99999994, which is the nearest representable float value that is not exactly 1;
+	...how to manage this inexactness:
+	use double for higher precision: the double data type uses 64 bits and provides about 15-18 significant decimal digits of precision, compared to float's 6-9 digits...
+	*/
 }}}}}
 
 #pragma comment(lib, "gl.math_v15.lib")      // this project is being tested by this unit test project;

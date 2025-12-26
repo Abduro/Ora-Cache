@@ -30,15 +30,17 @@ float& c_mat2x2::Cell (const uint32_t _u_col, const uint32_t _u_row) {
 c_mat2x2&  c_mat2x2::operator = (const c_mat2x2& _src) { _src; return *this; }
 
 #pragma endregion
-#pragma region cls::c_mat3x3{}
+#pragma region cls::c_mat3x3::c_cols{}
 
 c_mat3x3::c_cols::c_cols (c_mat3x3& _mat_ref) : m_mat_ref(_mat_ref) {}
 
-c_mat3x3& c_mat3x3::c_cols::Set (const float _col_0[3], const float _col_1[3], const float _col_2[3]) {
-	this->Set(0, _col_0); this->Set(1, _col_1); this->Set(2, _col_2);
+c_mat3x3& c_mat3x3::c_cols::Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count]) {
+	this->Set(0, _col_0);
+	this->Set(1, _col_1);
+	this->Set(2, _col_2);
 	return this->m_mat_ref; 
 }
-c_mat3x3& c_mat3x3::c_cols::Set (const uint32_t _u_col, const float _xyz[3]) { return this->Set(_u_col, _xyz[0], _xyz[1], _xyz[2]); }
+c_mat3x3& c_mat3x3::c_cols::Set (const uint32_t _u_col, const float _xyz[u_count]) { return this->Set(_u_col, _xyz[0], _xyz[1], _xyz[2]); }
 c_mat3x3& c_mat3x3::c_cols::Set (const uint32_t _u_col, const float _x, const float _y, const float _z) {
 	_u_col; _x; _y; _z;
 	if (_u_col > c_cols::u_count - 1) { // just returns the reference to unchanged matrix;
@@ -58,6 +60,9 @@ c_mat3x3& c_mat3x3::c_cols::Set (const vec_3&   _col_0, const vec_3& _col_1, con
 	this->Set(1, _col_1);
 	this->Set(2, _col_2); return this->m_mat_ref;
 }
+
+#pragma endregion
+#pragma region cls::c_mat3x3{}
 
 c_mat3x3::c_mat3x3 (void) : m_cols(*this) { this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size); }
 c_mat3x3::c_mat3x3 (const c_mat3x3& _src) : c_mat3x3() { *this = _src; }
@@ -82,9 +87,44 @@ float&  c_mat3x3::operator ()(const uint32_t _u_col, const uint32_t _u_row) cons
 float&  c_mat3x3::operator ()(const uint32_t _u_col, const uint32_t _u_row)       { return this->Cell(_u_col, _u_row); }
 
 #pragma endregion
+#pragma region cls::c_mat4x4::c_cols{}
+
+c_mat4x4::c_cols::c_cols (c_mat4x4& _mat_ref) : m_mat_ref(_mat_ref) {}
+
+c_mat4x4& c_mat4x4::c_cols::Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count], const float _col_3[u_count]) {
+	this->Set(0, _col_0);
+	this->Set(1, _col_1);
+	this->Set(2, _col_2);
+	this->Set(3, _col_3);
+	return this->m_mat_ref;
+}
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const float _xyzw[u_count]) { return this->Set(_u_col, _xyzw[0], _xyzw[1], _xyzw[2], _xyzw[3]); }
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const float _x, const float _y, const float _z, const float _w) {
+	_u_col; _x; _y; _z; _w;
+	if (_u_col > c_cols::u_count - 1) { // just returns the reference to unchanged matrix;
+		__trace_err_2(_T("#__e_inv_ndx: the col index (%u) is out of acceptable range;\n"), _u_col);
+		return this->m_mat_ref;
+	}
+	this->m_mat_ref.Cell(_u_col, 0) = _x;
+	this->m_mat_ref.Cell(_u_col, 1) = _y;
+	this->m_mat_ref.Cell(_u_col, 2) = _z;
+	this->m_mat_ref.Cell(_u_col, 3) = _w;
+
+	return this->m_mat_ref;
+}
+
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const vec_4& _xyzw) { return this->Set(_u_col, _xyzw.x, _xyzw.y, _xyzw.z, _xyzw.w); }
+c_mat4x4& c_mat4x4::c_cols::Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3) {
+	this->Set(0, _col_0);
+	this->Set(1, _col_1);
+	this->Set(2, _col_2);
+	this->Set(3, _col_3); return this->m_mat_ref;
+}
+
+#pragma endregion
 #pragma region cls::c_mat4x4{}
 
-c_mat4x4::c_mat4x4 (void) : m_rows(*this) { this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size); }
+c_mat4x4::c_mat4x4 (void) : m_cols(*this), m_rows(*this) { this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size); }
 c_mat4x4::c_mat4x4 (const c_mat4x4& _src) : c_mat4x4() { *this = _src; }
 
 const
@@ -93,12 +133,14 @@ float& c_mat4x4::Cell (const uint32_t _u_col, const uint32_t _u_row) const {
 	try { return this->m_data.at(_u_col * c_mat4x4::u_rows + _u_row); }
 	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::_impl::$na; }
 }
-
 float& c_mat4x4::Cell (const uint32_t _u_col, const uint32_t _u_row) {
 	_u_col; _u_row;
 	try { return this->m_data.at(_u_col * c_mat4x4::u_rows + _u_row); }
 	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::_impl::$na; }
 }
+const
+c_mat4x4::c_cols& c_mat4x4::Cols (void) const { return this->m_cols; }
+c_mat4x4::c_cols& c_mat4x4::Cols (void)       { return this->m_cols; }
 
 c_mat4x4& c_mat4x4::Identity (void) {
 
@@ -123,8 +165,8 @@ float& c_mat4x4::operator ()(const uint32_t _u_col, const uint32_t _u_row)      
 using c_rows = c_mat4x4::c_rows;
 
 const
-c_rows& c_mat4x4::Rows (void) const { return this->m_rows; }
-c_rows& c_mat4x4::Rows (void)       { return this->m_rows; }
+c_mat4x4::c_rows& c_mat4x4::Rows (void) const { return this->m_rows; }
+c_mat4x4::c_rows& c_mat4x4::Rows (void)       { return this->m_rows; }
 
 c_mat4x4& c_mat4x4::Translate (const float _x, const float _y, const float _z) {
 	_x; _y; _z;

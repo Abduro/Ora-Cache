@@ -12,6 +12,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	__class (c_vec3) {
 	public:
 		 c_vec3 (const bool _b_verb = true);
+		 c_vec3 (const float _x, const float _y, const float _z, const bool _b_verb = true);
 		~c_vec3 (void) = default;
 
 		__ctor (_ctor);
@@ -25,6 +26,29 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	private:
 		bool  m_b_verb;
 		vec_3 m_vec_3;
+	};
+	/*
+		Unfortunately there is no possibility to create test method with input arguments,
+		it can be solved by using Google test units, or through outside storage of required input arguments without hardcode and re-compiling the test project,
+		for example the usage of the system registry or ini-file;
+	*/
+	__class (c_vec4) {
+	public:
+		 c_vec4 (const bool _b_verb = true);
+		 c_vec4 (const float _x, const float _y, const float _z, const float _w, const bool _b_verb = true);
+		~c_vec4 (void) = default;
+
+		__ctor (_ctor);
+		__method (Set);     // sets some data to the vector after its creation, that means does not using this class constructor;
+
+		const
+		vec_4&  ref (void) const;
+		vec_4&  ref (void) ;
+		CString To_str (_pc_sz _p_pfx = predefs::_p_pfx, _pc_sz _p_sep = _T("; "), _pc_sz _p_sfx = predefs::_p_sfx) const;
+
+	private:
+		bool  m_b_verb;
+		vec_4 m_vec_4;
 	};
 
 }}}}}

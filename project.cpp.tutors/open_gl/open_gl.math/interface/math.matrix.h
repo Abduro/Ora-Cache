@@ -35,8 +35,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		public: static const uint32_t u_count = 3;
 			c_cols (c_mat3x3&); c_cols (void) = delete; c_cols (const c_cols&) = delete; c_cols (c_cols&&) = delete; ~c_cols (void) = default;
 
-			c_mat3x3& Set (const float _col_0[3], const float _col_1[3], const float _col_2[3]);
-			c_mat3x3& Set (const uint32_t _u_col, const float _xyz[3]);
+			c_mat3x3& Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count]);
+			c_mat3x3& Set (const uint32_t _u_col, const float _xyz[u_count]);
 			c_mat3x3& Set (const uint32_t _u_col, const float _x, const float _y, const float _z);
 
 			c_mat3x3& Set (const uint32_t _u_col, const vec_3& _xyz);
@@ -72,12 +72,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		class c_cols {
 		public: static const uint32_t u_count = 4;
 			c_cols (c_mat4x4&); c_cols (void) = delete; c_cols (const c_cols&) = delete; c_cols (c_cols&&) = delete; ~c_cols (void) = default;
+			
+			c_mat4x4& Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count], const float _col_3[u_count]); // sets all columns of the matrix;
+			c_mat4x4& Set (const uint32_t _u_col, const float _values[u_count]); // sets the column of given index to the values provided: x|y|z|w;
+			c_mat4x4& Set (const uint32_t _u_col, const float _x, const float _y, const float _z, const float _w = 1.0f); // sets the column of given index to the values provided;
 
-			c_mat4x4& Set (const uint32_t _u_col, const float _values[4]);
-			c_mat4x4& Set (const uint32_t _u_col, const float _x, const float _y, const float _z, const float _w = 1.0f);
-
-			c_mat4x4& Set (const uint32_t _u_col, const vec_3& _xyz);
-			c_mat4x4& Set (const vec_3&   _col_0, const vec_3& _col_1, const vec_3& _col_2);
+			c_mat4x4& Set (const uint32_t _u_col, const vec_4& _xyzw); // sets the column of given index to the values provided;
+			c_mat4x4& Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3);
 
 		private:
 			c_cols& operator = (const c_cols&) = delete; c_cols& operator = (c_cols&&) = delete;
@@ -100,6 +101,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of range, the reference to invalid cell is returned; (ro)
 		float& Cell (const uint32_t _u_col, const uint32_t _u_row);       // if column or row index is out of range, the reference to invalid cell is returned; (rw)
 
+		const
+		c_cols& Cols (void) const;
+		c_cols& Cols (void) ;
+
 		c_mat4x4& Identity (void);
 
 		const
@@ -118,6 +123,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	protected:
 		::std::vector<float> m_data; // u_cols x u_rows = 16 elements;
+		c_cols    m_cols;
 		c_rows    m_rows;
 	};
 
@@ -143,7 +149,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	public:
 		c_rotate_4x4 (void); c_rotate_4x4 (const c_rotate_4x4&) = delete; c_rotate_4x4 (c_rotate_4x4&&) = delete; ~c_rotate_4x4 (void) = default;
 
-		c_mat4x4& Do (const float _f_angle, const float _x, const float _y, const float _z); //  rotates angle(degree) along the given axix;
+		c_mat4x4& Do (const float _f_angle, const float _x, const float _y, const float _z); //  rotates angle(degree) about the given axix;
 		c_mat4x4& Do (const float _f_angle, const vec_3&);
 
 		c_mat4x4& On_x (const float _f_angle); // rotates on X-axis, the angle is in degrees;

@@ -80,7 +80,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		~c_rot_4x4 (void) = default;
 
 		__ctor (_ctor);
-		__method (Rotate_x);   // rotates on set of different angles alon x-axis;
+
+		__method (Rotate_free); // rotates on set of different angles about any axis specified by particular vector data ;
+
+		__method (Rotate_x);    // rotates on set of different angles about x-axis;
+		__method (Rotate_y);    // rotates on set of different angles about y-axis;
+		__method (Rotate_z);    // rotates on set of different angles about z-axis;
+		__method (Set);         // sets initial data for passing rotation test cases, there is no result with 0-filled matrix;
 
 		const
 		t_rot4x4&  ref (void) const;
