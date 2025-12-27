@@ -29,6 +29,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float z;
 	};
 
+	// https://en.cppreference.com/w/cpp/algorithm/transform.html ; this is not the case for vector emulation like the below class is;
 	struct s_vec_4 : public s_vec_3 {
 		s_vec_4 (void);
 		s_vec_4 (const float _values[4]);     // values are assigned in the following order: x|y|z|w;
@@ -36,7 +37,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		s_vec_4& Set (const float values[4]); // values are assigned in the following order: x|y|z|w;
 		s_vec_4& Set (const float _x, const float _y, const float _z, const float _w);
+
 		s_vec_4& operator = (const s_vec_4&);
+		s_vec_4& operator*= (const s_vec_4&); // multiplies this vector by input one;
 
 		float w;
 	};

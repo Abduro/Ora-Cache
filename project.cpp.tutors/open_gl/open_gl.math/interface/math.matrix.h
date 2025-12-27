@@ -14,16 +14,27 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	typedef ::std::array<::std::array<float, 2>, 2> t_mat_2x2; // there is 2 column and 2 rows; the columns go first;
 #endif
 	typedef ::std::vector<::std::reference_wrapper<float>> t_cell_refs;
+	/* the very important note from https://community.khronos.org/t/matrix-multiplication-using-2d-std-vector/106457 ;
+	   regarding using SYCL (System-wide Compute Language) buffer : (cl_khr_gl_sharing  one of the extensions)
+	...as the storage of a std::vector is *heap-allocated* in order to allow it to be resized, the overall structure is *non-contiguous*,
+	   which is a requirement for moving data to and from a device via a SYCL buffer... the excerpt from the answer given by gordonbrown589;
+	   perhaps, using fixed-sized std::array is the more preferable way in comparison with std::vector;
+	*/
 
 	class c_mat2x2 {
 	public:
 		static const uint32_t u_cols = 2, u_rows = 2, u_size = u_cols * u_rows;
 
-		c_mat2x2 (void); c_mat2x2 (const c_mat2x2&); c_mat2x2 (c_mat2x2&&) = delete; ~c_mat2x2 (void) = default;
-		c_mat2x2& operator = (const c_mat2x2&);
-		c_mat2x2& operator = (c_mat2x2&&) = delete; // not required yet;
+		c_mat2x2 (void); c_mat2x2 (const c_mat2x2&); c_mat2x2 (c_mat2x2&&); ~c_mat2x2 (void) = default;
+		
+		const
+		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of acceptable range, the reference to invalid cell is returned; (ro)
+		float& Cell (const uint32_t _u_col, const uint32_t _u_row) ;      // if column or row index is out of acceptable range, the reference to invalid cell is returned; (rw)
 
-		float& Cell (const uint32_t _u_col, const uint32_t _u_row); // if column or row index is out of acceptable range, the reference to invalid cell is returned;
+		float  Get  (const uint32_t _u_col, const uint32_t _u_row) const; // gets the value of the matrix entry by given column and row indices;
+
+		c_mat2x2& operator = (const c_mat2x2&);
+		c_mat2x2& operator = (c_mat2x2&&);
 
 	protected:
 		::std::vector<float> m_data; // u_cols x u_rows = 4 elements;
@@ -35,12 +46,16 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		public: static const uint32_t u_count = 3;
 			c_cols (c_mat3x3&); c_cols (void) = delete; c_cols (const c_cols&) = delete; c_cols (c_cols&&) = delete; ~c_cols (void) = default;
 
-			c_mat3x3& Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count]);
-			c_mat3x3& Set (const uint32_t _u_col, const float _xyz[u_count]);
-			c_mat3x3& Set (const uint32_t _u_col, const float _x, const float _y, const float _z);
+			c_mat3x3& Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count]); // sets values to all columns; the value is x|y|z data sequence;
+			c_mat3x3& Set (const uint32_t _u_col, const float _xyz[u_count]); // sets values to the column by given column index; the value is x|y|z data sequence;
+			c_mat3x3& Set (const uint32_t _u_col, const float _x, const float _y, const float _z); // sets values to the column by given column index;
 
-			c_mat3x3& Set (const uint32_t _u_col, const vec_3& _xyz);
-			c_mat3x3& Set (const vec_3&   _col_0, const vec_3& _col_1, const vec_3& _col_2);
+			c_mat3x3& Set (const uint32_t _u_col, const vec_3& _xyz); // sets values of the input vector to the column of the given index;
+			c_mat3x3& Set (const vec_3&   _col_0, const vec_3& _col_1, const vec_3& _col_2); // sets values to all columns from the input vectors;
+
+			const
+			c_mat3x3& operator ()(void) const; // returns the reference to the matrix object whith these columns are belong to; (ro)
+			c_mat3x3& operator ()(void) ;      // returns the reference to the matrix object whith these columns are belong to; (rw)
 
 		private:
 			c_cols& operator = (const c_cols&) = delete; c_cols& operator = (c_cols&&) = delete;
@@ -49,18 +64,23 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	public:
 		static const uint32_t u_cols = c_cols::u_count, u_rows = 3, u_size = u_cols * u_rows;
 
-		c_mat3x3 (void); c_mat3x3 (const c_mat3x3&); c_mat3x3 (c_mat3x3&&) = delete; ~c_mat3x3 (void) = default;
-		c_mat3x3& operator = (const c_mat3x3&);
-		c_mat3x3& operator = (c_mat3x3&&) = delete; // not required yet;
+		c_mat3x3 (void); c_mat3x3 (const c_mat3x3&); c_mat3x3 (c_mat3x3&&); ~c_mat3x3 (void) = default;
+
 		const
-		float&  Cell (const uint32_t _u_col, const uint32_t _u_row) const;
-		float&  Cell (const uint32_t _u_col, const uint32_t _u_row);
+		float&  Cell (const uint32_t _u_col, const uint32_t _u_row) const; // gets the reference to the value by given column and row indices;
+		float&  Cell (const uint32_t _u_col, const uint32_t _u_row);       // gets the reference to the value by given column and row indices;
+
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
+
+		float   Get  (const uint32_t _u_col, const uint32_t _u_row) const; // gets the value of the matrix entry by given column and row indices;
 		const
-		float&  operator ()(const uint32_t _u_col, const uint32_t _u_row) const;
-		float&  operator ()(const uint32_t _u_col, const uint32_t _u_row) ;
+		float&  operator ()(const uint32_t _u_col, const uint32_t _u_row) const; // gets the reference to the required matrix cell/entry;
+		float&  operator ()(const uint32_t _u_col, const uint32_t _u_row) ;		 // gets the reference to the required matrix cell/entry;
+
+		c_mat3x3& operator = (const c_mat3x3&);
+		c_mat3x3& operator = (c_mat3x3&&);
 
 	protected:
 		::std::vector<float> m_data; // u_cols x u_rows = 9 elements;
@@ -73,6 +93,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		public: static const uint32_t u_count = 4;
 			c_cols (c_mat4x4&); c_cols (void) = delete; c_cols (const c_cols&) = delete; c_cols (c_cols&&) = delete; ~c_cols (void) = default;
 			
+			vec_4 Get (const uint32_t _u_col) const;  // returns the vector of column values by given column index; if the column index is out of range, the emprty vector is returned;
+
 			c_mat4x4& Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count], const float _col_3[u_count]); // sets all columns of the matrix;
 			c_mat4x4& Set (const uint32_t _u_col, const float _values[u_count]); // sets the column of given index to the values provided: x|y|z|w;
 			c_mat4x4& Set (const uint32_t _u_col, const float _x, const float _y, const float _z, const float _w = 1.0f); // sets the column of given index to the values provided;
@@ -80,30 +102,43 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 			c_mat4x4& Set (const uint32_t _u_col, const vec_4& _xyzw); // sets the column of given index to the values provided;
 			c_mat4x4& Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3);
 
+			const
+			c_mat4x4& operator ()(void) const;
+			c_mat4x4& operator ()(void) ;
+
 		private:
 			c_cols& operator = (const c_cols&) = delete; c_cols& operator = (c_cols&&) = delete;
 			c_mat4x4& m_mat_ref;
 		};
+
 		class c_rows {
 		public: static const uint32_t u_count = 4;
 			c_rows (c_mat4x4&); c_rows (void) = delete; c_rows (const c_rows&) = delete; c_rows (c_rows&&) = delete; ~c_rows (void) = default;
 
-			void Set (const uint32_t _n_row, const float _f_val); // sets the input value to all elements of the row specified by index; if the index is out of range, nothing occurs;
+			vec_4 Get (const uint32_t _n_row) const;               // gets a copy of the row by given index; if the index out of range, empty vector is returned;
+			void  Set (const uint32_t _n_row, const float _f_val); // sets the input value to all elements of the row specified by index; if the index is out of range, nothing occurs;
+
+			const
+			c_mat4x4& operator ()(void) const;
+			c_mat4x4& operator ()(void) ;
 
 		private:
 			c_rows& operator = (const c_rows&) = delete; c_rows& operator = (c_rows&&) = delete;
 			c_mat4x4& m_mat_ref;
 		};
+
 	public: static const uint32_t u_cols = c_cols::u_count, u_rows = c_rows::u_count, u_size = u_cols * u_rows;
-		c_mat4x4 (void); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&) = delete; ~c_mat4x4 (void) = default;
+		c_mat4x4 (void); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&); ~c_mat4x4 (void) = default;
 
 		const
-		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of range, the reference to invalid cell is returned; (ro)
-		float& Cell (const uint32_t _u_col, const uint32_t _u_row);       // if column or row index is out of range, the reference to invalid cell is returned; (rw)
+		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of range, the reference to invalid entry is returned; (ro)
+		float& Cell (const uint32_t _u_col, const uint32_t _u_row);       // if column or row index is out of range, the reference to invalid entry is returned; (rw)
 
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
+
+		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // returns the value of the matrix entry by given column and row indices;
 
 		c_mat4x4& Identity (void);
 
@@ -115,7 +150,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_mat4x4& Translate (const vec_3&);
 
 		c_mat4x4& operator = (const c_mat4x4&);
-		c_mat4x4& operator = (c_mat4x4&&) = delete; // not required yet;
+		c_mat4x4& operator = (c_mat4x4&&); // https://en.cppreference.com/w/cpp/container/vector/swap ;
 
 		const
 		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) const;
@@ -126,6 +161,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_cols    m_cols;
 		c_rows    m_rows;
 	};
+
+	c_mat4x4 operator * (const c_mat4x4&, const c_mat4x4&); // https://en.wikipedia.org/wiki/Matrix_multiplication ;
 
 	class c_rotate_3x3 : public c_mat3x3 {
 	public:

@@ -45,4 +45,14 @@ s_vec_4& s_vec_4::Set (const float _x, const float _y, const float _z, const flo
 
 s_vec_4& s_vec_4::operator = (const s_vec_4& _src) { (s_vec_3&)*this = (const s_vec_3&)_src; this->w = _src.w; return *this; }
 
+s_vec_4& s_vec_4::operator*= (const s_vec_4& _multiplier) {
+	_multiplier;
+	this->x *= _multiplier.x;
+	this->y *= _multiplier.y;
+	this->z *= _multiplier.z;
+	this->w *= _multiplier.w;
+
+	return *this;
+}
+
 #pragma endregion
