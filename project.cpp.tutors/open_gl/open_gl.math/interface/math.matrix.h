@@ -162,6 +162,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_rows    m_rows;
 	};
 
+	// the multiplication operator cannot return reference due to the intermediate result requires buffering: neither _left nor _right is able to change;
 	c_mat4x4 operator * (const c_mat4x4&, const c_mat4x4&); // https://en.wikipedia.org/wiki/Matrix_multiplication ;
 
 	class c_rotate_3x3 : public c_mat3x3 {

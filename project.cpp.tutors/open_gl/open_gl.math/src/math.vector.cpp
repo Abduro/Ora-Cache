@@ -43,6 +43,8 @@ s_vec_4& s_vec_4::Set (const float _x, const float _y, const float _z, const flo
 	this->w = _w; return *this;
 }
 
+float    s_vec_4::Sum (void) const { return  this->x + this->y + this->z + this->w; }
+
 s_vec_4& s_vec_4::operator = (const s_vec_4& _src) { (s_vec_3&)*this = (const s_vec_3&)_src; this->w = _src.w; return *this; }
 
 s_vec_4& s_vec_4::operator*= (const s_vec_4& _multiplier) {
@@ -56,3 +58,11 @@ s_vec_4& s_vec_4::operator*= (const s_vec_4& _multiplier) {
 }
 
 #pragma endregion
+
+namespace ex_ui { namespace draw { namespace open_gl { namespace math { // otherwise: fatal error LNK1120: 1 unresolved externals ;
+
+s_vec_4 operator * (const s_vec_4& _left, const s_vec_4& _right) {
+	return s_vec_4(_left.x * _right.x, _left.y * _right.y, _left.z * _right.z, _left.w * _right.w);
+}
+
+}}}}

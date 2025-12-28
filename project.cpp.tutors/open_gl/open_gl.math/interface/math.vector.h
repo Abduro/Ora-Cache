@@ -38,11 +38,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_4& Set (const float values[4]); // values are assigned in the following order: x|y|z|w;
 		s_vec_4& Set (const float _x, const float _y, const float _z, const float _w);
 
+		float Sum (void) const; // gets the sum of the elements of this vector;
+
 		s_vec_4& operator = (const s_vec_4&);
 		s_vec_4& operator*= (const s_vec_4&); // multiplies this vector by input one;
 
 		float w;
 	};
+
+	s_vec_4 operator * (const s_vec_4&, const s_vec_4&);
 
 }}}}
 

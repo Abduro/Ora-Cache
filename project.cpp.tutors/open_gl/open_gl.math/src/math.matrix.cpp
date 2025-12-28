@@ -453,16 +453,18 @@ c_mat4x4& c_rotate_4x4::operator ()(void)       { return (c_rotate_4x4&)*this; }
 
 c_mat4x4 operator * (const c_mat4x4& _left, const c_mat4x4& _right) {
 	_left; _right;
-	// no check for number of rows of the left matrix for coincident or be the same with the number of columns of the right matrix: arguments are the same type; 
-	c_mat4x4 m_result;
-#if (0)
+	c_mat4x4 result;
+	// no check for number of rows of the left matrix for coincident or be the same with the number of columns of the right matrix: arguments are the same type;
 	for (uint32_t u_col = 0; u_col < c_mat4x4::c_cols::u_count; u_col++) {
+
+		vec_4 col = _right.Cols().Get(u_col);
+
 		for (uint32_t u_row = 0; u_row < c_mat4x4::c_rows::u_count; u_row++) {
-			for (uint32_t u_ndx = 0; c_mat4x4::c_rows::u_count > u_ndx && c_mat4x4::c_cols::u_count > u_ndx; u_ndx++) {
-				m_result(u_col, u_row) += (_left(u_ndx, u_row));
-			}
+			vec_4 row = _left.Rows().Get(u_row);
+			vec_4 res = col * row;
+			result(u_col, u_row) = res.Sum(); // result.Cell(u_col, u_row) = (_left.Rows(u_row) * _right.Cols(u_col)).Sum();
 		}
 	}
-#endif
-	return m_result;
+	
+	return result;
 }
