@@ -8,6 +8,7 @@ using namespace ex_ui::draw::open_gl::math;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl { void __warning_lnk_4221 (void) {}}}}}}
 
+#if (0) // not used;
 _2d::CPoint:: CPoint (void) : m_x(0.0f), m_y(0.0f) {}
 _2d::CPoint:: CPoint (const float _x, const float _y) : CPoint() { *this << _x >> _y; }
 _2d::CPoint:: CPoint (const CPoint& _src) : CPoint() { *this = _src; }
@@ -53,3 +54,5 @@ void   _3d::CPoint::z (const float _z) { this->m_z = _z; }
 _3d::CPoint&  _3d::CPoint::operator = (const _3d::CPoint& _src) { (TBase&)*this = (const TBase&)_src; this->z() = _src.z(); return *this; }
 _3d::CPoint&  _3d::CPoint::operator = (_3d::CPoint&& _victim) { *this = (const _3d::CPoint&)_victim; return *this; }
 _3d::CPoint&  _3d::CPoint::operator ^ (const float _z) { this->z() = _z; return *this; }
+
+#endif

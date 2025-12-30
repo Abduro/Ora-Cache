@@ -12,17 +12,21 @@
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	using namespace shared::defs;
-	/*
-	what is a vector: it is at least two values reflecting a tendency of change;
-	but in the terminology of OpenGL it is just a name of the data container, not a notion of 2d/3d space;
-	*/
+
+	namespace defs {
+		static float $na = 0.0f; // the reference to this variable may be returned in cases when an index of element is out of acceptable range;
+		#define __pi 3.141593f
+		const float  deg_2_rad = __pi / 180.0f;
+		const float  rad_2_deg = 180.0f / __pi;
+		const float  f_epsilon = 0.00001f;
+	}
 
 	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/user-defined-literals-cpp ;
 
 	typedef ::std::array<float, 2u> t_set_2;
 	typedef ::std::vector<float> t_dyna_set;
-
+#if (0) // not used;
 namespace _2d {
 
 	enum class e_index : uint32_t {
@@ -72,6 +76,7 @@ namespace _3d {
 		float m_z;
 	};
 }
+#endif
 }}}}
 
 #endif/*__MATH_DEFS_H_INCLUDED*/
