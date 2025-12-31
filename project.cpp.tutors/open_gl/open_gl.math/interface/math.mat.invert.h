@@ -25,6 +25,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	static float Get (const c_mat3x3&);
 	static float Get (const c_mat4x4&);
 
+	static bool  Is  (const float f_value); // makes a comparison of input determinant value with epsilon value;
+
 	private: c_det& operator = (const c_det&) = delete; c_det& operator = (c_det&&) = delete;
 	};
 
@@ -32,6 +34,12 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	class c_inverter_4x4 : public c_mat4x4 {
 	public:
 		c_inverter_4x4 (void); c_inverter_4x4 (const c_inverter_4x4&) = delete; c_inverter_4x4 (c_inverter_4x4&&) = delete; ~c_inverter_4x4 (void) = default;
+
+		c_mat4x4& Affine (void); // returns the inverse of affine transform matrix;
+
+		const
+		c_mat4x4& operator ()(void) const; // returns the reference to the parent class object; (ro)
+		c_mat4x4& operator ()(void) ;      // returns the reference to the parent class object; (rw)
 
 	private:
 		c_inverter_4x4& operator = (const c_inverter_4x4&) = delete; c_inverter_4x4& operator = (c_inverter_4x4&&) = delete;

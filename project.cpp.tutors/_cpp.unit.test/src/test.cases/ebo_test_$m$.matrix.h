@@ -7,6 +7,7 @@
 #include "ebo_test_$m$.defs.h"
 #include "ebo_test_$m$.vector.h"
 #include "math.matrix.h"
+#include "math.mat.rotate.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 

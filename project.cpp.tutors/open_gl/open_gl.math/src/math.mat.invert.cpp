@@ -8,7 +8,7 @@ using namespace ex_ui::draw::open_gl::math;
 
 #pragma region cls::c_det{}
 
-float Get (const c_mat2x2& _mat) {
+float c_det::Get (const c_mat2x2& _mat) {
 	/* https://en.wikipedia.org/wiki/Determinant ;
 	The determinant of a 2 × 2 matrix is:
 	cols:     #0 #1
@@ -17,7 +17,7 @@ float Get (const c_mat2x2& _mat) {
 	*/
 	return _mat(0, 0) * _mat(1, 1) - _mat(0, 1) * _mat(1, 0);
 }
-float Get (const c_mat3x3& _mat) {
+float c_det::Get (const c_mat3x3& _mat) {
 	/* https://en.wikipedia.org/wiki/Determinant ;
 	The determinant of a 3 × 3 matrix is:
 	cols:      #0   #1   #2
@@ -34,7 +34,7 @@ float Get (const c_mat3x3& _mat) {
           +_mat(0,2) * (_mat(1,0) * _mat(2,1) - _mat(1,1) * _mat(2,0));
 #endif
 }
-float Get (const c_mat4x4& _mat) {
+float c_det::Get (const c_mat4x4& _mat) {
 	// gets determinants (aka cofactor) of the minor matrix (3x3); ToDo: must be reviewed;
 	const float f_co_facs[] = {
 		c_det::Get(c_mat3x3(vec_3(_mat(1,1), _mat(1,2), _mat(1,3)), vec_3(_mat(2,1), _mat(2,2), _mat(2,3)), vec_3(_mat(3,1), _mat(3,2), _mat(3,3)))), // 0:0 * (col_#1!O:4, col_#2!O:8, col_#3!O:c) >> row_#0 is excluded;
@@ -46,9 +46,19 @@ float Get (const c_mat4x4& _mat) {
 	return f_co_facs[0] * _mat(0,0) - f_co_facs[1] * _mat(0,1) + f_co_facs[2] * _mat(0,2) - f_co_facs[3] * _mat(0,3);
 }
 
+bool  c_det::Is  (const float f_value) { return fabs(f_value) > ::defs::f_epsilon; }
+
 #pragma endregion
 #pragma region cls::c_inverter_4x4{}
 
 c_inverter_4x4::c_inverter_4x4 (void) : c_mat4x4() {}
+
+c_mat4x4& c_inverter_4x4::Affine (void) {
+	return *this;
+}
+
+const
+c_mat4x4& c_inverter_4x4::operator ()(void) const { return (c_mat4x4&)*this; }
+c_mat4x4& c_inverter_4x4::operator ()(void)       { return (c_mat4x4&)*this; }     
 
 #pragma endregion
