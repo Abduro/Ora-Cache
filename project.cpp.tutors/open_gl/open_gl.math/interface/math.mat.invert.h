@@ -56,7 +56,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	private: c_det& operator = (const c_det&) = delete; c_det& operator = (c_det&&) = delete;
 	};
-	/* for getting the inverse of the matrix:
+
+	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/inverse.xhtml ;
+	for getting the inverse of the matrix:
 	(1) calculating the determinant of the natrix; if the determinant is zero, the matrix is singular and cannot be inverted;
 	(2) calculating the adjugate matrix adj(A);
 	(3) multiplying the adjugate by 1/det(A); the end of story;
@@ -65,34 +67,30 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	public:
 		c_inverter (void); c_inverter (const c_inverter&) = delete; c_inverter (c_inverter&&) = delete; ~c_inverter (void) = default;
 
-	static c_mat2x2 Get (const c_mat2x2&, float* _p_det = nullptr);
-	static c_mat3x3 Get (const c_mat3x3&, float* _p_det = nullptr);
-	static c_mat4x4 Get (const c_mat4x4&, float* _p_det = nullptr);
+	static c_mat2x2 Get (const c_mat2x2&, float* _p_det = nullptr); // gets the inverse of input matrix, if the matrix is not ivertible (det == 0) an identity matrix is returned;
+	static c_mat3x3 Get (const c_mat3x3&, float* _p_det = nullptr); // gets the inverse of input matrix, if the matrix is not ivertible (det == 0) an identity matrix is returned;
+	static c_mat4x4 Get (const c_mat4x4&, float* _p_det = nullptr); // gets the inverse of input matrix, if the matrix is not ivertible (det == 0) an identity matrix is returned;
+	
+	// https://en.wikipedia.org/wiki/Affine_transformation ;
+	// https://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations ;
+	static c_mat4x4 Get_affine (const c_mat4x4&); // gets the inverse of affine transform matrix; https://en.wiktionary.org/wiki/affine ;
+	static c_mat4x4 Get_euclid (const c_mat4x4&); // gets the inverse of Euclidean transform matrix; https://en.wikipedia.org/wiki/Euclidean ;
 
 	private:
 		c_inverter& operator = (const c_inverter&) = delete; c_inverter& operator = (c_inverter&&) = delete;
 	};
 
-	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/inverse.xhtml ;
-	class c_inverter_4x4 : public c_mat4x4 {
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/transpose.xhtml ;
+	class c_trans {
 	public:
-		c_inverter_4x4 (void); c_inverter_4x4 (const c_inverter_4x4&) = delete; c_inverter_4x4 (c_inverter_4x4&&) = delete; ~c_inverter_4x4 (void) = default;
+		c_trans (void); c_trans (const c_trans&) = delete; c_trans (c_trans&&) = delete; ~c_trans (void) = default;
 
-		// https://en.wiktionary.org/wiki/affine ;
-		// https://en.wikipedia.org/wiki/Affine_transformation ;
-		// https://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations ;
-
-		c_mat4x4& Affine (void); // returns the inverse of affine transform matrix;
-
-		const
-		c_mat4x4& operator ()(void) const; // returns the reference to the parent class object; (ro)
-		c_mat4x4& operator ()(void) ;      // returns the reference to the parent class object; (rw)
+	static c_mat2x2 Get (const c_mat2x2&); // gets the transpose of the input matrix;
+	static c_mat3x3 Get (const c_mat3x3&); // gets the transpose of the input matrix;
 
 	private:
-		c_inverter_4x4& operator = (const c_inverter_4x4&) = delete; c_inverter_4x4& operator = (c_inverter_4x4&&) = delete;
+		c_trans& operator = (const c_trans&) = delete; c_trans& operator = (c_trans&&) = delete;
 	};
-
-
 }}}}
 
 #endif/*__MATH_MAT_INVERT_H_INCLUDED*/

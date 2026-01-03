@@ -210,10 +210,6 @@ c_mat4x4 c_inverter::Get (const c_mat4x4& _mat, float* _p_det) {
 	return c_adjoint::Get(_mat, 1.0f/det_);
 }
 
-#pragma region cls::c_inverter_4x4{}
-
-c_inverter_4x4::c_inverter_4x4 (void) : c_mat4x4() {}
-
 /* computes the inverse of a 4x4 affine transformation matrix;
    it includes translation, rotation, reflection, scaling,
    and shearing; the length and angle are *not* preserved;
@@ -226,13 +222,79 @@ c_inverter_4x4::c_inverter_4x4 (void) : c_mat4x4() {}
    [ R | T ]-1   [ R^-1 | -R^-1 * T ]
    [ --+-- ]   = [ -----+---------- ]
    [ 0 | 1 ]     [  0   +     1     ]
+   https://stackoverflow.com/questions/2624422/efficient-4x4-matrix-inverse-affine-transform ;
 */
-c_mat4x4& c_inverter_4x4::Affine (void) {
-	return *this;
+c_mat4x4 c_inverter::Get_affine (const c_mat4x4& _mat) {
+	_mat;
+	// creates R^-1 matrix; the last row and the right column are excluded; it is the minor matrix of the input one;
+	c_mat3x3 min_mat ({
+		_mat(0,0), _mat(0,1), _mat(0,2), // the col_#0; c0:r3 is omitted;
+		_mat(1,0), _mat(1,1), _mat(1,2), // the col_#1; c1:r3 is omitted;
+		_mat(2,0), _mat(2,1), _mat(2,2), // the col_#2; c2:r3 is omitted;
+	//	_mat(3,0), _mat(3,1), _mat(3,2), _mat(3,3) are excluded; this is the right column of the matrix;
+	});
+	// creates the translate point:
+	struct {
+		float x, y, z;
+	} t_pt = { _mat(3,0), _mat(3,1), _mat(3,2) };
+
+	c_mat4x4 aff_mat = _mat; // makes the copy of the oirginal/input matrix;
+	// -R^-1 * T ;
+	// the last column of the affine matrix:
+	aff_mat(3,0) = -(min_mat(0,0) * t_pt.x + min_mat(1,0) * t_pt.y + min_mat(2,0) * t_pt.z); // x-coord value;
+	aff_mat(3,1) = -(min_mat(0,1) * t_pt.x + min_mat(1,1) * t_pt.y + min_mat(2,1) * t_pt.z); // y-coord value;
+	aff_mat(3,2) = -(min_mat(0,2) * t_pt.x + min_mat(1,2) * t_pt.y + min_mat(2,2) * t_pt.z); // z-coord value;
+	// 
+	return aff_mat;
 }
 
-const
-c_mat4x4& c_inverter_4x4::operator ()(void) const { return (c_mat4x4&)*this; }
-c_mat4x4& c_inverter_4x4::operator ()(void)       { return (c_mat4x4&)*this; }
+/* computes the inverse of 4x4 Euclidean transformation matrix;
+
+   Euclidean transformation is translation, rotation, and reflection.
+   With Euclidean transform, only the position and orientation of the object
+   will be changed. Euclidean transform does not change the shape of an object
+   (no scaling).
+   Length and angle are *reserved*.
+
+   Use inverseAffine() if the matrix has scale and shear transformation.
+
+   M = [ R | T ]
+       [ --+-- ]    (R denotes 3x3 rotation/reflection matrix)
+       [ 0 | 1 ]    (T denotes 1x3 translation matrix)
+   
+   y = M*x  ->  y = R*x + T  ->  x = R^-1*(y - T)  ->  x = R^T*y - R^T*T
+   (R is orthogonal,  R^-1 = R^T)
+
+   [ R | T ]-1    [ R^T | -R^T * T ]    (R denotes 3x3 rotation matrix)
+   [ --+-- ]   =  [ ----+--------- ]    (T denotes 1x3 translation)
+   [ 0 | 1 ]      [  0  |     1    ]    (R^T denotes R-transpose)
+*/
+c_mat4x4 c_inverter::Get_euclid (const c_mat4x4& _mat) {
+	_mat;
+	return c_mat4x4();
+}
+
+#pragma endregion
+#pragma region cls::c_trans{}
+
+c_mat2x2 c_trans::Get (const c_mat2x2& _mat) {
+	_mat;
+	/* cols:  #0        #1; the given indices of the source/input matrix;
+	rows: #0 _mat(0,0) _mat(0,1)
+	      #1 _mat(1,0) _mat(1,1)
+	*/
+	return c_mat2x2({
+		_mat(0, 0), _mat(1,0), _mat(0,1), _mat(1,1)
+	});
+}
+
+c_mat3x3 c_trans::Get (const c_mat3x3& _mat) {
+	_mat;
+	return c_mat3x3({
+		_mat(0,0), _mat(1,0), _mat(2,0), // the col_#0;
+		_mat(0,1), _mat(1,1), _mat(2,1), // the col_#1;
+		_mat(0,2), _mat(1,2), _mat(2,2), // the col_#2;
+	});
+}
 
 #pragma endregion
