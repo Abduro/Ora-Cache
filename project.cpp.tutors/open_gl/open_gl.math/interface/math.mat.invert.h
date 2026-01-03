@@ -7,7 +7,34 @@
 #include "math.matrix.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
+	/* the exerpt from the https://en.wikipedia.org/wiki/Adjugate_matrix :
+	...In linear algebra, a minor of a matrix A is the determinant of some smaller square matrix generated from A by removing one or more of its rows and columns.
+	   Minors obtained by removing just one row and one column from square matrices are required for calculating matrix *cofactors*,
+	   which are useful for computing both the determinant and inverse of square matrices...
+	*/
+	class c_adjoint {
+	public: c_adjoint (void) = default; c_adjoint (const c_adjoint&) = delete; c_adjoint (c_adjoint&&) = delete; ~c_adjoint (void) = default;
 
+	static  c_mat2x2 Get (const c_mat2x2&);  // returns adjoint matrix that is just the transpose of the cofactor matrix;
+	static  c_mat2x2 Get (const c_mat2x2&, const float _f_scale);
+
+	static  c_mat3x3 Get (const c_mat3x3&);  // returns adjoint matrix that is just the transpose of the cofactor matrix;
+	static  c_mat3x3 Get (const c_mat3x3&, const float _f_scale);
+
+	static  c_mat4x4 Get (const c_mat4x4&);  // returns adjoint matrix that is just the transpose of the cofactor matrix;
+	static  c_mat4x4 Get (const c_mat4x4&, const float _f_scale);
+
+	private: c_adjoint& operator = (const c_adjoint&) = delete; c_adjoint& operator = (c_adjoint&&) = delete;
+	};
+	class c_cofactor {
+	public: c_cofactor (void) = default; c_cofactor (const c_cofactor&) = delete; c_cofactor (c_cofactor&&) = delete; ~c_cofactor (void) = default;
+
+	static  c_mat2x2 Get (const c_mat2x2&);
+	static  c_mat3x3 Get (const c_mat3x3&);
+	static  c_mat4x4 Get (const c_mat4x4&);
+
+	private: c_cofactor& operator = (const c_cofactor&) = delete; c_cofactor& operator = (c_cofactor&&) = delete;
+	};
 	/* https://en.wikipedia.org/wiki/Determinant ;
 	the determinant equals to 0 (zero) if:
 	(1) a matrix contains either a row of zeros or a column of zeros;
@@ -19,7 +46,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	    thus, if the determinant equals to 0 (zero) there is no area or no volume; https://medium.com/@mathphye/determinant-equal-to-zero-error-404-not-at-all-c2bc24c4e43c ;
 	*/
 	class c_det {
-	public: c_det (void) = default; c_det (const c_det&) = delete;
+	public: c_det (void) = default; c_det (const c_det&) = delete; c_det (c_det&&) = delete; ~c_det (void) = default;
 
 	static float Get (const c_mat2x2&);
 	static float Get (const c_mat3x3&);
@@ -29,11 +56,31 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	private: c_det& operator = (const c_det&) = delete; c_det& operator = (c_det&&) = delete;
 	};
+	/* for getting the inverse of the matrix:
+	(1) calculating the determinant of the natrix; if the determinant is zero, the matrix is singular and cannot be inverted;
+	(2) calculating the adjugate matrix adj(A);
+	(3) multiplying the adjugate by 1/det(A); the end of story;
+	*/
+	class c_inverter {
+	public:
+		c_inverter (void); c_inverter (const c_inverter&) = delete; c_inverter (c_inverter&&) = delete; ~c_inverter (void) = default;
+
+	static c_mat2x2 Get (const c_mat2x2&, float* _p_det = nullptr);
+	static c_mat3x3 Get (const c_mat3x3&, float* _p_det = nullptr);
+	static c_mat4x4 Get (const c_mat4x4&, float* _p_det = nullptr);
+
+	private:
+		c_inverter& operator = (const c_inverter&) = delete; c_inverter& operator = (c_inverter&&) = delete;
+	};
 
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/inverse.xhtml ;
 	class c_inverter_4x4 : public c_mat4x4 {
 	public:
 		c_inverter_4x4 (void); c_inverter_4x4 (const c_inverter_4x4&) = delete; c_inverter_4x4 (c_inverter_4x4&&) = delete; ~c_inverter_4x4 (void) = default;
+
+		// https://en.wiktionary.org/wiki/affine ;
+		// https://en.wikipedia.org/wiki/Affine_transformation ;
+		// https://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations ;
 
 		c_mat4x4& Affine (void); // returns the inverse of affine transform matrix;
 

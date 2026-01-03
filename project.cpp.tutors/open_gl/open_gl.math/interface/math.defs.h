@@ -13,6 +13,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	using namespace shared::defs;
 
+	typedef ::std::array<float, 0x02u> t_seq_2;   // can be used for setting a column or a row of the matrix 2x2;
+	typedef ::std::array<float, 0x03u> t_seq_3;   // can be used for setting a column or a row of the matrix 3x3;
+	typedef ::std::array<float, 0x04u> t_seq_4;   // can be used for setting a column or a row of the matrix 4x4;
+
+	typedef ::std::array<float, 0x04u> t_seq_2x2; // can be used for setting values of matrix 2x2 by the sequence: c0:r:0|c0:r1|c1:r0|c1:r1;
+	typedef ::std::array<float, 0x09u> t_seq_3x3; // can be used for setting values of matrix 3x3 by the sequence: c0:r:0|c0:r1|c0:r2|...|c2:r0|c1:r1|c2:r2;
+	typedef ::std::array<float, 0x10u> t_seq_4x4; // can be used for setting values of matrix 4x4 by the sequence: c0:r:0|c0:r1|c0:r2|c0:r3|...|c3:r0|c3:r1|c3:r2|c3:r3;
+
+	// https://stackoverflow.com/questions/6969881/operator-overload-for-two-dimensional-array ;
+	typedef ::std::array<::std::array<float, 2>, 2> t_set_2x2; // there is 2 column and 2 rows; the columns go first;
+
 	namespace defs {
 		static float $na = 0.0f; // the reference to this variable may be returned in cases when an index of element is out of acceptable range;
 		#define __pi 3.141593f
@@ -79,4 +90,4 @@ namespace _3d {
 #endif
 }}}}
 
-#endif/*__MATH_DEFS_H_INCLUDED*/
+#endif/*__MATH_DEFS_H_INCLUDED*/	
