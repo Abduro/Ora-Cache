@@ -116,6 +116,32 @@ c_mat2x2& c_mat2x2::operator *=(const float _f_scale) {
 	return *this;
 }
 
+c_mat2x2  operator * (const c_mat2x2& _left, const c_mat2x2& _right) {
+	_left; _right;
+	return c_mat2x2({
+		_left(0,0) * _right(0,0) + _left(1,0) * _right(0,1),  _left(0,1) * _right(0,0) + _left(1,1) * _right(0,1),
+		_left(0,0) * _right(1,0) + _left(1,0) * _right(1,1),  _left(0,1) * _right(1,0) + _left(1,1) * _right(1,1)
+	});
+}
+
+c_mat2x2  operator + (const c_mat2x2& _left, const c_mat2x2& _right) {
+	_left; _right;
+	return c_mat2x2({
+		_left(0,0) + _right(0,0), _left(0,1) + _right(0,1),  _left(1,0) + _right(1,0), _left(1,1) + _right(1,1)
+	});
+}
+
+c_mat2x2  operator - (const c_mat2x2& _left, const c_mat2x2& _right) {
+	_left; _right;
+	return c_mat2x2({
+		_left(0,0) - _right(0,0), _left(0,1) - _right(0,1),  _left(1,0) - _right(1,0), _left(1,1) - _right(1,1)
+	});
+}
+
+c_mat2x2  operator - (const c_mat2x2& _mat) {
+	return c_mat2x2({-1.0f * _mat(0,0), -1.0f * _mat(0,1), -1.0f * _mat(1,0), -1.0f * _mat(1,1)});
+}
+
 #pragma endregion
 #pragma region cls::c_mat3x3::c_cols{}
 
@@ -296,6 +322,7 @@ c_mat4x4& c_mat4x4::c_cols::operator ()(void)       { return this->m_mat_ref; }
 
 c_mat4x4::c_mat4x4 (void) : m_cols(*this), m_rows(*this) { this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size); }
 c_mat4x4::c_mat4x4 (const c_mat4x4& _src) : c_mat4x4() { *this = _src; }
+c_mat4x4::c_mat4x4 (const t_seq_4x4& _arr_values) : c_mat4x4() { *this << _arr_values; }
 c_mat4x4::c_mat4x4 (c_mat4x4&& _victim) : c_mat4x4() { *this = _victim; }
 
 const
@@ -361,11 +388,19 @@ c_mat4x4& c_mat4x4::Translate (const vec_3& _v_3) { return this->Translate(_v_3.
 
 c_mat4x4& c_mat4x4::operator = (const c_mat4x4& _src) { this->m_data = _src.m_data; return *this; }
 c_mat4x4& c_mat4x4::operator = (c_mat4x4&& _victim) { this->m_data.swap(_victim.m_data);  return *this;}
-c_mat4x4& c_mat4x4::operator *=(const float _f_scale) {
+c_mat4x4& c_mat4x4::operator*= (const float _f_scale) {
 	_f_scale;
 	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++)
 		for (uint32_t u_row = 0; u_row < c_mat4x4::u_rows; u_row++)
 			(*this)(u_col, u_row) *= _f_scale;
+	return *this;
+}
+c_mat4x4& c_mat4x4::operator <<(const t_seq_4x4& _arr_values) {
+	_arr_values;
+	this->Cols().Set(0, _arr_values.at(0x0), _arr_values.at(0x1), _arr_values.at(0x2), _arr_values.at(0x3));
+	this->Cols().Set(1, _arr_values.at(0x4), _arr_values.at(0x5), _arr_values.at(0x6), _arr_values.at(0x7));
+	this->Cols().Set(2, _arr_values.at(0x8), _arr_values.at(0x9), _arr_values.at(0xa), _arr_values.at(0xb));
+	this->Cols().Set(3, _arr_values.at(0xc), _arr_values.at(0xd), _arr_values.at(0xe), _arr_values.at(0xf));
 	return *this;
 }
 

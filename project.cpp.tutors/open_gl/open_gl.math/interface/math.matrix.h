@@ -101,6 +101,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_cols m_cols;
 		c_rows m_rows;
 	};
+
+	c_mat2x2 operator * (const c_mat2x2& _left, const c_mat2x2& _right); // (_left * _right); https://en.wikipedia.org/wiki/Matrix_multiplication ;
+	c_mat2x2 operator + (const c_mat2x2& _left, const c_mat2x2& _right); // (_left + _right); https://en.wikipedia.org/wiki/Matrix_addition ;
+	c_mat2x2 operator - (const c_mat2x2& _left, const c_mat2x2& _right); // (_left - _right); https://en.wikipedia.org/wiki/Matrix_addition ; and subtraction;
+
+	c_mat2x2 operator - (const c_mat2x2&) ; // negates the input matrix, i.e. (-1) * (input matrix); this is a form of scalar multiplication;
+
 	/* entry positions or in other words, entry's indices:
 	 cols:    #0  #1   #2
 	 rows:#0 | 0 | 3 | 6 |
@@ -241,6 +248,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	public: static const uint32_t u_cols = c_cols::u_count, u_rows = c_rows::u_count, u_size = u_cols * u_rows;
 		c_mat4x4 (void); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&); ~c_mat4x4 (void) = default;
+		c_mat4x4 (const t_seq_4x4& _arr_values);
 
 		const
 		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of range, the reference to invalid entry is returned; (ro)
@@ -263,7 +271,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		c_mat4x4& operator = (const c_mat4x4&);
 		c_mat4x4& operator = (c_mat4x4&&); // https://en.cppreference.com/w/cpp/container/vector/swap ;
+
 		c_mat4x4& operator*= (const float _f_scale);
+		c_mat4x4& operator <<(const t_seq_4x4& _arr_values);
 
 		const
 		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) const;

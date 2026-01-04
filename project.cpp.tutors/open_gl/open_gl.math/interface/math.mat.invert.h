@@ -75,6 +75,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	// https://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations ;
 	static c_mat4x4 Get_affine (const c_mat4x4&); // gets the inverse of affine transform matrix; https://en.wiktionary.org/wiki/affine ;
 	static c_mat4x4 Get_euclid (const c_mat4x4&); // gets the inverse of Euclidean transform matrix; https://en.wikipedia.org/wiki/Euclidean ;
+	// https://en.wikipedia.org/wiki/Projection_(linear_algebra) ;
+	// https://en.wikipedia.org/wiki/Projection_matrix ;
+	static c_mat4x4 Get_proj   (const c_mat4x4&); // gets the inverse of projective matrix by using a partitioning;
 
 	private:
 		c_inverter& operator = (const c_inverter&) = delete; c_inverter& operator = (c_inverter&&) = delete;
@@ -87,6 +90,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	static c_mat2x2 Get (const c_mat2x2&); // gets the transpose of the input matrix;
 	static c_mat3x3 Get (const c_mat3x3&); // gets the transpose of the input matrix;
+	static c_mat4x4 Get (const c_mat4x4&); // gets the transpose of the input matrix;
 
 	private:
 		c_trans& operator = (const c_trans&) = delete; c_trans& operator = (c_trans&&) = delete;

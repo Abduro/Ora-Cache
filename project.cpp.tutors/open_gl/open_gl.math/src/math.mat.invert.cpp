@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' generic data matrix inverter interface immplementation file;
 */
 #include "math.mat.invert.h"
+#include "shared.dbg.h"
 
 using namespace ex_ui::draw::open_gl::math;
 
@@ -271,7 +272,106 @@ c_mat4x4 c_inverter::Get_affine (const c_mat4x4& _mat) {
 */
 c_mat4x4 c_inverter::Get_euclid (const c_mat4x4& _mat) {
 	_mat;
-	return c_mat4x4();
+	c_mat4x4 mat_ = _mat; // makes the copy of the input matrix;
+
+	// the 1st step: transposings 3x3 rotation matrix part; to_do: new matrix 3x3 may be created as the extraction from the original/input matrix;
+    // | R^T | 0 |
+    // |-----+---|
+    // |  0  | 1 |
+	t_seq_3 arr_swap{_mat(0,1), _mat(0,2), _mat(1,2)}; // swap: the swap values' array is not necessary, direct assign of original/input matrix values is possible;
+	mat_(0,1) = mat_(1,0); mat_(1,0) = arr_swap.at(0); // c0:r1 <-> c1:r0 ;
+	mat_(0,0) = mat_(0,0); mat_(0,0) = arr_swap.at(1); // c0:r0 <-> c0:r0 ;
+	mat_(0,0) = mat_(0,0); mat_(0,0) = arr_swap.at(2); // c0:r0 <-> c0:r0 ;
+
+	// the 2nd step: computing the translation part -R^T * T ;
+    // | 0 | -R^T x |
+    // | --+------- |
+    // | 0 |   0    |
+	t_seq_3 arr_xyz{_mat(3,0), _mat(3,1), _mat(3,2)};
+
+	mat_(3,0) = -(mat_(0,0) * arr_xyz.at(0) + mat_(1,0) * arr_xyz.at(1) + mat_(2,0) * arr_xyz.at(2)); // -> x ;
+	mat_(3,1) = -(mat_(0,1) * arr_xyz.at(0) + mat_(1,1) * arr_xyz.at(1) + mat_(2,1) * arr_xyz.at(2)); // -> y ;
+	mat_(3,2) = -(mat_(0,2) * arr_xyz.at(0) + mat_(1,2) * arr_xyz.at(1) + mat_(2,2) * arr_xyz.at(2)); // -> z ;
+
+	return mat_;
+}
+
+/* inverses a matrix using matrix partitioning (blockwise inverse);
+   It devides a 4x4 matrix into 4 of 2x2 matrices and works in case of where
+   det(A) != 0 *only*, otherwise, the generic inverse method must be used;
+
+   the inverse formula:
+   M = [ A | B ]    A, B, C, D are 2x2 matrix blocks;
+       [ --+-- ]    det(M) = |A| * |D - ((C * A^-1) * B)|
+       [ C | D ]
+  
+   M^-1 = [ A' | B' ]   A' = A^-1 - (A^-1 * B) * C'
+          [ ---+--- ]   B' = (A^-1 * B) * -D'
+          [ C' | D' ]   C' = -D' * (C * A^-1)
+                        D' = (D - ((C * A^-1) * B))^-1
+  
+   note: it's wrapped by () if it it used more than once;
+         The matrix is invertable even if det(A)=0, so must check det(A) before
+         calling this function, and use invertGeneric() instead;
+*/
+c_mat4x4 c_inverter::Get_proj (const c_mat4x4& _mat) {
+	_mat;
+	/* (1) creating partition matrices (in source/input matrix columns and rows indices);
+	cols:    #0  (A)   #1          #2  (B)   #3
+	rows: #0 _mat(0,0) _mat(1,0)   _mat(2,0) _mat(3,0)
+	      #1 _mat(0,1) _mat(1,1)   _mat(2,0) _mat(3,1)
+	             (C)                   (D)
+	      #2 _mat(0,2) _mat(1,2)   _mat(2,2) _mat(3,2)
+	      #3 _mat(0,3) _mat(1,3)   _mat(2,3) _mat(3,3)
+	*/
+	c_mat2x2 mat_a({_mat(0,0), _mat(0,1), _mat(1,0), _mat(1,1)}), // (A) ;
+	         mat_b({_mat(2,0), _mat(2,1), _mat(3,0), _mat(3,1)}), // (B) ;
+	         mat_c({_mat(0,2), _mat(0,3), _mat(1,2), _mat(1,3)}), // (C) ;
+	         mat_d({_mat(2,2), _mat(2,3), _mat(3,2), _mat(3,3)}); // (D) ;
+
+	// (2) checking the determinant of matrix A;
+	if (false == c_det::Is(c_det::Get(mat_a))) {
+		__trace_err_2(_T("#__e_val: det(A) is 0 (zero); not inversible;")); return c_mat4x4().Identity();
+	}
+
+	// (3) pre-computing repeated parts;
+	mat_a = c_inverter::Get(mat_a);  // A^-1;
+
+	c_mat2x2 mat_a_b = mat_a * mat_b; // A^-1 * B;
+	c_mat2x2 mat_c_a = mat_c * mat_a; // C * A^-1;
+	c_mat2x2 mat_c_a_b = mat_c_a * mat_b; // C * A^-1 * B;
+	c_mat2x2 mat_d_c_a_b = mat_d - mat_c_a_b; // D - C * A^-1 * B;
+
+	// (4) checking the determinant on pre-computed matrix (mat_d_c_a_b);
+	if (false == c_det::Is(c_det::Get(mat_d_c_a_b))) {
+		__trace_err_2(_T("#__e_val: det(pre-computed-mat) is 0 (zero); not inversible;")); return c_mat4x4().Identity();
+	}
+
+	// (5) computing matrices D' and -D';
+	c_mat2x2 mat_d_0 = c_inverter::Get(mat_d_c_a_b); // (D - C * A^-1 * B)^-1;
+	c_mat2x2 mat_d_1 = -mat_d_0; // -(D - C * A^-1 * B)^-1;
+
+	// (5.a) computing matrix C';
+	c_mat2x2 mat_c_0 = mat_d_1 * mat_c_a;   // -D' * (C * A^-1);
+	// (5.b) computing matrix B';
+	c_mat2x2 mat_b_0 = mat_a_b * mat_d_1;   // (A^-1 * B) * -D';
+	// (5.c) computing matrix A';
+	c_mat2x2 mat_a_0 = mat_a - (mat_a_b * mat_c_0); // A^-1 - (A^-1 * B) * C';
+
+	/* (6) the final step: assembling the inverse matrix;
+	cols:    #0           #1            #2           #3
+	rows: #0 mat_a_0(0,0) mat_a_0(1,0)  mat_b_0(0,0) mat_b_0(1,0)
+	      #1 mat_a_0(0,1) mat_a_0(1,1)  mat_b_0(0,1) mat_b_0(1,1)
+
+	      #2 mat_c_0(0,0) mat_c_0(1,0)  mat_d_0(0,0) mat_d_0(1,0)
+	      #3 mat_c_0(0,1) mat_c_0(1,1)  mat_d_0(0,1) mat_d_0(1,1)
+	*/
+	return c_mat4x4({
+		mat_a_0(0,0), mat_a_0(0,1), mat_c_0(0,0), mat_c_0(0,1), // the col_#0;
+		mat_a_0(1,0), mat_a_0(1,1), mat_c_0(1,0), mat_c_0(1,1), // the col_#1;
+		mat_b_0(0,0), mat_b_0(0,1), mat_d_0(0,0), mat_d_0(0,1), // the col_#2;
+		mat_b_0(1,0), mat_b_0(1,1), mat_d_0(1,0), mat_d_0(1,1), // the col_#3;
+	});
 }
 
 #pragma endregion
@@ -279,8 +379,8 @@ c_mat4x4 c_inverter::Get_euclid (const c_mat4x4& _mat) {
 
 c_mat2x2 c_trans::Get (const c_mat2x2& _mat) {
 	_mat;
-	/* cols:  #0        #1; the given indices of the source/input matrix;
-	rows: #0 _mat(0,0) _mat(0,1)
+	/* cols:  #0        #1
+	rows: #0 _mat(0,0) _mat(0,1) -> the given indices of the source/input matrix;
 	      #1 _mat(1,0) _mat(1,1)
 	*/
 	return c_mat2x2({
@@ -290,10 +390,31 @@ c_mat2x2 c_trans::Get (const c_mat2x2& _mat) {
 
 c_mat3x3 c_trans::Get (const c_mat3x3& _mat) {
 	_mat;
+	/* cols:  #0        #1;       #2
+	rows: #0 _mat(0,0) _mat(0,1) _mat(0,2)
+	      #1 _mat(1,0) _mat(1,1) _mat(1,2) -> the given indices of the source/input matrix;
+	      #2 _mat(2,0) _mat(2,1) _mat(2,2)
+	*/
 	return c_mat3x3({
 		_mat(0,0), _mat(1,0), _mat(2,0), // the col_#0;
 		_mat(0,1), _mat(1,1), _mat(2,1), // the col_#1;
 		_mat(0,2), _mat(1,2), _mat(2,2), // the col_#2;
+	});
+}
+
+c_mat4x4 c_trans::Get (const c_mat4x4& _mat) {
+	_mat;
+	/* cols:  #0        #1;       #2       #3
+	rows: #0 _mat(0,0) _mat(0,1) _mat(0,2) _mat(0,3)
+	      #1 _mat(1,0) _mat(1,1) _mat(1,2) _mat(1,3) -> the given indices of the source/input matrix;
+	      #2 _mat(2,0) _mat(2,1) _mat(2,2) _mat(2,3)
+	      #3 _mat(3,0) _mat(3,1) _mat(3,2) _mat(3,3)
+	*/
+	return c_mat4x4({
+		_mat(0,0), _mat(1,0), _mat(2,0), _mat(3,0), // the col_#0;
+		_mat(0,1), _mat(1,1), _mat(2,1), _mat(3,1), // the col_#1;
+		_mat(0,2), _mat(1,2), _mat(2,2), _mat(3,2), // the col_#2;
+		_mat(0,3), _mat(1,2), _mat(2,3), _mat(3,3), // the col_#3;
 	});
 }
 
