@@ -74,7 +74,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	// https://en.wikipedia.org/wiki/Affine_transformation ;
 	// https://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations ;
 	static c_mat4x4 Get_affine (const c_mat4x4&); // gets the inverse of affine transform matrix; https://en.wiktionary.org/wiki/affine ;
+	static c_mat4x4 Get_cramer (const c_mat4x4&); // gets the inverse of the input matrix by using Cramer's rule; https://en.wikipedia.org/wiki/Cramer%27s_rule ;
 	static c_mat4x4 Get_euclid (const c_mat4x4&); // gets the inverse of Euclidean transform matrix; https://en.wikipedia.org/wiki/Euclidean ;
+	
 	// https://en.wikipedia.org/wiki/Projection_(linear_algebra) ;
 	// https://en.wikipedia.org/wiki/Projection_matrix ;
 	static c_mat4x4 Get_proj   (const c_mat4x4&); // gets the inverse of projective matrix by using a partitioning;

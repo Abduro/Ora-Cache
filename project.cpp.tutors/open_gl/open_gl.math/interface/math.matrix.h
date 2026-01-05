@@ -258,6 +258,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
 
+		c_mat3x3 Exclude (const uint32_t _u_col, const uint32_t _u_row) const; // gets matrix 3x3 by excluding particular colomn and row;
 		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // returns the value of the matrix entry by given column and row indices;
 
 		c_mat4x4& Identity (void);

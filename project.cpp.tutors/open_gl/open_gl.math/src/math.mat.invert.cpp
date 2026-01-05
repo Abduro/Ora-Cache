@@ -249,6 +249,37 @@ c_mat4x4 c_inverter::Get_affine (const c_mat4x4& _mat) {
 	return aff_mat;
 }
 
+/* computes the inverse of a general 4x4 matrix using Cramer's Rule;
+   M^-1 = adj(M) / det(M)
+   if an inverse cannot be found, an indentity matrix is returned;
+*/
+c_mat4x4 c_inverter::Get_cramer (const c_mat4x4& _mat) {
+	_mat;
+	t_seq_4x4 co_facs;
+	uint32_t u_ndx = 0;
+
+	float f_det = 0.0f;
+
+	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++) {
+		for (uint32_t u_row = 0; u_row < c_mat4x4::u_rows; u_row++) {
+
+			if (u_ndx == co_facs.size())
+				break;
+
+			co_facs.at(u_ndx++) = c_det::Get(c_cofactor::Get(_mat.Exclude(u_col, u_row)));
+
+			if (0 == u_col && 3 == u_row) {
+				// gets determinant value: _mat::col:0:r[0...3] * co-factors[0...3];
+				if (false == c_det::Is(f_det = _mat(0,0) * co_facs.at(0) - _mat(0,1) * co_facs.at(1) + _mat(0,2) * co_facs.at(2) - _mat(0,3) * co_facs.at(3))) {
+					__trace_err_2(_T("#__e_inv_det: det of minor matrix is 0; inversible;\n"));
+					return c_mat4x4().Identity();
+				}
+			}
+		}
+	}
+	return c_mat4x4();
+}
+
 /* computes the inverse of 4x4 Euclidean transformation matrix;
 
    Euclidean transformation is translation, rotation, and reflection.

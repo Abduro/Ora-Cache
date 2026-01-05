@@ -341,6 +341,22 @@ const
 c_mat4x4::c_cols& c_mat4x4::Cols (void) const { return this->m_cols; }
 c_mat4x4::c_cols& c_mat4x4::Cols (void)       { return this->m_cols; }
 
+c_mat3x3 c_mat4x4::Exclude (const uint32_t _u_col, const uint32_t _u_row) const {
+	_u_col; _u_row;
+	if (_u_col > c_mat4x4::u_cols - 1) { __trace_err_2(_T("#e__inv_arg: col index = %u;\n"), _u_col); return c_mat3x3(); }
+	if (_u_row > c_mat4x4::u_rows - 1) { __trace_err_2(_T("#e__inv_arg: row index = %u;\n"), _u_row); return c_mat3x3(); }
+
+	c_mat3x3 mat_;
+
+	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++)
+		if (_u_col != u_col)
+			for (uint32_t u_row = 0; u_row < c_mat4x4::u_rows; u_row++)
+				if (_u_row != u_row)
+					mat_(u_col, u_row) = (*this)(u_col, u_row);
+
+	return mat_;
+}
+
 float c_mat4x4::Get (const uint32_t _u_col, const uint32_t _u_row) const { return (*this)(_u_col, _u_row); }
 
 c_mat4x4& c_mat4x4::Identity (void) {
