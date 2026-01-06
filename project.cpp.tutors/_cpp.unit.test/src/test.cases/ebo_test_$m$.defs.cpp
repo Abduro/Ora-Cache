@@ -5,3 +5,5 @@
 #include "ebo_test_$m$.defs.h"
 
 using namespace ebo::boo::test::open_gl::math;
+
+namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_3 { void __warning_lnk_4006 (void) {}}}}}
