@@ -53,6 +53,13 @@ err_code    CTriangle::Draw (void) {
 		return CShape::m_error = vert_arr.Error();
 
 	CProgram& prog = renderer.Scene().Progs().Get(CShape::Target());
+
+	if (false == prog.Id().Is_valid()) {
+		CShape::m_error << __e_inv_arg = TString().Format(_T("'_u_prog_id' (%u) is invalid"), prog.Id().Get());
+		__trace_err_2(_T("%s;\n"), (_pc_sz) CShape::Error().Print(TError::e_print::e_req));
+		return CShape::m_error;
+	}
+
 	// (1) gets the program in use;
 	if (__failed(prog.Use())) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) prog.Error().Print(TError::e_print::e_req));

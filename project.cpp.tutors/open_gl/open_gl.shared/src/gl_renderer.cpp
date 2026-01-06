@@ -121,7 +121,10 @@ err_code    CRenderer::Draw (void) {
 	if (this->Cfg().Is_drawable(e_object::e_grid)) this->View().Grid().Draw();
 
 	// (3) draws the triangle; *note*: for this version of the implementation the only shape that is drawn is the triangle;
-	if (this->Cfg().Is_drawable(e_object::e_tria)) ::Get_shapes().Get(e_object::e_tria).Draw();
+	if (this->Cfg().Is_drawable(e_object::e_tria))
+		if (__failed(::Get_shapes().Get(e_object::e_tria).Draw()))
+			return this->m_error = ::Get_shapes().Get(e_object::e_tria).Error();
+
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
 	if (false == !!::SwapBuffers(this->Scene().Ctx().Draw().Target().Get())) {

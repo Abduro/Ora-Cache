@@ -136,19 +136,23 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #if (0)
 		$_wnd.Renderer().Scene().Array().Attrs() = triangle.A().Attrs();
 #endif
+#if (0) // to-do: a buffer does not belong to program, but to vertex array object; the code section below must be re-written;
 		using
 		CBuffer_4_vert = ex_ui::draw::open_gl::CBuffer_4_vert;
-		CBuffer_4_vert& buffer = $_wnd.Renderer().Scene().Prog().Buffer();
+		CBuffer_4_vert& buffer = $_wnd.Renderer().Scene().Progs().Get(e_object::e_tria).Buffer();
 
 		if (__failed(buffer.SetData(triangle))) {
 			break;
 		}
+#endif
 #pragma endregion
 #pragma region __step_5
+#if (0) // to-do: vertex array does not belong to shape, but to vertex array object; the code section below must be re-written;
 		// (5) sets renderer cfg values;
 		$_wnd.Renderer().Cfg().Count(triangle.Vertices().Count());
 		$_wnd.Renderer().Cfg().Primitive(triangle.Primitive());
 		$_wnd.Renderer().Cfg().StartAt(0);
+#endif
 #pragma endregion
 	} while (true == false);
 
@@ -161,8 +165,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 		if (false == b_error) {
-			if (__failed($_wnd.Renderer().Draw())) // perhaps this function must check for changing the draw data before draw it;
+			if (__failed($_wnd.Renderer().Draw())) { // perhaps this function must check for changing the draw data before draw it;
 				b_error = true;
+				$_wnd.Renderer().Is_allowed(false);
+			}
 			::Sleep(10);
 		}
 	}

@@ -133,7 +133,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			CContext ctx;
 			// (1)(2) creates fake window and get OpenGL draw renderer context of the base version (OpenGL v1.1);
 			// the error *always* occurs on RDP of MS Windows;
-			if (__failed(ctx.Create(wnd_ctx.Handle(), vers[i_].n_major, vers[i_].n_minor))) {
+			/* to-do:
+			(1) window context must be created;
+			(2) an error trace in case if the context is not created yet;
+			*/
+			if (__failed(ctx.Create(vers[i_].n_major, vers[i_].n_minor))) {
 				__trace_err_3(_T("%s\n"), (_pc_sz) ctx.Error()().Print(TError::e_req));
 			//	ctx.Error()().Show(); break;
 			}

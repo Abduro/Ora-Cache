@@ -90,20 +90,20 @@ err_code shader::CWnd::PostCreate (void) {
 	}
 #endif
 
-#if (0)
+#if (1)
 	// for better debugging and in order do not re-compile the executable, this section is disabled;
 	// sets resource identifiers for loading shaders' source code;
-	if (__failed(this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-	if (__failed(this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(this->Renderer().Scene().Progs().Get(e_object::e_tria).Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Progs().Get(e_object::e_tria).Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(this->Renderer().Scene().Progs().Get(e_object::e_tria).Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) this->Renderer().Scene().Progs().Get(e_object::e_tria).Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 #else
 	// sets the option of the shader source configuration to use external shader source files;
-	CProgram& prog = this->Renderer().Scene().Prog();
-	if (__failed(prog.Shaders().Fragment().Src().Cfg().Path($Type::e_fragment)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+	CProg_enum& progs = this->Renderer().Scene().Progs();
+	if (__failed(progs.Get(e_object::e_tria).Shaders().Fragment().Src().Cfg().Path($Type::e_fragment)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) progs.Get(e_object::e_tria).Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
 	if (__failed(prog.Shaders().Vertex().Src().Cfg().Path($Type::e_vertex)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+	    __trace_err_2(_T("%s\n"), (_pc_sz) progs.Get(e_object::e_tria).Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 #endif
 	
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;

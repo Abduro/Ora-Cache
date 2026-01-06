@@ -11,6 +11,7 @@
 #include "gl_version.h"
 
 #pragma comment(lib, "gl.shared_v15.lib")   // OpenGL tutorials shared lib;
+#pragma comment(lib, "gl.procs_v15.lib" )     // OpenGL driver functions' loader;
 #pragma comment(lib, "gl.tutor.0.fake.lib") // fake window lib; shared.trim_v15.lib is commented in open_gl_tutor.0.defs.h for the linking;
 
 namespace ex_ui { namespace draw { namespace open_gl {  namespace fake {
