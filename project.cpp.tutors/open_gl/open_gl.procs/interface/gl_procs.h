@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 06-Sep-2025 at 13:09:31.015, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL tutorials' procedures loader wrapper interface declaration file; 
 */
-#include "procs\gl_procs_base.h"
+#include "gl_procs_base.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace procs {

@@ -8,8 +8,8 @@
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
-#include "procs\gl_procs_prog.h"
-#include "procs\gl_procs_uniform.h"
+#include "gl_procs_prog.h"
+#include "gl_procs_uniform.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vars;

@@ -5,7 +5,7 @@
 #include "gl_vertex_data.h"
 #include "gl_procs.h"
 #include "gl_viewport.h"
-#include "procs\gl_procs_vertex.h"
+#include "gl_procs_vertex.h"
 
 #include "shared.dbg.h"
 #include "shared.preproc.h"

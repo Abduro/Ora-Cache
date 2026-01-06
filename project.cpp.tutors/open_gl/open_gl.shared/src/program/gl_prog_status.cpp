@@ -8,7 +8,7 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
-#include "procs\gl_procs_prog.h"
+#include "gl_procs_prog.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;

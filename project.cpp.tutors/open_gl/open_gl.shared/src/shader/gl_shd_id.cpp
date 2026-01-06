@@ -4,7 +4,7 @@
 */
 #include "gl_shd_id.h"
 #include "shared.preproc.h"
-#include "procs\gl_procs_shader.h"
+#include "gl_procs_shader.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;

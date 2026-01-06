@@ -8,7 +8,7 @@
 #include "shared.preproc.h"
 #include "sys.registry.h"
 
-#include "procs\gl_procs_shader.h"
+#include "gl_procs_shader.h"
 
 #pragma warning(disable: 4702)
 

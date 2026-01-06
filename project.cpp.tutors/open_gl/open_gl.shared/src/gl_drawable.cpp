@@ -12,8 +12,8 @@
 #include "shared.theme.h"
 #include "sys.registry.h"
 
-#include "procs\gl_procs_surface.h"
-#include "procs\gl_procs_uniform.h"
+#include "gl_procs_surface.h"
+#include "gl_procs_uniform.h"
 
 #include "color._defs.h"
 

@@ -3,7 +3,6 @@
 	This is Ebo Pack OpenGL error handler adapter interface implementation file;
 */
 #include "gl_error.h"
-#include "gl_defs.h"
 #include "gl_procs.h"
 #include "shared.preproc.h"
 

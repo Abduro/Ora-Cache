@@ -5,7 +5,7 @@
 #include "gl_$_attr.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
-#include "procs\gl_procs_vertex.h"
+#include "gl_procs_vertex.h"
 
 using namespace ex_ui::draw::open_gl::shader;
 

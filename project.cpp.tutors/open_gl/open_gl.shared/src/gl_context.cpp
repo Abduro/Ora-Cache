@@ -3,7 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' context base interface implementation file;
 */
 #include "gl_context.h"
-#include "procs\gl_procs_ctx.h"
+#include "gl_procs_ctx.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 #include "sys.registry.h"

@@ -7,8 +7,8 @@
 #include "gl_program.h"
 #include "gl_shader.h"
 
-#include "procs\gl_procs_prog.h"
-#include "procs\gl_procs_shader.h"
+#include "gl_procs_prog.h"
+#include "gl_procs_shader.h"
 
 using namespace ex_ui::draw::open_gl;
 

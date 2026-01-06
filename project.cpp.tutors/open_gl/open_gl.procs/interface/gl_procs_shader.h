@@ -8,6 +8,20 @@
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace procs {
 
+	enum class e_shader_types : uint32_t {
+		/* alias    | value    | OpenGL symbolic def       | brief description ;
+		------------+----------+---------------------------+-------------------*/
+		e_undef     = 0x0000,  // the type is not set;     |
+		e_compute   = 0x91B9,  // GL_COMPUTE_SHADER        | for additional stages in animation or lighting algorithms (e.g. tiled forward rendering);
+		e_fragment  = 0x8B30,  // GL_FRAGMENT_SHADER       | for manipulating properties such as position, color and texture coordinates, but cannot create new vertices;
+		e_geometry  = 0x8DD9,  // GL_GEOMETRY_SHADER       | for generating new graphics primitives; executed after vertex shaders;
+		e_tess_ctrl = 0x8E88,  // GL_TESS_CONTROL_SHADER   | tessellation control shader (also known as hull shader);
+		e_tess_eval = 0x8E87,  // GL_TESS_EVALUATION_SHADER| evaluation shader (also known as domain shader); 
+		e_vertex    = 0x8B31,  // GL_VERTEX_SHADER         | transforms vertex's 3D position in virtual space to the 2D coords of the screen (as well as a depth value for the Z-buffer); https://www.khronos.org/opengl/wiki/Vertex_Shader ;
+	};
+
+	CString $_type_to_str (const uint32_t _u_$_type); // converts a shader type constant to string for trace output;
+
 	class CShader : public CBase {
 	typedef uint32_t (__stdcall *pfn_Create) (uint32_t _u_type);    // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateShader.xhtml ;
 	typedef void     (__stdcall *pfn_Delete) (uint32_t _shader_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDeleteShader.xhtml ;
@@ -18,13 +32,13 @@ namespace procs {
 	public:
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetShader.xhtml ;
 		enum e_param_types : uint32_t {
-		/* alias     | value    | OpenGL symbolic defs    | brief description ;
-		-------------+----------+-------------------------+--------------------------*/
-		e_compiled   = 0x8B81, // GL_COMPILE_STATUS       | returns 'true' if the last compile operation on shader was successful, and 'false' otherwise;
-		e_deleted    = 0x8B80, // GL_DELETE_STATUS        | returns 'true' if shader is currently flagged for deletion, and 'false' otherwise;
-		e_info_len   = 0x8B84, // GL_INFO_LOG_LENGTH      | returns the number of characters in the information log for shader including the null termination character;
-		e_src_len    = 0x8B88, // GL_SHADER_SOURCE_LENGTH | returns the length of the concatenation of the source strings that make up the shader source for the shader, including the null termination character;
-		e_$_type     = 0x8B4F, // GL_SHADER_TYPE          | returns GL_VERTEX_SHADER, GL_GEOMETRY_SHADER and GL_FRAGMENT_SHADER if shader is one of those types;
+		/* alias     | value    | OpenGL symbolic defs     | brief description ;
+		-------------+----------+--------------------------+--------------------------*/
+		e_compiled   = 0x8B81, // GL_COMPILE_STATUS        | returns 'true' if the last compile operation on shader was successful, and 'false' otherwise;
+		e_deleted    = 0x8B80, // GL_DELETE_STATUS         | returns 'true' if shader is currently flagged for deletion, and 'false' otherwise;
+		e_info_len   = 0x8B84, // GL_INFO_LOG_LENGTH       | returns the number of characters in the information log for shader including the null termination character;
+		e_src_len    = 0x8B88, // GL_SHADER_SOURCE_LENGTH  | returns the length of the concatenation of the source strings that make up the shader source for the shader, including the null termination character;
+		e_$_type     = 0x8B4F, // GL_SHADER_TYPE           | returns GL_VERTEX_SHADER, GL_GEOMETRY_SHADER and GL_FRAGMENT_SHADER if shader is one of those types;
 		};
 		CShader (void); ~CShader (void) = default;
 

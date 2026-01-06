@@ -4,7 +4,11 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 04-Oct-2025 at 14:25:53.097, (UTC+4), Batumi, Saturday;
 	This is Ebo Pack OpenGL functions' loader base interface declaration file;
 */
-#include "gl_defs.h"
+#include "shared.defs.h"
+#include <gl/gl.h>       // the headers' include order is important: windows.h must go first;
+#include "gl_error.h"
+
+#pragma comment(lib, "opengl32.lib")
 /*
 	https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-reference ;
 	https://learn.microsoft.com/en-us/windows/win32/opengl/state-variables ;
@@ -13,6 +17,12 @@
 */
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	// https://www.khronos.org/opengl/wiki/OpenGL_Type ;
+
+	using namespace shared::defs;
+	using namespace ATL;
+
+	using CErr_ex = CError_ex;
+	using TErr_ex = const CErr_ex;
 
 	typedef ::std::map<CString, PROC> TProcCache;  // the key is the procedure name, the value is the pointer to the address of procefure function/method;
 	/**important*:

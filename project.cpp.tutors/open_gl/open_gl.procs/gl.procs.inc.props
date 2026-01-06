@@ -2,6 +2,8 @@
 <!--
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Aug-2025 at 12:11:16.642, UTC+4, Batumi,Thursday;
 	This is Ebo pack OpenGL tutorials' shared library include property page declaration file;
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Adopted to OpenGL procedures' loader on 05-Jan-2026 at 21:38:58.724, UTC+4, Batumi, Monday;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -9,10 +11,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared><!--This is common definitions for all tutorials; -->
-    <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr>
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg>
-    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--This reference is only for getting fake window interface; -->
-    <Shared_Procs Condition="'$(Shared_Procs)'==''">..\open_gl.procs\</Shared_Procs>
+    <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
+    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the node of GUI rich app window composition;-->
+    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -20,29 +22,19 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>interface\</_0>
-    <_0-0>interface\shader\</_0-0>
-    <_0-1>interface\program\</_0-1>
-    <_0-2>interface\shapes\</_0-2>
-    <_0-3>interface\vertex\</_0-3>
     <_1>src\</_1>
-    <_1-0>src\shader\</_1-0>
-    <_1-1>src\program\</_1-1>
-    <_1-2>src\shapes\</_1-2>
-    <_1-3>src\vertex\</_1-3>
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Dbg)interface\</_3>
     <_4>$(Shared_Gui)interface\</_4>
     <_5>$(Shared_Clr)interface\</_5>
-    <_6>$(Shared_Procs)interface\</_6>
+    <_6>$(Shared_GL)interface\</_6>
     <_7></_7>
     <_8></_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <_0-0-0>$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3)</_0-0-0>
-    <_1-0-0>$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3)</_1-0-0>
-    <IncludePath>$(Shared);$(_0-0-0);$(_1-0-0);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(Shared);$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

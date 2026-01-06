@@ -9,8 +9,8 @@
 #include "shader\gl_compiler.h"
 #include "shader\gl_shd_type.h"
 
-#include "procs\gl_procs_prog.h"
-#include "procs\gl_procs_shader.h"
+#include "gl_procs_prog.h"
+#include "gl_procs_shader.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;

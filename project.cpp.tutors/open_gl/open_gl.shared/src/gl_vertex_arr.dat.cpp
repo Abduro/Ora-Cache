@@ -3,7 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' generic vertex data array interface implementation file; 
 */
 #include "gl_vertex_arr.dat.h"
-#include "procs\gl_procs_vertex.h"
+#include "gl_procs_vertex.h"
 
 #include "shared.dbg.h"
 #include "shared.preproc.h"

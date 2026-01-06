@@ -66,7 +66,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	// https://registry.khronos.org/OpenGL/specs/gl/glspec44.core.pdf#page=328;
 	// https://wikis.khronos.org/opengl/primitive ;
 	// it is supposed the primitive types have different values and it's separated to different enums by primitives' category;
-	class CPrimitives : private no_copy {
+	class CPrimitives {
 	public:
 		enum class e_line : uint32_t {
 		/* alias    | value    | OpenGL symbolic def      | brief description ;
@@ -96,6 +96,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		};
 
 		static CString To_str (const uint32_t _prom_id);
+	private:
+		CPrimitives (void); CPrimitives (const CPrimitives&); ~CPrimitives(void);
 	};
 
 	class CRenderer : public CBase {

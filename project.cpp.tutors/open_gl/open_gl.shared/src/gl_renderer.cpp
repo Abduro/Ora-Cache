@@ -9,7 +9,7 @@
 #include "shared.preproc.h"
 #include "sys.registry.h"
 
-#include "procs\gl_procs_surface.h"
+#include "gl_procs_surface.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace shared::sys_core::storage;

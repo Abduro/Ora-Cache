@@ -5,9 +5,9 @@
 #include "gl_viewport.h"
 #include "shared.preproc.h"
 
-#include "procs\gl_procs_surface.h"
-#include "procs\gl_procs_vertex.h"
-#include "procs\gl_procs_view.h"
+#include "gl_procs_surface.h"
+#include "gl_procs_vertex.h"
+#include "gl_procs_view.h"
 
 #include "sys.registry.h"
 #include "color.rgb.h"

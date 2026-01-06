@@ -277,6 +277,16 @@ c_mat4x4 c_inverter::Get_cramer (const c_mat4x4& _mat) {
 			}
 		}
 	}
+	// builds inverse matrix = adj(M) / det(M); the adjugate of M is the transpose of the cofactor matrix of M;
+	f_det = 1.0f/f_det; // inverts the determinant;
+
+	c_mat4x4 mat_({
+		 f_det * co_facs.at(0), -f_det * co_facs.at(4),  f_det * co_facs.at(0x8), -f_det * co_facs.at(0xc), // the col_#0 = +/-f_det * cofactors of row_#0;
+		-f_det * co_facs.at(1),  f_det * co_facs.at(5), -f_det * co_facs.at(0x9),  f_det * co_facs.at(0xd), // the col_#1 = +/-f_det * cofactors of row_#1;
+		 f_det * co_facs.at(2), -f_det * co_facs.at(6),  f_det * co_facs.at(0xa), -f_det * co_facs.at(0xe), // the col_#2 = +/-f_det * cofactors of row_#2;
+		-f_det * co_facs.at(3),  f_det * co_facs.at(7), -f_det * co_facs.at(0xb),  f_det * co_facs.at(0xf), // the col_#3 = +/-f_det * cofactors of row_#3;
+	});
+
 	return c_mat4x4();
 }
 

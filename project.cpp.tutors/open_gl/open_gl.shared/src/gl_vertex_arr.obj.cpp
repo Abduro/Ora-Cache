@@ -6,7 +6,7 @@
 #include "gl_procs.h"
 #include "gl_renderer.h"
 
-#include "procs\gl_procs_vertex.h"
+#include "gl_procs_vertex.h"
 #include "program\gl_prog_status.h"
 
 #include "shared.dbg.h"

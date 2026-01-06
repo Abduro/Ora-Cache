@@ -6,7 +6,7 @@
 #include "gl_renderer.h"
 #include "program\gl_prog_linker.h"
 #include "program\gl_prog_status.h"
-#include "procs\gl_procs_prog.h"
+#include "gl_procs_prog.h"
 
 #include "shared.preproc.h"
 #include "shared.dbg.h"

@@ -211,6 +211,9 @@
     <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
     </ProjectReference>
+    <ProjectReference Include="$(Shared_Procs)gl.procs_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0008}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

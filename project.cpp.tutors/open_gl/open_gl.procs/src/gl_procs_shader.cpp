@@ -3,7 +3,6 @@
 	This is Ebo Pack OpenGL shader functions' loader interface implementation file;
 */
 #include "gl_procs_shader.h"
-#include "gl_shd_type.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
@@ -15,6 +14,23 @@ using namespace ex_ui::draw::open_gl::procs;
 #define GL_SHADER_SOURCE_LENGTH  0x8B88 // from glcorearb.h ;
 
 #define __err_no_support DXGI_ERROR_UNSUPPORTED
+
+// the namespace must be referenced to or is created, otherwise the linker error occurs;
+CString ex_ui::draw::open_gl::procs::$_type_to_str (const uint32_t _u_type) {
+	_u_type;
+	CString cs_out;
+	switch (_u_type) {
+	case (uint32_t)e_shader_types::e_compute   : cs_out = _T("$_compute"); break;
+	case (uint32_t)e_shader_types::e_fragment  : cs_out = _T("$_fragment"); break;
+	case (uint32_t)e_shader_types::e_geometry  : cs_out = _T("$_geometry"); break;
+	case (uint32_t)e_shader_types::e_tess_ctrl : cs_out = _T("$_tess_ctrl"); break;
+	case (uint32_t)e_shader_types::e_tess_eval : cs_out = _T("$_tess_eval"); break;
+	case (uint32_t)e_shader_types::e_vertex    : cs_out = _T("$_vertex"); break;
+	default:
+		cs_out.Format(_T("#undef(%u)"), _u_type);
+	}
+	return  cs_out;
+}
 
 static _pc_sz shader_fun_names[] = {
 	  _T("glCreateShader"),  _T("glDeleteShader"),  _T("glGetShaderInfoLog"),  _T("glGetShaderiv"), _T("glIsShader"), _T("glShaderSource")
@@ -53,7 +69,7 @@ uint32_t  CShader::Create (const uint32_t _u_type) {
 	switch ( u_err_code ){
 	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_u_type' (%u) is invalid"), _u_type); break;
 	default:
-		CBase::m_error <<__e_fail = TString().Format(_T("#__e_int_err: creating shader of type '%s' failed (err_code = %u)"), (_pc_sz)shader::CType::To_str(_u_type), u_err_code);
+		CBase::m_error <<__e_fail = TString().Format(_T("#__e_int_err: creating shader of type '%s' failed (err_code = %u)"), (_pc_sz)$_type_to_str(_u_type), u_err_code);
 	}
 
 	return n_result;

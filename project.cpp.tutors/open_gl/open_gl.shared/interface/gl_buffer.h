@@ -6,7 +6,7 @@
 */
 #include "gl_defs.h"
 #include "vertex\gl_vertex_data.h"
-#include "procs\gl_procs_buffer.h"
+#include "gl_procs_buffer.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace data {
