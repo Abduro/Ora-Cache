@@ -18,6 +18,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 using namespace ex_ui::draw::open_gl::_impl;
 
 #pragma region cls::context::CBase{}
+
 context::CBase:: CBase (void) : m_drw_ctx(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CBase::~CBase (void) { this->Destroy(); }
 
@@ -87,9 +88,10 @@ CBase& context::CBase::operator <<(const HWND _h_wnd) {
 		return *this;
 	this->Set(_h_wnd); return *this;
 }
+
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::context::CTarget{}
+
 context::CTarget:: CTarget (void) :  m_dc_src(0), m_target(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CTarget:: CTarget (const HWND _h_wnd) : CTarget() { *this << _h_wnd; }
 context::CTarget::~CTarget (void) {
@@ -195,9 +197,10 @@ context::CTarget&  context::CTarget::operator <<(const HWND _h_wnd) {
 }
 
 context::CTarget::operator const HWND (void) const { return this->m_target; }
+
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::context::CDevice::CMode{}
+
 context::CDevice::CMode:: CMode (void) : m_value(e_mode::e__undef), m_hdc(nullptr) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CDevice::CMode:: CMode (const HDC& _h_dc) : CMode() { *this << _h_dc; }
 context::CDevice::CMode::~CMode (void) {}
@@ -261,9 +264,10 @@ context::CDevice::CMode&  context::CDevice::CMode::operator << (const HDC& _h_dc
 context::CDevice::CMode&  context::CDevice::CMode::operator << (const e_mode _e_mode) { this->m_value = _e_mode; return *this; }
 const
 context::CDevice::CMode&  context::CDevice::CMode::operator >> (uint32_t& _n_out) const { _n_out = this->Current(); return *this; }
+
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::context::CDevice{}
+
 context::CDevice:: CDevice (void) : CBase() { CBase::m_error <<__CLASS__; }
 
 context::CDevice:: CDevice (const HWND _h_target) : CDevice() { *this << _h_target; }
@@ -373,8 +377,9 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 	this->Create(_h_target);
 	return *this; // for getting the result of creation the error state should be checked;
 }
+
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CContext{}
 
 #include "shared.wnd.fake.h"
 #include "gl_format.h"
@@ -458,6 +463,9 @@ using CVersion = CContext::CVersion;
 const
 CVersion& CContext::Version (void) const { return this->m_ver; }
 
+#pragma endregion
+#pragma region cls::CVersion
+
 CVersion::CVersion (void) : m_major(0), m_minor (0), m_use_core(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; this->Load(); }
 
 TError&   CVersion::Error (void) const { return this->m_error; }
@@ -480,3 +488,5 @@ err_code  CVersion::Load  (void) {
 
 	return this->Error();
 }
+
+#pragma endregion

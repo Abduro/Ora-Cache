@@ -6,7 +6,7 @@
 
 using namespace ebo::boo::test;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CCache{}
 
 CCache:: CCache (void) : m_prefix(_T("\t")), m_suffix(_T("\n")) {}
 CCache::~CCache (void) {}
@@ -61,26 +61,8 @@ CCache&  CCache::operator >>(_pc_sz _lp_sz_suffix) { this->Suffix(_lp_sz_suffix)
 const
 CCache&  CCache::operator ()(void) const { this->Output(); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
-const
-CCache&  CLogger::Cached  (void) const { return this->m_cache; }
-CCache&  CLogger::Cached  (void)       { return this->m_cache; }
-
-_pc_sz   CLogger::Pattern (void) const { return (_pc_sz)this->m_pattern; }
-bool     CLogger::Pattern (_pc_sz _lp_sz_pat) {
-	_lp_sz_pat;
-	bool b_is_set = false;
-
-	if (0 == _lp_sz_pat || 0 == ::_tcslen(_lp_sz_pat))
-		return b_is_set;
-
-	this->m_pattern = _lp_sz_pat;
-	this->m_pattern.Trim();
-
-	return (b_is_set = !this->m_pattern.IsEmpty());
-}
-
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CLog_Opts{}
 
 CLog_Opts:: CLog_Opts (void) : m_accepted(_accepted::e_none) {}
 CLog_Opts::~CLog_Opts (void) {}
@@ -104,7 +86,28 @@ CLog_Opts& CLog_Opts::operator -=(const CLog_Opts::_accepted _opt) {
 	return *this;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CLogger{}
+
+CLogger::CLogger (void) { __trace::SetTestOut(this); }
+
+const
+CCache&  CLogger::Cached  (void) const { return this->m_cache; }
+CCache&  CLogger::Cached  (void)       { return this->m_cache; }
+
+_pc_sz   CLogger::Pattern (void) const { return (_pc_sz)this->m_pattern; }
+bool     CLogger::Pattern (_pc_sz _lp_sz_pat) {
+	_lp_sz_pat;
+	bool b_is_set = false;
+
+	if (0 == _lp_sz_pat || 0 == ::_tcslen(_lp_sz_pat))
+		return b_is_set;
+
+	this->m_pattern = _lp_sz_pat;
+	this->m_pattern.Trim();
+
+	return (b_is_set = !this->m_pattern.IsEmpty());
+}
 
 void CLogger::Out (const CString& _str) const {
 	this->Out((_pc_sz)_str.GetString());
@@ -136,10 +139,22 @@ void CLogger::Out (_pc_sz _lp_sz_text) const {
 		else
 		ms_logger::WriteMessage(_lp_sz_text);
 	}
+
+	this->m_cache.Clear();
 }
 const
 CLog_Opts& CLogger::Opts(void) const { return this->m_opts; }
 CLog_Opts& CLogger::Opts(void)       { return this->m_opts; }
+
+void CLogger::Write (_pc_sz _p_msg) {
+	_p_msg;
+	CString cs_msg(_p_msg);
+
+	if (-1 != cs_msg.ReverseFind(_T('\n')))
+		cs_msg = cs_msg.Left(cs_msg.GetLength() - 1);
+
+	this->Cached().Get().push_back(cs_msg);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -156,23 +171,16 @@ CLogger& CLogger::operator -=(const CLog_Opts::_accepted _opt)  { this->Opts() -
 CLogger& CLogger::operator +=(const CString& cs_out) { this->Cached() += cs_out; return *this; }
 CLogger& CLogger::operator +=(_pc_sz _p_sz_out) { this->Cached() += _p_sz_out; return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
-
-CLogger&  CLogger::operator >> (_pc_sz _lp_sz_pat) { this->Pattern(_lp_sz_pat); return *this; }
+CLogger& CLogger::operator >> (_pc_sz _lp_sz_pat) { this->Pattern(_lp_sz_pat); return *this; }
 
 CLogger::operator CCache& (void) { return this->Cached(); }
 const
 CLogger& CLogger::operator ()(void) const { this->Cached()(); return *this; } 
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 
-//namespace ebo { namespace boo { namespace test {
-
-	/*const*/
-	TLogger& _out(void) {
-		static
-		TLogger logger_;
-		return  logger_;
-	}
-
-//}}}
+TLogger& _out(void) {
+	static
+	TLogger logger_;
+	return  logger_;
+}

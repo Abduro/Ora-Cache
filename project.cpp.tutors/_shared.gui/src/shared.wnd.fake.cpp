@@ -50,7 +50,7 @@ HDC& CMsgWnd::Get_ctx (void)       { return this->m_h_dc; }
 		if (this->Error())
 			cs_out = this->Error().Print(TError::e_print::e_req);
 		else
-			cs_out = TString().Format(_T("cls::[%s::%s].%s() >> context device: handle=%s\n"), 
+			cs_out = TString().Format(_T("cls::[%s::%s].%s() >> context device: handle=%s;"), 
 				(_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, (_pc_sz) __METHOD__, TString()._addr_of(this->Get_ctx())
 			);
 

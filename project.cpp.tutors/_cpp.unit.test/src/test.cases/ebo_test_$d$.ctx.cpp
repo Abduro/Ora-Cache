@@ -5,9 +5,9 @@
 #include "ebo_test_$d$.ctx.h"
 #include "shared.preproc.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+#include <crtdbg.h>
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_2 { void __warning_lnk_4006 (void) {}}}}}
+using namespace ebo::boo::test::open_gl::draw;
 
 #pragma region cls::c_ctx{}
 
@@ -18,21 +18,50 @@ c_ctx::c_ctx (const bool _b_verb) : m_b_verb(_b_verb) {
 	}
 }
 
+c_ctx::~c_ctx (void) {
+//	__debugbreak();
+//	_out()();
+}
+
 void c_ctx::_ctor (void) {
 	if (false == this->m_b_verb)
 		return;
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += this->Ref().To_str();
-
+	_out() += this->Fake_wnd().To_str();
 	_out()();
 }
 
 void c_ctx::Device (void) {
-	this->_ctor();
+
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += this->Fake_wnd().To_str();
+
+	if (this->Fake_wnd().Error()) {
+		_out()();
+		return;
+	}
+
+	TRenderer& renderer = ::Get_renderer();
+
+	// the code block below is copied from camera::CWnd ctor;
+	CDevice& dev_ref = renderer.Scene().Ctx().Device();
+	dev_ref.Target().Source(TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__));
+
+	if (__failed(dev_ref.Create(this->Fake_wnd().m_hWnd))) {
+		_out() += this->Fake_wnd().Error().Print(TError::e_print::e_req);
+	}
+
+	// at the end of this test case the context and renderer objects must be destroyed;
+	// otherwise on process exit and calling objects' destructors a lot of errors is thrown;
+	renderer.Scene().Ctx().Clear();
+	if (renderer.Scene().Ctx().Device().Is_valid())
+	    renderer.Scene().Ctx().Device().Destroy();
+
+	_out()();
 }
 
 const
-CFakeWnd& c_ctx::Ref (void) const { return this->m_fk_wnd; }
-CFakeWnd& c_ctx::Ref (void)       { return this->m_fk_wnd; }
+CFakeWnd& c_ctx::Fake_wnd (void) const { return this->m_fk_wnd; }
+CFakeWnd& c_ctx::Fake_wnd (void)       { return this->m_fk_wnd; }
 
 #pragma endregion

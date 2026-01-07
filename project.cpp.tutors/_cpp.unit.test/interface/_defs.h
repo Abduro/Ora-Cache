@@ -11,6 +11,7 @@
 	   - Multi-threaded Debug (/MTd) ;
 */
 #pragma comment(lib, "shared.trim_v15.lib") // this is the shared base lib project of Ebo pack solution that is adopted to Stroke Over projects;
+#pragma comment(lib, "shared.dbg_v15.lib")  // this lib is used for output debug messages to test output console;
 
 namespace ebo { namespace boo { namespace test {
 

@@ -5,6 +5,7 @@
 	This is Ebo Pak UIX libs unit test logger interface declaration file.
 */
 #include "_defs.h"
+#include "shared.dbg.h"
 
 namespace ebo { namespace boo { namespace test {
 
@@ -85,9 +86,9 @@ namespace ebo { namespace boo { namespace test {
 		uint32_t m_accepted;  // this is the set of accepted options for applying to log output content format;
 	};
 
-	class CLogger {
+	class CLogger : public shared::dbg::ITestOutput {
 	public:
-		 CLogger (void) = default;
+		 CLogger (void);
 		 CLogger (const CLogger&) = delete;
 		 CLogger (CLogger&&) = delete;
 		~CLogger (void) = default;
@@ -133,9 +134,12 @@ namespace ebo { namespace boo { namespace test {
 		const
 		CLogger& operator()(void) const; // it is the shortcut for cached strings class functor operator;
 
+		void Write (_pc_sz _p_msg) override final; // ITestOutput interface method;
+
 	private:
-		CString   m_pattern; // not used yet;
+		mutable
 		CCache    m_cache;
+		CString   m_pattern; // not used yet;
 		CLog_Opts m_opts ;
 	};
 

@@ -26,6 +26,8 @@ namespace _impl {
 			return CString(_T("[info]"));
 		}
 	}
+
+	ITestOutput* m_test_out = 0;
 }
 using namespace _impl;
 using namespace shared::defs;
@@ -73,6 +75,10 @@ void CTrace::Out_0 (_pc_sz _lp_sz_fmt, ...) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw ;
 	::OutputDebugString((_pc_sz) cs_out);
 
+	TSafe_Lock();
+	if (_impl::m_test_out)
+		_impl::m_test_out->Write((_pc_sz) cs_out);
+
 	va_end  (args_);
 }
 
@@ -92,6 +98,10 @@ void CTrace::Out_0 (const e_category _e_cat, _pc_sz _lp_sz_fmt, ...) { // perhap
 	}
 //	else
 	::OutputDebugString((_pc_sz) cs_out);
+
+	TSafe_Lock();
+	if (_impl::m_test_out)
+		_impl::m_test_out->Write((_pc_sz) cs_out);
 
 	va_end  (args_);
 }
@@ -113,6 +123,10 @@ void CTrace::Out_2 (const e_category _e_cat, _pc_sz _p_cls, _pc_sz _p_method, _p
 //	else
 	::OutputDebugString((_pc_sz) cs_out);
 
+	TSafe_Lock();
+	if (_impl::m_test_out)
+		_impl::m_test_out->Write((_pc_sz) cs_out);
+
 	va_end  (args_);
 }
 
@@ -133,7 +147,17 @@ void CTrace::Out_3 (const e_category _e_cat, _pc_sz _p_nm_space, _pc_sz _p_cls, 
 //	else
 	::OutputDebugString((_pc_sz) cs_out);
 
+	TSafe_Lock();
+	if (_impl::m_test_out)
+		_impl::m_test_out->Write((_pc_sz) cs_out);
+
 	va_end  (args_);
+}
+
+void CTrace::SetTestOut (ITestOutput* _p_out) {
+
+	TSafe_Lock();
+	_impl::m_test_out = _p_out;
 }
 
 }}

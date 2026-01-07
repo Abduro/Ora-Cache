@@ -35,6 +35,11 @@
 namespace shared { namespace dbg {
 
 	using namespace shared::defs;
+	// debug messages cannot be sent to the test case console output window, but for running test cases it would be helpful to see all trace messages there;
+	// the trace output and test console wrapper is not thead safe yet;
+	interface ITestOutput {
+		virtual void Write (_pc_sz _p_msg) { _p_msg; }
+	};
 
 	class CTrace {
 	private:
@@ -64,6 +69,8 @@ namespace shared { namespace dbg {
 
 		static void Out_2(const e_category, _pc_sz _p_cls, _pc_sz _p_method, _pc_sz _p_sz_format, ...); // this method for #define ;
 		static void Out_3(const e_category, _pc_sz _p_nm_space, _pc_sz _p_cls, _pc_sz _p_method, _pc_sz _p_sz_format, ...); // this method for #define ;
+
+		static void SetTestOut (ITestOutput*); // nullptr is also acceptable and it means to unsubscribe the test console from debug output;
 
 	private:
 		CTrace& operator = (const CTrace&) = delete; CTrace& operator = (CTrace&&) = delete;
@@ -108,5 +115,15 @@ typedef shared::dbg::CTrace __trace;
 #define __trace_warn_3(_p_format, ...) { _p_format; __VA_ARGS__; }
 
 #endif
+
+#include <mutex>
+
+namespace shared { namespace sys_core {
+
+	typedef ::std::lock_guard<std::recursive_mutex> TGuard;
+	static  ::std::recursive_mutex the_lock;
+
+}}
+#define TSafe_Lock() shared::sys_core::TGuard locker(shared::sys_core::the_lock);
 
 #endif/*_SHARED_DBG_H_INCLUDED*/
