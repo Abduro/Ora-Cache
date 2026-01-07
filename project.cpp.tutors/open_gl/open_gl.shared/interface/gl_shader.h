@@ -5,11 +5,16 @@
 	This is Ebo Pack OpenGL tutorials' shader base interface declaration file;
 */
 #include "gl_defs.h"
+#include "gl_error.h"
 #include "shader\gl_shd_source.h"
 #include "shader\gl_shd_type.h"
 #include "shader\gl_shd_status.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
+
+	using CErr_ex = CError_ex;
+	using TErr_ex = const CErr_ex;
+
 	// https://compphys.go.ro/newtonian-gravity/ ; << this is the solar system demo project that is used shadors for calculating rotation and gravity;
 	// https://community.khronos.org/t/floating-point-accuracy-in-glsl/62729/7 ;
 	// https://stackoverflow.com/questions/54058612/differing-floating-point-behaviour-between-uniform-and-constants-in-glsl ;

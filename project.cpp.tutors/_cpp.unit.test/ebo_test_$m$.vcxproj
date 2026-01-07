@@ -228,12 +228,6 @@
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
   </ItemGroup>
   <ItemGroup>
-<!--<ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(Shared_dbg)shared.dbg_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
-    </ProjectReference>!-->
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>

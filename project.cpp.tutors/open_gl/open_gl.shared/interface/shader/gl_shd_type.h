@@ -5,8 +5,12 @@
 	This is Ebo Pack OpenGL shader type wrapper interface declaration file;
 */
 #include "gl_defs.h"
+#include "gl_error.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
+
+	using CErr_ex = CError_ex;
+	using TErr_ex = const CErr_ex;
 
 	// https://en.wikipedia.org/wiki/Shader ;
 	class CType {

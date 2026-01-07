@@ -21,8 +21,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CLog_Base& operator = (const CLog_Base&) = delete; CLog_Base& operator = (CLog_Base&&) = delete;
 	protected:
 		mutable
-		CError_ex m_error ;
-		CString   m_buffer;  // stores the log info;
+		CError   m_error ;
+		CString  m_buffer;  // stores the log info;
 	};
 
 namespace program {

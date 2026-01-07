@@ -41,7 +41,7 @@ namespace context {
 		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
 		~CBase (void);
 
-		 TErr_ex&  Error (void) const;   // this is the OpenGL error wrapper;
+		 TError&  Error  (void) const;   // this is the OpenGL error wrapper;
 		 err_code Destroy(void) ;
 
 		 bool   Is_valid (void) const;   // returns 'true' in case if device renderer context is not nullptr; no target object check;
@@ -59,9 +59,9 @@ namespace context {
 		 CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 	protected:
 		 mutable // for updating the error state in 'const' methods/properties;
-		 CError_ex m_error ;
-		 CTarget   m_target;  // this is the object containing the target window handle and its device context one;
-		 HGLRC     m_drw_ctx; // rendering context that is compatible with regular GDI;
+		 CError   m_error ;
+		 CTarget  m_target;  // this is the object containing the target window handle and its device context one;
+		 HGLRC    m_drw_ctx; // rendering context that is compatible with regular GDI;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;

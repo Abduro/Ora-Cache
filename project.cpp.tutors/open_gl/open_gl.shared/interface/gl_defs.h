@@ -8,16 +8,12 @@
 // https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-on-windows-nt--windows-2000--and-windows-95-98 ; << old but still valid;
 // https://github.com/KhronosGroup/OpenGL-Registry ;
 #include <gl/gl.h> // the headers' include order is important: windows.h must go first;
-#include "gl_error.h"
 
 #pragma comment(lib, "opengl32.lib")
 
 namespace ex_ui { namespace draw { namespace open_gl {
 
 	using namespace shared::defs;
-
-	using CErr_ex = CError_ex;
-	using TErr_ex = const CErr_ex;
 
 	class no_copy { // maybe it's something like boost::noncopyable;
 	protected:

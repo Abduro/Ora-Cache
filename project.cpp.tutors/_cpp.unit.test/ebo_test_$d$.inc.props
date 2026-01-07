@@ -8,10 +8,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
-    <Shared Condition="'$(Shared)'==''">..\_shared\</Shared>
-    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
-    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl\open_gl.shared\</Shared_GL>
-    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib>
+    <Shared Condition="'$(Shared)'==''">..\_shared\</Shared> <!--getting possible system error info;-->
+    <Shared_Clr Condition="'$(Shared_Clr)'==''">..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
+    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg> <!--debug message trace output;-->
+    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\_shared.gui\</Shared_Gui> <!--window message and handle wrapper;-->
+    <GL_procs Condition="'$(GL_procs)'==''">..\open_gl\open_gl.procs\</GL_procs> <!--regular context device and draw renderer creator;-->
+    <GL_shared Condition="'$(GL_shared)'==''">..\open_gl\open_gl.shared\</GL_shared> <!--regular context device and draw renderer creator;-->
+    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib> <!--this project of test cases;-->
   </PropertyGroup>
   <PropertyGroup>
     <Root>$(ThisLib)</Root>
@@ -21,16 +24,16 @@
     <_1>src\</_1>
     <_2>src\test.cases\</_2> <!--combining two or more paths separated by a semicolon is unacceptable, as the path to a specific source file will be incorrect!-->
     <_3>$(Shared)interface\</_3>
-    <_4>$(Shared_Dbg)interface\</_4>
-    <_5>$(Shared_GL)interface\</_5>
-    <_6></_6>
-    <_7></_7>
-    <_8></_8>
+    <_4>$(Shared_Clr)interface\</_4>
+    <_5>$(Shared_Dbg)interface\</_5>
+    <_6>$(Shared_Gui)interface\</_6>
+    <_7>$(GL_procs)interface\</_7>
+    <_8>$(GL_shared)interface\</_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -11,16 +11,16 @@
 	[DirecX]  : {00000C13-EEEE-BBBB-6667-100000000003} << the sub-root for DirectX tutorials;
 	[OpenGL]  : {00000C13-EEEE-BBBB-6667-100000000002} << the sub-root for OpenGL tutorials;
 		[!test.cases]   : {00000C13-EEEE-BBBB-6667-100000000100} << the sub-root for test cases project(s);
-			[core]  : {00000C13-EEEE-BBBB-6667-100000000110} << the sub-root for core project(s) of the test cases;
+		       [core]   : {00000C13-EEEE-BBBB-6667-100000000110} << the sub-root for core project(s) of the test cases;
 		ebo_test_$$$    : {00000C13-EEEE-BBBB-6667-C00000060000} << the shared core project of test cases;
 		ebo_test_$d$    : {00000C13-EEEE-BBBB-6667-C00000060002} << the unit test project for testing functionality of draw context;
 		ebo_test_$m$    : {00000C13-EEEE-BBBB-6667-C00000060001} << the unit test project for shared project of OpenGL basic math lib;
  
-		[!test.resource]  : {00000C13-EEEE-BBBB-6667-100000000200} << the sub-root for test cases resources;
-			[shaders] : {00000C13-EEEE-BBBB-6667-100000000210} << the sub-root for shaders' files;
-		open_gl.math    : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
-		open_gl.procs   : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
-		open_gl.shared  : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;
+		[!test.resource] : {00000C13-EEEE-BBBB-6667-100000000200} << the sub-root for test cases resources;
+		       [shaders] : {00000C13-EEEE-BBBB-6667-100000000210} << the sub-root for shaders' files;
+		gl.math_v15     : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
+		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
+		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;
 
 	[tutor.0.fake] : {00000C13-EEEE-BBBB-6667-100000000020} << the node of the fake window project tutorial;
 	   gl.tutor.0.fake    : {00000C13-EEEE-BBBB-6667-0000000B0003} << the tutorial for creating OpenGL context based on fake window;

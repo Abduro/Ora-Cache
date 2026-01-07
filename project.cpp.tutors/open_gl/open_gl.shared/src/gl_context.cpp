@@ -18,37 +18,37 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 using namespace ex_ui::draw::open_gl::_impl;
 
 #pragma region cls::context::CBase{}
-context::CBase:: CBase (void) : m_drw_ctx(0) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
+context::CBase:: CBase (void) : m_drw_ctx(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 context::CBase::~CBase (void) { this->Destroy(); }
 
 err_code context::CBase::Destroy (void) {
-	this->m_error() <<__METHOD__<<__s_ok;
+	this->m_error <<__METHOD__<<__s_ok;
 
 	// (1) destroys the renderer handle first;
 	if (nullptr != this->m_drw_ctx) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
 		if (0 == ::wglMakeCurrent(this->Target().Get(), 0)) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		}
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wgldeletecontext ;
 		if (0 == ::wglDeleteContext(this->m_drw_ctx)) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		}
 		else
 			this->m_drw_ctx = nullptr;
 	}
 	// (2) destroys device context handle; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc ;
 	if (__failed(this->Target().Free()))
-		this->m_error() = this->Target().Error();
+		this->m_error  = this->Target().Error();
 
 	if (false == this->Error()) {
 		__trace_info_2(_T("Unbinding renderer ctx and releasing GDI ctx succeeded;\n"));
 	}
 
-	return this->Error()();
+	return this->Error();
 }
 
-TErr_ex& context::CBase::Error (void) const { return this->m_error; }
+TError& context::CBase::Error (void) const { return this->m_error; }
 
 bool   context::CBase::Is_valid (void) const {
 	return !!this->m_drw_ctx;
@@ -62,17 +62,17 @@ err_code context::CBase::Set (const HWND _h_target) {
 	_h_target;
 
 	if (this->Is_valid()) {
-		this->m_error() << (err_code) TErrCodes::eObject::eInited = _T("Draw renderer exists");
-		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error()().Print(TError::e_req)); return this->Error()();
+		this->m_error  << (err_code) TErrCodes::eObject::eInited = _T("Draw renderer exists");
+		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
 
-	this->m_error()<<__METHOD__<<__s_ok;
+	this->m_error <<__METHOD__<<__s_ok;
 
 	if (__failed(this->Target().Set(_h_target))) {
-		return this->m_error() = this->Target().Error();
+		return this->m_error  = this->Target().Error();
 	}
 
-	return this->Error()();
+	return this->Error();
 }
 
 const
@@ -280,12 +280,12 @@ err_code context::CDevice::Create (void) {
 		HWND Create (void) { TBase::Create(HWND_MESSAGE); return TBase::Detach(); }
 	};
 
-	CBase::m_error() <<__METHOD__<<__s_ok;
+	CBase::m_error  <<__METHOD__<<__s_ok;
 
 	const HWND h_fake = CFakeWnd().Create();
 	if (0 == h_fake) {
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
-		return CBase::Error()();
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error (CError::e_cmds::e_get_last)).Print(TError::e_req));
+		return CBase::Error();
 	}
 
 	if (__succeeded(this->Create(h_fake))) {
@@ -294,23 +294,23 @@ err_code context::CDevice::Create (void) {
 	else
 		::DestroyWindow(h_fake);
 
-	return CBase::Error()();
+	return CBase::Error();
 }
 #endif
 err_code context::CDevice::Create (const HWND _h_target) {
 	_h_target;
-	CBase::m_error() <<__METHOD__<<__s_ok;
+	CBase::m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr == CBase::Target().Source()) // the source class name can be set outside of this procedure;
 		CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
 
 	if (__failed(CBase::Set(_h_target))) {
-		return CBase::Error()();
+		return CBase::Error();
 	}
 	
 	this->Mode() << CBase::Target().Get();
 	if (__failed(this->Mode().Set(CMode::e_mode::e_advanced)))
-		return this->m_error() = this->Mode().Error();
+		return this->m_error  = this->Mode().Error();
 
 	PIXELFORMATDESCRIPTOR px_fmt_desc = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
 	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << there is the example of how to do that;
@@ -325,31 +325,31 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat ;
 	int32_t n_px_format = ::ChoosePixelFormat(CBase::Target().Get(), &px_fmt_desc);
 	if (0== n_px_format) {
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
-		return CBase::Error()();
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		return CBase::Error();
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setpixelformat ;
 	if (false == !!::SetPixelFormat(CBase::Target().Get(), n_px_format, &px_fmt_desc)) {
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
-		return CBase::Error()();
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		return CBase::Error();
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
 	this->m_drw_ctx = ::wglCreateContext(CBase::Target().Get());
 	if ( 0 == this->m_drw_ctx) {
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
-		return CBase::Error()();
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		return CBase::Error();
 	}
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 	}
 
-	if (false == CBase::Error()()) {
+	if (false == CBase::Error()) {
 		__trace_impt_3(_T("%s\n"), _T("*result*: success;"));
 	}
-	return CBase::Error()();
+	return CBase::Error();
 }
 
 bool context::CDevice::Is_DC (const HDC _hdc) {
@@ -382,12 +382,12 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 using CFakeWnd = ex_ui::popup::CMsgWnd;
 using namespace ex_ui::draw::open_gl::format;
 
-CContext:: CContext (void) : TBase() { TBase::m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
+CContext:: CContext (void) : TBase() { TBase::m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CContext::~CContext (void) {}
 
 err_code   CContext::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver) {
 	_u_gl_major_ver; _u_gl_minor_ver;
-	TBase::m_error() <<__METHOD__<< __s_ok;
+	TBase::m_error <<__METHOD__<< __s_ok;
 
 	if (false == TBase::Target().Is_valid()) {
 		TBase::m_error << (err_code)TErrCodes::eExecute::eState = _T("Target window handle is not set");
@@ -413,39 +413,39 @@ err_code   CContext::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_g
 	if (0 == n_result) { // the failure has occurred: the format cannot be chosen for creating the context;
 		if (__get_ctx_procs().Error()) { // checks for failure of loading the function pointer;
 			__get_ctx_procs().Error().Show();
-			TBase::m_error() = __get_ctx_procs().Error();
+			TBase::m_error  = __get_ctx_procs().Error();
 		}
-		else { // otherwise checks the OpenGL error that has been thrown;
-			TBase::m_error.Get_last();
-			TBase::m_error().Show();
+		else { // otherwise checks the OpenGL error that has been thrown; to-do: expect to do not work, it requires a re-view of this code block;
+			TBase::m_error.Last();
+			TBase::m_error.Show();
 		}
 	}
 	else if (nullptr != &p_formats && true == !!n_count) { b_can_go_ahead = true; }
 	else { b_can_go_ahead = true; }
 
 	if (false == b_can_go_ahead)
-		return TBase::Error()();
+		return TBase::Error();
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-describepixelformat ;
 	PIXELFORMATDESCRIPTOR pfd = {0};
 	if (0 == ::DescribePixelFormat(TBase::Target().Get(), p_formats, sizeof(PIXELFORMATDESCRIPTOR), &pfd))
-		return TBase::m_error().Last();
+		return TBase::m_error .Last();
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setpixelformat ;
 	if (false ==!!::SetPixelFormat(TBase::Target().Get(), p_formats, &pfd))
-		return TBase::m_error().Last();
+		return TBase::m_error .Last();
 
 	CAtt_set_ctx ctx_atts(_u_gl_major_ver, _u_gl_minor_ver);
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
 	this->m_drw_ctx = __get_ctx_procs().CreateCtxAttsArb(TBase::Target().Get(), 0, ctx_atts.IAtt_Get_Int_Ptr());
 	if (nullptr == this->m_drw_ctx) {
-		return TBase::m_error().Last(); // the excerpt: Extended error information can be obtained with GetLastError().
+		return TBase::m_error .Last(); // the excerpt: Extended error information can be obtained with GetLastError().
 	}
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error()(CError::e_cmds::e_get_last)).Print(TError::e_req));
+		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error (CError::e_cmds::e_get_last)).Print(TError::e_req));
 	}
 
-	if (false == CBase::Error()()) {
+	if (false == CBase::Error()) {
 		__trace_impt_3(_T("%s\n"), _T("*result*: success;"));
 	}
 
