@@ -35,6 +35,15 @@
 namespace shared { namespace dbg {
 
 	using namespace shared::defs;
+
+	class CModule {
+	public:
+		static CString  Get_path (CError&); // gets full path to dyna-lib, it is especially intended for MSTest projects;
+	private:
+		CModule (void) = delete; CModule (const CModule&) = delete; CModule (CModule&&) = delete; ~CModule (void) = delete;
+		CModule& operator = (const CModule&) = delete; CModule& operator = (CModule&&) = delete;
+	};
+
 	// debug messages cannot be sent to the test case console output window, but for running test cases it would be helpful to see all trace messages there;
 	// the trace output and test console wrapper is not thead safe yet;
 	interface ITestOutput {
@@ -122,7 +131,6 @@ namespace shared { namespace sys_core {
 
 	typedef ::std::lock_guard<std::recursive_mutex> TGuard;
 	static  ::std::recursive_mutex the_lock;
-
 }}
 #define TSafe_Lock() shared::sys_core::TGuard locker(shared::sys_core::the_lock);
 

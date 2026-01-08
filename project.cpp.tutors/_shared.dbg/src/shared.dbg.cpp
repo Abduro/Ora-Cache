@@ -15,6 +15,20 @@ using namespace shared::console;
 #if defined(_DEBUG)
 namespace shared { namespace dbg {
 
+CString  CModule::Get_path (CError& _err) {
+	_err;
+	HMODULE This = nullptr;
+	if (0 == ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (_pc_sz)&CModule::Get_path, &This)) {
+		_err.Last(); return CString();
+	}
+	const uint32_t u_req_len = 512;
+	CString cs_out;
+	if (0 == ::GetModuleFileName(This, cs_out.GetBuffer(u_req_len), u_req_len * sizeof(t_char))) {
+		_err.Last();
+	}
+	return cs_out;
+}
+
 namespace _impl {
 	CString CatToStr (const CTrace::e_category _e_cat) {
 		_e_cat;
@@ -161,6 +175,9 @@ void CTrace::SetTestOut (ITestOutput* _p_out) {
 }
 
 }}
+
+
+
 #else
 namespace shared { namespace dbg { namespace _impl { void __warning_lnk_4221 (void) {}}}}
 #endif

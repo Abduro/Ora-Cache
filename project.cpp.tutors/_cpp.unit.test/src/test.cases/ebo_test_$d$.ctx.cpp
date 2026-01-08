@@ -19,8 +19,8 @@ c_ctx::c_ctx (const bool _b_verb) : m_b_verb(_b_verb) {
 }
 
 c_ctx::~c_ctx (void) {
-//	__debugbreak();
-//	_out()();
+//	__debugbreak(); it very looks like running *each* test case method creates its own *new* copy of this class;
+//	_out()();       thus other event handlers' macros should be used those are executed *before* and *after* running the test case;
 }
 
 void c_ctx::_ctor (void) {

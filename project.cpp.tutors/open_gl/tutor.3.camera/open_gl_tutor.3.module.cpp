@@ -13,8 +13,8 @@
 #include "gl_renderer.h"
 #include "gl_version.h"
 
-#include "console.h"
-#include "console.font.h"
+#include "__trace\console.h"
+#include "__trace\console.font.h"
 
 #include "win.gui.wnd.h"
 

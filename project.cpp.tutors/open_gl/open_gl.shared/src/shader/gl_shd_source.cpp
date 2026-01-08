@@ -19,6 +19,8 @@ using namespace shared::sys_core::storage;
 
 using e_shaders = CReg_router::CShaders::e_types;
 
+#pragma region cls::CSrc_Cfg{}
+
 CSrc_Cfg:: CSrc_Cfg (void) : m_prefer(e_prefer::e_undef), m_res_id(0) {
 	this->m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
 CSrc_Cfg:: CSrc_Cfg (const CSrc_Cfg& _src) : CSrc_Cfg() { *this = _src; }
@@ -105,7 +107,8 @@ CSrc_Cfg& CSrc_Cfg::operator <<(const e_prefer _e_mode) { this->Prefer(_e_mode);
 CSrc_Cfg& CSrc_Cfg::operator <<(const uint16_t _res_id) { this->m_res_id = _res_id; return *this; }
 CSrc_Cfg& CSrc_Cfg::operator <<(_pc_sz _p_path) { this->m_path = _p_path; return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CSource{}
 
 CSource:: CSource (void) : m_$_id(0) { this->m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
 CSource:: CSource (const CSource& _src) : CSource() { *this = _src; }

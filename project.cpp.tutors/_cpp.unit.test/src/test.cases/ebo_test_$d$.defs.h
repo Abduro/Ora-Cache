@@ -9,6 +9,9 @@
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
 	using namespace ebo::boo::test;
 
+	__load (OnLoad);
+	__unload (OnUnload);
+
 }}}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);

@@ -24,15 +24,22 @@ namespace ebo { namespace boo { namespace test {
 
 	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
 
-#define __class(name) TEST_CLASS(name)
-#define __method(name) TEST_METHOD(name)
-#define __property(name) TEST_METHOD(name)
+#define __load(name)   TEST_MODULE_INITIALIZE(name) // this method is called by 'testhost.exe' on *loding* a user defined test case project dll; must to be checked;
+#define __unload(name) TEST_MODULE_CLEANUP(name)    // this method is called by 'testhost.exe' on *unloding* a user defined test case project dll; must to be checked;
 
-#define __ctor(name) TEST_METHOD(name) // just for making a distinguishing between a method and a constructor of a class;
-#define __dtor(name) TEST_METHOD(name) // just for making a distinguishing between a method and a destructor of a class;
+#define __init(name)   TEST_CLASS_INITIALIZE(name)  // defines method 'name' that runs *before* each test class is created;
+#define __clean(name)  TEST_CLASS_CLEANUP(name)     // defines method 'name' that runs *after* each test class is created;
 
-#define __init(name) TEST_CLASS_INITIALIZE(name) // an event of loading a test class object ;
-#define __term(name) TEST_CLASS_CLEANUP(name)
+#define __class(name)  TEST_CLASS(name)      // *required* for each class containing test methods; it identifies 'name' as a test class;
+
+#define __ctor(name)   TEST_METHOD(name)     // just for making a distinguishing between a method and a constructor of a class; not required;
+#define __dtor(name)   TEST_METHOD(name)     // just for making a distinguishing between a method and a destructor of a class; not required;
+
+#define __method(name)   TEST_METHOD(name)   // a test method must be declared in the scope of the test class; *required*;
+#define __property(name) TEST_METHOD(name)   // just for a distinguishing between a method and a pproperty of a class; not required;
+
+#define __befare_run(name) TEST_METHOD_INITIALIZE(name) // a method to be run *before each* test method is called; some sort of constructor of test case;
+#define __after_run(name)  TEST_METHOD_CLEANUP(name)    // a method to be run *after each* test method; some sort of destructor of thest case;
 
 }}}
 

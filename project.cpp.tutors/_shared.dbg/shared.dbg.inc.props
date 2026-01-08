@@ -18,7 +18,9 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
+    <_0-0>interface\__trace\</_0-0>
     <_1>src\</_1>
+    <_1-0>src\__trace\</_1-0>
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Gui)interface\</_3>
     <_4></_4>
@@ -30,7 +32,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_0-0);$(_1);$(_1-0);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />
