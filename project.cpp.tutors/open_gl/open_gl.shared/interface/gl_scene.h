@@ -16,10 +16,9 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CScene {
 	public:
-	using CDevCtx  = context::CDevice;
-	using CDrwCtx  = CContext;
 	using CArrObjects = vertex::CArrObj_enum;
-	using CProgs   = CProg_enum;
+	using CDevice = context::CDevice;
+	using CProgs  = CProg_enum;
 	public:
 		class CContext {
 		public:
@@ -27,18 +26,18 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 			err_code Clear (void); // destroys target GDI context that is retrieved from particular window handle; is called on window destroy message;
 			const
-			CDevCtx& Device (void) const;
-			CDevCtx& Device (void) ;
-			const
-			CDrwCtx& Draw (void) const;
-			CDrwCtx& Draw (void) ;
+			CDevice& Device (void) const;
+			CDevice& Device (void) ;
 
 			TError&  Error (void) const;
+			const
+			CGraphics& Graphics (void) const;
+			CGraphics& Graphics (void) ;
 		private:
 			CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
-			CDevCtx m_dev_ctx;
-			CDrwCtx m_drw_ctx;
-			CError  m_error;
+			CDevice   m_device;
+			CGraphics m_graphics;
+			CError    m_error;
 		};
 	
 	public:

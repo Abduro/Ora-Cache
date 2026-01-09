@@ -379,7 +379,7 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 }
 
 #pragma endregion
-#pragma region cls::CContext{}
+#pragma region cls::CGraphics{}
 
 #include "shared.wnd.fake.h"
 #include "gl_format.h"
@@ -387,10 +387,10 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 using CFakeWnd = ex_ui::popup::CMsgWnd;
 using namespace ex_ui::draw::open_gl::format;
 
-CContext:: CContext (void) : TBase() { TBase::m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-CContext::~CContext (void) {}
+CGraphics:: CGraphics (void) : TBase() { TBase::m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CGraphics::~CGraphics (void) {}
 
-err_code   CContext::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver) {
+err_code   CGraphics::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver) {
 	_u_gl_major_ver; _u_gl_minor_ver;
 	TBase::m_error <<__METHOD__<< __s_ok;
 
@@ -458,10 +458,10 @@ err_code   CContext::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_g
 }
 
 using CRegVer  = shared::sys_core::storage::CReg_router::CCtx::CVersion;
-using CVersion = CContext::CVersion;
+using CVersion = CGraphics::CVersion;
 
 const
-CVersion& CContext::Version (void) const { return this->m_ver; }
+CVersion& CGraphics::Version (void) const { return this->m_ver; }
 
 #pragma endregion
 #pragma region cls::CVersion

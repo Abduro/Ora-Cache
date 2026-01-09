@@ -90,14 +90,14 @@ err_code camera::CWnd::PostCreate (void) {
 	TRenderer& renderer = Get_renderer();
 
 	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
-	renderer.Scene().Ctx().Draw().Target() << *this;
-	renderer.Scene().Ctx().Draw().Target().Source((_pc_sz)cs_cls);
+	renderer.Scene().Ctx().Graphics().Target() << *this;
+	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
 
-	const uint32_t u_major = renderer.Scene().Ctx().Draw().Version().Major();
-	const uint32_t u_minor = renderer.Scene().Ctx().Draw().Version().Minor();
+	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
+	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
 
-	if (__failed(renderer.Scene().Ctx().Draw().Create(u_major, u_minor))) {
-		this->m_error = renderer.Scene().Ctx().Draw().Error();
+	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
+		this->m_error = renderer.Scene().Ctx().Graphics().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
 	}
 #if (0)
@@ -175,7 +175,7 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		::EndPaint(TBase::Handle(), &ps);
 #els (true == false) // if this is able then something goes wrong way: binding of required object(s) is dropped out and triangle goes away;
 		::Get_renderer().Is_allowed(true);
-		if (__failed(::Get_renderer().Draw()))
+		if (__failed(::Get_renderer().Graphics()))
 			__trace_err_3(_T("%s;\n"), (_pc_sz) ::Get_renderer().Error().Print(TError::e_req));
 #endif
 			return 0; // in any case, this message is considered as handled one;

@@ -13,7 +13,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	using namespace ebo::boo::test;
 
 	using CFakeWnd = ex_ui::popup::CMsgWnd;
-	using CContext = ex_ui::draw::open_gl::CContext;
+	using CGraphics = ex_ui::draw::open_gl::CGraphics;
 	using CDevice  = ex_ui::draw::open_gl::context::CDevice;
 
 	__class (c_ctx) {
@@ -21,16 +21,16 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		  c_ctx (const bool _b_verb = true);
 		 ~c_ctx (void);
 
-		 __ctor (_ctor);
-		 __method (Device);  // creates the regular device context compatible with open_gl rendering;
+		 __clean (OnClean);   // is called after destroying this class instance;
+		 __init (OnInit);     // is called before creating this class instance;
 
-		 const
-		 CFakeWnd& Fake_wnd (void) const;
-		 CFakeWnd& Fake_wnd (void) ;
+		 __ctor (_ctor);      // just for testing the test case when this class in new and has no method yet, otherwise not required;
+		 __method (Device);   // creates the regular device context compatible with open_gl rendering;
+
+		 __method (Graphics); // creates the open_gl graphics context;
 
 	private:
 		bool      m_b_verb;
-		CFakeWnd  m_fk_wnd;
 	};
 
 }}}}}

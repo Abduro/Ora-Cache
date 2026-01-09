@@ -129,12 +129,12 @@ namespace context {
 		(1) creates fake window;
 		(2) gets renderer context that is based on regular device context handle; *important* the rendering context must be set as current one;
 		(3) querying pointers to the OpenGL functions that are required for creating real draw context of OpenGL version at least 3.0;
-		(4) creates new window that is expected to be surface of the drawing;
+		(4) creates new window that is expected to be the surface of the drawing;
 		(5) using new window device context for setting pixel format by using OpenGL functions been loaded on the previous step (#3);
-		(6) creating the OpenGL draw context and making it current;
+		(6) creating the OpenGL draw rendering/graphics context and making it current;
 	*/
 
-	class CContext : public context::CBase { typedef context::CBase TBase;
+	class CGraphics : public context::CBase { typedef context::CBase TBase;
 	public:
 		class CVersion { // for setting the version attributes that may be different by value in comparison with OpenGL installed on the OS;
 		public:
@@ -156,17 +156,16 @@ namespace context {
 			bool      m_use_core;
 		};
 	public:
-		 CContext (void);  CContext (const CContext&) = delete; CContext (CContext&&) = delete;
-		~CContext (void);
+		 CGraphics (void);  CGraphics (const CGraphics&) = delete; CGraphics (CGraphics&&) = delete;
+		~CGraphics (void);
 
 		 err_code  Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver); // it is supposed the target window is set and its HDC is already gotten;
-		 err_code  Destroy (void);
 
 		 const
 		 CVersion& Version (void) const;
 
 	private:
-		 CContext& operator = (const CContext&) = delete; CContext& operator = (CContext&&) = delete;
+		 CGraphics& operator = (const CGraphics&) = delete; CGraphics& operator = (CGraphics&&) = delete;
 		 CVersion  m_ver;
 	};
 }}}

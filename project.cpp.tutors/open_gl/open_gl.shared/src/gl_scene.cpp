@@ -22,7 +22,7 @@ CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_o
 err_code CScene::CContext::Clear (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	context::CBase*  ctx_bases[] = { &this->Draw(), &this->Device() };
+	context::CBase* ctx_bases[] = { &this->Graphics(), &this->Device() };
 
 	for (uint32_t i_ = 0; i_ < _countof(ctx_bases); i_++) {
 		if (__failed(ctx_bases[i_]->Destroy()))
@@ -33,13 +33,14 @@ err_code CScene::CContext::Clear (void) {
 }
 
 const
-CScene::CDevCtx& CScene::CContext::Device (void) const { return this->m_dev_ctx; }
-CScene::CDevCtx& CScene::CContext::Device (void)       { return this->m_dev_ctx; }
+CDevice& CScene::CContext::Device (void) const { return this->m_device; }
+CDevice& CScene::CContext::Device (void)       { return this->m_device; }
 const
-CScene::CDrwCtx& CScene::CContext::Draw (void) const { return this->m_drw_ctx; }
-CScene::CDrwCtx& CScene::CContext::Draw (void)       { return this->m_drw_ctx; }
+CGraphics& CScene::CContext::Graphics (void) const { return this->m_graphics; }
+CGraphics& CScene::CContext::Graphics (void)       { return this->m_graphics; }
 
 TError& CScene::CContext::Error (void) const { return this->m_error; }
+
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 

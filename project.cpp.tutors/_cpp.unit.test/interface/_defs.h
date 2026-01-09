@@ -22,13 +22,11 @@ namespace ebo { namespace boo { namespace test {
 
 	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-	// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference ;
+#define __load(name)   TEST_MODULE_INITIALIZE(name) // this method is called by 'testhost.exe' on *loding* a user defined test case project dll; global;
+#define __unload(name) TEST_MODULE_CLEANUP(name)    // this method is called by 'testhost.exe' on *unloding* a user defined test case project dll; global;
 
-#define __load(name)   TEST_MODULE_INITIALIZE(name) // this method is called by 'testhost.exe' on *loding* a user defined test case project dll; must to be checked;
-#define __unload(name) TEST_MODULE_CLEANUP(name)    // this method is called by 'testhost.exe' on *unloding* a user defined test case project dll; must to be checked;
-
-#define __init(name)   TEST_CLASS_INITIALIZE(name)  // defines method 'name' that runs *before* each test class is created;
-#define __clean(name)  TEST_CLASS_CLEANUP(name)     // defines method 'name' that runs *after* each test class is created;
+#define __init(name)   TEST_CLASS_INITIALIZE(name)  // defines method 'name' that runs *before* each test class is created; the scope of the test class;
+#define __clean(name)  TEST_CLASS_CLEANUP(name)     // defines method 'name' that runs *after* each test class is created; the scope of the test class;
 
 #define __class(name)  TEST_CLASS(name)      // *required* for each class containing test methods; it identifies 'name' as a test class;
 
