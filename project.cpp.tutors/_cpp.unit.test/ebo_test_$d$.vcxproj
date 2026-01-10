@@ -224,10 +224,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="$(_2-0)ebo_test_$d$.builder.h" />
+    <ClCompile Include="$(_2-0)ebo_test_$d$.builder.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.ctx.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.prog.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">

@@ -11,7 +11,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_0 { void 
 
 using e_object = CPipeline::e_object;
 
-CPipeline:: CPipeline (void) : m_target(e_object::e_none) {}
+CPipeline:: CPipeline (const e_object _target) : m_target(_target) {}
 CPipeline::~CPipeline (void) {}
 
 e_object  CPipeline::Target (void) const { return this->m_target; }

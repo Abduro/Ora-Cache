@@ -67,7 +67,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		err_code Load (const uint16_t _res_id, const uint32_t _n_shader_id); // loads source text from the executable resource table string;
 		err_code Load (_pc_sz _p_path, const uint32_t _n_shader_id);         // loads the shader source code file ;
 
-		err_code Set (_pc_sz _p_source, const uint32_t _n_shader_id);        // sets the source text to the shader;
+		err_code Set (_pc_sz _p_code , const uint32_t _n_shader_id);         // sets the source code to the shader;
 		err_code Set (void); // it is assumed the source cfg is already set;
 
 	public: CSource& operator = (const CSource&); CSource& operator = (CSource&&) = delete; CSource& operator <<(const uint32_t _shader_id);

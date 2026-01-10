@@ -24,8 +24,8 @@ err_code  CProgId::Set (const uint32_t _u_value) {
 	this->m_error<<__METHOD__<<__s_ok;
 
 	if (0 == _u_value) {
-		this->Reset();
-		return this->Error();
+		this->Reset(); // the error object state is set to __e_not_inited and it shouldn't be returned, because it is intended state of identifier;
+		return __s_ok; // possibly __s_false may be returned, but it looks like unnecessary;
 	}
 	if (false == CProgId::Is_valid(_u_value, this->m_error))
 		return this->Error();

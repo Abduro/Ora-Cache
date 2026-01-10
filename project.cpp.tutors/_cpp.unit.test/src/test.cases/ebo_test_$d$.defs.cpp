@@ -14,7 +14,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_3 { void 
 */
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
 void OnLoad (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CError error((_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -28,7 +28,7 @@ void OnLoad (void) {
 }
 
 void OnUnload (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CError error((_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 

@@ -4,17 +4,10 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Jan-2026 at 00:55:23.370, UTC+4, Batumi, Wednesday;
 	Ebo Pack OpenGL draw context of regular device and of renderer uint test interface declaration file;
 */
-#include "_log.h"
-#include "gl_context.h"
-#include "gl_renderer.h"
-#include "shared.wnd.fake.h"
+#include "ebo_test_$d$.builder.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
 	using namespace ebo::boo::test;
-
-	using CFakeWnd = ex_ui::popup::CMsgWnd;
-	using CGraphics = ex_ui::draw::open_gl::CGraphics;
-	using CDevice  = ex_ui::draw::open_gl::context::CDevice;
 
 	__class (c_ctx) {
 	public:
@@ -30,7 +23,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		 __method (Graphics); // creates the open_gl graphics context;
 
 	private:
-		bool      m_b_verb;
+		bool m_b_verb;
 	};
 
 }}}}}

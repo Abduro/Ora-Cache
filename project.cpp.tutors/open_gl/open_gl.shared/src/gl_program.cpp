@@ -212,6 +212,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
 using namespace _impl;
 
+#pragma region cls::CProgram::CAttrs{}
+
 using CAttrs = CProg_enum::CAttrs;
 
 CAttrs:: CAttrs (CProg_enum* _p_progs) : m_progs(_p_progs) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
@@ -285,6 +287,9 @@ err_code CAttrs::Init (void) {
 
 	return this->Error();
 }
+
+#pragma endregion
+#pragma region cls::CProg_enum{}
 
 CProg_enum:: CProg_enum (void) : m_attrs(this) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	m_progs[0].Target(e_object::e_grid);
@@ -393,21 +398,21 @@ err_code CProg_enum::Delete (void) {
 
 TError&  CProg_enum::Error (void) const { return this->m_error; }
 const
-CProgram&   CProg_enum::Get (const e_object _u_target) const {
+CProgram& CProg_enum::Get (const e_object _u_target) const {
 	_u_target;
 	if (e_object::e_grid == _u_target) return this->m_progs[0];
 	if (e_object::e_tria == _u_target) return this->m_progs[1];
 	return _impl::inv_prog;
 }
 
-CProgram&   CProg_enum::Get (const e_object _u_target) {
+CProgram& CProg_enum::Get (const e_object _u_target) {
 	_u_target;
 	if (e_object::e_grid == _u_target) return this->m_progs[0];
 	if (e_object::e_tria == _u_target) return this->m_progs[1];
 	return _impl::inv_prog;
 }
 const
-CProgram&   CProg_enum::GetActive (void) const {
+CProgram& CProg_enum::GetActive (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	const uint32_t u_prog_id = program::CStatus::GetActiveProg(this->m_error);
@@ -424,7 +429,7 @@ CProgram&   CProg_enum::GetActive (void) const {
 	return _impl::inv_prog; // there is no active program from existing ones;
 }
 
-err_code    CProg_enum::Load (void) {
+err_code  CProg_enum::Load (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;
 	static _pc_sz p_object[] = {_T("grid.1"), _T("triangle.1")};
@@ -449,3 +454,5 @@ err_code    CProg_enum::Load (void) {
 const
 CProgram& CProg_enum::Ref (const uint32_t _u_ndx) const { if (_countof(this->m_progs) > _u_ndx) return this->m_progs[_u_ndx]; else return _impl::inv_prog; }
 CProgram& CProg_enum::Ref (const uint32_t _u_ndx)       { if (_countof(this->m_progs) > _u_ndx) return this->m_progs[_u_ndx]; else return _impl::inv_prog; }
+
+#pragma endregion

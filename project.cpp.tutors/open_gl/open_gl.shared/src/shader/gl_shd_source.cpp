@@ -100,7 +100,6 @@ err_code  CSrc_Cfg::Path (_pc_sz _p_path) {
 	return this->Error();
 }
 
-
 CSrc_Cfg& CSrc_Cfg::operator = (const CSrc_Cfg& _src) { *this << _src.Prefer() << _src.ResId() << _src.Path(); return *this; }
 
 CSrc_Cfg& CSrc_Cfg::operator <<(const e_prefer _e_mode) { this->Prefer(_e_mode); return *this; }
@@ -156,22 +155,22 @@ err_code CSource::Set (void) {
 	return this->Error();
 }
 
-err_code CSource::Set (_pc_sz _p_source, const uint32_t _u_shader_id) {
-	_p_source; _u_shader_id;
+err_code CSource::Set (_pc_sz _p_code, const uint32_t _u_shader_id) {
+	_p_code; _u_shader_id;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _p_source || CString(_p_source).IsEmpty())
+	if (nullptr == _p_code || CString(_p_code).IsEmpty())
 		return this->m_error  << __e_inv_arg = _T("Source code is empty");
 
 	if (false == CShader::Is_valid(_u_shader_id, this->m_error)) {
 		return this->Error();
 	}
-	this->m_buffer = _p_source; m_buffer.Trim();
+	this->m_buffer = _p_code; m_buffer.Trim();
 
-	CStringA src_a((_pc_sz) this->m_buffer); // converts to ansi-char from unicode if necessary;
-	int32_t n_len = src_a.GetLength();
+	CStringA code_a((_pc_sz) this->m_buffer); // converts to ansi-char from unicode if necessary;
+	int32_t n_len = code_a.GetLength();
 
-	const char* p_buffer = src_a.GetBuffer();
+	const char* p_buffer = code_a.GetBuffer();
 
 	if (__failed(__get_$_procs().Source(_u_shader_id, 1, &p_buffer, &n_len)))
 		this->m_error = __get_$_procs().Error();
