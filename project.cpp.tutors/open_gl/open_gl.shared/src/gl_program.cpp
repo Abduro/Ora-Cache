@@ -431,18 +431,19 @@ CProgram& CProg_enum::GetActive (void) const {
 
 err_code  CProg_enum::Load (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+#if (0) // it is not required anymore;
 	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;
-	static _pc_sz p_object[] = {_T("grid.1"), _T("triangle.1")};
-
+	static _pc_sz p_key_names[] = {_T("grid.1"), _T("triangle.1")};
+#endif
 	const render::CCfg& cfg = ::Get_renderer().Cfg();
 
-	for (uint32_t i_ = 0; i_ < _countof(this->m_progs) && i_ < _countof(p_object); i_++) {
+	for (uint32_t i_ = 0; i_ < _countof(this->m_progs)/* && i_ < _countof(p_key_names)*/; i_++) {
 		CProgram& prog = this->m_progs[i_];
 		if (false == cfg.Is_drawable(prog.Target()))
 			continue;
-		if (__failed(prog.Shaders().Fragment().Src().Cfg().Path(p_object[i_], prog.Shaders().Fragment().Type().Get())))
+		if (__failed(prog.Shaders().Fragment().Src().Cfg().Path(TPipe::To_str(prog.Target()), prog.Shaders().Fragment().Type().Get())))
 		    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-		if (__failed(prog.Shaders().Vertex().Src().Cfg().Path(p_object[i_], prog.Shaders().Vertex().Type().Get())))
+		if (__failed(prog.Shaders().Vertex().Src().Cfg().Path(TPipe::To_str(prog.Target()), prog.Shaders().Vertex().Type().Get())))
 	        __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
 
 		if (__failed(prog.Shaders().Load())) {}

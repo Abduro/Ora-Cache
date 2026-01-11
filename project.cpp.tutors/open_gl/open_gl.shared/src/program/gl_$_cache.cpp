@@ -225,7 +225,7 @@ err_code CCache::Compile (void) {
 			// checks the compile status of the shader;
 			$_status << shaders[i_]->Id();
 			const bool b_compiled = $_status.Is_compiled();
-			if ($_status.Error() ) { // the error can occur in one of the procedure wrappers;
+			if ($_status.Error()) { // the error can occur in one of the procedure wrappers;
 				__trace_err_2(_T("%s\n"), (_pc_sz) $_status.Error().Print(TError::e_print::e_req));
 			}
 			else {

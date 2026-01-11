@@ -19,3 +19,12 @@ e_object  CPipeline::Target (void) const { return this->m_target; }
 	 _u_target;
 	 const bool b_changed = this->Target() != _u_target; if (b_changed) this->m_target = _u_target; return b_changed;
  }
+
+ _pc_sz   CPipeline::To_str (const e_object _u_target) {
+	 _u_target;
+	 static _pc_sz p_names[] = {_T("#none"), _T("grid.1"), _T("triangle.1")};
+	 if (false) {}
+	 else if (e_object::e_grid == _u_target) return p_names[e_object::e_grid];
+	 else if (e_object::e_tria == _u_target) return p_names[e_object::e_tria];
+	 else return p_names[e_object::e_none];
+ }

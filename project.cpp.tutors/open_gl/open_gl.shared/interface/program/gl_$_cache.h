@@ -50,7 +50,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace program {
 
 		TError&  Error (void) const;
 
-		err_code Load  (void);   // load source code for each shader;
+		err_code Load  (void);   // uploads the source code for each shader; the cfg of the source code must be configured for how or from where to get the code;
 		const
 		CProgId& ProgId (void) const;
 		CProgId& ProgId (void) ;

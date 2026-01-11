@@ -32,8 +32,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 		err_code  ResId  (const uint16_t, const e_res_types); // checks the availability of resources in the executable file that created this process;
 
 		_pc_sz    Path   (void) const;
-		err_code  Path   (_pc_sz _p_object, const $Type);     // loads from the registry a path to source file of the logical object name and particular type of shader;
-		err_code  Path   (_pc_sz);         // sets the path to the file directly, the path is checked in order to guarantee the file exists;
+		err_code  Path   (_pc_sz _p_key_name, const $Type);   // loads from the registry a path to source file of the logical object name and particular type of shader;
+		err_code  Path   (_pc_sz); // sets the path to the file directly, the path is checked in order to guarantee the file exists;
 
 		CSrc_Cfg& operator <<(const e_prefer);
 		CSrc_Cfg& operator <<(const uint16_t);

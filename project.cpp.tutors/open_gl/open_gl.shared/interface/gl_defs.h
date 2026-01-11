@@ -40,9 +40,13 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 		e_object  Target (void) const;     // gets pipeline target object;
 		bool      Target (const e_object); // sets pipeline target object; returns 'true' in case of target object value change;
+		static
+		_pc_sz    To_str (const e_object); // gets target object name; it is used for getting values from registry, for example;
 	protected:
 		e_object  m_target ;
 	};
 }}}
+
+typedef ex_ui::draw::open_gl::CPipeline TPipe;
 
 #endif/*_GL_DEFS_H_INCLUDED*/

@@ -3,8 +3,6 @@
 	Ebo Pack OpenGL drawing context of regular device and of renderer uint test interface implementation file;
 */
 #include "ebo_test_$d$.ctx.h"
-#include "shared.preproc.h"
-
 #include <crtdbg.h>
 
 using namespace ebo::boo::test::open_gl::draw;
@@ -48,10 +46,10 @@ void c_ctx::Device (void) {
 
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	
-	CBuilder builder;
+	CDevCtx dev_ctx;
 
-	builder.Device().Create(); // the error and result are output by builder itself;
-	builder.Device().Delete();
+	dev_ctx.Create(); // the error and result are output by builder itself;
+	dev_ctx.Delete();
 
 	_out()();
 }
@@ -60,19 +58,22 @@ void c_ctx::Graphics (void) {
 
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CBuilder builder;
+	CDevCtx dev_ctx;
+	CGraphCtx graph_ctx;
 
 	const bool b_error = false; // if is set to 'true' the error part of this test case throws the error;
 	if (b_error) {
-		builder.Graph().Create(nullptr);
-		builder.Graph().Delete();
+		graph_ctx.Create(nullptr);
+		graph_ctx.Delete();
 	}
-	else if (__failed(builder.Device().Create())) { /*nothing to test;*/ }
-	else if (__failed(builder.Graph().Create(builder.Device().Window().m_hWnd)))  { /*nothing to test;*/ }
+	else if (__failed(dev_ctx.Create())) { /*nothing to test;*/ }
+	else if (__failed(graph_ctx.Create(dev_ctx.Window().m_hWnd)))  { /*nothing to test;*/ }
 	else {
-		builder.Graph().Delete();
-		builder.Device().Delete();
+		graph_ctx.Delete();
 	}
+
+	dev_ctx.Delete();
+
 	_out()();
 }
 

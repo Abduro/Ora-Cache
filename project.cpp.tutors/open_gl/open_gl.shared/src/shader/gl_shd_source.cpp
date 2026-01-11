@@ -58,8 +58,8 @@ err_code  CSrc_Cfg::ResId  (const uint16_t _res_id, const e_res_types _e_type) {
 }
 
 _pc_sz    CSrc_Cfg::Path (void) const { return (_pc_sz)this->m_path; }
-err_code  CSrc_Cfg::Path (_pc_sz _p_object, const $Type _e_type) {
-	_p_object, _e_type;
+err_code  CSrc_Cfg::Path (_pc_sz _p_key_name, const $Type _e_type) {
+	_p_key_name, _e_type;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	e_shaders e_shader = e_shaders::e__undef;
@@ -72,7 +72,7 @@ err_code  CSrc_Cfg::Path (_pc_sz _p_object, const $Type _e_type) {
 		return this->m_error <<__e_inv_arg = TString().Format(_T("Unsupported shader type '%s'"), (_pc_sz) CType::To_str((uint32_t)_e_type));
 	}
 
-	CString cs_path = Get_registry().Value(_p_object, e_shader);
+	CString cs_path = Get_registry().Value(_p_key_name, e_shader);
 	if (cs_path.IsEmpty()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) Get_registry().Error().Print(TError::e_print::e_req));
 		return this->m_error = Get_registry().Error();
