@@ -36,7 +36,7 @@ namespace program {
 		 static CString  Class (void); // returns this class name for debug purposes;
 
 		 err_code Create (void);
-		 err_code Delete (void);       // deletes the attribute object first afterwards the program object itself;
+		 err_code Delete (void);       // deletes the attribute object first afterwards the program object itself; << needs to be changed, otherwise unclear regarding attribute object;
 
 		 TError&  Error (void) const;
 
@@ -52,6 +52,8 @@ namespace program {
 		 bool Is_valid (const uint32_t _prog_id, CError&); // there is not way to check program identifier as it can be made for shader; the comment must be clarified;
 		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
 
+		 static                      // the static method is suitable for test cases;
+		 err_code Link (const uint32_t _prog_id, CError&);
 		 err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());
 
 		 const

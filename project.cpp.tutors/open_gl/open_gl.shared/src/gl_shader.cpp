@@ -42,12 +42,12 @@ err_code CShader::Create (const $Type _e_type) {
 
 	__trace::Use_con(true); // ToDo: possibly it is not necessary and must be removed;
 
-	this->m_id = __get_$_procs().Create(_e_type);
+	this->m_id = __get_$_procs().Create((uint32_t)_e_type);
 	if (0 == this->m_id) {
 		this->m_error() = __get_$_procs().Error();
 	__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	} else {
-	__trace_impt_2(_T("The shader: id = %u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	__trace_impt_2(_T("The shader: id = %u, type='%s' is created;\n"), this->Id(), (_pc_sz) CType::To_str((uint32_t)this->Type().Get()));
 	this->Src() << this->Id();
 	}
 	return this->Error()();
@@ -66,7 +66,7 @@ err_code CShader::Delete (void) {
 		return (this->m_error() << (err_code) TErrCodes::eData::eInvalid = TString().Format(_T("The shader id = %u is not valid"), this->Id()));
 
 	__trace::Use_con(true);
-	__trace_warn_3(_T("The shader: id = %u, type='%s' is deleted;\n"), this->Id(), (_pc_sz) CType::To_str(this->Type().Get()));
+	__trace_warn_3(_T("The shader: id = %u, type='%s' is deleted;\n"), this->Id(), (_pc_sz) CType::To_str((uint32_t)this->Type().Get()));
 	this->m_id = 0;
 
 	return this->Error()();

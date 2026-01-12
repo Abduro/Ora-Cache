@@ -17,7 +17,7 @@ c_prog::c_prog (const bool _b_verb) : m_b_verb(_b_verb) {
 
 void c_prog::Grid (void) {
 
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CDevCtx dev_ctx;
 	CGraphCtx graph_ctx;
@@ -28,6 +28,8 @@ void c_prog::Grid (void) {
 	CProg prog;
 
 	prog.Target(e_object::e_grid); // by default, it is already set as the target of the grid, but for better readability;
+	prog.Opts().UseShaders(true);  // turn on the option of using the program shaders;
+	prog.Opts().Link(true);        // turn on the option of linking the program;
 
 	prog.Create();
 	prog.Delete();

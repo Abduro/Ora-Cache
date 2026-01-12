@@ -5,15 +5,57 @@
 	This is Ebo Pack OpenGL shaders' wrapper interface declaration file for using in test cases adapters;
 */
 #include "ebo_test_$d$.defs.h"
+#include "ebo_test_$d$.ctx.h"
+#include "gl_defs.h"
+#include "gl_shader.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
 
 	using namespace ex_ui::draw::open_gl;
 
+	using CShader   = ex_ui::draw::open_gl::CShader;
 	using $Fragment = ex_ui::draw::open_gl::shader::CFragment;
 	using $Vertex   = ex_ui::draw::open_gl::shader::CVertex;
+	// this class especially intended for shader source code file compilation check; no shared renderer components is used;
+	class C$Base : public TPipe {
+	public:
+		C$Base (const e_object = e_object::e_grid);
+		C$Base (const C$Base&) = delete; C$Base (C$Base&&) = delete; ~C$Base (void) = default;
 
-	// the shaders class uses program shader cache that is declared in gl_$_cache.h;
+		err_code Compile(void);        // it is supposed the object target is already set; device context must be created too;
+		err_code Create (const $Type); // creates a shader of given type;
+		err_code Delete (void);        // deletes a shader;
+
+		TError&  Error  (void) const;
+		const
+		CShader& Ref (void) const;
+		CShader& Ref (void) ;
+
+		static err_code Compile(CShader&, const e_object, CError&); // the input shader has its type, target object is for loading appropriate source code file;
+		static err_code Create (CShader&, const $Type, CError&); // device contex is created inside of this proc; such behaviour needs a review;
+		static err_code Delete (CShader&, CError&); // deletes the given shader;
+
+	protected:
+		C$Base& operator = (const C$Base&) = delete; C$Base& operator = (C$Base&&) = delete;
+		CError   m_error;
+		CShader  m_shader; // this is isolated class from the renderer draw pipeline;
+	};
+
+	class C$Frag : public C$Base {
+	public:
+		C$Frag (const e_object = e_object::e_grid); ~C$Frag (void) = default;
+
+		err_code Create (void); // creates a fragment shader;
+	};
+
+	class C$Vert : public C$Base {
+	public:
+		C$Vert (const e_object = e_object::e_grid); ~C$Vert (void) = default;
+
+		err_code Create (void); // creates a vertex shader;
+	};
+
+	// the shaders' class uses program shader cache that is declared in gl_$_cache.h;
 	class CShaders : public CPipeline { typedef CPipeline TBase;
 	public:
 		CShaders (const e_object = e_object::e_grid);

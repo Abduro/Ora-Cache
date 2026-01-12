@@ -34,6 +34,8 @@
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.prog.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.shader.h"><Filter>interface</Filter></ClInclude>

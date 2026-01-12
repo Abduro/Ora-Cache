@@ -4,15 +4,22 @@
 */
 #include "ebo_test_$d$.shader.h"
 
-#include "gl_procs_shader.h"
-#include "shader\gl_compiler.h"
-#include "shader\gl_shd_status.h"
-
 using namespace ebo::boo::test::open_gl::draw;
 
-using CCompiler = ex_ui::draw::open_gl::shader::CCompiler;
-using CStatus = ex_ui::draw::open_gl::shader::CStatus;
+using COpts = c_shaders::COpts;
 
+#pragma region cls::COpts{}
+
+COpts::COpts (void) : m_b_cmpl(true) {}
+
+bool COpts::Compile (void) const { return this->m_b_cmpl; }
+bool COpts::Compile (const bool _opt) {
+	_opt;
+	const bool b_changed = this->Compile() != _opt; if (b_changed) this->m_b_cmpl = _opt; 
+	return b_changed;
+}
+
+#pragma endregion
 #pragma region cls::c_shaders{}
 
 c_shaders::c_shaders (const e_object _target, const bool _b_verb) : m_target(_target), m_b_verb(_b_verb) {
@@ -22,67 +29,46 @@ c_shaders::c_shaders (const e_object _target, const bool _b_verb) : m_target(_ta
 	}
 }
 
-void c_shaders::Create (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	_out()();
-}
-
-#pragma warning (disable: 4706) // assignment within conditional expression;
-// or this one is also good: https://stackoverflow.com/questions/6986018/visual-studio-2010-c-suppress-c4706-warning-temporarily >> parentheses;
 void c_shaders::Get_frag (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CDevCtx dev_ctx;
-	CShaders shaders;
 
-	CCompiler compiler;
-
-	bool b_supported = false; // the flag of compiler support;
-
-	if (__failed(dev_ctx.Create())) { _out()(); return; }
-
-	$Fragment& $_frag = shaders.Fragment();
-
-	if (false){}
-	else if (__failed($_frag.Create())) {/*nothig for test*/}
-	else if (__failed($_frag.Src().Cfg().Path(TPipe::To_str(this->Target()), $_frag.Type().Get()))) {/*nothig for test*/}
-	else if (__failed($_frag.Src().Set())) {/*nothig for test*/}
-	else {
-		if (false) {}
-		else if (b_supported = compiler.Is_supported()) { _out() += _T("shader compiler support is: 'true';"); }
-		else if (compiler.Error()) { _out() += compiler.Error().Print(TError::e_print::e_req); }
+	if (__failed(dev_ctx.Create())) {
+		_out() += dev_ctx.Error().Print(TError::e_print::e_req); _out()(); return;
 	}
 
-	if (b_supported) {
-		compiler << $_frag.Id();
-		if (false) {}
-		else if (__failed(compiler.Compile())) { _out() += compiler.Error().Print(TError::e_print::e_req); }
-		else {
-			CStatus $_status;
-			$_status << $_frag.Id();
-			const bool b_compiled = $_status.Is_compiled();
-			if ($_status.Error()) { _out() += $_status.Error().Print(TError::e_print::e_req); }
-			else _out() += TString().Format(
-				_T("shader '%s' (id = %u) compiled status: '%s';"), (_pc_sz) procs::$_type_to_str($_frag.Type().Get()), $_frag.Id(), TString().Bool(b_compiled)
-			);
+	C$Frag $_frag;
 
-			if (__failed(compiler.Release())) { _out() += compiler.Error().Print(TError::e_print::e_req); }
-		}
-	}
+	$_frag.Create(); if (this->Opts().Compile()) $_frag.Compile();
+	$_frag.Delete();
 
-	$_frag.Delete(); // deletes the shader in any case;
-
-	dev_ctx.Delete();
+	dev_ctx.Delete(); // the error code of this operation is not interested in this procedure context;
 
 	_out()();
 }
-#pragma warning (default: 4706)
 
 void c_shaders::Get_vert (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CDevCtx dev_ctx;
+
+	if (__failed(dev_ctx.Create())) {
+		_out() += dev_ctx.Error().Print(TError::e_print::e_req); _out()(); return;
+	}
+
+	C$Vert $_vert;
+
+	$_vert.Create(); if (this->Opts().Compile()) $_vert.Compile();
+	$_vert.Delete();
+
+	dev_ctx.Delete(); // the error code of this operation is not interested in this procedure context;
+
 	_out()();
 }
+const
+COpts&   c_shaders::Opts (void) const { return this->m_opts; }
+COpts&   c_shaders::Opts (void)       { return this->m_opts; }
 
 e_object c_shaders::Target (void) const { return this->m_target; }
 

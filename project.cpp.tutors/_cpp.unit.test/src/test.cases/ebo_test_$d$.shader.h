@@ -12,19 +12,32 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	__class (c_shaders) { // test class cannot be inherited from any class unfortunately;
 	public:
+		class COpts : private no_copy {
+		public:
+			COpts (void) ; ~COpts (void) = default;
+
+			bool Compile (void) const; // gets the compile option value;
+			bool Compile (const bool); // sets the compile option value, returns 'true' in case of option value change;
+
+		private:
+			bool m_b_cmpl; // this is the option of shader compilation when it is created; by default is true;
+		};
 		  c_shaders (const e_object = e_object::e_grid, const bool _b_verb = true);
 		 ~c_shaders (void) = default;
-
-		 __method (Create);   // creates all shaders, before calling this proc, the device context must be created, otherwise procs loader throws the error;
 
 		 __method (Get_frag); // shaders belong to a program of the draw target object and the reference to the program can be gotten by target type only;
 		 __method (Get_vert); // shaders belong to a program of the draw target object and the reference to the program can be gotten by target type only;
 
+		 const
+		 COpts&   Opts (void) const;
+		 COpts&   Opts (void) ;
+
 		 e_object Target (void) const;
 
 	private:
-		bool     m_b_verb;
+		bool     m_b_verb; // not used yet;
 		e_object m_target;
+		COpts    m_opts;
 	};
 
 }}}}}

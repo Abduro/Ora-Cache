@@ -234,6 +234,8 @@
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.prog.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.shader.h" />

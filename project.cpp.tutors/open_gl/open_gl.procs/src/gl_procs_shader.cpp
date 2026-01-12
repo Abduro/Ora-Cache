@@ -88,10 +88,11 @@ err_code  CShader::Delete (const uint32_t _shader_id) {
 	const
 	uint32_t u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ){
-	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("'_shader_id' (%u) is invalid"), _shader_id); break;
+	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("'_shader_id' 0x%04x (%u) is invalid"), _shader_id, _shader_id); break;
+	case GL_INVALID_OPERATION : CBase::m_error << __e_inv_arg = TString().Format(_T("'_shader_id' 0x%04x (%u) is not compiled"), _shader_id, _shader_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 	}
 
 	return CBase::Error();

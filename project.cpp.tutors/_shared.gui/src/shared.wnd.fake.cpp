@@ -20,7 +20,7 @@ CMsgWnd:: CMsgWnd (void) : TWindow(), m_h_dc(0) { this->m_error >> __CLASS__ << 
 		this->m_error << __s_ok;
 		this->m_h_dc = TWindow::GetDC();
 	//	__empty_ln();
-		__trace_info_3(_T("context device: handle=%s\n"),  TString()._addr_of(this->Get_ctx()));
+		__trace_info_3(_T("context device: handle=%s;\n"),  TString()._addr_of(this->Get_ctx()));
 	}
 }
 

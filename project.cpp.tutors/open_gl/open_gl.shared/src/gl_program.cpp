@@ -51,7 +51,7 @@ err_code   CProgram::Create (void) {
 		this->Shaders() << this->Id(); // this is very *important*, otherwise no shader attachment will succeed;
 		this->Status() << this->Id();
 	}
-	if (this->Error()) { // with no brackets : error C2181: illegal else without matching if ;
+	if (this->Error()) { // without curly brackets: error C2181: illegal else without matching if ;
 	      __trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
 	else {__trace_impt_2(_T("The program (id = %u) is created;\n"), this->Id().Get()); }
 
@@ -118,33 +118,38 @@ bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 
 err_code CProgram::Link (void) {
 	this->m_error<<__METHOD__<<__s_ok;
+	return CProgram::Link(this->Id(), this->m_error);
+}
 
-	static _pc_sz pc_sz_pat_lnk = _T("The program (id = %u) is linked;\n");
+err_code CProgram::Link (const uint32_t _prog_id, CError& _err) {
+	_prog_id; _err;
+	static _pc_sz pc_sz_pat_lnk = _T("The program (id = 0x%04x) is linked;\n");
 
-	CStatus prog_status(this->Id());
-	CLinker linker(this->Id());
+	CLinker linker(_prog_id);
 
 	if ( __failed(linker.Link()) ) {
-	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); this->m_error = linker.Error(); }
-	else __trace_impt_2(pc_sz_pat_lnk, linker.ProgId());
+	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); _err = linker.Error(); return _err; }
+	else __trace_impt_2(pc_sz_pat_lnk, _prog_id);
+
+	CStatus prog_status(_prog_id);
 
 	// just checks the program link status;
 	const bool b_linked = prog_status.Is_linked();
 	if ( prog_status.Error() ) {
-		__trace_err_2(_T("%s\n"), (_pc_sz) prog_status.Error().Print(TError::e_print::e_req));}
-	else {
-		__trace_info_2(_T("Program (id = %u) link status is '%s';\n"), linker.ProgId(), TString().Bool(b_linked));
-		if (false == b_linked) {
-			program::CLog log;
-			if (__failed( log.Set(this->Id()))) {
-			    __trace_err_2(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
-			else {
-				__trace_warn_2(_T("%s\n"), _T("Link log:"));
-			    __trace_err(_T("%s"), log.Get());
-			}
+		__trace_err_2(_T("%s\n"), (_pc_sz) prog_status.Error().Print(TError::e_print::e_req)); _err = prog_status.Error(); return _err;
+	} else { __trace_info_2(_T("Program (id = 0x%04x) link status is '%s';\n"), linker.ProgId(), TString().Bool(b_linked)); }
+
+	if (false == b_linked) {
+		program::CLog log;
+		if (__failed( log.Set(_prog_id))) {
+			__trace_err_2(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
+		else {
+			__trace_warn_2(_T("%s\n"), _T("Link log:"));
+			__trace_err(_T("%s"), log.Get());
 		}
 	}
-	return this->Error();
+
+	return _err;
 }
 
 const

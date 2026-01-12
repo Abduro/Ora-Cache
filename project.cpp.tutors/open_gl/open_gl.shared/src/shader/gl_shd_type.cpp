@@ -12,10 +12,10 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
-CType:: CType (void) : m_value(e_value::e_undef) { this->m_error()>>__CLASS__<<__METHOD__<<__e_not_inited; }
+CType:: CType (void) : m_value(e_value::e_undef) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CType:: CType (const CType& _src) : CType() { *this = _src; }
 
-TErr_ex& CType::Error (void) const { return this->m_error; }
+TError& CType::Error (void) const { return this->m_error; }
 
 $Type   CType::Get (void) const { return this->m_value; }
 bool    CType::Set (const e_value _e_type) {
@@ -30,19 +30,7 @@ bool CType::Is_fragment (void) const { return e_value::e_fragment == this->Get()
 bool CType::Is_vertex (void) const { return e_value::e_vertex == this->Get(); }
 
 CString CType::To_str(const uint32_t _u_type) {
-	_u_type;
-	CString cs_out;
-	switch (_u_type) {
-	case e_value::e_compute   : cs_out = _T("$_compute"); break;
-	case e_value::e_fragment  : cs_out = _T("$_fragment"); break;
-	case e_value::e_geometry  : cs_out = _T("$_geometry"); break;
-	case e_value::e_tess_ctrl : cs_out = _T("$_tess_ctrl"); break;
-	case e_value::e_tess_eval : cs_out = _T("$_tess_eval"); break;
-	case e_value::e_vertex    : cs_out = _T("$_vertex"); break;
-	default:
-		cs_out.Format(_T("#undef(%u)"), _u_type);
-	}
-	return  cs_out;
+	return  procs::$_type_to_str(_u_type);
 }
 
 #define __gl_shader_type 0x8B4F // GL_SHADER_TYPE ;
@@ -50,7 +38,7 @@ CString CType::To_str(const uint32_t _u_type) {
 CType::e_value CType::Get_type (const uint32_t _u_shader_id,  CError& _err) {
 	_u_shader_id;
 
-	int32_t n_type = CType::e_value::e_undef;
+	int32_t n_type = (uint32_t)CType::e_value::e_undef;
 
 	if (__failed(__get_$_procs().Params(_u_shader_id, __gl_shader_type, &n_type))) {
 		_err = __get_$_procs().Error();
@@ -59,6 +47,6 @@ CType::e_value CType::Get_type (const uint32_t _u_shader_id,  CError& _err) {
 	return  CType::e_value(n_type);
 }
 
-CType::operator uint16_t (void) const { return this->Get(); }
+CType::operator uint32_t (void) const { return (uint32_t) this->Get(); }
 
 CType& CType::operator = (const CType& _src) { this->Set(_src.Get()); return *this; }

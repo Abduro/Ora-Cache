@@ -19,6 +19,7 @@ namespace procs {
 		e_tess_eval = 0x8E87,  // GL_TESS_EVALUATION_SHADER| evaluation shader (also known as domain shader); 
 		e_vertex    = 0x8B31,  // GL_VERTEX_SHADER         | transforms vertex's 3D position in virtual space to the 2D coords of the screen (as well as a depth value for the Z-buffer); https://www.khronos.org/opengl/wiki/Vertex_Shader ;
 	};
+	/* tesselation shaders are for simpler meshes to be subdivided into finer meshes at run-time; for viewing camera to allow active level-of-detail scaling;*/
 
 	CString $_type_to_str (const uint32_t _u_$_type); // converts a shader type constant to string for trace output;
 

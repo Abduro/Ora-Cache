@@ -68,8 +68,8 @@ bool  CCompiler::Is_supported (void) const {
 
 	if (cmpl.Error().Is())
 		this->m_error = cmpl.Error();
-	else
-		this->m_error <<__e_not_inited = _T("Shader compiler support: 'false'");
+//	else
+//		this->m_error <<__e_not_inited = _T("Shader compiler support: 'false'"); there is no error, but yes/no support;
 	return b_support;
 }
 
