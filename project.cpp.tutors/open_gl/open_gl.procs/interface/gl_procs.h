@@ -35,7 +35,8 @@ namespace procs {
 	public:
 		CLinker (void); ~CLinker (void) = default;
 
-		err_code Link    (const uint32_t _prog_id);  // links the program object specified by _prog_id ;
+		err_code Link    (const uint32_t _prog_id);  // links the program object specified by '_prog_id';
+		err_code Get_all (void) ; // gets all functions' pointers at once;
 
 	private:
 		CLinker& operator = (const CLinker&) = delete; CLinker& operator = (CLinker&&) = delete;
@@ -61,6 +62,8 @@ namespace procs {
 	};
 }}}}
 
+typedef ex_ui::draw::open_gl::procs::CCompiler TCmplProcs; TCmplProcs& __get_cmpl_procs (void);
+typedef ex_ui::draw::open_gl::procs::CLinker TLnkProcs; TLnkProcs& __get_lnk_procs (void);
 typedef ex_ui::draw::open_gl::procs::CParam TParam; TParam& __get_param_procs (void);
 
 #endif/*_GL_PROCS_H_INCLUDED*/

@@ -60,7 +60,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 }}}}}
 
 using namespace _impl;
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CInterface{}
 
 static _pc_sz iface_fun_names[] = { _T("glGetProgramInterfaceiv") };
 
@@ -149,7 +149,7 @@ err_code CInterface::Get (const uint32_t _prog_id, const e_interface _e_iface, c
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -177,8 +177,6 @@ TIfaceProcs&  ::__get_iface_procs (void) {
 	}
 	return procs;
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 const bool CProperty::Is_checked (const e_interface _e_iface, const ::std::vector<e_property>& _props, ::std::vector<e_property>& _error) {
 	_e_iface; _props; _error;
@@ -218,7 +216,8 @@ const ::std::vector<e_interface>& CProperty::Find (const e_property _e_prop) {
 		return found->second;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CResource{}
 
 static _pc_sz res_fun_names[] = { _T("glGetProgramResourceLocation"), _T("glGetProgramResourceiv"), _T("glGetProgramResourceName") };
 
@@ -231,16 +230,39 @@ CResource:: CResource (void) : CBase() { CString cs_cls = TString().Format(_T("%
 #define __gl_atom_counter   0x92C0 // GL_ATOMIC_COUNTER_BUFFER;
 #define __gl_trans_feedback 0x8C8E // GL_TRANSFORM_FEEDBACK_BUFFER;
 
-int32_t  CResource::GetLocate (const uint32_t _prog_id, const e_interface _e_iface, const char* _p_att_name) {
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceLocation.xhtml ;
+int32_t  CResource::GetLocate (const uint32_t _prog_id, const e_interface _e_iface, _pc_sz _p_att_name) {
 	_prog_id; _e_iface; _p_att_name;
 	/* Possible error codes:
+	GL_INVALID_VALUE : '_prog_id' is not the name of an existing program object;
+	GL_INVALID_ENUM  : '_e_iface' is not one of the accepted interface types;
+	GL_INVALID_OPERATION : program object reffered by '_prog_id' has not been linked successfully;
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
 	int32_t n_result  = -1;
 
+	pfn_GetLoc p_fun = reinterpret_cast<pfn_GetLoc>(CBase::Get(res_fun_names[(uint32_t)e_res_fun_ndx::e_get_loc]));
+	if (nullptr == p_fun)
+		return n_result;
+
+	CStringA cs_att_name(_p_att_name);
+
+	p_fun(_prog_id, (uint32_t)_e_iface, cs_att_name.GetString());
+
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
+	case GL_INVALID_ENUM : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_enum: '_e_iface'{'%s' (0x%04x)} is not applicable}"), e_iface_to_str(_e_iface), _e_iface); break;
+	case GL_INVALID_OPERATION : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_oper: program '_prog_id' (0x%04x) is not linked"), _prog_id); break;
+	case GL_INVALID_VALUE : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (0x%04x) refers to no program"), _prog_id); break;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
+	}
+
 	return n_result;
 }
-
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceName.xhtml ;
 err_code CResource::GetName (const uint32_t _prog_id, const e_interface _e_iface, const uint32_t _u_ndx, CString& _name) {
 	_prog_id; _e_iface; _u_ndx; _name;
 	/* Possible error codes:
@@ -263,8 +285,9 @@ err_code CResource::GetName (const uint32_t _prog_id, const e_interface _e_iface
 
 	p_fun(_prog_id, (uint32_t)_e_iface, _u_ndx, n_size, &u_length, sz_buffer);
 
-	const uint32_t u_err_code = CErr_ex().Get_code();
-	switch (u_err_code) {
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
 	case GL_INVALID_ENUM  : {
 			if (false) {}
 			else if (false == CInterface::Is_acceptable((uint32_t)_e_iface)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_e_iface' (%u) is not accepted"), _e_iface);
@@ -278,7 +301,9 @@ err_code CResource::GetName (const uint32_t _prog_id, const e_interface _e_iface
 			else if (false == __get_prog_procs().IsProg(_prog_id)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) refers to no program"), _prog_id);
 			else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: err_code (%u)"), u_err_code);
 		} break;
-	default:;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	if (false == CBase::Error()) {
@@ -287,7 +312,6 @@ err_code CResource::GetName (const uint32_t _prog_id, const e_interface _e_iface
 
 	return CBase::Error();
 }
-
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResource.xhtml ;
 err_code CResource::GetValues (const uint32_t _prog_id, const e_interface _e_iface, const uint32_t _u_ndx, const TRawProps& _e_props, TRawValues& _result) {
 	_prog_id; _e_iface; _u_ndx; _e_props; _result;
@@ -328,7 +352,7 @@ err_code CResource::GetValues (const uint32_t _prog_id, const e_interface _e_ifa
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -357,7 +381,8 @@ TResProcs&  ::__get_res_procs (void) {
 	return procs;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CProg{}
 
 static _pc_sz prog_fun_names[] = {
 	_T("glCreateProgram"), _T("glDeleteProgram"), _T("glGetProgramInfoLog"), _T("glGetProgramiv"),
@@ -392,10 +417,18 @@ uint32_t CProg::Create (void){
 	n_result = p_fun();
 
 	if (0 == n_result) {
-		switch (CErr_ex().Get_code()) {
+		const
+		uint32_t u_err_code = CErr_ex().Get_code();
+		switch ( u_err_code ) {
 		case GL_OUT_OF_MEMORY: CBase::m_error << __e_no_memory = _T("#__e_no_mem: generic error;"); break;
+#if (0)
 		default:
 			CBase::m_error << (err_code) TErrCodes::eExecute::eInternal = _T("#__e_inv_oper: a program cannot be created");
+#else
+		default:
+			if (!!u_err_code)
+				CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
+#endif
 		}
 	}
 	return n_result;
@@ -417,7 +450,7 @@ err_code CProg::Delete (const uint32_t _prog_id){
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is not valid;"), _prog_id);
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 	return CBase::Error();
 }
@@ -436,15 +469,18 @@ err_code CProg::InfoLog (const uint32_t _prog_id, const int32_t _buf_size, uint3
 		return CBase::Error();
 
 	p_fun(_prog_id, _buf_size, reinterpret_cast<int32_t*>(_log_len), _p_log);
-
-	switch (CErr_ex().Get_code()) {
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
 	case GL_INVALID_OPERATION: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: '_prog_id' (%u) refers to no program object"), _prog_id); break;
 	case GL_INVALID_VALUE: {
 			if (0 > _buf_size)
 			     CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_buf_size' (%d) is negative;"), _buf_size);
 			else CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id);
 		} break;
-	default:;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -484,7 +520,7 @@ err_code CProg::Params  (const uint32_t _prog_id, const uint32_t _param_id, uint
 	case GL_INVALID_VALUE: CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -524,7 +560,7 @@ err_code CProg::Use (const uint32_t _prog_id){
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -550,7 +586,7 @@ err_code CProg::Validate (const uint32_t _prog_id){
 	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_prog_id' (%u) is invalid;"), _prog_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -581,7 +617,8 @@ TProgProcs& ::__get_prog_procs (void) {
 	return procs;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CShaders{}
 
 static _pc_sz $_fun_names[] = { _T("glAttachShader"), _T("glDetachShader"), _T("glGetAttachedShaders") };
 enum class  e_$_fun_ndx : uint32_t {
@@ -630,7 +667,7 @@ err_code CShaders::Attach (const uint32_t _prog_id, const uint32_t _shader_id) {
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 	return CBase::Error();
 }
@@ -668,7 +705,7 @@ err_code CShaders::Attached (const uint32_t _prog_id, const uint32_t _u_max_cnt,
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error << __e_fail = TString().Format(_T("#__e_undef: error code (%d)"), u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 
 	return CBase::Error();
@@ -715,7 +752,7 @@ err_code CShaders::Detach (const uint32_t _prog_id, const uint32_t _shader_id) {
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error << __e_fail = TString().Format(_T("#__e_undef: error code (%d)"), u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"),  u_err_code,  u_err_code);
 	}
 	return CBase::Error();
 }
@@ -752,3 +789,5 @@ TProgShaders& ::__get_$_bind_procs (void) {
 	}
 	return procs;
 }
+
+#pragma endregion

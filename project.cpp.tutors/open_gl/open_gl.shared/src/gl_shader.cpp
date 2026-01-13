@@ -3,7 +3,6 @@
 	This is Ebo Pack OpenGL tutorials' shader base interface implementation file;
 */
 #include "gl_shader.h"
-#include "gl_logs.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
@@ -17,9 +16,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {}}}}
 
 /////////////////////////////////////////////////////////////////////////////
 
-#define GL_DELETE_STATUS   0x8B80
-#define GL_SHADER_TYPE     0x8B4F
-#define GL_SHADER_SRC_LEN  0x8B88
 #if (0)
 enum e_params : uint32_t {
      e_compile  = GL_COMPILE_STATUS , // GL_TRUE if the last compile operation on shader was successful;

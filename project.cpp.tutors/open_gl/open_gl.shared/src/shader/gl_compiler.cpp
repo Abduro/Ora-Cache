@@ -6,16 +6,13 @@
 #include "gl_shader.h"
 #include "shared.preproc.h"
 
+#include "gl_procs.h"
+
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::shader;
 
 CCompiler:: CCompiler (const uint32_t _u_shader_id) : m_shader_id(_u_shader_id) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CCompiler::~CCompiler (void) {}
-
-procs::CCompiler& CCompiler::Procs (void) {
-	static procs::CCompiler procs;
-	return procs;
-}
 
 err_code CCompiler::Compile (void) {
 
@@ -26,10 +23,8 @@ err_code CCompiler::Compile (void) {
 	if (0 == $_id)
 		return this->m_error <<__e_not_inited = TString().Format(_T("Shader id (%d) is not valid"), $_id);
 
-	procs::CCompiler& procs = CCompiler::Procs();
-
-	if (__failed(procs.Compile($_id))) {
-		return this->m_error = procs.Error();
+	if (__failed(__get_cmpl_procs().Compile($_id))) {
+		return this->m_error = __get_cmpl_procs().Error();
 	}
 
 	if (__failed(this->Log().Set($_id))) // gets log info for this complilation in any case; the log error code can be retrieved by direct call to log error; 
@@ -80,10 +75,8 @@ CLog&    CCompiler::Log (void)       { return this->m_log; }
 err_code CCompiler::Release (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	procs::CCompiler& procs = CCompiler::Procs();
-
-	if (__failed(procs.Release())) {
-		this->m_error = procs.Error();
+	if (__failed(__get_cmpl_procs().Release())) {
+		this->m_error = __get_cmpl_procs().Error();
 	}
 	return this->Error();
 }

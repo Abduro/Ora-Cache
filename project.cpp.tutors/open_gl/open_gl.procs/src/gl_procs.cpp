@@ -12,6 +12,9 @@ using namespace ex_ui::draw::open_gl::procs;
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_1 { void __warning_lnk_4006 (void) {}}}}}
 
 #define GL_SHADER_COMPILER 0x8dfa // from glcorearb.h ;
+#define __gl_curr_prog     0x8B8D // GL_CURRENT_PROGRAM ;
+
+#pragma region cls::CCompiler{}
 
 static _pc_sz cmpl_fun_names[] = { _T("glCompileShader"), _T("glReleaseShaderCompiler") };
 
@@ -40,7 +43,7 @@ err_code  CCompiler::Compile (uint32_t _shader_id) {
 	case GL_INVALID_OPERATION:  CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_oper: _shader_id (%u) refers to not shader;"), _shader_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 	}
 	return CBase::Error();
 }
@@ -73,7 +76,7 @@ err_code CCompiler::Release (void) {
 	const
 	uint32_t u_err_code = CErr_ex().Get_code(); // regardless this function does not throw an error, just follows for handling unexpected error;
 	if (!!u_err_code) 
-		CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+		CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 
 	return CBase::Error();
 }
@@ -89,9 +92,20 @@ err_code CCompiler::Get_all (void) {
 	return CBase::Error();
 }
 
-/////////////////////////////////////////////////////////////////////////////
+TCmplProcs& ::__get_cmpl_procs (void) {
+	static TCmplProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
 
-#define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
+#pragma endregion
+#pragma region cls::CLinker{}
 
 static _pc_sz lnk_fun_names[] = { _T("glLinkProgram") };
 enum class  e_lnk_fun_ndx : uint32_t {
@@ -132,12 +146,36 @@ err_code CLinker::Link (const uint32_t _prog_id){
 		}} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 	}
 	return CBase::Error();
 }
 
-/////////////////////////////////////////////////////////////////////////////
+err_code CLinker::Get_all (void) {
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	for (uint32_t i_ = 0; i_ < _countof(lnk_fun_names); i_++) {
+		if (nullptr == CBase::Get(lnk_fun_names[i_]))
+			break;
+	}
+
+	return CBase::Error();
+}
+
+TLnkProcs& ::__get_lnk_procs (void) {
+	static TLnkProcs procs;
+	static bool b_loaded = false;
+	if (false == b_loaded) {
+		if (__failed(procs.Get_all())) {
+		    __trace_err_2(_T("%s;\n"), (_pc_sz) procs.Error().Print(TError::e_print::e_req)); }
+		else
+		    b_loaded = true;
+	}
+	return procs;
+}
+
+#pragma endregion
+#pragma region cls::CParam{}
 
 static _pc_sz param_fun_names[] = {
 	_T("glGetBooleanv"), _T("glGetFloatv"), _T("glGetIntegerv")
@@ -184,7 +222,7 @@ bool    CParam::GetBool (const uint32_t _u_param_id) {
 	case GL_INVALID_ENUM : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 	}
 
 	return !!u_result;
@@ -211,7 +249,7 @@ float   CParam::GetFloat (const uint32_t _u_param_id) {
 	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 	}
 
 	return f_result;
@@ -238,13 +276,13 @@ int32_t CParam::GetInt (const uint32_t _u_param_id) {
 	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
 	}
 
 	return n_result;
 }
 
-TParam& __get_param_procs (void) {
+TParam& ::__get_param_procs (void) {
 	static TParam procs;
 	static bool b_loaded = false;
 	if (false == b_loaded) {
@@ -255,3 +293,5 @@ TParam& __get_param_procs (void) {
 	}
 	return procs;
 }
+
+#pragma endregion	

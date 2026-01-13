@@ -31,7 +31,7 @@ err_code  CProgId::Set (const uint32_t _u_value) {
 		return this->Error();
 
 	if (this->Get() == _u_value) // the check of input '_u_prog_id' is already made by above statement, thus '0==0' is avoided;
-		return this->m_error << __s_false = TString().Format(_T("The '_u_prog_id' (%u) is already assigned;"), _u_value);
+		return this->m_error << __s_false = TString().Format(_T("The '_u_prog_id' 0x%04x (%u) is already assigned;"), _u_value, _u_value);
 
 	this->m_value = _u_value;
 
@@ -46,10 +46,10 @@ bool CProgId::Is_valid (void) const {
 
 bool CProgId::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	_u_prog_id; _err;
-	static _pc_sz p_sz_pat_err = _T("'_u_prog_id' (%u) is invalid");
+	static _pc_sz p_sz_pat_err = _T("'_u_prog_id' 0x%04x (%u) is invalid");
 
 	if (0 == _u_prog_id) {
-		return false == (_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id)).Is();
+		return false == (_err << __e_inv_arg = TString().Format(p_sz_pat_err, _u_prog_id, _u_prog_id)).Is();
 	}
 #if (0) // this for getting active (i.e. set by glUseProgram()), it can be applied for check active program identifier ;
 	procs::CParam param;
@@ -64,11 +64,12 @@ bool CProgId::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	}
 	return false == _err.Is();
 #else // it is intended for check of program identifier regardless the program of such identifier is active or not;
-	CProg procs;
-	const bool b_valid = procs.IsProg(_u_prog_id);
+	const bool b_valid = __get_prog_procs().IsProg(_u_prog_id);
 	if (false == b_valid)
-		if (procs.Error())
-			_err = procs.Error();
+		if (__get_prog_procs().Error())
+			_err = __get_prog_procs().Error();
+		else
+			_err << __e_inv_arg = TString().Format(_T("'_u_prog_id' 0x%04x (%u) refers to not the program"), _u_prog_id, _u_prog_id);
 
 	return b_valid;
 #endif

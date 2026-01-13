@@ -36,7 +36,7 @@ bool  CStatus::Get (const uint32_t _param_id, const uint32_t _prog_id, CError& _
 		return false;
 
 	if (__gl_curr_prog == _param_id)
-		return CStatus::Is_current(_prog_id, _err);
+		return CStatus::Is_used(_prog_id, _err);
 
 	uint32_t u_result = 0;
 
@@ -55,11 +55,11 @@ uint32_t CStatus::GetActiveProg (CError& _err) {
 	return u_prog_id;
 }
 
-bool  CStatus::Is_current (void) const {
-	return CStatus::Is_current(this->ProgId().Get(), this->m_error);
+bool  CStatus::Is_used (void) const {
+	return CStatus::Is_used(this->ProgId().Get(), this->m_error);
 }
 
-bool  CStatus::Is_current (const uint32_t _prog_id, CError& _err) {
+bool  CStatus::Is_used (const uint32_t _prog_id, CError& _err) {
 	_prog_id; _err;
 	
 	if (false == CProgId::Is_valid(_prog_id, _err))
@@ -81,6 +81,10 @@ bool  CStatus::Is_valid  (void) const {
 bool  CStatus::Is_valid  (const uint32_t _u_prog_id, CError& _err) {
 	return CStatus::Get(__gl_valid_status, _u_prog_id, _err);
 }
+
+const
+CLog& CStatus::Log (void) const { return this->m_log; }
+CLog& CStatus::Log (void)       { return this->m_log; }
 
 const
 program::CProgId&  CStatus::ProgId (void) const { return this->m_prog_id; }

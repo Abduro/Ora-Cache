@@ -390,7 +390,7 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 			return this->Error();
 		}
 		// before setting the color value to uniform variable of the fragment shader the programm must be active, otherwise the error is generated;
-		if (false == prog.Status().Is_current())
+		if (false == prog.Status().Is_used())
 			if (__failed(prog.Use())) {
 				this->m_error = prog.Error();
 				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));

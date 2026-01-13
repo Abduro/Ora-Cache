@@ -6,12 +6,14 @@
 */
 #include "gl_defs.h"
 #include "gl_shd_id.h"
+#include "gl_$_log.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace shader {
 
 	class CStatus : private no_copy  {
 	public:
+		using CLog = shader::CLog;
 		CStatus (const uint32_t _shader_id = 0); ~CStatus (void);
 
 		TError&  Error (void) const;
@@ -21,6 +23,11 @@ namespace shader {
 		static
 		bool  Is_compiled (const uint32_t _shader_id, CError&);
 		bool  Is_compiled (void) const;       // if result is 'false' the details can be received by calling the log info function;
+
+		const
+		CLog& Log (void) const;
+		CLog& Log (void) ;
+
 		const
 		CShaderId& ShaderId (void) const;
 		CShaderId& ShaderId (void) ;
@@ -30,7 +37,8 @@ namespace shader {
 	private:
 		mutable
 		CError     m_error ;
-		CShaderId  m_shd_id;		
+		CShaderId  m_shd_id;	
+		CLog m_log;
 	};
 
 }}}}

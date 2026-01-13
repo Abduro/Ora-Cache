@@ -65,18 +65,20 @@ namespace program {
 
 	typedef ::std::vector<e_property> TRawProps;
 	typedef ::std::vector<int32_t> TRawValues;    // perhaps 'signed' integer data type is required for returning negative coordinate value;
-
+	/* not used yet:
+	https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceIndex.xhtml ;
+	https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceLocationIndex.xhtml ;
+	*/
 	class CResource : public CBase {
-	typedef int32_t (__stdcall *pfn_GetLoc) (uint32_t _prog_id, uint32_t _u_iface, const char* _p_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceLocation.xhtml
-	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResource.xhtml ;
-	typedef void (__stdcall *pfn_GetRes ) (uint32_t _prog_id, uint32_t _u_iface, uint32_t _u_ndx, uint32_t _u_prop_count, const uint32_t* _p_props, uint32_t _u_buf_size, uint32_t* _p_length, int32_t* _p_params);
-	typedef void (__stdcall *pfn_GetName) (uint32_t _prog_id, uint32_t _u_iface, uint32_t _u_ndx, uint32_t _u_buf_size, uint32_t* _p_length, char* _p_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceName.xhtml ;
+	typedef int32_t (__stdcall *pfn_GetLoc ) (uint32_t _prog_id, uint32_t _u_iface, const char* _p_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceLocation.xhtml
+	typedef void    (__stdcall *pfn_GetRes ) (uint32_t _prog_id, uint32_t _u_iface, uint32_t _u_ndx, uint32_t _u_prop_count, const uint32_t* _p_props, uint32_t _u_buf_size, uint32_t* _p_length, int32_t* _p_params); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResource.xhtml ;
+	typedef void    (__stdcall *pfn_GetName) (uint32_t _prog_id, uint32_t _u_iface, uint32_t _u_ndx, uint32_t _u_buf_size, uint32_t* _p_length, char* _p_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetProgramResourceName.xhtml ;
 	public:
 		CResource (void); ~CResource (void) = default;
 
 		err_code Get_all (void);
 
-		int32_t  GetLocate (const uint32_t _prog_id, const e_interface, const char* _p_att_name); // queries the location of a named resource within a program;
+		int32_t  GetLocate (const uint32_t _prog_id, const e_interface, _pc_sz _p_att_name); // queries the location of a named resource within a program;
 		err_code GetName (const uint32_t _prog_id, const e_interface, const uint32_t _u_ndx, CString&); // queries the name of an indexed resource within a program;
 		err_code GetValues (const uint32_t _prog_id, const e_interface, const uint32_t _u_ndx, const TRawProps&, TRawValues&); // retrieves values for multiple properties of a single active resource within a program object;
 

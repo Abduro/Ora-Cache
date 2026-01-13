@@ -193,12 +193,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)gl_buffer.h" />
     <ClCompile Include="$(_1)gl_buffer.cpp" />
-    <ClInclude Include="$(_0-1)gl_$_cache.h" />
-    <ClCompile Include="$(_1-1)gl_$_cache.cpp" />
-    <ClInclude Include="$(_0-0)gl_compiler.h" />
-    <ClCompile Include="$(_1-0)gl_compiler.cpp" />
     <ClInclude Include="$(_0)gl_context.h" />
     <ClCompile Include="$(_1)gl_context.cpp" />
     <ClInclude Include="$(_0)gl_defs.h" />
@@ -207,14 +205,6 @@
     <ClCompile Include="$(_1)gl_drawable.cpp" />
     <ClInclude Include="$(_0)gl_format.h" />
     <ClCompile Include="$(_1)gl_format.cpp" />
-    <ClInclude Include="$(_0)gl_logs.h" />
-    <ClCompile Include="$(_1)gl_logs.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_id.h" />
-    <ClCompile Include="$(_1-1)gl_prog_id.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_linker.h" />
-    <ClCompile Include="$(_1-1)gl_prog_linker.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_status.h" />
-    <ClCompile Include="$(_1-1)gl_prog_status.cpp" />
     <ClInclude Include="$(_0)gl_program.h" />
     <ClCompile Include="$(_1)gl_program.cpp" />
     <ClInclude Include="$(_0)gl_renderer.h" />
@@ -223,12 +213,36 @@
     <ClCompile Include="$(_1)gl_scene.cpp" />
     <ClInclude Include="$(_0)gl_shader.h" />
     <ClCompile Include="$(_1)gl_shader.cpp" />
-    <ClInclude Include="$(_0-2)gl_shape.2d.h" />
-    <ClCompile Include="$(_1-2)gl_shape.2d.cpp" />
-    <ClInclude Include="$(_0-2)gl_shape.bs.h" />
-    <ClCompile Include="$(_1-2)gl_shape.bs.cpp" />
+    <ClInclude Include="$(_0)gl_uniform.h" />
+    <ClCompile Include="$(_1)gl_uniform.cpp" />
+    <ClInclude Include="$(_0)gl_version.h" />
+    <ClCompile Include="$(_1)gl_version.cpp" />
+    <ClInclude Include="$(_0)gl_vertex_arr.dat.h" />
+    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp" />
+    <ClInclude Include="$(_0)gl_vertex_arr.obj.h" />
+    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp" />
+    <ClInclude Include="$(_0)gl_viewport.h" />
+    <ClCompile Include="$(_1)gl_viewport.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_$_cache.h" />
+    <ClCompile Include="$(_1-1)gl_$_cache.cpp" />
+    <ClInclude Include="$(_0-1)gl_prog_id.h" />
+    <ClCompile Include="$(_1-1)gl_prog_id.cpp" />
+    <ClInclude Include="$(_0-1)gl_prog_linker.h" />
+    <ClCompile Include="$(_1-1)gl_prog_linker.cpp" />
+    <ClInclude Include="$(_0-1)gl_prog_log.h" />
+    <ClCompile Include="$(_1-1)gl_prog_log.cpp" />
+    <ClInclude Include="$(_0-1)gl_prog_status.h" />
+    <ClCompile Include="$(_1-1)gl_prog_status.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0-0)gl_$_attr.h" />
     <ClCompile Include="$(_1-0)gl_$_attr.cpp" />
+    <ClInclude Include="$(_0-0)gl_$_log.h" />
+    <ClCompile Include="$(_1-0)gl_$_log.cpp" />
+    <ClInclude Include="$(_0-0)gl_compiler.h" />
+    <ClCompile Include="$(_1-0)gl_compiler.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_id.h" />
     <ClCompile Include="$(_1-0)gl_shd_id.cpp" />
     <ClInclude Include="$(_0-0)gl_shd_source.h" />
@@ -239,20 +253,18 @@
     <ClCompile Include="$(_1-0)gl_shd_type.cpp" />
     <ClInclude Include="$(_0-0)gl_src_parser.h" />
     <ClCompile Include="$(_1-0)gl_src_parser.cpp" />
-    <ClInclude Include="$(_0)gl_uniform.h" />
-    <ClCompile Include="$(_1)gl_uniform.cpp" />
-    <ClInclude Include="$(_0)gl_version.h" />
-    <ClCompile Include="$(_1)gl_version.cpp" />
-    <ClInclude Include="$(_0)gl_vertex_arr.dat.h" />
-    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp" />
-    <ClInclude Include="$(_0)gl_vertex_arr.obj.h" />
-    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-2)gl_shape.2d.h" />
+    <ClCompile Include="$(_1-2)gl_shape.2d.cpp" />
+    <ClInclude Include="$(_0-2)gl_shape.bs.h" />
+    <ClCompile Include="$(_1-2)gl_shape.bs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0-3)gl_vertex_attr.h" />
     <ClCompile Include="$(_1-3)gl_vertex_attr.cpp" />
     <ClInclude Include="$(_0-3)gl_vertex_data.h" />
     <ClCompile Include="$(_1-3)gl_vertex_data.cpp" />
-    <ClInclude Include="$(_0)gl_viewport.h" />
-    <ClCompile Include="$(_1)gl_viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

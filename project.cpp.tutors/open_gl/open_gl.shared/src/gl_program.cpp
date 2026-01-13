@@ -123,29 +123,44 @@ err_code CProgram::Link (void) {
 
 err_code CProgram::Link (const uint32_t _prog_id, CError& _err) {
 	_prog_id; _err;
+	CStatus status(_prog_id);
+
+	return CProgram::Link(_prog_id, status, _err);
+}
+
+err_code CProgram::Link (const uint32_t _prog_id, CStatus& _status, CError& _err) {
+	_prog_id; _status; _err;
 	static _pc_sz pc_sz_pat_lnk = _T("The program (id = 0x%04x) is linked;\n");
 
 	CLinker linker(_prog_id);
 
 	if ( __failed(linker.Link()) ) {
 	     __trace_err_2(_T("%s\n"), (_pc_sz) linker.Error().Print(TError::e_print::e_req)); _err = linker.Error(); return _err; }
-	else __trace_impt_2(pc_sz_pat_lnk, _prog_id);
+	else __trace_info_2(pc_sz_pat_lnk, _prog_id);
 
-	CStatus prog_status(_prog_id);
-
+	// it is assumed the input status already has program identifier;
 	// just checks the program link status;
-	const bool b_linked = prog_status.Is_linked();
-	if ( prog_status.Error() ) {
-		__trace_err_2(_T("%s\n"), (_pc_sz) prog_status.Error().Print(TError::e_print::e_req)); _err = prog_status.Error(); return _err;
-	} else { __trace_info_2(_T("Program (id = 0x%04x) link status is '%s';\n"), linker.ProgId(), TString().Bool(b_linked)); }
+	const bool b_linked = _status.Is_linked();
+	if ( _status.Error() ) {
+		__trace_err_2(_T("%s\n"), (_pc_sz) _status.Error().Print(TError::e_print::e_req)); _err = _status.Error(); return _err;
+	} else {
+		static _pc_sz pc_sz_pat_stat = _T("Program (id = 0x%04x) link status is '%s';\n");
+		if (b_linked) {
+		       __trace_impt_2(pc_sz_pat_stat, _prog_id, TString().Bool(b_linked)); }
+		else { __trace_warn_2(pc_sz_pat_stat, _prog_id, TString().Bool(b_linked)); }
+	}
 
-	if (false == b_linked) {
-		program::CLog log;
-		if (__failed( log.Set(_prog_id))) {
-			__trace_err_2(_T("%s\n"), (_pc_sz) log.Error().Print(TError::e_print::e_req)); }
+	_status.Log() = linker.Log(); // copies linker log content;
+
+	if (_status.Log().Error()) {
+		__trace_err_2(_T("%s\n"), (_pc_sz) _status.Log().Error().Print(TError::e_print::e_req)); }
+	else {
+		__trace_info_2(_T("%s\n"), _T("Link log:"));
+		if (false == b_linked) {
+			__trace_err(_T("%s\n"), _status.Log().Get()); }
+		else if (_status.Log().Buffer().IsEmpty()) { __trace_info_2(_T("The program 0x%04x (%u) is linked;\n"), _prog_id, _prog_id); }
 		else {
-			__trace_warn_2(_T("%s\n"), _T("Link log:"));
-			__trace_err(_T("%s"), log.Get());
+			__trace_info(_T("%s\n"), _status.Log().Get());
 		}
 	}
 
@@ -162,7 +177,7 @@ program::CStatus& CProgram::Status (void)       { return this->m_status; }
  err_code CProgram::Use (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (this->Status().Is_current()) {
+	if (this->Status().Is_used()) {
 #if (0)
 		this->m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_inv_state: the program (id = %u) is already used"), this->Id()());
 #endif

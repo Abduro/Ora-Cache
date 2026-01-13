@@ -5,6 +5,7 @@
 #include "gl_prog_linker.h"
 #include "shared.preproc.h"
 #include "gl_program.h"
+#include "gl_procs.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
@@ -16,11 +17,6 @@ CLinker:: CLinker (const uint32_t _u_prog_id) : m_prog_id(0) {
 }
 CLinker::~CLinker (void) {}
 
-procs::CLinker& CLinker::Procs (void) {
-	static procs::CLinker m_fn_cache;
-	return m_fn_cache;
-}
-
 CString   CLinker::Class (void) { return __CLASS__; }
 
 TError&   CLinker::Error (void) const { return this->m_error; }
@@ -28,18 +24,35 @@ TError&   CLinker::Error (void) const { return this->m_error; }
 err_code  CLinker::Link (const uint32_t _u_prog_id, CError& _err) {
 	_u_prog_id; _err;
 	if (false == CProgram::Is_valid(_u_prog_id, _err))
-		return _err;
+		return _err; // the error contains info of error details related to program identifier validity;
 
-	procs::CLinker& procs = CLinker::Procs();
-	if (__failed( procs.Link(_u_prog_id)))   // makes all required checks and sets the error if necessary;
-		_err = procs.Error();
+	if (__failed(__get_lnk_procs().Link(_u_prog_id)))   // makes all required checks and sets the error if necessary;
+		_err = __get_lnk_procs().Error();
+
+	return _err;
+}
+
+err_code CLinker::Link (const uint32_t _u_prog_id, CLog& _log, CError& _err) {
+	_u_prog_id; _log; _err;
+	if (false == CProgram::Is_valid(_u_prog_id, _err))
+		return _err; // the error contains info of error details related to program identifier validity;
+
+	if (__failed(__get_lnk_procs().Link(_u_prog_id)))   // makes all required checks and sets the error if necessary;
+		_err = __get_lnk_procs().Error();
+
+	if (__failed(_log.Set(_u_prog_id))) // to-do: this error shouldn't be taken into account because it is not linker error, but program log one;
+		_err = _log.Error();
 
 	return _err;
 }
 
 err_code  CLinker::Link (void) {
-	return CLinker::Link(this->ProgId(), this->m_error);
+	return CLinker::Link(this->ProgId(), this->Log(), this->m_error);
 }
+
+const
+CLog& CLinker::Log (void) const { return this->m_log; }
+CLog& CLinker::Log (void)       { return this->m_log; }
 
 uint32_t  CLinker::ProgId (void) const { return this->m_prog_id; }
 err_code  CLinker::ProgId (const uint32_t _u_prog_id) {

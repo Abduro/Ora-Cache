@@ -6,10 +6,10 @@
 */
 #include "gl_defs.h"
 #include "gl_buffer.h"
-#include "gl_logs.h"
 #include "gl_procs.h"
 #include "program\gl_$_cache.h"
 #include "program\gl_prog_id.h"
+#include "program\gl_prog_log.h"
 #include "program\gl_prog_status.h"
 #include "gl_vertex_arr.obj.h"
 #include "vertex\gl_vertex_attr.h"
@@ -26,58 +26,57 @@ namespace program {
 	using CProgId  = program::CProgId;
 	using CStatus  = program::CStatus;
 	public:
-		 CProgram (void) ;  CProgram (const CProgram&) = delete; CProgram (CProgram&&) = delete;
-		~CProgram (void) ;
+		CProgram (void) ;  CProgram (const CProgram&) = delete; CProgram (CProgram&&) = delete; ~CProgram (void) ;
 
-		 const
-		 CAttrArr& Attrs (void) const; // gets the reference to the attribute array that is dependable on program shaders; (ro)
-		 CAttrArr& Attrs (void) ;      // gets the reference to the attribute array that is dependable on program shaders; (rw)
+		const
+		CAttrArr& Attrs (void) const; // gets the reference to the attribute array that is dependable on program shaders; (ro)
+		CAttrArr& Attrs (void) ;      // gets the reference to the attribute array that is dependable on program shaders; (rw)
 
-		 static CString  Class (void); // returns this class name for debug purposes;
+		static CString  Class (void); // returns this class name for debug purposes;
 
-		 err_code Create (void);
-		 err_code Delete (void);       // deletes the attribute object first afterwards the program object itself; << needs to be changed, otherwise unclear regarding attribute object;
+		err_code Create (void);
+		err_code Delete (void);       // deletes the attribute object first afterwards the program object itself; << needs to be changed, otherwise unclear regarding attribute object;
 
-		 TError&  Error (void) const;
+		TError&  Error (void) const;
 
-		 const
-		 CProgId& Id (void) const;
-		 CProgId& Id (void) ;
+		const
+		CProgId& Id (void) const;
+		CProgId& Id (void) ;
 
-		 /* the validation of a program is determined by the target that is required to be valid:
-			(a) program identifier (aka symbolic name); glIsProgram() is used by CProgId::Is_valid();
-			(b) program status; glGetProgramiv() is used by CStatus::Get();
-		 */
-		 static
-		 bool Is_valid (const uint32_t _prog_id, CError&); // there is not way to check program identifier as it can be made for shader; the comment must be clarified;
-		 bool Is_valid (void) const; // checks the identifier that stored in this class object;
+		/* the validation of a program is determined by the target that is required to be valid:
+		   (a) program identifier (aka symbolic name); glIsProgram() is used by CProgId::Is_valid();
+		   (b) program status; glGetProgramiv() is used by CStatus::Get();
+		*/
+		static
+		bool Is_valid (const uint32_t _prog_id, CError&); // checks the given identifier by querying glIsProgram();
+		bool Is_valid (void) const; // checks the identifier that is stored in this class object;
 
-		 static                      // the static method is suitable for test cases;
-		 err_code Link (const uint32_t _prog_id, CError&);
-		 err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());
+		err_code Link (void) ;      // it is assumed all attached shaders is already compiled; this method calls CLinker::Link(this->Prog_id());
+		static err_code Link (const uint32_t _prog_id, CError&);           // the static method is suitable for test cases;
+		static err_code Link (const uint32_t _prog_id, CStatus&, CError&); // the static method is suitable for test cases; the reference to status object provides the ability to format log message;
 
-		 const
-		 CCache&   Shaders (void) const;
-		 CCache&   Shaders (void) ;
-		 const
-		 CStatus&  Status (void) const;
-		 CStatus&  Status (void) ;
+		const
+		CCache&   Shaders (void) const;
+		CCache&   Shaders (void) ;
+		const
+		CStatus&  Status (void) const;
+		CStatus&  Status (void) ;
 
-		 err_code  Use (void);       // sets this program to be current in draw pipeline;
-		 err_code  Validate (void);  // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
-		 static
-		 err_code  Unused (CError&); // makes any currently active/in-use program to be unused by calling 'use' operation to 'default' program with identifier 0 (zero);
+		err_code  Use (void);       // sets this program to be current in draw pipeline;
+		err_code  Validate (void);  // mimics the validation operation that OpenGL implementations must perform when rendering commands are issued ;
+		static
+		err_code  Unused (CError&); // makes any currently active/in-use program to be unused by calling 'use' operation to 'default' program with identifier 0 (zero);
 
-		 CProgram& operator <<(const CProgId&);
+		CProgram& operator <<(const CProgId&);
 
 	private:
-		 CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
-		 mutable
-		 CError    m_error;
-		 CAttrArr  m_attrs;
-		 CCache    m_shaders;
-		 CProgId   m_prog_id;
-		 CStatus   m_status ;
+		CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;
+		mutable
+		CError    m_error;
+		CAttrArr  m_attrs;
+		CCache    m_shaders;
+		CProgId   m_prog_id;
+		CStatus   m_status ;
 	};
 
 	class CProg_enum {

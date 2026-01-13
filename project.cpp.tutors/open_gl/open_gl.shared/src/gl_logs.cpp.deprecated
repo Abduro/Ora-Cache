@@ -12,6 +12,8 @@
 
 using namespace ex_ui::draw::open_gl;
 
+#pragma region cls::CLog_Base{}
+
 CLog_Base:: CLog_Base (void) { this->m_error>>__CLASS__<<__METHOD__<<__e_not_inited; }
 CLog_Base::~CLog_Base (void) {}
 
@@ -19,7 +21,9 @@ TError&  CLog_Base::Error (void) const { return this->m_error; }
 _pc_sz   CLog_Base::Get (void) const { return (_pc_sz) this->m_buffer; }
 
 using e_param_types = procs::CShader::e_param_types;
-/////////////////////////////////////////////////////////////////////////////
+
+#pragma endregion
+#pragma region cls::program::CLog{}
 
 program::CLog:: CLog (void) : TBase() {
 	TBase::m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CProgram::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
@@ -32,7 +36,7 @@ err_code program::CLog::Set (const uint32_t _u_prog_id) {
 	if (false == CProgram::Is_valid(_u_prog_id, this->m_error))
 		return TBase::Error();
 
-	// (1) gets the shader log length;
+	// (1) gets the program log length;
 	uint32_t u_length = 0;
 	if (__failed(__get_prog_procs().Params(_u_prog_id, e_param_types::e_info_len, &u_length))) {
 		this->m_buffer = _T("#error");
@@ -56,7 +60,8 @@ err_code program::CLog::Set (const uint32_t _u_prog_id) {
 	return this->Error();
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::shader::CLog{}
 
 shader::CLog:: CLog (void) : TBase() {
 	TBase::m_error >> TString().Format(_T("%s::%s"), (_pc_sz) CShader::Class(), (_pc_sz)__CLASS__)<<__METHOD__<<__e_not_inited; }
@@ -100,3 +105,5 @@ err_code shader::CLog::Set (const uint32_t _u_shader_id) {
 
 	return TBase::Error();
 }
+
+#pragma endregion

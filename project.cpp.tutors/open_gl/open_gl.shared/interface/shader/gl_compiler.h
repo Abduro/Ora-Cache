@@ -5,25 +5,22 @@
 	This is Ebo Pack OpenGL shader compiler wrapper interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_logs.h"
-#include "gl_procs.h"
-#include "program\gl_$_cache.h"
+#include "gl_$_log.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace shader {
 
 	class CCompiler {
 	public:
+		using CLog = shader::CLog;
 		CCompiler (const uint32_t _u_shader_id = 0); CCompiler (const CCompiler&) = delete; CCompiler (CCompiler&&) = delete; ~CCompiler (void);
 
-		static procs::CCompiler& Procs (void);
-
-		err_code Compile (void);              // tries to compile source code of the shader;
+		err_code Compile (void);              // tries to compile source code of the shader; the reference to the shader log object is provided;
 
 		TError&  Error (void) const;
 #if (0) // it is not the property of the compiler, but shader status;
 		bool  Is_compiled  (void) const;      // checks compilation status of the shader; if it is false, either no compilation was made or getting log info is required for details;
-	#endif
+#endif
 		bool  Is_supported (void) const;
 		const
 		CLog&    Log (void) const;

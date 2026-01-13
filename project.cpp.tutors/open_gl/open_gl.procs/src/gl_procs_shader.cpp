@@ -119,7 +119,7 @@ err_code  CShader::InfoLog (uint32_t _shader_id, uint32_t _u_max_len, int32_t* _
 	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("#__e_inv_val: '_shader_id' (%u) is invalid"), _shader_id); break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x, (%d)"), u_err_code, u_err_code);
 	}
 	return CBase::Error();
 }
@@ -138,9 +138,7 @@ bool  CShader::Is_valid (uint32_t _shader_id) {
 		return false;
 	}
 
-	const uint32_t b_result = !!p_fun(_shader_id);
-
-	return b_result;
+	return !!p_fun(_shader_id);
 }
 // https://registry.khronos.org/OpenGL-Refpages/es2.0/xhtml/glGetShaderiv.xml ;
 err_code  CShader::Params (uint32_t _shader_id, uint32_t _param_type, int32_t* _p_params) {
@@ -172,7 +170,7 @@ err_code  CShader::Params (uint32_t _shader_id, uint32_t _param_type, int32_t* _
 		}
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x, (%d)"), u_err_code, u_err_code);
 	}
 
 	return CBase::Error();
@@ -203,7 +201,7 @@ err_code  CShader::Source  (uint32_t _shader_id, int32_t _n_count, const char** 
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x, (%d)"), u_err_code, u_err_code);
 	}
 	return CBase::Error();
 }

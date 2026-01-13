@@ -33,7 +33,7 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 	CCompiler compiler;
 	CShader& $base = _shader;
 
-	static _pc_sz pc_sz_pat = _T("Shader compiler support is: '%s';");
+	static _pc_sz pc_sz_pat_not_supp = _T("Shader compiler support is: '%s';");
 
 	bool b_supported = compiler.Is_supported();
 	if (compiler.Error()) {
@@ -41,15 +41,20 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 		_out() += _err.Print(TError::e_print::e_req); return _err;
 	}
 	else if (false == b_supported) {
-		_err << (err_code)TErrCodes::eExecute::eEnviron = TString().Format(pc_sz_pat, _T("false")); return _err;
+		_err << (err_code)TErrCodes::eExecute::eEnviron = TString().Format(pc_sz_pat_not_supp, _T("false")); return _err;
 	}
-	else if (__failed($base.Src().Cfg().Path(TPipe::To_str(_target), $base.Type().Get()))) {
+	else if (__failed($base.Src().Cfg().Path(TPipe::To_str(_target), $base.Type().Get()))) { // sets source code file path that is read from the registry;
 		_err = $base.Src().Cfg().Error();
+		_out() += _err.Print(TError::e_print::e_req); return _err;
+	}
+	else if (__failed($base.Src().Set())) { // loads the source code file to the shader code buffer;
+		_err = $base.Src().Error();
 		_out() += _err.Print(TError::e_print::e_req); return _err;
 	}
 	else {}
 
-	_out() += TString().Format(pc_sz_pat, _T("true"));
+	_out() += TString().Format(pc_sz_pat_not_supp, _T("true"));
+
 	compiler << $base.Id();
 	if (false) {}
 	else if (__failed(compiler.Compile())) { _err = compiler.Error(); _out() += _err.Print(TError::e_print::e_req); }
@@ -59,10 +64,12 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 		const bool b_compiled = $_status.Is_compiled();
 
 		if ($_status.Error()) { _out() += $_status.Error().Print(TError::e_print::e_req); }
-		else _out() += TString().Format(
-			_T("Shader '%s' (id = %u) compiled status: '%s';"), (_pc_sz) procs::$_type_to_str((uint32_t)$base.Type()), $base.Id(), TString().Bool(b_compiled)
-		);
-
+		else {
+			static _pc_sz pc_sz_pat_stat = _T("Shader '%s' (id = 0x%04x) compiled status: '%s';");
+			_out() += TString().Format(pc_sz_pat_stat, (_pc_sz) procs::$_type_to_str((uint32_t)$base.Type()), $base.Id(), TString().Bool(b_compiled));
+			_out() += _T("Shader compiler log:");
+			_out() += compiler.Log().Get();
+		}
 		if (__failed(compiler.Release())) { _out() += compiler.Error().Print(TError::e_print::e_req); } // this error is not traced;
 	}
 

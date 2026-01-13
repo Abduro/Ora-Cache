@@ -42,10 +42,6 @@
   <ItemGroup>
     <ClInclude Include="$(_0)gl_buffer.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_buffer.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0-1)gl_$_cache.h"><Filter>interface\program</Filter></ClInclude>
-    <ClCompile Include="$(_1-1)gl_$_cache.cpp"><Filter>src\program</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)gl_compiler.h"><Filter>interface\shader</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)gl_compiler.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_context.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_context.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_defs.h"><Filter>interface</Filter></ClInclude>
@@ -54,14 +50,6 @@
     <ClCompile Include="$(_1)gl_drawable.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_format.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_format.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_logs.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_logs.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0-1)gl_prog_id.h"><Filter>interface\program</Filter></ClInclude>
-    <ClCompile Include="$(_1-1)gl_prog_id.cpp"><Filter>src\program</Filter></ClCompile>
-    <ClInclude Include="$(_0-1)gl_prog_linker.h"><Filter>interface\program</Filter></ClInclude>
-    <ClCompile Include="$(_1-1)gl_prog_linker.cpp"><Filter>src\program</Filter></ClCompile>
-    <ClInclude Include="$(_0-1)gl_prog_status.h"><Filter>interface\program</Filter></ClInclude>
-    <ClCompile Include="$(_1-1)gl_prog_status.cpp"><Filter>src\program</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_program.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_program.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_renderer.h"><Filter>interface</Filter></ClInclude>
@@ -70,12 +58,36 @@
     <ClCompile Include="$(_1)gl_scene.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_shader.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_shader.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0-2)gl_shape.2d.h"><Filter>interface\shapes</Filter></ClInclude>
-    <ClCompile Include="$(_1-2)gl_shape.2d.cpp"><Filter>src\shapes</Filter></ClCompile>
-    <ClInclude Include="$(_0-2)gl_shape.bs.h"><Filter>interface\shapes</Filter></ClInclude>
-    <ClCompile Include="$(_1-2)gl_shape.bs.cpp"><Filter>src\shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_uniform.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_uniform.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_version.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex_arr.dat.h"><Filter>interface\vertex</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex_arr.obj.h"><Filter>interface\vertex</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_viewport.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_viewport.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_$_cache.h"><Filter>interface\program</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_$_cache.cpp"><Filter>src\program</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)gl_prog_id.h"><Filter>interface\program</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_prog_id.cpp"><Filter>src\program</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)gl_prog_linker.h"><Filter>interface\program</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_prog_linker.cpp"><Filter>src\program</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)gl_prog_log.h"><Filter>interface\program</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_prog_log.cpp"><Filter>src\program</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)gl_prog_status.h"><Filter>interface\program</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_prog_status.cpp"><Filter>src\program</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0-0)gl_$_attr.h"><Filter>interface\shader</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_$_attr.cpp"><Filter>src\shader</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_$_log.h"><Filter>interface\shader</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_$_log.cpp"><Filter>src\shader</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_compiler.h"><Filter>interface\shader</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_compiler.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_id.h"><Filter>interface\shader</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_shd_id.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_shd_source.h"><Filter>interface\shader</Filter></ClInclude>
@@ -86,19 +98,17 @@
     <ClCompile Include="$(_1-0)gl_shd_type.cpp"><Filter>src\shader</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_src_parser.h"><Filter>interface\shader</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_src_parser.cpp"><Filter>src\shader</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_uniform.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_uniform.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_version.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_version.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_vertex_arr.dat.h"><Filter>interface\vertex</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp"><Filter>src\vertex</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_vertex_arr.obj.h"><Filter>interface\vertex</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp"><Filter>src\vertex</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-2)gl_shape.2d.h"><Filter>interface\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_1-2)gl_shape.2d.cpp"><Filter>src\shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0-2)gl_shape.bs.h"><Filter>interface\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_1-2)gl_shape.bs.cpp"><Filter>src\shapes</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0-3)gl_vertex_attr.h"><Filter>interface\vertex</Filter></ClInclude>
     <ClCompile Include="$(_1-3)gl_vertex_attr.cpp"><Filter>src\vertex</Filter></ClCompile>
     <ClInclude Include="$(_0-3)gl_vertex_data.h"><Filter>interface\vertex</Filter></ClInclude>
     <ClCompile Include="$(_1-3)gl_vertex_data.cpp"><Filter>src\vertex</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_viewport.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_viewport.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

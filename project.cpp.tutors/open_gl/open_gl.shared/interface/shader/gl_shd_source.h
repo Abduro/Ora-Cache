@@ -50,6 +50,12 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 	};
 
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetShaderSource.xhtml ;
+	/**important*
+	if shader's compilation is made with empty source code buffer, the compiler does not report an error, the compiler log info is also empty,
+	but the program linker throws the error:
+	[error] vertex shader(s) failed to link, fragment shader(s) failed to link...invalid_operation...error(#97) No program main found...
+	https://stackoverflow.com/questions/25472164/opengl-error97-no-program-main-found ;
+	*/
 	class CSource {
 	public: CSource (void); CSource (const CSource&); CSource (CSource&&) = delete; ~CSource (void) ;
 		static
