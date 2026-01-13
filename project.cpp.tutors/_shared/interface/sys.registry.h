@@ -88,11 +88,21 @@ namespace shared { namespace sys_core { namespace storage {
 			e_vertex    = 0x6, // transforms each vertex's 3D position in virtual space to the 2D coordinate at which it appears on the screen;
 			};
 		public:
-			CShaders (void) ; CShaders (const CShaders&) = delete; CShaders (CShaders&&) = delete; ~CShaders (void) = default;
+			CShaders (void); CShaders (const CShaders&) = delete; CShaders (CShaders&&) = delete; ~CShaders (void) = default;
 
-			CString  Name (const e_types) const;    // returns the value name for input shader type; 
-			CString  Path (_pc_sz _p_object) const; // returns the path to shaders of the object by its name;
+			CString  Name (const e_types) const;    // returns the registry key value name for input shader type; 
+			CString  Path (_pc_sz _p_object) const; // returns the registry key path to shaders of the object by its name;
 			_pc_sz   Root (void) const; // gets root key path for all shader types;
+
+			class CTestCase {
+			public:
+				CTestCase (void) = default; CTestCase (const CTestCase&) = delete; CTestCase (CTestCase&&) = delete; ~CTestCase (void) = default;
+
+				static CString Key_path (const uint32_t _u_number);  // returns the key path for given test case number;
+
+			private:
+				CTestCase& operator = (const CTestCase&) = delete; CTestCase& operator = (CTestCase&&) = delete;
+			};
 
 		private:
 			CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
@@ -292,6 +302,10 @@ namespace shared { namespace sys_core { namespace storage {
 typedef shared::sys_core::storage::CRegKey_Ex TRegKeyEx;
 typedef TRegKeyEx::CCache TKeyCache;
 typedef TRegKeyEx::CValue TKeyValue;
+
+typedef shared::sys_core::storage::CReg_router TReg_router;
+typedef TReg_router::CShaders TReg_shaders;
+typedef TReg_shaders::CTestCase TReg_test_case;
 
 shared::sys_core::storage::CReg_router&  Get_reg_router (void); // returns the reference to the singleton of the router object;
 shared::sys_core::storage::CRegistry&  Get_registry (void); // returns the reference to the singleton of the registry object;

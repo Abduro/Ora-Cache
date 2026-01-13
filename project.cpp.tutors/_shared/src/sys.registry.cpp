@@ -192,6 +192,14 @@ _pc_sz  CReg_router::CShaders::Root (void) const {
 	}
 	return (_pc_sz)_impl::cs_$_root;
 }
+
+CString CReg_router::CShaders::CTestCase::Key_path (const uint32_t _u_number) {
+	_u_number;
+	static _pc_sz pc_sz_pat = _T("%s\\test.case.%u");
+	CString cs_key_path; cs_key_path.Format(pc_sz_pat, ::Get_reg_router().Shaders().Root(), _u_number);
+	return  cs_key_path;
+}
+
 #pragma endregion
 /////////////////////////////////////////////////////////////////////////////
 #pragma region cls::CReg_router::CTheme{}

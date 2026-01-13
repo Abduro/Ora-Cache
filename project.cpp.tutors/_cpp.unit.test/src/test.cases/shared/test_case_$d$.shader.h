@@ -56,10 +56,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	};
 
 	// the shaders' class uses program shader cache that is declared in gl_$_cache.h;
-	class CShaders : public CPipeline { typedef CPipeline TBase;
+	class C$_enum : public TPipe {
 	public:
-		CShaders (const e_object = e_object::e_grid);
-		CShaders (const CShaders&) = delete; CShaders (CShaders&&) = delete; ~CShaders (void) = default;
+		C$_enum (const e_object = e_object::e_grid);
+		C$_enum (const C$_enum&) = delete; C$_enum (C$_enum&&) = delete; ~C$_enum (void) = default;
 
 		err_code Create (void); // creates all shaders;
 
@@ -72,7 +72,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		$Vertex& Vertex (void) const; // gets the reference to vertex shader of the program by given object type;
 		$Vertex& Vertex (void)      ; // gets the reference to vertex shader of the program by given object type;
 	private:
-		CShaders& operator = (const CShaders&) = delete; CShaders& operator = (CShaders&&) = delete;
+		C$_enum& operator = (const C$_enum&) = delete; C$_enum& operator = (C$_enum&&) = delete;
 		CError   m_error;
 	};
 

@@ -6,11 +6,53 @@
 
 #include "shader\gl_compiler.h"
 #include "shader\gl_shd_status.h"
+#include "shader\gl_shd_type.h"
+
+#include "sys.registry.h"
 
 using namespace ebo::boo::test::open_gl::draw;
 
 using CCompiler = ex_ui::draw::open_gl::shader::CCompiler;
 using CStatus = ex_ui::draw::open_gl::shader::CStatus;
+
+namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
+
+	class CReg_helper {
+	        CReg_helper (const CReg_helper&) = delete; CReg_helper (CReg_helper&&) = delete;
+	public: CReg_helper (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; } ~CReg_helper (void) = default;
+
+		TError& Error (void) const { return this->m_error; }
+		CString Path (const $Type _type) {
+			_type;
+			this->m_error <<__METHOD__<<__s_ok;
+
+			using e_types = shared::sys_core::storage::CReg_router::CShaders::e_types;
+			e_types e_shader = e_types::e__undef;
+
+			switch (_type) {
+			case $Type::e_fragment: e_shader = e_types::e_fragment; break;
+			case $Type::e_vertex  : e_shader = e_types::e_vertex; break;
+			default:
+				this->m_error <<__e_inv_arg = TString().Format(_T("Unsupported shader type '%s'"), (_pc_sz) shader::CType::To_str((uint32_t)_type));
+			}
+
+			CString $_path;
+			CString $_name = ::Get_reg_router().Shaders().Name(e_shader);
+
+			TRegKeyEx reg_key;
+			$_path = reg_key.Value().GetString((_pc_sz) TReg_test_case::Key_path(0), (_pc_sz) $_name);
+			if (reg_key.Error())
+				this->m_error = reg_key.Error();
+
+			return $_path;
+		}
+
+	private:
+		CReg_helper& operator = (const CReg_helper&) = delete; CReg_helper& operator = (CReg_helper&&) = delete;
+		CError m_error;
+	};
+
+}}}}}
 
 #pragma region cls::C$Base{}
 
@@ -139,29 +181,36 @@ err_code C$Vert::Create (void) {
 }
 
 #pragma endregion
-#pragma region cls::CShaders{}
+#pragma region cls::C$_enum{}
 
-CShaders::CShaders (const e_object _target) : TBase(_target) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+C$_enum::C$_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 
-err_code  CShaders::Create (void) {
+err_code  C$_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	TRenderer& renderer = ::Get_renderer();
-	CProgram& prog = renderer.Scene().Progs().Get(TBase::Target());
+	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
 
+#if (0) // the shaders for test cases are loaded independently from target object type;
 	if (__failed(prog.Shaders().Create()))
 		this->m_error = prog.Shaders().Error();
+#else
+	shader::CFragment& $frag = prog.Shaders().Fragment();
+	shader::CVertex& $vert = prog.Shaders().Vertex();
 
+	if (__failed(C$Base::Create($frag, $frag.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
+	if (__failed(C$Base::Create($vert, $vert.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
+#endif
 	return this->Error();
 }
 
 const
-$Fragment& CShaders::Fragment (void) const { return ::Get_renderer().Scene().Progs().Get(TBase::Target()).Shaders().Fragment(); }
-$Fragment& CShaders::Fragment (void)       { return ::Get_renderer().Scene().Progs().Get(TBase::Target()).Shaders().Fragment(); }
+$Fragment& C$_enum::Fragment (void) const { return ::Get_renderer().Scene().Progs().Get(TPipe::Target()).Shaders().Fragment(); }
+$Fragment& C$_enum::Fragment (void)       { return ::Get_renderer().Scene().Progs().Get(TPipe::Target()).Shaders().Fragment(); }
 
-TError& CShaders::Error (void) const { return this->m_error; }
+TError& C$_enum::Error (void) const { return this->m_error; }
 const
-$Vertex& CShaders::Vertex (void) const { return ::Get_renderer().Scene().Progs().Get(TBase::Target()).Shaders().Vertex(); }
-$Vertex& CShaders::Vertex (void)       { return ::Get_renderer().Scene().Progs().Get(TBase::Target()).Shaders().Vertex(); }
+$Vertex& C$_enum::Vertex (void) const { return ::Get_renderer().Scene().Progs().Get(TPipe::Target()).Shaders().Vertex(); }
+$Vertex& C$_enum::Vertex (void)       { return ::Get_renderer().Scene().Progs().Get(TPipe::Target()).Shaders().Vertex(); }
 
 #pragma endregion
