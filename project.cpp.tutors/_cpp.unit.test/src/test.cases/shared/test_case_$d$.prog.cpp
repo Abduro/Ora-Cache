@@ -76,14 +76,16 @@ err_code CProg::Create (void) {
 	else if (this->Opts().UseShaders() == false)
 		return this->Error();
 	else {}
-
+#if (0)
 	shader::CFragment& $frag = prog.Shaders().Fragment();
 	shader::CVertex& $vert = prog.Shaders().Vertex();
 
 	// it is expected the 'compile' option is on;
 	if (__failed(C$Base::Create($frag, $frag.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 	if (__failed(C$Base::Create($vert, $vert.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
-
+#else
+	if ((this->m_error = C$_enum().Create())) return this->Error(); 
+#endif
 	if (false == this->Opts().Link())
 		return this->Error();
 
@@ -100,14 +102,18 @@ err_code CProg::Delete (void) {
 	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
 
 	if (true == this->Opts().UseShaders()) {
+
 		shader::CFragment& $frag = prog.Shaders().Fragment();
 		shader::CVertex& $vert = prog.Shaders().Vertex();
 
 		this->Detach($frag);
 		this->Detach($vert);
-
+#if (0)
 		C$Base::Delete($frag, this->m_error); // if the error occurs, shader base class makes the error trace;
 		C$Base::Delete($vert, this->m_error); // if the error occurs, shader base class makes the error trace;
+#else
+		C$_enum().Delete(); // if the error occurs, shader enumerator class makes the error trace;
+#endif
 	}
 
 	if (__failed(prog.Delete())) {
@@ -118,6 +124,18 @@ err_code CProg::Delete (void) {
 }
 
 TError&  CProg::Error (void) const { return this->m_error; }
+
+uint32_t CProg::GetId (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("cls::[%s::%s].%s();"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	TRenderer& renderer = ::Get_renderer();
+	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
+
+	if (prog.Error()) this->m_error = prog.Error();
+
+	return prog.Id().Get();
+}
 
 err_code CProg::Link (void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -136,10 +154,12 @@ err_code CProg::Link (void) {
 		    __failed(this->Attach($vert))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 
 		if (this->Error()) return this->Error(); // there is no sense to link the program because one of the shaders is not attached successfully;
-
+#if (0)
 		if (__failed(C$Base::Compile($frag, TPipe::Target(), this->m_error)) ||
 		    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
-
+#else
+		this->m_error = C$_enum().Compile();
+#endif
 		if (this->Error()) return this->Error(); // there is no		sense to link the program because one of the shaders is not compiled;
 	}
 

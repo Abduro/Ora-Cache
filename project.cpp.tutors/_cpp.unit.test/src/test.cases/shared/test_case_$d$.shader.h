@@ -61,7 +61,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		C$_enum (const e_object = e_object::e_grid);
 		C$_enum (const C$_enum&) = delete; C$_enum (C$_enum&&) = delete; ~C$_enum (void) = default;
 
-		err_code Create (void); // creates all shaders;
+		err_code Compile(void);
+		err_code Create (void);
+		err_code Delete (void);
 
 		const
 		$Fragment& Fragment (void) const; // gets the reference to fragment shader of the program by given object type;

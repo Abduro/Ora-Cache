@@ -99,3 +99,35 @@ err_code CGraphCtx::Delete (void) {
 TError&  CGraphCtx::Error (void) const { return this->m_error; }
 
 #pragma endregion
+#pragma region cls::CCtx_auto{}
+
+CCtx_auto:: CCtx_auto (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;  this->Create(); }
+CCtx_auto::~CCtx_auto (void) { this->Delete(); }
+
+err_code CCtx_auto::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false) {}
+	else if (__failed(this->Device().Create())) this->m_error = this->Device().Error();
+	else if (__failed(this->Graph().Create(this->Device().Window()))) this->m_error = this->Graph().Error();
+
+	return this->Error();
+}
+err_code CCtx_auto::Delete (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Graph().Delete())) this->m_error = this->Graph().Error();
+	if (__failed(this->Device().Delete())) this->m_error = this->Device().Error();
+	
+	return this->Error();
+}
+
+TError&  CCtx_auto::Error (void) const { return this->m_error; }
+const
+CDevCtx& CCtx_auto::Device (void) const { return this->m_device; }
+CDevCtx& CCtx_auto::Device (void)       { return this->m_device; }
+const
+CGraphCtx& CCtx_auto::Graph (void) const { return this->m_graphs; }
+CGraphCtx& CCtx_auto::Graph (void)       { return this->m_graphs; }
+
+#pragma endregion

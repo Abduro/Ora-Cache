@@ -47,6 +47,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		err_code Delete (void);
 		TError&  Error  (void) const;
 
+		uint32_t GetId(void);
 		err_code Link (void); // links this program;
 
 		const

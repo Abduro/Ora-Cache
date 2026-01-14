@@ -224,12 +224,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.shader.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.uniform.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2)ebo_test_$d$.ctx.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h" />
@@ -240,6 +246,8 @@
     <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.shader.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.uniform.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">

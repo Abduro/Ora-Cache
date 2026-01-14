@@ -85,10 +85,17 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 	else if (false == b_supported) {
 		_err << (err_code)TErrCodes::eExecute::eEnviron = TString().Format(pc_sz_pat_not_supp, _T("false")); return _err;
 	}
+#if (0) // this is not suitable for test cases, because it is required to load shader source code file independently from the target object type;
 	else if (__failed($base.Src().Cfg().Path(TPipe::To_str(_target), $base.Type().Get()))) { // sets source code file path that is read from the registry;
 		_err = $base.Src().Cfg().Error();
 		_out() += _err.Print(TError::e_print::e_req); return _err;
 	}
+#else
+	else if (__failed($base.Src().Cfg().Path(_impl::CReg_helper().Path(_shader.Type().Get())))) {
+		_err = $base.Src().Cfg().Error();
+		_out() += _err.Print(TError::e_print::e_req); return _err;
+	}
+#endif
 	else if (__failed($base.Src().Set())) { // loads the source code file to the shader code buffer;
 		_err = $base.Src().Error();
 		_out() += _err.Print(TError::e_print::e_req); return _err;
@@ -185,6 +192,21 @@ err_code C$Vert::Create (void) {
 
 C$_enum::C$_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 
+err_code  C$_enum::Compile(void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TRenderer& renderer = ::Get_renderer();
+	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
+
+	shader::CFragment& $frag = prog.Shaders().Fragment();
+	shader::CVertex& $vert = prog.Shaders().Vertex();
+
+	if (__failed(C$Base::Compile($frag, TPipe::Target(), this->m_error)) ||
+	    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
+
+	return this->Error();
+}
+
 err_code  C$_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -197,10 +219,25 @@ err_code  C$_enum::Create (void) {
 #else
 	shader::CFragment& $frag = prog.Shaders().Fragment();
 	shader::CVertex& $vert = prog.Shaders().Vertex();
-
+	// the sequence of shader creation is not good approach: if the first shader creation fails the error will be overwritten by the creation of the next shader;
 	if (__failed(C$Base::Create($frag, $frag.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 	if (__failed(C$Base::Create($vert, $vert.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 #endif
+	return this->Error();
+}
+
+err_code  C$_enum::Delete (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TRenderer& renderer = ::Get_renderer();
+	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
+
+	shader::CFragment& $frag = prog.Shaders().Fragment();
+	shader::CVertex& $vert = prog.Shaders().Vertex();
+
+	C$Base::Delete($frag, this->m_error); // if the error occurs, shader base class makes the error trace;
+	C$Base::Delete($vert, this->m_error); // if the error occurs, shader base class makes the error trace;
+
 	return this->Error();
 }
 

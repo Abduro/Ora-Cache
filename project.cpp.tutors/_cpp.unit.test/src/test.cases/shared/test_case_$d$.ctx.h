@@ -48,6 +48,32 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError m_error;
 	};
 
+	/*
+		this class creates the device and graphics contexts in its constructor and auto-deletes them in its destructor;
+	*/
+	class CCtx_auto {
+	public:
+		CCtx_auto (void); ~CCtx_auto (void);
+		CCtx_auto (const CCtx_auto&) = delete; CCtx_auto (CCtx_auto&&) = delete;
+
+		err_code Create (void);
+		err_code Delete (void);
+
+		const
+		CDevCtx& Device (void) const;
+		CDevCtx& Device (void) ;
+		const
+		CGraphCtx& Graph (void) const;
+		CGraphCtx& Graph (void) ;
+
+		TError&  Error  (void) const;
+	private:
+		CCtx_auto& operator = (const CCtx_auto&) = delete; CCtx_auto& operator = (CCtx_auto&&) = delete;
+		CError    m_error;
+		CDevCtx   m_device;
+		CGraphCtx m_graphs;
+	};
+
 }}}}}
 
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/
