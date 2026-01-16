@@ -230,8 +230,12 @@
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.render.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.render.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.shader.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.uniform.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp" />
   </ItemGroup>
@@ -244,6 +248,8 @@
     <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.prog.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.render.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.render.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.shader.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.uniform.h" />

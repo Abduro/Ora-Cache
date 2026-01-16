@@ -26,8 +26,12 @@
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>src\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h"><Filter>interface\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp"><Filter>src\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.render.h"><Filter>interface\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.render.cpp"><Filter>src\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.shader.h"><Filter>interface\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp"><Filter>src\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h"><Filter>interface\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp"><Filter>src\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.uniform.h"><Filter>interface\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp"><Filter>src\shared</Filter></ClCompile>
   </ItemGroup>
@@ -40,6 +44,8 @@
     <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.prog.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.render.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.render.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.shader.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.uniform.h"><Filter>interface</Filter></ClInclude>

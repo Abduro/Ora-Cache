@@ -23,7 +23,7 @@ using CAttrArr = CProgram::CAttrArr;
 #define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
 
 CProgram:: CProgram (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CProgram::~CProgram (void) { this->Delete(); }
+CProgram::~CProgram (void) { /*this->Delete(); if a program is not created in the constructor above, it shouldn't be deleted here;*/ }
 
 const
 CAttrArr&  CProgram::Attrs (void) const { return this->m_attrs; }

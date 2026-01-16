@@ -5,37 +5,65 @@
 	This Ebo Pack OpenGL shader variable uniform data type wrapper interface declaration file;
 */
 #include "gl_defs.h"
+#include "gl_types.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace vars {
 
-	class CUniform : no_copy {
+	using CType = procs::CType;
+
+	class CUniform {
 	public:
-		class CValue : no_copy {
+		class CValue {
 		public:
-			CValue (CUniform* = nullptr); ~CValue (void) = default;
+			CValue (CUniform* = nullptr); ~CValue (void) = default; CValue (const CValue&); CValue (CValue&&);
 
 			TError& Error (void) const;
 
+			err_code Get (void) ; // gets the value of this uniform variable in accordance with its data type;
+			const
+			CType&  Type (void) const;
+			CType&  Type (void) ;
+
+			CValue& operator = (const CValue&); CValue& operator = (CValue&&);
+			CValue& operator <<(const CType&);
+
 		private:
-			CUniform* m_p_form;
+			CUniform* m_p_form; // is not used in copy, move ctors and assign operators; otherwise it must be a shared_ptr or the reference;
 			CError    m_error ;
+			CType     m_type  ;
 		};
 
 	public:
-		CUniform (void); ~CUniform (void);
+		static const uint32_t u_inv_ndx = (uint32_t)-1;
+		CUniform (void); ~CUniform (void); CUniform (const CUniform&); CUniform (CUniform&&);
 
 		TError& Error (void) const;
-		_pc_sz  Name  (void) const;
-		bool    Name  (_pc_sz);
+
+		uint32_t Locate (void) const;     // gets variable location (the index within shader context);
+		bool     Locate (const uint32_t); // sets variable location; it is mainly used by uniform enumerator class; returns 'true' in case of value change;
 		const
-		CValue& Value (void) const;
-		CValue& Value (void) ;
+		uint32_t& ProgId (void) const;
+		uint32_t& ProgId (void);
+
+		_pc_sz Name (void) const; // gets the name of this variable;
+		bool   Name (_pc_sz);     // sets the name of this variable; returns 'true' in case of the name change;
+
+		const
+		CValue&  Value (void) const;
+		CValue&  Value (void) ;
+
+		CUniform& operator = (const CUniform&); CUniform& operator = (CUniform&&);
+		CUniform& operator <<(_pc_sz _p_name);
+		CUniform& operator <<(const CValue&);
+		CUniform& operator <<(const uint32_t _u_ndx); // sets the location/index value;
 
 	private:
-		CError  m_error;
-		CString m_name ; // this is variable name that is used inside of shader source code;
-		CValue  m_value;
+		CError   m_error;
+		CString  m_name ; // this is variable name that is used inside of shader source code;
+		CValue   m_value;
+		uint32_t m_index; // aka location;
+		uint32_t m_prog_id;
 	};
 
 	typedef ::std::vector<CUniform> TUniVars;

@@ -114,7 +114,7 @@ CAttr_Location& CAttr_Location::operator <<(_pc_sz _attr_name) { this->Attr_name
 /////////////////////////////////////////////////////////////////////////////
 #pragma region __vert_attr
 
-using e_att_val_float = ex_ui::draw::open_gl::procs::vertex::e_att_val_float;
+using e_att_val_float = ex_ui::draw::open_gl::procs::e_att_val_float;
 
 CAttr:: CAttr (_pc_sz _p_name) : m_size(0), m_type(0), m_norm(false), m_stride (0), m_offset(0), m_used(true) {
 	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;

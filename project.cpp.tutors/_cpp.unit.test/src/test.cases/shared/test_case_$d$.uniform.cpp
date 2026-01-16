@@ -19,12 +19,51 @@ uint32_t CUni_enum::Count (const uint32_t _prog_id, CError& _err) {
 
 TError&  CUni_enum::Error (void) const { return this->m_error; }
 
+err_code CUni_enum::Get (const uint32_t _prog_id) {
+	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Get(_prog_id, this->m_vars, this->m_error);
+}
+err_code CUni_enum::Get (const uint32_t _prog_id, TUniVars& _vars, CError& _err) {
+	_prog_id; _vars; _err;
+	return CUniEnum::Get(_prog_id, _vars, _err);
+}
+
+err_code  CUni_enum::OnDraw (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	this->m_shape.Init();
+	return CUni_enum::OnDraw(this->m_vars, this->m_error);
+}
+
+err_code  CUni_enum::OnDraw (TUniVars& _vars, CError& _err) {
+	_vars; _err;
+	CFake_renderer renderer;
+
+	if (__failed(renderer.On_draw_begin())) _err = renderer.Error(); // just keeps going, no exit;
+
+	CUniEnum::Get(CProg(e_object::e_grid).GetId(), _vars, _err); // this is the main point of uniform variable test;
+
+	if (__failed(renderer.On_draw_end()))  _err = renderer.Error();
+
+	return _err;
+}
+
+const
+TUniVars& CUni_enum::Vars (void) const { return this->m_vars; }
+
 #pragma endregion
 #pragma region cls::CUni_form{}
 
 CUni_form::CUni_form (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 TError& CUni_form::Error (void) const { return this->m_error; }
+
+CString CUni_form::To_str (const CUniform& _u_form) {
+	_u_form;
+	static _pc_sz pc_sz_pat_u_form = _T("cls::[%s::%s] >> {name = %s; type = %s (0x%04x)};");
+
+	CString cs_out;
+	        cs_out.Format(pc_sz_pat_u_form, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _u_form.Name(), (_pc_sz) _u_form.Value().Type().To_str(), _u_form.Value().Type().Get());
+	return  cs_out;
+}
 
 #pragma endregion
 #pragma region cls::CUni_value{}

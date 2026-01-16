@@ -15,20 +15,92 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vars;
 
 using CValue = CUniform::CValue;
+using CProgId = program::CProgId;
 
 #pragma region cls::CUniform::CValue{}
 
 CValue::CValue (CUniform* _p_form) : m_p_form(_p_form) {}
+CValue::CValue (const CValue& _src) : CValue(_src.m_p_form) { *this = _src; }
+CValue::CValue (CValue&& _victim) : CValue() { *this = _victim; }
 
 TError& CValue::Error (void) const { return this->m_error; }
+
+err_code CValue::Get (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == this->m_p_form)
+		return this->m_error << __e_pointer = _T("#__e_not_inited: the pointer to uniform var is not set");
+
+	switch (this->Type().Get()) {
+	case (uint32_t)procs::e_att_val_vec::e_float_vec3: {
+
+		using t_uniform_3f = procs::vars::t_uniform_3f; t_uniform_3f v_values = {0.0f};
+
+		if (__failed(::__get_uni_val_procs().Get_3fs(this->m_p_form->ProgId(), this->m_p_form->Locate(), v_values))) {
+			this->m_error = ::__get_uni_val_procs().Error();
+			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		}
+	} break;
+	case (uint32_t)procs::e_att_val_vec::e_float_vec4: {
+
+		using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f v_values = {0.0f};
+
+		if (__failed(::__get_uni_val_procs().Get_4fs(this->m_p_form->ProgId(), this->m_p_form->Locate(), v_values))) {
+			this->m_error = ::__get_uni_val_procs().Error();
+			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+		}
+	} break;
+	default:;
+	}
+
+	return this->Error();
+}
+
+const
+CType&  CValue::Type (void) const { return this->m_type; }
+CType&  CValue::Type (void)       { return this->m_type; }
+
+CValue& CValue::operator = (const CValue& _src) { *this << _src.Type(); this->m_error = _src.Error(); return *this; }
+CValue& CValue::operator = (CValue&& _victim) { _victim; return *this; }
+
+CValue& CValue::operator <<(const CType& _type) { this->Type() = _type; return *this; }
 
 #pragma endregion
 #pragma region cls::vars::CUniform{}
 
-CUniform:: CUniform (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUniform:: CUniform (void) : m_value(this), m_index(u_inv_ndx), m_prog_id(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUniform:: CUniform (const CUniform& _src) : CUniform() { *this = _src; }
+CUniform:: CUniform (CUniform&& _victim) : CUniform() { *this = _victim; }
 CUniform::~CUniform (void) {}
 
 TError&    CUniform::Error (void) const { return this->m_error; }
+
+_pc_sz  CUniform::Name (void) const { return (_pc_sz) this->m_name; }
+bool    CUniform::Name (_pc_sz _p_name) {
+	_p_name;
+	const bool b_changed = !!this->m_name.CompareNoCase(_p_name); if (b_changed) this->m_name = _p_name; return b_changed;
+}
+
+uint32_t CUniform::Locate (void) const { return this->m_index; }
+bool     CUniform::Locate (const uint32_t _u_ndx) {
+	_u_ndx;
+	const bool b_changed = this->Locate() != _u_ndx; if (b_changed) this->m_index = _u_ndx; return b_changed;
+}
+
+const
+uint32_t& CUniform::ProgId (void) const { return this->m_prog_id; }
+uint32_t& CUniform::ProgId (void)       { return this->m_prog_id; }
+
+const
+CValue& CUniform::Value (void) const { return this->m_value; }
+CValue& CUniform::Value (void)       { return this->m_value; }
+
+CUniform&  CUniform::operator = (const CUniform& _src) { *this << _src.Name() << _src.Value() << _src.Locate(); this->ProgId() = _src.ProgId(); return *this; }
+CUniform&  CUniform::operator = (CUniform&& _victim) { *this = (const CUniform&)_victim; return *this; }
+
+CUniform&  CUniform::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+CUniform&  CUniform::operator <<(const CValue& _val) { this->Value() = _val; return *this; }
+CUniform&  CUniform::operator <<(const uint32_t _u_ndx) { this->Locate(_u_ndx); return *this; }
 
 #pragma endregion
 #pragma region cls::vars::CUniform_enum{}
@@ -91,6 +163,57 @@ err_code CUniform_enum::Get (const uint32_t prog_id, TUniVars& _vars, CError& _e
 	uint32_t u_vars_count = CUniform_enum::Count(prog_id, _err);
 	if (0 == u_vars_count)
 		return _err; // no errors and no variables;
+
+	using e_iface = procs::program::e_interface;
+	using e_prop = procs::program::e_property;
+
+	enum class e_ndx : uint32_t { e_name = 0, e_type, e_loc, e_bloc }; // for reference to value vector elements;
+
+	procs::program::TRawProps props = {e_prop::e_name_len, e_prop::e_type, e_prop::e_location, e_prop::e_block_ndx};
+	procs::program::TRawValues values(props.size());
+	// (2) reserving a vector items number is not good idea, an error may occur and the vector will contain vars that are empty and not valid;
+#if (0)
+	try {
+	_vars.resize(u_vars_count); _vars.reserve(u_vars_count);
+	} catch (const ::std::bad_alloc&) {
+		_err << __e_no_memory; return _err;
+	}
+#endif
+	for (uint32_t i_ = 0; i_ < u_vars_count; i_++) {
+		if (__failed(::__get_res_procs().GetValues(prog_id, e_iface::e_uniform, i_, props, values))) {
+			_err = ::__get_res_procs().Error(); break;
+		}
+#if (0) // the variable is still of interest, at least for testing purposes;
+		// skips uniforms that are part of a named uniform block, as they are handled separately;
+		if (-1 == values.at(3)) // to-do: hard coded index value is not good;
+			continue;
+#endif
+		CString cs_name;
+		if (__failed(::__get_res_procs().GetName(prog_id, e_iface::e_uniform, i_, cs_name))) {
+			_err = ::__get_res_procs().Error(); break;
+		}
+
+		CUniform u_form; u_form.Name((_pc_sz)cs_name);
+#if (0)
+		try {
+			_vars.at(i_) = u_form;
+		} catch (const ::std::out_of_range&) {
+			_err << __e_index; break;
+		}
+#else
+		try {
+			u_form.Value().Type() << (uint32_t) values.at((uint32_t)e_ndx::e_type); // data type can be converted to 'unsigned', no negative value is expected;
+			u_form << i_; // sets the index/location of the variable;
+			u_form.ProgId() = prog_id;
+
+			u_form.Value().Get(); // this method may generate an error, the value object saves the error state;
+
+			_vars.push_back(u_form);
+		} catch (const ::std::bad_alloc&) {
+			_err << __e_no_memory; break;
+		}
+#endif
+	}
 
 	return _err;
 }

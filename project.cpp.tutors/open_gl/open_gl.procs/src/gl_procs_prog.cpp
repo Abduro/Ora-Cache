@@ -330,9 +330,9 @@ err_code CResource::GetValues (const uint32_t _prog_id, const e_interface _e_ifa
 
 	const uint32_t u_prop_count = static_cast<uint32_t>(_e_props.size());
 	const uint32_t u_result_count = static_cast<uint32_t>(_result.size());
-	uint32_t u_lenght = 0;
+	uint32_t u_length = 0;
 
-	p_fun(_prog_id, (uint32_t)_e_iface, _u_ndx, u_prop_count, (uint32_t*)_e_props.data(), u_result_count, &u_lenght, (int32_t*)_result.data());
+	p_fun(_prog_id, (uint32_t)_e_iface, _u_ndx, u_prop_count, (uint32_t*)_e_props.data(), u_result_count, &u_length, (int32_t*)_result.data());
 	const
 	uint32_t u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ) {

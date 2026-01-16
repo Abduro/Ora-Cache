@@ -27,6 +27,7 @@ err_code CDevCtx::Create (void) {
 
 	if (__failed(dev_ref.Create(this->Window()))) {
 		this->m_error = dev_ref.Error();
+		_out() += this->Error().Print(TError::e_print::e_req);
 	}
 
 	return this->Error();
@@ -74,7 +75,7 @@ err_code CGraphCtx::Create (const HWND _h_target) {
 	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
 
 	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
-		this->m_error = renderer.Scene().Ctx().Graphics().Error();
+		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out() += this->Error().Print(TError::e_print::e_req);
 	}
 
 	return this->Error();
@@ -87,16 +88,29 @@ err_code CGraphCtx::Delete (void) {
 	TRenderer& renderer = ::Get_renderer();
 				
 	/* at the end of the test case the graphics object must be destroyed;
-	   otherwise on process exit and calling objects' destructors a lot of errors is thrown;
+	   otherwise on process' exit and calling objects' destructors a lot of errors is thrown;
 	   debug trace is connected to test output, a possible error is output using debug;
 	*/
 	if (renderer.Scene().Ctx().Graphics().Is_valid())
-		renderer.Scene().Ctx().Graphics().Destroy();
+		renderer.Scene().Ctx().Graphics().Destroy(); // to-do: possible error of this procedure may be of interest;
 
 	return this->Error();
 }
 
 TError&  CGraphCtx::Error (void) const { return this->m_error; }
+
+err_code CGraphCtx::Swap (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	TRenderer& renderer = ::Get_renderer();
+
+	if (false == !!::SwapBuffers(renderer.Scene().Ctx().Graphics().Target().Get())) {
+		this->m_error.Last();
+		_out() += this->Error().Print(TError::e_print::e_req);
+	}
+	return this->Error();
+}
 
 #pragma endregion
 #pragma region cls::CCtx_auto{}

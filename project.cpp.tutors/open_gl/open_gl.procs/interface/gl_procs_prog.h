@@ -26,6 +26,7 @@ namespace program {
 	e_active_res = 0x92F5, // GL_ACTIVE_RESOURCES  | the number of resources in the active resource list for particular interface;
 	e_arr_size   = 0x92FB, // GL_ARRAY_SIZE        | the number of active array elements of an active variable; (in)
 	e_arr_stride = 0x92FE, // GL_ARRAY_STRIDE      | the stride between array elements in an active variable; (out)
+	e_block_ndx  = 0x92FD, // GL_BLOCK_INDEX       | the index of the active interface block containing an active variable;
 	e_loc_index  = 0x930F, // GL_LOCATION_INDEX    | the fragment color index of an active fragment shader output variable;
 	e_location   = 0x930E, // GL_LOCATION          | the assigned location for an active uniform, input, output, or subroutine uniform variable;
 	e_name_len   = 0x92F9, // GL_NAME_LENGTH       | the length of the name string associated with an active variable;

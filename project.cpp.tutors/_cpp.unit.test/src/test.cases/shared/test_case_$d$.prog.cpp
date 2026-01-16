@@ -18,11 +18,24 @@ bool COpts::Link (const bool _opt) {
 	const bool b_changed = this->Link() != _opt; if (b_changed) this->m_b_opts[e_opts::e_link] = _opt; 
 	return b_changed;
 }
-bool COpts::UseShaders (void) const { return this->m_b_opts[e_opts::e_use_$]; }
-bool COpts::UseShaders (const bool _opt) {
+bool COpts::Use_$ (void) const { return this->m_b_opts[e_opts::e_use_$]; }
+bool COpts::Use_$ (const bool _opt) {
 	_opt;
-	const bool b_changed = this->UseShaders() != _opt; if (b_changed) this->m_b_opts[e_opts::e_use_$] = _opt; 
+	const bool b_changed = this->Use_$() != _opt; if (b_changed) this->m_b_opts[e_opts::e_use_$] = _opt; 
 	return b_changed;
+}
+
+COpts& COpts::operator <<(const e_opts _opt) {
+	_opt;
+	if (e_opts::e_link == _opt) this->Link(true);
+	if (e_opts::e_use_$ == _opt) this->Use_$(true);
+	return *this;
+}
+COpts& COpts::operator >>(const e_opts _opt) {
+	_opt;
+	if (e_opts::e_link == _opt) this->Link(false);
+	if (e_opts::e_use_$ == _opt) this->Use_$(false);
+	return *this;
 }
 
 #pragma endregion
@@ -73,7 +86,7 @@ err_code CProg::Create (void) {
 	if (false){}
 	else if (__failed(prog.Create())) {
 		_out() += prog.Error().Print(TError::e_print::e_req); return this->m_error = prog.Error(); }
-	else if (this->Opts().UseShaders() == false)
+	else if (this->Opts().Use_$() == false)
 		return this->Error();
 	else {}
 #if (0)
@@ -101,7 +114,7 @@ err_code CProg::Delete (void) {
 	TRenderer& renderer = ::Get_renderer();
 	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
 
-	if (true == this->Opts().UseShaders()) {
+	if (true == this->Opts().Use_$()) {
 
 		shader::CFragment& $frag = prog.Shaders().Fragment();
 		shader::CVertex& $vert = prog.Shaders().Vertex();
@@ -132,7 +145,10 @@ uint32_t CProg::GetId (void) {
 	TRenderer& renderer = ::Get_renderer();
 	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
 
-	if (prog.Error()) this->m_error = prog.Error();
+	if (prog.Error()) {
+		this->m_error = prog.Error();
+		_out() += this->m_error.Print(TError::e_print::e_req);
+	}
 
 	return prog.Id().Get();
 }
@@ -145,7 +161,7 @@ err_code CProg::Link (void) {
 	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
 	// tries to attach the required shaders for linking this program; it is assumed the shaders are created;
 	// to-do: working with shaders must be moved to separate class/procedure;
-	if (this->Opts().UseShaders()) {
+	if (this->Opts().Use_$()) {
 
 		shader::CFragment& $frag = prog.Shaders().Fragment();
 		shader::CVertex& $vert = prog.Shaders().Vertex();
@@ -160,7 +176,7 @@ err_code CProg::Link (void) {
 #else
 		this->m_error = C$_enum().Compile();
 #endif
-		if (this->Error()) return this->Error(); // there is no		sense to link the program because one of the shaders is not compiled;
+		if (this->Error()) return this->Error(); // there is no	sense to link the program because one of the shaders is not compiled;
 	}
 
 	if (__failed(CProgram::Link(prog.Id(), this->m_error))) { _out() += this->Error().Print(TError::e_print::e_req); }
@@ -168,8 +184,31 @@ err_code CProg::Link (void) {
 	return this->Error();
 }
 
+err_code CProg::Use  (const bool _b_on) {
+	_b_on;
+	this->m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	TRenderer& renderer = ::Get_renderer();
+	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());
+
+	if (_b_on) {
+		if (__failed(prog.Use())) {
+			this->m_error = prog.Error(); _out() += this->Error().Print(TError::e_print::e_req);
+		}
+	}
+	else {
+		if (__failed(CProgram::Unused(this->m_error))) _out() += this->Error().Print(TError::e_print::e_req);
+	}
+	
+	return this->Error();
+}
+
 const
 COpts&   CProg::Opts (void) const { return this->m_opts; }
 COpts&   CProg::Opts (void)       { return this->m_opts; }
+
+CProg&   CProg::operator <<(const e_opts _opt) { this->Opts() << _opt; return *this; }
+CProg&   CProg::operator >>(const e_opts _opt) { this->Opts() >> _opt; return *this; }
 
 #pragma endregion

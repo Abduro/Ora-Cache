@@ -40,5 +40,7 @@
     <ClCompile Include="$(_1)gl_procs_vertex.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_view.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_view.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_types.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_types.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

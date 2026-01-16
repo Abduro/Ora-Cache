@@ -125,7 +125,6 @@ err_code    CRenderer::Draw (void) {
 		if (__failed(::Get_shapes().Get(e_object::e_tria).Draw()))
 			return this->m_error = ::Get_shapes().Get(e_object::e_tria).Error();
 
-
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
 	if (false == !!::SwapBuffers(this->Scene().Ctx().Graphics().Target().Get())) {
 		this->m_error.Last();

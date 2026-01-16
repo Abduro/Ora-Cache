@@ -15,28 +15,6 @@ using namespace ex_ui::draw::open_gl::procs::vertex;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
-	class CAtt_dat_type {
-	public:
-		CAtt_dat_type (void) { this->m_error>>__CLASS__<<__METHOD__<<__s_ok; } ~CAtt_dat_type(void) = default;
-		CAtt_dat_type (const CAtt_dat_type&) = delete; CAtt_dat_type (CAtt_dat_type&&) = delete;
-
-		TError& Error (void) const { return this->m_error; }
-
-		static bool  Is_float (const uint32_t _u_type) {
-			return (_i_to_f(e_att_val_float::e_double) == _u_type || _i_to_f(e_att_val_float::e_float) == _u_type ||
-			        _i_to_f(e_att_val_float::e_float_16bits) == _u_type);
-		}
-
-		static bool  Is_int (const uint32_t _u_type) {
-			return (_i_to_u(e_att_val_int::e_byte) == _u_type || _i_to_u(e_att_val_int::e_u_byte) == _u_type || _i_to_u(e_att_val_int::e_short) == _u_type ||
-			        _i_to_u(e_att_val_int::e_u_short) == _u_type || _i_to_u(e_att_val_int::e_int) == _u_type || _i_to_u(e_att_val_int::e_u_int) == _u_type ||
-			        _i_to_u(e_att_val_int::e_fixed) == _u_type);
-		}
-
-	private: CAtt_dat_type& operator = (const CAtt_dat_type&) = delete; CAtt_dat_type& operator = (CAtt_dat_type&&) = delete;
-	private:
-		mutable CError m_error;
-	};
 	#define GL_BGRA 0x80E1               // from glcorearb.h ;
 	#define GL_MAX_VERTEX_ATTRIBS 0x8869 // from glcorearb.h ;
 	#define __gl_bgra GL_BGRA
@@ -64,7 +42,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 		TError& Check (const uint32_t _u_ndx, const uint32_t _u_size, const uint32_t _u_type) const {
 			if (__failed(this->Check( _u_ndx, _u_size))) return this->Error();
 			// GL_INVALID_ENUM  : tye type '_u_type' is not an accepted value ;
-			if (false == CAtt_dat_type::Is_int(_u_type) && false == CAtt_dat_type::Is_float(_u_type))
+			if (false == CType::Is_int(_u_type) && false == CType::Is_float(_u_type))
 			     return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_type: '_u_type' (%u) is not acceptable"), _u_type);
 			else return this->m_error<<__METHOD__<<__s_ok;
 		}
@@ -701,7 +679,7 @@ err_code CAttrPtr::Set_I (const uint32_t _u_ndx, const uint32_t _u_size, const u
 	if (nullptr == p_fun)
 		return CBase::Error();
 
-	if (false == CAtt_dat_type::Is_int(_u_type)) // it will be called again in CInput_Args::Check(...) but it is not important for now;
+	if (false == CType::Is_int(_u_type)) // it will be called again in CInput_Args::Check(...) but it is not important for now;
 		return CBase::m_error << __e_inv_arg = TString().Format(_T("#__err_dat_type: '_u_type' (%u) is not integer data type"), _u_type);
 
 	CBase::m_error = CInput_Args().Check(_u_ndx, _u_size, _u_type, _u_stride);
@@ -723,7 +701,7 @@ err_code CAttrPtr::Set_L (const uint32_t _u_ndx, const uint32_t _u_size, const u
 	if (nullptr == p_fun)
 		return CBase::Error();
 
-	if (false == CAtt_dat_type::Is_float(_u_type)) // it will be called again in CInput_Args::Check(...) but it is not important for now;
+	if (false == CType::Is_float(_u_type)) // it will be called again in CInput_Args::Check(...) but it is not important for now;
 		return CBase::m_error << __e_inv_arg = TString().Format(_T("#__err_dat_type: '_u_type' (%u) is not float data type"), _u_type);
 
 	CBase::m_error = CInput_Args().Check(_u_ndx, _u_size, _u_type, _u_stride);

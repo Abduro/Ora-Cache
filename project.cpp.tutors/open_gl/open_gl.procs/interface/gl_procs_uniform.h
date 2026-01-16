@@ -20,15 +20,23 @@ namespace vars {
 		CUniform& operator = (const CUniform&) = delete; CUniform& operator = (CUniform&&) = delete;
 	};
 
+	typedef ::std::array<float, 2u> t_uniform_2f;
+	typedef ::std::array<float, 3u> t_uniform_3f;
 	typedef ::std::array<float, 4u> t_uniform_4f;
-	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetUniform.xhtml ; >> gets uniform variable value;
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUniform.xhtml ;    << sets uniform variable value;
 	class CUni_value : public CBase {
+	typedef void (__stdcall *pfn_Get_fv ) (const uint32_t _prog_id, const int32_t _n_locate, float* _p_values);      // gets float value(s); glGetUniformfv();
+	typedef void (__stdcall *pfn_Get_nfv) (const uint32_t _prog_id, const int32_t _n_locate, const uint32_t _buf_size, float* _p_values);  // gets n-float value(s) through buffer; glGetnUniformfv();
 	typedef void (__stdcall *pfn_Set_4fs) (const int32_t _n_locate, float _f_0, float _f_1, float _f_2, float _f_3); // for setting scalar values;
 	typedef void (__stdcall *pfn_Set_4fv) (const int32_t _n_locate, const uint32_t _u_count, const float* _p_value); // for setting values to vector and matrix;
 	public:
 		CUni_value (void); ~CUni_value (void) = default;
 
 		err_code Get_all (void);
+
+		err_code Get_3fs (const uint32_t _prog_id, const uint32_t _n_locate, t_uniform_3f& _arr_values); // gets vec3 data;
+		err_code Get_4fs (const uint32_t _prog_id, const uint32_t _n_locate, t_uniform_4f& _arr_values); // gets vec3 data;
 
 		err_code Set_4fs (const int32_t _n_locate, const t_uniform_4f&); // for setting scalar values;
 		err_code Set_4fv (const int32_t _n_locate, const t_uniform_4f&); // for setting vector values;

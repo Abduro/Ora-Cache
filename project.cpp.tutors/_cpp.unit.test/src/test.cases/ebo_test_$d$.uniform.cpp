@@ -21,19 +21,47 @@ void c_uni_enum::Count (void) {
 	CCtx_auto ctx_auto;
 	if (ctx_auto.Error()) { _out()(); return; }
 
-	CProg prog;
-
-	// to-do this set of function calls must be moved to one method for simple call;
-	prog.Target(e_object::e_grid);
-	prog.Opts().UseShaders(true);
-	prog.Opts().Link(true);
+	CProg prog(e_object::e_grid); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;
 
 	prog.Create();
 
 	CUni_enum uni_enum;
 	const uint32_t u_vars = uni_enum.Count(prog.GetId());
 
+	prog.Delete();
+
 	_out() += TString().Format(_T("Uniform vars count: %u;"), u_vars);
+	_out()();
+}
+
+void c_uni_enum::Get (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CCtx_auto ctx_auto;
+	if (ctx_auto.Error()) { _out()(); return; }
+
+	CProg prog(e_object::e_grid); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;
+
+	prog.Create();
+
+	CUni_enum uni_enum; uni_enum.Get(prog.GetId());
+
+	prog.Delete();
+
+	_out() += TString().Format(_T("Uniform vars count: %u;"), uni_enum.Vars().size());
+	for (uint32_t i_ = 0; i_ < uni_enum.Vars().size(); i_++)
+	_out() += CUni_form::To_str(uni_enum.Vars().at(i_));
+	_out()();
+}
+
+void c_uni_enum::OnDraw (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CUni_enum uni_enum; uni_enum.OnDraw();
+
+	_out() += TString().Format(_T("Uniform vars count: %u;"), uni_enum.Vars().size());
+	for (uint32_t i_ = 0; i_ < uni_enum.Vars().size(); i_++)
+	_out() += CUni_form::To_str(uni_enum.Vars().at(i_));
 	_out()();
 }
 

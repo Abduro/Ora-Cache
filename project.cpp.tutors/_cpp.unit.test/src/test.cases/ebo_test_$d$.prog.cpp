@@ -25,10 +25,10 @@ void c_prog::Grid (void) {
 	if (__failed(dev_ctx.Create())) return;
 	if (__failed(graph_ctx.Create(dev_ctx.Window()))) return;
 
-	CProg prog;
+	CProg prog(e_object::e_grid); prog.Opts() << CProg::COpts::e_opts::e_link << CProg::COpts::e_opts::e_use_$;
 
 	prog.Target(e_object::e_grid); // by default, it is already set as the target of the grid, but for better readability;
-	prog.Opts().UseShaders(true);  // turn on the option of using the program shaders;
+	prog.Opts().Use_$(true);       // turn on the option of using the program shaders;
 	prog.Opts().Link(true);        // turn on the option of linking the program;
 
 	prog.Create();

@@ -24,6 +24,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		err_code Create (void);
 		err_code Delete (void);
 		TError&  Error  (void) const;
+
 		const
 		CFakeWnd& Window (void) const;
 		CFakeWnd& Window (void) ;
@@ -41,8 +42,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 		err_code Create (const HWND _h_target); // for the test cases the fake window handle is used;
 		err_code Delete (void);
-
 		TError&  Error  (void) const;
+
+		err_code Swap (void); // replaces graphics context by the target window device context, i.e. makes draw on the screen;
+
 	private:
 		CGraphCtx& operator = (const CGraphCtx&) = delete; CGraphCtx& operator = (CGraphCtx&&) = delete;
 		CError m_error;

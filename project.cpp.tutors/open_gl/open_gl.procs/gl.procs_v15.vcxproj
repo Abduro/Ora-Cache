@@ -217,6 +217,8 @@
     <ClCompile Include="$(_1)gl_procs_vertex.cpp" />
     <ClInclude Include="$(_0)gl_procs_view.h" />
     <ClCompile Include="$(_1)gl_procs_view.cpp" />
+    <ClInclude Include="$(_0)gl_types.h" />
+    <ClCompile Include="$(_1)gl_types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

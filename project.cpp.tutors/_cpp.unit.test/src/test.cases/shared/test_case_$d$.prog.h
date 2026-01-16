@@ -18,6 +18,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	class CProg : public TPipe {
 	public:
 		class COpts {
+		public:
 			enum e_opts : uint32_t {
 				e_link  = 0x0, // 'link' program option flag index;
 				e_use_$ = 0x1, // 'use shaders' flag index;
@@ -26,17 +27,21 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		public:
 			COpts (void) ; ~COpts (void) = default; COpts (const COpts&) = delete; COpts (COpts&&) = delete;
 
-			bool Link (void) const;       // if this option is 'true'; the program will be linked after its creation; it is assumed the shaders are used also;
-			bool Link (const bool);       // sets the 'link' option value, returns 'true' in case of option value change;
+			bool Link (void) const;  // if this option is 'true'; the program will be linked after its creation; it is assumed the shaders are used also;
+			bool Link (const bool);  // sets the 'link' option value, returns 'true' in case of option value change;
 
-			bool UseShaders (void) const; // if this option is 'true'; the program creates shaders when it is create itself;
-			bool UseShaders (const bool); // sets the 'shader use' option value, returns 'true' in case of option value change;
+			bool Use_$ (void) const; // if this option is 'true'; the program creates shaders when it is create itself;
+			bool Use_$ (const bool); // sets the 'shader use' option value, returns 'true' in case of option value change;
+
+			COpts& operator <<(const e_opts); // turns given option on;
+			COpts& operator >>(const e_opts); // turns given option off;
 
 		private:
 			COpts& operator = (const COpts&) = delete; COpts& operator = (COpts&&) = delete;
 			bool  m_b_opts[u_opt_count];
 		};
-	public:
+	
+		using e_opts = COpts::e_opts;
 		CProg (const e_object = e_object::e_grid); // creates grid program by default for testing matrices throug shaders;
 		CProg (const CProg&) = delete; CProg (CProg&&) = delete; ~CProg (void) = default;
 
@@ -49,10 +54,14 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 		uint32_t GetId(void);
 		err_code Link (void); // links this program;
+		err_code Use  (const bool _b_on = true);
 
 		const
 		COpts&   Opts (void) const;
 		COpts&   Opts (void) ;
+
+		CProg& operator <<(const e_opts); // turns given option on;
+		CProg& operator >>(const e_opts); // turns given option off;
 
 	private:
 		CProg& operator = (const CProg&) = delete; CProg& operator = (CProg&&) = delete;
