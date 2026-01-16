@@ -12,7 +12,7 @@ namespace vars {
 
 	using CType = procs::CType;
 
-	class CUniform {
+	class CUniform : public TPipe {
 	public:
 		class CValue {
 		public:
@@ -36,15 +36,12 @@ namespace vars {
 
 	public:
 		static const uint32_t u_inv_ndx = (uint32_t)-1;
-		CUniform (void); ~CUniform (void); CUniform (const CUniform&); CUniform (CUniform&&);
+		CUniform (const e_object = e_object::e_none); ~CUniform (void); CUniform (const CUniform&); CUniform (CUniform&&);
 
 		TError& Error (void) const;
 
 		uint32_t Locate (void) const;     // gets variable location (the index within shader context);
 		bool     Locate (const uint32_t); // sets variable location; it is mainly used by uniform enumerator class; returns 'true' in case of value change;
-		const
-		uint32_t& ProgId (void) const;
-		uint32_t& ProgId (void);
 
 		_pc_sz Name (void) const; // gets the name of this variable;
 		bool   Name (_pc_sz);     // sets the name of this variable; returns 'true' in case of the name change;
@@ -58,25 +55,28 @@ namespace vars {
 		CUniform& operator <<(const CValue&);
 		CUniform& operator <<(const uint32_t _u_ndx); // sets the location/index value;
 
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void);
+
 	private:
 		CError   m_error;
 		CString  m_name ; // this is variable name that is used inside of shader source code;
 		CValue   m_value;
 		uint32_t m_index; // aka location;
-		uint32_t m_prog_id;
 	};
 
 	typedef ::std::vector<CUniform> TUniVars;
 
-	class CUniform_enum : no_copy {
+	class CUniform_enum : public TPipe {
 	public:
-		CUniform_enum (void); ~CUniform_enum (void);
+		CUniform_enum (const e_object = e_object::e_none); ~CUniform_enum (void);
 		static
-		uint32_t Count (const uint32_t prog_id,  CError&); // gets count of uniforms in the active/bound program object;
-		uint32_t Count (void) const; // gets active program reference from the global renderer;
+		uint32_t Count (const e_object, CError&); // gets count of uniforms in the active/bound program object;
+		uint32_t Count (void) const;              // gets active program reference from the global renderer;
 		TError&  Error (void) const;
 		static
-		err_code Get (const uint32_t prog_id, TUniVars&, CError&); // enumerates all uniform variables;
+		err_code Get (const e_object, TUniVars&, CError&); // enumerates all uniform variables;
 	
 	private:
 		mutable

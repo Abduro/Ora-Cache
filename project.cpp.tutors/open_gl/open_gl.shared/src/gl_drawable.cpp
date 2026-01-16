@@ -396,7 +396,7 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 				return this->Error();
 			}
-#if (1) // for usniform vars test case only;
+#if (0) // for usniform vars test case only;
 		using CUni_enum = vars::CUniform_enum; CUni_enum u_vars;
 		const uint32_t var_count = u_vars.Count();
 		if (u_vars.Error()) {
@@ -404,7 +404,7 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 		}
 #endif
 	//	using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f clr_4f{clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a()};
-#if (1)
+#if (0)
 		if (__failed(::__get_uni_val_procs().Set_4fs(clr_ndx, {clr.Get_r(), clr.Get_g(), clr.Get_b(), /*clr.Get_a()*/1.0f}))) {
 			this->m_error = ::__get_uni_val_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));

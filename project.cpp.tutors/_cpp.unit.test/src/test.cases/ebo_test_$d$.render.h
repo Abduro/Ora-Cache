@@ -11,10 +11,17 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	__class (c_renderer) {
 	public:
-		  c_renderer (void);
+		  c_renderer (const e_object = e_object::e_none);
 		 ~c_renderer (void) = default;
 
 		 __method (Draw);
+
+		 const
+		 TPipe& operator ()(void) const;
+		 TPipe& operator ()(void) ;
+
+	private:
+		TPipe  m_pipe;
 	};
 
 }}}}}

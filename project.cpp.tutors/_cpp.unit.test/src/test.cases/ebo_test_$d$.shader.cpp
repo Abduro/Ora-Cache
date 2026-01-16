@@ -22,7 +22,7 @@ bool COpts::Compile (const bool _opt) {
 #pragma endregion
 #pragma region cls::c_shaders{}
 
-c_shaders::c_shaders (const e_object _target, const bool _b_verb) : m_target(_target), m_b_verb(_b_verb) {
+c_shaders::c_shaders (const e_object _target, const bool _b_verb) : m_pipe(_target), m_b_verb(_b_verb) {
 	if (this->m_b_verb && false) {
 		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		_out()();
@@ -30,7 +30,7 @@ c_shaders::c_shaders (const e_object _target, const bool _b_verb) : m_target(_ta
 }
 
 void c_shaders::Get_frag (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CDevCtx dev_ctx;
 
@@ -38,7 +38,7 @@ void c_shaders::Get_frag (void) {
 		_out() += dev_ctx.Error().Print(TError::e_print::e_req); _out()(); return;
 	}
 
-	C$Frag $_frag;
+	C$Frag $_frag((*this)()); // draw target type is important;
 
 	$_frag.Create(); if (this->Opts().Compile()) $_frag.Compile();
 	$_frag.Delete();
@@ -49,7 +49,7 @@ void c_shaders::Get_frag (void) {
 }
 
 void c_shaders::Get_vert (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CDevCtx dev_ctx;
 
@@ -57,7 +57,7 @@ void c_shaders::Get_vert (void) {
 		_out() += dev_ctx.Error().Print(TError::e_print::e_req); _out()(); return;
 	}
 
-	C$Vert $_vert;
+	C$Vert $_vert((*this)()); // draw target type is important;
 
 	$_vert.Create(); if (this->Opts().Compile()) $_vert.Compile();
 	$_vert.Delete();
@@ -70,6 +70,8 @@ const
 COpts&   c_shaders::Opts (void) const { return this->m_opts; }
 COpts&   c_shaders::Opts (void)       { return this->m_opts; }
 
-e_object c_shaders::Target (void) const { return this->m_target; }
+const
+TPipe&   c_shaders::operator ()(void) const { return this->m_pipe; }
+TPipe&   c_shaders::operator ()(void)       { return this->m_pipe; }
 
 #pragma endregion

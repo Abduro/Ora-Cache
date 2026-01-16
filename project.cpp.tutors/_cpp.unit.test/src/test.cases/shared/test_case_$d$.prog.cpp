@@ -97,7 +97,7 @@ err_code CProg::Create (void) {
 	if (__failed(C$Base::Create($frag, $frag.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 	if (__failed(C$Base::Create($vert, $vert.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 #else
-	if ((this->m_error = C$_enum().Create())) return this->Error(); 
+	if ((this->m_error = C$_enum(TPipe::Target()).Create())) return this->Error(); 
 #endif
 	if (false == this->Opts().Link())
 		return this->Error();
@@ -125,7 +125,7 @@ err_code CProg::Delete (void) {
 		C$Base::Delete($frag, this->m_error); // if the error occurs, shader base class makes the error trace;
 		C$Base::Delete($vert, this->m_error); // if the error occurs, shader base class makes the error trace;
 #else
-		C$_enum().Delete(); // if the error occurs, shader enumerator class makes the error trace;
+		C$_enum(TPipe::Target()).Delete(); // if the error occurs, shader enumerator class makes the error trace;
 #endif
 	}
 
@@ -174,7 +174,7 @@ err_code CProg::Link (void) {
 		if (__failed(C$Base::Compile($frag, TPipe::Target(), this->m_error)) ||
 		    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
 #else
-		this->m_error = C$_enum().Compile();
+		this->m_error = C$_enum(TPipe::Target()).Compile(); // *important*: shader enumeration target object must be the same with this program target;
 #endif
 		if (this->Error()) return this->Error(); // there is no	sense to link the program because one of the shaders is not compiled;
 	}
@@ -210,5 +210,9 @@ COpts&   CProg::Opts (void)       { return this->m_opts; }
 
 CProg&   CProg::operator <<(const e_opts _opt) { this->Opts() << _opt; return *this; }
 CProg&   CProg::operator >>(const e_opts _opt) { this->Opts() >> _opt; return *this; }
+
+const
+TPipe&   CProg::operator ()(void) const { return (TPipe&)*this; }
+TPipe&   CProg::operator ()(void)       { return (TPipe&)*this; }
 
 #pragma endregion

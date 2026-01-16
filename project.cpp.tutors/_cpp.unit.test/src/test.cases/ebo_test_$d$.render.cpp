@@ -8,10 +8,14 @@ using namespace ebo::boo::test::open_gl::draw;
 
 #pragma region cls::c_renderer{}
 
-c_renderer::c_renderer (void) {}
+c_renderer::c_renderer (const e_object _target) : m_pipe(_target) {}
 
 void c_renderer::Draw (void) {
-	CFake_renderer renderer; renderer.Draw();
+	CFake_renderer renderer((*this)()); renderer.Draw();
 }
+
+const
+TPipe& c_renderer::operator ()(void) const { return this->m_pipe; }
+TPipe& c_renderer::operator ()(void)       { return this->m_pipe; }
 
 #pragma endregion

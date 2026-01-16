@@ -8,38 +8,37 @@ using namespace ebo::boo::test::open_gl::draw;
 
 #pragma region cls::CUni_enum{}
 
-CUni_enum::CUni_enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUni_enum::CUni_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-uint32_t CUni_enum::Count (const uint32_t _prog_id) {
-	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Count(_prog_id, this->m_error);
+uint32_t CUni_enum::Count (void) const {
+	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Count(TPipe::Target(), this->m_error);
 }
-uint32_t CUni_enum::Count (const uint32_t _prog_id, CError& _err) {
-	return CUniEnum::Count(_prog_id, _err);
+uint32_t CUni_enum::Count (const e_object _target, CError& _err) {
+	return CUniEnum::Count(_target, _err);
 }
 
 TError&  CUni_enum::Error (void) const { return this->m_error; }
 
-err_code CUni_enum::Get (const uint32_t _prog_id) {
-	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Get(_prog_id, this->m_vars, this->m_error);
+err_code CUni_enum::Get (void) {
+	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Get(TPipe::Target(), this->m_vars, this->m_error);
 }
-err_code CUni_enum::Get (const uint32_t _prog_id, TUniVars& _vars, CError& _err) {
-	_prog_id; _vars; _err;
-	return CUniEnum::Get(_prog_id, _vars, _err);
+err_code CUni_enum::Get (const e_object _target, TUniVars& _vars, CError& _err) {
+	_target; _vars; _err;
+	return CUniEnum::Get(_target, _vars, _err);
 }
 
 err_code  CUni_enum::OnDraw (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	this->m_shape.Init();
-	return CUni_enum::OnDraw(this->m_vars, this->m_error);
+	return CUni_enum::OnDraw(TPipe::Target(), this->m_vars, this->m_error);
 }
 
-err_code  CUni_enum::OnDraw (TUniVars& _vars, CError& _err) {
+err_code  CUni_enum::OnDraw (const e_object _target, TUniVars& _vars, CError& _err) {
 	_vars; _err;
 	CFake_renderer renderer;
 
 	if (__failed(renderer.On_draw_begin())) _err = renderer.Error(); // just keeps going, no exit;
 
-	CUniEnum::Get(CProg(e_object::e_grid).GetId(), _vars, _err); // this is the main point of uniform variable test;
+	CUniEnum::Get(_target, _vars, _err); // this is the main point of uniform variable test;
 
 	if (__failed(renderer.On_draw_end()))  _err = renderer.Error();
 

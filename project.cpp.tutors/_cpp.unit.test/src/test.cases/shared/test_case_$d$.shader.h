@@ -19,7 +19,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	// this class especially intended for shader source code file compilation check; no shared renderer components is used;
 	class C$Base : public TPipe {
 	public:
-		C$Base (const e_object = e_object::e_grid);
+		C$Base (const e_object = e_object::e_none);
 		C$Base (const C$Base&) = delete; C$Base (C$Base&&) = delete; ~C$Base (void) = default;
 
 		err_code Compile(void);        // it is supposed the object target is already set; device context must be created too;
@@ -35,6 +35,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		static err_code Create (CShader&, const $Type, CError&); // device contex is created inside of this proc; such behaviour needs a review;
 		static err_code Delete (CShader&, CError&); // deletes the given shader;
 
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void) ;
+
 	protected:
 		C$Base& operator = (const C$Base&) = delete; C$Base& operator = (C$Base&&) = delete;
 		CError   m_error;
@@ -43,14 +47,14 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	class C$Frag : public C$Base {
 	public:
-		C$Frag (const e_object = e_object::e_grid); ~C$Frag (void) = default;
+		C$Frag (const e_object = e_object::e_none); ~C$Frag (void) = default;
 
 		err_code Create (void); // creates a fragment shader;
 	};
 
 	class C$Vert : public C$Base {
 	public:
-		C$Vert (const e_object = e_object::e_grid); ~C$Vert (void) = default;
+		C$Vert (const e_object = e_object::e_none); ~C$Vert (void) = default;
 
 		err_code Create (void); // creates a vertex shader;
 	};

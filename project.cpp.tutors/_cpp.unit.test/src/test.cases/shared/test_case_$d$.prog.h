@@ -42,7 +42,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		};
 	
 		using e_opts = COpts::e_opts;
-		CProg (const e_object = e_object::e_grid); // creates grid program by default for testing matrices throug shaders;
+		CProg (const e_object = e_object::e_none); // creates grid program by default for testing matrices throug shaders; (changed to none);
 		CProg (const CProg&) = delete; CProg (CProg&&) = delete; ~CProg (void) = default;
 
 		err_code Attach (const CShader&); // for this program link management;
@@ -62,6 +62,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 		CProg& operator <<(const e_opts); // turns given option on;
 		CProg& operator >>(const e_opts); // turns given option off;
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void) ;
 
 	private:
 		CProg& operator = (const CProg&) = delete; CProg& operator = (CProg&&) = delete;

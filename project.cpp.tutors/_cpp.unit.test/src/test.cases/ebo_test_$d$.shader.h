@@ -22,7 +22,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		private:
 			bool m_b_cmpl; // this is the option of shader compilation when it is created; by default is true;
 		};
-		  c_shaders (const e_object = e_object::e_grid, const bool _b_verb = true);
+		  c_shaders (const e_object = e_object::e_none, const bool _b_verb = true);
 		 ~c_shaders (void) = default;
 
 		 __method (Get_frag); // shaders belong to a program of the draw target object and the reference to the program can be gotten by target type only;
@@ -32,12 +32,14 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		 COpts&   Opts (void) const;
 		 COpts&   Opts (void) ;
 
-		 e_object Target (void) const;
+		 const
+		 TPipe& operator ()(void) const;
+		 TPipe& operator ()(void);
 
 	private:
-		bool     m_b_verb; // not used yet;
-		e_object m_target;
-		COpts    m_opts;
+		bool   m_b_verb; // not used yet;
+		COpts  m_opts;
+		TPipe  m_pipe;
 	};
 
 }}}}}

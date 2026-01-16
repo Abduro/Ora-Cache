@@ -14,13 +14,19 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	*/
 	__class (c_prog) {
 	public:
-		  c_prog (const bool _b_verb = true);
+		  c_prog (const e_object = e_object::e_none, const bool _b_verb = true);
 		 ~c_prog (void) = default;
 
-		 __method (Grid);
+		 __method (Grid); // this test case sets the appropriate target to program that may be inconsistent with the target of this test class;
+		 __method (Tria); // this test case sets the appropriate target to program that may be inconsistent with the target of this test class;
+
+		 const
+		 TPipe& operator ()(void) const;
+		 TPipe& operator ()(void) ;
 
 	private:
-		bool m_b_verb;
+		bool  m_b_verb;
+		TPipe m_pipe;
 	};
 }}}}}
 

@@ -31,12 +31,14 @@ err_code CValue::Get (void) {
 	if (nullptr == this->m_p_form)
 		return this->m_error << __e_pointer = _T("#__e_not_inited: the pointer to uniform var is not set");
 
+	const uint32_t prog_id = ::Get_renderer().Scene().Progs().Get(this->m_p_form->Target()).Id().Get();
+
 	switch (this->Type().Get()) {
 	case (uint32_t)procs::e_att_val_vec::e_float_vec3: {
 
 		using t_uniform_3f = procs::vars::t_uniform_3f; t_uniform_3f v_values = {0.0f};
 
-		if (__failed(::__get_uni_val_procs().Get_3fs(this->m_p_form->ProgId(), this->m_p_form->Locate(), v_values))) {
+		if (__failed(::__get_uni_val_procs().Get_3fs(prog_id, this->m_p_form->Locate(), v_values))) {
 			this->m_error = ::__get_uni_val_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 		}
@@ -45,7 +47,7 @@ err_code CValue::Get (void) {
 
 		using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f v_values = {0.0f};
 
-		if (__failed(::__get_uni_val_procs().Get_4fs(this->m_p_form->ProgId(), this->m_p_form->Locate(), v_values))) {
+		if (__failed(::__get_uni_val_procs().Get_4fs(prog_id, this->m_p_form->Locate(), v_values))) {
 			this->m_error = ::__get_uni_val_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 		}
@@ -68,7 +70,7 @@ CValue& CValue::operator <<(const CType& _type) { this->Type() = _type; return *
 #pragma endregion
 #pragma region cls::vars::CUniform{}
 
-CUniform:: CUniform (void) : m_value(this), m_index(u_inv_ndx), m_prog_id(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUniform:: CUniform (const e_object _target) : TPipe(_target), m_value(this), m_index(u_inv_ndx) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CUniform:: CUniform (const CUniform& _src) : CUniform() { *this = _src; }
 CUniform:: CUniform (CUniform&& _victim) : CUniform() { *this = _victim; }
 CUniform::~CUniform (void) {}
@@ -88,42 +90,46 @@ bool     CUniform::Locate (const uint32_t _u_ndx) {
 }
 
 const
-uint32_t& CUniform::ProgId (void) const { return this->m_prog_id; }
-uint32_t& CUniform::ProgId (void)       { return this->m_prog_id; }
-
-const
 CValue& CUniform::Value (void) const { return this->m_value; }
 CValue& CUniform::Value (void)       { return this->m_value; }
 
-CUniform&  CUniform::operator = (const CUniform& _src) { *this << _src.Name() << _src.Value() << _src.Locate(); this->ProgId() = _src.ProgId(); return *this; }
+CUniform&  CUniform::operator = (const CUniform& _src) {
+	(TPipe&)*this = (const TPipe&)_src; *this << _src.Name() << _src.Value() << _src.Locate(); return *this;
+}
 CUniform&  CUniform::operator = (CUniform&& _victim) { *this = (const CUniform&)_victim; return *this; }
 
 CUniform&  CUniform::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
 CUniform&  CUniform::operator <<(const CValue& _val) { this->Value() = _val; return *this; }
 CUniform&  CUniform::operator <<(const uint32_t _u_ndx) { this->Locate(_u_ndx); return *this; }
 
+const
+TPipe& CUniform::operator ()(void) const { return (TPipe&)*this; }
+TPipe& CUniform::operator ()(void)       { return (TPipe&)*this; }
+
 #pragma endregion
 #pragma region cls::vars::CUniform_enum{}
 
-CUniform_enum:: CUniform_enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUniform_enum:: CUniform_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CUniform_enum::~CUniform_enum (void) {}
 
 uint32_t CUniform_enum::Count (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
-
-	const CProgram& prog = ::Get_renderer().Scene().Progs().GetActive();
 #if (0)
+	const CProgram& prog = ::Get_renderer().Scene().Progs().GetActive(); // the active program may not have the required target object type;
 	if (false == prog.Is_valid()) {
 		this->m_error = ::Get_renderer().Scene().Progs().Error(); // the error is traced;
 		return 0;
 	}
 #endif
-	return CUniform_enum::Count(prog.Id().Get(), this->m_error);
+	return CUniform_enum::Count(TPipe::Target(), this->m_error);
 }
 
-uint32_t CUniform_enum::Count (const uint32_t prog_id,  CError& _err) {
-	prog_id; _err;
+uint32_t CUniform_enum::Count (const e_object _target,  CError& _err) {
+	_target; _err;
 	uint32_t u_result = 0;
+
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(_target);
+	const uint32_t prog_id = prog.Id();
 
 	if (false == program::CProgId::Is_valid(prog_id, _err))
 		return u_result;
@@ -153,14 +159,14 @@ uint32_t CUniform_enum::Count (const uint32_t prog_id,  CError& _err) {
 
 TError&  CUniform_enum::Error (void) const { return this->m_error; }
 
-err_code CUniform_enum::Get (const uint32_t prog_id, TUniVars& _vars, CError& _err) {
-	prog_id; _vars; _err;
+err_code CUniform_enum::Get (const e_object _target, TUniVars& _vars, CError& _err) {
+	_target; _vars; _err;
 
 	if (_vars.empty() == false)
 		_vars.clear();
 
 	// (1) gets uniform variables number through the program interface object;
-	uint32_t u_vars_count = CUniform_enum::Count(prog_id, _err);
+	uint32_t u_vars_count = CUniform_enum::Count(_target, _err);
 	if (0 == u_vars_count)
 		return _err; // no errors and no variables;
 
@@ -179,6 +185,9 @@ err_code CUniform_enum::Get (const uint32_t prog_id, TUniVars& _vars, CError& _e
 		_err << __e_no_memory; return _err;
 	}
 #endif
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(_target);
+	const uint32_t prog_id = prog.Id();
+
 	for (uint32_t i_ = 0; i_ < u_vars_count; i_++) {
 		if (__failed(::__get_res_procs().GetValues(prog_id, e_iface::e_uniform, i_, props, values))) {
 			_err = ::__get_res_procs().Error(); break;
@@ -203,8 +212,8 @@ err_code CUniform_enum::Get (const uint32_t prog_id, TUniVars& _vars, CError& _e
 #else
 		try {
 			u_form.Value().Type() << (uint32_t) values.at((uint32_t)e_ndx::e_type); // data type can be converted to 'unsigned', no negative value is expected;
-			u_form << i_; // sets the index/location of the variable;
-			u_form.ProgId() = prog_id;
+			u_form << i_;         // sets the index/location of the variable;
+			u_form() << _target;  // sets the draw target object type;
 
 			u_form.Value().Get(); // this method may generate an error, the value object saves the error state;
 

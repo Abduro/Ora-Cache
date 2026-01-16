@@ -167,6 +167,10 @@ const
 CShader& C$Base::Ref (void) const { return this->m_shader; }
 CShader& C$Base::Ref (void)       { return this->m_shader; }
 
+const
+TPipe& C$Base::operator ()(void) const { return (TPipe&)*this; }
+TPipe& C$Base::operator ()(void)       { return (TPipe&)*this; }
+
 #pragma endregion
 #pragma region cls::C$Frag{}
 

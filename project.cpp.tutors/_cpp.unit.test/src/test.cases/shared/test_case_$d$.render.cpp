@@ -9,25 +9,25 @@ using namespace ebo::boo::test::open_gl::draw;
 
 #pragma region cls::CFake_renderer{}
 
-CFake_renderer::CFake_renderer (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CFake_renderer::CFake_renderer (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 const
 CCtx_auto& CFake_renderer::Ctx (void) const { return this->m_ctx_auto; }
 CCtx_auto& CFake_renderer::Ctx (void)       { return this->m_ctx_auto; }
 
 err_code CFake_renderer::Draw (void) {
-	this->m_error <<__METHOD__<<__s_ok; return CFake_renderer::Draw(this->m_error);
+	this->m_error <<__METHOD__<<__s_ok; return CFake_renderer::Draw((*this)(), this->m_error);
 }
 
-err_code CFake_renderer::Draw (CError& _err) {
-	_err;
+err_code CFake_renderer::Draw (const e_object _target, CError& _err) {
+	_target; _err;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CCtx_auto ctx_auto;
 	if (ctx_auto.Error())
 		return _err = ctx_auto.Error();
 
-	CProg prog(e_object::e_grid); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;
+	CProg prog(_target); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;
 
 	// on possible error case the exiting from this function is reasonable, but what is about deleting the prog object?
 
@@ -57,13 +57,24 @@ err_code CFake_renderer::On_draw_begin (void) {
 
 	if (this->Ctx().Error()) return this->m_error = this->Ctx().Error();
 
-	CProg prog(e_object::e_grid); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;
+	CProg prog((*this)()); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;
 
 	if (__failed(prog.Create())) { return this->m_error = prog.Error(); }
 	if (__failed(prog.Use())) { return this->m_error = prog.Error(); }
-
+#if (0) // drawing the background does not use shaders; so it is useless;
 	CBkgnd bkgnd;
 	if (__failed(bkgnd.Draw())) { this->m_error = bkgnd.Error(); }
+#endif;
+	if (__failed(::Get_shapes().Defaults().SetTo(e_object::e_tria))) {
+		this->m_error = ::Get_shapes().Defaults().Error();
+		_out() += this->Error().Print(TError::e_print::e_req); // just traces the error, no return from this proc yet;
+	}
+
+	shapes::CShape& tria = ::Get_shapes().Get(e_object::e_tria);
+	if (__failed(tria.Draw())) {
+		this->m_error = tria.Error();
+		_out() += this->Error().Print(TError::e_print::e_req); // just traces the error, no return from this proc yet;
+	}
 
 	return this->Error();
 }
@@ -74,11 +85,15 @@ err_code CFake_renderer::On_draw_end (void) {
 
 	if (__failed(this->Ctx().Graph().Swap())) { this->m_error = this->Ctx().Graph().Error(); } // just keeping going ahead; the swap is the final point of draw operation;
 
-	CProg prog(e_object::e_grid);
+	CProg prog((*this)());
 
 	if (__failed(prog.Delete())) this->m_error = prog.Error();
 
 	return this->Error();
 }
+
+const
+TPipe& CFake_renderer::operator ()(void) const { return (TPipe&)*this; }
+TPipe& CFake_renderer::operator ()(void)       { return (TPipe&)*this; }
 
 #pragma endregion

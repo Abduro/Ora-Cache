@@ -6,6 +6,7 @@
 
 using namespace ebo::boo::test::open_gl::draw;
 
+#if (0) // the shape cache is used instead of this class;
 #pragma region cls::CTria{}
 
 C3angle::C3angle (void) : TShape() { TShape::m_error >>__CLASS__; }
@@ -30,3 +31,4 @@ err_code C3angle::Init (void) {
 }
 
 #pragma endregion
+#endif

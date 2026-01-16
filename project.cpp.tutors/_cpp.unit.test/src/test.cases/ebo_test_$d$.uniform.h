@@ -15,15 +15,24 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	*/
 	__class (c_uni_enum) {
 	public:
-		  c_uni_enum (const bool _b_verb = true);
+		  c_uni_enum (const e_object = e_object::e_none, const bool _b_verb = true); // the test framework requires default constructor;
 		 ~c_uni_enum (void) = default;
 
 		 __method (Count);
 		 __method (Get);    // using this test case does not produce success in result: uniform vars are empty - no shader code is executed;
 		 __method (OnDraw); // this test case includes a renderer that draws something for running the 'main()' functions of shaders script;
 
+		 const
+		 TPipe&  Pipe (void) const;
+		 TPipe&  Pipe (void) ;
+
+		 const
+		 TPipe&  operator ()(void) const;
+		 TPipe&  operator ()(void) ;
+
 	private:
-		bool m_b_verb; // looks like useless, but still remain perhaps for future use;
+		bool  m_b_verb; // looks like useless, but still remain perhaps for future use;
+		TPipe m_pipe;   // for 
 	};
 }}}}}
 

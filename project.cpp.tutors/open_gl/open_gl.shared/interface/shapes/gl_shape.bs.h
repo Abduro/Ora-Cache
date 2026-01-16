@@ -40,7 +40,23 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 	};
 
 	class CShape_enum {
+	public:
+		class CDefaults {
+		public:
+			CDefaults (void); CDefaults (const CDefaults&) = delete; CDefaults (CDefaults&&) = delete; ~CDefaults (void) = default;
+
+			TError& Error (void) const;
+			err_code SetTo (const e_object);  
+
+		private:
+			CDefaults& operator = (const CDefaults&) = delete; CDefaults& operator = (CDefaults&&) = delete;
+			CError m_error;
+		};
 	public: CShape_enum (void); ~CShape_enum (void); CShape_enum (const CShape_enum&) = delete; CShape_enum (CShape_enum&&) = delete;
+
+		const
+		CDefaults& Defaults (void) const; // gets the reference to default settings of shapes; (ro)
+		CDefaults& Defaults (void) ;      // gets the reference to default settings of shapes; (rw)
 
 		TError& Error (void) const;
 		const
@@ -54,7 +70,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace shapes {
 		CShape_enum& operator = (const CShape_enum&) = delete;
 		CShape_enum& operator = (CShape_enum&&) = delete;
 		mutable
-		CError  m_error;
+		CError    m_error;
+		CDefaults m_defs;
 	};
 
 }}}}

@@ -25,7 +25,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		 no_copy& operator = (no_copy&&) = delete;
 	};
 
-	class CPipeline : private no_copy {
+	class CPipeline {
 	public:
 		enum e_targets : uint32_t {
 		e_none = 0x0, // due to this element the enumeration other elements cannot be used as indices for getting an item from array of open_gl wrappers;
@@ -36,12 +36,23 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	public:
 		using e_object = CPipeline::e_targets;
 
-		CPipeline (e_object = e_object::e_none); ~CPipeline (void);
+		CPipeline (e_object = e_object::e_none); ~CPipeline (void); CPipeline (const CPipeline&); CPipeline (CPipeline&&);
 
 		e_object  Target (void) const;     // gets pipeline target object;
 		bool      Target (const e_object); // sets pipeline target object; returns 'true' in case of target object value change;
 		static
 		_pc_sz    To_str (const e_object); // gets target object name; it is used for getting values from registry, for example;
+
+		// 'using e_object' does not work for assign/move/output operators, that's the reason of applying 'e_targets' or 'typedef';
+
+		operator   e_targets  (void) const;      // gets the target object;
+		const
+		CPipeline& operator >>(e_targets&) const;
+		CPipeline& operator <<(const e_object);  // sets the target object;
+
+		CPipeline& operator = (const CPipeline&);
+		CPipeline& operator = (CPipeline&&);
+
 	protected:
 		e_object  m_target ;
 	};
