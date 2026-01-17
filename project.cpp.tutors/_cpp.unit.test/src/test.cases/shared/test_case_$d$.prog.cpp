@@ -155,7 +155,7 @@ uint32_t CProg::GetId (void) {
 
 err_code CProg::Link (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	TRenderer& renderer = ::Get_renderer();
 	CProgram& prog = renderer.Scene().Progs().Get(TPipe::Target());

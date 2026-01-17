@@ -50,7 +50,8 @@ namespace shared { namespace defs {
 #endif
 		_pc_sz Bool (const bool) ; // sets this string value to text: 'false' or 'true';
 		_pc_sz Dword (dword) ;     // sets this string to unsigned long value;
-		_pc_sz Float(float, t_fmt_spec = t_fmt_spec::e_decimal, _pc_sz _p_format = nullptr/*_T("%.2f")*/); // https://en.cppreference.com/w/cpp/io/c/fprintf ;
+		_pc_sz Float (float, _pc_sz _p_format /*_T("%.8f")*/);
+		_pc_sz Float (float, t_fmt_spec = t_fmt_spec::e_decimal, _pc_sz _p_format = nullptr/*_T("%.2f")*/); // https://en.cppreference.com/w/cpp/io/c/fprintf ;
 		_pc_sz Format (_pc_sz _p_pattern, ...);
 		_pc_sz Long (long) ;       // sets this string to long value;
 	};

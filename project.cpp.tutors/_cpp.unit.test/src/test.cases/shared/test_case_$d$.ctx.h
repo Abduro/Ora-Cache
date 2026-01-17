@@ -25,10 +25,16 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		err_code Delete (void);
 		TError&  Error  (void) const;
 
+		bool Is_valid (void) const;
+
 		const
 		CFakeWnd& Window (void) const;
 		CFakeWnd& Window (void) ;
 
+		const
+		CDevice&  operator ()(void) const;
+		CDevice&  operator ()(void) ;
+		 
 	private:
 		CDevCtx& operator = (const CDevCtx&) = delete; CDevCtx& operator = (CDevCtx&&) = delete;
 		CError   m_error ;
@@ -44,7 +50,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		err_code Delete (void);
 		TError&  Error  (void) const;
 
+		bool Is_valid (void) const;
+
 		err_code Swap (void); // replaces graphics context by the target window device context, i.e. makes draw on the screen;
+
+		const
+		CGraphics&  operator ()(void) const;
+		CGraphics&  operator ()(void) ;
 
 	private:
 		CGraphCtx& operator = (const CGraphCtx&) = delete; CGraphCtx& operator = (CGraphCtx&&) = delete;
@@ -56,7 +68,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	*/
 	class CCtx_auto {
 	public:
-		CCtx_auto (void); ~CCtx_auto (void);
+		CCtx_auto (const bool _b_auto = true); ~CCtx_auto (void);
 		CCtx_auto (const CCtx_auto&) = delete; CCtx_auto (CCtx_auto&&) = delete;
 
 		err_code Create (void);
@@ -70,6 +82,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CGraphCtx& Graph (void) ;
 
 		TError&  Error  (void) const;
+		bool Is_created (void) const; // checks the context device is created or not; useful for check it in static functions;
+
 	private:
 		CCtx_auto& operator = (const CCtx_auto&) = delete; CCtx_auto& operator = (CCtx_auto&&) = delete;
 		CError    m_error;

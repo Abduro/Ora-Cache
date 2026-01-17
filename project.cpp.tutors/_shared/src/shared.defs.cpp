@@ -100,6 +100,10 @@ _pc_sz  CString_Ex::Dword(dword _u_value) {
 	return (_pc_sz)*this;
 }
 
+_pc_sz  CString_Ex::Float (float _f_value, _pc_sz _p_format) {
+	return this->Float(_f_value, t_fmt_spec::e_decimal, _p_format);
+}
+
 _pc_sz  CString_Ex::Float (float _f_value, t_fmt_spec _spec, _pc_sz _p_format) {
 	_f_value; _spec; _p_format;
 //	https://stackoverflow.com/questions/29200635/convert-float-to-string-with-precision-number-of-decimal-digits-specified ;

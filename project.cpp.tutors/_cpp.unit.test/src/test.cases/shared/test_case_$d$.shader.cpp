@@ -62,15 +62,11 @@ err_code C$Base::Compile(void) {
 	this->m_error <<__METHOD__<<__s_ok; return C$Base::Compile(this->Ref(), TPipe::Target(), this->m_error);
 }
 
-err_code C$Base::Create (const $Type _type) {
-	this->m_error <<__METHOD__<<__s_ok; return C$Base::Create(this->Ref(), _type, this->m_error);
-}
-
 //#pragma warning (disable: 4706) // assignment within conditional expression;
 // https://stackoverflow.com/questions/6986018/visual-studio-2010-c-suppress-c4706-warning-temporarily >> parentheses ;)
 err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err) {
 	_shader; _target; _err;
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s() <static>:"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CCompiler compiler;
 	CShader& $base = _shader;
@@ -125,6 +121,10 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 	return _err;
 }
 //#pragma warning (default: 4706)
+
+err_code C$Base::Create (const $Type _type) {
+	this->m_error <<__METHOD__<<__s_ok; return C$Base::Create(this->Ref(), _type, this->m_error);
+}
 err_code C$Base::Create (CShader& _shader, const $Type _type, CError& _err) {
 	_shader; _type; _err;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);

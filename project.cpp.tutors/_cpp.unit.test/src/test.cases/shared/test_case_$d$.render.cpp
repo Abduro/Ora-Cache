@@ -21,7 +21,7 @@ err_code CFake_renderer::Draw (void) {
 
 err_code CFake_renderer::Draw (const e_object _target, CError& _err) {
 	_target; _err;
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s() <static>:"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CCtx_auto ctx_auto;
 	if (ctx_auto.Error())

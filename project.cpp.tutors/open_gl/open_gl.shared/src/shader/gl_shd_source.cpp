@@ -225,9 +225,10 @@ err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
 
 	if (__failed(__get_$_procs().Source(_u_shader_id, 1, &p_buffer, &n_len)))
 		this->m_error = __get_$_procs().Error();
-	else
+	else {
 		this->m_buffer = buffer; // just making the copy; it is not necessary, but for debug puposes only;
-
+		__trace_info_2(_T("Shader source file is loaded:\n%s\n"), _p_path);
+	}
 	return this->Error();
 }
 

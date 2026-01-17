@@ -93,7 +93,9 @@ err_code CClr_flt::Get (const e_object _target) {
 	}
 
 	TBase::Set((rgb_color)CHex((_pc_sz) cs_clr)); // alpha channel is set to 0 (zero), but it is not important for because it is not taken into account yet;
-
+#if defined(_DEBUG)
+	__trace_info_2(_T("grid line color: {%s};\n"), (_pc_sz) TBase::Print(e_print::e_req)); 
+#endif
 	return this->Error();
 }
 
@@ -404,7 +406,7 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 		}
 #endif
 	//	using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f clr_4f{clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a()};
-#if (0)
+#if (1)
 		if (__failed(::__get_uni_val_procs().Set_4fs(clr_ndx, {clr.Get_r(), clr.Get_g(), clr.Get_b(), /*clr.Get_a()*/1.0f}))) {
 			this->m_error = ::__get_uni_val_procs().Error();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));

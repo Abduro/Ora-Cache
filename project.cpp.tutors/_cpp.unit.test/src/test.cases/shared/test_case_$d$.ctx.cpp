@@ -13,11 +13,15 @@ CDevCtx::CDevCtx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;
 err_code CDevCtx::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += this->Window().To_str();
 
 	if (this->Window().Error()) {
 		return this->m_error = this->Window().Error();
+	}
+
+	if (this->Is_valid()) {
+		_out() += _T("the device context is already created;"); return this->Error();
 	}
 
 	TRenderer& renderer = ::Get_renderer();
@@ -50,10 +54,15 @@ err_code CDevCtx::Delete (void) {
 }
 
 TError&  CDevCtx::Error (void) const { return this->m_error; }
+bool  CDevCtx::Is_valid (void) const { return (*this)().Is_valid(); }
 
 const
 CFakeWnd& CDevCtx::Window (void) const { return this->m_fk_wnd; }
 CFakeWnd& CDevCtx::Window (void)       { return this->m_fk_wnd; }
+
+const
+CDevice&  CDevCtx::operator ()(void) const { return ::Get_renderer().Scene().Ctx().Device(); }
+CDevice&  CDevCtx::operator ()(void)       { return ::Get_renderer().Scene().Ctx().Device(); }
 
 #pragma endregion
 #pragma region cls::CGraphCtx{}
@@ -65,12 +74,16 @@ err_code CGraphCtx::Create (const HWND _h_target) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	CString cs_cls = TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__);
-	_out() += TString().Format(_T("cls::[%s].%s():"), (_pc_sz) cs_cls, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("[warn] cls::[%s].%s():"), (_pc_sz) cs_cls, (_pc_sz)__METHOD__);
+
+	if (this->Is_valid()) {
+		_out() += _T("the graphics context is already created;"); return this->Error();
+	}
 				
 	TRenderer& renderer = Get_renderer();
-	renderer.Scene().Ctx().Graphics().Target() << _h_target;
 	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
-
+	renderer.Scene().Ctx().Graphics().Target() << _h_target;
+	
 	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
 	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
 
@@ -99,6 +112,8 @@ err_code CGraphCtx::Delete (void) {
 
 TError&  CGraphCtx::Error (void) const { return this->m_error; }
 
+bool  CGraphCtx::Is_valid (void) const { return (*this)().Is_valid(); }
+
 err_code CGraphCtx::Swap (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -112,10 +127,14 @@ err_code CGraphCtx::Swap (void) {
 	return this->Error();
 }
 
+const
+CGraphics& CGraphCtx::operator ()(void) const { return ::Get_renderer().Scene().Ctx().Graphics(); }
+CGraphics& CGraphCtx::operator ()(void)       { return ::Get_renderer().Scene().Ctx().Graphics(); }
+
 #pragma endregion
 #pragma region cls::CCtx_auto{}
 
-CCtx_auto:: CCtx_auto (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;  this->Create(); }
+CCtx_auto:: CCtx_auto (const bool _b_auto) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; if (_b_auto) this->Create(); }
 CCtx_auto::~CCtx_auto (void) { this->Delete(); }
 
 err_code CCtx_auto::Create (void) {
@@ -136,12 +155,17 @@ err_code CCtx_auto::Delete (void) {
 	return this->Error();
 }
 
-TError&  CCtx_auto::Error (void) const { return this->m_error; }
 const
 CDevCtx& CCtx_auto::Device (void) const { return this->m_device; }
 CDevCtx& CCtx_auto::Device (void)       { return this->m_device; }
 const
 CGraphCtx& CCtx_auto::Graph (void) const { return this->m_graphs; }
 CGraphCtx& CCtx_auto::Graph (void)       { return this->m_graphs; }
+
+TError&  CCtx_auto::Error (void) const { return this->m_error; }
+
+bool CCtx_auto::Is_created (void) const {
+	return this->Device().Is_valid() || this->Graph().Is_valid();
+}
 
 #pragma endregion

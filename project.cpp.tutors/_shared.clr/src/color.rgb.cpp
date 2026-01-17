@@ -353,10 +353,10 @@ CString  CFloat::Print (const e_print _e_opt) const {
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s]>>{r:%s;g:%s;b:%s;a:%s};");
 	static _pc_sz pc_sz_pat_r = _T("r:%s;g:%s;b:%s;a:%s");
 
-	CString cs_a = TString().Float(this->Get_a());
-	CString cs_b = TString().Float(this->Get_b());
-	CString cs_g = TString().Float(this->Get_g());
-	CString cs_r = TString().Float(this->Get_r());
+	CString cs_a = TString().Float(this->Get_a(), _T("%.8f"));
+	CString cs_b = TString().Float(this->Get_b(), _T("%.8f"));
+	CString cs_g = TString().Float(this->Get_g(), _T("%.8f"));
+	CString cs_r = TString().Float(this->Get_r(), _T("%.8f"));
 
 	CString cs_out;
 	if (e_print::e_all   == _e_opt)
@@ -506,7 +506,7 @@ bool CHex::Set (_pc_sz _p_val) {
 	const rgb_value n_green = static_cast<rgb_value>(::std::stoi((_pc_sz)cs_green, nullptr, 16));
 	const rgb_value n_blue = static_cast<rgb_value>(::std::stoi((_pc_sz)cs_blue, nullptr, 16));
 
-	this->m_color.Set(n_red, n_green, n_blue, 0x0);
+	b_changed = this->m_color.Set(n_red, n_green, n_blue, 0x0);
 #else
 #pragma warning(disable: 4996)
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/scanf-s-scanf-s-l-wscanf-s-wscanf-s-l ;
