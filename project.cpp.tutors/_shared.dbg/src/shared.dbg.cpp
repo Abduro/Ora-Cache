@@ -10,6 +10,20 @@
 #endif
 #include "console.out.h"
 
+#if (0)
+/*
+the locker of the trace cannot be used within TEST_CLASS_INITIALIZE() macro of the mstest framework:
+in case of using s++ run-time mutex:
+Exception thrown: read access violation; _Mtx_internal_imp_t::_get_cs(...)->**** was nullptr;
+in case of using critical section:
+Exception thrown at 0x00007FFDFC8949E6 (ntdll.dll) in testhost.exe: 0xC0000005: Access violation writing location 0x0000000000000024;
+*/
+shared::sys_core::CSyncObject g_lock;
+#ifdef TSafe_Lock
+#undef TSafe_Lock
+#define TSafe_Lock() TAutoLocker tAutoLocker(g_lock);
+#endif
+#endif
 using namespace shared::console;
 
 #if defined(_DEBUG)
@@ -175,9 +189,6 @@ void CTrace::SetTestOut (ITestOutput* _p_out) {
 }
 
 }}
-
-
-
 #else
 namespace shared { namespace dbg { namespace _impl { void __warning_lnk_4221 (void) {}}}}
 #endif

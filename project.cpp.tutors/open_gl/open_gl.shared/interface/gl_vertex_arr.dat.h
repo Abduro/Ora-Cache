@@ -28,8 +28,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		// https://www.allacronyms.com/elements/abbreviated ;
 		uint32_t  Count  (void) const;    // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
 		err_code  Count  (const uint32_t _n_elems);  // sets the number of the required vertices, i.e. elements;
-		err_code  Create (void);                     // creates the vertex data buffer (aka wbo);
-		err_code  Delete (void);                     // deletes the vertex data buffer (aka wbo);
+		err_code  Create (void);                     // creates the vertex data buffer (aka vbo);
+		err_code  Delete (void);                     // deletes the vertex data buffer (aka vbo);
 		TError&   Error  (void) const;
 
 		const void*      Data_ptr (void) const;      // gets the pointer to vertex array data, this is the data for vertex buffer;

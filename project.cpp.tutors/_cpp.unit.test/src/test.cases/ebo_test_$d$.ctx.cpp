@@ -25,16 +25,6 @@ c_ctx::~c_ctx (void) {
 //	_out()();       thus other event handlers' macros should be used those are executed *before* and *after* running the test case;
 }
 
-void c_ctx::OnClean (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out()();
-}
-
-void c_ctx::OnInit (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out()();
-}
-
 void c_ctx::_ctor (void) {
 	if (false == this->m_b_verb)
 		return;
@@ -74,6 +64,16 @@ void c_ctx::Graphics (void) {
 
 	dev_ctx.Delete();
 
+	_out()();
+}
+
+void c_ctx::OnClean (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out()();
+}
+
+void c_ctx::OnInit (void) {
+	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out()();
 }
 

@@ -12,10 +12,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	using namespace ebo::boo::test;
 
 	/* creating device context and graphics must be made before creating a program object;
+	*important*: test class constructor having input arguments is useful in case when 'class initializer' is used for dynamic creation of this test class,
+	otherwise the default values of the constructor arguments is applied, that means, the object target type should not have default value 'e_none';
 	*/
 	__class (c_uni_enum) {
 	public:
-		  c_uni_enum (const e_object = e_object::e_none, const bool _b_verb = true); // the test framework requires default constructor;
+		  c_uni_enum (const e_object = e_object::e_tria, const bool _b_verb = true); // the test framework requires default constructor;
 		 ~c_uni_enum (void) = default;
 
 		 __method (Count);
@@ -32,7 +34,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	private:
 		bool  m_b_verb; // looks like useless, but still remain perhaps for future use;
-		TPipe m_pipe;   // for 
+		TPipe m_pipe;   // for draw target type;
 	};
 }}}}}
 

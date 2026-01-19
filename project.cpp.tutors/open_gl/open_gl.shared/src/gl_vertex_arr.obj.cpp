@@ -24,13 +24,16 @@ using CVertDat = CArrObject::CVertDat;
 
 #pragma region cls::CArrObject{}
 
-CArrObject:: CArrObject (void) : m_arr_id(0) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
+CArrObject:: CArrObject (void) : m_arr_id(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CArrObject:: CArrObject (const CArrObject& _src) : CArrObject() { *this = _src; }
 CArrObject:: CArrObject (CArrObject&& _victim) : CArrObject() { *this = _victim; }
 CArrObject::~CArrObject (void) {}
 
 err_code CArrObject::Bind (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid())
+		return this->Error();
 
 	if (this->Is_bound()) {
 #if (0) // no error is set, the array is already bound, so just returns __s_ok;
@@ -54,7 +57,7 @@ err_code CArrObject::Bind (void) {
 }
 
 err_code CArrObject::Create (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
+	this->m_error <<__METHOD__<<__s_ok;
 
 	if (!!this->GetId()) {
 		this->m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(_T("#__e_inv_state: array (id = %u) already exists"), this->GetId());
@@ -81,7 +84,7 @@ err_code CArrObject::Create (void) {
 }
 
 err_code CArrObject::Delete (void) {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
+	this->m_error <<__METHOD__<<__s_ok;
 
 	if (0 == this->GetId())  // if the array is not created yet success is returned and just keeping the silence;
 		return this->Error();
@@ -111,7 +114,7 @@ TError&  CArrObject::Error (void) const { return this->m_error; }
 uint32_t CArrObject::GetId (void) const { return this->m_arr_id; }
 
 bool     CArrObject::Is_bound (void) const {
-	this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
+	this->m_error <<__METHOD__<<__s_ok;
 
 	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGet.xhtml
 	   the excerpt from the above article:
@@ -130,6 +133,29 @@ bool     CArrObject::Is_bound (void) const {
 		__trace_info_2(_T("the vertex array object of '_arr_id' (%u) is not bound;\n"), this->GetId());
 #endif
 	return b_result;
+}
+
+bool CArrObject::Is_valid (void) const {
+	this->m_error <<__METHOD__<<__s_ok; // this error object must be set to error state in case if outer object being called fails;
+
+	bool b_valid = false;
+
+	if (0 == this->GetId()) {
+		this->m_error <<__e_not_inited = _T("the array is not created;");
+		return b_valid;
+	}
+
+	b_valid = ::__get_arr_procs().Is_array(this->GetId());
+
+	if (::__get_arr_procs().Error()) {
+		this->m_error = ::__get_arr_procs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
+	}
+	else if (false == b_valid) {
+		__trace_info_2(_T("id = %u does not refer to array object"), this->GetId());
+	}
+
+	return b_valid;
 }
 
 err_code CArrObject::SetData (const TVertData& _v_data) {

@@ -29,6 +29,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace vertex {
 		uint32_t  GetId  (void) const;
 
 		bool    Is_bound (void) const;    // returns 'true' if the array is bound;
+		bool    Is_valid (void) const;    // checks this array identifier and nothing more;
 		/* the requirements:
 		(1) vertex array object binding; the object defines vertex array data through attributes by using glBindVertexArray();
 		(2) the buffer binding through glBindBuffer();

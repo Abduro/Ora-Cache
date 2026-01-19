@@ -238,6 +238,10 @@
     <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.uniform.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.dat.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.dat.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.obj.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2)ebo_test_$d$.ctx.h" />
@@ -252,8 +256,14 @@
     <ClCompile Include="$(_2)ebo_test_$d$.render.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.shader.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.shape.2d.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.shape.2d.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.uniform.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.uniform.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.dat.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.dat.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.obj.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.obj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">

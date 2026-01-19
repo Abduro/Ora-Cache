@@ -141,9 +141,10 @@ err_code  CBuffer_Base::Delete (void) {
 		}
 	}
 #endif
-	if (false == this->Is_valid()) // no error this time, just returning the success code;
+	if (false == this->Is_valid()) { // no error this time, just returning the success code;
+		__trace_info_2(_T("the buffer object is not created yet;\n"));
 		return this->Error();
-
+	}
 	if (__failed(__get_buf_procs().Delete(1, &this->m_buf_id))) { // ToDo: perhaps the buffer identifier should be set to zero, but under specific circumstances it is cannot be made;
 		this->m_error = __get_buf_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));

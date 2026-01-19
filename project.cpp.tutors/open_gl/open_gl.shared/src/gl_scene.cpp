@@ -94,7 +94,7 @@ err_code CScene::Prepare (void) {
 	if (__failed(this->Progs().Attrs().Init())) { this->m_error = this->Progs().Attrs().Error(); } // does nothing with the error;
 	if (__failed(this->ArrObjects().Create())) { this->m_error = this->Progs().Attrs().Error(); }  // does nothing with the error;
 #pragma endregion
-
+	// the step #3: recalculates the grid layout;
 	if (__failed(::Get_renderer().View().Update()))
 		this->m_error = ::Get_renderer().View().Error();
 

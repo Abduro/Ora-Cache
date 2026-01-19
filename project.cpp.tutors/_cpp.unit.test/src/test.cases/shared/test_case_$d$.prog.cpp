@@ -87,8 +87,13 @@ err_code CProg::Create (void) {
 	else if (__failed(prog.Create())) {
 		_out() += prog.Error().Print(TError::e_print::e_req); return this->m_error = prog.Error(); }
 	else if (this->Opts().Use_$() == false)
-		return this->Error();
-	else {}
+		return this->Error(); // there is no further steps, neither the error too;
+	else {
+		prog.Attrs() << prog.Id();
+		if (__failed(prog.Attrs().Enum_attrs())) {
+			return this->m_error = prog.Attrs().Error();
+		}
+	}
 #if (0)
 	shader::CFragment& $frag = prog.Shaders().Fragment();
 	shader::CVertex& $vert = prog.Shaders().Vertex();

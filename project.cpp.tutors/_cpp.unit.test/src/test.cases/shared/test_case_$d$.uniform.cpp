@@ -8,7 +8,15 @@ using namespace ebo::boo::test::open_gl::draw;
 
 #pragma region cls::CUni_enum{}
 
-CUni_enum::CUni_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUni_enum::CUni_enum (const e_object _target) : TPipe(_target) {
+	this->m_error >>__CLASS__<<__METHOD__<< (e_object::e_none == _target ? __e_not_inited : __s_ok);
+
+	static _pc_sz pc_sz_pat_tgt = _T("%s cls::[%s::%s] >> the draw target is set to: '%s';");
+
+	if (e_object::e_none == _target) {
+	      _out() += TString().Format(pc_sz_pat_tgt, _T("[error]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, TPipe::To_str(_target)); }
+	else {_out() += TString().Format(pc_sz_pat_tgt, _T("[warn]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, TPipe::To_str(_target)); }
+}
 
 uint32_t CUni_enum::Count (void) const {
 	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Count(TPipe::Target(), this->m_error);
@@ -34,7 +42,7 @@ err_code  CUni_enum::OnDraw (void) {
 
 err_code  CUni_enum::OnDraw (const e_object _target, TUniVars& _vars, CError& _err) {
 	_vars; _err;
-	CFake_renderer renderer;
+	CFake_renderer renderer(_target);
 
 	if (__failed(renderer.On_draw_begin())) _err = renderer.Error(); // just keeps going, no exit;
 
