@@ -55,6 +55,8 @@ err_code CProg::Attach (const CShader& _shader) {
 	if (__failed(T$Cache::Attach(_shader.Id(), prog.Id(), this->m_error))) {
 		_out() += this->Error().Print(TError::e_print::e_req);
 	}
+	else
+		_out() += TString().Format(_T("Shader {type='%s';id=0x%04x} is attached;"), (_pc_sz) shader::CType::To_str((uint32_t)_shader.Type().Get()), _shader.Id());
 
 	return this->Error();
 }
@@ -71,6 +73,8 @@ err_code CProg::Detach (const CShader& _shader) {
 	if (__failed(T$Cache::Detach(_shader.Id(), prog.Id(), this->m_error))) {
 		_out() += this->Error().Print(TError::e_print::e_req);
 	}
+	else
+		_out() += TString().Format(_T("Shader {type='%s';id=0x%04x} is detached;"), (_pc_sz) shader::CType::To_str((uint32_t)_shader.Type().Get()), _shader.Id());
 
 	return this->Error();
 }
@@ -88,11 +92,7 @@ err_code CProg::Create (void) {
 		_out() += prog.Error().Print(TError::e_print::e_req); return this->m_error = prog.Error(); }
 	else if (this->Opts().Use_$() == false)
 		return this->Error(); // there is no further steps, neither the error too;
-	else {
-		prog.Attrs() << prog.Id();
-		if (__failed(prog.Attrs().Enum_attrs())) {
-			return this->m_error = prog.Attrs().Error();
-		}
+	else {		
 	}
 #if (0)
 	shader::CFragment& $frag = prog.Shaders().Fragment();
@@ -108,6 +108,10 @@ err_code CProg::Create (void) {
 		return this->Error();
 
 	this->Link();
+	if (this->Error() == false) // the link of the program is succeeded;
+		if (__failed(prog.Attrs().Enum_attrs())) { // the error trace is made by the attr enum class method itself;
+			return this->m_error = prog.Attrs().Error();
+		}
 
 	return this->Error();
 }

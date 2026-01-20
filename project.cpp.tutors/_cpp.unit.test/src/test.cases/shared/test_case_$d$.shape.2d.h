@@ -23,6 +23,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		err_code Create (void); // creates a simple triangle and related to the triangle objects, such as vertex array object and vertex buffer object;
 		err_code Delete (void); // deletes this shape: the associated program and vertex array object;
 
+		err_code Draw (void);   // calls 'draw' method of the triangle; the 'draw' method is used by the renderer;
+
 		TError&  Error (void) const;
 
 		const
@@ -31,7 +33,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	private:
 		C3angle& operator = (const C3angle&) = delete; C3angle& operator = (C3angle&&) = delete;
-		CError m_error;
+		CError  m_error;
+		CCtx_auto m_ctx; // this object is required for shareing the contexts between 'Create' and 'Delete' methods, otherwise each of them creats its own context objects;
 	};
 #endif
 }}}}}

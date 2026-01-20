@@ -13,12 +13,15 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	public:
 		c_tria_2d (void); ~c_tria_2d (void) = default;
 
+		__method (Create_n_Delete);  // this is for creating triangle shape with all required draw objects: vao, vbo and vertex attrs;
+		__method (Draw);             // tests the draw operation of the triangle shape;
+
 		const
 		TPipe& operator ()(void) const;
 		TPipe& operator ()(void) ;
 
 	private:
-		TPipe m_pipe;
+		TPipe m_pipe; // perhaps it is not required because the triangle test case class has the pipe with predefined draw target 'e_tria';
 	};
 
 }}}}}

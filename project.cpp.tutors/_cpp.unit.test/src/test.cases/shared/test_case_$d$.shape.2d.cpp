@@ -17,20 +17,22 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 #if (1)
 #pragma region cls::CTria{}
 
-C3angle::C3angle (void) : TPipe(e_object::e_tria) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+C3angle::C3angle (void) : TPipe(e_object::e_tria) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+	if (this->m_ctx.Error())
+		this->m_error = this->m_ctx.Error();
+}
 
 err_code C3angle::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto;
 	CTriangle& tria = __tria_accessor(); // the triangle constructor makes basic configuration and data sizes check;
 	if (tria.Error()) {
 		this->m_error = tria.Error();
 		_out() += this->Error().Print(TError::e_print::e_req); return this->Error();
 	}
 
-	// the 1st step:: creating the program;
+	// the 1st step: creating the program and its shaders, compiling shaders and attaching them to program;
 	CProg prog((*this)()); prog << CProg::e_opts::e_link << CProg::e_opts::e_use_$; // the options are required for proper program creation;
 
 	if (__failed(prog.Create())) {
@@ -50,7 +52,6 @@ err_code C3angle::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto;
 	CTriangle& tria = __tria_accessor(); // the triangle should be already created, thus no check error of this constructor that is not called;
 
 	// the 1st step: deleting the associated program;
@@ -68,6 +69,26 @@ err_code C3angle::Delete (void) {
 	}
 
 	tria; // the shape of the triangle does nothing and participates in the vertex data set and in the triangle shape drawing;
+
+	return this->Error();
+}
+
+err_code C3angle::Draw (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed(this->Create())) return this->Error();
+
+	// triangle shape is created, but its vertices are not set to value, it is important, otherwise vertex array is invalid;
+	::Get_shapes().Defaults().SetTo((*this)());
+
+	CTriangle& tria = __tria_accessor();
+	if (__failed(tria.Draw()))
+		this->m_error = tria.Error(); // the error trace is made by 'draw' method; no exit at this point;
+	else
+		_out() += _T("[impt] Triangle draw is completed successfully;");
+
+	this->Delete(); // the error of draw operation may be overwritten, but it is not important in the context of this procedure;
 
 	return this->Error();
 }
