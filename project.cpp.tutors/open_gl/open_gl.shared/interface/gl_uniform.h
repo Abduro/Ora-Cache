@@ -6,11 +6,99 @@
 */
 #include "gl_defs.h"
 #include "gl_types.h"
+#include "gl_procs_uniform.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace vars {
 
 	using CType = procs::CType;
+	using t_uniform_4f = procs::vars::t_uniform_4f;
+
+	static const uint32_t u_inv_loc  = (uint32_t)-1;
+	static const uint32_t u_inv_prog = (uint32_t)-1;
+
+	class CU_frm_0x0 : public TPipe {
+	protected:
+		CU_frm_0x0 (void); CU_frm_0x0 (const CU_frm_0x0&); CU_frm_0x0 (CU_frm_0x0&&); ~CU_frm_0x0 (void) = default;
+	public:
+		TError&  Error (void) const;
+		bool  Is_valid (void) const;      // checks the location/index value;
+
+		uint32_t Locate (void) const;     // gets variable location (the index within shader source code);
+		bool     Locate (const uint32_t); // sets variable location; it is mainly used by uniform enumerator class; returns 'true' in case of value change;
+
+		CU_frm_0x0& operator = (const CU_frm_0x0&); CU_frm_0x0& operator = (CU_frm_0x0&&);
+		CU_frm_0x0& operator <<(const uint32_t _u_locate);
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void);
+
+	protected:
+		mutable
+		CError   m_error;
+		uint32_t m_index; // aka location;
+	};
+
+	class CU_val_0x0 {
+	protected:
+		CU_val_0x0 (void); CU_val_0x0 (const CU_val_0x0&); CU_val_0x0 (CU_val_0x0&&); ~CU_val_0x0 (void) = default;
+	public:
+		TError& Error (void) const;
+		bool Is_valid (void) const;        // returns 'true' in case of program identifier and index location have assigned value;
+		
+		uint32_t Locate (void) const;      // gets the location index;
+		err_code Locate (const uint32_t);  // input location value is checked by querying variables' count;
+
+		uint32_t ProgId (void) const;      // gets the program identifier which this uniform belongs to;
+		err_code ProgId (const uint32_t);  // program identifier is checked by calling glIsProgram;
+
+		const
+		CType& Type (void) const;
+		CType& Type (void) ;
+
+		CU_val_0x0& operator <<(const CType&);
+		CU_val_0x0& operator = (const CU_val_0x0&); CU_val_0x0& operator = (CU_val_0x0&&);
+	protected:
+		CError   m_error;
+		CType    m_type ;
+		uint32_t m_prog_id;  // the program identifier which the uniform variable belongs to;
+		uint32_t m_locate ;  // the index of the uniform variable within the shader source code;
+	};
+
+	class CU_val_v4 : public CU_val_0x0 { typedef CU_val_0x0 TBase;
+	public:
+		CU_val_v4 (void); CU_val_v4 (const CU_val_v4&); CU_val_v4 (CU_val_v4&&); ~CU_val_v4 (void) = default;
+
+		const
+		t_uniform_4f& Data (void) const;
+		t_uniform_4f& Data (void) ;
+		static
+		err_code Get (const uint32_t _prog_id, const uint32_t _locate, t_uniform_4f&, CError&);
+		err_code Get (void) ; // gets the value of the uniform variable in accordance with its data type;
+
+	public:
+		CU_val_v4& operator = (const CU_val_v4&); CU_val_v4& operator = (CU_val_v4&&);
+	private:
+		t_uniform_4f m_data;
+	};
+
+	class CU_frm_v4 : public TPipe {
+	public:
+		CU_frm_v4 (void); CU_frm_v4 (const CU_frm_v4&); CU_frm_v4 (CU_frm_v4&&); ~CU_frm_v4 (void) = default;
+
+		uint32_t Locate (void) const;     // gets variable location (the index within shader context);
+		bool     Locate (const uint32_t); // sets variable location; it is mainly used by uniform enumerator class; returns 'true' in case of value change;
+
+		_pc_sz Name (void) const; // gets the name of this variable;
+		bool   Name (_pc_sz);     // sets the name of this variable; returns 'true' in case of the name change;
+
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void);
+
+		CU_frm_v4& operator = (const CU_frm_v4&);
+		CU_frm_v4& operator = (CU_frm_v4&&);
+	};
 
 	class CUniform : public TPipe {
 	public:

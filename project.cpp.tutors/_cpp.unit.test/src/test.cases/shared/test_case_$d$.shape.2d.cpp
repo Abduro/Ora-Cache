@@ -17,9 +17,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 #if (1)
 #pragma region cls::CTria{}
 
-C3angle::C3angle (void) : TPipe(e_object::e_tria) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+C3angle::C3angle (void) : TPipe(e_object::e_tria), m_ctx(true,false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	if (this->m_ctx.Error())
-		this->m_error = this->m_ctx.Error();
+		this->m_error = this->m_ctx.Error(); _out()(true); // restores verbose mode of the logger;
 }
 
 err_code C3angle::Create (void) {
@@ -88,7 +88,7 @@ err_code C3angle::Draw (void) {
 	else
 		_out() += _T("[impt] Triangle draw is completed successfully;");
 
-	this->Delete(); // the error of draw operation may be overwritten, but it is not important in the context of this procedure;
+//	this->Delete(); // the error of draw operation may be overwritten, but it is not important in the context of this procedure;
 
 	return this->Error();
 }

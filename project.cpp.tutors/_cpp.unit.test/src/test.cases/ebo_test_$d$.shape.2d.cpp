@@ -31,6 +31,7 @@ void c_tria_2d::Draw (void) {
 	C3angle tria;
 
 	tria.Draw();
+	tria.Delete();
 
 	_out()();
 }

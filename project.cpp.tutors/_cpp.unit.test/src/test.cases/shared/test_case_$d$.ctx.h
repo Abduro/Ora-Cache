@@ -68,7 +68,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	*/
 	class CCtx_auto {
 	public:
-		CCtx_auto (const bool _b_auto = true); ~CCtx_auto (void);
+		CCtx_auto (const bool _b_auto = true, const bool _b_verb = true); ~CCtx_auto (void);
 		CCtx_auto (const CCtx_auto&) = delete; CCtx_auto (CCtx_auto&&) = delete;
 
 		err_code Create (void);
@@ -86,9 +86,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	private:
 		CCtx_auto& operator = (const CCtx_auto&) = delete; CCtx_auto& operator = (CCtx_auto&&) = delete;
-		CError    m_error;
-		CDevCtx   m_device;
-		CGraphCtx m_graphs;
+		CError     m_error;
+		CDevCtx    m_device;
+		CGraphCtx  m_graphs;
 	};
 
 }}}}}

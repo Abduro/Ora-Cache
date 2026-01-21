@@ -68,6 +68,9 @@ namespace program {
 		err_code  Unused (CError&); // makes any currently active/in-use program to be unused by calling 'use' operation to 'default' program with identifier 0 (zero);
 
 		CProgram& operator <<(const CProgId&);
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void) ;
 
 	private:
 		CProgram& operator = (const CProgram&) = delete; CProgram& operator = (CProgram&&) = delete;

@@ -29,7 +29,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 		TError&  Error (void) const;
 		static
-		err_code Get (const e_object, TUniVars&, CError&); // enumerates all u-fofm variables of the program by given identifier;
+		err_code Get (const e_object, TUniVars&, CError&); // enumerates all u-form variables of the program by given identifier;
 		err_code Get (void); // without open_gl draw functions the uniform variable has default value;
 
 		static
@@ -38,6 +38,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 		const
 		TUniVars& Vars (void) const;
+
+		const
+		TPipe& operator ()(void) const;
+		TPipe& operator ()(void) ;
 
 	private:
 		CUni_enum& operator = (const CUni_enum&) = delete; CUni_enum& operator = (CUni_enum&&) = delete;

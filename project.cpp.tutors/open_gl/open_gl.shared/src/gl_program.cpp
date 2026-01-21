@@ -222,6 +222,9 @@ err_code  CProgram::Validate (void) {
 }
 
 CProgram& CProgram::operator <<(const CProgId& _prog_id) { this->Id() << _prog_id; return *this; }
+const
+TPipe& CProgram::operator ()(void) const { return (TPipe&)*this; }
+TPipe& CProgram::operator ()(void)       { return (TPipe&)*this; }
 
 #pragma endregion
 

@@ -8,7 +8,7 @@ using namespace ebo::boo::test;
 
 #pragma region cls::CCache{}
 
-CCache:: CCache (void) : m_prefix(_T("\t")), m_suffix(_T("\n")) {}
+CCache:: CCache (void) : m_prefix(_T("\t")), m_suffix(_T("\n")), m_locked(false) {}
 CCache::~CCache (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -18,6 +18,9 @@ void CCache::Clear(void) { this->m_strings.clear(); }
 const
 TCached& CCache::Get (void) const { return this->m_strings; }
 TCached& CCache::Get (void)       { return this->m_strings; }
+const
+bool&    CCache::Locked (void) const { return this->m_locked; }
+bool&    CCache::Locked (void)       { return this->m_locked; }
 
 _pc_sz   CCache::Prefix (void) const   { return this->m_prefix.GetString(); }
 void     CCache::Prefix (_pc_sz _prfx) { this->m_prefix = _prfx; }
@@ -47,10 +50,10 @@ void     CCache::Output (void) const {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CCache&  CCache::operator +=(_pc_sz _p_out) { this->Get().push_back(CString(_p_out)); return *this; };
+CCache&  CCache::operator +=(_pc_sz _p_out) { if (false == this->Locked()) this->Get().push_back(CString(_p_out)); return *this; };
 
-CCache&  CCache::operator +=(const CString& _str)   { this->Get().push_back(_str); return *this; }
-CCache&  CCache::operator +=(const TParts& _parts)  {
+CCache&  CCache::operator +=(const CString& _str)   { if (false == this->Locked()) this->Get().push_back(_str); return *this; }
+CCache&  CCache::operator +=(const TParts& _parts)  { if (false == this->Locked()) 
 	// https://en.cppreference.com/w/cpp/container/vector/insert ;
 	this->Get().insert(this->Get().end(), _parts.begin(), _parts.end());  // people saying there is no exception for catching, but maybe it's just words;
 	return *this;
@@ -60,6 +63,7 @@ CCache&  CCache::operator <<(_pc_sz _lp_sz_prefix) { this->Prefix(_lp_sz_prefix)
 CCache&  CCache::operator >>(_pc_sz _lp_sz_suffix) { this->Suffix(_lp_sz_suffix); return *this; }
 const
 CCache&  CCache::operator ()(void) const { this->Output(); return *this; }
+CCache&  CCache::operator ()(const bool _b_verb) { this->Locked() = !_b_verb; return *this; }
 
 #pragma endregion
 #pragma region cls::CLog_Opts{}
@@ -148,6 +152,8 @@ CLog_Opts& CLogger::Opts(void)       { return this->m_opts; }
 
 void CLogger::Write (_pc_sz _p_msg) {
 	_p_msg;
+	if (this->Cached().Locked())
+		return;
 	CString cs_msg(_p_msg);
 
 	if (-1 != cs_msg.ReverseFind(_T('\n')))
@@ -176,6 +182,7 @@ CLogger& CLogger::operator >> (_pc_sz _lp_sz_pat) { this->Pattern(_lp_sz_pat); r
 CLogger::operator CCache& (void) { return this->Cached(); }
 const
 CLogger& CLogger::operator ()(void) const { this->Cached()(); return *this; } 
+CLogger& CLogger::operator ()(const bool _b_verb) { this->Cached().Locked() = !_b_verb; return *this; }
 
 #pragma endregion
 

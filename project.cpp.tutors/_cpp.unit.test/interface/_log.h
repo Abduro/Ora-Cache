@@ -29,6 +29,9 @@ namespace ebo { namespace boo { namespace test {
 
 		const TCached& Get (void) const; // gets a reference to a vector of buffered strings (ro); 
 		      TCached& Get (void)      ; // gets a reference to a vector of buffered strings (rw);
+		const
+		bool&  Locked (void) const;      // gets a reference to the lock flag of this cache (ro); 'true' means: add message - 'no', otherwise 'yes';
+		bool&  Locked (void) ;           // gets a reference to the lock flag of this cache (rw); 'true' means: add message - 'no', otherwise 'yes';
 
 		_pc_sz Prefix (void) const;      // gets a prefix string that is inserted before each element of the buffer;
 		void   Prefix (_pc_sz)   ;       // sets a prefix string, it can be equal to null or be empty; '\t' (default);
@@ -49,9 +52,11 @@ namespace ebo { namespace boo { namespace test {
 		CCache& operator +=(const CString&); // appends a string object to this cache;
 		CCache& operator +=(const TParts&);  // appends words i.e. parts of the sentence(s) that can be differ to multiple lines by a separator;
 		const
-		CCache& operator()(void) const;
+		CCache& operator ()(void) const;     // ouputs this cache content to 'Test' ouput panel;
+		CCache& operator ()(const bool _b_verb); // if '_b_verb' is 'true' there's no lock for adding a message, otherwise the lock is turned on;
 
 	private:
+		bool m_locked; // the flag for indicating the block of adding new messages to this cache; is set to 'false' by default;
 		TCached  m_strings;
 		CString  m_prefix ;
 		CString  m_suffix ;
@@ -126,13 +131,13 @@ namespace ebo { namespace boo { namespace test {
 		CLogger& operator +=(const CString& cs_out) ;     // appends the input string object to the cache; [for simplicity of input];
 		CLogger& operator +=(_pc_sz _p_sz_out) ;          // appends the raw text to the cache; [for simplicity of input];
 
-	public:
-		CLogger& operator >>(_pc_sz _lp_sz_pat); // sets the pattern string;
+		CLogger& operator >>(_pc_sz _lp_sz_pat);   // sets the pattern string;
 
 		operator CCache& (void);
 
 		const
-		CLogger& operator()(void) const; // it is the shortcut for cached strings class functor operator;
+		CLogger& operator()(void) const;           // it is the shortcut for cached strings class functor operator;
+		CLogger& operator()(const bool _b_verb);   // allows/disallows adding messages to the cache;
 
 		void Write (_pc_sz _p_msg) override final; // ITestOutput interface method;
 

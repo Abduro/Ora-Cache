@@ -22,7 +22,8 @@ uint32_t CUni_enum::Count (void) const {
 	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Count(TPipe::Target(), this->m_error);
 }
 uint32_t CUni_enum::Count (const e_object _target, CError& _err) {
-	return CUniEnum::Count(_target, _err);
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s() <static>:"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	return CUniEnum::Count(_target, _err); // this method traces its error(s) and pront out the count property result;
 }
 
 TError&  CUni_enum::Error (void) const { return this->m_error; }

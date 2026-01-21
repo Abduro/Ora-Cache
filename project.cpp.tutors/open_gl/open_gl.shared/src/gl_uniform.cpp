@@ -4,6 +4,7 @@
 */
 #include "gl_uniform.h"
 #include "gl_renderer.h"
+#include "gl_prog_id.h"
 
 #include "shared.dbg.h"
 #include "shared.preproc.h"
@@ -17,6 +18,116 @@ using namespace ex_ui::draw::open_gl::vars;
 using CValue = CUniform::CValue;
 using CProgId = program::CProgId;
 
+using e_iface = procs::program::e_interface;
+using e_prop = procs::program::e_property;
+
+enum class e_ndx : uint32_t { e_name = 0, e_type, e_loc, e_bloc }; // for reference to value vector elements;
+
+procs::program::TRawProps props = {e_prop::e_name_len, e_prop::e_type, e_prop::e_location, e_prop::e_block_ndx};
+procs::program::TRawValues values(props.size());
+
+#pragma region cls::CU_frm_0x0{}
+
+CU_frm_0x0::CU_frm_0x0 (void) : m_index (0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CU_frm_0x0::CU_frm_0x0 (const CU_frm_0x0& _src) : CU_frm_0x0() { *this = _src; }
+CU_frm_0x0::CU_frm_0x0 (CU_frm_0x0&& _victim) : CU_frm_0x0() { *this = _victim; }
+
+TError&  CU_frm_0x0::Error (void) const { return this->m_error; }
+bool CU_frm_0x0::Is_valid (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	const uint32_t u_count = CUniform_enum::Count((*this).Target(), this->m_error);
+	
+	if (this->m_index >= u_count)
+		this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: _value (%u) is out of range (%u)"), this->m_index, u_count);
+	
+	return false == this->Error();
+}
+
+uint32_t CU_frm_0x0::Locate (void) const { return this->m_index; }
+bool     CU_frm_0x0::Locate (const uint32_t _u_ndx) {
+	_u_ndx;
+	const bool b_changed = this->Locate() != _u_ndx; if (b_changed) this->m_index = _u_ndx; return b_changed;
+}
+
+CU_frm_0x0& CU_frm_0x0::operator = (const CU_frm_0x0& _src) { *this << _src.Locate(); return *this; }
+CU_frm_0x0& CU_frm_0x0::operator = (CU_frm_0x0&& _victim) { *this = (const CU_frm_0x0&)_victim; return *this; }
+CU_frm_0x0& CU_frm_0x0::operator <<(const uint32_t _locate) { this->Locate(_locate); return *this; }
+
+#pragma endregion
+#pragma region cls::CU_val_0x0{}
+
+CU_val_0x0::CU_val_0x0 (void) : m_prog_id(u_inv_prog), m_locate(u_inv_loc) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CU_val_0x0::CU_val_0x0 (const CU_val_0x0& _src) : CU_val_0x0() { *this = _src; }
+CU_val_0x0::CU_val_0x0 (CU_val_0x0&& _victim) : CU_val_0x0() { *this = _victim; }
+
+TError& CU_val_0x0::Error (void) const { return this->m_error; }
+bool CU_val_0x0::Is_valid (void) const { return this->Locate() != u_inv_loc && this->ProgId() != u_inv_prog; }
+
+uint32_t CU_val_0x0::Locate (void) const { return this->m_locate; }
+err_code CU_val_0x0::Locate (const uint32_t _value) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TRenderer& renderer = ::Get_renderer();
+	const CProgram& prog = renderer.Scene().Progs().GetActive(); // to-do: must be re-viewed, the active program may be different from this uniform value belongs to;
+	const uint32_t u_count = CUniform_enum::Count(prog().Target(), this->m_error);
+	
+	if (_value >= u_count)
+		this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: _value (%u) is out of range (%u)"), _value, u_count);
+	else
+		this->m_locate = _value;
+
+	return this->Error();
+}
+
+uint32_t CU_val_0x0::ProgId (void) const { return this->m_prog_id; }    
+err_code CU_val_0x0::ProgId (const uint32_t _prog_id) {
+	_prog_id;
+	CProgId::Is_valid(_prog_id, this->m_error);
+	if (this->Error() == false)
+		this->m_prog_id = _prog_id;
+	return this->Error();
+}
+
+const
+CType& CU_val_0x0::Type (void) const { return this->m_type; }
+CType& CU_val_0x0::Type (void)       { return this->m_type; }
+
+CU_val_0x0& CU_val_0x0::operator = (const CU_val_0x0& _src) {
+	*this << _src.Type(); this->m_error = _src.Error(); this->m_prog_id = _src.ProgId(); this->m_locate = _src.Locate(); return *this;
+}
+CU_val_0x0& CU_val_0x0::operator = (CU_val_0x0&& _victim) { *this = (const CU_val_0x0&)_victim; return *this; }
+CU_val_0x0& CU_val_0x0::operator <<(const CType& _type) { this->Type() = _type; return *this; }
+
+#pragma endregion
+#pragma region cls::CU_val_v4{}
+
+CU_val_v4::CU_val_v4 (void) : TBase() {}
+CU_val_v4::CU_val_v4 (const CU_val_v4& _src) : CU_val_v4() { *this = _src; }
+CU_val_v4::CU_val_v4 (CU_val_v4&& _victim) : CU_val_v4() { *this = _victim; }
+
+const
+t_uniform_4f& CU_val_v4::Data (void) const { return this->m_data; }
+t_uniform_4f& CU_val_v4::Data (void)       { return this->m_data; }
+
+err_code CU_val_v4::Get (void) {
+	this->m_error <<__METHOD__<<__s_ok; return CU_val_v4::Get(this->ProgId(), this->Locate(), this->Data(), this->m_error);
+}
+err_code CU_val_v4::Get (const uint32_t _prog_id, const uint32_t _u_locate, t_uniform_4f& _data, CError& _err) {
+	_prog_id; _u_locate; _data; _err;
+
+	if (__failed(::__get_res_procs().GetValues(_prog_id, e_iface::e_uniform, _u_locate, props, values))) {
+		_err = ::__get_res_procs().Error();
+	}
+	else {}
+
+	return _err;
+}
+
+CU_val_v4& CU_val_v4::operator = (const CU_val_v4& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+CU_val_v4& CU_val_v4::operator = (CU_val_v4&& _victim) { *this = (const CU_val_v4&)_victim; return *this; }
+
+#pragma endregion
 #pragma region cls::CUniform::CValue{}
 
 CValue::CValue (CUniform* _p_form) : m_p_form(_p_form) {}
@@ -170,13 +281,6 @@ err_code CUniform_enum::Get (const e_object _target, TUniVars& _vars, CError& _e
 	if (0 == u_vars_count)
 		return _err; // no errors and no variables;
 
-	using e_iface = procs::program::e_interface;
-	using e_prop = procs::program::e_property;
-
-	enum class e_ndx : uint32_t { e_name = 0, e_type, e_loc, e_bloc }; // for reference to value vector elements;
-
-	procs::program::TRawProps props = {e_prop::e_name_len, e_prop::e_type, e_prop::e_location, e_prop::e_block_ndx};
-	procs::program::TRawValues values(props.size());
 	// (2) reserving a vector items number is not good idea, an error may occur and the vector will contain vars that are empty and not valid;
 #if (0)
 	try {

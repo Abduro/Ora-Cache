@@ -23,7 +23,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		err_code Create (void); // creates a simple triangle and related to the triangle objects, such as vertex array object and vertex buffer object;
 		err_code Delete (void); // deletes this shape: the associated program and vertex array object;
 
-		err_code Draw (void);   // calls 'draw' method of the triangle; the 'draw' method is used by the renderer;
+		err_code Draw (void);   // calls 'draw' method of the triangle; the 'draw' method is used by the renderer; 'delete' is *not* called;
 
 		TError&  Error (void) const;
 
