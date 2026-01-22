@@ -27,7 +27,7 @@ uint32_t CUni_enum::Count (const e_object _target, CError& _err) {
 }
 
 TError&  CUni_enum::Error (void) const { return this->m_error; }
-
+#if (0)
 err_code CUni_enum::Get (void) {
 	this->m_error <<__METHOD__<<__s_ok; return CUni_enum::Get(TPipe::Target(), this->m_vars, this->m_error);
 }
@@ -56,10 +56,10 @@ err_code  CUni_enum::OnDraw (const e_object _target, TUniVars& _vars, CError& _e
 
 const
 TUniVars& CUni_enum::Vars (void) const { return this->m_vars; }
-
+#endif
 #pragma endregion
 #pragma region cls::CUni_form{}
-
+#if (0)
 CUni_form::CUni_form (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 TError& CUni_form::Error (void) const { return this->m_error; }
@@ -72,12 +72,30 @@ CString CUni_form::To_str (const CUniform& _u_form) {
 	        cs_out.Format(pc_sz_pat_u_form, (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, _u_form.Name(), (_pc_sz) _u_form.Value().Type().To_str(), _u_form.Value().Type().Get());
 	return  cs_out;
 }
-
+#endif
 #pragma endregion
-#pragma region cls::CUni_value{}
+#pragma region cls::CUf_val_v4{}
 
-CUni_value::CUni_value (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CUf_val_v4::CUf_val_v4 (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-TError& CUni_value::Error (void) const { return this->m_error; }
+TError& CUf_val_v4::Error (void) const { return this->m_error; }
+
+err_code CUf_val_v4::Get (const e_object _target, const uint32_t _locate, t_uniform_4f& _value, CError& _err) {
+	_target; _locate; _value; _err;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s() <static>:"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	CU_val_v4 vec4(_target); vec4.Locate(_locate);
+
+	if (__failed(vec4.Get())) {
+		_err = vec4.Error();
+		_out() += _err.Print(TError::e_print::e_req); return _err; // no value retrieved - no sense to go ahead;
+	}
+
+	const t_uniform_4f& v4_dat = vec4.Data();
+
+	_out() += TString().Format(_T("the value is: {%.06f;%.06f;%.06f;%.06f}"), v4_dat.at(0), v4_dat.at(1), v4_dat.at(2), v4_dat.at(3) );
+
+	return _err;
+}
 
 #pragma endregion

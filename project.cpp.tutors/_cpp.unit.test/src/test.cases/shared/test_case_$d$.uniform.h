@@ -12,10 +12,22 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	using namespace ex_ui::draw::open_gl;
 
 	using CUniEnum  = ex_ui::draw::open_gl::vars::CUniform_enum;
-	using CUniform  = ex_ui::draw::open_gl::vars::CUniform;
-	using CUniValue = ex_ui::draw::open_gl::vars::CUniform::CValue;
+	using CU_frm_v4 = ex_ui::draw::open_gl::vars::CU_frm_v4;
+	using CU_val_v4 = ex_ui::draw::open_gl::vars::CU_val_v4;
 
-	using TUniVars  = ex_ui::draw::open_gl::vars::TUniVars;
+	using TUniVars  = ex_ui::draw::open_gl::vars::TU_vars_v4;
+
+	using t_uniform_3f = procs::vars::t_uniform_3f;
+	using t_uniform_4f = procs::vars::t_uniform_4f;
+
+	/* the running this tests requires:
+		(1) creating the renderer context;
+		(2) compiling shaders and linking a program;
+		(3) creating a shape, for examole, a triangle;
+		(4) starting to draw the shape for executing the shaders code;
+		(5) ***running the test case of a uniform variable;***
+		(6) ending up the draw operation by destroying all objects related to draw operation;
+	*/
 
 	// https://www.allacronyms.com/uniform/abbreviated ;
 
@@ -28,6 +40,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		uint32_t Count (void) const; // to-do: getting the active program from the global renderer should be considered; (done)
 
 		TError&  Error (void) const;
+#if (0)
 		static
 		err_code Get (const e_object, TUniVars&, CError&); // enumerates all u-form variables of the program by given identifier;
 		err_code Get (void); // without open_gl draw functions the uniform variable has default value;
@@ -35,7 +48,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		static
 		err_code OnDraw (const e_object, TUniVars&, CError&); // invokes open_gl draw functions for getting shaders' script executed;
 		err_code OnDraw (void);
-
+#endif
 		const
 		TUniVars& Vars (void) const;
 
@@ -50,6 +63,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		TUniVars m_vars;
 	};
 
+#if (0)
 	class CUni_form {
 	public:
 		CUni_form (void); CUni_form (const CUni_form&) = delete; CUni_form (CUni_form&&) = delete; ~CUni_form (void) = default;
@@ -62,15 +76,19 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CUni_form& operator = (const CUni_form&) = delete; CUni_form& operator = (CUni_form&&) = delete;
 		CError  m_error;
 	};
-
-	class CUni_value {
+#endif
+	
+	class CUf_val_v4 : public TPipe {
 	public:
-		CUni_value (void); CUni_value (const CUni_value&) = delete; CUni_value (CUni_value&&) = delete; ~CUni_value (void) = default;
+		CUf_val_v4 (const e_object = e_object::e_none);
+		CUf_val_v4 (const CUf_val_v4&) = delete; CUf_val_v4 (CUf_val_v4&&) = delete; ~CUf_val_v4 (void) = default;
 
 		TError& Error (void) const;
+		static
+		err_code Get (const e_object, const uint32_t _locate, t_uniform_4f&, CError&); 
 
 	private:
-		CUni_value& operator = (const CUni_value&) = delete; CUni_value& operator = (CUni_value&&) = delete;
+		CUf_val_v4& operator = (const CUf_val_v4&) = delete; CUf_val_v4& operator = (CUf_val_v4&&) = delete;
 		CError  m_error;
 	};
 

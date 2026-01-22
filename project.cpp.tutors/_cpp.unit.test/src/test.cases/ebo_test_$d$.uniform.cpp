@@ -38,7 +38,7 @@ void c_uni_enum::Count (void) {
 	_out() += TString().Format(_T("Uniform vars count: %u;"), u_vars);
 	_out()();
 }
-
+#if (0)
 void c_uni_enum::Get (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -69,7 +69,7 @@ void c_uni_enum::OnDraw (void) {
 	_out() += CUni_form::To_str(uni_enum.Vars().at(i_));
 	_out()();
 }
-
+#endif
 const
 TPipe&  c_uni_enum::Pipe (void) const { return this->m_pipe; }
 TPipe&  c_uni_enum::Pipe (void)       { return this->m_pipe; }
