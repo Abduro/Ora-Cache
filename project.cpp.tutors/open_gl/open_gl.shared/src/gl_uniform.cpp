@@ -15,7 +15,6 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vars;
 
-using CValue = CUniform::CValue;
 using CProgId = program::CProgId;
 
 using e_iface = procs::program::e_interface;
@@ -26,17 +25,18 @@ enum class e_ndx : uint32_t { e_name = 0, e_type, e_loc, e_bloc }; // for refere
 procs::program::TRawProps props = {e_prop::e_name_len, e_prop::e_type, e_prop::e_location, e_prop::e_block_ndx};
 procs::program::TRawValues values(props.size());
 
-#pragma region cls::CU_frm_0x0{}
+#pragma region cls::CU_bas_0x0{}
 
-CU_frm_0x0::CU_frm_0x0 (void) : m_index (0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CU_frm_0x0::CU_frm_0x0 (const CU_frm_0x0& _src) : CU_frm_0x0() { *this = _src; }
-CU_frm_0x0::CU_frm_0x0 (CU_frm_0x0&& _victim) : CU_frm_0x0() { *this = _victim; }
+CU_bas_0x0::CU_bas_0x0 (const e_object _target) : TPipe(_target), m_index (0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CU_bas_0x0::CU_bas_0x0 (const CU_bas_0x0& _src) : CU_bas_0x0(_src.Target()) { *this = _src; }
+CU_bas_0x0::CU_bas_0x0 (CU_bas_0x0&& _victim) : CU_bas_0x0(_victim.Target()) { *this = _victim; }
 
-TError&  CU_frm_0x0::Error (void) const { return this->m_error; }
-bool CU_frm_0x0::Is_valid (void) const {
+TError&  CU_bas_0x0::Error (void) const { return this->m_error; }
+
+bool CU_bas_0x0::Is_valid (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	const uint32_t u_count = CUniform_enum::Count((*this).Target(), this->m_error);
+	const uint32_t u_count = CUniform_enum::Count(TPipe::Target(), this->m_error);
 	
 	if (this->m_index >= u_count)
 		this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: _value (%u) is out of range (%u)"), this->m_index, u_count);
@@ -44,80 +44,122 @@ bool CU_frm_0x0::Is_valid (void) const {
 	return false == this->Error();
 }
 
-uint32_t CU_frm_0x0::Locate (void) const { return this->m_index; }
-bool     CU_frm_0x0::Locate (const uint32_t _u_ndx) {
+uint32_t CU_bas_0x0::Locate (void) const { return this->m_index; }
+bool     CU_bas_0x0::Locate (const uint32_t _u_ndx) {
 	_u_ndx;
 	const bool b_changed = this->Locate() != _u_ndx; if (b_changed) this->m_index = _u_ndx; return b_changed;
 }
 
-CU_frm_0x0& CU_frm_0x0::operator = (const CU_frm_0x0& _src) { *this << _src.Locate(); return *this; }
+CU_bas_0x0& CU_bas_0x0::operator = (const CU_bas_0x0& _src) { (TPipe&)*this = (const TPipe&)_src; this->m_error = _src.Error(); return *this; }
+CU_bas_0x0& CU_bas_0x0::operator = (CU_bas_0x0&& _victim) { *this = (const CU_bas_0x0&)_victim; return *this; }
+CU_bas_0x0& CU_bas_0x0::operator <<(const uint32_t _locate) { this->Locate(_locate); return *this; }
+
+#pragma endregion
+#pragma region cls::CU_frm_0x0{}
+
+CU_frm_0x0::CU_frm_0x0 (const e_object _target) : TBase(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CU_frm_0x0::CU_frm_0x0 (const CU_frm_0x0& _src) : CU_frm_0x0() { *this = _src; }
+CU_frm_0x0::CU_frm_0x0 (CU_frm_0x0&& _victim) : CU_frm_0x0() { *this = _victim; }
+
+bool CU_frm_0x0::Is_valid (void) const {
+	const bool b_valid = TBase::Is_valid() && !!this->m_name.GetLength(); return b_valid;
+}
+
+_pc_sz   CU_frm_0x0::Name (void) const { return (_pc_sz) this->m_name; }
+bool     CU_frm_0x0::Name (_pc_sz _p_name) {
+	_p_name;
+	const bool b_changed = !!this->m_name.CompareNoCase(_p_name); if (b_changed) this->m_name = _p_name; return b_changed;
+}
+err_code CU_frm_0x0::Query_name (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == TBase::Is_valid()) {
+		return this->Error();
+	}
+
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(TBase::Target());
+
+	if (__failed(::__get_res_procs().GetName(prog.Id().Get(), e_iface::e_uniform, TBase::Locate(), this->m_name))) {
+		TBase::m_error = ::__get_res_procs().Error();
+	}
+
+	return this->Error();
+}
+
+CU_frm_0x0& CU_frm_0x0::operator = (const CU_frm_0x0& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Name(); return *this; }
 CU_frm_0x0& CU_frm_0x0::operator = (CU_frm_0x0&& _victim) { *this = (const CU_frm_0x0&)_victim; return *this; }
-CU_frm_0x0& CU_frm_0x0::operator <<(const uint32_t _locate) { this->Locate(_locate); return *this; }
+CU_frm_0x0& CU_frm_0x0::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
+CU_frm_0x0& CU_frm_0x0::operator <<(const CString& _cs_name) { *this << (_pc_sz)_cs_name; return *this; }
 
 #pragma endregion
 #pragma region cls::CU_val_0x0{}
 
-CU_val_0x0::CU_val_0x0 (void) : m_prog_id(u_inv_prog), m_locate(u_inv_loc) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CU_val_0x0::CU_val_0x0 (const CU_val_0x0& _src) : CU_val_0x0() { *this = _src; }
+CU_val_0x0::CU_val_0x0 (const e_object _target) : TBase(_target) { TBase::m_error >>__CLASS__; }
+CU_val_0x0::CU_val_0x0 (const CU_val_0x0& _src) : CU_val_0x0(_src.Target()) { *this = _src; }
 CU_val_0x0::CU_val_0x0 (CU_val_0x0&& _victim) : CU_val_0x0() { *this = _victim; }
 
-TError& CU_val_0x0::Error (void) const { return this->m_error; }
-bool CU_val_0x0::Is_valid (void) const { return this->Locate() != u_inv_loc && this->ProgId() != u_inv_prog; }
-
-uint32_t CU_val_0x0::Locate (void) const { return this->m_locate; }
-err_code CU_val_0x0::Locate (const uint32_t _value) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	TRenderer& renderer = ::Get_renderer();
-	const CProgram& prog = renderer.Scene().Progs().GetActive(); // to-do: must be re-viewed, the active program may be different from this uniform value belongs to;
-	const uint32_t u_count = CUniform_enum::Count(prog().Target(), this->m_error);
-	
-	if (_value >= u_count)
-		this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: _value (%u) is out of range (%u)"), _value, u_count);
-	else
-		this->m_locate = _value;
-
-	return this->Error();
-}
-
-uint32_t CU_val_0x0::ProgId (void) const { return this->m_prog_id; }    
-err_code CU_val_0x0::ProgId (const uint32_t _prog_id) {
-	_prog_id;
-	CProgId::Is_valid(_prog_id, this->m_error);
-	if (this->Error() == false)
-		this->m_prog_id = _prog_id;
-	return this->Error();
-}
+bool CU_val_0x0::Is_valid (void) const { return !!this->Type().Get() && TBase::Is_valid(); }
 
 const
 CType& CU_val_0x0::Type (void) const { return this->m_type; }
 CType& CU_val_0x0::Type (void)       { return this->m_type; }
 
-CU_val_0x0& CU_val_0x0::operator = (const CU_val_0x0& _src) {
-	*this << _src.Type(); this->m_error = _src.Error(); this->m_prog_id = _src.ProgId(); this->m_locate = _src.Locate(); return *this;
-}
+CU_val_0x0& CU_val_0x0::operator = (const CU_val_0x0& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Type(); return *this; }
 CU_val_0x0& CU_val_0x0::operator = (CU_val_0x0&& _victim) { *this = (const CU_val_0x0&)_victim; return *this; }
 CU_val_0x0& CU_val_0x0::operator <<(const CType& _type) { this->Type() = _type; return *this; }
 
 #pragma endregion
+#pragma region cls::CU_val_v3{}
+
+CU_val_v3::CU_val_v3 (const e_object _target) : TBase(_target) { TBase::m_error >>__CLASS__; }
+CU_val_v3::CU_val_v3 (const CU_val_v3& _src) : CU_val_v3(_src.Target()) { *this = _src; }
+CU_val_v3::CU_val_v3 (CU_val_v3&& _victim) : CU_val_v3(_victim.Target()) { *this = _victim; }
+
+const
+t_uniform_3f& CU_val_v3::Data (void) const { return this->m_data; }
+t_uniform_3f& CU_val_v3::Data (void)       { return this->m_data; }
+
+err_code CU_val_v3::Get (void) {
+	TBase::m_error <<__METHOD__<<__s_ok; return CU_val_v3::Get(TBase::Target(), TBase::Locate(), this->Data(), TBase::m_error);
+}
+err_code CU_val_v3::Get (const e_object _target, const uint32_t _u_locate, t_uniform_3f& _data, CError& _err) {
+	_target; _u_locate; _data; _err;
+
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(_target);
+
+	if (__failed(::__get_uni_val_procs().Get_3fs(prog.Id().Get(), _u_locate, _data))) {
+		_err = ::__get_uni_val_procs().Error();
+	}
+	else {}
+
+	return _err;
+}
+
+CU_val_v3& CU_val_v3::operator = (const CU_val_v3& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
+CU_val_v3& CU_val_v3::operator = (CU_val_v3&& _victim) { *this = (const CU_val_v3&)_victim; return *this; }
+CU_val_v3& CU_val_v3::operator <<(const t_uniform_3f& _data) { this->Data() = _data; return *this; }
+
+#pragma endregion
 #pragma region cls::CU_val_v4{}
 
-CU_val_v4::CU_val_v4 (void) : TBase() {}
-CU_val_v4::CU_val_v4 (const CU_val_v4& _src) : CU_val_v4() { *this = _src; }
-CU_val_v4::CU_val_v4 (CU_val_v4&& _victim) : CU_val_v4() { *this = _victim; }
+CU_val_v4::CU_val_v4 (const e_object _target) : TBase(_target) { TBase::m_error >>__CLASS__; }
+CU_val_v4::CU_val_v4 (const CU_val_v4& _src) : CU_val_v4(_src.Target()) { *this = _src; }
+CU_val_v4::CU_val_v4 (CU_val_v4&& _victim) : CU_val_v4(_victim.Target()) { *this = _victim; }
 
 const
 t_uniform_4f& CU_val_v4::Data (void) const { return this->m_data; }
 t_uniform_4f& CU_val_v4::Data (void)       { return this->m_data; }
 
 err_code CU_val_v4::Get (void) {
-	this->m_error <<__METHOD__<<__s_ok; return CU_val_v4::Get(this->ProgId(), this->Locate(), this->Data(), this->m_error);
+	TBase::m_error <<__METHOD__<<__s_ok; return CU_val_v4::Get(TBase::Target(), TBase::Locate(), this->Data(), TBase::m_error);
 }
-err_code CU_val_v4::Get (const uint32_t _prog_id, const uint32_t _u_locate, t_uniform_4f& _data, CError& _err) {
-	_prog_id; _u_locate; _data; _err;
+err_code CU_val_v4::Get (const e_object _target, const uint32_t _u_locate, t_uniform_4f& _data, CError& _err) {
+	_target; _u_locate; _data; _err;
 
-	if (__failed(::__get_res_procs().GetValues(_prog_id, e_iface::e_uniform, _u_locate, props, values))) {
-		_err = ::__get_res_procs().Error();
+	const CProgram& prog = ::Get_renderer().Scene().Progs().Get(_target);
+
+	if (__failed(::__get_uni_val_procs().Get_4fs(prog.Id().Get(), _u_locate, _data))) {
+		_err = ::__get_uni_val_procs().Error();
 	}
 	else {}
 
@@ -126,96 +168,31 @@ err_code CU_val_v4::Get (const uint32_t _prog_id, const uint32_t _u_locate, t_un
 
 CU_val_v4& CU_val_v4::operator = (const CU_val_v4& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CU_val_v4& CU_val_v4::operator = (CU_val_v4&& _victim) { *this = (const CU_val_v4&)_victim; return *this; }
+CU_val_v4& CU_val_v4::operator <<(const t_uniform_4f& _data) { this->Data() = _data; return *this; }
 
 #pragma endregion
-#pragma region cls::CUniform::CValue{}
+#pragma region cls::CU_frm_v4{}
 
-CValue::CValue (CUniform* _p_form) : m_p_form(_p_form) {}
-CValue::CValue (const CValue& _src) : CValue(_src.m_p_form) { *this = _src; }
-CValue::CValue (CValue&& _victim) : CValue() { *this = _victim; }
+CU_frm_v4::CU_frm_v4 (const e_object _target) : TBase(_target), m_vec4(_target) { TBase::m_error >>__CLASS__; }
+CU_frm_v4::CU_frm_v4 (const CU_frm_v4& _src) : CU_frm_v4(_src.Target()) { *this = _src; }
+CU_frm_v4::CU_frm_v4 (CU_frm_v4&& _victim) : CU_frm_v4(_victim.Target()) { *this = _victim; }
 
-TError& CValue::Error (void) const { return this->m_error; }
-
-err_code CValue::Get (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	if (nullptr == this->m_p_form)
-		return this->m_error << __e_pointer = _T("#__e_not_inited: the pointer to uniform var is not set");
-
-	const uint32_t prog_id = ::Get_renderer().Scene().Progs().Get(this->m_p_form->Target()).Id().Get();
-
-	switch (this->Type().Get()) {
-	case (uint32_t)procs::e_att_val_vec::e_float_vec3: {
-
-		using t_uniform_3f = procs::vars::t_uniform_3f; t_uniform_3f v_values = {0.0f};
-
-		if (__failed(::__get_uni_val_procs().Get_3fs(prog_id, this->m_p_form->Locate(), v_values))) {
-			this->m_error = ::__get_uni_val_procs().Error();
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		}
-	} break;
-	case (uint32_t)procs::e_att_val_vec::e_float_vec4: {
-
-		using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f v_values = {0.0f};
-
-		if (__failed(::__get_uni_val_procs().Get_4fs(prog_id, this->m_p_form->Locate(), v_values))) {
-			this->m_error = ::__get_uni_val_procs().Error();
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		}
-	} break;
-	default:;
-	}
-
-	return this->Error();
-}
-
-const
-CType&  CValue::Type (void) const { return this->m_type; }
-CType&  CValue::Type (void)       { return this->m_type; }
-
-CValue& CValue::operator = (const CValue& _src) { *this << _src.Type(); this->m_error = _src.Error(); return *this; }
-CValue& CValue::operator = (CValue&& _victim) { _victim; return *this; }
-
-CValue& CValue::operator <<(const CType& _type) { this->Type() = _type; return *this; }
-
-#pragma endregion
-#pragma region cls::vars::CUniform{}
-
-CUniform:: CUniform (const e_object _target) : TPipe(_target), m_value(this), m_index(u_inv_ndx) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CUniform:: CUniform (const CUniform& _src) : CUniform() { *this = _src; }
-CUniform:: CUniform (CUniform&& _victim) : CUniform() { *this = _victim; }
-CUniform::~CUniform (void) {}
-
-TError&    CUniform::Error (void) const { return this->m_error; }
-
-_pc_sz  CUniform::Name (void) const { return (_pc_sz) this->m_name; }
-bool    CUniform::Name (_pc_sz _p_name) {
-	_p_name;
-	const bool b_changed = !!this->m_name.CompareNoCase(_p_name); if (b_changed) this->m_name = _p_name; return b_changed;
-}
-
-uint32_t CUniform::Locate (void) const { return this->m_index; }
-bool     CUniform::Locate (const uint32_t _u_ndx) {
+bool CU_frm_v4::Locate (const uint32_t _u_ndx) {
 	_u_ndx;
-	const bool b_changed = this->Locate() != _u_ndx; if (b_changed) this->m_index = _u_ndx; return b_changed;
+	bool b_changed = false;
+	if (TBase::Locate(_u_ndx)) b_changed = true;
+	if (this->Vec4().Locate(_u_ndx)) b_changed = true;
+
+	return b_changed;
 }
 
 const
-CValue& CUniform::Value (void) const { return this->m_value; }
-CValue& CUniform::Value (void)       { return this->m_value; }
+CU_val_v4& CU_frm_v4::Vec4 (void) const { return this->m_vec4; }
+CU_val_v4& CU_frm_v4::Vec4 (void)       { return this->m_vec4; }
 
-CUniform&  CUniform::operator = (const CUniform& _src) {
-	(TPipe&)*this = (const TPipe&)_src; *this << _src.Name() << _src.Value() << _src.Locate(); return *this;
-}
-CUniform&  CUniform::operator = (CUniform&& _victim) { *this = (const CUniform&)_victim; return *this; }
-
-CUniform&  CUniform::operator <<(_pc_sz _p_name) { this->Name(_p_name); return *this; }
-CUniform&  CUniform::operator <<(const CValue& _val) { this->Value() = _val; return *this; }
-CUniform&  CUniform::operator <<(const uint32_t _u_ndx) { this->Locate(_u_ndx); return *this; }
-
-const
-TPipe& CUniform::operator ()(void) const { return (TPipe&)*this; }
-TPipe& CUniform::operator ()(void)       { return (TPipe&)*this; }
+CU_frm_v4& CU_frm_v4::operator = (const CU_frm_v4& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Vec4();  return *this; }
+CU_frm_v4& CU_frm_v4::operator = (CU_frm_v4&& _victim) { *this = (const CU_frm_v4&)_victim; return *this; }
+CU_frm_v4& CU_frm_v4::operator <<(const CU_val_v4& _vec4) { this->Vec4() = _vec4; return *this; }
 
 #pragma endregion
 #pragma region cls::vars::CUniform_enum{}
@@ -270,7 +247,7 @@ uint32_t CUniform_enum::Count (const e_object _target,  CError& _err) {
 
 TError&  CUniform_enum::Error (void) const { return this->m_error; }
 
-err_code CUniform_enum::Get (const e_object _target, TUniVars& _vars, CError& _err) {
+err_code CUniform_enum::Get (const e_object _target, TU_vars_v4& _vars, CError& _err) {
 	_target; _vars; _err;
 
 	if (_vars.empty() == false)
@@ -301,33 +278,22 @@ err_code CUniform_enum::Get (const e_object _target, TUniVars& _vars, CError& _e
 		if (-1 == values.at(3)) // to-do: hard coded index value is not good;
 			continue;
 #endif
-		CString cs_name;
-		if (__failed(::__get_res_procs().GetName(prog_id, e_iface::e_uniform, i_, cs_name))) {
-			_err = ::__get_res_procs().Error(); break;
+		CU_frm_v4 u_form(_target); u_form.Locate(i_); // just sets the location/index of the variable; calling 'Is_valid()' is unnecessary yet; 
+		
+		if (__failed(u_form.Query_name())) {
+			_err = u_form.Error(); break;
+		}
+		u_form.Vec4().Type() << (uint32_t) values.at((uint32_t)e_ndx::e_type); // data type can be converted to 'unsigned', no negative value is expected;
+		if (__failed(u_form.Vec4().Get())) { // the location and draw target type is already set (at least must be set);
+			_err = u_form.Vec4().Error(); break;
 		}
 
-		CUniform u_form; u_form.Name((_pc_sz)cs_name);
-#if (0)
 		try {
-			_vars.at(i_) = u_form;
-		} catch (const ::std::out_of_range&) {
-			_err << __e_index; break;
-		}
-#else
-		try {
-			u_form.Value().Type() << (uint32_t) values.at((uint32_t)e_ndx::e_type); // data type can be converted to 'unsigned', no negative value is expected;
-			u_form << i_;         // sets the index/location of the variable;
-			u_form() << _target;  // sets the draw target object type;
-
-			u_form.Value().Get(); // this method may generate an error, the value object saves the error state;
-
 			_vars.push_back(u_form);
 		} catch (const ::std::bad_alloc&) {
 			_err << __e_no_memory; break;
 		}
-#endif
 	}
-
 	return _err;
 }
 
