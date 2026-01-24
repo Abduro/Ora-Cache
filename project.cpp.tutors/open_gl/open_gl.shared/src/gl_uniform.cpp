@@ -36,7 +36,7 @@ TError&  CU_bas_0x0::Error (void) const { return this->m_error; }
 bool CU_bas_0x0::Is_valid (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	const uint32_t u_count = CUniform_enum::Count(TPipe::Target(), this->m_error);
+	const uint32_t u_count = CU_vars_enum::Count(TPipe::Target(), this->m_error);
 	
 	if (this->m_index >= u_count)
 		this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: _value (%u) is out of range (%u)"), this->m_index, u_count);
@@ -142,7 +142,7 @@ CU_val_v3& CU_val_v3::operator <<(const t_uniform_3f& _data) { this->Data() = _d
 #pragma endregion
 #pragma region cls::CU_val_v4{}
 
-CU_val_v4::CU_val_v4 (const e_object _target) : TBase(_target) { TBase::m_error >>__CLASS__; }
+CU_val_v4::CU_val_v4 (const e_object _target) : TBase(_target) { TBase::m_error >>__CLASS__; TBase::Type() << (uint32_t) procs::e_att_val_vec::e_float_vec4; }
 CU_val_v4::CU_val_v4 (const CU_val_v4& _src) : CU_val_v4(_src.Target()) { *this = _src; }
 CU_val_v4::CU_val_v4 (CU_val_v4&& _victim) : CU_val_v4(_victim.Target()) { *this = _victim; }
 
@@ -195,12 +195,12 @@ CU_frm_v4& CU_frm_v4::operator = (CU_frm_v4&& _victim) { *this = (const CU_frm_v
 CU_frm_v4& CU_frm_v4::operator <<(const CU_val_v4& _vec4) { this->Vec4() = _vec4; return *this; }
 
 #pragma endregion
-#pragma region cls::vars::CUniform_enum{}
+#pragma region cls::vars::CU_vars_enum{}
 
-CUniform_enum:: CUniform_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CUniform_enum::~CUniform_enum (void) {}
+CU_vars_enum:: CU_vars_enum (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CU_vars_enum::~CU_vars_enum (void) {}
 
-uint32_t CUniform_enum::Count (void) const {
+uint32_t CU_vars_enum::Count (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 #if (0)
 	const CProgram& prog = ::Get_renderer().Scene().Progs().GetActive(); // the active program may not have the required target object type;
@@ -209,10 +209,10 @@ uint32_t CUniform_enum::Count (void) const {
 		return 0;
 	}
 #endif
-	return CUniform_enum::Count(TPipe::Target(), this->m_error);
+	return CU_vars_enum::Count(TPipe::Target(), this->m_error);
 }
 
-uint32_t CUniform_enum::Count (const e_object _target,  CError& _err) {
+uint32_t CU_vars_enum::Count (const e_object _target,  CError& _err) {
 	_target; _err;
 	uint32_t u_result = 0;
 
@@ -245,16 +245,16 @@ uint32_t CUniform_enum::Count (const e_object _target,  CError& _err) {
 	return u_result;
 }
 
-TError&  CUniform_enum::Error (void) const { return this->m_error; }
+TError&  CU_vars_enum::Error (void) const { return this->m_error; }
 
-err_code CUniform_enum::Get (const e_object _target, TU_vars_v4& _vars, CError& _err) {
+err_code CU_vars_enum::Get (const e_object _target, TU_vars_v4& _vars, CError& _err) {
 	_target; _vars; _err;
 
 	if (_vars.empty() == false)
 		_vars.clear();
 
 	// (1) gets uniform variables number through the program interface object;
-	uint32_t u_vars_count = CUniform_enum::Count(_target, _err);
+	uint32_t u_vars_count = CU_vars_enum::Count(_target, _err);
 	if (0 == u_vars_count)
 		return _err; // no errors and no variables;
 

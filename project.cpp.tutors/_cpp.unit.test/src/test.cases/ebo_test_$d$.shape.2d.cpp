@@ -1,5 +1,5 @@
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 19-Jan-2026 at 23:24:33.762, UTC+4, Batumi, Monday;
+	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 23:24:33.762, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL 2d shape wrapper unit test adapter interface implementation file.
 */
 #include "ebo_test_$d$.shape.2d.h"
@@ -15,7 +15,7 @@ c_tria_2d::c_tria_2d (void) : m_pipe(e_object::e_tria) {
 }
 
 void c_tria_2d::Create_n_Delete (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+//	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	C3angle tria;
 
@@ -23,10 +23,11 @@ void c_tria_2d::Create_n_Delete (void) {
 	tria.Delete(); // required error trace is made by the method being called itself;
 
 	_out()();
+	_out()(false); // to block the output from destructors;
 }
 
 void c_tria_2d::Draw (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+//	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	C3angle tria;
 
@@ -34,6 +35,7 @@ void c_tria_2d::Draw (void) {
 	tria.Delete();
 
 	_out()();
+	_out()(false); // to block the output from destructors;
 }
 
 const

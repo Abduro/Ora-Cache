@@ -226,6 +226,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$d$.buffer.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h" />
@@ -244,6 +246,8 @@
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2)ebo_test_$d$.buffer.h" />
+    <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.ctx.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h" />

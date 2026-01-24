@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 11:43:15.709, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL vertex array data wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$d$.defs.h"
+#include "test_case_$d$.ctx.h"
 #include "gl_vertex_arr.dat.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {

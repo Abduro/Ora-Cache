@@ -1,7 +1,7 @@
 #ifndef _EBO_TEST_$D$_SHADER_H_INCLUDED
 #define _EBO_TEST_$D$_SHADER_H_INCLUDED
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 11-Jan-2026 at 16:11:29.597, UTC+4, Batumi, Sunday;
+	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 16:11:29.597, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL tutorials' shader wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.ctx.h"

@@ -1,5 +1,5 @@
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 11-Jan-2026 at 16:13:37.087, UTC+4, Batumi, Sunday;
+	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 16:13:37.087, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL tutorials' shader wrapper unit test adapter interface implementation file.
 */
 #include "ebo_test_$d$.shader.h"

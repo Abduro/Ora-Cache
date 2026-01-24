@@ -22,6 +22,8 @@
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$d$.buffer.h"><Filter>interface\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp"><Filter>src\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>interface\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>src\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h"><Filter>interface\shared</Filter></ClInclude>
@@ -40,6 +42,8 @@
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp"><Filter>src\shared</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2)ebo_test_$d$.buffer.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.ctx.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h"><Filter>interface</Filter></ClInclude>

@@ -128,9 +128,9 @@ namespace vars {
 
 	typedef ::std::vector<CU_frm_v4> TU_vars_v4;
 
-	class CUniform_enum : public TPipe {
+	class CU_vars_enum : public TPipe {
 	public:
-		CUniform_enum (const e_object = e_object::e_none); ~CUniform_enum (void);
+		CU_vars_enum (const e_object = e_object::e_none); ~CU_vars_enum (void);
 		static
 		uint32_t Count (const e_object, CError&); // gets count of uniforms in the active/bound program object;
 		uint32_t Count (void) const;              // gets active program reference from the global renderer;

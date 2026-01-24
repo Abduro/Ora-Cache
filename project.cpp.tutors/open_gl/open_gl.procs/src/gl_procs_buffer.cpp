@@ -9,43 +9,60 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::procs;
 
+#pragma region procs::aux()
+
+bool is_buf_param (const uint32_t _u_param) {
+	return (uint32_t) e_buf_params::e_access     == _u_param
+		|| (uint32_t) e_buf_params::e_acc_flags  == _u_param
+		|| (uint32_t) e_buf_params::e_immutable  == _u_param
+		|| (uint32_t) e_buf_params::e_mapped     == _u_param
+		|| (uint32_t) e_buf_params::e_map_len    == _u_param
+		|| (uint32_t) e_buf_params::e_map_offset == _u_param
+		|| (uint32_t) e_buf_params::e_size       == _u_param
+		|| (uint32_t) e_buf_params::e_stg_flags  == _u_param;
+}
+
 bool is_bind_target (const uint32_t _u_tgt_type) {
-	return (uint32_t)e_bind_targets::e_array    == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_counter  == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_read     == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_write    == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_disp     == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_draw     == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_el_arr   == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_pxl_pk   == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_pxl_unpk == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_query    == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_$_stg    == _u_tgt_type    
-		|| (uint32_t)e_bind_targets::e_texture  == _u_tgt_type
-		|| (uint32_t)e_bind_targets::e_trans    == _u_tgt_type   
-		|| (uint32_t)e_bind_targets::e_uniform  == _u_tgt_type;
+	return (uint32_t) e_bind_targets::e_array    == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_counter  == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_read     == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_write    == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_disp     == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_draw     == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_el_arr   == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_pxl_pk   == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_pxl_unpk == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_query    == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_$_stg    == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_texture  == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_trans    == _u_tgt_type
+		|| (uint32_t) e_bind_targets::e_uniform  == _u_tgt_type;
 }
 
 bool is_buf_usage (const uint32_t _u_oper_type) {
-	return (uint32_t)e_buf_usage::e_stream_draw == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_stream_read == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_stream_copy == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_static_draw == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_static_read == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_static_copy == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_dyna_draw   == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_dyna_read   == _u_oper_type
-		|| (uint32_t)e_buf_usage::e_dyna_copy   == _u_oper_type;
+	return (uint32_t) e_buf_usage::e_stream_draw == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_stream_read == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_stream_copy == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_static_draw == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_static_read == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_static_copy == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_dyna_draw   == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_dyna_read   == _u_oper_type
+		|| (uint32_t) e_buf_usage::e_dyna_copy   == _u_oper_type;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+
+namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespace _impl {
+}}}}}
+using namespace _impl;
 
 static _pc_sz buf_fun_names[] = {
-	_T("glBindBuffer"), _T("glBufferData"), _T("glDeleteBuffers"), _T("glGenBuffers"), _T("glIsBuffer"), _T("glNamedBufferData")
+	_T("glBindBuffer"), _T("glBufferData"), _T("glDeleteBuffers"), _T("glGenBuffers"), _T("glGetBufferParameteriv"), _T("glIsBuffer"), _T("glNamedBufferData")
 };
 
 enum class e_buf_fun_ndx : uint32_t {
-	e_bind = 0x0, e_data = 0x1, e_delete = 0x2, e_generate = 0x3, e_is_buffer = 0x4, e_named = 0x5
+	e_bind = 0x0, e_data, e_delete, e_generate, e_params, e_is_buffer, e_named
 };
 
 CBuffer:: CBuffer (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
@@ -144,7 +161,7 @@ err_code CBuffer::Delete (const int32_t _n_count, const uint32_t* _p_buffers) {
 	return CBase::Error();
 }
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml ;
-err_code CBuffer::GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids) {
+err_code CBuffer::GenIds (const int32_t _n_count, uint32_t* _p_buf_ids) {
 	_n_count; _p_buf_ids;
 	// GL_INVALID_VALUE : _n_count is negative ;
 	// ToDo: what is about pointer to the buffer identifiers' array?
@@ -234,8 +251,50 @@ err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, con
 		} break;
 	default:
 		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code (%d)"),  u_err_code);
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%u)"), u_err_code, u_err_code);
 	}
+
+	return CBase::Error();
+}
+
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetBufferParameter.xhtml ;
+err_code CBuffer::Param (const e_bind_targets _e_target, const e_buf_params _e_param, uint32_t& _u_value) {
+	_e_target; _e_param; _u_value;
+	/* Possible error codes:
+	GL_INVALID_ENUM      : '_e_target' is not one of the accepted buffer targets;
+	GL_INVALID_ENUM      : '_e_param' is not one of the buffer object parameter names; 
+	GL_INVALID_OPERATION : default buffer is bound to target;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	uint32_t u_result = 0;
+
+	pfn_Param p_fun = reinterpret_cast<pfn_Param>(CBase::Get(buf_fun_names[(uint32_t)e_buf_fun_ndx::e_params]));
+	if (nullptr == p_fun)
+		return u_result;
+
+	int32_t n_result = 0; // actually uint32_t is also okay, because it has the same size in memory;
+
+	p_fun(static_cast<uint32_t>(_e_target), static_cast<uint32_t>(_e_param), &n_result);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code(); 
+	switch ( u_err_code ) {
+	case GL_INVALID_ENUM : {
+		if (false) {}
+		else if (false == ::is_bind_target((uint32_t)_e_target)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__inv_arg: '_e_target' (0x%04x) is not accepted"), _e_target);
+		else if (false == ::is_buf_param((uint32_t)_e_param)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__inv_arg: '_e_param' (0x%04x) is not accepted"), _e_param);
+		else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__inv_unk: '_e_param' (0x%04x) is unknown"), _e_param);
+	} break;
+	case GL_INVALID_OPERATION : {
+		CBase::m_error <<__e_inv_arg = _T("#__e_oper: the default buffer (id = 0) is bound;");
+	} break;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%u)"), u_err_code, u_err_code);
+	}
+
+	if (false == CBase::Error())
+		_u_value = abs(n_result);
 
 	return CBase::Error();
 }

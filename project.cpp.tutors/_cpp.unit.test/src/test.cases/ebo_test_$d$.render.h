@@ -1,7 +1,7 @@
 #ifndef _EBO_TEST_$D$_UNIFORM_H_INCLUDED
 #define _EBO_TEST_$D$_UNIFORM_H_INCLUDED
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 15-Jan-2026 at 22:23:24.532.906, UTC+4, Batumi, Thursday;
+	Created by Tech_dog (ebontrop@gmail.com) on 15-Jan-2026 at 22:23:24.532.906, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL tutorials' draw renderer wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.render.h"

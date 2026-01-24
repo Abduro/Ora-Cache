@@ -10,13 +10,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	enum class e_bind_state : uint32_t {
 	/* alias     | value    | OpenGL symbolic definition (aka name)  | target object identifier ;
 	-------------+----------+----------------------------------------+--------------------------*/
-	e_array      = 0x8894, // GL_ARRAY_BUFFER_BINDING                | GL_ARRAY_BUFFER;
-	e_counter    = 0x92C1, // GL_ATOMIC_COUNTER_BUFFER_BINDING       |
-	e_draw_indir = 0x8F43, // GL_DRAW_INDIRECT_BUFFER_BINDING        |
-	e_draw_frame = 0x8CA6, // GL_DRAW_FRAMEBUFFER_BINDING            | GL_DRAW_FRAMEBUFFER;
-	e_disp       = 0x90EF, // GL_DISPATCH_INDIRECT_BUFFER_BINDING    | GL_DISPATCH_INDIRECT_BUFFER;
-	e_element    = 0x8895, // GL_ELEMENT_ARRAY_BUFFER_BINDING        | GL_ELEMENT_ARRAY_BUFFER;
-	e_pack       = 0x88ED, // GL_PIXEL_PACK_BUFFER_BINDING           | GL_PIXEL_PACK_BUFFER;
+	e_array      = 0x8894, // GL_ARRAY_BUFFER_BINDING                | to identify the name/ID of the buffer object currently bound to the GL_ARRAY_BUFFER target; glGetIntegerv();
+	e_counter    = 0x92C1, // GL_ATOMIC_COUNTER_BUFFER_BINDING       | to query which buffer object is currently active for atomic counter operations; glGetIntegerv() or glGetActiveAtomicCounterBufferiv();
+	e_draw_indir = 0x8F43, // GL_DRAW_INDIRECT_BUFFER_BINDING        | to query which buffer is currently set up to provide parameters for indirect drawing commands; glDrawArraysIndirect() or glDrawElementsIndirect();
+	e_draw_frame = 0x8CA6, // GL_DRAW_FRAMEBUFFER_BINDING            | returns the name/ID of the framebuffer object currently bound to the GL_DRAW_FRAMEBUFFER target; glGetIntegerv();
+	e_disp       = 0x90EF, // GL_DISPATCH_INDIRECT_BUFFER_BINDING    | retrieves the name/ID of the buffer object currently bound to the GL_DISPATCH_INDIRECT_BUFFER target; glDispatchComputeIndirect();
+	e_element    = 0x8895, // GL_ELEMENT_ARRAY_BUFFER_BINDING        | to identify which buffer object is currently bound to the GL_ELEMENT_ARRAY_BUFFER target (Index Buffer Object); glGetIntegerv();
+	e_pack       = 0x88ED, // GL_PIXEL_PACK_BUFFER_BINDING           | indicates which buffer object is active for receiving image data read from the framebuffer; glReadPixels() or glGetCompressedTexImage();
 	e_pipeline   = 0x825A, // GL_PROGRAM_PIPELINE_BINDING            | returns the identifier of the currently bound program pipeline object;
 	e_read       = 0x8F36, // GL_COPY_READ_BUFFER_BINDING            |
 	e_read_frame = 0x8CAA, // GL_READ_FRAMEBUFFER_BINDING            | GL_READ_FRAMEBUFFER;
@@ -79,6 +79,20 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 
 	/**question*: what is the reason to use 'signed int' data type for 'count' and do not expect negative value or even '0'?
 	*/
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetBufferParameter.xhtml ;
+	enum class e_buf_params : uint32_t {
+	/* alias     | value    | OpenGL symbolic definition (aka name)  | Description ;
+	-------------+----------+----------------------------------------+---------------------------*/
+	e_access     = 0x88BB, // GL_BUFFER_ACCESS                       | returns the access policy set while mapping the buffer object; glMapBuffer();
+	e_acc_flags  = 0x911F, // GL_BUFFER_ACCESS_FLAGS                 | returns the access policy set while mapping the buffer object; glMapBufferRange();
+	e_immutable  = 0x821F, // GL_BUFFER_IMMUTABLE_STORAGE            | returns a boolean flag indicating whether the buffer object is immutable, initial is 'false';
+	e_mapped     = 0x88BC, // GL_BUFFER_MAPPED                       | returns a flag indicating whether the buffer object is currently mapped, initial is 'false';
+	e_map_len    = 0x9120, // GL_BUFFER_MAP_LENGTH                   | returns the length of the mapping into the buffer object established with glMapBuffer*();
+	e_map_offset = 0x9121, // GL_BUFFER_MAP_OFFSET                   | returns the offset of the mapping into the buffer object established with glMapBuffer*();
+	e_size       = 0x8764, // GL_BUFFER_SIZE                         | returns the size of the buffer object, measured in bytes; initial is 0;
+	e_stg_flags  = 0x8220, // GL_BUFFER_STORAGE_FLAGS                | returns a bitfield indicating the storage flags for the buffer object; glBufferStorage();
+	e_usage      = 0x8765, // GL_BUFFER_USAGE                        | returns the buffer object's usage pattern; the initial value is GL_STATIC_DRAW;
+	};
 
 	// https://www.abbreviations.com/abbreviation/Target >> tgt ;
 	// https://www.allacronyms.com/buffer/abbreviated >> buf ;
@@ -89,15 +103,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	typedef void    (__stdcall *pfn_GenIds) (int32_t _n_count, uint32_t* _p_buf_ids); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenBuffers.xhtml ;
 	typedef int32_t (__stdcall *pfn_IsBuf) (uint32_t _u_buf_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glIsBuffer.xhtml [
 	typedef void    (__stdcall *pfn_Named) (uint32_t _u_buf_id, ptrdiff_t _n_size, const void* _p_data, uint32_t _u_usage); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
+	typedef void    (__stdcall *pfn_Param) (uint32_t _u_tgt_id, uint32_t _e_param, int32_t* _p_result); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetBufferParameter.xhtml ;
 	public:
 		CBuffer (void); ~CBuffer (void) = default;
 
 		err_code Bind (const uint32_t _u_tgt_id, const uint32_t _u_buf_id); // binds a buffer object to the specified point ;
 		err_code Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
-		err_code Delete (const int32_t  _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
-		err_code GenerateIds (const int32_t _n_count, uint32_t* _p_buf_ids); // returns _n_count buffer object names in _p_names array ;
+		err_code Delete (const int32_t _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
+		err_code GenIds (const int32_t _n_count, uint32_t* _p_buf_ids); // returns _n_count buffer object names in _p_names array ;
 		bool  Is_Buffer(const uint32_t _u_buf_id) ;
 		err_code Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
+		err_code Param (const e_bind_targets, const e_buf_params, uint32_t& _u_value); // returns parameter value of a buffer object;
 
 		err_code Get_all (void); // gets all functions' pointers at once;
 
@@ -106,8 +122,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	};
 }}}}
 
-typedef ex_ui::draw::open_gl::procs::CBuffer  TBufferProcs;
-
-TBufferProcs& __get_buf_procs (void);
+typedef ex_ui::draw::open_gl::procs::CBuffer  TBufferProcs; TBufferProcs& __get_buf_procs (void);
 
 #endif/*_GL_PROCS_BUFFER_H_INCLUDED*/

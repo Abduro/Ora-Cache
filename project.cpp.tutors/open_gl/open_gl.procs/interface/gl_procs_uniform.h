@@ -36,7 +36,7 @@ namespace vars {
 		err_code Get_all (void);
 
 		err_code Get_3fs (const uint32_t _prog_id, const uint32_t _n_locate, t_uniform_3f& _arr_values); // gets vec3 data;
-		err_code Get_4fs (const uint32_t _prog_id, const uint32_t _n_locate, t_uniform_4f& _arr_values); // gets vec3 data;
+		err_code Get_4fs (const uint32_t _prog_id, const uint32_t _n_locate, t_uniform_4f& _arr_values); // gets vec4 data;
 
 		err_code Set_4fs (const int32_t _n_locate, const t_uniform_4f&); // for setting scalar values;
 		err_code Set_4fv (const int32_t _n_locate, const t_uniform_4f&); // for setting vector values;

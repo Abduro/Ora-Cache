@@ -68,8 +68,20 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	private:
 		CProg& operator = (const CProg&) = delete; CProg& operator = (CProg&&) = delete;
-		CError   m_error;
-		COpts    m_opts ;
+		CError m_error;
+		COpts  m_opts ;
+	};
+
+	class CProg_Attrs : TPipe {
+	public:
+		CProg_Attrs (const e_object = e_object::e_none);
+		CProg_Attrs (const CProg_Attrs&) = delete; CProg_Attrs (CProg_Attrs&&) = delete; ~CProg_Attrs (void) = default;
+
+		TError& Error (void) const;
+
+	private:
+		CProg_Attrs& operator = (const CProg_Attrs&) = delete; CProg_Attrs& operator = (CProg_Attrs&&) = delete;
+		CError m_error;
 	};
 
 }}}}}

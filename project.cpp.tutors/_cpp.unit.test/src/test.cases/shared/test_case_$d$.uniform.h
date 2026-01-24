@@ -11,7 +11,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	using namespace ex_ui::draw::open_gl;
 
-	using CUniEnum  = ex_ui::draw::open_gl::vars::CUniform_enum;
+	using CU_vars_enum = ex_ui::draw::open_gl::vars::CU_vars_enum;
 	using CU_frm_v4 = ex_ui::draw::open_gl::vars::CU_frm_v4;
 	using CU_val_v4 = ex_ui::draw::open_gl::vars::CU_val_v4;
 
@@ -31,13 +31,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	// https://www.allacronyms.com/uniform/abbreviated ;
 
-	class CUni_enum : public TPipe {
+	class CTU_enum : public TPipe {
 	public:
-		CUni_enum (const e_object = e_object::e_none); CUni_enum (const CUni_enum&) = delete; CUni_enum (CUni_enum&&) = delete; ~CUni_enum (void) = default;
+		CTU_enum (const e_object = e_object::e_none); CTU_enum (const CTU_enum&) = delete; CTU_enum (CTU_enum&&) = delete; ~CTU_enum (void) = default;
 
 		static
-		uint32_t Count (const e_object, CError&);
-		uint32_t Count (void) const; // to-do: getting the active program from the global renderer should be considered; (done)
+		uint32_t Count (const e_object, CError&); // gets count of the program by draw target type; contexts are created;
+		uint32_t Count (void) const;
 
 		TError&  Error (void) const;
 #if (0)
@@ -57,7 +57,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		TPipe& operator ()(void) ;
 
 	private:
-		CUni_enum& operator = (const CUni_enum&) = delete; CUni_enum& operator = (CUni_enum&&) = delete;
+		CTU_enum& operator = (const CTU_enum&) = delete; CTU_enum& operator = (CTU_enum&&) = delete;
 		mutable
 		CError   m_error;
 		TUniVars m_vars;
@@ -78,18 +78,24 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	};
 #endif
 	
-	class CUf_val_v4 : public TPipe {
+	class CTU_val_v4 : public TPipe {
 	public:
-		CUf_val_v4 (const e_object = e_object::e_none);
-		CUf_val_v4 (const CUf_val_v4&) = delete; CUf_val_v4 (CUf_val_v4&&) = delete; ~CUf_val_v4 (void) = default;
+		CTU_val_v4 (const e_object = e_object::e_none);
+		CTU_val_v4 (const CTU_val_v4&) = delete; CTU_val_v4 (CTU_val_v4&&) = delete; ~CTU_val_v4 (void) = default;
 
 		TError& Error (void) const;
 		static
-		err_code Get (const e_object, const uint32_t _locate, t_uniform_4f&, CError&); 
+		err_code Get (const e_object, const uint32_t _locate, t_uniform_4f&, CError&);
+		err_code Get (void); // it is assumed the properties such as location and pipe draw target type are already set to the 'm_val_v4';
+
+		const
+		CU_val_v4& operator ()(void) const; // get the reference to the uniform variable value being tested;
+		CU_val_v4& operator ()(void) ;      // get the reference to the uniform variable value being tested;
 
 	private:
-		CUf_val_v4& operator = (const CUf_val_v4&) = delete; CUf_val_v4& operator = (CUf_val_v4&&) = delete;
-		CError  m_error;
+		CTU_val_v4& operator = (const CTU_val_v4&) = delete; CTU_val_v4& operator = (CTU_val_v4&&) = delete;
+		CError    m_error;
+		CU_val_v4 m_val_v4;
 	};
 
 }}}}}

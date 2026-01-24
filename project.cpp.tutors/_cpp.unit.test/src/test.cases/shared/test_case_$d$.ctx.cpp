@@ -134,10 +134,10 @@ CGraphics& CGraphCtx::operator ()(void)       { return ::Get_renderer().Scene().
 #pragma endregion
 #pragma region cls::CCtx_auto{}
 
-CCtx_auto:: CCtx_auto (const bool _b_auto, const bool _b_verb) {
-	_out()(_b_verb); this->m_error >>__CLASS__<<__METHOD__<<__s_ok; if (_b_auto) this->Create();
+CCtx_auto:: CCtx_auto (const bool _b_auto) {
+	this->m_error >>__CLASS__<<__METHOD__<<__s_ok; if (_b_auto) this->Create();
 }
-CCtx_auto::~CCtx_auto (void) { this->Delete(); _out()(true); /*restores the logger output, it's very often late and is good on error catch only;*/ }
+CCtx_auto::~CCtx_auto (void) { this->Delete(); }
 
 err_code CCtx_auto::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;

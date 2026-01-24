@@ -1,7 +1,7 @@
 #ifndef _EBO_TEST_$D$_VERT_ARR_OBJ_H_INCLUDED
 #define _EBO_TEST_$D$_VERT_ARR_OBJ_H_INCLUDED
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 18-Jan-2026 at 22:19:15.921, UTC+4, Batumi, Sunday;
+	Created by Tech_dog (ebontrop@gmail.com) on 18-Jan-2026 at 22:19:15.921, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL vertex array object wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.vert.arr.obj.h"

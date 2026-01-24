@@ -225,3 +225,10 @@ TPipe&   CProg::operator ()(void) const { return (TPipe&)*this; }
 TPipe&   CProg::operator ()(void)       { return (TPipe&)*this; }
 
 #pragma endregion
+#pragma region cls::CProg_Attrs{}
+
+CProg_Attrs::CProg_Attrs (const e_object _target) : TPipe(_target) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+
+TError&  CProg_Attrs::Error (void) const { return this->m_error; }
+
+#pragma endregion

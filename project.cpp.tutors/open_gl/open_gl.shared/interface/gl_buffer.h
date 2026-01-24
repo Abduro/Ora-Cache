@@ -70,6 +70,9 @@ namespace data {
 		TError&  Error (void) const;
 		uint32_t GetId (void) const;
 		static
+		uint32_t Get_size (const e_bind_targets, CError&);
+		uint32_t Get_size (void) const;
+		static
 		bool  Is_bound (const uint32_t _buffer_id, CError&);
 		bool  Is_bound (void) const; // https://stackoverflow.com/questions/22123222/what-are-the-effects-of-unbinding-opengl-buffers ;
 		static

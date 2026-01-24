@@ -33,6 +33,7 @@ void OnLoad (void) {
 }
 
 void OnUnload (void) {
+	_out()(true); // it can be turned off by one of the test cases;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CError error((_pc_sz)__CLASS__, (_pc_sz)__METHOD__);

@@ -1,5 +1,5 @@
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 09-Jan-2026 at 22:02:46.843, UTC+4, Batumi, Friday;
+	Created by Tech_dog (ebontrop@gmail.com) on 09-Jan-2026 at 22:02:46.843, UTC+4, Batumi, Friday;
 	This is Ebo Pack OpenGL tutorials' program wrapper unit test interface implementation file.
 */
 #include "ebo_test_$d$.prog.h"

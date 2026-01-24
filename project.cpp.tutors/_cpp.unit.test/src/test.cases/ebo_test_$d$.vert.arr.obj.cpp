@@ -1,5 +1,5 @@
 /*
-	Created by Tech_dog (eb0ntrop@gmail.com) on 18-Jan-2026 at 22:24:13.050, UTC+4, Batumi, Sunday;
+	Created by Tech_dog (ebontrop@gmail.com) on 18-Jan-2026 at 22:24:13.050, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL vertex array object wrapper unit test adapter interface implementation file.
 */
 #include "ebo_test_$d$.vert.arr.obj.h"

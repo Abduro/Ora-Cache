@@ -20,7 +20,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 using namespace ex_ui::draw::open_gl::_impl;
 
-/////////////////////////////////////////////////////////////////////////////
 #pragma region vertex::cls::CCfg{}
 data::CCfg:: CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
 
@@ -81,7 +80,7 @@ CBuffer_Base::CBinder::~CBinder (void) {}
 
 TError&  CBuffer_Base::CBinder::Error (void) const { return this->m_error; }
 #endif
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CBuffer_Base{}
 
 CBuffer_Base:: CBuffer_Base (void) : m_buf_id(0), m_target(e_bind_targets::e__undef) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CBuffer_Base::~CBuffer_Base (void) {}
@@ -119,7 +118,7 @@ err_code  CBuffer_Base::Create (void) {
 	if (!!this->GetId())
 		return this->m_error << (err_code) TErrCodes::eObject::eExists = _T("The buffer is already created");
 
-	if (__failed(__get_buf_procs().GenerateIds(1, &this->m_buf_id))) {
+	if (__failed(__get_buf_procs().GenIds(1, &this->m_buf_id))) {
 		this->m_error = __get_buf_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
@@ -164,6 +163,19 @@ TError&   CBuffer_Base::Error (void) const { return this->m_error; }
 
 uint32_t  CBuffer_Base::GetId (void) const { return this->m_buf_id; }
 
+uint32_t  CBuffer_Base::Get_size (void) const { this->m_error <<__METHOD__<<__s_ok; return CBuffer_Base::Get_size(this->Target(), this->m_error); }
+uint32_t  CBuffer_Base::Get_size (const e_bind_targets _target, CError& _err) {
+	_target; _err;
+
+	uint32_t u_size = 0;
+	
+	if (__failed(::__get_buf_procs().Param(_target, procs::e_buf_params::e_size, u_size))) {
+		_err = ::__get_buf_procs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
+	}
+	return u_size;
+}
+
 bool  CBuffer_Base::Is_bound (void) const {
 	return CBuffer_Base::Is_bound(this->GetId(), this->m_error);
 }
@@ -207,12 +219,7 @@ using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 e_bind_targets CBuffer_Base::Target (void) const { return this->m_target; }
 const bool     CBuffer_Base::Target (const e_bind_targets e_target) {
 	e_target;
-	const bool b_changed = this->Target() != e_target;
-
-	if (b_changed)
-		this->m_target = e_target;
-
-	return b_changed;
+	const bool b_changed = this->Target() != e_target; if (b_changed) this->m_target = e_target; return b_changed;
 }
 #if (0)
 err_code CBuffer_Base::Unbind (void) {
@@ -241,8 +248,8 @@ err_code CBuffer_Base::Unbind (const procs::e_bind_targets _e_target, CError& _e
 	return _err;
 }
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::vertex::CBuffer{}
 
 vertex::CBuffer:: CBuffer (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
 vertex::CBuffer::~CBuffer (void) {}
@@ -321,3 +328,5 @@ err_code vertex::CBuffer::SetData (const TVertData& _v_data) {
 
 	return TBase::Error();
 }
+
+#pragma endregion

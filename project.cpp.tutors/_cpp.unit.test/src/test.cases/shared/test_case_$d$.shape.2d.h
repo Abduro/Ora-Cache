@@ -34,7 +34,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	private:
 		C3angle& operator = (const C3angle&) = delete; C3angle& operator = (C3angle&&) = delete;
 		CError  m_error;
-		CCtx_auto m_ctx; // this object is required for shareing the contexts between 'Create' and 'Delete' methods, otherwise each of them creats its own context objects;
+		CCtx_auto m_ctx; // this object is required for shareing the contexts between 'Create', 'Draw' and 'Delete' methods, otherwise each of them creats its own context objects;
 	};
 #endif
 }}}}}
