@@ -9,7 +9,7 @@
 #include <atltrace.h>
 #include <cstdarg>
 
-#include "shared.defs.h"
+#include "shared.types.h"
 #include "shared.preproc.h"
 
 	// https://en.cppreference.com/w/cpp/language/enum ;

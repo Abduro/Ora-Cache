@@ -167,10 +167,10 @@ uint32_t  CBuffer_Base::Get_size (void) const { this->m_error <<__METHOD__<<__s_
 uint32_t  CBuffer_Base::Get_size (const e_bind_targets _target, CError& _err) {
 	_target; _err;
 
-	uint32_t u_size = 0;
-	
-	if (__failed(::__get_buf_procs().Param(_target, procs::e_buf_params::e_size, u_size))) {
-		_err = ::__get_buf_procs().Error();
+	uint32_t u_size = procs::buffer::CData_Accessor::Get_Size(_target, _err);
+
+	if (_err) {
+		_err = ::__get_buf_acc_procs().Error();
 		__trace_err_2(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
 	}
 	return u_size;

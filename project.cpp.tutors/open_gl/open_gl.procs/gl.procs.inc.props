@@ -22,7 +22,9 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>interface\</_0>
+    <_0-0>interface\buffer\</_0-0>
     <_1>src\</_1>
+    <_1-0>src\buffer\</_1-0>
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Dbg)interface\</_3>
     <_4>$(Shared_Gui)interface\</_4>
@@ -34,7 +36,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(Shared);$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(Shared);$(_0);$(_0-0);$(_1);$(_1-0);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -11,16 +11,7 @@ using namespace ex_ui::draw::open_gl::procs;
 
 #pragma region procs::aux()
 
-bool is_buf_param (const uint32_t _u_param) {
-	return (uint32_t) e_buf_params::e_access     == _u_param
-		|| (uint32_t) e_buf_params::e_acc_flags  == _u_param
-		|| (uint32_t) e_buf_params::e_immutable  == _u_param
-		|| (uint32_t) e_buf_params::e_mapped     == _u_param
-		|| (uint32_t) e_buf_params::e_map_len    == _u_param
-		|| (uint32_t) e_buf_params::e_map_offset == _u_param
-		|| (uint32_t) e_buf_params::e_size       == _u_param
-		|| (uint32_t) e_buf_params::e_stg_flags  == _u_param;
-}
+namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 
 bool is_bind_target (const uint32_t _u_tgt_type) {
 	return (uint32_t) e_bind_targets::e_array    == _u_tgt_type
@@ -51,14 +42,11 @@ bool is_buf_usage (const uint32_t _u_oper_type) {
 		|| (uint32_t) e_buf_usage::e_dyna_copy   == _u_oper_type;
 }
 
+}}}}
 #pragma endregion
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespace _impl {
-}}}}}
-using namespace _impl;
-
 static _pc_sz buf_fun_names[] = {
-	_T("glBindBuffer"), _T("glBufferData"), _T("glDeleteBuffers"), _T("glGenBuffers"), _T("glGetBufferParameteriv"), _T("glIsBuffer"), _T("glNamedBufferData")
+	_T("glBindBuffer"), _T("glBufferData"), _T("glDeleteBuffers"), _T("glGenBuffers"), _T("glIsBuffer"), _T("glNamedBufferData")
 };
 
 enum class e_buf_fun_ndx : uint32_t {
@@ -253,48 +241,6 @@ err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, con
 		if (!!u_err_code)
 			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%u)"), u_err_code, u_err_code);
 	}
-
-	return CBase::Error();
-}
-
-// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetBufferParameter.xhtml ;
-err_code CBuffer::Param (const e_bind_targets _e_target, const e_buf_params _e_param, uint32_t& _u_value) {
-	_e_target; _e_param; _u_value;
-	/* Possible error codes:
-	GL_INVALID_ENUM      : '_e_target' is not one of the accepted buffer targets;
-	GL_INVALID_ENUM      : '_e_param' is not one of the buffer object parameter names; 
-	GL_INVALID_OPERATION : default buffer is bound to target;
-	*/
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	uint32_t u_result = 0;
-
-	pfn_Param p_fun = reinterpret_cast<pfn_Param>(CBase::Get(buf_fun_names[(uint32_t)e_buf_fun_ndx::e_params]));
-	if (nullptr == p_fun)
-		return u_result;
-
-	int32_t n_result = 0; // actually uint32_t is also okay, because it has the same size in memory;
-
-	p_fun(static_cast<uint32_t>(_e_target), static_cast<uint32_t>(_e_param), &n_result);
-	const
-	uint32_t u_err_code = CErr_ex().Get_code(); 
-	switch ( u_err_code ) {
-	case GL_INVALID_ENUM : {
-		if (false) {}
-		else if (false == ::is_bind_target((uint32_t)_e_target)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__inv_arg: '_e_target' (0x%04x) is not accepted"), _e_target);
-		else if (false == ::is_buf_param((uint32_t)_e_param)) CBase::m_error <<__e_inv_arg = TString().Format(_T("#__inv_arg: '_e_param' (0x%04x) is not accepted"), _e_param);
-		else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__inv_unk: '_e_param' (0x%04x) is unknown"), _e_param);
-	} break;
-	case GL_INVALID_OPERATION : {
-		CBase::m_error <<__e_inv_arg = _T("#__e_oper: the default buffer (id = 0) is bound;");
-	} break;
-	default:
-		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%u)"), u_err_code, u_err_code);
-	}
-
-	if (false == CBase::Error())
-		_u_value = abs(n_result);
 
 	return CBase::Error();
 }
