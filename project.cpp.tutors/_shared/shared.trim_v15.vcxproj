@@ -208,6 +208,8 @@
     <ClInclude Include="$(_0)sys.err.codes.h"/>
     <ClInclude Include="$(_1)sys.err.format.h" />
     <ClCompile Include="$(_1)sys.err.format.cpp" />
+    <ClInclude Include="$(_0)sys.mem.heap.h" />
+    <ClCompile Include="$(_1)sys.mem.heap.cpp" />
     <ClInclude Include="$(_0)sys.err.trim.h" />
     <ClCompile Include="$(_1)sys.err.trim.cpp" />
     <ClInclude Include="$(_0)sys.gen.time.h" />

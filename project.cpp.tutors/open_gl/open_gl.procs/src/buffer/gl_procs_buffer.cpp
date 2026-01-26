@@ -5,6 +5,7 @@
 #include "gl_procs_buffer.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
+#include "gl_procs.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::procs;
@@ -243,6 +244,14 @@ err_code CBuffer::Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, con
 	}
 
 	return CBase::Error();
+}
+
+uint32_t CBuffer::Get_bound (const e_bind_targets e_target, CError& _err) {
+	e_target; _err;
+	const int32_t n_result = ::__get_param_procs().GetInt((uint32_t)e_target);
+	if (::__get_param_procs().Error())
+		_err = ::__get_param_procs().Error();
+	return static_cast<uint32_t>(abs(n_result));
 }
 
 err_code CBuffer::Get_all (void) {

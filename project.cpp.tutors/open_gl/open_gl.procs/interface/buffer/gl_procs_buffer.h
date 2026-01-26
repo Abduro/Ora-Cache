@@ -97,8 +97,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		err_code Data (const uint32_t _u_tgt_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage); // creates and initializes a buffer object's data store currently bound to target is used ;
 		err_code Delete (const int32_t _n_count, const uint32_t* _p_buffers); // deletes _n_count buffer objects named by the elements of the array _p_buffers ;
 		err_code GenIds (const int32_t _n_count, uint32_t* _p_buf_ids); // returns _n_count buffer object names in _p_names array ;
-		bool  Is_Buffer(const uint32_t _u_buf_id) ;
+		bool  Is_Buffer (const uint32_t _u_buf_id);
 		err_code Named (const uint32_t _u_buf_id, const ptrdiff_t _n_bytes, const void* _p_data, const uint32_t _u_usage);  // creates and initializes a buffer object associated with ID specified by the caller in buffer will be used instead ;
+
+		static uint32_t Get_bound (const e_bind_targets, CError&); // returns buffer identifier that is currently bound; or 0 is returned in case when no buffer is bound;
 
 		err_code Get_all (void); // gets all functions' pointers at once;
 

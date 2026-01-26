@@ -177,22 +177,21 @@ uint32_t  CBuffer_Base::Get_size (const e_bind_targets _target, CError& _err) {
 }
 
 bool  CBuffer_Base::Is_bound (void) const {
-	return CBuffer_Base::Is_bound(this->GetId(), this->m_error);
+	return CBuffer_Base::Is_bound(this->GetId(), this->Target(), this->m_error);
 }
 
 // https://stackoverflow.com/questions/70884233/opengl-get-currently-bound-vertex-buffer-and-index-buffer ;
-bool  CBuffer_Base::Is_bound (const uint32_t _buffer_id, CError& _err) {
-	_buffer_id; _err;
+bool  CBuffer_Base::Is_bound (const uint32_t _buffer_id, const e_bind_targets e_target, CError& _err) {
+	_buffer_id; _err; e_target;
 	if (0 == _buffer_id)
 		return false == (_err << __e_inv_arg = _T("#__e_inv_val: '_buffer_id' cannot be set to zero (0)")).Is(); // 'false' does not equal to 'true';
-	procs::CParam procs;
-	const int32_t n_result = procs.GetInt(__gl_bound_to_arr);
-	if (procs.Error()) {
-		_err = procs.Error();
+
+	const uint32_t u_bound_id = TBufferProcs::Get_bound(e_target, _err);
+	if (_err) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
 	}
 
-	return (n_result == static_cast<int32_t>(_buffer_id));
+	return _buffer_id == u_bound_id;
 }
 
 bool  CBuffer_Base::Is_valid (void) const {

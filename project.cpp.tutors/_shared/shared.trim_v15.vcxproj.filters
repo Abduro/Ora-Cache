@@ -37,6 +37,8 @@
     <ClCompile Include="$(_1)sys.err.trim.cpp"><Filter>src\error</Filter></ClCompile>
     <ClInclude Include="$(_1)sys.err.format.h"><Filter>src\error</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.err.format.cpp"><Filter>src\error</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.mem.heap.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.mem.heap.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.gen.time.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.gen.time.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.registry.h"><Filter>interface</Filter></ClInclude>

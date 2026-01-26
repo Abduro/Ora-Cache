@@ -74,7 +74,7 @@ err_code CProperty::Get (const e_bind_targets _e_target, const e_buf_params _e_p
 }
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetBufferParameter.xhtml ;
-err_code CProperty::Get_nm (const uint32_t _u_buf_id, const e_buf_params _e_param, uint32_t& _u_value) {
+err_code CProperty::Get (const uint32_t _u_buf_id, const e_buf_params _e_param, uint32_t& _u_value) {
 	_u_buf_id; _e_param; _u_value;
 	/* Possible error codes:
 	GL_INVALID_ENUM      : '_e_param' is not one of the buffer object parameter names; 

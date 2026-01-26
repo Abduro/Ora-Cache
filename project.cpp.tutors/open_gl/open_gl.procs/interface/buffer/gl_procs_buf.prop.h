@@ -32,8 +32,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 	public:
 		CProperty (void); ~CProperty (void) = default;
 
-		err_code Get (const e_bind_targets, const e_buf_params, uint32_t& _u_value); // returns property value of a buffer object by given parameter;
-		err_code Get_nm (const uint32_t _u_buf_id, const e_buf_params, uint32_t& _u_value); // returns property value of a buffer object by its identifier;
+		err_code Get (const e_bind_targets, const e_buf_params, uint32_t& _u_value);     // returns property value of a buffer object by given parameter;
+		err_code Get (const uint32_t _u_buf_id, const e_buf_params, uint32_t& _u_value); // returns property value of a buffer object by its identifier;
 
 		err_code Get_all (void);
 
