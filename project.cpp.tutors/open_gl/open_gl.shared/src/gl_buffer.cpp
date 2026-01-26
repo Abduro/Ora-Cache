@@ -11,20 +11,18 @@
 #include "gl_procs_surface.h"
 
 using namespace ex_ui::draw::open_gl;
-using namespace ex_ui::draw::open_gl::data;
+using namespace ex_ui::draw::open_gl::buffer;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
 
-#define __gl_bound_to_arr 0x8894 // GL_ARRAY_BUFFER_BINDING;
-
 using namespace ex_ui::draw::open_gl::_impl;
 
-#pragma region vertex::cls::CCfg{}
-data::CCfg:: CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
+#pragma region buffer::cls::CCfg{}
+buffer::CCfg::CCfg (void) : m_count_ndx(0), m_prim_mode((uint32_t)procs::CPrimitives::e_others::e_points), m_start_ndx(0) {}
 
-uint32_t data::CCfg::Count (void) const { return this->m_count_ndx; }
-bool     data::CCfg::Count (const uint32_t _n_count) {
+uint32_t buffer::CCfg::Count (void) const { return this->m_count_ndx; }
+bool     buffer::CCfg::Count (const uint32_t _n_count) {
 	_n_count;
 	const bool b_changed = (this->Count() != _n_count);
 	if (b_changed)
@@ -32,8 +30,8 @@ bool     data::CCfg::Count (const uint32_t _n_count) {
 	return b_changed;
 }
 
-uint32_t data::CCfg::Primitive (void) const { return this->m_prim_mode; }
-bool     data::CCfg::Primitive (const uint32_t _u_mode) {
+uint32_t buffer::CCfg::Primitive (void) const { return this->m_prim_mode; }
+bool     buffer::CCfg::Primitive (const uint32_t _u_mode) {
 	_u_mode;
 	const bool b_changed = (this->Primitive() != _u_mode);
 	if (b_changed)
@@ -41,8 +39,8 @@ bool     data::CCfg::Primitive (const uint32_t _u_mode) {
 	return b_changed;
 }
 
-uint32_t data::CCfg::StartAt (void) const { return this->m_start_ndx; }
-bool     data::CCfg::StartAt (const uint32_t _u_ndx) {
+uint32_t buffer::CCfg::StartAt (void) const { return this->m_start_ndx; }
+bool     buffer::CCfg::StartAt (const uint32_t _u_ndx) {
 	_u_ndx;
 	const bool b_changed = (this->StartAt() != _u_ndx);
 	if (b_changed)
@@ -74,6 +72,50 @@ CString  CTarget::To_str (const e_bind_targets _e_target) {
 	return  cs_out;
 }
 #pragma endregion
+#pragma region buffer::cls::CData{}
+
+CData::CData (void) : m_target(e_bnd_tgts::e__undef), m_buf_id(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+uint32_t CData::BufferId (void) const { return this->m_buf_id; }
+bool     CData::BufferId (const uint32_t _u_buf_id) {
+	_u_buf_id;
+	const bool b_changed = this->BufferId() != _u_buf_id; if (b_changed) this->m_buf_id = _u_buf_id; return b_changed;
+}
+
+TError& CData::Error (void) const { return this->m_error; }
+const
+TRawData& CData::Get (void) const { return this->m_data; }
+
+bool CData::Is_valid (void) const {
+	return !!this->BufferId() && this->Target() != e_bnd_tgts::e__undef;
+}
+
+err_code CData::Set (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid()) {
+		this->m_error << __e_not_inited;
+		__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); return this->Error();
+	}
+
+	if (__failed(::__get_buf_acc_procs().Get_Ptr(this->BufferId(), e_data_access::e_read, this->m_data))) {
+		this->m_error = ::__get_buf_acc_procs().Error();
+		__trace_err_2(_T("%s;\n"), (_pc_sz)this->Error().Print(TError::e_print::e_req));
+	}
+
+	return this->Error();
+}
+
+e_bnd_tgts CData::Target (void) const { return this->m_target; }
+const bool CData::Target (const e_bnd_tgts _target) {
+	_target;
+	const bool b_changed = this->Target() != _target; if (b_changed) this->m_target = _target; return b_changed;
+}
+
+CData& CData::operator <<(e_bnd_tgts _target) { this->Target(_target); return *this; }
+CData& CData::operator <<(const uint32_t _buf_id) { this->BufferId(_buf_id); return *this; }
+
+#pragma endregion
 #if (0)
 CBuffer_Base::CBinder:: CBinder (CBuffer_Base& _buf) : m_buffer(_buf) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CBuffer_Base::CBinder::~CBinder (void) {}
@@ -82,13 +124,13 @@ TError&  CBuffer_Base::CBinder::Error (void) const { return this->m_error; }
 #endif
 #pragma region cls::CBuffer_Base{}
 
-CBuffer_Base:: CBuffer_Base (void) : m_buf_id(0), m_target(e_bind_targets::e__undef) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CBuffer_Base:: CBuffer_Base (void) : m_buf_id(0), m_target(e_bnd_tgts::e__undef) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CBuffer_Base::~CBuffer_Base (void) {}
 
-err_code  CBuffer_Base::BindTo (const e_bind_targets _e_target) {
+err_code  CBuffer_Base::BindTo (const e_bnd_tgts _e_target) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (e_bind_targets::e__undef == _e_target) {
+	if (e_bnd_tgts::e__undef == _e_target) {
 		this->m_error <<__e_inv_arg = _T("#__e_inv_arg: '_e_target' is undefined");
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 		return this->Error();
@@ -106,7 +148,7 @@ err_code  CBuffer_Base::BindTo (const e_bind_targets _e_target) {
 	}
 	else {
 		this->m_target = _e_target;
-		__trace_info_2(_T("The buffer (id = %u) is bound to target = '%s';\n"), this->GetId(), (_pc_sz) data::CTarget::To_str(_e_target));
+		__trace_info_2(_T("The buffer (id = %u) is bound to target = '%s';\n"), this->GetId(), (_pc_sz) buffer::CTarget::To_str(_e_target));
 	}
 
 	return this->Error();
@@ -156,15 +198,15 @@ err_code  CBuffer_Base::Delete (void) {
 }
 
 const
-data::CCfg& CBuffer_Base::Cfg (void) const { return this->m_cfg; }
-data::CCfg& CBuffer_Base::Cfg (void)       { return this->m_cfg; }
+buffer::CCfg& CBuffer_Base::Cfg (void) const { return this->m_cfg; }
+buffer::CCfg& CBuffer_Base::Cfg (void)       { return this->m_cfg; }
 
 TError&   CBuffer_Base::Error (void) const { return this->m_error; }
 
 uint32_t  CBuffer_Base::GetId (void) const { return this->m_buf_id; }
 
 uint32_t  CBuffer_Base::Get_size (void) const { this->m_error <<__METHOD__<<__s_ok; return CBuffer_Base::Get_size(this->Target(), this->m_error); }
-uint32_t  CBuffer_Base::Get_size (const e_bind_targets _target, CError& _err) {
+uint32_t  CBuffer_Base::Get_size (const e_bnd_tgts _target, CError& _err) {
 	_target; _err;
 
 	uint32_t u_size = procs::buffer::CData_Accessor::Get_Size(_target, _err);
@@ -181,7 +223,7 @@ bool  CBuffer_Base::Is_bound (void) const {
 }
 
 // https://stackoverflow.com/questions/70884233/opengl-get-currently-bound-vertex-buffer-and-index-buffer ;
-bool  CBuffer_Base::Is_bound (const uint32_t _buffer_id, const e_bind_targets e_target, CError& _err) {
+bool  CBuffer_Base::Is_bound (const uint32_t _buffer_id, const e_bnd_tgts e_target, CError& _err) {
 	_buffer_id; _err; e_target;
 	if (0 == _buffer_id)
 		return false == (_err << __e_inv_arg = _T("#__e_inv_val: '_buffer_id' cannot be set to zero (0)")).Is(); // 'false' does not equal to 'true';
@@ -213,10 +255,10 @@ bool  CBuffer_Base::Is_valid (const uint32_t _buffer_id, CError& _err) {
 	return b_valid;
 }
 
-using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
+using e_bnd_tgts = ex_ui::draw::open_gl::procs::e_bnd_tgts;
 
-e_bind_targets CBuffer_Base::Target (void) const { return this->m_target; }
-const bool     CBuffer_Base::Target (const e_bind_targets e_target) {
+e_bnd_tgts CBuffer_Base::Target (void) const { return this->m_target; }
+const bool CBuffer_Base::Target (const e_bnd_tgts e_target) {
 	e_target;
 	const bool b_changed = this->Target() != e_target; if (b_changed) this->m_target = e_target; return b_changed;
 }
@@ -231,13 +273,13 @@ err_code CBuffer_Base::Unbind (void) {
 		__trace_err_2(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
 	}
 	else {
-		__trace_info_2(_T("The buffer id = %u is unbound from target = '%s';\n"), this->GetId(), (_pc_sz) data::CTarget::To_str(this->Target()));
+		__trace_info_2(_T("The buffer id = %u is unbound from target = '%s';\n"), this->GetId(), (_pc_sz) buffer::CTarget::To_str(this->Target()));
 	}
 
 	return this->Error();
 }
 #else
-err_code CBuffer_Base::Unbind (const procs::e_bind_targets _e_target, CError& _err) {
+err_code CBuffer_Base::Unbind (const procs::e_bnd_tgts _e_target, CError& _err) {
 	_e_target; _err;
 	if (__failed(__get_buf_procs().Bind((uint32_t)_e_target, 0))) {
 		_err = __get_buf_procs().Error();
@@ -250,7 +292,7 @@ err_code CBuffer_Base::Unbind (const procs::e_bind_targets _e_target, CError& _e
 #pragma endregion
 #pragma region cls::vertex::CBuffer{}
 
-vertex::CBuffer:: CBuffer (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bind_targets::e_array); }
+vertex::CBuffer:: CBuffer (void) { TBase::m_error <<__CLASS__; TBase::Target(e_bnd_tgts::e_array); }
 vertex::CBuffer::~CBuffer (void) {}
 
 err_code vertex::CBuffer::Bind (void) {

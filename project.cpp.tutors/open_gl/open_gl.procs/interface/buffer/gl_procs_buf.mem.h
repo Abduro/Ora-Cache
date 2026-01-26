@@ -14,6 +14,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMapBuffer.xhtml ;
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMapBufferRange.xhtml ;
+	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUnmapBuffer.xhtml ;
 	enum class e_data_access : uint32_t {
 	/* alias     | value    | OpenGL symbolic def | description
 	-------------+----------+---------------------+---------------------------*/
@@ -27,6 +28,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 	typedef void* (__stdcall *pfn_Map_nm) (const uint32_t _u_buf_id, const uint32_t _e_access); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMapBuffer.xhtml ; v4.5;
 	typedef void* (__stdcall *pfn_Range) (const uint32_t _u_target, const ptrdiff_t _l_offset, const ptrdiff_t _l_length, const uint32_t _u_acc_flags); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMapBufferRange.xhtml ;
 	typedef void* (__stdcall *pfn_Range_nm) (const uint32_t _u_buf_id, const ptrdiff_t _l_offset, const ptrdiff_t _l_length, const uint32_t _u_acc_flags); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMapBufferRange.xhtml ;
+	typedef void* (__stdcall *pfn_Unmap) (const uint32_t _u_target); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUnmapBuffer.xhtml ;
+	typedef void* (__stdcall *pfn_Unmap_nm) (const uint32_t _u_buf_id); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glUnmapBuffer.xhtml ;
 
 	public:
 		CData_Accessor (void); ~CData_Accessor (void) = default;
@@ -41,6 +44,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 
 		static bool Is_mapped (const e_bind_targets, CError&);     // checks buffer bound to given target is currently mapped or not;
 		static bool Is_mapped (const uint32_t u_buf_id, CError&);  // checks buffer with given identifier is currently mapped or not;
+
+		// these two procs will be automatically called after copying buffer data to local data container;
+		err_code Unmap (const e_bnd_tgts e_target); // releases the mapping to the graphics card memory by given target type the buffer is bound to;
+		err_code Unmap (const uint32_t _u_buf_id);  // releases the mapping to the graphics card memory by given buffer identifier;
 
 	private:
 		CData_Accessor& operator = (const CData_Accessor&) = delete; CData_Accessor& operator = (CData_Accessor&&) = delete;

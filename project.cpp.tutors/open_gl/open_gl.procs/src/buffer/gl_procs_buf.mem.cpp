@@ -10,7 +10,7 @@ using namespace ex_ui::draw::open_gl::procs;
 using namespace ex_ui::draw::open_gl::procs::buffer;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespace _impl {
-
+#if (0)
 	class CMem_alloca {
 	public:
 		CMem_alloca (void) = default; CMem_alloca (const CMem_alloca&) = delete; CMem_alloca (CMem_alloca&&) = delete; ~CMem_alloca (void) = default;
@@ -38,17 +38,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs { namespa
 			return _err;
 		}
 	};
-
+#endif
 }}}}}
 
 #pragma region cls::CData_Accessor{}
 
 static _pc_sz dat_acc_fun_names[] = {
-	_T("glMapBuffer"), _T("glMapNamedBuffer"), _T("glMapBufferRange"), _T("glMapNamedBufferRange")
+	_T("glMapBuffer"), _T("glMapNamedBuffer"), _T("glMapBufferRange"), _T("glMapNamedBufferRange"), _T("glUnmapBuffer"), _T("glUnmapNamedBuffer")
 };
 
 enum class e_dat_acc_fun_ndx : uint32_t {
-	e_map_bound = 0x0, e_map_named, e_range, e_range_named
+	e_map_bound = 0x0, e_map_named, e_range, e_range_named, e_unmap_bound, e_unmap_named
 };
 
 CData_Accessor::CData_Accessor (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
@@ -206,6 +206,73 @@ bool CData_Accessor::Is_mapped (const uint32_t u_buf_id, CError& _err) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req));
 	}
 	return !!u_mapped;
+}
+
+err_code CData_Accessor::Unmap (const e_bnd_tgts e_target) {
+	e_target;
+	/* Possible errors:
+	GL_INVALID_ENUM      : 'e_target' is not one of the buffer binding targets;
+	GL_INVALID_OPERATION : default buffer of zero identifier is bound to target;
+	GL_INVALID_OPERATION : the buffer object is not in a mapped state;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Unmap p_fun = reinterpret_cast<pfn_Unmap>(CBase::Get(dat_acc_fun_names[(uint32_t)e_dat_acc_fun_ndx::e_unmap_bound]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(static_cast<uint32_t>(e_target));
+	const
+	uint32_t u_err_code = CErr_ex().Get_code(); 
+	switch ( u_err_code ) {
+	case GL_INVALID_ENUM : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: bound target (id = 0x%04x) is not acceptable"), e_target); break;
+	case GL_INVALID_OPERATION :
+		if (0 == TBufferProcs::Get_bound(e_target, CBase::m_error)) CBase::m_error <<__e_inv_arg = _T("#__e_oper: the default buffer (id = 0) is bound;");
+		else if (false == CData_Accessor::Is_mapped(e_target, CBase::m_error)) {
+			CBase::m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_oper: the target buffer is *not* mapped;");
+		}
+		break;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%u)"), u_err_code, u_err_code);
+	}
+
+	return CBase::Error();
+}
+
+err_code CData_Accessor::Unmap (const uint32_t _u_buf_id) {
+	_u_buf_id;
+	/* Possible errors:
+	GL_INVALID_ENUM      : '_u_buf_id' is not one of the buffer binding targets;
+	GL_INVALID_OPERATION : default buffer of zero identifier is bound to target;
+	GL_INVALID_OPERATION : the buffer object is not in a mapped state;
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	pfn_Unmap_nm p_fun = reinterpret_cast<pfn_Unmap_nm>(CBase::Get(dat_acc_fun_names[(uint32_t)e_dat_acc_fun_ndx::e_unmap_named]));
+	if (nullptr == p_fun)
+		return CBase::Error();
+
+	p_fun(_u_buf_id);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
+	case GL_INVALID_ENUM : CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_buf_id' (0x%02x) is invalid"), _u_buf_id); break;
+	case GL_INVALID_OPERATION :
+		if (false == ::__get_buf_procs().Is_Buffer(_u_buf_id)) {
+			if (::__get_buf_procs().Error())
+				CBase::m_error = ::__get_buf_procs().Error();
+			else CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_oper: buffer id = 0x%02x is invalid"), _u_buf_id); break;
+		}
+		else if (CData_Accessor::Is_mapped(_u_buf_id, CBase::m_error) == false) {
+			CBase::m_error << (err_code) TErrCodes::eExecute::eState = TString().Format(_T("#__e_oper: the buffer (id = 0x%02x) is not mapped;"), _u_buf_id); break;
+		}
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%u)"), u_err_code, u_err_code);
+	}
+
+	return CBase::Error();
 }
 
 TBufAccessor&  __get_buf_acc_procs (void) {

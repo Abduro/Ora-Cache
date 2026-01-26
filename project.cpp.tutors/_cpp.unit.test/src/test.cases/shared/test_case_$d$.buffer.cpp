@@ -27,11 +27,7 @@ uint32_t CVertBuffer::Size (const e_bind_targets _target, CError& _err) {
 	_target; _err;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s() <static>:"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto(false); {
-		_out()(false);
-		ctx_auto.Create();
-		_out()(true);
-	}
+	CCtx_auto ctx_auto(false); { _out()(false); ctx_auto.Create(); _out()(true); }
 
 	const uint32_t u_size = CBuffer::Get_size(_target, _err);
 	if (false == _err) {

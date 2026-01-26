@@ -13,6 +13,15 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 
+	class CVertBufData : public TPipe {
+	public:
+		CVertBufData (const e_object = e_object::e_none); ~CVertBufData (void) = default;
+		CVertBufData (const CVertBufData&) = delete; CVertBufData (CVertBufData&&) = delete;
+
+	private:
+		CVertBufData& operator = (const CVertBufData&) = delete; CVertBufData& operator = (CVertBufData&&) = delete;
+	};
+
 	class CVertBuffer : public TPipe {
 	public:
 		CVertBuffer (const e_object = e_object::e_none); ~CVertBuffer (void) = default;

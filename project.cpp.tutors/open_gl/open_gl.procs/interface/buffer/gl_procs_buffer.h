@@ -51,6 +51,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	e_uniform    = 0x8A11, // GL_UNIFORM_BUFFER                      |   >= 3.1    | uniform block storage;
 	};
 
+	typedef e_bind_targets e_bnd_tgts; // jsut playing with names;
+
 	bool is_bind_target(const uint32_t _u_tgt_type);
 	/* ToDo: the enumeration of below can be separated to the following enums:
 		the excerpt from https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferData.xhtml ;
