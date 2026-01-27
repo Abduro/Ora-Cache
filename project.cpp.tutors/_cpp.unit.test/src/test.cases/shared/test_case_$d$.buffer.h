@@ -8,18 +8,32 @@
 #include "gl_buffer.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+
 	using namespace ex_ui::draw::open_gl;
 	using CBuffer = ex_ui::draw::open_gl::vertex::CBuffer;
+	using CData = ex_ui::draw::open_gl::buffer::CData;
 
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
-
+	/* for test case of the getting data from vertex buffer the following prerequisites are required:
+	(1) creating a shape, for example, a triangle;
+	(2) set vertex data to particular values: position and color;
+	(3) draw the triangle;
+	(4) do *not* destroy objects related to draw operation, this requirement is mandatory;
+	(5) get data from the buffer; this step is *test case*;
+	(6) destroy all draw objects;
+	*/
 	class CVertBufData : public TPipe {
 	public:
 		CVertBufData (const e_object = e_object::e_none); ~CVertBufData (void) = default;
 		CVertBufData (const CVertBufData&) = delete; CVertBufData (CVertBufData&&) = delete;
 
+		TError&  Error (void) const;
+		err_code Get (void);         // gets vertex buffer data copy of target shape;
+
 	private:
 		CVertBufData& operator = (const CVertBufData&) = delete; CVertBufData& operator = (CVertBufData&&) = delete;
+		mutable
+		CError  m_error;
 	};
 
 	class CVertBuffer : public TPipe {

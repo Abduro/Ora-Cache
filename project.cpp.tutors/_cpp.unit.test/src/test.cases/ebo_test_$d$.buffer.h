@@ -13,6 +13,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	public:
 		c_vert_buf (void); ~c_vert_buf (void) = default;
 
+		__method (Data); // gets vertex buffer data of triangle shape;
 		__method (Size); // gets vertex buffer size in bytes; if no buffer is bound the error is returned;
 	};
 

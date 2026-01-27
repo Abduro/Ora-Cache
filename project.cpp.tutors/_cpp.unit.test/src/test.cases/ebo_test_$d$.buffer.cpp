@@ -10,6 +10,15 @@ using namespace ebo::boo::test::open_gl::draw;
 
 c_vert_buf::c_vert_buf (void) {}
 
+void c_vert_buf::Data (void) {
+
+	CVertBufData buf_dat(e_object::e_tria);
+	buf_dat.Get();
+
+	_out()();
+	_out()(false);
+}
+
 void c_vert_buf::Size (void) {
 
 	CVertBuffer buffer; // no draw target is required yet;

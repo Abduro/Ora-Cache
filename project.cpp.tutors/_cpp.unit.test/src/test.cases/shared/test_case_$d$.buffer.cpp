@@ -3,8 +3,35 @@
 	This is Ebo Pack OpenGL vertex buffer object wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.buffer.h"
+#include "test_case_$d$.shape.2d.h"
 
 using namespace ebo::boo::test::open_gl::draw;
+
+#pragma region cls::CVertBufData{}
+
+CVertBufData::CVertBufData (const e_object _target) : TPipe(_target) {
+	this->m_error >>__CLASS__<<__METHOD__<< (e_object::e_none == _target ? __e_not_inited : __s_ok);
+
+	static _pc_sz pc_sz_pat_tgt = _T("%s cls::[%s::%s] >> the draw target is set to: '%s';");
+
+	if (e_object::e_none == _target) {
+	      _out() += TString().Format(pc_sz_pat_tgt, _T("[error]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, TPipe::To_str(_target)); }
+	else {_out() += TString().Format(pc_sz_pat_tgt, _T("[warn]"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, TPipe::To_str(_target)); }
+}
+
+TError& CVertBufData::Error (void) const { return this->m_error; }
+
+err_code CVertBufData::Get (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	C3angle tria;
+	if (__failed(tria.Create())) return this->m_error = tria.Error();
+
+	return this->Error();
+}
+
+#pragma endregion
 
 #pragma region cls::CVertBuffer{}
 
