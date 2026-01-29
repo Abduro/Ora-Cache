@@ -31,7 +31,7 @@ err_code CDevCtx::Create (void) {
 
 	if (__failed(dev_ref.Create(this->Window()))) {
 		this->m_error = dev_ref.Error();
-		_out() += this->Error().Print(TError::e_print::e_req);
+		_out()(this->Error());
 	}
 
 	return this->Error();
@@ -88,7 +88,7 @@ err_code CGraphCtx::Create (const HWND _h_target) {
 	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
 
 	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
-		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out() += this->Error().Print(TError::e_print::e_req);
+		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out()(this->Error());
 	}
 
 	return this->Error();
@@ -122,7 +122,7 @@ err_code CGraphCtx::Swap (void) {
 
 	if (false == !!::SwapBuffers(renderer.Scene().Ctx().Graphics().Target().Get())) {
 		this->m_error.Last();
-		_out() += this->Error().Print(TError::e_print::e_req);
+		_out()(this->Error());
 	}
 	return this->Error();
 }

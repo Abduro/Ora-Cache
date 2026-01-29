@@ -15,18 +15,22 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CVertArray : public CPipeline {
 	public:
-		using CAttr   = vertex::CAttr;
-		using CBuffer = vertex::CBuffer;
+		using CAttr    = vertex::CAttr;
+		using CAttrArr = vertex::CAttrArray;
+		using CBuffer  = vertex::CBuffer;
 	public:
 		CVertArray (void); CVertArray (const CVertArray&) = delete; CVertArray (CVertArray&&) = delete; ~CVertArray (void);
+		const
+		CAttrArr& Attrs (void) const;  // gets the reference to the attribute array that is dependable on program shaders; (ro)
+		CAttrArr& Attrs (void) ;       // gets the reference to the attribute array that is dependable on program shaders; (rw)
 		const
 		CBuffer&  Buffer (void) const;
 		CBuffer&  Buffer (void) ;
 
-		uint32_t  Bytes  (void) const;    // gets memory size of all vertices of this shape;
+		uint32_t  Bytes  (void) const; // gets memory size of all vertices of this shape;
 
 		// https://www.allacronyms.com/elements/abbreviated ;
-		uint32_t  Count  (void) const;    // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
+		uint32_t  Count  (void) const; // gets count of vertices elements, the same can be made by direct access to the vertices' vector;
 		err_code  Count  (const uint32_t _n_elems);  // sets the number of the required vertices, i.e. elements;
 		err_code  Create (void);                     // creates the vertex data buffer (aka vbo);
 		err_code  Delete (void);                     // deletes the vertex data buffer (aka vbo);
@@ -62,6 +66,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		TVertices m_items;  // this is the set of vertices themselves;
 		TVertData m_data ;  // this is the data for vertex buffer;
 		CBuffer   m_buffer;
+		CAttrArr  m_attrs;
 	};
 
 }}}

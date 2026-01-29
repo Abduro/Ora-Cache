@@ -30,6 +30,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		TError&  Error (void) const;
 		err_code Get (void);         // gets vertex buffer data copy of target shape;
 
+		static CString To_str (const TRawData&, const uint32_t _u_elements = 0x64, _pc_sz _p_pfx = predefs::_p_pfx, _pc_sz _p_sfx = predefs::_p_sfx);
+
 	private:
 		CVertBufData& operator = (const CVertBufData&) = delete; CVertBufData& operator = (CVertBufData&&) = delete;
 		mutable

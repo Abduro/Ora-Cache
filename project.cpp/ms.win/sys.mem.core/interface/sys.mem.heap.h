@@ -93,7 +93,7 @@ namespace shared { namespace memory
 		 CRawData (const CRawData&);
 		 CRawData (CRawData&&);
 #if (0) // moved to sys.com.core adapter class;
-		 CRawData (const _variant_t&);       // ia created from bstr data;
+		 CRawData (const _variant_t&);       // is created from bstr data;
 #endif
 		 CRawData (const dword dwSize);
 #if (0) // moved to sys.com.core adapter class;

@@ -11,8 +11,6 @@ using namespace ebo::boo::test;
 CCache:: CCache (void) : m_prefix(_T("\t")), m_suffix(_T("\n")), m_locked(false) {}
 CCache::~CCache (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-
 void CCache::Clear(void) { this->m_strings.clear(); }
 
 const
@@ -71,15 +69,11 @@ CCache&  CCache::operator ()(const bool _b_verb) { this->Locked() = !_b_verb; re
 CLog_Opts:: CLog_Opts (void) : m_accepted(_accepted::e_none) {}
 CLog_Opts::~CLog_Opts (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-
 bool CLog_Opts::Get (_accepted _opt) const { return !!(_opt & this->m_accepted); }
 void CLog_Opts::Set (_accepted _opt, bool _b_set) {
 	if ( _b_set) this->m_accepted |= _opt;
 	if (!_b_set) this->m_accepted &=~_opt; // https://stackoverflow.com/questions/3920307/how-can-i-remove-a-flag-in-c ;)
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 CLog_Opts& CLog_Opts::operator +=(const CLog_Opts::_accepted _opt) {
 	this->Set(_opt, true );
@@ -176,13 +170,21 @@ CLogger& CLogger::operator -=(const CLog_Opts::_accepted _opt)  { this->Opts() -
 
 CLogger& CLogger::operator +=(const CString& cs_out) { this->Cached() += cs_out; return *this; }
 CLogger& CLogger::operator +=(_pc_sz _p_sz_out) { this->Cached() += _p_sz_out; return *this; }
-
-CLogger& CLogger::operator >> (_pc_sz _lp_sz_pat) { this->Pattern(_lp_sz_pat); return *this; }
+CLogger& CLogger::operator >>(_pc_sz _lp_sz_pat) { this->Pattern(_lp_sz_pat); return *this; }
 
 CLogger::operator CCache& (void) { return this->Cached(); }
 const
 CLogger& CLogger::operator ()(void) const { this->Cached()(); return *this; } 
 CLogger& CLogger::operator ()(const bool _b_verb) { this->Cached().Locked() = !_b_verb; return *this; }
+
+CLogger& CLogger::operator ()(TError& _err) {
+	_err;
+	const bool b_locked = this->Cached().Locked(); // saves the previously set lock option;
+	this->Cached().Locked() = false;
+	this->Cached() += _err.Print(TError::e_print::e_req);
+	this->Cached().Locked() = b_locked;
+	return *this;
+}
 
 #pragma endregion
 

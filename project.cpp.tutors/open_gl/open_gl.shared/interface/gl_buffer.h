@@ -8,6 +8,8 @@
 #include "vertex\gl_vertex_data.h"
 #include "buffer\gl_procs_buffer.h"
 #include "buffer\gl_procs_buf.mem.h"
+#include "buffer\gl_buf.bind.h"
+#include "buffer\gl_buf.data.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace buffer {
@@ -32,43 +34,6 @@ namespace buffer {
 		uint32_t m_count_ndx;
 		uint32_t m_prim_mode;
 		uint32_t m_start_ndx;
-	};
-	/*
-	the preferable way is to use the buffer identifier for getting the buffer data,
-	but for comparison the old way is kept: getting by target type the buffer is bound to;
-	*/
-	class CData {
-	public:
-		CData (void); CData (const CData&) = delete; CData (CData&&) = delete; ~CData (void) = default;
-
-		uint32_t BufferId (void) const;     // gets buffer identifier value;
-		bool     BufferId (const uint32_t); // sets buffer identifier value; no check for input value validity; returns 'true' in case of value change;
-		const
-		TRawData& Get (void) const;
-		TError& Error (void) const;
-
-		bool Is_valid (void) const; // checks for assigning the target type and buffer identifier;
-
-		err_code  Set (void); // retrieves data copy of the buffer object;
-
-		e_bnd_tgts Target (void) const;       // gets buffer target type which the buffer is bound to;
-		const bool Target (const e_bnd_tgts); // sets buffer target type, returns 'true' in case of target value change;
-
-		CData& operator <<(e_bnd_tgts);       // sets the target type the buffer is bound to;
-		CData& operator <<(const uint32_t _buf_id);
-
-	private:
-		CData& operator = (const CData&) = delete; CData& operator = (CData&&) = delete;
-		CError m_error;
-		e_bnd_tgts m_target;  // target type which the buffer is bound to;
-		uint32_t   m_buf_id;
-		TRawData   m_data;
-	};
-
-	class CTarget : private no_copy { using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
-	private: CTarget (void) = default; ~CTarget (void) = default;
-	public:
-		static CString To_str (const e_bind_targets);
 	};
 }
 	/* note: each buffer for one set of data: for example, setting a position and a color through different sets of data will require two buffers;

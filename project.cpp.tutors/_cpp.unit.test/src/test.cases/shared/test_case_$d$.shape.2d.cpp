@@ -22,6 +22,7 @@ C3angle::C3angle (void) : TPipe(e_object::e_tria), m_ctx(false) { this->m_error 
 	if (__failed(this->m_ctx.Create()))
 		this->m_error = this->m_ctx.Error(); _out()(true); // restores verbose mode of the logger;
 }
+C3angle::~C3angle (void) { _out()(false); }
 
 err_code C3angle::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -31,11 +32,11 @@ err_code C3angle::Create (void) {
 	CTriangle& tria = __tria_accessor(); // the triangle constructor makes basic configuration and data sizes check;
 	if (tria.Error()) { // it an error occurs the triangle {ctor} prints out it to debug trace;
 		this->m_error = tria.Error();
-		_out() += this->Error().Print(TError::e_print::e_req); return this->Error();
+		_out()(this->Error()); return this->Error();
 	}
 	_out()(false); // it is not of interest to get info from program create routines;
 
-	// the 1st step: creating the program and its shaders, compiling shaders and attaching them to program;
+	// the 1st step: creating the program and its shaders, compiling shaders and attaching them to program; but what is about errors?
 	CProg prog((*this)()); prog << CProg::e_opts::e_link << CProg::e_opts::e_use_$; // the options are required for proper program creation;
 
 	if (__failed(prog.Create())) {
@@ -99,7 +100,7 @@ err_code C3angle::Draw (void) {
 	
 	_out()(true);
 	if (this->Error())
-		_out() += this->Error().Print(TError::e_print::e_req);
+		_out()(this->Error());
 	else
 		_out() += _T("[impt] Triangle draw is completed;");
 

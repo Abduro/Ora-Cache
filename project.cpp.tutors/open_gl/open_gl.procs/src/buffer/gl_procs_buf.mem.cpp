@@ -135,7 +135,7 @@ err_code CData_Accessor::Get_Ptr (const uint32_t _u_buf_id, const e_data_access 
 	if (CBase::Error())
 		return CBase::Error();
 
-	pfn_Map_nm p_fun = reinterpret_cast<pfn_Map_nm>(CBase::Get(dat_acc_fun_names[(uint32_t)e_dat_acc_fun_ndx::e_map_bound]));
+	pfn_Map_nm p_fun = reinterpret_cast<pfn_Map_nm>(CBase::Get(dat_acc_fun_names[(uint32_t)e_dat_acc_fun_ndx::e_map_named]));
 	if (nullptr == p_fun)
 		return CBase::Error();
 

@@ -81,7 +81,7 @@ namespace ex_ui { namespace theme { namespace storage {
 		err_code Load  (const TThemePalette, CNamed_Enum&); // loads custom themes of the palette specified;
 		err_code Load  (CNamed_Enum&);
 
-		err_code Load  (CCurrent&);                  // loads current theme data from the registry; the current theme is inteaned from router;
+		err_code Load  (CCurrent&);                  // loads current theme data from the registry; the current theme is intended from router;
 
 		err_code Node  (_pc_sz _p_path, CElement&);
 		err_code Node  (TRawElements&);              // returns the error in case when no elements found for parent part node;

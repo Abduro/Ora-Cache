@@ -20,13 +20,15 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>interface\</_0>
-    <_0-0>interface\shader\</_0-0>
+    <_0-4>interface\buffer\</_0-4>
     <_0-1>interface\program\</_0-1>
+    <_0-0>interface\shader\</_0-0>
     <_0-2>interface\shapes\</_0-2>
     <_0-3>interface\vertex\</_0-3>
     <_1>src\</_1>
-    <_1-0>src\shader\</_1-0>
+    <_1-4>src\buffer\</_1-4>
     <_1-1>src\program\</_1-1>
+    <_1-0>src\shader\</_1-0>
     <_1-2>src\shapes\</_1-2>
     <_1-3>src\vertex\</_1-3>
     <_2>$(Shared)interface\</_2>
@@ -40,8 +42,8 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <_0-0-0>$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3)</_0-0-0>
-    <_1-0-0>$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3)</_1-0-0>
+    <_0-0-0>$(_0);$(_0-0);$(_0-1);$(_0-2);$(_0-3);$(_0-4)</_0-0-0>
+    <_1-0-0>$(_1);$(_1-0);$(_1-1);$(_1-2);$(_1-3);$(_1-4)</_1-0-0>
     <IncludePath>$(Shared);$(_0-0-0);$(_1-0-0);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

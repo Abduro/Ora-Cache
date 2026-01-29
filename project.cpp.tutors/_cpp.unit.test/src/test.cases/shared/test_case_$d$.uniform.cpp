@@ -106,7 +106,7 @@ err_code CTU_val_v4::Get (const e_object _target, const uint32_t _locate, t_unif
 
 	if (__failed(vec4.Get())) {
 		_err = vec4.Error();
-		_out() += _err.Print(TError::e_print::e_req); return _err; // no value retrieved - no sense to go ahead;
+		_out()(_err); return _err; // no value retrieved - no sense to go ahead;
 	}
 
 	const t_uniform_4f& v4_dat = vec4.Data();
@@ -125,8 +125,8 @@ err_code CTU_val_v4::Get (void) {
 	
 	if (false) {}
 	else if (__failed(tria.Draw())) { this->m_error = tria.Error(); }
-	else if ((*this)().Is_valid() == false) { this->m_error = (*this)().Error(); _out() += this->Error().Print(TError::e_print::e_req); }
-	else if (__failed((*this)().Get())) { this->m_error = (*this)().Error(); _out() += this->Error().Print(TError::e_print::e_req); }
+	else if ((*this)().Is_valid() == false) { this->m_error = (*this)().Error(); _out()(this->Error()); }
+	else if (__failed((*this)().Get())) { this->m_error = (*this)().Error(); _out()(this->Error()); }
 	else {
 		_out() += _T("Getting the value of uniform variable succeeded:");
 

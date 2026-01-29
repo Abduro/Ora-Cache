@@ -4,6 +4,7 @@
 */
 #include "test_case_$d$.buffer.h"
 #include "test_case_$d$.shape.2d.h"
+#include "test_case_$d$.vert.arr.dat.h"
 
 using namespace ebo::boo::test::open_gl::draw;
 
@@ -24,11 +25,59 @@ TError& CVertBufData::Error (void) const { return this->m_error; }
 err_code CVertBufData::Get (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
+	// (1-3) steps: creating the triangle shape and drawing it;
 	C3angle tria;
-	if (__failed(tria.Create())) return this->m_error = tria.Error();
-
+	if (__failed(tria.Draw())) return this->m_error = tria.Error(); // this draw operation creates its own copy of the triangle shape;
+	// (4,5) steps: keeping the triangle, getting the buffer identifier and querying its data;
+	// (4.a) gets the buffer identifier;
+	CVertArray& vert_arr = __vert_arr_accessor (tria());
+	const uint32_t u_buf_id = vert_arr.Buffer().GetId();
+	// (4.b) queries the data;
+	/* *important*: setting buf_data << tria() does not produce any compilation error:
+	    the input data is cast to e_bnd_tgts enum element and this leads to invalid target type the buffer is bound to; */
+	CData buf_data; buf_data << u_buf_id << vert_arr.Buffer().Target(); // sets required attribute values;
+	if (__failed(buf_data.Query())) return this->m_error = buf_data.Error();
+	else {
+		const TRawData& raw_data = buf_data.Get();
+		_out() += TString().Format(_T("[impt] Data is queried: {size = 0x%04x};"), raw_data.GetSize());
+		_out() += CVertBufData::To_str(raw_data);
+	}
 	return this->Error();
+}
+
+CString  CVertBufData::To_str (const TRawData& _data, const uint32_t _u_elements, _pc_sz _p_pfx, _pc_sz _p_sfx) {
+	_data; _u_elements; _p_pfx; _p_sfx;
+	CString cs_out;
+	
+	if (_data.GetSize() == 0) return (cs_out = TString().Format(_T("%s#empty"), _p_pfx));
+	if (_data.GetSize() % sizeof(float)) return (cs_out = TString().Format(_T("%s#not_aligned"), _p_pfx));
+
+	static const uint32_t u_cols = 8, u_sec = 4; u_cols; u_sec;
+
+	const uint32_t u_count = _data.GetSize() / sizeof(float);
+	const float* const p_data = reinterpret_cast<const float*>(_data.GetData());
+	if (nullptr == p_data)
+		return (cs_out = TString().Format(_T("%s#not_float"), _p_pfx));
+
+	static _pc_sz pc_fmt_p = _T("  %.8f"); // positive value preserves the space for minus sign in purposes of alignment;
+	static _pc_sz pc_fmt_n = _T(" %.8f");
+
+	uint32_t u_col = 0;
+
+	cs_out += _T("\t");
+	for (uint32_t i_ = 0; i_ < u_count; i_++) { u_col += 1;
+		if (p_data[i_] < 0.0f)
+		     cs_out += TString().Format(pc_fmt_n, p_data[i_]);
+		else cs_out += TString().Format(pc_fmt_p, p_data[i_]);
+		if (u_col == u_cols) 
+			if (i_ > 0) {
+				cs_out += _p_sfx;
+				cs_out += _p_pfx; u_col = 0;
+			}
+	}
+	cs_out += _p_sfx;
+
+	return  cs_out;
 }
 
 #pragma endregion

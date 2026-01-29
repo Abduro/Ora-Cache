@@ -18,7 +18,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 	class C3angle : public TPipe {
 	public:
-		C3angle (void); C3angle (const C3angle&) = delete; C3angle (C3angle&&) = delete; ~C3angle (void) = default;
+		C3angle (void); C3angle (const C3angle&) = delete; C3angle (C3angle&&) = delete; ~C3angle (void);
 
 		err_code Create (void); // creates a simple triangle and related to the triangle objects, such as vertex array object and vertex buffer object;
 		err_code Delete (void); // deletes this shape: the associated program and vertex array object;

@@ -75,13 +75,13 @@ err_code CFake_renderer::On_draw_begin (void) {
 #endif;
 	if (__failed(::Get_shapes().Defaults().SetTo(e_object::e_tria))) {
 		this->m_error = ::Get_shapes().Defaults().Error();
-		_out() += this->Error().Print(TError::e_print::e_req); // just traces the error, no return from this proc yet;
+		_out()(this->Error()); // just traces the error, no return from this proc yet;
 	}
 
 	shapes::CShape& tria = ::Get_shapes().Get(e_object::e_tria);
 	if (__failed(tria.Draw())) {
 		this->m_error = tria.Error();
-		_out() += this->Error().Print(TError::e_print::e_req); // just traces the error, no return from this proc yet;
+		_out()(this->Error()); // just traces the error, no return from this proc yet;
 	}
 
 	return this->Error();

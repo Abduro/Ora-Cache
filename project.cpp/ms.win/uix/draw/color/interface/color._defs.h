@@ -180,7 +180,7 @@ typedef ex_ui::color::rgb::clr_type  rgb_color; // it looks like COLORREF that i
 /*
 	regarding the classic GDI of MS Windows OS, RGB and alpha channel value:
 	(a) alpha channel values in standard range [0...255], that means 0 - fully transparent, 255 - opaque;
-	(b) but classic GDI treats it in oposite side: alpha == 0 means opaque, otherwise - black screen;
+	(b) but classic GDI treats it in opposite side: alpha == 0 means opaque, otherwise - black screen;
 	it is the talking about the 4th bit of the RGB color that aka COLORREF;
 */
 

@@ -76,7 +76,7 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 	bool b_supported = compiler.Is_supported();
 	if (compiler.Error()) {
 		_err = compiler.Error();
-		_out() += _err.Print(TError::e_print::e_req); return _err;
+		_out()(_err); return _err;
 	}
 	else if (false == b_supported) {
 		_err << (err_code)TErrCodes::eExecute::eEnviron = TString().Format(pc_sz_pat_not_supp, _T("false")); return _err;
@@ -84,17 +84,17 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 #if (0) // this is not suitable for test cases, because it is required to load shader source code file independently from the target object type;
 	else if (__failed($base.Src().Cfg().Path(TPipe::To_str(_target), $base.Type().Get()))) { // sets source code file path that is read from the registry;
 		_err = $base.Src().Cfg().Error();
-		_out() += _err.Print(TError::e_print::e_req); return _err;
+		_out()(_err); return _err;
 	}
 #else
 	else if (__failed($base.Src().Cfg().Path(_impl::CReg_helper().Path(_shader.Type().Get())))) {
 		_err = $base.Src().Cfg().Error();
-		_out() += _err.Print(TError::e_print::e_req); return _err;
+		_out()(_err); return _err;
 	}
 #endif
 	else if (__failed($base.Src().Set())) { // loads the source code file to the shader code buffer;
 		_err = $base.Src().Error();
-		_out() += _err.Print(TError::e_print::e_req); return _err;
+		_out()(_err); return _err;
 	}
 	else {}
 
@@ -102,7 +102,7 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 
 	compiler << $base.Id();
 	if (false) {}
-	else if (__failed(compiler.Compile())) { _err = compiler.Error(); _out() += _err.Print(TError::e_print::e_req); }
+	else if (__failed(compiler.Compile())) { _err = compiler.Error(); _out()(_err); }
 	else {
 		CStatus $_status($base.Id());
 
@@ -115,7 +115,7 @@ err_code C$Base::Compile (CShader& _shader, const e_object _target, CError& _err
 			_out() += _T("Shader compiler log:");
 			_out() += compiler.Log().Get();
 		}
-		if (__failed(compiler.Release())) { _out() += compiler.Error().Print(TError::e_print::e_req); } // this error is not traced;
+		if (__failed(compiler.Release())) { _out()(compiler.Error()); } // this error is not traced;
 	}
 
 	return _err;
@@ -132,7 +132,7 @@ err_code C$Base::Create (CShader& _shader, const $Type _type, CError& _err) {
 	CDevCtx dev_ctx;
 
 	if (__failed(dev_ctx.Create())) {
-		_out() += dev_ctx.Error().Print(TError::e_print::e_req);
+		_out()(dev_ctx.Error());
 		return _err = dev_ctx.Error();
 	}
 #endif
@@ -155,7 +155,7 @@ err_code C$Base::Delete (CShader& _shader, CError& _err) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	if (__failed(_shader.Delete())) {
-		_err = _shader.Error(); _out() += _err.Print(TError::e_print::e_req);
+		_err = _shader.Error(); _out()(_err);
 	}
 
 	return _err;
@@ -206,7 +206,7 @@ err_code  C$_enum::Compile(void) {
 	shader::CVertex& $vert = prog.Shaders().Vertex();
 
 	if (__failed(C$Base::Compile($frag, TPipe::Target(), this->m_error)) ||
-	    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
+	    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out()(this->Error()); }
 
 	return this->Error();
 }
@@ -224,8 +224,8 @@ err_code  C$_enum::Create (void) {
 	shader::CFragment& $frag = prog.Shaders().Fragment();
 	shader::CVertex& $vert = prog.Shaders().Vertex();
 	// the sequence of shader creation is not good approach: if the first shader creation fails the error will be overwritten by the creation of the next shader;
-	if (__failed(C$Base::Create($frag, $frag.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
-	if (__failed(C$Base::Create($vert, $vert.Type().Get(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
+	if (__failed(C$Base::Create($frag, $frag.Type().Get(), this->m_error))) { _out()(this->Error()); }
+	if (__failed(C$Base::Create($vert, $vert.Type().Get(), this->m_error))) { _out()(this->Error()); }
 #endif
 	return this->Error();
 }

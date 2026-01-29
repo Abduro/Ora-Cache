@@ -20,9 +20,14 @@ TError& CType::Error (void) const { return this->m_error; }
 $Type   CType::Get (void) const { return this->m_value; }
 bool    CType::Set (const e_value _e_type) {
 	_e_type;
+	this->m_error <<__METHOD__<<__s_ok;
+
 	const bool b_changed = this->Get() != _e_type;
 	if (b_changed)
 		this->m_value = _e_type;
+
+	if (this->Get() == e_value::e_undef) this->m_error << __e_not_inited = _T("The type is not set");
+
 	return b_changed;
 }
 

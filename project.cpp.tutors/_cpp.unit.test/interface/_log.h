@@ -93,10 +93,7 @@ namespace ebo { namespace boo { namespace test {
 
 	class CLogger : public shared::dbg::ITestOutput {
 	public:
-		 CLogger (void);
-		 CLogger (const CLogger&) = delete;
-		 CLogger (CLogger&&) = delete;
-		~CLogger (void) = default;
+		 CLogger (void); CLogger (const CLogger&) = delete; CLogger (CLogger&&) = delete; ~CLogger (void) = default;
 
 	public:
 		// https://en.cppreference.com/w/cpp/utility/format/spec ;
@@ -140,6 +137,8 @@ namespace ebo { namespace boo { namespace test {
 		CLogger& operator()(const bool _b_verb);   // allows/disallows adding messages to the cache;
 
 		void Write (_pc_sz _p_msg) override final; // ITestOutput interface method;
+
+		CLogger& operator()(TError&);              // adds error message regardless the verbose option, because any error is always important;
 
 	private:
 		mutable

@@ -53,7 +53,7 @@ err_code CProg::Attach (const CShader& _shader) {
 
 	// for test purposes the static shader attachment procedure is used; it is assumed that shaders and program belong to global renderer;
 	if (__failed(T$Cache::Attach(_shader.Id(), prog.Id(), this->m_error))) {
-		_out() += this->Error().Print(TError::e_print::e_req);
+		_out()(this->Error());
 	}
 	else
 		_out() += TString().Format(_T("Shader {type='%s';id=0x%04x} is attached;"), (_pc_sz) shader::CType::To_str((uint32_t)_shader.Type().Get()), _shader.Id());
@@ -71,7 +71,7 @@ err_code CProg::Detach (const CShader& _shader) {
 
 	// for test purposes the static shader detachment procedure is used; it is assumed that shaders and program belong to global renderer;
 	if (__failed(T$Cache::Detach(_shader.Id(), prog.Id(), this->m_error))) {
-		_out() += this->Error().Print(TError::e_print::e_req);
+		_out()(this->Error());
 	}
 	else
 		_out() += TString().Format(_T("Shader {type='%s';id=0x%04x} is detached;"), (_pc_sz) shader::CType::To_str((uint32_t)_shader.Type().Get()), _shader.Id());
@@ -89,7 +89,7 @@ err_code CProg::Create (void) {
 
 	if (false){}
 	else if (__failed(prog.Create())) {
-		_out() += prog.Error().Print(TError::e_print::e_req); return this->m_error = prog.Error(); }
+		_out()(prog.Error()); return this->m_error = prog.Error(); }
 	else if (this->Opts().Use_$() == false)
 		return this->Error(); // there is no further steps, neither the error too;
 	else {		
@@ -140,7 +140,7 @@ err_code CProg::Delete (void) {
 
 	if (__failed(prog.Delete())) {
 		this->m_error = prog.Error();
-		_out() += prog.Error().Print(TError::e_print::e_req);
+		_out()(prog.Error());
 	}
 	return this->Error();
 }
@@ -156,7 +156,7 @@ uint32_t CProg::GetId (void) {
 
 	if (prog.Error()) {
 		this->m_error = prog.Error();
-		_out() += this->m_error.Print(TError::e_print::e_req);
+		_out()(this->m_error);
 	}
 
 	return prog.Id().Get();
@@ -174,21 +174,20 @@ err_code CProg::Link (void) {
 
 		shader::CFragment& $frag = prog.Shaders().Fragment();
 		shader::CVertex& $vert = prog.Shaders().Vertex();
-
-		if (__failed(this->Attach($frag)) || 
-		    __failed(this->Attach($vert))) { _out() +=this->Error().Print(TError::e_print::e_req); }
-
-		if (this->Error()) return this->Error(); // there is no sense to link the program because one of the shaders is not attached successfully;
 #if (0)
 		if (__failed(C$Base::Compile($frag, TPipe::Target(), this->m_error)) ||
-		    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out() +=this->Error().Print(TError::e_print::e_req); }
+		    __failed(C$Base::Compile($vert, TPipe::Target(), this->m_error))) { _out()(this->Error()); }
 #else
 		this->m_error = C$_enum(TPipe::Target()).Compile(); // *important*: shader enumeration target object must be the same with this program target;
 #endif
 		if (this->Error()) return this->Error(); // there is no	sense to link the program because one of the shaders is not compiled;
+		if (__failed(this->Attach($frag)) || 
+		    __failed(this->Attach($vert))) { _out()(this->Error()); }
+
+		if (this->Error()) return this->Error(); // there is no sense to link the program because one of the shaders is not attached successfully;
 	}
 
-	if (__failed(CProgram::Link(prog.Id(), this->m_error))) { _out() += this->Error().Print(TError::e_print::e_req); }
+	if (__failed(CProgram::Link(prog.Id(), this->m_error))) { _out()(this->Error()); }
 
 	return this->Error();
 }
@@ -203,11 +202,11 @@ err_code CProg::Use  (const bool _b_on) {
 
 	if (_b_on) {
 		if (__failed(prog.Use())) {
-			this->m_error = prog.Error(); _out() += this->Error().Print(TError::e_print::e_req);
+			this->m_error = prog.Error(); _out()(this->Error());
 		}
 	}
 	else {
-		if (__failed(CProgram::Unused(this->m_error))) _out() += this->Error().Print(TError::e_print::e_req);
+		if (__failed(CProgram::Unused(this->m_error))) _out()(this->Error());
 	}
 	
 	return this->Error();

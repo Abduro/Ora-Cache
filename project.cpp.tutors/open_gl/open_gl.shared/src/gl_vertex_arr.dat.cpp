@@ -12,10 +12,15 @@ using namespace ex_ui::draw::open_gl;
 
 CVertex virt_vex;
 
+using CAttrArr = vertex::CAttrArray;
 using CBuffer = CVertArray::CBuffer;
 
 CVertArray:: CVertArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
 CVertArray::~CVertArray (void) {}
+
+const
+CAttrArr&  CVertArray::Attrs (void) const { return this->m_attrs; }
+CAttrArr&  CVertArray::Attrs (void)       { return this->m_attrs; }
 
 const
 CBuffer&   CVertArray::Buffer (void) const { return this->m_buffer; }

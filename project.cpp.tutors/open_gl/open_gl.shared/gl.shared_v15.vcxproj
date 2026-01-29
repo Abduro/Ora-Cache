@@ -197,6 +197,12 @@
   <ItemGroup>
     <ClInclude Include="$(_0)gl_buffer.h" />
     <ClCompile Include="$(_1)gl_buffer.cpp" />
+    <ClInclude Include="$(_0-4)gl_buf.bind.h" />
+    <ClCompile Include="$(_1-4)gl_buf.bind.cpp" />
+    <ClInclude Include="$(_0-4)gl_buf.data.h" />
+    <ClCompile Include="$(_1-4)gl_buf.data.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)gl_context.h" />
     <ClCompile Include="$(_1)gl_context.cpp" />
     <ClInclude Include="$(_0)gl_defs.h" />
