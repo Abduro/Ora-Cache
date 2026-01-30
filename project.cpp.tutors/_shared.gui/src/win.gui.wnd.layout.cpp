@@ -14,7 +14,7 @@ using namespace shared::gui::docking;
 
 using namespace ex_ui::popup;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CPane{}
 
 CPane:: CPane (void) : m_wnd(0), m_rect{0} {}
 
@@ -42,7 +42,8 @@ err_code CPane::Target (const HWND _h_target) {
 	return __s_ok;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CSide{}
 
 CSide:: CSide (void) : m_area(e_areas::e_left) {}
 CSide:: CSide (const e_areas _area) : CSide() { *this << _area; }
@@ -59,7 +60,8 @@ bool CSide::Value (const e_areas _area) {
 
 CSide&  CSide::operator <<(const e_areas _area) { this->Value(_area); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CSize{}
 
 CSize:: CSize (const long _l_cx, const long _l_cy) { *this << CValue(_l_cx) >> CValue(_l_cy); }
 CSize:: CSize (const CValue& _cx, const CValue& _cy) { *this << _cx >> _cy; }
@@ -85,7 +87,8 @@ bool    CSize::Width (const long _l_value, const CValue::e_ctrl _e_type) {
 CSize&  CSize::operator >>(const CValue& _v_height) { this->Height().Set(_v_height.Get(), _v_height.Ctrl()); return *this; }
 CSize&  CSize::operator <<(const CValue& _v_width) { this->Width().Set(_v_width.Get(), _v_width.Ctrl()); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CValue{}
 
 CValue:: CValue (const long _l_value, const e_ctrl _e_ctrl_type) : m_ctrl(_e_ctrl_type), m_value(_l_value) {}
 
@@ -131,7 +134,8 @@ CValue& CValue::operator <<(const long _l_value) { this->Set(_l_value); return *
 
 CValue::operator long (void) const { return this->Get(); }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CMainWnd{}
 
 CLayout::CMainWnd:: CMainWnd (void) : m_rect_clt{0}, m_rect_pos{0}, m_main_wnd(0), m_locked(true) {}
 
@@ -164,7 +168,8 @@ err_code   CLayout::CMainWnd::Target (const HWND _h_target) {
 	return __s_ok;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CLayout{}
 
 CLayout:: CLayout (void) : m_wait(*this) { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
 CLayout::~CLayout (void) {
@@ -178,7 +183,7 @@ CPane&   CLayout::Bottom (void)       { return this->m_low; }
 
 err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
-	err_code n_result = IMsg_Handler::_n_not_handled;
+	err_code n_result = messages::IMsg_Handler::_n_not_handled;
 	switch (_u_code) {
 	case WM_ACTIVATE:{
 		const bool b_activated = (WA_INACTIVE != _w_param); // https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate ;
@@ -242,7 +247,7 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 
 		} break;
 	default:
-		n_result = IMsg_Handler::_n_not_handled;
+		n_result = messages::IMsg_Handler::_n_not_handled;
 	}
 	return n_result;
 }
@@ -338,3 +343,5 @@ err_code CLayout::Update (t_rect* const _p_rect) {
 void  CLayout::IWaitable_OnComplete (void) {
 	this->Update();
 }
+
+#pragma endregion

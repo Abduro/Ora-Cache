@@ -108,11 +108,12 @@ err_code CProg::Create (void) {
 		return this->Error();
 
 	this->Link();
+#if (0)
 	if (this->Error() == false) // the link of the program is succeeded;
 		if (__failed(prog.Attrs().Enum_attrs())) { // the error trace is made by the attr enum class method itself;
 			return this->m_error = prog.Attrs().Error();
 		}
-
+#endif
 	return this->Error();
 }
 

@@ -15,7 +15,7 @@ namespace ex_ui { namespace popup {
 	// ToDo: Window builder must be involeved into creating new window; the builder must have window style, layout, etc.;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassname ; getting class name from the window;
 
-	class CWndBase : protected IMsg_Handler {
+	class CWndBase : protected messages::IMsg_Handler {
 	public:
 		 CWndBase (void); CWndBase (const CWndBase&) = delete; CWndBase (CWndBase&&) = delete;
 		~CWndBase (void);

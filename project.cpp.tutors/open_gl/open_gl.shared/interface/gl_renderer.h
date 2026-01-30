@@ -39,7 +39,7 @@ namespace render {
 		CError   m_error;
 	};
 }
-	using IKbrd_Handler = ex_ui::popup::IKbrd_Handler;
+	using IKbrd_Handler = ex_ui::popup::messages::IKbrd_Handler;
 	using CTheme = shared::gui::theme::CTheme;
 
 	class CRenderer : public IKbrd_Handler {

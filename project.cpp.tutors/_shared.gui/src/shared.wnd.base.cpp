@@ -25,7 +25,7 @@ namespace ex_ui { namespace popup { namespace _impl {
 
 using namespace ex_ui::popup::_impl;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CSize{}
 
 CWndBase::CLayout::CSize:: CSize (const uint32_t _u_cx, const uint32_t _u_cy) : m_size{static_cast<long>(_u_cx), static_cast<long>(_u_cy)}, m_lock(false) {}
 
@@ -43,7 +43,8 @@ const
 t_size& CWndBase::CLayout::CSize::Ref (void) const { return this->m_size; }
 t_size& CWndBase::CLayout::CSize::Ref (void)       { return this->m_size; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CLayout{}
 
 CWndBase::CLayout:: CLayout (void) {}
 
@@ -51,7 +52,8 @@ const
 CWndBase::CLayout::CSize&  CWndBase::CLayout::Size (void) const { return this->m_size; }
 CWndBase::CLayout::CSize&  CWndBase::CLayout::Size (void)       { return this->m_size; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CWndBase{}
 
 CWndBase:: CWndBase (void) : m_h_wnd (0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; this->m_cls_name = __CLASS__; }
 CWndBase::~CWndBase (void) {
@@ -197,7 +199,8 @@ CWndBase::operator const HWND (void) const { return this->Handle(); }
 
 const HWND CWndBase::operator ()(void) const { return this->Handle(); }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CStyles{}
 
 CWndBase::CStyles:: CStyles (void) : m_ext(0), m_std(0) {}
 CWndBase::CStyles::~CStyles (void) {}
@@ -230,3 +233,5 @@ bool     CWndBase::CStyles::Std (const uint32_t _u_styles) {
 
 	return b_changed;
 }
+
+#pragma endregion

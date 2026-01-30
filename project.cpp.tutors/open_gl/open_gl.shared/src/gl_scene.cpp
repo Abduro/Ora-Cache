@@ -91,8 +91,7 @@ err_code CScene::Prepare (void) {
 #pragma endregion
 #pragma region __2nd_step
 	// the step #2: configuring vertex attributes and creating vertex attribute objects;
-	if (__failed(this->Progs().Attrs().Init())) { this->m_error = this->Progs().Attrs().Error(); } // does nothing with the error;
-	if (__failed(this->ArrObjects().Create())) { this->m_error = this->Progs().Attrs().Error(); }  // does nothing with the error;
+	if (__failed(this->ArrObjects().Create())) this->m_error = this->ArrObjects().Error();
 #pragma endregion
 	// the step #3: recalculates the grid layout;
 	if (__failed(::Get_renderer().View().Update()))

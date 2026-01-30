@@ -38,21 +38,22 @@ err_code CVertBufData::Get (void) {
 	CData buf_data; buf_data << u_buf_id << vert_arr.Buffer().Target(); // sets required attribute values;
 	if (__failed(buf_data.Query())) return this->m_error = buf_data.Error();
 	else {
+		const CAttrs& attrs = vert_arr.Attrs(); attrs;
 		const TRawData& raw_data = buf_data.Get();
 		_out() += TString().Format(_T("[impt] Data is queried: {size = 0x%04x};"), raw_data.GetSize());
-		_out() += CVertBufData::To_str(raw_data);
+		_out() += CVertBufData::To_str(raw_data, attrs);
 	}
 	return this->Error();
 }
 
-CString  CVertBufData::To_str (const TRawData& _data, const uint32_t _u_elements, _pc_sz _p_pfx, _pc_sz _p_sfx) {
-	_data; _u_elements; _p_pfx; _p_sfx;
+CString  CVertBufData::To_str (const TRawData& _data, const CAttrs& _attrs, _pc_sz _p_pfx, _pc_sz _p_sfx) {
+	_data; _attrs; _p_pfx; _p_sfx;
 	CString cs_out;
 	
 	if (_data.GetSize() == 0) return (cs_out = TString().Format(_T("%s#empty"), _p_pfx));
 	if (_data.GetSize() % sizeof(float)) return (cs_out = TString().Format(_T("%s#not_aligned"), _p_pfx));
 
-	static const uint32_t u_cols = 8, u_sec = 4; u_cols; u_sec;
+	static const uint32_t u_cols = _attrs.Size();
 
 	const uint32_t u_count = _data.GetSize() / sizeof(float);
 	const float* const p_data = reinterpret_cast<const float*>(_data.GetData());

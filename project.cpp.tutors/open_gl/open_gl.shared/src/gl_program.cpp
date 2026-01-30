@@ -15,19 +15,10 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::program;
 
-using CAttrArr = CProgram::CAttrArr;
-
-/////////////////////////////////////////////////////////////////////////////
-
 #pragma region CProgram{}
-#define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
 
 CProgram:: CProgram (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CProgram::~CProgram (void) { /*this->Delete(); if a program is not created in the constructor above, it shouldn't be deleted here;*/ }
-
-const
-CAttrArr&  CProgram::Attrs (void) const { return this->m_attrs; }
-CAttrArr&  CProgram::Attrs (void)       { return this->m_attrs; }
 
 CString    CProgram::Class (void) { return __CLASS__; }
 
@@ -47,7 +38,6 @@ err_code   CProgram::Create (void) {
 		if (__failed(log.Set(0))) {} // if the program identifier equals to zero, there is no way to get the creation error details;
 	}
 	else {
-		this->Attrs() << this->Id();
 		this->Shaders() << this->Id(); // this is very *important*, otherwise no shader attachment will succeed;
 		this->Status() << this->Id();
 	}
@@ -75,8 +65,6 @@ err_code   CProgram::Delete (void) {
 		__trace_warn_2(_T("The program (id = %u) is deleted;\n"), this->Id().Get());
 	// actually the reset the prog identifier to invalid value is not so important: the all dependent objects must be deleted first;
 	this->Id().Reset();
-
-	this->Attrs().ProgId(0u);         // reset on program identifier cannot be made by derect call because the all attributes must be updated;
 	this->Shaders().ProgId().Reset(); // the prog_id reset can be made in the only case: deleting the program, so shaders must be deleted first;
 	this->Status().ProgId().Reset();  // the program status set to be invalid and it doesn't much matter;
 
@@ -94,6 +82,7 @@ bool CProgram::Is_valid (void) const {
 bool CProgram::Is_valid (const uint32_t _u_prog_id, CError& _err) {
 	_u_prog_id; _err;
 #if (0)
+	#define __gl_curr_prog 0x8B8D // GL_CURRENT_PROGRAM ;
 	static _pc_sz p_sz_pat_err = _T("'_u_prog_id' (%u) is invalid");
 
 	if (0 == _u_prog_id) {
@@ -235,94 +224,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
 using namespace _impl;
 
-#pragma region cls::CProgram::CAttrs{}
-
-using CAttrs = CProg_enum::CAttrs;
-
-CAttrs:: CAttrs (CProg_enum* _p_progs) : m_progs(_p_progs) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CAttrs::~CAttrs (void) {}
-
-TError&  CAttrs::Error (void) const { return this->m_error; }
-
-err_code CAttrs::Init (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	if (nullptr == this->m_progs)
-		return this->m_error <<__e_not_inited;
-
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
-
-	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
-		CProgram& prog = this->m_progs->Ref(i_);
-		if (false == cfg.Is_drawable(prog.Target()))
-			continue;
-#if (1)
-		prog.Attrs() << prog.Id(); // ToDo: it should be not necessary;
-		if (__failed(prog.Attrs().Enum_attrs())) {
-		    __trace_err_2(_T("%s;\n"), (_pc_sz) prog.Attrs().Error().Print(TError::e_print::e_req));
-		}
-#else
-		// this is predefined names of attributes;
-		// enumerating of the attributes is not done yet;
-		static _pc_sz attr_names[] = {_T("colorIn"), _T("positionIn")};
-
-		// these attributes' names must be coincident with vertex shader source code, possibly a parsing of the code should give an ability to get them;
-		if (__failed(prog.Attrs().Clr().Name(attr_names[0]))) /*return*/ this->m_error = prog.Attrs().Clr().Error();
-		if (__failed(prog.Attrs().Pos().Name(attr_names[1]))) /*return*/ this->m_error = prog.Attrs().Pos().Error();
-		// the error may be set by procedure of assigning the name to attribute, just output the error to trace log;
-		if (this->Error()) {
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		}
-#endif
-#if (0)
-		/*important:
-		  the attributes' indices are set through source code of vertex shader, the same is for vertex color, it can be set in fragment shader;
-		  but these indices can be applied after program linking only; they can be received by querying the program object;
-		  for this tutorial another way of vertex attribute location is selected:
-		  the indices are set before linking the program, it is assumed the indices are the same as in shaders' source code;
-		  after linking the program the indices are checked for test purpose that they are sill have the same values;
-		*/
-		// sets attributes' indecise (aka location) before linking the program,
-		// an index of the particular attribute must be the same as in actual vertex: 0 - position; 1 - color;
-		// also, it is very important: the shader source code can change the location of the attributes and after the program linking those locations will be applied;
-		if (__failed(prog.Attrs().Clr().Locate().Set(1))) /*return*/ this->m_error = prog.Attrs().Clr().Error();
-		if (__failed(prog.Attrs().Pos().Locate().Set(0))) /*return*/ this->m_error = prog.Attrs().Pos().Error();
-		// the same as above, the error may be set by procedure of setting the index to attribute, just output the error to trace log;
-		if (this->Error()) {
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		}
-
-		// checks vertex attributes' indices after linking the program and deleting the shaders;
-		// the indices must be the same as them were set before the linking;
-
-		const int32_t n_clr_ndx = prog.Attrs().Clr().Locate().Get();
-		const int32_t n_pos_ndx = prog.Attrs().Pos().Locate().Get();
-
-		if (prog.Attrs().Clr().Locate().Error()) this->m_error = prog.Attrs().Clr().Locate().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[0], n_clr_ndx); }
-		if (prog.Attrs().Pos().Locate().Error()) this->m_error = prog.Attrs().Pos().Locate().Error(); else {__trace_info_2(_T("The attr '%s' has the index = %d;\n"), attr_names[1], n_pos_ndx); }
-		// the error may be set by any attribute and the error of the first attribute may be overritten by the error of the last attriboute,
-		// but it is not important for this time yet;
-		if (this->Error()) {
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-		}
-#endif
-	}
-
-	return this->Error();
-}
-
-#pragma endregion
 #pragma region cls::CProg_enum{}
 
-CProg_enum:: CProg_enum (void) : m_attrs(this) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+CProg_enum:: CProg_enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	m_progs[0].Target(e_object::e_grid);
 	m_progs[1].Target(e_object::e_tria);
 }
 CProg_enum::~CProg_enum (void) {}
-
-const
-CAttrs&  CProg_enum::Attrs (void) const { return this->m_attrs; }
-CAttrs&  CProg_enum::Attrs (void)       { return this->m_attrs; }
 
 err_code CProg_enum::Build (void) {
 	this->m_error <<__METHOD__<<__s_ok;

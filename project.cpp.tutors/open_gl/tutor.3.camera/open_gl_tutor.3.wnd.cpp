@@ -71,6 +71,11 @@ err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 	}*/
 	this->IMsg_OnMessage (WM_SIZE, 0, 0); // just sends the messege identifier, the handler takes all required steps itself;
 
+	if (__failed(::Get_mouse() << this)) {
+		TBase::m_error = ::Get_mouse().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
+	}
+
 	return TBase::Error();
 }
 err_code camera::CWnd::PostCreate (void) {
@@ -137,6 +142,11 @@ err_code camera::CWnd::PostCreate (void) {
 
 err_code camera::CWnd::Destroy (void) {
 
+	if (__failed(::Get_mouse() >> this)) {
+		TBase::m_error = ::Get_mouse().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
+	}
+
 	TRenderer& renderer = ::Get_renderer();
 
 	renderer.Is_allowed(false);     // stops draw operation of the renderer;
@@ -192,4 +202,13 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		} break;
 	}
 	return TBase::IMsg_OnMessage(_u_code, _w_param, _l_param);
+}
+
+TError&  camera::CWnd::IMouse_Error (void) const { return TBase::m_error; }
+err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
+	TBase::m_error <<__METHOD__<<__s_false;
+
+	__trace_info(_T("%s\n"), (_pc_sz)_evt.To_str());
+
+	return TBase::Error();
 }

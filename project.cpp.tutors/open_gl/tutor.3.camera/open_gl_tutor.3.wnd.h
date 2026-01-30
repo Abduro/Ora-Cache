@@ -19,12 +19,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
 	using CFakeWnd = ex_ui::popup::CMsgWnd;
 
-	class CWnd : public ex_ui::popup::CWndBase { typedef ex_ui::popup::CWndBase TBase; using CDevice = context::CDevice;
+	class CWnd : public ex_ui::popup::CWndBase, public messages::IMouse_Handler { typedef ex_ui::popup::CWndBase TBase;
+	using CDevice = context::CDevice;
 	public:
 		 CWnd (void);
 		~CWnd (void);
 
 		err_code IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param) override final;
+		TError&  IMouse_Error (void) const override final;
+		err_code IMouse_OnEvent (const CEvent&) override final;
 
 		err_code Create (const HWND _h_parent, const t_rect&, const bool _b_visible = true);
 		err_code Destroy (void);
