@@ -193,6 +193,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="$(_0)shared.ctx.menu.h" />
+    <ClCompile Include="$(_1)shared.ctx.menu.cpp" />
     <ClInclude Include="$(_0)shared.theme.h" />
     <ClCompile Include="$(_1)shared.theme.cpp" />
     <ClInclude Include="$(_0)shared.wnd.atom.h" />

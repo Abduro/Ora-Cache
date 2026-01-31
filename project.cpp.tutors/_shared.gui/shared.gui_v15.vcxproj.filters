@@ -22,6 +22,8 @@
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shared.ctx.menu.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.ctx.menu.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.theme.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.theme.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.atom.h"><Filter>interface\window</Filter></ClInclude>
