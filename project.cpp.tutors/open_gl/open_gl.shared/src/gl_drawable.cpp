@@ -77,7 +77,7 @@ err_code CClr_flt::Get (const e_object _target) {
 	CString cs_name;  // registry key value name;
 
 	if (e_object::e_grid == _target) {
-		using CRegGrid = shared::sys_core::storage::CReg_router::CViewport::CGrid;
+		using CRegGrid = shared::sys_core::storage::route::CGrid;
 		CRegGrid& reg_grid = ::Get_reg_router().Viewport().Grid();
 
 		cs_key = reg_grid.Root(); cs_name = reg_grid.Clr_name();
@@ -126,7 +126,7 @@ using CCell = view::CGrid::CCell;
 
 CCell:: CCell (void) : m_size{0u} {
 
-	using CRegCell = shared::sys_core::storage::CReg_router::CViewport::CGrid::CCell;
+	using CRegCell = shared::sys_core::storage::CGrid::CCell;
 	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
 
 	TRegKeyEx reg_key;

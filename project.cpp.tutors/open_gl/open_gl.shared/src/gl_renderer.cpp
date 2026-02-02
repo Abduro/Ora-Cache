@@ -45,7 +45,7 @@ bool render::CCfg::Is_drawable (const CPipeline::e_object _target) const {
 err_code render::CCfg::Load  (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	using CRegDraw = shared::sys_core::storage::CReg_router::CDraw;
+	using CRegDraw = shared::sys_core::storage::route::CDraw;
 	using e_draw   = CRegDraw::e_targets;
 	const CRegDraw& draw = ::Get_reg_router().Draw();
 

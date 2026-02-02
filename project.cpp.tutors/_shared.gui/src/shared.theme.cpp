@@ -8,9 +8,12 @@
 
 using namespace shared::gui::theme;
 using namespace shared::sys_core::storage;
+
 using namespace ex_ui::color::rgb;
 
-using e_element = CReg_router::CTheme::e_element;
+using e_element = route::CTheme::e_element;
+
+namespace shared { namespace gui { namespace theme {
 
 CTheme::CTheme (void) : m_bkgnd(4, 0.0f), m_is_read(false) {}
 
@@ -40,7 +43,9 @@ const rgb_color CTheme::Border (void) const {
 	return (rgb_color)CHex((_pc_sz)Get_registry().Value(e_element::e_border));
 }
 
-TTheme&  ::Get_theme (void) {
+}}}
+
+TTheme& ::Get_theme (void) {
 	static TTheme theme;
 	return theme;
 }

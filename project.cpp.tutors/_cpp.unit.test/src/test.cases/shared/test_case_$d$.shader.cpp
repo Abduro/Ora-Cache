@@ -26,7 +26,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			_type;
 			this->m_error <<__METHOD__<<__s_ok;
 
-			using e_types = shared::sys_core::storage::CReg_router::CShaders::e_types;
+			using e_types = shared::sys_core::storage::route::CShaders::e_types;
 			e_types e_shader = e_types::e__undef;
 
 			switch (_type) {

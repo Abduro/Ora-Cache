@@ -13,13 +13,25 @@
     <Filter Include="src\error">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0013}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\_prec">
+    <Filter Include="interface\registry">
       <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\registry">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_prec">
+      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0016}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)sys.reg.router.h"><Filter>interface\registry</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.reg.router.cpp"><Filter>src\registry</Filter></ClCompile>
+    <ClInclude Include="$(_0)sys.registry.h"><Filter>interface\registry</Filter></ClInclude>
+    <ClCompile Include="$(_1)sys.registry.cpp"><Filter>src\registry</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)shared.defs.h"><Filter>interface</Filter></ClInclude>
@@ -32,6 +44,8 @@
     <ClCompile Include="$(_1)shared.timer.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.types.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.types.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)sys.err.codes.h"><Filter>interface\error</Filter></ClInclude>
     <ClInclude Include="$(_0)sys.err.trim.h"><Filter>interface\error</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.err.trim.cpp"><Filter>src\error</Filter></ClCompile>
@@ -41,8 +55,6 @@
     <ClCompile Include="$(_1)sys.mem.heap.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.gen.time.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.gen.time.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)sys.registry.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)sys.registry.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)sys.sync_obj.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)sys.sync_obj.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

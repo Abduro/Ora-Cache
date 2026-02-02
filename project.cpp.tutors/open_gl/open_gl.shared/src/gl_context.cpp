@@ -457,7 +457,7 @@ err_code   CGraphics::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_
 	return TBase::Error();
 }
 
-using CRegVer  = shared::sys_core::storage::CReg_router::CCtx::CVersion;
+using CRegVer  = shared::sys_core::storage::route::CCtx::CVersion;
 using CVersion = CGraphics::CVersion;
 
 const

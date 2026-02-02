@@ -205,6 +205,14 @@
     <ClCompile Include="$(_1)shared.timer.cpp" />
     <ClInclude Include="$(_0)shared.types.h" />
     <ClCompile Include="$(_1)shared.types.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)sys.reg.router.h" />
+    <ClCompile Include="$(_1)sys.reg.router.cpp" />
+    <ClInclude Include="$(_0)sys.registry.h" />
+    <ClCompile Include="$(_1)sys.registry.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)sys.err.codes.h"/>
     <ClInclude Include="$(_1)sys.err.format.h" />
     <ClCompile Include="$(_1)sys.err.format.cpp" />
@@ -214,8 +222,6 @@
     <ClCompile Include="$(_1)sys.err.trim.cpp" />
     <ClInclude Include="$(_0)sys.gen.time.h" />
     <ClCompile Include="$(_1)sys.gen.time.cpp" />
-    <ClInclude Include="$(_0)sys.registry.h" />
-    <ClCompile Include="$(_1)sys.registry.cpp" />
     <ClInclude Include="$(_0)sys.sync_obj.h" />
     <ClCompile Include="$(_1)sys.sync_obj.cpp" />
   </ItemGroup>
