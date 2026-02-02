@@ -239,14 +239,26 @@ using CVirtKeys = IMouse_Handler::CVirtKeys;
 
 #pragma region cls::CCoords{}
 
-CCoords::CCoords (void) : m_point{0} {}
+CCoords::CCoords (void) : m_point{0}, m_screen(true) {}
 const
 t_point& CCoords::Get (void) const { return this->m_point; }
 bool     CCoords::Set (const l_param _l_pos) {
 	_l_pos;
+	if (false == this->Use_screen()) {
 	const t_point pt_loc = { GET_X_LPARAM(_l_pos), GET_Y_LPARAM(_l_pos) };
-	const bool b_changed = this->Get().x != pt_loc.x || this->Get().y != pt_loc.y; if (b_changed) this->m_point = pt_loc; return b_changed;
+	const bool b_changed = this->Get().x != pt_loc.x || this->Get().y != pt_loc.y; if (b_changed) this->m_point = pt_loc; return b_changed; } else {
+
+		t_point pt_screen = {0};
+		if (0 == ::GetCursorPos(&pt_screen)) { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos ;
+			return false;
+		} else if (this->Get().x != pt_screen.x || this->Get().y != pt_screen.y) {
+			this->m_point = pt_screen; return true;
+		} else return false;
+	}
 }
+
+bool CCoords::Use_screen (void) const { return this->m_screen; }
+void CCoords::Use_screen (const bool _b_use) { this->m_screen = _b_use; }
 
 #pragma endregion
 #pragma region cls::IMouse_Handler::CEvent{}

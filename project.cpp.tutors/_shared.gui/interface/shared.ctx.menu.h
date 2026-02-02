@@ -80,6 +80,8 @@ namespace shared { namespace gui { namespace menus {
 		CItem_Coll& operator <<(const HMENU);
 		HMENU operator ()(void) const;
 
+		CItem_Coll& operator += (const CItem&);  // appends the given menu item;
+
 	private:
 		CItem_Coll& operator = (const CItem_Coll&) = delete; CItem_Coll& operator = (CItem_Coll&&) = delete;
 		HMENU   m_menu ;
@@ -101,6 +103,8 @@ namespace shared { namespace gui { namespace menus {
 		const
 		CItem_Coll& Items (void) const;
 		CItem_Coll& Items (void) ;
+
+		err_code Load  (uint16_t _res_id); // loads a menu from resource of the executable by given resource identifier; menu items are not created!
 
 		uint32_t Track (const HWND _h_owner, const t_point _pt_screen); // tracks popup menu; returns selected menu item command or 0;
 

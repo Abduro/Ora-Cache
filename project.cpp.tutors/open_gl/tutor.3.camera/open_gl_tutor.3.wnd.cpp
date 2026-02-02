@@ -71,79 +71,28 @@ err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 	}*/
 	this->IMsg_OnMessage (WM_SIZE, 0, 0); // just sends the messege identifier, the handler takes all required steps itself;
 
-	if (__failed(::Get_mouse() << this)) {
+	// creates the context menu and subscribes to mouse use events;
+	if (false){}
+	else if (__failed(this->m_ctx_mnu.Load(IDR_TUTOR_3_CTX_MENU_0))) {
+		TBase::m_error = this->m_ctx_mnu.Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
+	}
+	else if (__failed(::Get_mouse() << this)) {
 		TBase::m_error = ::Get_mouse().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
 	}
 
 	return TBase::Error();
 }
-err_code camera::CWnd::PostCreate (void) {
-	TBase::m_error << __METHOD__ << __s_ok;
-
-	shader::CCompiler cmpl;
-	if (false == cmpl.Is_supported()) {
-		 __trace_err_2(_T("%s\n"), (_pc_sz) cmpl.Error().Print(TError::e_print::e_req));
-		return this->m_error = cmpl.Error();
-	}
-	else
-		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
-
-	// at the first step the opengl draw renderer must be created;
-	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
-
-	TRenderer& renderer = Get_renderer();
-
-	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
-	renderer.Scene().Ctx().Graphics().Target() << *this;
-	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
-
-	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
-	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
-
-	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
-		this->m_error = renderer.Scene().Ctx().Graphics().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
-	}
-#if (0)
-	// the fake window and its device handle can not be destroyed at this time; because not all opengl functions are loaded yet;
-	context::CDevice& dev_ref = renderer.Scene().Ctx().Device();
-	if (__failed(dev_ref.Destroy())) {
-		this->m_error = dev_ref.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
-	}
-#endif
-#if (0)
-	// for better debugging and in order do not re-compile the executable, this section is disabled;
-	// sets resource identifiers for loading shaders' source code;
-	if (__failed(renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-	if (__failed(renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
-#else
-	// loading external files of shaders' sources is moved to program_enum::load();
-#endif
-	
-#if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
-	if (__failed(renderer.Scene().Prepare()))
-		return TBase::m_error = this->Renderer().Scene().Error();
-#endif
-	if (__failed(renderer.View().Grid().Create()))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
-
-	renderer.Is_allowed(true);     // allows the draw opereation of the renderer;
-
-#define _test_case_lvl -1
-#if defined(_test_case_lvl) && (_test_case_lvl == 0)
-	renderer.Scene().Destroy();
-#endif
-	return TBase::Error();
-}
 
 err_code camera::CWnd::Destroy (void) {
-
+	// unsubscribes from mouse use events and destroys shortcut/context menu;
 	if (__failed(::Get_mouse() >> this)) {
 		TBase::m_error = ::Get_mouse().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
+	}
+	if (__failed(this->m_ctx_mnu.Destroy())) {
+		TBase::m_error = this->m_ctx_mnu.Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
 	}
 
@@ -206,9 +155,101 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 
 TError&  camera::CWnd::IMouse_Error (void) const { return TBase::m_error; }
 err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
+	_evt;
 	TBase::m_error <<__METHOD__<<__s_false;
 
 	__trace_info(_T("%s\n"), (_pc_sz)_evt.To_str());
+	// the shortcut menu appears on releasing/unpressing the right mouse button;
+	if (_evt.Action() != e_action::e_released) return TBase::Error();
+	if (_evt.Button() != e_button::e_right) return TBase::Error();
 
+	const uint32_t u_cmd_id = this->m_ctx_mnu.Track(*this, _evt.Coords().Get());
+	__trace_info(_T("selected cmd_id: %u;\n"), u_cmd_id);
+
+	TRenderer& renderer = ::Get_renderer();
+	CViewPort& viewport = renderer.View();
+	view::CGrid& grid = viewport.Grid();
+
+	switch (u_cmd_id) {
+	case IDR_TUTOR_3_GRD_CELL_H_025 : grid.Cell().H(025); break; case IDR_TUTOR_3_GRD_CELL_H_050 : grid.Cell().H(050); break;
+	case IDR_TUTOR_3_GRD_CELL_H_075 : grid.Cell().H(075); break; case IDR_TUTOR_3_GRD_CELL_H_100 : grid.Cell().H(100); break;
+	case IDR_TUTOR_3_GRD_CELL_W_025 : grid.Cell().W(025); break; case IDR_TUTOR_3_GRD_CELL_W_050 : grid.Cell().W(050); break;
+	case IDR_TUTOR_3_GRD_CELL_W_075 : grid.Cell().W(075); break; case IDR_TUTOR_3_GRD_CELL_W_100 : grid.Cell().W(100); break;
+	default:
+		return this->Error();
+	}
+
+	if (__failed(grid.Update(viewport.Get()))) { // re-calculates the grid lines' layout;
+		return TBase::m_error = grid.Error();
+	}
+	
+	renderer.Is_allowed(true);
+	if (__failed(renderer.Draw()))
+		TBase::m_error = renderer.Error();
+	renderer.Is_allowed(false);
+
+	return TBase::Error();
+}
+
+
+err_code camera::CWnd::PostCreate (void) {
+	TBase::m_error << __METHOD__ << __s_ok;
+
+	shader::CCompiler cmpl;
+	if (false == cmpl.Is_supported()) {
+		 __trace_err_2(_T("%s\n"), (_pc_sz) cmpl.Error().Print(TError::e_print::e_req));
+		return this->m_error = cmpl.Error();
+	}
+	else
+		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
+
+	// at the first step the opengl draw renderer must be created;
+	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
+
+	TRenderer& renderer = Get_renderer();
+
+	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
+	renderer.Scene().Ctx().Graphics().Target() << *this;
+	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
+
+	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
+	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
+
+	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
+		this->m_error = renderer.Scene().Ctx().Graphics().Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
+	}
+#if (0)
+	// the fake window and its device handle can not be destroyed at this time; because not all opengl functions are loaded yet;
+	context::CDevice& dev_ref = renderer.Scene().Ctx().Device();
+	if (__failed(dev_ref.Destroy())) {
+		this->m_error = dev_ref.Error();
+		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
+	}
+#endif
+#if (0)
+	// for better debugging and in order do not re-compile the executable, this section is disabled;
+	// sets resource identifiers for loading shaders' source code;
+	if (__failed(renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
+	if (__failed(renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
+#else
+	// loading external files of shaders' sources is moved to program_enum::load();
+#endif
+	
+#if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
+	if (__failed(renderer.Scene().Prepare()))
+		return TBase::m_error = this->Renderer().Scene().Error();
+#endif
+	if (__failed(renderer.View().Grid().Create()))
+	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
+
+	renderer.Is_allowed(true);     // allows the draw opereation of the renderer;
+
+#define _test_case_lvl -1
+#if defined(_test_case_lvl) && (_test_case_lvl == 0)
+	renderer.Scene().Destroy();
+#endif
 	return TBase::Error();
 }

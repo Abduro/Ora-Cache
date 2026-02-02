@@ -52,6 +52,8 @@ TVertData& CVertex::Raw (void)       { return this->m_data; }
 
 err_code   CVertex::Update (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+
+	uint32_t i_ = 0, j_ = 0, clr_sz = 0, pos_sz = 0;
 	try {
 		this->m_data.resize(this->Size(), 0.0f); this->m_data.reserve(this->Size());
 #if (0)
@@ -71,14 +73,18 @@ err_code   CVertex::Update (void) {
 		// copies the color attribute values second;
 		::std::copy(clr_b, clr_e, it_to);
 #else
-		for (uint32_t i_ = 0; i_ < this->Size(); i_++) {
-			for (uint32_t j_ = 0; j_ < this->Attrs().Pos().Size(); j_++, i_++) this->m_data.at(i_) =  this->Attrs().Pos().Data().at(j_);
-			for (uint32_t j_ = 0; j_ < this->Attrs().Clr().Size(); j_++, i_++) this->m_data.at(i_) =  this->Attrs().Clr().Data().at(j_);
+		for (i_ = 0; i_ < this->Size(); i_++) {
+			clr_sz = this->Attrs().Clr().Size();
+			pos_sz = this->Attrs().Pos().Size();
+			for (j_ = 0; j_ < pos_sz; j_++, i_++) this->m_data.at(i_) =  this->Attrs().Pos().Data().at(j_);
+			for (j_ = 0; j_ < clr_sz; j_++, i_++) this->m_data.at(i_) =  this->Attrs().Clr().Data().at(j_);
 		}
 #endif
 	}
 	catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; }
-	catch (const ::std::out_of_range&) { this->m_error << __e_inv_arg; } // the error code must be other not this one;
+	catch (const ::std::out_of_range&) {
+		this->m_error << __e_inv_arg = TString().Format(_T("#__out_of_range: i_ = %u; j_ = %u; clr_sz = %u; pos_sz = %u"), i_, j_, clr_sz, pos_sz);
+	}
 	return this->Error();
 }
 

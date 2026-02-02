@@ -5,63 +5,87 @@
 #include <winresrc.h>
 #include "open_gl_tutor.3.res.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
-
+// https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings ;
+// https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers ;
+// https://winprotocoldoc.z19.web.core.windows.net/MS-LCID/%5bMS-LCID%5d.pdf ;
+// https://learn.microsoft.com/en-us/windows/win32/menurc/language-statement ;
 #ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif
 
 #pragma region __ver_info
+// https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource ;
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION    1,0,0,3
- PRODUCTVERSION 1,0,0,3
- FILEFLAGSMASK  0x3fL
+	FILEVERSION    1,0,0,3
+	PRODUCTVERSION 1,0,0,3
+	FILEFLAGSMASK  0x3fL
 #ifdef _DEBUG
- FILEFLAGS      0x1L
+	FILEFLAGS      0x1L
 #else
- FILEFLAGS      0x0L
+	FILEFLAGS      0x0L
 #endif
- FILEOS         0x4L
- FILETYPE       0x2L
- FILESUBTYPE    0x0L
+	FILEOS         0x4L
+	FILETYPE       0x2L
+	FILESUBTYPE    0x0L
 BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904B0"
-        BEGIN
+	BLOCK "StringFileInfo" {   // https://learn.microsoft.com/en-us/windows/win32/menurc/stringfileinfo-block ;
+		BLOCK "040904B0" { // 0x0409 (U.S. English) | 0x04B0 (Unicode);
 #if defined(WIN64)
-            VALUE "Comments"        , "OpenGL Camera Tutorial (64-bit)"
-            VALUE "FileDescription" , "OpenGL Camera Tutorial (64-bit)"
+			VALUE "Comments"        , "OpenGL Camera Tutorial (64-bit)"
+			VALUE "FileDescription" , "OpenGL Camera Tutorial (64-bit)"
 #else
-            VALUE "Comments"        , "OpenGL Camera Tutorial (32-bit)"
-            VALUE "FileDescription" , "OpenGL Camera Tutorial (32-bit)"
+			VALUE "Comments"        , "OpenGL Camera Tutorial (32-bit)"
+			VALUE "FileDescription" , "OpenGL Camera Tutorial (32-bit)"
 #endif
-            VALUE "CompanyName"     , "The Moon Wanderer"
-            VALUE "FileVersion"     , "1.0.0.3"
-            VALUE "InternalName"    , "OpenGL Test Project"
-            VALUE "LegalCopyright"  , "Tech_dog (c) 2010-2025"
-            VALUE "OriginalFilename", "tutor.3.camera.exe"
-            VALUE "ProductName"     , "OpenGL Tutorial Project"
-            VALUE "ProductVersion"  , "1.0.0.3"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1252
-    END
+			VALUE "CompanyName"     , "The Moon Wanderer"
+			VALUE "FileVersion"     , "1.0.0.3"
+			VALUE "InternalName"    , "OpenGL Test Project"
+			VALUE "LegalCopyright"  , "Tech_dog (c) 2010-2025"
+			VALUE "OriginalFilename", "tutor.3.camera.exe"
+			VALUE "ProductName"     , "OpenGL Tutorial Project"
+			VALUE "ProductVersion"  , "1.0.0.3"
+	}}
+	BLOCK "VarFileInfo" {
+		VALUE "Translation", 0x409, 1252 // https://learn.microsoft.com/en-us/windows/win32/menurc/varfileinfo-block ;
+	}
 END
 #pragma endregion
 
-/////////////////////////////////////////////////////////////////////////////
-// image(s) & icon(s)
+// https://learn.microsoft.com/en-us/windows/win32/menurc/accelerators-resource ;
 
-  IDR_TUTOR_0_ICO  ICON    "open_gl_tutor.0.ico"
+// https://learn.microsoft.com/en-us/windows/win32/menurc/bitmap-resource ;
+// https://learn.microsoft.com/en-us/windows/win32/menurc/icon-resource ;
+IDR_TUTOR_0_ICO  ICON    "open_gl_tutor.0.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-// auxiliary string(s)
+// https://learn.microsoft.com/en-us/windows/win32/menurc/rcdata-resource ;
 
+// https://learn.microsoft.com/en-us/windows/win32/menurc/menuex-resource ;
+// https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ;
+IDR_TUTOR_3_CTX_MENU_0 MENU {
+	POPUP "Grid" {
+		POPUP "Cell Size" {
+			POPUP "Height" { // https://learn.microsoft.com/en-us/windows/win32/menurc/popup-resource ;
+				MENUITEM " 25" , IDR_TUTOR_3_GRD_CELL_H_025
+				MENUITEM " 50" , IDR_TUTOR_3_GRD_CELL_H_050 CHECKED
+				MENUITEM " 75" , IDR_TUTOR_3_GRD_CELL_H_075
+				MENUITEM "100" , IDR_TUTOR_3_GRD_CELL_H_100
+			}
+			POPUP "Width" {
+				MENUITEM " 25" , IDR_TUTOR_3_GRD_CELL_W_025 // https://learn.microsoft.com/en-us/windows/win32/menurc/menuitem-statement ;
+				MENUITEM " 50" , IDR_TUTOR_3_GRD_CELL_W_050
+				MENUITEM " 75" , IDR_TUTOR_3_GRD_CELL_W_075 CHECKED
+				MENUITEM "100" , IDR_TUTOR_3_GRD_CELL_W_100
+			}
+		}
+	}
+}
+
+// https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
+// https://learn.microsoft.com/en-us/windows/win32/menurc/dialog-resource ;
+// https://learn.microsoft.com/en-us/windows/win32/menurc/dialogex-resource ;
+
+// https://learn.microsoft.com/en-us/windows/win32/menurc/stringtable-resource ;
 /* Google AI: *important*
 	If you are constructing your shader source code programmatically (e.g., concatenating strings),
 	a missing newline character (\n) after a preprocessor directive or comment can cause subsequent lines to be interpreted incorrectly.

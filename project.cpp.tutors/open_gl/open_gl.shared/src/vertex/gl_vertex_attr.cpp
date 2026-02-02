@@ -15,14 +15,12 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::vertex;
 using namespace ex_ui::color::rgb;
 
-/////////////////////////////////////////////////////////////////////////////
-
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
-
 using namespace _impl;
 
 #pragma region __attr_index
+
 CAttr_Location:: CAttr_Location (void) : m_value(CAttr_Location::_$na) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CAttr_Location:: CAttr_Location (const CAttr_Location& _src) : CAttr_Location() { *this = _src; }
 CAttr_Location:: CAttr_Location (CAttr_Location&& _victim) : CAttr_Location() { *this = _victim; }
@@ -109,9 +107,8 @@ CAttr_Location& CAttr_Location::operator = (CAttr_Location&& _victim) { *this = 
 CAttr_Location& CAttr_Location::operator <<(const CProgId& _prog_id) { this->ProgId() << _prog_id; return *this; }
 CAttr_Location& CAttr_Location::operator <<(const int32_t _n_value) { this->Value(_n_value); return *this; }
 CAttr_Location& CAttr_Location::operator <<(_pc_sz _attr_name) { this->Attr_name(_attr_name); return *this; }
-#pragma endregion
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 #pragma region __vert_attr
 
 using e_att_val_float = ex_ui::draw::open_gl::procs::e_att_val_float;
@@ -186,7 +183,7 @@ uint32_t CAttr::Type (void) const { return this->m_type; }
 uint32_t CAttr::Stride(void) const { return this->m_stride; }
 
 CAttr&  CAttr::operator = (const CAttr& _src) {
-	*this << _src.ProgId() << _src.Name() << _src.Locate() << _src.Size() << _src.Type() << _src.Is_normal();
+	*this << _src.ProgId() << _src.Name() << _src.Locate() << _src.Size() << _src.Is_normal() >> _src.Type(); // playing with operators may often lead to incorrect data assignment;
 	 this->m_offset = _src.Offset();
 	 this->m_stride = _src.Stride();
 	 this->m_data   = _src.m_data;
@@ -203,8 +200,8 @@ CAttr&  CAttr::operator <<(const uint32_t _u_size) { this->m_size = _u_size; ret
 CAttr&  CAttr::operator >>(const uint32_t _u_type) { this->m_type = _u_type; return *this; }
 
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region CColor{}
+
 using CConvert = ex_ui::color::rgb::CConvert; // this class has static method for converting color channel to float value;
 
 CColor:: CColor (void) : TBase() {
@@ -260,9 +257,10 @@ void CColor::Set (const rgb_color _rgba) {
 
 CColor&  CColor::operator = (const CColor& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CColor&  CColor::operator = (CColor&& _victim) { *this = (const CColor&)_victim; return *this; }
+
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region CPosition{}
+
 CPosition:: CPosition (void) : TBase() {
 	TBase::m_error >>__CLASS__<<__s_ok;
 	TBase::m_offset = 0; // position goes first, no offset;
@@ -296,8 +294,9 @@ void CPosition::Set (const long  _x, const long  _y) {
 
 CPosition&  CPosition::operator = (const CPosition& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPosition&)_victim; return *this; }
+
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CAttrArray{}
 
 CAttrArray:: CAttrArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
 	// sets directly default location values for both attributes;
@@ -573,3 +572,5 @@ CAttrArray&  CAttrArray::operator <<(const uint32_t _prog_id) { this->ProgId(_pr
 
 CAttrArray&  CAttrArray::operator <<(const CColor& _clr) { this->Clr() = _clr; return *this; }
 CAttrArray&  CAttrArray::operator <<(const CPosition& _pos) { this->Pos() = _pos; return *this;}
+
+#pragma endregion

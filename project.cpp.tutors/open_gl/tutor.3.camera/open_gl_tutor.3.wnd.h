@@ -19,6 +19,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 	using namespace ex_ui::popup;
 
 	using CFakeWnd = ex_ui::popup::CMsgWnd;
+	using CCtxMenu = shared::gui::CCtxMenu;
 
 	class CWnd : public ex_ui::popup::CWndBase, public messages::IMouse_Handler { typedef ex_ui::popup::CWndBase TBase;
 	using CDevice = context::CDevice;
@@ -36,6 +37,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
 	protected:
 		CFakeWnd  m_fak_wnd; // message-only window (aka fake) is created in its constructor;
+		CCtxMenu  m_ctx_mnu;
 	};
 
 }}}}

@@ -85,6 +85,26 @@ const
 CItem_Coll& CCtxMenu::Items (void) const { return this->m_items; }
 CItem_Coll& CCtxMenu::Items (void)       { return this->m_items; }
 
+err_code CCtxMenu::Load (const uint16_t _res_id) {
+	_res_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid())
+		return this->m_error <<(err_code)TErrCodes::eObject::eExists;
+
+	_pc_sz p_res = reinterpret_cast<t_char*>(static_cast<__int3264>(_res_id));
+
+	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlbasemodule-class ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua ;
+
+	this->m_menu = ::LoadMenu(::ATL::_AtlBaseModule.GetResourceInstance(), p_res);
+
+	if (this->Is_valid() == false)
+		this->m_error.Last();
+
+	return this->Error();
+}
+
 uint32_t CCtxMenu::Track (const HWND _h_owner, const t_point _pt_screen) {
 	_h_owner; _pt_screen;
 	this->m_error <<__METHOD__<<__s_ok;
@@ -96,8 +116,10 @@ uint32_t CCtxMenu::Track (const HWND _h_owner, const t_point _pt_screen) {
 	if (false == !!::IsWindow(_h_owner)) {
 		this->m_error <<__e_hwnd; return u_cmd_id;
 	}
+	static const uint32_t u_flags = TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD; 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenuex ;
-	u_cmd_id = ::TrackPopupMenuEx((*this)(), TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD, _pt_screen.x, _pt_screen.y, _h_owner, nullptr);
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu ;
+	u_cmd_id = ::TrackPopupMenuEx(::GetSubMenu((*this)(), 0), u_flags, _pt_screen.x, _pt_screen.y, _h_owner, nullptr);
 	if (u_cmd_id == 0) {
 		this->m_error.Last();
 	}
@@ -133,6 +155,8 @@ bool     CItem::CmdId (const uint32_t _u_cmd_id) {
 
 bool  CItem::Is_valid (void) const { return !!this->CmdId() && !this->m_cs_cap.IsEmpty(); }
 
+uint32_t CItem::Mask  (void) const { return MIIM_FTYPE|MIIM_STATE|MIIM_ID|MIIM_STRING; }
+
 CItem&  CItem::operator = (const CItem& _src) { *this << _src.CmdId() << _src.Caption(); return *this; }
 CItem&  CItem::operator = (CItem&& _victim) { *this = (const CItem&)_victim;  return *this; }
 CItem&  CItem::operator <<(const uint32_t _u_cmd_id) { this->CmdId(_u_cmd_id); return *this; }
@@ -163,6 +187,26 @@ err_code CItem_Coll::Append (const CItem& _item) {
 	return TBase::Error();
 }
 
+err_code CItem_Coll::Insert (const uint32_t _u_before, const CItem& _item) {
+	_u_before; _item;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid())
+		return TBase::m_error <<__e_not_inited;
+
+	CString cs_cap(_item.Caption());
+
+	TItemInfo itm_info = {
+		sizeof(TItemInfo), _item.Mask(), MIIM_STRING, MFS_ENABLED, _item.CmdId(), 0, 0, 0, 0, cs_cap.GetBuffer(), static_cast<uint32_t>(cs_cap.GetLength())
+	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuitemw ;
+	if (false == !!::InsertMenuItem((*this)(), _u_before, true, &itm_info))
+		TBase::m_error.Last();
+
+	return TBase::Error();
+}
+
 bool CItem_Coll::Is_valid (void) const { return !!::IsMenu(this->Menu()); }
 
 HMENU    CItem_Coll::Menu (void) const { return this->m_menu; }
@@ -181,5 +225,7 @@ err_code CItem_Coll::Menu (const HMENU _h_menu) {
 CItem_Coll& CItem_Coll::operator <<(const HMENU _h_menu) { this->Menu(_h_menu); return *this; }
 
 HMENU CItem_Coll::operator ()(void) const { return this->Menu(); }
+
+CItem_Coll& CItem_Coll::operator += (const CItem& _item) { this->Append(_item); return *this; }
 
 #pragma endregion

@@ -65,9 +65,12 @@ namespace ex_ui { namespace popup { namespace messages {
 			const
 			t_point& Get (void) const;    // returns the reference to currently set cursor position;
 			bool     Set (const l_param); // sets the cursor position in client area coordinate system; returns 'true' if the cursor position is changed;
+			bool Use_screen (void) const;
+			void Use_screen (const bool); // to-do: this option is not accessible from event consumer side, set to 'true' by default;
 
 		private:
 			CCoords& operator = (const CCoords&) = delete; CCoords& operator = (CCoords&&) = delete;
+			bool     m_screen;  // this flag is for using point in different coordinate systems: 'true' - screen, 'false' - window client area;
 			t_point  m_point;
 		};
 		

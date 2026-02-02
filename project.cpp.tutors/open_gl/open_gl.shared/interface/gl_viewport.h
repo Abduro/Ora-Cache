@@ -18,8 +18,9 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	// https://en.wikipedia.org/wiki/Viewport ;
 	// it is supposed the viewport dimensions are the same as target window client area is;
-	class CViewPort : private no_copy { using CGrid = view::CGrid;
+	class CViewPort : private no_copy {
 	public:
+		using CGrid = view::CGrid;
 		CViewPort (const uint32_t _u_width = 0, const uint32_t _u_height = 0); ~CViewPort (void);
 
 		TError&   Error (void) const;
