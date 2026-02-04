@@ -9,10 +9,13 @@
 #include "shared.wnd.base.h"
 #include "shared.wnd.msg.h"
 
+#include "sys.registry.h"
+
 using namespace shared::gui;
 using namespace shared::gui::docking;
 
 using namespace ex_ui::popup;
+using namespace shared::sys_core::storage;
 
 #pragma region cls::CPane{}
 
@@ -118,8 +121,7 @@ bool CValue::Set (const long _l_value) {
 		this->m_value = _l_value;
 	return b_changed;
 }
-
-bool    CValue::Set (const long _l_value, const e_ctrl _ctrl) {
+bool CValue::Set (const long _l_value, const e_ctrl _ctrl) {
 	_l_value; _ctrl;
 	bool b_changed = false;
 
@@ -135,43 +137,10 @@ CValue& CValue::operator <<(const long _l_value) { this->Set(_l_value); return *
 CValue::operator long (void) const { return this->Get(); }
 
 #pragma endregion
-#pragma region cls::CMainWnd{}
 
-CLayout::CMainWnd:: CMainWnd (void) : m_rect_clt{0}, m_rect_pos{0}, m_main_wnd(0), m_locked(true) {}
-
-const
-t_rect&  CLayout::CMainWnd::ClientArea (void) const { return this->m_rect_clt; }
-t_rect&  CLayout::CMainWnd::ClientArea (void)       { return this->m_rect_clt; }
-const
-t_rect&  CLayout::CMainWnd::Position (void) const { return this->m_rect_pos; }
-t_rect&  CLayout::CMainWnd::Position (void)       { return this->m_rect_pos; }
-
-bool     CLayout::CMainWnd::Is_locked(void) const { return this->m_locked; }        
-bool     CLayout::CMainWnd::Is_locked(const bool _b_state) {
-	_b_state;
-	const bool b_changed = this->Is_locked() != _b_state;
-	if (b_changed)
-		this->m_locked = _b_state;
-	return b_changed;
-}
-
-bool     CLayout::CMainWnd::Is_valid (void) const { return (0 != this->Target() && ::IsWindow(this->Target())); }
-
-const HWND CLayout::CMainWnd::Target (void) const { return this->m_main_wnd; }
-err_code   CLayout::CMainWnd::Target (const HWND _h_target) {
-	_h_target;
-	if (0 == _h_target || false == !!::IsWindow(_h_target))
-		return __e_hwnd;
-
-	this->m_main_wnd = _h_target;
-
-	return __s_ok;
-}
-
-#pragma endregion
 #pragma region cls::CLayout{}
 
-CLayout:: CLayout (void) : m_wait(*this) { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
+CLayout:: CLayout (void) : m_wait(*this), m_rect{0} { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
 CLayout::~CLayout (void) {
 	if (false == this->m_wait.IsValid())
 		this->m_wait.Destroy();
@@ -180,7 +149,8 @@ CLayout::~CLayout (void) {
 const
 CPane&   CLayout::Bottom (void) const { return this->m_low; }
 CPane&   CLayout::Bottom (void)       { return this->m_low; }
-
+const
+t_rect&  CLayout::ClientArea (void) const { return this->m_rect; }
 err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
 	err_code n_result = messages::IMsg_Handler::_n_not_handled;
@@ -219,17 +189,20 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 #if (0)
 				__trace_info(_T("x=%d;y=%d;cx=%d;cy=%d"), p_wnd_pos->x, p_wnd_pos->y, p_wnd_pos->cx, p_wnd_pos->cy);
 #endif
+				CFrame& frame = ::Get_app_wnd().Frame();
 				// locks the size change;
-				if (this->Main().Is_locked()) {
-					p_wnd_pos->cx = __W(this->Main().Position());
-					p_wnd_pos->cy = __H(this->Main().Position());
+				if (::Get_app_wnd().Frame().Size().Is_locked()) {
+					p_wnd_pos->cx = __W(frame.Position().Get());
+					p_wnd_pos->cy = __H(frame.Position().Get());
 				}
 				// https://stackoverflow.com/questions/812686/can-a-window-be-always-on-top-of-just-one-other-window ;
 				// this answer: https://stackoverflow.com/a/821061/4325555 really works; thanks Matthew Xavier ;
-				::DefWindowProc(this->Main().Target(), _u_code, _w_param, _l_param);
+				const HWND h_target = ::Get_app_wnd()();
+
+				::DefWindowProc(h_target, _u_code, _w_param, _l_param);
 
 				p_wnd_pos->hwnd = this->Bottom().Target();
-				p_wnd_pos->hwndInsertAfter = this->Main().Target();
+				p_wnd_pos->hwndInsertAfter = h_target;
 				p_wnd_pos->flags &= ~SWP_NOZORDER;
 
 				n_result = __s_ok; // this message is handled;
@@ -246,23 +219,25 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 			n_result = __s_false;
 
 		} break;
+	case WM_CLOSE :
+		if (::Get_app_wnd().Is_valid()) {
+			::Get_app_wnd().Frame().Position().Save(); // no error catch occurs here and the message still be unhandled;
+		}
+		break;
 	default:
 		n_result = messages::IMsg_Handler::_n_not_handled;
 	}
 	return n_result;
 }
 
-bool     CLayout::Is_valid (void) const { return this->Bottom().Is_valid() && this->Main().Is_valid() && this->Top().Is_valid(); }
+bool     CLayout::Is_valid (void) const { return this->Bottom().Is_valid() && this->Top().Is_valid(); }
 
 err_code CLayout::Recalc (void) {
 
 	err_code n_result = __s_ok;
-
 	// (1) sets the main window position and size first;
 	t_rect rc_client  = layout::CPrimary().Centered(layout::t_size_u{uint32_t(layout::CRatios().Get().at(0).cx), uint32_t(layout::CRatios().Get().at(0).cy)});
-
-	this->Main().ClientArea() = rc_client; // sets the main window client area rectangle;
-	this->Main().Is_locked(true);          // it is set to 'true' by default, but nevertheless;
+	this->m_rect = rc_client; // sets the main window client area rectangle;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrect ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex ;
@@ -272,7 +247,19 @@ err_code CLayout::Recalc (void) {
 	if (false == !!::AdjustWindowRect(&rc_pos, ::Get_app_wnd().Styles().Std(), false)) {
 		__trace_err_3(_T("%s\n"), (_pc_sz) CError(__CLASS__, __METHOD__, __LastErrToHresult()).Print(TError::e_req)); // just for indicating the error state and continue;
 	}
-	this->Main().Position() = rc_pos; // sets main window position on the screen by already converted rectangle;
+
+	CFrame& frame = ::Get_app_wnd().Frame(); frame.Size().Is_locked(true); // it is set to 'true' by default, but nevertheless;
+	// (1.a) concerns the anchor point only, not the window size;
+	if (__succeeded(frame.Position().Load())) {
+		const t_rect& rect = frame.Position().Get();
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isrectempty ;
+		if (false == !!::IsRectEmpty(&rect)) {
+			// the window rectengle is centered on the screen by default, it must be taking into account:
+			// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setrect ;
+			if (false == !!::SetRect(&rc_pos, rect.left, rect.top, rect.left + __W(rc_pos), rect.top + __H(rc_pos))) {}
+		}
+	}
+	frame.Position() << rc_pos; // sets main window position on the screen by already converted rectangle;
 
 	// (1.a) calculates the rectangles of the child windows;
 
@@ -300,9 +287,6 @@ err_code CLayout::Recalc (void) {
 }
 
 const
-CLayout::CMainWnd&  CLayout::Main (void) const { return this->m_main_wnd; }
-CLayout::CMainWnd&  CLayout::Main (void)       { return this->m_main_wnd; }
-const
 CPane&  CLayout::Top (void) const { return this->m_top; }
 CPane&  CLayout::Top (void)       { return this->m_top; }
 
@@ -313,8 +297,8 @@ err_code CLayout::Update (t_rect* const _p_rect) {
 	t_rect rc_wnd_pos = {0};
 
 	if (0 == _p_rect) {
-		::GetWindowRect(this->Main().Target(), &rc_wnd_pos);
-		this->Main().Position() = rc_wnd_pos;
+		::GetWindowRect(::Get_app_wnd()(), &rc_wnd_pos);
+		::Get_app_wnd().Frame().Position() << rc_wnd_pos;
 	}
 	else
 		::CopyRect(&rc_wnd_pos, _p_rect);

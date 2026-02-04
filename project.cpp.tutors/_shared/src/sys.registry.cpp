@@ -114,7 +114,7 @@ uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
 		(*this)() >> _p_name;  // puts the name to the cache;
 
 	dword d_value  = 0;
-	LSTATUS n_result = m_the_key().QueryDWORDValue((_pc_sz) _p_name, d_value);
+	LSTATUS n_result = m_the_key().QueryDWORDValue(_p_name, d_value);
 	if (!!n_result) {
 		(m_the_key.m_error = dword(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
 		return 0u;
@@ -134,9 +134,9 @@ uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_key_path, _pc_sz _p_name) {
 
 	LSTATUS n_result = __s_ok;
 	if (nullptr == m_the_key()){
-		n_result = m_the_key().Open(Get_reg_router().Root().Key(), (_pc_sz) _p_key_path);
+		n_result = m_the_key().Open(Get_reg_router().Root().Key(), _p_key_path);
 		if (!!n_result) {
-			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), (_pc_sz)_p_key_path); return 0u;
+			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path); return 0u;
 		}
 	}
 	return this->GetDword(_p_name);
@@ -186,6 +186,37 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_key_path, _pc_sz _p_name) {
 const
 CRegKey_Ex::CCache&  CRegKey_Ex::CValue::operator ()(void) const { return this->m_cache; }
 CRegKey_Ex::CCache&  CRegKey_Ex::CValue::operator ()(void)       { return this->m_cache; }
+
+err_code CRegKey_Ex::CValue::Set (const uint32_t _u_value) {
+	_u_value;
+	m_the_key.m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)().Is()) return m_the_key.m_error << __e_inv_arg = _T("The key path is not set");
+	if (nullptr == (*this)().Name()) return m_the_key.m_error << __e_inv_arg = _T("The value name is not set");
+
+	return this->Set((*this)().Path(), (*this)().Name(), _u_value);
+}
+
+err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value) {
+	_p_key_path; _p_name; _u_value;
+	m_the_key.m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) { return m_the_key.m_error << __e_inv_arg = _T("Input registry key path is invalid"); }
+	if (nullptr == _p_name || 0 == ::_tcslen(_p_name)) { return m_the_key.m_error << __e_inv_arg = _T("Input registry value name is invalid"); }
+
+	LSTATUS n_result = __s_ok;
+	if (nullptr == m_the_key()){ // the key is not open yet;
+		n_result = m_the_key().Open(Get_reg_router().Root().Key(), _p_key_path);
+		if (!!n_result) {
+			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path); return m_the_key.Error();
+		}
+	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw ;
+	n_result = m_the_key().SetDWORDValue(_p_name, _u_value);
+	if (!!n_result) {
+		(m_the_key.m_error = dword(n_result)) = TString().Format(_T("Set value '%s' to (%d) is failed"), _p_name, _u_value);
+	}
+
+	return m_the_key.Error();
+}
 
 CRegKey_Ex::CValue::operator _pc_sz (void) /*const*/ { return this->GetString((*this)().Path(), (*this)().Name()); }
 

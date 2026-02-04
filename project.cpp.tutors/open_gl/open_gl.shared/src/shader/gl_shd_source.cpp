@@ -17,7 +17,7 @@ using namespace ex_ui::draw::open_gl::shader;
 using namespace shared::app;
 using namespace shared::sys_core::storage;
 
-using e_shaders = CReg_router::CShaders::e_types;
+using e_shaders = route::CShaders::e_types;
 
 #pragma region cls::CSrc_Cfg{}
 

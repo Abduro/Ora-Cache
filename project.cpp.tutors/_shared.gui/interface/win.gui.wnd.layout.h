@@ -12,7 +12,6 @@ namespace shared { namespace gui {
 	using namespace shared::defs;
 	using namespace shared::types;
 
-	using CWindow = ::ATL::CWindow;
 	using IWaitable_Events = shared::common::IWaitable_Events;
 	using CStdTimer = shared::common::CStdTimer;
 
@@ -26,12 +25,7 @@ namespace docking {
 
 	class CSide {
 	public:
-		enum e_areas : uint32_t {
-		e_left  = 0x0,
-		e_top   = 0x1,
-		e_right = 0x2,
-		e_btm   = 0x3,
-		};
+		enum e_areas : uint32_t { e_left = 0x0, e_top = 0x1, e_right = 0x2, e_btm = 0x3 };
 	public:
 		CSide (void);
 		CSide (const e_areas); CSide (const CSide&) = delete; CSide (CSide&&) = delete; ~CSide (void) = default;
@@ -90,11 +84,12 @@ namespace docking {
 		bool    Height (const long _l_value, const CValue::e_ctrl); // returns 'true' in case if the value or control type is changed;
 
 		bool Is_locked (void) const; // returns 'true' in case both attributes (height|width) is fixed;
+		bool Is_locked (const bool _b_lock); // if input value is 'true' this size value attributes set to e_ctrl::e_fixed;
 
 		const
-		CValue& Width  (void) const;
-		CValue& Width  (void) ;
-		bool    Width  (const long _l_value, const CValue::e_ctrl); // returns 'true' in case if the value or control type is changed;
+		CValue&  Width (void) const;
+		CValue&  Width (void) ;
+		bool     Width (const long _l_value, const CValue::e_ctrl); // returns 'true' in case if the value or control type is changed;
 
 		CSize& operator >>(const CValue& _v_height);
 		CSize& operator <<(const CValue& _v_width);
@@ -137,88 +132,53 @@ namespace docking {
 		t_rect m_rect;
 	};
 }
-
 	// this version of the layout implementation supports two components only:
 	// (a) a window in the top part of the client area, this is the child window of graphics output: DirectX and OpenGL tutorials;
 	// (b) a window in the bottom part of the client area, this is the debug output console; (text mode);
 	class CLayout : public IWaitable_Events {
 	public:
-		class CMainWnd {
-		public:
-			CMainWnd (void); CMainWnd (const CMainWnd&) = delete; CMainWnd (CMainWnd&&) = delete; ~CMainWnd (void) = default;
-			const
-			t_rect&  ClientArea (void) const;
-			t_rect&  ClientArea (void) ;
-			const
-			t_rect&  Position (void) const; // returns the reference to the rectangle of the main window position on the screen; (ro);
-			t_rect&  Position (void) ;      // direct changing of the rectangle value(s) does not move window or change its size;
+		using CPane = docking::CPane;
+		CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete; ~CLayout (void);
 
-			bool     Is_locked(void) const;           // returns the lock state of the main window frame size, if it is 'true' the window size cannot be changed;
-			bool     Is_locked(const bool _b_state);  // sets the lock state of the main window frame rectangle (not its position, the window is still moveable); 
+		// https://thecontentauthority.com/blog/below-vs-bottom ;
+		// https://www.abbreviations.com/abbreviation/bottom ;
+		const
+		CPane& Bottom (void) const;
+		CPane& Bottom (void) ;
+		const
+		t_rect&  ClientArea (void) const;
+		err_code Default (void) ; // creates default layout by arranging the two (top|bottom) panes whithin the main one;
 
-			bool     Is_valid (void) const;
+		// all required messages are routed to this function by the main window;
+		// *important*: in order to handle the particular message the code of that message must be added to the:
+		// l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param _w_param, l_param _l_param); shared.wnd.msg.cpp;
 
-			const HWND Target (void) const;
-			err_code   Target (const HWND);
+		err_code  IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param);
 
-		private:
-			CMainWnd& operator = (const CMainWnd&) = delete; CMainWnd& operator = (CMainWnd&&) = delete;
-			t_rect m_rect_pos; // the main window frame position on the screen in absolute coordinates' system;
-			t_rect m_rect_clt; // the rectangle of the client area of the main window;
+		// https://english.stackexchange.com/questions/14694/what-is-the-difference-between-adjust-settle-and-arrange ;
+		bool   Is_valid (void) const ; // just validates all panes; in any case the arrangement will be made on the panes that are valid;
+		err_code Recalc (void) ;       // re-calculates rectangles of all parts of the main window including its initial window rect too;
+		 
+		// https://forum.wordreference.com/threads/bottom-lower-and-top-upper.2453408/ ; << good explaining;
+		// Google AI: 'Top' can be considered more *absolute*, referring to a singular point, whereas 'upper' is relative..."
 
-			bool   m_locked;
-			HWND   m_main_wnd;
-		};
-	using CPane = docking::CPane;
-	public:
-		 CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
-		~CLayout (void);
+		const
+		CPane& Top (void) const; // returns the reference to the target window which client area is adjusted by this layout; (ro);
+		CPane& Top (void) ;	  // returns the reference to the target window which client area is adjusted by this layout; (rw);
 
-		 // https://thecontentauthority.com/blog/below-vs-bottom ;
-		 // https://www.abbreviations.com/abbreviation/bottom ;
-		 const
-		 CPane& Bottom (void) const;
-		 CPane& Bottom (void) ;
-
-		 err_code Default (void) ; // creates default layout by arranging the two (top|bottom) panes whithin the main one;
-
-		 // all required messages are routed to this function by the main window;
-		 // *important*: in order to handle the particular message the code of that message must be added to the:
-		 // l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param _w_param, l_param _l_param); shared.wnd.msg.cpp;
-
-		 err_code  IMsg_OnMessage (const uint32_t _u_code, const w_param, const l_param);
-
-		 // https://english.stackexchange.com/questions/14694/what-is-the-difference-between-adjust-settle-and-arrange ;
-		 bool   Is_valid  (void) const ; // just validates all panes; in any case the arrangement will be made on the panes that are valid;
-
-		 err_code Recalc  (void) ; // re-calculates rectangles of all parts of the main window including its initial window rect too;
-
-		 const
-		 CMainWnd& Main (void) const; // actually, it is not the pane but the main window sizes themselves;
-		 CMainWnd& Main (void) ;     
-
-		 // https://forum.wordreference.com/threads/bottom-lower-and-top-upper.2453408/ ; << good explaining;
-		 // Google AI: 'Top' can be considered more *absolute*, referring to a singular point, whereas 'upper' is relative..."
-
-		 const
-		 CPane& Top (void) const; // returns the reference to the target window which client area is adjusted by this layout; (ro);
-		 CPane& Top (void) ;	  // returns the reference to the target window which client area is adjusted by this layout; (rw);
-
-		 err_code Update (t_rect* const = 0);   // perhaps it would be better to name it as 'Recalc'; this method is called on 'moving' window message handler;
+		err_code Update (t_rect* const = 0);   // perhaps it would be better to name it as 'Recalc'; this method is called on 'moving' window message handler;
 
 	private:
-		 CLayout& operator = (const CLayout&) = delete;
-		 CLayout& operator = (CLayout&&) = delete;
+		CLayout& operator = (const CLayout&) = delete;
+		CLayout& operator = (CLayout&&) = delete;
 
-		 void IWaitable_OnComplete(void) override final;
+		void IWaitable_OnComplete(void) override final;
 
-		 CPane  m_low;
-		 CPane  m_top;
-
-		 CMainWnd  m_main_wnd; // it is the main window of the tutorial app;
-		 CStdTimer m_wait;
+		CPane  m_low;
+		CPane  m_top;
+		CStdTimer m_wait;
+		t_rect m_rect; // the rectangle of the client area of the main window;
 	};
-
 }}
 
 #ifndef __H

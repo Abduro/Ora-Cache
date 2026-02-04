@@ -16,7 +16,6 @@ namespace shared { namespace gui {
 	using namespace shared::types;
 
 	using namespace ex_ui::popup;
-//	using namespace ex_ui::popup::layout;
 
 	using CWindow = ::ATL::CWindow;
 
@@ -24,34 +23,68 @@ namespace shared { namespace gui {
 	public:
 		class CIcons { // declaration this class here is just trying to create an illusion of the object-oriented programming;
 		public:
-			CIcons (CFrame* const = 0); CIcons (const CIcons&) = delete; CIcons (CIcons&&) = delete; ~CIcons (void) = default;
+			CIcons (void); CIcons (const CIcons&) = delete; CIcons (CIcons&&) = delete; ~CIcons (void) = default;
 
-			err_code Set (const uint16_t _u_res_id); // sets icons of both sizes (small & large) to the window handle;
+			TError&  Error (void) const;
+			err_code Set (const uint16_t _u_res_id); // sets icons of both sizes (small: 16x16px & large: 32x32px) to the app window;
 
 		private:
 			CIcons& operator = (const CIcons&) = delete; CIcons& operator = (CIcons&&) = delete;
-			CFrame* const m_p_frm;
+			CError  m_error;
+		};
+		class CPosition { // *note*: 'position' is the state of being, while 'placement' is the action of placing;
+		public:
+			CPosition (void); CPosition (const CPosition&) = delete; CPosition (CPosition&&) = delete; ~CPosition (void);
+
+			TError&  Error(void) const;
+			err_code Load (void); // loads the app/main window position from the regestry;
+			err_code Save (void); // saves the app/main window position in the regestry; *note*: 'in'-'position'(where), 'into'-'direction/motion'(where to);
+
+			const
+			t_rect&  Get (void) const;    // gets the reference to the rectangle of the main window frame position on the screen; (ro);
+			bool     Set (const t_rect&); // sets the window rectangle;
+
+			const
+			t_rect&  operator ()(void) const;
+			t_rect&  operator ()(void) ;
+
+			CPosition& operator <<(const t_rect&);
+
+		private:
+			CPosition& operator = (const CPosition&) = delete; CPosition& operator = (CPosition&&) = delete;
+			t_rect m_rect;
+			CError m_error;
+		};
+		class CSize {
+		public:
+			CSize (void); CSize (const CSize&) = delete; CSize (CSize&&) = delete; ~CSize (void) = default;
+			bool Is_locked (void) const;           // returns the lock state of the main window frame size, if it is 'true' the window size cannot be changed;
+			bool Is_locked (const bool _b_state);  // sets the lock state of the main window frame rectangle (not its position, the window is still moveable); 
+		private:
+			CSize& operator = (const CSize&) = delete; CSize& operator = (CSize&&);
+			bool   m_locked;
 		};
 		
 	public:
+#pragma region iface::CFrame{}
 		 CFrame (void); CFrame (const CFrame&) = delete; CFrame (CFrame&&) = delete;
 		~CFrame (void);
 
 		const
 		CIcons& Icons (void) const;
 		CIcons& Icons (void) ;
-
 		const
-		CWindow& Window (void) const;
-		CWindow& Window (void) ;
-
+		CPosition& Position (void) const;
+		CPosition& Position (void) ;
+		const
+		CSize&  Size (void) const;
+		CSize&  Size (void) ;
+#pragma endregion
 	private:
-		CIcons  m_icons;
-		CWindow m_owner; // this is window handle wrapper which this frame belongs to;
-
-	private:
-		CFrame& operator = (const CFrame&) = delete;
-		CFrame& operator = (CFrame&&) = delete;
+		CFrame& operator = (const CFrame&) = delete; CFrame& operator = (CFrame&&) = delete;
+		CIcons    m_icons;
+		CPosition m_pos;
+		CSize     m_size;
 	};
 
 	class CAppWnd : public ex_ui::popup::CWndBase { typedef ex_ui::popup::CWndBase TBase;
@@ -87,10 +120,8 @@ namespace shared { namespace gui {
 		CFrame  m_frame ;
 		shared::gui::CLayout m_layout;
 	};
-
 }}
 
-// the main window in any application can be the only one:
-shared::gui::CAppWnd&  Get_app_wnd (void);
+shared::gui::CAppWnd&  Get_app_wnd (void); // the main window of any desktop application can be the only one;
 
 #endif/*_WIN_GUI_WND_H_INCLUDED*/

@@ -55,11 +55,13 @@ CWndBase::CLayout::CSize&  CWndBase::CLayout::Size (void)       { return this->m
 #pragma endregion
 #pragma region cls::CWndBase{}
 
-CWndBase:: CWndBase (void) : m_h_wnd (0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; this->m_cls_name = __CLASS__; }
+CWndBase:: CWndBase (void) : m_h_wnd (0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CWndBase::~CWndBase (void) {
 	if (this->Is_valid())
 		this->Destroy(); // it is *required* for removing message handler interface pointer from router notification queue;
 }
+
+_pc_sz   CWndBase::Cls_name (void) const { static CString cs_cls = __CLASS__; return (_pc_sz) cs_cls; }
 
 err_code CWndBase::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
 	_u_code; _w_param; _l_param;
@@ -168,7 +170,14 @@ TError&  CWndBase::Error (void) const { return this->m_error; }
 HWND  CWndBase::Handle (void) const { return this->m_h_wnd; }
 
 bool  CWndBase::Is_valid (void) const {
-	return nullptr != this->m_h_wnd && true == !!::IsWindow(this->Handle());
+//	this->m_error <<__METHOD__<<__s_ok;
+	const
+	bool b_valid = nullptr != this->m_h_wnd && true == !!::IsWindow(this->Handle());
+#if (0)
+	if (b_valid == false)
+		this->m_error << __e_hwnd = _T("#__e_inv_handle: The window handle is invalid or not inited");
+#endif
+	return b_valid;
 }
 
 bool  CWndBase::Is_top (void) const {
@@ -189,8 +198,6 @@ CWndBase::CLayout& CWndBase::Layout (void)       { return this->m_layout; }
 const
 CWndBase::CStyles& CWndBase::Styles (void) const { return this->m_styles; }
 CWndBase::CStyles& CWndBase::Styles (void)       { return this->m_styles; }
-
-_pc_sz CWndBase::Cls_name (void) const { return (_pc_sz) this->m_cls_name; }
 
 bool CWndBase::operator == (const CWndBase& _rsh) const { return this->Handle() == _rsh.Handle(); }
 bool CWndBase::operator == (const HWND _what) const { return this->Handle() == _what; }

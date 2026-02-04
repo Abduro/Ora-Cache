@@ -480,11 +480,11 @@ err_code  CVersion::Load  (void) {
 	const CRegVer& ver = ::Get_reg_router().Ctx().Version();
 
 	TRegKeyEx reg_key;
-	this->m_major = reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_major)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	this->m_minor = reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_minor)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	this->m_major = reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_major)); if (reg_key.Error()) { this->m_error = reg_key.Error(); __trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
+	this->m_minor = reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_minor)); if (reg_key.Error()) { this->m_error = reg_key.Error(); __trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
 
 	this->m_use_core = !!reg_key.Value().GetDword(ver.Root(), (_pc_sz) ver.Name(CRegVer::e_core));
-	if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	if (reg_key.Error()) { this->m_error = reg_key.Error(); __trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req)); }
 
 	return this->Error();
 }

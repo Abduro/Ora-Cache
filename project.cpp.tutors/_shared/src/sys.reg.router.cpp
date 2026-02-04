@@ -10,10 +10,11 @@
 using namespace shared::sys_core::storage;
 using namespace shared::sys_core::storage::route;
 
+using CAppWnd = CApp::CWindow;
 using CCell = CGrid::CCell;
-using e_renderer = CRoot::e_renderer;
-using CVersion   = CCtx::CVersion;
 using CTestCase  = CShaders::CTestCase;
+using CVersion   = CCtx::CVersion;
+using e_renderer = CRoot::e_renderer;
 
 #define TutorialRootKey HKEY_CURRENT_USER
 
@@ -21,6 +22,23 @@ static e_renderer e_current = e_renderer::e_open_gl;
 static CString cs_$_root;
 static CString cs_theme;
 
+#pragma region cls::CApp{}
+
+CApp::CApp (void) {}
+
+_pc_sz CApp::Root (void) const {
+
+	static CString cs_root;
+	if (cs_root.IsEmpty()) {
+		cs_root.Format(_T("%s\\App"), ::Get_reg_router().Root().Path());
+	}
+	return (_pc_sz) cs_root;
+}
+const
+CAppWnd& CApp::Window (void) const { return this->m_wnd; }
+CAppWnd& CApp::Window (void)       { return this->m_wnd; }
+
+#pragma endregion
 #pragma region cls::CCell{}
 
 CCell::CCell (void) {}
@@ -159,7 +177,7 @@ CString CShaders::Path (_pc_sz _p_object) const {
 _pc_sz  CShaders::Root (void) const {
 
 	if (cs_$_root.IsEmpty()) {
-		cs_$_root.Format(_T("%s\\shaders"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
+		cs_$_root.Format(_T("%s\\shaders"), (_pc_sz)::Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
 	}
 	return (_pc_sz) cs_$_root;
 }
@@ -247,11 +265,49 @@ _pc_sz  CVersion::Root (void) const {
 }
 
 #pragma endregion
+#pragma region cls::CWindow{}
+
+CAppWnd::CWindow (void) {}
+
+_pc_sz CAppWnd::Position (void) const {
+
+	static CString cs_pos;
+	if (cs_pos.IsEmpty()) {
+		cs_pos.Format(_T("%s\\Position"), this->Root());
+	}
+	return (_pc_sz) cs_pos;
+}
+
+_pc_sz CAppWnd::Root (void) const {
+
+	static CString cs_root;
+	if (cs_root.IsEmpty()) {
+		cs_root.Format(_T("%s\\Window"), ::Get_reg_router().App().Root());
+	}
+	return (_pc_sz) cs_root;
+}
+
+using e_pos = CAppWnd::e_pos;
+
+_pc_sz CAppWnd::Side (const e_pos _e_side) const {
+	_e_side;
+	static CString cs_sides[4];
+	if (cs_sides[(uint32_t)_e_side].IsEmpty()) {
+		cs_sides[(uint32_t)_e_side] = e_pos::e_left == _e_side ? _T("Left") : e_pos::e_right == _e_side ? _T("Right") : e_pos::e_top == _e_side ? _T("Top") : _T("Bottom");
+	}
+	return (_pc_sz) cs_sides[(uint32_t)_e_side];
+}
+
+#pragma endregion
 
 #pragma region cls::CReg_router{}
 
 CReg_router:: CReg_router (void) {}
 CReg_router::~CReg_router (void) {}
+
+const
+CApp& CReg_router::App (void) const { return this->m_app; }
+CApp& CReg_router::App (void)       { return this->m_app; }
 
 const   CCtx&  CReg_router::Ctx (void) const { return this->m_ctx; }
 const   CDraw& CReg_router::Draw (void) const { return this->m_draw; }

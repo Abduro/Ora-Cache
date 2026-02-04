@@ -76,8 +76,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma region __step_0
 		// (0) creating the main window/application at the beginning of this 'journey';
 		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#3_camera"), true))) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
-			app_wnd.Error().Show(); break;
+			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req)); break;
 		}
 
 		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);

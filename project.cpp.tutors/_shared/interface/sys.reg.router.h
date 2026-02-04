@@ -7,6 +7,32 @@
 #include "shared.defs.h"
 namespace shared { namespace sys_core { namespace storage {
 namespace route { using namespace shared::defs;
+
+	class CApp {
+	public:
+		class CWindow {
+		public:
+			enum class e_pos : uint32_t {
+				e_left = 0x0, e_right, e_top, e_bottom
+			};
+			CWindow (void); CWindow (const CWindow&) = delete; CWindow (CWindow&&) = delete; ~CWindow (void) = default;
+			_pc_sz Position (void) const;    // returns app main window position key path;
+			_pc_sz Root (void) const;        // returns app main window root key path;
+			_pc_sz Side (const e_pos) const; // returns app main window rectangle side value name;
+		private:
+			CWindow& operator = (const CWindow&) = delete; CWindow& operator = (CWindow&&) = delete;
+		};
+	public:
+		CApp (void); CApp (const CApp&) = delete; CApp (CApp&&) = delete; ~CApp (void) = default;
+		_pc_sz Root (void) const;
+		const
+		CWindow& Window (void) const;
+		CWindow& Window (void) ;
+	private:
+		CApp& operator = (const CApp&) = delete; CApp& operator = (CApp&&) = delete;
+		CWindow m_wnd;
+	};
+
 	class CCtx {
 	public:
 		class CVersion {
@@ -169,6 +195,9 @@ namespace route { using namespace shared::defs;
 		 CReg_router (void) ; CReg_router (const CReg_router&) = delete; CReg_router (CReg_router&&) = delete;
 		~CReg_router (void) ;
 
+		const
+		CApp&  App (void) const;
+		CApp&  App (void) ;
 		const  CCtx&  Ctx  (void) const;  // there is no need to returns the reference to non-constant object;
 		const  CDraw& Draw (void) const;  // gets info of what shape/view to draw;
 		const
@@ -188,6 +217,7 @@ namespace route { using namespace shared::defs;
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
 
+		CApp   m_app ;
 		CCtx   m_ctx ;
 		CDraw  m_draw;
 		CRoot  m_root;

@@ -50,7 +50,7 @@ namespace ex_ui { namespace popup {
 
 		TError&  Error  (void) const;	
 		HWND     Handle (void) const;
-		bool  Is_valid  (void) const;
+		bool  Is_valid  (void) const; // this function shouldn't set error object state to 'invalid', otherwise window creation process is failed;
 
 		bool  Is_top (void) const; // checks it is the top window, i.e. is the main window of the app or not; ToDo: possibly the name must be changed;
 
@@ -134,12 +134,11 @@ namespace ex_ui { namespace popup {
 		CStyles&  Styles (void) const;
 		CStyles&  Styles (void) ;
 
-		_pc_sz    Cls_name (void) const;
+		_pc_sz    Cls_name (void) const; // this is the name of this class, i.e. the name this class is declared; for debug purposes only;
 
 	protected:
 		CLayout   m_layout;
 		CStyles   m_styles;
-		CString   m_cls_name;  // this is the name of this class, i.e. the name this class is declared; for debug purposes only;
 	};
 }}
 

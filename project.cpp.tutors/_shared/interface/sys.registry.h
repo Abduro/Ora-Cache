@@ -67,6 +67,9 @@ namespace shared { namespace sys_core { namespace storage {
 			CString GetString (_pc_sz _p_name); // it is assumed the key is already open; empty value name means (default);
 			CString GetString (_pc_sz _p_key_path, _pc_sz _p_name)/* const*/; // returns empty string in case of error;
 
+			err_code Set (const uint32_t _u_value); // it is assumed the value name and key path are already set to the cache;
+			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value);
+
 		public:
 			CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
 			const
