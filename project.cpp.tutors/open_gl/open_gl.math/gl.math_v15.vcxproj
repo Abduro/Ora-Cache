@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -195,14 +195,20 @@
     </ClCompile>
     <ClInclude Include="$(_0)math.defs.h" />
     <ClCompile Include="$(_1)math.defs.cpp" />
+    <ClInclude Include="$(_0)math.lerp.h" />
+    <ClCompile Include="$(_1)math.lerp.cpp" />
     <ClInclude Include="$(_0)math.mat.invert.h" />
     <ClCompile Include="$(_1)math.mat.invert.cpp" />
     <ClInclude Include="$(_0)math.mat.rotate.h" />
     <ClCompile Include="$(_1)math.mat.rotate.cpp" />
     <ClInclude Include="$(_0)math.matrix.h" />
     <ClCompile Include="$(_1)math.matrix.cpp" />
+    <ClInclude Include="$(_0)math.quat.h" />
+    <ClCompile Include="$(_1)math.quat.cpp" />
     <ClInclude Include="$(_0)math.vector.h" />
     <ClCompile Include="$(_1)math.vector.cpp" />
+    <ClInclude Include="$(_0)virt_camera.h" />
+    <ClCompile Include="$(_1)virt_camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

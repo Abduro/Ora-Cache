@@ -18,13 +18,19 @@
   <ItemGroup>
     <ClInclude Include="$(_0)math.defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.lerp.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.lerp.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.mat.invert.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.mat.invert.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.mat.rotate.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.matrix.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.matrix.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.quat.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.quat.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.vector.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.vector.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)virt_camera.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)virt_camera.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>
