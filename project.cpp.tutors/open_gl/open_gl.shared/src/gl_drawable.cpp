@@ -125,7 +125,7 @@ rgb::CFloat&  CClr_flt::operator ()(void)       { return (TBase&)*this; }
 using CCell = view::CGrid::CCell;
 
 CCell:: CCell (void) : m_size{0u} {
-
+#if (0)
 	using CRegCell = shared::sys_core::storage::CGrid::CCell;
 	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
 
@@ -138,6 +138,7 @@ CCell:: CCell (void) : m_size{0u} {
 	if (reg_key.Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
 	}
+#endif
 }
 
 CCell::~CCell (void) {}
@@ -252,8 +253,14 @@ const
 CClr_flt& CGrid::Clr (void) const { return this->m_color; }
 CClr_flt& CGrid::Clr (void)       { return this->m_color; }
 
-err_code CGrid::Create (void) { this->m_error <<__METHOD__<<__s_ok; return this->Error(); }
-err_code CGrid::Destroy (void) { this->m_error <<__METHOD__<<__s_ok; return this->Error(); }
+err_code CGrid::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	this->m_pers.Load(this->Cell()); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
+}
+err_code CGrid::Destroy (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	this->m_pers.Save(this->Cell()); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
+}
 
 #if (0)
 void CGrid::Default (void) {
@@ -414,6 +421,52 @@ err_code view::CGrid::Update (const t_size_u& _u_size) {
 		}
 #endif
 	}
+	return this->Error();
+}
+
+#pragma endregion
+#pragma region cls::CPersistent{}
+
+using CPersistent = CGrid::CPersistent;
+
+CPersistent::CPersistent (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError& CPersistent::Error (void) const { return this->m_error; }
+
+err_code CPersistent::Load (CGrid::CCell& _cell) const {
+	_cell;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using CRegCell = shared::sys_core::storage::CGrid::CCell;
+	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
+
+	TRegKeyEx reg_key;
+	_cell.W(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_width)));
+	if (reg_key.Error()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	}
+	_cell.H(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_height)));
+	if (reg_key.Error()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	}
+
+	return this->Error();
+}
+err_code CPersistent::Save (const CGrid::CCell& _cell) {
+	_cell;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using CRegCell = shared::sys_core::storage::CGrid::CCell;
+	using e_values = CRegCell::e_values;
+
+	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
+
+	TRegKeyEx reg_key;
+
+	reg_key.Value()() << reg_cell.Root();
+	reg_key.Value()() >> reg_cell.Name(e_values::e_height); if (__failed(reg_key.Value().Set(_cell.H()))) this->m_error = reg_key.Error();
+	reg_key.Value()() >> reg_cell.Name(e_values::e_width); if (__failed(reg_key.Value().Set(_cell.W()))) this->m_error = reg_key.Error();
+
 	return this->Error();
 }
 

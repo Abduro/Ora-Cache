@@ -13,15 +13,19 @@ namespace shared { namespace gui { namespace menus {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenuex ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-tpmparams ;
 
+	typedef MENUITEMINFO TItemInfo;
+	// https://learn.microsoft.com/en-us/windows/win32/menurc/using-menus#example-of-owner-drawn-menu-items ;
+
 	class CBase {
 	protected:
 		CBase (void); CBase (const CBase&); CBase (CBase&&); ~CBase (void);
+	public:
 		TError& Error (void) const;
 	protected:
 		CBase& operator = (const CBase&); CBase& operator = (CBase&&);
 		mutable CError m_error;
 	};
-
+#if (0) // not used;
 	class CCtxCfg : public CBase { typedef CBase TBase;
 	public:
 		enum class e_h_align : uint32_t { e_left = 0x0, e_right = 0x1 };
@@ -36,8 +40,27 @@ namespace shared { namespace gui { namespace menus {
 		e_h_align m_h_align;
 		e_v_align m_v_align;
 	};
-
+#endif
 	class CItem : public CBase { typedef CBase TBase;
+	public:
+		class CState { // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate << should be used;
+		public:
+			enum e_state : uint32_t { e_enabled = 0x0, e_checked };
+			CState (void); CState (const CState&); CState (CState&&); ~CState (void) = default;
+
+			bool Get (const e_state) const;   // gets menu item state by given enumeration value;
+			err_code Set (const TItemInfo&);  // sets menu item state fields' values from given menu info structure;
+
+			bool Is_checked (void) const;
+			bool Is_enabled (void) const;
+
+		public:
+			CState& operator = (const CState&); CState& operator = (CState&&);
+			bool& operator [](const e_state);
+
+		private:
+			bool m_state[e_state::e_checked + 1];
+		};
 	public:
 		CItem (const uint32_t _u_cmd_id = 0, _pc_sz _p_caption = nullptr);
 		CItem (const CItem&); CItem (CItem&&); ~CItem (void);
@@ -53,14 +76,27 @@ namespace shared { namespace gui { namespace menus {
 		bool  Is_valid (void) const;
 		uint32_t Mask  (void) const;       // this is the flag mask for appending or inserting menu item;
 
+	//	static err_code Disable (const uint32_t _itm_id, CError&);
+	//	static err_code Enable (const uint32_t _itm_id, CError&);
+
+		err_code Set (const TItemInfo&);   // sets the fields values from the given item information;
+		const
+		CState&  State (void) const;
+		CState&  State (void) ;
+
+		_pc_sz To_str (void) const;        // converts this class object to string representation for debug output;
+
 	public:
 		CItem& operator = (const CItem&); CItem& operator = (CItem&&);
 		CItem& operator <<(const uint32_t _u_cmd_id);
 		CItem& operator <<(_pc_sz _p_caption);
+		CItem& operator <<(const CState&);
+
 	private:
 		uint32_t m_cmd_id;
 		CString  m_cs_cap;
 		uint32_t m_mask;
+		CState   m_state;
 	};
 
 	typedef ::std::vector<CItem> TItems;
@@ -100,6 +136,9 @@ namespace shared { namespace gui { namespace menus {
 
 		TError&  Error (void) const;
 		bool  Is_valid (void) const;
+
+		HMENU Handle (void) const;
+
 		const
 		CItem_Coll& Items (void) const;
 		CItem_Coll& Items (void) ;
@@ -116,6 +155,18 @@ namespace shared { namespace gui { namespace menus {
 		CError     m_error;
 		HMENU      m_menu ;
 		CItem_Coll m_items;
+	};
+
+	typedef ::std::map<HMENU, menus::CItem_Coll> TMenuMap;
+
+	class CMenu_Enum { // gets complete info of menu comntent: items and sub-menu(s) from given menu handle;
+	public:
+		CMenu_Enum (void); CMenu_Enum (const CMenu_Enum&) = delete; CMenu_Enum (CMenu_Enum&&) = delete; ~CMenu_Enum (void) = default;
+
+		static err_code Do (const HMENU, TMenuMap&, CError&);
+
+	private:
+		CMenu_Enum& operator = (const CMenu_Enum&) = delete; CMenu_Enum& operator = (CMenu_Enum&&) = delete;
 	};
 
 }}

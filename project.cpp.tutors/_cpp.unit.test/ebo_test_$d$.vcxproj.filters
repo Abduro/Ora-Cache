@@ -1,68 +1,79 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060020}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060021}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_prec">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060022}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\shared">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060023}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\shared">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060024}</UniqueIdentifier>
-    </Filter>
+    <Filter Include="_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060020}</UniqueIdentifier></Filter>
+    <Filter Include="_root\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060021}</UniqueIdentifier></Filter>
+
+    <Filter Include="render"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060022}</UniqueIdentifier></Filter>
+    <Filter Include="render\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060023}</UniqueIdentifier></Filter>
+    <Filter Include="render\shapes"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060024}</UniqueIdentifier></Filter>
+    <Filter Include="render\shapes\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060025}</UniqueIdentifier></Filter>
+
+    <Filter Include="shader"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060026}</UniqueIdentifier></Filter>
+    <Filter Include="shader\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060027}</UniqueIdentifier></Filter>
+    <Filter Include="shader\vars"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060028}</UniqueIdentifier></Filter>
+    <Filter Include="shader\vars\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060029}</UniqueIdentifier></Filter>
+
+    <Filter Include="vertex"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002A}</UniqueIdentifier></Filter>
+    <Filter Include="vertex\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002B}</UniqueIdentifier></Filter>
+
+    <Filter Include="win_api"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002C}</UniqueIdentifier></Filter>
+    <Filter Include="win_api\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002D}</UniqueIdentifier></Filter>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
-    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+  <ItemGroup><!--precompiled headers and module;-->
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_2-0)test_case_$d$.buffer.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.prog.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.render.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.render.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.shader.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.uniform.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.dat.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.dat.cpp"><Filter>src\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.obj.h"><Filter>interface\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp"><Filter>src\shared</Filter></ClCompile>
+  <ItemGroup><!--renderer and shapes;-->
+    <ClInclude Include="$(_2-0)test_case_$d$.render.h"><Filter>render</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.render.cpp"><Filter>render\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h"><Filter>render\shapes\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp"><Filter>render\shapes\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.render.h"><Filter>render</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.render.cpp"><Filter>render</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.shape.2d.h"><Filter>render\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.shape.2d.cpp"><Filter>render\shapes</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_2)ebo_test_$d$.buffer.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.ctx.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.defs.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.prog.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.render.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.render.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.shader.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.shape.2d.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.shape.2d.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.uniform.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.uniform.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.dat.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.dat.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.obj.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.obj.cpp"><Filter>src</Filter></ClCompile>
+  <ItemGroup><!--shader related test cases;-->
+    <ClInclude Include="$(_2-0)test_case_$d$.prog.h"><Filter>shader\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp"><Filter>shader\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.prog.h"><Filter>shader</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp"><Filter>shader</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.shader.h"><Filter>shader\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp"><Filter>shader\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.shader.h"><Filter>shader</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp"><Filter>shader</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--shader variable data types;-->
+    <ClInclude Include="$(_2-0)test_case_$d$.uniform.h"><Filter>shader\vars\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp"><Filter>shader\vars\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.uniform.h"><Filter>shader\vars</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.uniform.cpp"><Filter>shader\vars</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--vertex array and its buffer;-->
+    <ClInclude Include="$(_2-0)test_case_$d$.buffer.h"><Filter>vertex\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp"><Filter>vertex\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.buffer.h"><Filter>vertex</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp"><Filter>vertex</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.dat.h"><Filter>vertex\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.dat.cpp"><Filter>vertex\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.obj.h"><Filter>vertex\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp"><Filter>vertex\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.dat.h"><Filter>vertex</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.dat.cpp"><Filter>vertex</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.obj.h"><Filter>vertex</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.obj.cpp"><Filter>vertex</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--window device context and popup menu;-->
+    <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>win_api\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>win_api\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.menu.h"><Filter>win_api\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.menu.cpp"><Filter>win_api\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.ctx.h"><Filter>win_api</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp"><Filter>win_api</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.menu.h"><Filter>win_api</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.menu.cpp"><Filter>win_api</Filter></ClCompile>
   </ItemGroup>
 </Project>

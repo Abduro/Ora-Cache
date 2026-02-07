@@ -97,10 +97,22 @@ namespace view {
 
 		err_code Update(const t_size_u&); // recalculates all vertices for input size of the draw area;
 
+		class CPersistent { // this class is for loading/saving grid settings in the registry;
+		public:
+			CPersistent (void); CPersistent (const CPersistent&) = delete; CPersistent (CPersistent&&) = delete; ~CPersistent (void) = default;
+			TError& Error (void) const;
+
+			err_code Load (CGrid::CCell&) const;
+			err_code Save (const CGrid::CCell&);
+
+		private:
+			CPersistent& operator = (const CPersistent&) = delete; CPersistent& operator = (CPersistent&&) = delete;
+			mutable CError m_error;
+		};
+
 	private:
-		CCell    m_cell ;    // cell dimensions: height|width;
-		CError   m_error;
-		CClr_flt m_color;
+		CCell  m_cell ;
+		CError m_error; CClr_flt m_color; CPersistent m_pers;
 	};
 }
 

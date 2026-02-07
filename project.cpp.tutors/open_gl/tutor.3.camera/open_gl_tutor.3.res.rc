@@ -62,7 +62,12 @@ IDR_TUTOR_0_ICO  ICON    "open_gl_tutor.0.ico"
 
 // https://learn.microsoft.com/en-us/windows/win32/menurc/menuex-resource ;
 // https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ;
-IDR_TUTOR_3_CTX_MENU_0 MENU {
+IDR_TUTOR_3_CTX_MENU_0 MENU { POPUP "" {
+	POPUP "Draw" {
+		MENUITEM "Grid", IDR_TUTOR_3_DRW_OBJ_GRID CHECKED
+		MENUITEM "Triangle", IDR_TUTOR_3_DRW_OBJ_TRIA CHECKED
+	}
+	POPUP "Settings" {
 	POPUP "Grid" {
 		POPUP "Cell Size" {
 			POPUP "Height" { // https://learn.microsoft.com/en-us/windows/win32/menurc/popup-resource ;
@@ -78,8 +83,8 @@ IDR_TUTOR_3_CTX_MENU_0 MENU {
 				MENUITEM "100" , IDR_TUTOR_3_GRD_CELL_W_100
 			}
 		}
-	}
-}
+	}}
+}}
 
 // https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
 // https://learn.microsoft.com/en-us/windows/win32/menurc/dialog-resource ;

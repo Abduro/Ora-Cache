@@ -10,8 +10,6 @@
 using namespace shared::gui;
 using namespace shared::gui::menus;
 
-typedef MENUITEMINFO TItemInfo;
-
 #pragma region cls::CBase{}
 
 CBase:: CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
@@ -26,7 +24,7 @@ CBase&  CBase::operator = (CBase&& _victim) { *this = (const CBase&)_victim; ret
 
 #pragma endregion
 #pragma region cls::CCtxCfg{}
-
+#if (0)
 CCtxCfg::CCtxCfg (void) : TBase(), m_h_align(e_h_align::e_left), m_v_align(e_v_align::e_top) { TBase::m_error >>__CLASS__; }
 
 err_code CCtxCfg::Get (void) {
@@ -44,7 +42,7 @@ err_code CCtxCfg::Get (void) {
 	// it seems look like using the default values is much appropriate and in cases if necessary the track function will take care of correct position of the menu;
 	return TBase::Error();
 }
-
+#endif
 #pragma endregion
 #pragma region cls::CCtxMenu{}
 
@@ -59,9 +57,10 @@ err_code CCtxMenu::Create (void) {
 	this->m_menu = ::CreatePopupMenu();
 	if (!this->m_menu)
 		this->m_error.Last();
-	else
+	else {
 		this->m_items << this->m_menu;
-
+		__trace_impt_2(_T("popup menu (handle = %s) is created;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
+	}
 	return this->Error();
 }
 
@@ -72,13 +71,15 @@ err_code CCtxMenu::Destroy (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu ;
 	if (0 == ::DestroyMenu(this->m_menu))
 		this->m_error.Last();
-	else
+	else {
+		__trace_impt_2(_T("popup menu (handle = %s) is destroyed;\n"), TString()._addr_of(this->Handle(), _T("0x%08x")));
 		this->m_menu = nullptr;
-
+	}
 	return this->Error();
 }
 
 TError& CCtxMenu::Error (void) const { return this->m_error; }
+HMENU CCtxMenu::Handle (void) const { return this->m_menu; }
 
 bool CCtxMenu::Is_valid (void) const { return nullptr != this->m_menu && !!::IsMenu(this->m_menu); }
 const
@@ -157,10 +158,62 @@ bool  CItem::Is_valid (void) const { return !!this->CmdId() && !this->m_cs_cap.I
 
 uint32_t CItem::Mask  (void) const { return MIIM_FTYPE|MIIM_STATE|MIIM_ID|MIIM_STRING; }
 
-CItem&  CItem::operator = (const CItem& _src) { *this << _src.CmdId() << _src.Caption(); return *this; }
+err_code CItem::Set (const TItemInfo& _info) {
+	_info;
+	err_code n_result = __s_ok;
+
+	return n_result;
+}
+const
+CItem::CState& CItem::State (void) const { return this->m_state;}
+CItem::CState& CItem::State (void)       { return this->m_state;}
+
+_pc_sz  CItem::To_str (void) const {
+	static _pc_sz pc_sz_pat = _T("cmd_id = 0x%04x; caption = '%s'");
+	static CString cs_out; cs_out.Format(pc_sz_pat, this->CmdId(), (_pc_sz) this->Caption());
+	return (_pc_sz) cs_out;
+}
+
+CItem&  CItem::operator = (const CItem& _src) { *this << _src.CmdId() << _src.Caption() << _src.State(); return *this; }
 CItem&  CItem::operator = (CItem&& _victim) { *this = (const CItem&)_victim;  return *this; }
 CItem&  CItem::operator <<(const uint32_t _u_cmd_id) { this->CmdId(_u_cmd_id); return *this; }
 CItem&  CItem::operator <<(_pc_sz _p_caption) { this->Caption(_p_caption); return *this; }
+CItem&  CItem::operator <<(const CState& _state) { this->State() = _state;  return *this; }
+
+#pragma endregion
+#pragma region cls::CItem::CState{}
+
+using CState = CItem::CState;
+
+CState::CState (void) : m_state{false} {}
+CState::CState (const CState& _src) : CState() { *this = _src; }
+CState::CState (CState&& _victim) : CState() { *this = _victim; }
+
+bool CState::Get (const e_state _state) const {
+	_state;
+	return e_state::e_enabled == _state ? this->Is_enabled() : this->Is_checked();
+}
+err_code CState::Set (const TItemInfo& _info) {
+	_info;
+	err_code n_result = __s_ok;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow ;
+	this->m_state[e_state::e_checked] =  (_info.fState & MFS_CHECKED);
+	this->m_state[e_state::e_enabled] = !(_info.fState & MFS_DISABLED);
+
+	return n_result;
+}
+
+bool CState::Is_checked (void) const { return this->m_state[e_state::e_checked]; }
+bool CState::Is_enabled (void) const { return this->m_state[e_state::e_enabled]; }
+
+CState& CState::operator = (const CState& _src) {
+	(*this)[e_state::e_checked] = _src.Is_checked();
+	(*this)[e_state::e_enabled] = _src.Is_enabled(); return *this;
+}
+
+CState& CState::operator = (CState&& _victim) { *this = (const CState&)_victim;  return *this; }
+
+bool& CState::operator [] (const e_state _state) { return this->m_state[_state]; }
 
 #pragma endregion
 #pragma region cls::CItem_Coll{}
@@ -227,5 +280,49 @@ CItem_Coll& CItem_Coll::operator <<(const HMENU _h_menu) { this->Menu(_h_menu); 
 HMENU CItem_Coll::operator ()(void) const { return this->Menu(); }
 
 CItem_Coll& CItem_Coll::operator += (const CItem& _item) { this->Append(_item); return *this; }
+
+#pragma endregion
+
+#pragma region cls::CMenu_Enum{}
+
+CMenu_Enum::CMenu_Enum (void) {}
+
+err_code CMenu_Enum::Do (const HMENU _h_menu, TMenuMap& _map, CError& _err) {
+	_h_menu; _map; _err;
+	if (nullptr == _h_menu || false == !!::IsMenu(_h_menu))
+		return _err <<__e_inv_arg = _T("#__e_inv_arg: '_h_menu' is not valid");
+
+	if (_map.empty() == false)
+		_map.clear();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount ;
+	const int32_t u_count = ::GetMenuItemCount(_h_menu);
+	if (0 > u_count)
+		return _err.Last();
+
+	static const uint32_t u_req_len = 0x200;
+
+	menus::CItem_Coll items;
+
+	for (uint32_t i_ = 0; i_ < static_cast<uint32_t>(u_count); i_++) {
+
+		CString cs_caption;
+
+		TItemInfo itm_info = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow ;
+		itm_info.cbSize = sizeof(TItemInfo);
+		itm_info.fMask  = MIIM_FTYPE|MIIM_ID|MIIM_STATE|MIIM_SUBMENU|MIIM_STRING;
+		itm_info.dwTypeData = cs_caption.GetBuffer(u_req_len); // 512 characters should be enough;
+		itm_info.cch = u_req_len;
+
+		if (0 == ::GetMenuItemInfo(_h_menu, i_, true, &itm_info)) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuiteminfow ;
+			return _err.Last();
+
+		CItem item(itm_info.wID, (_pc_sz)cs_caption);
+
+		try {
+		} catch (const ::std::bad_alloc&) { return _err << __e_no_memory; }
+	}
+
+	return _err;
+}
 
 #pragma endregion
