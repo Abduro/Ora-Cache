@@ -12,8 +12,8 @@ namespace ebo { namespace boo { namespace test { namespace win_api { namespace m
 	using namespace shared::gui;
 	using namespace shared::gui::menus;
 
-	using CCtxMenu = shared::gui::CCtxMenu;
-	using CMenu_Enum = shared::gui::CMenu_Enum;
+	using CMenu = shared::gui::menus::CMenu;
+	using CMenu_Enum = shared::gui::menus::CMenu_Enum;
 	/* these use cases do not require OpenGL API; it looks like such a kind of use cases must be placed in separate test case project;
 	*/
 	class CTMenu {
@@ -21,17 +21,17 @@ namespace ebo { namespace boo { namespace test { namespace win_api { namespace m
 		CTMenu (void); CTMenu (const CTMenu&) = delete; CTMenu (CTMenu&&) = delete; ~CTMenu (void) = default;
 		TError& Error (void) const;
 
-		err_code Create (void);
+		err_code Create (_pc_sz _p_caption);
 		err_code Delete (void); // this method is for test of deleting menu handle, but actually 'CCtxMenu' class makes it in its destructor;
 
 		const
-		CCtxMenu& operator ()(void) const;
-		CCtxMenu& operator ()(void) ;
+		CMenu& operator ()(void) const;
+		CMenu& operator ()(void) ;
 
 	public:
 		CTMenu& operator = (const CTMenu&) = delete; CTMenu& operator = (CTMenu&&) = delete;
-		CError   m_error;
-		CCtxMenu m_menu;   // shortcut/context popup menu;
+		CError m_error;
+		CMenu  m_menu;   // shortcut/context popup menu;
 	};
 
 	class CTMenus {
@@ -39,7 +39,7 @@ namespace ebo { namespace boo { namespace test { namespace win_api { namespace m
 		CTMenus (void); CTMenus (const CTMenus&) = delete; CTMenus (CTMenus&&) = delete; ~CTMenus (void) = default;
 		TError& Error (void) const;
 
-		err_code Do (void); // creates a popup menu and gets information of all menu items from the menu handle;
+		err_code Get_info (void); // creates a popup menu and gets information of all menu items from the menu handle;
 
 	public:
 		CTMenus& operator = (const CTMenus&) = delete; CTMenus& operator = (CTMenus&&) = delete;

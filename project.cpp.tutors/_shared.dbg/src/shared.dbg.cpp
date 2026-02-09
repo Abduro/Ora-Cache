@@ -192,3 +192,7 @@ void CTrace::SetTestOut (ITestOutput* _p_out) {
 #else
 namespace shared { namespace dbg { namespace _impl { void __warning_lnk_4221 (void) {}}}}
 #endif
+
+void ::__trace_err_ex_0 (shared::defs::TError& _err) { __trace_err(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req)); }
+void ::__trace_err_ex_2 (shared::defs::TError& _err) { __trace_err(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req)); }
+void ::__trace_err_ex_3 (shared::defs::TError& _err) { __trace_err(_T("%s;\n"), (_pc_sz) _err.Print(TError::e_print::e_req)); }

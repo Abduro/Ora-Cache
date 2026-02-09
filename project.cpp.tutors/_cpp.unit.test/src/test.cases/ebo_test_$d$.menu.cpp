@@ -10,10 +10,10 @@ using namespace ebo::boo::test::win_api::menu;
 
 c_ctx_menu::c_ctx_menu (void) {}
 
-void c_ctx_menu::Create (void) { CTMenu menu; menu.Create(); _out()(); }
+void c_ctx_menu::Create (void) { CTMenu menu; menu.Create(_T("Popup menu")); _out()(); }
 void c_ctx_menu::Get_info (void) {
 	CTMenus menu_enum;
-	if (__failed(menu_enum.Do())) { _out()(); return; }
+	if (__failed(menu_enum.Get_info())) { _out()(); return; }
 
 	_out()();
 }

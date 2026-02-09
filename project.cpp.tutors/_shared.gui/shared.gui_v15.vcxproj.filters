@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0010}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0011}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\window">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0012}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0013}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_prec">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0014}</UniqueIdentifier>
-    </Filter>
+    <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0010}</UniqueIdentifier></Filter>
+    <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0011}</UniqueIdentifier></Filter>
+    <Filter Include="interface\menu"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0012}</UniqueIdentifier></Filter>
+    <Filter Include="src\menu"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0013}</UniqueIdentifier></Filter>
+    <Filter Include="interface\window"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0014}</UniqueIdentifier></Filter>
+    <Filter Include="src\window"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0015}</UniqueIdentifier></Filter>
+    <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0016}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0-0)shared.menu.base.h"><Filter>interface\menu</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)shared.menu.base.cpp"><Filter>src\menu</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)shared.menu.enum.h"><Filter>interface\menu</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)shared.menu.enum.cpp"><Filter>src\menu</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)shared.menu.item.h"><Filter>interface\menu</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)shared.menu.item.cpp"><Filter>src\menu</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)shared.menu.popup.h"><Filter>interface\menu</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)shared.menu.popup.cpp"><Filter>src\menu</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)shared.menu.state.h"><Filter>interface\menu</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)shared.menu.state.cpp"><Filter>src\menu</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.ctx.menu.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.ctx.menu.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)shared.theme.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.theme.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.wnd.atom.h"><Filter>interface\window</Filter></ClInclude>

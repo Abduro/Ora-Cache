@@ -35,26 +35,27 @@ _pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_
 }
 
 _pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format, const bool _b_low_case) {
-	_p_fun_or_obj_ptr; _p_format;
+	_p_fun_or_obj_ptr; _p_format; _b_low_case;
 
 	(TBase&)*this = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
 	if (false == TBase::IsEmpty())
 		return (_pc_sz)*this;
 
-#if (1)
+#if (0)
 	// https://stackoverflow.com/questions/22846721/pointer-outputs  ;
 	const
 	uint64_t* p_address = reinterpret_cast<const uint64_t*>(_p_fun_or_obj_ptr);
 
 	((TBase&)*this).Format(!!_p_format ? _p_format : _T("0x%x"), &p_address);
-	// https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class#makelower ;
-	if (_b_low_case)
-		((TBase&)*this).MakeLower();
-
 #else
 	// https://stackoverflow.com/questions/2369541/where-is-p-useful-with-printf ;
 	((TBase&)*this).Format(_T("0x%p"), _p_fun_or_obj_ptr);
+	CString cs_loc = ((TBase&)*this).Right(8);
+	((TBase&)*this).Format(_T("0x%s"), (_pc_sz) cs_loc);
 #endif
+	// https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class#makelower ;
+	if (_b_low_case)
+		((TBase&)*this).MakeLower();
 	return (_pc_sz)*this;
 }
 

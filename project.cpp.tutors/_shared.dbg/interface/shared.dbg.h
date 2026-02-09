@@ -88,6 +88,10 @@ namespace shared { namespace dbg {
 
 typedef shared::dbg::CTrace __trace;
 
+void __trace_err_ex_0 (shared::defs::TError&); // direct print out of the error object;
+void __trace_err_ex_2 (shared::defs::TError&); // direct print out of the error object; class name and method name are included;
+void __trace_err_ex_3 (shared::defs::TError&); // direct print out of the error object; namespace, class name and method name are included;
+
 #define __empty_ln() __trace::Empty_ln();
 
 #define __trace_err(_p_format, ...)  __trace::Out_0(__trace::e_err , _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
