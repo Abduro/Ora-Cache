@@ -51,6 +51,7 @@ namespace ebo { namespace boo { namespace test {
 		CCache& operator +=(_pc_sz _p_out ); // appends a raw text to this cache;
 		CCache& operator +=(const CString&); // appends a string object to this cache;
 		CCache& operator +=(const TParts&);  // appends words i.e. parts of the sentence(s) that can be differ to multiple lines by a separator;
+		CCache& operator +=(TError&);        // appends error object content; *important*: verbose mode does *not* affect the error output;
 		const
 		CCache& operator ()(void) const;     // ouputs this cache content to 'Test' ouput panel;
 		CCache& operator ()(const bool _b_verb); // if '_b_verb' is 'true' there's no lock for adding a message, otherwise the lock is turned on;
@@ -125,8 +126,9 @@ namespace ebo { namespace boo { namespace test {
 		CLogger& operator +=(const CLog_Opts::_accepted _opt); // sets the input option; this is for direct call the CLog_Opts::Set(..., true );
 		CLogger& operator -=(const CLog_Opts::_accepted _opt); // remove the input option from the options' set; the CLog_Opts::Set(..., false);
 
-		CLogger& operator +=(const CString& cs_out) ;     // appends the input string object to the cache; [for simplicity of input];
-		CLogger& operator +=(_pc_sz _p_sz_out) ;          // appends the raw text to the cache; [for simplicity of input];
+		CLogger& operator +=(const CString& cs_out);     // appends the input string object to the cache; [for simplicity of input];
+		CLogger& operator +=(_pc_sz _p_sz_out);          // appends the raw text to the cache; [for simplicity of input];
+		CLogger& operator +=(TError&);             // appends the error object content;
 
 		CLogger& operator >>(_pc_sz _lp_sz_pat);   // sets the pattern string;
 

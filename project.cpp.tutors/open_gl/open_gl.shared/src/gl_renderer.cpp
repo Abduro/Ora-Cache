@@ -23,6 +23,9 @@ using CConvert    = ex_ui::color::rgb::CConvert; // this class has static method
 render::CCfg:: CCfg (void) : m_opts{0}, m_flags{false} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; this->Load();
 	m_opts[1] = (uint32_t)procs::CPrimitives::e_others::e_points;
 }
+render::CCfg::~CCfg (void) {
+	this->Save();
+}
 
 uint32_t render::CCfg::Count (void) const { return this->m_opts[0]; }
 bool     render::CCfg::Count (const uint32_t _n_count) {
@@ -50,8 +53,8 @@ err_code render::CCfg::Load  (void) {
 	const CRegDraw& draw = ::Get_reg_router().Draw();
 
 	TRegKeyEx reg_key;
-	this->m_flags[0] = reg_key.Value().GetDword(draw.Root(), (_pc_sz) draw.Name(e_draw::e_grid)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	this->m_flags[1] = reg_key.Value().GetDword(draw.Root(), (_pc_sz) draw.Name(e_draw::e_tria)); if (reg_key.Error()) __trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	this->m_flags[0] = reg_key.Value().GetDword(draw.Root(), (_pc_sz) draw.Name(e_draw::e_grid)); if (reg_key.Error()) __trace_err_ex_0(reg_key.Error());
+	this->m_flags[1] = reg_key.Value().GetDword(draw.Root(), (_pc_sz) draw.Name(e_draw::e_tria)); if (reg_key.Error()) __trace_err_ex_0(reg_key.Error());
 
 	if (reg_key.Error()) {
 		this->m_error = reg_key.Error();
@@ -81,6 +84,22 @@ void     render::CCfg::Print (const e_print _e_opt) const {
 	__trace_warn_3(_pc_sz_pat, TString().Bool(this->Is_drawable(e_object::e_grid)), TString().Bool(this->Is_drawable(e_object::e_tria)));
 }
 
+err_code render::CCfg::Save (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using CRegDraw  = shared::sys_core::storage::route::CDraw;
+	using e_targets = CRegDraw::e_targets;
+	const CRegDraw& draw = ::Get_reg_router().Draw();
+
+	TRegKeyEx reg_key;
+
+	reg_key.Value()() << draw.Root();
+	reg_key.Value()() >> draw.Name(e_targets::e_grid); if (__failed(reg_key.Value().Set(this->m_flags[0]))) this->m_error = reg_key.Error();
+	reg_key.Value()() >> draw.Name(e_targets::e_tria); if (__failed(reg_key.Value().Set(this->m_flags[1]))) this->m_error = reg_key.Error();
+
+	return this->Error();
+}
+
 uint32_t render::CCfg::StartAt (void) const { return this->m_opts[2]; }
 bool     render::CCfg::StartAt (const uint32_t _u_ndx) {
 	_u_ndx;
@@ -88,6 +107,12 @@ bool     render::CCfg::StartAt (const uint32_t _u_ndx) {
 	if (b_changed)
 		this->m_opts[2] = _u_ndx;
 	return b_changed;
+}
+
+void render::CCfg::Toggle (const e_object _target) {
+	_target;
+	if (e_object::e_grid == _target) this->m_flags[0] = !this->m_flags[0];
+	if (e_object::e_tria == _target) this->m_flags[1] = !this->m_flags[1];
 }
 
 #pragma endregion

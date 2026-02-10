@@ -57,6 +57,10 @@ namespace shared { namespace gui { namespace menus {
 		err_code Append (const CItem&);
 		err_code Insert (const uint32_t _u_before, const CItem&);
 
+		const
+		CItem&   Find (const uint32_t _cmd_id) const; // finds the menu item by given command identifier, if not found the reference to unvalid item is returned;
+		CItem&   Find (const uint32_t _cmd_id) ;	  // finds the menu item by given command identifier, if not found the reference to unvalid item is returned;
+
 		HMENU    Menu (void) const;
 		err_code Menu (const HMENU);
 		const

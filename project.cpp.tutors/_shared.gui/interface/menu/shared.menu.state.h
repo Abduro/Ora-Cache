@@ -14,15 +14,19 @@ namespace shared { namespace gui { namespace menus {
 		enum /*class*/ e_state : uint32_t { e_checked = 0x0, e_enabled, e_popup }; // this is the named indices of the state value array;
 		CState (void); CState (const CState&); CState (CState&&); ~CState (void) = default;
 
-		bool Get (const e_state) const;   // gets menu item state by given enumeration value;
+		static err_code Check  (const HMENU, const uint32_t _u_cmd_id, const bool _b_on, CError&); // sets menu item state to checked/unchecked;
+		static err_code Enable (const HMENU, const uint32_t _u_cmd_id, const bool _b_on, CError&); // sets menu item state to enable/disable;
+
+		bool Get (const e_state) const;         // gets menu item state by given enumeration value;
+		static
+		err_code Get (const HMENU, const uint32_t _u_cmd_id, CState&, CError&); // gets menu item state from menu handle by command identifier;
+		err_code Get (const TItemInfo& _from);  // gets menu item state fields' values from given menu info structure;
+		static
+		err_code Set (const HMENU, const uint32_t _u_cmd_id, const CState&, CError&); // sets menu item state in given menu handle by specified command identifier; 
 
 		bool Is_checked (void) const;
 		bool Is_enabled (void) const;
 		bool Is_popup (void) const;       // the menu item is the popup submenu;
-
-		static
-		err_code Set (const HMENU, const uint32_t _u_cmd_id, CState&, CError&); // sets menu item state from menu handle by command identifier;
-		err_code Set (const TItemInfo&);  // sets menu item state fields' values from given menu info structure;
 
 		_pc_sz To_str (void) const;
 

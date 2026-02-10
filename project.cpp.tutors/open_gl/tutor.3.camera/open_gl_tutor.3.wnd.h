@@ -15,7 +15,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
 	using namespace shared::defs;
 	using namespace shared::types;
-
 	using namespace ex_ui::popup;
 
 	using CFakeWnd = ex_ui::popup::CMsgWnd;
@@ -38,6 +37,48 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 	protected:
 		CFakeWnd  m_fak_wnd; // message-only window (aka fake) is created in its constructor;
 		CCtxMenu  m_ctx_mnu;
+	};
+
+	// https://en.wikipedia.org/wiki/Memento_pattern ;
+	class CCaretaker {
+	public:
+		CCaretaker (void); CCaretaker (const CCaretaker&) = delete; CCaretaker (CCaretaker&&) = delete; ~CCaretaker (void) = default;
+
+		err_code ApplyTo (CCtxMenu&);
+		TError&  Error (void) const;
+
+	private:
+		CCaretaker& operator = (const CCaretaker&) = delete; CCaretaker& operator = (CCaretaker&&) = delete;
+		CError m_error;
+	};
+
+	class COrganizer {
+	public:
+		class CGrid {
+		public:
+			class CCell {
+			public:
+				CCell (void) = default; CCell (const CCell&) = delete; CCell (CCell&&) = delete; ~CCell (void) = default;
+
+				static uint32_t CmdToHeight (const uint32_t _u_cmd_id);
+				static uint32_t CmdToWidth  (const uint32_t _u_cmd_id);
+
+				static uint32_t HeightToCmd (const uint32_t _u_height);
+				static uint32_t WidthToCmd  (const uint32_t _u_width );
+
+			private:
+				CCell& operator = (const CCell&) = delete; CCell& operator = (CCell&&) = delete;
+			};
+		public:
+			CGrid (void); CGrid (const CGrid&) = delete; CGrid (CGrid&&) = delete; ~CGrid (void) = default;
+		private:
+			CGrid& operator = (const CGrid&) = delete; CGrid& operator = (CGrid&&) = delete;
+		};
+	public:
+		COrganizer (void); COrganizer (const COrganizer&) = delete; COrganizer (COrganizer&&) = delete; ~COrganizer (void) = default;
+
+	private:
+		COrganizer& operator = (const COrganizer&) = delete; COrganizer& operator = (COrganizer&&) = delete;
 	};
 
 }}}}

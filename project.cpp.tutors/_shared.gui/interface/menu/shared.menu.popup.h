@@ -35,6 +35,8 @@ namespace shared { namespace gui { namespace menus { using namespace shared::def
 		CItem_Coll& Items (void) const;
 		CItem_Coll& Items (void) ;
 
+		err_code Load (uint16_t _res_id); // loads a menu from resource of the executable by given resource identifier; menu items are not created!
+
 		const
 		HMENU& operator ()(void) const; // gets the reference to the menu handle; (ro)
 		HMENU& operator ()(void) ;      // gets the reference to the menu handle; (rw)

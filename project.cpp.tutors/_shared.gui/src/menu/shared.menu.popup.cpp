@@ -76,6 +76,26 @@ const
 CItem_Coll& CMenu::Items (void) const { return this->m_items; }
 CItem_Coll& CMenu::Items (void)       { return this->m_items; }
 
+err_code CMenu::Load (const uint16_t _res_id) {
+	_res_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid())
+		return this->m_error <<(err_code)TErrCodes::eObject::eExists;
+
+	_pc_sz p_res = reinterpret_cast<t_char*>(static_cast<__int3264>(_res_id));
+
+	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlbasemodule-class ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua ;
+
+	this->Handle() = ::LoadMenu(::ATL::_AtlBaseModule.GetResourceInstance(), p_res);
+
+	if (this->Is_valid() == false)
+		this->m_error.Last();
+
+	return this->Error();
+}
+
 const
 HMENU& CMenu::operator ()(void) const { return this->Handle(); }
 HMENU& CMenu::operator ()(void)       { return this->Handle(); }

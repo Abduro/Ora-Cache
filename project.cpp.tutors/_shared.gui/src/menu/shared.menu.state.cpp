@@ -27,40 +27,78 @@ using namespace _impl;
 
 #pragma region cls::CState{}
 
-CState::CState (void) : m_state{true, false} { CBase::m_error >>__CLASS__;}
+CState::CState (void) : m_state{false, true} { CBase::m_error >>__CLASS__;} // default values m_state{checked,enabled};
 CState::CState (const CState& _src) : CState() { *this = _src; }
 CState::CState (CState&& _victim) : CState() { *this = _victim; }
+
+err_code CState::Check  (const HMENU _h_menu, const uint32_t _u_cmd_id, const bool _b_on, CError& _err) {
+	_h_menu; _u_cmd_id; _b_on; _err;
+	if (nullptr == _h_menu || false == !!::IsMenu(_h_menu)) return _err <<__e_inv_arg;
+	if (0 == _u_cmd_id) return _err <<__e_inv_arg;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem ;
+	if (-1 == ::CheckMenuItem(_h_menu, _u_cmd_id, _b_on ? MF_CHECKED : MF_UNCHECKED))
+		_err <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: menu item of cmd_id = 0x%04x is not found"), _u_cmd_id);
+
+	return _err;
+}
+err_code CState::Enable (const HMENU _h_menu, const uint32_t _u_cmd_id, const bool _b_on, CError& _err) {
+	_h_menu; _u_cmd_id; _b_on; _err;
+	if (nullptr == _h_menu || false == !!::IsMenu(_h_menu)) return _err <<__e_inv_arg;
+	if (0 == _u_cmd_id) return _err <<__e_inv_arg;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablemenuitem ;
+	if (-1 == ::EnableMenuItem(_h_menu, _u_cmd_id, _b_on ? MF_ENABLED : MF_DISABLED)) // MF_BYCOMMAND flag is the default, so can be not specified;
+		_err <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: menu item of cmd_id = 0x%04x is not found"), _u_cmd_id);
+
+	return _err;
+}
 
 bool CState::Get (const e_state _state) const {
 	_state;
 	return e_state::e_enabled == _state ? this->Is_enabled() : this->Is_checked();
 }
-err_code CState::Set (const TItemInfo& _info) {
+err_code CState::Get (const TItemInfo& _info) {
 	_info;
 	err_code n_result = __s_ok;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow ;
-	this->m_state[e_state::e_checked] =  (_info.fState & MFS_CHECKED);
-	this->m_state[e_state::e_enabled] = !(_info.fState & MFS_DISABLED | MF_GRAYED);
-	this->m_state[e_state::e_popup] = (_info.fState & MF_POPUP);
+	this->m_state[e_state::e_checked] = 0 != (_info.fState & MFS_CHECKED);
+	this->m_state[e_state::e_enabled] = 0 == (_info.fState & MFS_DISABLED | MF_GRAYED);
+	this->m_state[e_state::e_popup]   = 0 != (_info.fState & MF_POPUP);
 
 	return n_result;
 }
-err_code CState::Set (const HMENU _h_menu, const uint32_t _u_cmd_id, CState& _out, CError& _err) {
+
+err_code CState::Get (const HMENU _h_menu, const uint32_t _u_cmd_id, CState& _out, CError& _err) {
 	_h_menu; _u_cmd_id; _out; _err;
+	if (nullptr == _h_menu || false == !!::IsMenu(_h_menu)) return _err <<__e_inv_arg;
+	if (0 == _u_cmd_id) return _err <<__e_inv_arg;
+
+	// *note*: the GetMenuState() function has been superseded by the GetMenuItemInfo();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate ;
+	const uint32_t u_flags = ::GetMenuState(_h_menu, _u_cmd_id, MF_BYCOMMAND);
+	if (0 > static_cast<int32_t>(u_flags))
+		return _err.Last();
+
+	_out[e_state::e_checked] = 0 != (u_flags & MFS_CHECKED);
+	_out[e_state::e_enabled] = 0 == (u_flags &(MFS_DISABLED | MF_GRAYED));
+	_out[e_state::e_popup]   = 0 != (u_flags & MF_POPUP);
+
+	return _err;
+}
+err_code CState::Set (const HMENU _h_menu, const uint32_t _u_cmd_id, const CState& _state, CError& _err) {
+	_h_menu; _u_cmd_id; _state; _err;
 	if (nullptr == _h_menu || false == !!::IsMenu(_h_menu))
 		return _err <<__e_inv_arg;
 	if (0 == _u_cmd_id)
 		return _err <<__e_inv_arg;
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate ;
-	if (0 > ::GetMenuState(_h_menu, _u_cmd_id, MF_BYCOMMAND))
-		return _err.Last();
 
 	return _err;
 }
 
 bool CState::Is_checked (void) const { return this->m_state[e_state::e_checked]; }
 bool CState::Is_enabled (void) const { return this->m_state[e_state::e_enabled]; }
-bool CState::Is_popup (void) const {  return this->m_state[e_state::e_popup];  }
+bool CState::Is_popup (void) const { return this->m_state[e_state::e_popup]; }
 
 _pc_sz CState::To_str (void) const {
 	static _pc_sz pc_sz_pat = _T("checked: %s; enabled: %s; sub-menu: %s");

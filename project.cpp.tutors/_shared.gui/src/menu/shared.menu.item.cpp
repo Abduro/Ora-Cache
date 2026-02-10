@@ -52,6 +52,26 @@ CItem&  CItem::operator <<(const CState& _state) { this->State() = _state;  retu
 #pragma endregion
 #pragma region cls::CItem_Coll{}
 
+namespace shared { namespace gui { namespace menus { namespace _impl {
+	CItem inv_item;
+
+	CItem& _find_item (const uint32_t _cmd_id, const TItems& _items, CError& _err) {
+		_cmd_id; _items; _err;
+		if (0 == _cmd_id) {
+			_err <<__e_inv_arg; return inv_item;
+		}
+		TItems& items = const_cast<TItems&>(_items);
+		for (uint32_t i_ = 0; i_ < items.size(); i_++) {
+			CItem& item = items.at(i_);
+			if (item.CmdId() == _cmd_id)
+				return item;
+		}
+		return inv_item;
+	}
+
+}}}}
+using namespace _impl;
+
 CItem_Coll:: CItem_Coll (HMENU _h_menu) : TBase(), m_menu(_h_menu) { TBase::m_error >>__CLASS__; }
 CItem_Coll:: CItem_Coll (const CItem_Coll& _src) : CItem_Coll() { *this = _src; }
 CItem_Coll:: CItem_Coll (CItem_Coll&& _victim) : CItem_Coll() { *this = _victim; }
@@ -74,6 +94,18 @@ err_code CItem_Coll::Append (const CItem& _item) {
 		TBase::m_error.Last();
 
 	return TBase::Error();
+}
+
+const
+CItem&   CItem_Coll::Find (const uint32_t _cmd_id) const {
+	_cmd_id;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	return _find_item(_cmd_id, this->Raw(), TBase::m_error);
+}
+CItem&   CItem_Coll::Find (const uint32_t _cmd_id) {
+	_cmd_id;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	return _find_item(_cmd_id, this->Raw(), TBase::m_error);
 }
 
 err_code CItem_Coll::Insert (const uint32_t _u_before, const CItem& _item) {
@@ -139,7 +171,7 @@ err_code CItem_Coll::Set  (const HMENU _h_menu, TItems& _items, CError& _err) {
 		if (0 == ::GetMenuItemInfo(_h_menu, i_, true, &itm_info)) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuiteminfow ;
 			return _err.Last();
 
-		CItem item(itm_info.wID, (_pc_sz)cs_caption); item.State().Set(itm_info);
+		CItem item(itm_info.wID, (_pc_sz)cs_caption); item.State().Get(itm_info);
 		try {
 			_items.push_back(item);
 		} catch (const ::std::bad_alloc&) { _err << __e_no_memory; break; }

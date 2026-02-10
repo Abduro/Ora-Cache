@@ -7,6 +7,8 @@
 #include "shared.defs.h"
 #include "menu\shared.menu.enum.h"
 #include "menu\shared.menu.item.h"
+#include "menu\shared.menu.state.h"
+#include "menu\shared.menu.popup.h"
 
 namespace shared { namespace gui { namespace menus { using namespace shared::defs;
 
@@ -29,35 +31,17 @@ namespace shared { namespace gui { namespace menus { using namespace shared::def
 }
 	using namespace shared::defs;
 
-	class CCtxMenu {
+	class CCtxMenu : public menus::CMenu { typedef menus::CMenu TMenu;
 	public:
-		using CItem_Coll = menus::CItem_Coll;
 		CCtxMenu (void); CCtxMenu (const CCtxMenu&) = delete; CCtxMenu (CCtxMenu&&) = delete; ~CCtxMenu (void);
 
-		err_code Create (void);  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu ;
-		err_code Destroy (void); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu ;
-
-		TError&  Error (void) const;
-		bool  Is_valid (void) const;
-
-		HMENU Handle (void) const;
-
-		const
-		CItem_Coll& Items (void) const;
-		CItem_Coll& Items (void) ;
-
-		err_code Load  (uint16_t _res_id); // loads a menu from resource of the executable by given resource identifier; menu items are not created!
-
 		uint32_t Track (const HWND _h_owner, const t_point _pt_screen); // tracks popup menu; returns selected menu item command or 0;
-
-		operator HMENU (void) const;
-		HMENU operator ()(void) const;
+		const
+		menus::CMenu& operator ()(void) const;
+		menus::CMenu& operator ()(void) ;
 
 	private:
 		CCtxMenu& operator = (const CCtxMenu&) = delete; CCtxMenu& operator = (CCtxMenu&&) = delete;
-		CError     m_error;
-		HMENU      m_menu ;
-		CItem_Coll m_items;
 	};
 
 }}

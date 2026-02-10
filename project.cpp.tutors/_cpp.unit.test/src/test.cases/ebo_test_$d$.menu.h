@@ -13,7 +13,10 @@ namespace ebo { namespace boo { namespace test { namespace win_api { namespace m
 	public:
 		c_ctx_menu (void); ~c_ctx_menu (void) = default;
 
+		__method (Checked);   // checks/unchecks particulat menu item;
 		__method (Create);    // creates and destroys the popup menu;
+		__method (Enabled);   // enables/disebles particular menu item;
+		__method (Find);      // tries to find menu item by given command identifier;
 		__method (Get_info);  // creates popup menu and gets information of the menu content from its handle;
 
 	};

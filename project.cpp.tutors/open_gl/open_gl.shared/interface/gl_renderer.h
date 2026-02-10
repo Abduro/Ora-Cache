@@ -15,7 +15,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 namespace render {
 	class CCfg : private no_copy {
 	public:
-		CCfg (void); ~CCfg (void) = default;
+		CCfg (void); ~CCfg (void);
 
 		uint32_t Count (void) const;              // returns how many vertices must be drawn;
 		bool     Count (const uint32_t);          // returns 'true' in case of count number of vertices is changed;
@@ -30,8 +30,12 @@ namespace render {
 
 		void     Print (const e_print = e_print::e_no_ns) const; // outputs to thace the drawable settings;
 
+		err_code Save (void);                     // saves the options of drawable objects in the registry;
+
 		uint32_t StartAt (void) const;            // returns the vertex arrey index to start from for drawing;
 		bool     StartAt (const uint32_t _u_ndx); // returns 'true' in case of start index value change;
+
+		void Toggle (const e_object);             // toggle draw option of input object type;
 
 	private:
 		uint32_t m_opts [3];    // 0 - count; 1 - primitive; 2 - start at;

@@ -56,6 +56,7 @@ CCache&  CCache::operator +=(const TParts& _parts)  { if (false == this->Locked(
 	this->Get().insert(this->Get().end(), _parts.begin(), _parts.end());  // people saying there is no exception for catching, but maybe it's just words;
 	return *this;
 }
+CCache&  CCache::operator +=(TError& _err) { this->Get().push_back(_err.Print(TError::e_print::e_req)); return *this; }
 
 CCache&  CCache::operator <<(_pc_sz _lp_sz_prefix) { this->Prefix(_lp_sz_prefix); return *this; }
 CCache&  CCache::operator >>(_pc_sz _lp_sz_suffix) { this->Suffix(_lp_sz_suffix); return *this; }
@@ -170,6 +171,7 @@ CLogger& CLogger::operator -=(const CLog_Opts::_accepted _opt)  { this->Opts() -
 
 CLogger& CLogger::operator +=(const CString& cs_out) { this->Cached() += cs_out; return *this; }
 CLogger& CLogger::operator +=(_pc_sz _p_sz_out) { this->Cached() += _p_sz_out; return *this; }
+CLogger& CLogger::operator +=(TError& _err) { this->Cached() += _err; return *this; }
 CLogger& CLogger::operator >>(_pc_sz _lp_sz_pat) { this->Pattern(_lp_sz_pat); return *this; }
 
 CLogger::operator CCache& (void) { return this->Cached(); }
