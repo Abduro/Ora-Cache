@@ -298,7 +298,7 @@ CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPositi
 #pragma endregion
 #pragma region cls::CAttrArray{}
 
-CAttrArray:: CAttrArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__s_ok;
+CAttrArray:: CAttrArray (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	// sets directly default location values for both attributes;
 	 this->Pos().Locate().Value(0); this->Clr().Locate().Value(1);
 }

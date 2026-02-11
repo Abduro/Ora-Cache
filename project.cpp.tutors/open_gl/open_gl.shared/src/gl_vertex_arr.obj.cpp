@@ -162,7 +162,7 @@ err_code CArrObject::SetData (const TVertData& _v_data) {
 	_v_data;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (0 == this->GetId() || false == ::Get_renderer().Cfg().Is_drawable(this->Target()))
+	if (0 == this->GetId()/* || false == ::Get_renderer().Cfg().Is_drawable(this->Target())*/)
 		return this->Error();
 
 	if (__failed(this->Bind())) return this->Error(); // (1) tries to bind this vertex array object first;
@@ -229,12 +229,14 @@ CArrObj_enum::~CArrObj_enum (void) {}
 err_code CArrObj_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
+	const render::CCfg& cfg = ::Get_renderer().Cfg(); cfg;
 
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CArrObject& object = this->Ref(i_);
+#if (0)
 		if (false == cfg.Is_drawable(object.Target()))
 			continue;
+#endif
 		if (__failed(object.Create())) { this->m_error = object.Error(); break; }
 	//	if (__failed(object.Bind()))   { this->m_error = object.Error(); break; }
 	}

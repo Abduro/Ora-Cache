@@ -235,12 +235,14 @@ CProg_enum::~CProg_enum (void) {}
 err_code CProg_enum::Build (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
+	const render::CCfg& cfg = ::Get_renderer().Cfg(); cfg;
 
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CProgram& prog = this->Ref(i_);
+#if (0)
 		if (false == cfg.Is_drawable(prog.Target()))
 			continue;
+#endif
 		if (__failed(prog.Shaders().Compile())) {
 			this->m_error = prog.Shaders().Error(); break;
 		}
@@ -277,12 +279,14 @@ err_code CProg_enum::Clear (void) {
 err_code CProg_enum::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
+	const render::CCfg& cfg = ::Get_renderer().Cfg(); cfg;
 
 	for (uint32_t i_ = 0; i_ < CPipeline::u_tgt_count; i_++) {
 		CProgram& prog = this->Ref(i_);
+#if (0)
 		if (false == cfg.Is_drawable(prog.Target()))
 			continue;
+#endif
 		if (__failed(prog.Create())) {
 			this->m_error = prog.Error(); break;
 		}
@@ -366,12 +370,14 @@ err_code  CProg_enum::Load (void) {
 	// this array size must have the same value as programs' count: each program has the entries in registry for shaders' paths;
 	static _pc_sz p_key_names[] = {_T("grid.1"), _T("triangle.1")};
 #endif
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
+	const render::CCfg& cfg = ::Get_renderer().Cfg(); cfg;
 
 	for (uint32_t i_ = 0; i_ < _countof(this->m_progs)/* && i_ < _countof(p_key_names)*/; i_++) {
 		CProgram& prog = this->m_progs[i_];
+#if (0)
 		if (false == cfg.Is_drawable(prog.Target()))
 			continue;
+#endif
 		if (__failed(prog.Shaders().Fragment().Src().Cfg().Path(TPipe::To_str(prog.Target()), prog.Shaders().Fragment().Type().Get())))
 		    __trace_err_2(_T("%s\n"), (_pc_sz) prog.Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
 		if (__failed(prog.Shaders().Vertex().Src().Cfg().Path(TPipe::To_str(prog.Target()), prog.Shaders().Vertex().Type().Get())))

@@ -15,7 +15,7 @@ CVertex virt_vex;
 using CAttrArr = vertex::CAttrArray;
 using CBuffer = CVertArray::CBuffer;
 
-CVertArray:: CVertArray (void) { this->m_error <<__CLASS__<<__METHOD__<<__e_not_inited; }
+CVertArray:: CVertArray (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CVertArray::~CVertArray (void) {}
 
 const
