@@ -5,3 +5,9 @@
 #include "math.lerp.h"
 
 using namespace ex_ui::draw::open_gl::math;
+
+#pragma region cls::c_interp{}
+
+c_interp::c_interp (void) {}
+
+#pragma endregion

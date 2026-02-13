@@ -220,6 +220,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 			c_mat4x4& Set (const uint32_t _u_col, const vec_4& _xyzw); // sets the column of given index to the values provided;
 			c_mat4x4& Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3);
+			c_mat4x4& Set (const uint32_t _u_col, const vec_3& _xyz ); // sets the column of given index to the values provided;
 
 			const
 			c_mat4x4& operator ()(void) const;

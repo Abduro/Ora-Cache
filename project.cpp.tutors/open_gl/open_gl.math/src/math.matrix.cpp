@@ -312,6 +312,16 @@ c_mat4x4& c_mat4x4::c_cols::Set (const vec_4&   _col_0, const vec_4& _col_1, con
 	this->Set(2, _col_2);
 	this->Set(3, _col_3); return this->m_mat_ref;
 }
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const vec_3& _xyz ) {
+	_u_col; _xyz;
+	if (_u_col > c_cols::u_count - 1) { // just returns the reference to unchanged matrix;
+		__trace_err_2(_T("#__e_inv_ndx: the col index (%u) is out of acceptable range;\n"), _u_col);
+		return this->m_mat_ref;
+	}
+	(*this)()(_u_col, 0) = _xyz.x;
+	(*this)()(_u_col, 1) = _xyz.y;
+	(*this)()(_u_col, 2) = _xyz.z; return this->m_mat_ref;
+}
 
 const
 c_mat4x4& c_mat4x4::c_cols::operator ()(void) const { return this->m_mat_ref; }

@@ -12,8 +12,12 @@ s_vec_2::s_vec_2 (void) : x(0.0f), y(0.0f) {}
 s_vec_2::s_vec_2 (const float _values[u_count]) : s_vec_2(_values[0], _values[1]) {}
 s_vec_2::s_vec_2 (const float _x, const float _y) : x(_x), y(_y) {}
 
-s_vec_2& s_vec_2::Inverse (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; return *this; }      
-s_vec_2  s_vec_2::Inverse (const float _f_scale) const { return s_vec_2(this->x / _f_scale, this->y / _f_scale); }
+s_vec_2& s_vec_2::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; return *this; }      
+s_vec_2  s_vec_2::Invert (const float _f_scale) const { return s_vec_2(this->x / _f_scale, this->y / _f_scale); }
+
+s_vec_2& s_vec_2::Negate (void) {
+	this->x = -this->x; this->y = -this->y; return *this;
+}
 
 s_vec_2& s_vec_2::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1]); }
 s_vec_2& s_vec_2::Set (const float _x, const float _y) { _x; _y; this->x = _x; this->y = _y;  return *this; }
@@ -29,8 +33,8 @@ s_vec_2& s_vec_2::operator*= (const s_vec_2& _multiplier) {
 	return *this;
 }
 
-s_vec_2& s_vec_2::operator /= (const float _f_scale)       { return this->Inverse(_f_scale); }     
-s_vec_2  s_vec_2::operator /  (const float _f_scale) const { return this->Inverse(_f_scale); } // double times of copying the result; not good :(
+s_vec_2& s_vec_2::operator /= (const float _f_scale)       { return this->Invert(_f_scale); }     
+s_vec_2  s_vec_2::operator /  (const float _f_scale) const { return this->Invert(_f_scale); } // double times of copying the result; not good :(
 
 #pragma endregion
 #pragma region s_vec_3{}
@@ -39,8 +43,27 @@ s_vec_3::s_vec_3 (void) : s_vec_2(), z(0.0f) {}
 s_vec_3::s_vec_3 (const float _values[u_count]) : s_vec_3(_values[0], _values[1], _values[2]) {}
 s_vec_3::s_vec_3 (const float _x, const float _y, const float _z) : s_vec_2(_x, _y), z(_z) {}
 
-s_vec_3& s_vec_3::Inverse (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; return *this; }      
-s_vec_3  s_vec_3::Inverse (const float _f_scale) const { return s_vec_3(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale); }
+s_vec_3 s_vec_3::Get_cross (const s_vec_3& _v_3) {
+	return s_vec_3(this->y * _v_3.z - this->z *_v_3.y, this->z * _v_3.x - this->x *_v_3.z, this->x * _v_3.y - this->y *_v_3.x);
+}
+
+float s_vec_3::Get_dot (const s_vec_3& _v_3) {
+	return this->x * _v_3.x + this->y * _v_3.y + this->z * _v_3.z;
+}
+
+s_vec_3& s_vec_3::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; return *this; }      
+s_vec_3  s_vec_3::Invert (const float _f_scale) const { return s_vec_3(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale); }
+
+s_vec_3& s_vec_3::Negate (void) {
+	s_vec_2::Negate(); this->z = -this->z; return *this;
+}
+s_vec_3& s_vec_3::Normalize (void) {
+	const float f_sum = this->x * this->x + this->y * this->y + this->z * this->z;
+	const float f_inv_len = 1.0f/::sqrtf(f_sum);
+	this->x *=  f_inv_len;
+	this->y *=  f_inv_len;
+	this->z *=  f_inv_len; return *this;
+}
 
 s_vec_3& s_vec_3::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1], _values[2]); }
 s_vec_3& s_vec_3::Set (const float _x, const float _y, const float _z) {
@@ -56,8 +79,12 @@ s_vec_3& s_vec_3::operator*= (const s_vec_3& _multiplier) {
 	(*this)() *= (_multiplier)(); this->z *= _multiplier.z; return *this;
 }
 
-s_vec_3& s_vec_3::operator /= (const float _f_scale)       { return this->Inverse(_f_scale); }     
-s_vec_3  s_vec_3::operator /  (const float _f_scale) const { return this->Inverse(_f_scale); } // double times of copying the result; not good :(
+s_vec_3& s_vec_3::operator /= (const float _f_scale)       { return this->Invert(_f_scale); }     
+s_vec_3  s_vec_3::operator /  (const float _f_scale) const { return this->Invert(_f_scale); } // double times of copying the result; not good :(
+
+s_vec_3  s_vec_3::operator + (const s_vec_3& _v_3) const {
+	return s_vec_3(this->x + _v_3.x, this->y + _v_3.y, this->z + _v_3.z);
+}
 
 const
 s_vec_2& s_vec_3::operator ()(void) const { return (s_vec_2&)*this; }
@@ -70,8 +97,8 @@ s_vec_4::s_vec_4 (void) : s_vec_3(), w(0.0f) {}
 s_vec_4::s_vec_4 (const float _values[u_count]) : s_vec_4(_values[0], _values[1], _values[2], _values[3]) {}
 s_vec_4::s_vec_4 (const float _x, const float _y, const float _z, const float _w) : s_vec_3(_x, _y, _z), w(_w) {}
 
-s_vec_4& s_vec_4::Inverse (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; this->w /= _f_scale; return *this; }      
-s_vec_4  s_vec_4::Inverse (const float _f_scale) const { return s_vec_4(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale, this->w / _f_scale); }
+s_vec_4& s_vec_4::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; this->w /= _f_scale; return *this; }      
+s_vec_4  s_vec_4::Invert (const float _f_scale) const { return s_vec_4(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale, this->w / _f_scale); }
 
 s_vec_4& s_vec_4::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1], _values[2], _values[4]); }
 s_vec_4& s_vec_4::Set (const float _x, const float _y, const float _z, const float _w) {
@@ -84,8 +111,8 @@ float    s_vec_4::Sum (void) const { return  s_vec_3::Sum() + this->w; }
 s_vec_4& s_vec_4::operator  = (const s_vec_4& _src) { (s_vec_3&)*this = (const s_vec_3&)_src; this->w = _src.w; return *this; }
 s_vec_4& s_vec_4::operator *= (const s_vec_4& _multiplier) { (*this)() *= (_multiplier)(); this->w *= _multiplier.w; return *this; }
 
-s_vec_4& s_vec_4::operator /= (const float _f_scale)       { return this->Inverse(_f_scale); }     
-s_vec_4  s_vec_4::operator /  (const float _f_scale) const { return this->Inverse(_f_scale); } // double times of copying the result; not good :(
+s_vec_4& s_vec_4::operator /= (const float _f_scale)       { return this->Invert(_f_scale); }     
+s_vec_4  s_vec_4::operator /  (const float _f_scale) const { return this->Invert(_f_scale); } // double times of copying the result; not good :(
 
 const
 s_vec_3& s_vec_4::operator ()(void) const { return (s_vec_3&)*this; }
@@ -95,6 +122,9 @@ s_vec_3& s_vec_4::operator ()(void)       { return (s_vec_3&)*this; }
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math { // otherwise: fatal error LNK1120: 1 unresolved externals ;
 
+s_vec_3 operator * (const float _lft, const s_vec_3& _v_3) {
+	return s_vec_3(_lft * _v_3.x, _lft * _v_3.y, _lft * _v_3.z);
+}
 s_vec_4 operator * (const s_vec_4& _left, const s_vec_4& _right) {
 	return s_vec_4(_left.x * _right.x, _left.y * _right.y, _left.z * _right.z, _left.w * _right.w);
 }

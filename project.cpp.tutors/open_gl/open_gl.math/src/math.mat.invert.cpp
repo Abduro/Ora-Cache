@@ -337,7 +337,7 @@ c_mat4x4 c_inverter::Get_euclid (const c_mat4x4& _mat) {
 	return mat_;
 }
 
-/* inverses a matrix using matrix partitioning (blockwise inverse);
+/* inverts a matrix using matrix partitioning (blockwise inverse);
    It devides a 4x4 matrix into 4 of 2x2 matrices and works in case of where
    det(A) != 0 *only*, otherwise, the generic inverse method must be used;
 

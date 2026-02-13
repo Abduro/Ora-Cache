@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <numeric>       // required for std::accumulate();
 #include "shared.defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
@@ -35,7 +36,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/user-defined-literals-cpp ;
 
-	typedef ::std::array<float, 2u> t_set_2;
+	typedef ::std::array<float, 0x02u> t_set_2;
+	typedef ::std::array<float, 0x03u> t_set_3;
 	typedef ::std::vector<float> t_dyna_set;
 #if (0) // not used;
 namespace _2d {

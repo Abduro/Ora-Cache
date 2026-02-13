@@ -13,12 +13,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2 (const float _values[u_count]);        // values are assigned in the following order: x|y;
 		s_vec_2 (const float _x, const float _y);
 
-		s_vec_2& Inverse (const float _f_scale);       // inverses this vector in accordance with given scale factor;
-		s_vec_2  Inverse (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
+		s_vec_2& Invert (const float _f_scale);       // inverts this vector in accordance with given scale factor;
+		s_vec_2  Invert (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
 
 		s_vec_2& Set (const float values[u_count]);    // values are assigned in the following order: x|y|z|w;
 		s_vec_2& Set (const float _x, const float _y);
 
+		s_vec_2& Negate (void);
 		float Sum (void) const; // gets the sum of the elements of this vector;
 
 		s_vec_2& operator  = (const s_vec_2&);
@@ -33,22 +34,29 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	struct s_vec_3 : public s_vec_2 {
 		static const uint32_t u_count = s_vec_2::u_count + 1; // the number of the fields' count;
 		s_vec_3 (void);
-		s_vec_3 (const float _values[u_count]);     // values are assigned in the following order: x|y|z;
+		s_vec_3 (const float _values[u_count]);       // values are assigned in the following order: x|y|z;
 		s_vec_3 (const float _x, const float _y, const float _z);
 
-		s_vec_3& Inverse (const float _f_scale);       // inverses this vector in accordance with given scale factor;
-		s_vec_3  Inverse (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
+		s_vec_3 Get_cross (const s_vec_3&);           // gets cross product;
+		float   Get_dot (const s_vec_3&);             // gets dot product;
+
+		s_vec_3& Invert (const float _f_scale);       // inverts this vector in accordance with given scale factor;
+		s_vec_3  Invert (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
+
+		s_vec_3& Negate (void);
+		s_vec_3& Normalize (void);
 
 		s_vec_3& Set (const float values[u_count]); // values are assigned in the following order: x|y|z;
 		s_vec_3& Set (const float _x, const float _y, const float _z);
 
 		float Sum (void) const; // gets the sum of the elements of this vector;
 
-		s_vec_3& operator  = (const s_vec_3&);
-		s_vec_3& operator *= (const s_vec_3&); // multiplies this vector by input one;
+		s_vec_3& operator  =(const s_vec_3&);
+		s_vec_3& operator *=(const s_vec_3&); // multiplies this vector by input one;
 
-		s_vec_3& operator /= (const float _f_scale) ;      // makes inversion of this vector in accordance with given scale factor;
-		s_vec_3  operator /  (const float _f_scale) const; // makes inversion of this vector in accordance with given scale factor;
+		s_vec_3& operator /=(const float _f_scale) ;      // makes inversion of this vector in accordance with given scale factor;
+		s_vec_3  operator / (const float _f_scale) const; // makes inversion of this vector in accordance with given scale factor;
+		s_vec_3  operator + (const s_vec_3&) const;
 
 		const
 		s_vec_2& operator ()(void) const;     // gets the reference to the parent structure object; (ro)
@@ -64,8 +72,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_4 (const float _values[u_count]);     // values are assigned in the following order: x|y|z|w;
 		s_vec_4 (const float _x, const float _y, const float _z, const float _w);
 
-		s_vec_4& Inverse (const float _f_scale);       // inverses this vector in accordance with given scale factor;
-		s_vec_4  Inverse (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
+		s_vec_4& Invert (const float _f_scale);       // inverts this vector in accordance with given scale factor;
+		s_vec_4  Invert (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
 
 		s_vec_4& Set (const float values[u_count]); // values are assigned in the following order: x|y|z|w;
 		s_vec_4& Set (const float _x, const float _y, const float _z, const float _w);
@@ -85,6 +93,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float w;
 	};
 
+	s_vec_3 operator * (const float, const s_vec_3&);
 	s_vec_4 operator * (const s_vec_4&, const s_vec_4&);
 
 }}}}

@@ -8,7 +8,8 @@ using namespace ex_ui::draw::open_gl::math;
 
 #pragma region cls::c_rotate_3x3{}
 
-c_rotate_3x3::c_rotate_3x3 (void) : c_mat3x3() {}
+c_rotate_3x3::c_rotate_3x3 (void) : TBase() {}
+c_rotate_3x3::c_rotate_3x3 (const c_mat3x3& _src) : TBase(_src) {}
 c_rotate_3x3::c_rotate_3x3 (const float _f_angle, const float _x, const float _y, const float _z) { (*this)(_f_angle, _x, _y, _z); }
 
 c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const float _x, const float _y, const float _z) {
@@ -39,6 +40,38 @@ c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const float _x, const float _y
 }
 
 c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const vec_3& _axis) { return this->Do(_f_angle, _axis.x, _axis.y, _axis.z); }
+/* retrieves angles in degree from rotation matrix, M = rx * ry * rz:
+   where, rx - the rotation about x-axis or 'pitch', ry - the rotation about y-axis or 'yaw/heading' and rx - the rotation about z-axis or 'roll';
+*/
+vec_3 c_rotate_3x3::Get_angle (void) const {
+	/*          rx('pitch')            ry('yaw')              rz('roll')
+	cols:       0  1       2           0       1  2           0        1       2 
+	rows: 0   [ 1, 0     , 0     ]   [ cos(y), 0, sin(y)]   [ cos(z), -sin(z), 0 ]
+	      1   [ 0, cos(x),-sin(x)] * [      0, 1, 0     ] * [ sin(z),  cos(z), 0 ]
+	      2   [ 0, sin(x), cos(x)]   [-sin(y), 0, cos(y)]   [ 0     ,  0     , 1 ]
+	result:
+	      0   [ cos(y) * cos(z)                           , -cos(y) * sin(z)                           ,  sin(y)         ]
+	      1 = [ sin(x) * sin(y) * cos(z) + cos(x) * sin(z), -sin(x) * sin(y) * sin(z) + cos(x) * cos(z), -sin(x) * cos(y)]
+	      2   [-cos(x) * sin(y) * cos(z) + sin(x) * sin(z),  cos(x) * sin(y) * sin(z) + sin(x) * cos(z),  cos(x) * cos(y)]
+	*/
+	struct angles { float _pitch; float _roll; float _yaw; } s_angles { 0.0f, 0.0f, 0.0f };
+	// (1) _patch = atan(-m[7] / m[8]);
+	// (2) _roll  = atan(-m[3] / m[0]);
+	if (-(::defs::f_epsilon) < /*m[0]*/(*this)()(0, 0) &&/*m[0]*/(*this)()(0, 0) < ::defs::f_epsilon) {
+		s_angles._pitch = ::defs::rad_2_deg * ::atan2f(/*+m[1]*/+(*this)()(0, 1), /*m[4]*/(*this)()(1, 1));
+	} else {
+		s_angles._pitch = ::defs::rad_2_deg * ::atan2f(/*-m[7]*/-(*this)()(2, 1), /*m[8]*/(*this)()(2, 2));
+		s_angles._roll  = ::defs::rad_2_deg * ::atan2f(/*-m[3]*/-(*this)()(1, 0), /*m[0]*/(*this)()(0, 0));
+	}
+	// (3) _yaw   = asin(m[6]) ;
+	s_angles._yaw = ::defs::rad_2_deg * ::asinf(/*m[6]*/(*this)()(2, 0));
+	if (0.0f > /*m[8]*/(*this)()(2, 1)) { // uses z-value of forward vector;
+		if(0.0f <= s_angles._yaw)         // note: asin() returns -90 ~ +90, so correct the angle range is [-180.0f...+180.0f];
+		     s_angles._yaw = 180.0f - s_angles._yaw;
+		else s_angles._yaw =-180.0f - s_angles._yaw;
+	}
+	return vec_3(s_angles._pitch, s_angles._yaw, s_angles._roll);
+}
 
 c_mat3x3& c_rotate_3x3::operator ()(const float _f_angle, const float _x, const float _y, const float _z) { return this->Do(_f_angle, _x, _y, _z); }
 const
@@ -96,6 +129,14 @@ c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const float _x, const float _y
 }
 
 c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const vec_3& _coords) { return this->Do(_f_angle, _coords.x, _coords.y, _coords.z); }
+
+vec_3  c_rotate_4x4::Get_angle (void) const {
+	return c_rotate_3x3(c_mat3x3(
+		{(*this)()(0, 0),(*this)()(0, 1),(*this)()(0, 2)},
+		{(*this)()(1, 0),(*this)()(1, 1),(*this)()(1, 2)},
+		{(*this)()(2, 0),(*this)()(2, 1),(*this)()(2, 2)})
+	).Get_angle();
+}
 
 c_mat4x4& c_rotate_4x4::On_x (const float _f_angle) {
 	_f_angle;

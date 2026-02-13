@@ -5,6 +5,8 @@
 	This is Ebo Pack math quaternion wrapper interface declaration file; 
 */
 #include "math.defs.h"
+#include "math.vector.h"
+#include "math.matrix.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	// https://en.wikipedia.org/wiki/Quaternion ;
@@ -17,6 +19,29 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	                making them essential for 3D graphics, game engines (e.g., Unity, Unreal), robotics, and aerospace navigation.
 	*/
 	struct s_quat { // https://www.abbreviations.com/abbreviation/quaternion ;
+
+		s_quat (void);
+		s_quat (const vec_3&, const float _w);
+		s_quat (const float _x, const float _y, const float _z, const float _w);
+
+		s_quat&  Conjugate  (void);
+		float    Get_length (void) const; // computes a normal of this quat;
+		c_mat4x4 Get_mat4x4 (void) const; // returns matrix from quant of unit length;
+
+		s_quat& Invert (void);
+		s_quat& Normalize (void);         // converts to uinit quat;
+
+		s_quat& Set (const float _x, const float _y, const float _z, const float _w);
+		s_quat& Set (const vec_3& _axis, const float _angle); // the half of the angle;
+
+		float   Sum2 (void) const;       // this is the sum of all the elements, each of which is raised to the power of 2;
+
+		s_quat& operator = (const s_quat&);
+		s_quat  operator * (const float) const;
+		s_quat  operator * (const s_quat&) const;
+
+		vec_3 v_3;
+		float w;
 	};
 }}}}
 

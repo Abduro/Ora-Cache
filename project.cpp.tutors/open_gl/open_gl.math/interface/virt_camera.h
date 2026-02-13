@@ -5,6 +5,7 @@
 	This is Ebo Pack OpenGL 3D virtual camera interface declaration file;
 */
 #include "math.defs.h"
+#include "math.lerp.h"
 #include "math.matrix.h"
 #include "math.quat.h"
 #include "math.vector.h"
@@ -29,11 +30,33 @@ namespace camera { namespace opers {
 	class CRotation {
 	public:
 		CRotation (void); CRotation (const CRotation&) = delete; CRotation (CRotation&&) = delete; ~CRotation (void) = default;
+
+		void Set  (const float _x_angle, const float _y_angle, const float _z_angle);
+		void Set  (const s_vec_3 _angles);    // all angles are set in degrees;
+		void Turn (const float _time_frame);
+
+		const c_mat4x4&  To_matrix (void);
+		const c_mat4x4&  To_matrix (const s_vec_3& _angle);
+
 	private:
 		CRotation& operator = (const CRotation&) = delete;  CRotation& operator = (CRotation&&) = delete;
+#pragma region cPos::attrs
+		bool     m_b_oper; // for indicating start/stop rotate operation;
+		bool     m_b_quat; // for indicating to use quaternions;
+		float    m_f_dura; // duration of the rotation; (secs)
+		float    m_f_time; // time of starting rotation;
+
+		s_vec_3  m_angle_from;
+		s_vec_3  m_angle_to;
+		s_quat   m_quat_from;
+		s_quat   m_quat_to;
+
 		c_mat4x4 m_rotate; // 4x4 matrix for rotation only;
 		s_quat   m_quat ;  // quaternion for rotations;
 		c_mat4x4 m_trans;  // 4x4 matrix combined rotation and translation;
+
+		c_interp::e_mode m_mode;
+#pragma endregion
 	};
 
 	class CTarget {
@@ -48,12 +71,11 @@ namespace camera { namespace opers {
 	public:
 		CVirtCamera (void); CVirtCamera (const CVirtCamera&) = delete; CVirtCamera (CVirtCamera&&) = delete; ~CVirtCamera (void) = default;
 		TError& Error (void) const;
+
 	protected:
 		CVirtCamera& operator = (const CVirtCamera&) = delete; CVirtCamera& operator = (CVirtCamera&&) = delete;
 		CError m_error;
-		float  m_dist;   // distance between position and target;
-		vec_3  m_pos ;   // camera position at world space;
-		vec_3  m_target; // camera focal(lookat) position at world space;
+		camera::opers::CRotation m_rotate;
 	};
 
 }}}

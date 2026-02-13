@@ -9,15 +9,18 @@
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	// https://en.wikipedia.org/wiki/Rotation_matrix ;
-	class c_rotate_3x3 : public c_mat3x3 {
+	class c_rotate_3x3 : public c_mat3x3 { typedef c_mat3x3 TBase;
 	public:
 		c_rotate_3x3 (void); c_rotate_3x3 (const c_rotate_3x3&) = delete; c_rotate_3x3 (c_rotate_3x3&&) = delete; ~c_rotate_3x3 (void) = default;
+		c_rotate_3x3 (const c_mat3x3&);
 		c_rotate_3x3 (const float _f_angle, const float _x, const float _y, const float _z);
 
 		c_mat3x3& Do (const float _f_angle, const float _x, const float _y, const float _z);  // rotates by a given angle about an axis specified;
 		c_mat3x3& Do (const float _f_angle, const vec_3& _axis);
 
-		c_mat3x3& operator ()(const float _f_angle, const float _x, const float _y, const float _z);
+		vec_3 Get_angle (void) const;  // gets rotation angle from this matrix {x:pitch;y:yaw;z:roll};
+
+		c_mat3x3& operator ()(const float _f_angle, const float _x, const float _y, const float _z); // rotates this matrix by calling this::Do(...);
 
 		const
 		c_mat3x3& operator ()(void) const;
@@ -33,6 +36,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		c_mat4x4& Do (const float _f_angle, const float _x, const float _y, const float _z); //  rotates angle(degree) about the given axix;
 		c_mat4x4& Do (const float _f_angle, const vec_3&);
+
+		vec_3 Get_angle(void) const;           // gets rotation angle from this matrix {x:pitch;y:yaw;z:roll};
 
 		c_mat4x4& On_x (const float _f_angle); // rotates on X-axis, the angle is in degrees;
 		c_mat4x4& On_y (const float _f_angle); // rotates on Y-axis, the angle is in degrees;
