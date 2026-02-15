@@ -4,17 +4,10 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Dec-2025 at 08:10:22.332, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL math lib matrix uint test interface declaration file; 
 */
-#include "ebo_test_$m$.defs.h"
+#include "test_case_$m$.matrix.h"
 #include "ebo_test_$m$.vector.h"
-#include "math.matrix.h"
-#include "math.mat.rotate.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
-
-	using t_mat3x3 = ex_ui::draw::open_gl::math::c_mat3x3;
-	using t_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
-	using t_rot3x3 = ex_ui::draw::open_gl::math::c_rotate_3x3;
-	using t_rot4x4 = ex_ui::draw::open_gl::math::c_rotate_4x4;
 
 	__class (c_mat3x3) {
 	public:

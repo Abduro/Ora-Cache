@@ -12,7 +12,7 @@
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
 	using namespace ebo::boo::test;
 
-	/**important*: the main rools of error trace:
+	/**important*: the main rules of error trace:
 	(1) if a test case object throws the error, it should trace it itself;
 	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
 	*/

@@ -92,6 +92,14 @@ float s_quat::Sum2 (void) const {
 	return this->w * this->w + this->v_3.x * this->v_3.x + this->v_3.y * this->v_3.y + this->v_3.z * this->v_3.z;
 }
 
+CString s_quat::To_str (_pc_sz _p_format/* = _T("%10.7f")*/) const {
+	static _pc_sz pc_sz_pat = _T("%s;w=%s");
+	CString cs_out; cs_out.Format(pc_sz_pat, (_pc_sz) this->v_3.To_str(), TString().Float(this->w, _p_format));
+	return  cs_out;
+}
+
+s_quat& s_quat::operator = (const s_quat& _src) { *this << _src.w << _src.v_3; return *this; }
+
 s_quat  s_quat::operator * (const float _f) const {
 	return s_quat(this->v_3.x * _f, this->v_3.y * _f, this->v_3.z * _f, this->w * _f);
 }
@@ -107,5 +115,8 @@ s_quat  s_quat::operator * (const s_quat& _q) const {
 
 	return s_quat(v_res, this->w * _q.w - f_dot);
 }
+
+s_quat& s_quat::operator <<(const float _w) { this->w = _w; return *this; }
+s_quat& s_quat::operator <<(const vec_3 _v) { this->v_3 = _v; return *this; }
 
 #pragma endregion

@@ -19,6 +19,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_mat3x3& Do (const float _f_angle, const vec_3& _axis);
 
 		vec_3 Get_angle (void) const;  // gets rotation angle from this matrix {x:pitch;y:yaw;z:roll};
+		vec_3 Get_forward (void) const;
+		vec_3 Get_left (void) const;
+		vec_3 Get_up (void) const;
 
 		c_mat3x3& operator ()(const float _f_angle, const float _x, const float _y, const float _z); // rotates this matrix by calling this::Do(...);
 

@@ -11,8 +11,33 @@
 #include "math.vector.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::defs; using namespace ex_ui::draw::open_gl::math;
-namespace camera { namespace opers {
+namespace camera {
+	class CAxes {
+	public:
+		enum e_axes : uint32_t { e_x_axis = 0x0, e_y_axis, e_z_axis }; static const uint32_t u_count = e_axes::e_z_axis + 1;
+		CAxes (void); CAxes (const CAxes&) = delete; CAxes (CAxes&&) = delete; ~CAxes (void) = default;
+		const
+		vec_3& Get (const e_axes) const;
+		vec_3& Get (const e_axes);
 
+	private:
+		CAxes& operator = (const CAxes&) = delete; CAxes& operator = (CAxes&&) = delete;
+		vec_3  m_v_axes[CAxes::u_count];
+	};
+
+	class CScene {
+	public:
+		enum e_axes : uint32_t { e_forward = CAxes::e_z_axis, e_left = CAxes::e_x_axis, e_up = CAxes::e_y_axis };
+		CScene (void); CScene (const CScene&) = delete; CScene (CScene&&) = delete; ~CScene (void) = default;
+	private:
+		CScene& operator = (const CScene&) = delete; CScene& operator = (CScene&&) = delete;
+		CAxes  m_axes;  // have unchangable angles between each other: 90 digrees; can be shifted to left|right|up|down, no rotation;
+		vec_3  m_dirs[CAxes::u_count]; // can be moved as above and to be turned/rotated too;
+	};
+namespace opers {
+	/* 'Upfront' refers to something done in advance or at the beginning of a process (e.g., upfront costs);
+	   'Forward' implies moving in a direction toward the front or future;
+	*/
 	class CForward {
 	public:
 		CForward (void); CForward (const CForward&) = delete; CForward (CForward&&) = delete; ~CForward (void) = default;
@@ -23,13 +48,28 @@ namespace camera { namespace opers {
 	class CPosition { // position class for camera movement;
 	public:
 		CPosition (void); CPosition (const CPosition&) = delete; CPosition (CPosition&&) = delete; ~CPosition (void) = default;
+		const
+		vec_3& Get (void) const; // gets the reference to the camera position coordinates; (ro)
+		vec_3& Get (void);       // gets the reference to the camera position coordinates; (rw)
+		void Reset (void);
+
 	private:
 		CPosition& operator = (const CPosition&) = delete;  CPosition& operator = (CPosition&&) = delete;
+		vec_3  m_coords;
 	};
 
 	class CRotation {
 	public:
 		CRotation (void); CRotation (const CRotation&) = delete; CRotation (CRotation&&) = delete; ~CRotation (void) = default;
+
+		const
+		c_mat4x4& Get (void) const;
+		c_mat4x4& Get (void);
+		const
+		s_quat&   Quat (void) const;
+		s_quat&   Quat (void);
+
+		void Reset(void);   // resets the camera rotation state to default: the angle of the rotation is set to 0;
 
 		void Set  (const float _x_angle, const float _y_angle, const float _z_angle);
 		void Set  (const s_vec_3 _angles);    // all angles are set in degrees;
@@ -59,25 +99,70 @@ namespace camera { namespace opers {
 #pragma endregion
 	};
 
-	class CTarget {
-	public:
+	class CTarget { // this is a class of an object the camera 'looks' at;
+	public: // https://en.wikipedia.org/wiki/List_of_glossing_abbreviations :: 'default' >> 'dflt';
+		static inline const float f_dflt_dist = 10.0f; // error C2864: a static data member with an in-class initializer must have non-volatile const integral type or be specified as 'inline';
 		CTarget (void); CTarget (const CTarget&) = delete; CTarget (CTarget&&) = delete; ~CTarget (void) = default;
+
+		const
+		vec_3&  Angle (void) const;
+		vec_3&  Angle (void);
+		
+		const
+		float& Distance (void) const; // returns the reference to the current distance between the camera position and target; (ro)
+		float& Distance (void);       // returns the reference to the current distance between the camera position and target; (rw)
+
+		const
+		vec_3&  Get (void) const;
+		vec_3&  Get (void);
+
+		void  Reset (void);
+
+		CTarget& operator <<(const float _f_dist); // assigns the distance to given value;
+
 	private:
 		CTarget& operator = (const CTarget&) = delete;  CTarget& operator = (CTarget&&) = delete;
+		vec_3  m_angle; // angle in degree around the target; x:pitch;y:yaw;z:roll;
+		vec_3  m_coords;
+		float  m_dist;  // https://www.abbreviations.com/abbreviation/distance ;
 	};
 }}
 
 	class CVirtCamera {
 	public:
+		using CPosition = camera::opers::CPosition;
+		using CRotation = camera::opers::CRotation;
+		using CTarget   = camera::opers::CTarget  ;
+	public:
 		CVirtCamera (void); CVirtCamera (const CVirtCamera&) = delete; CVirtCamera (CVirtCamera&&) = delete; ~CVirtCamera (void) = default;
 		TError& Error (void) const;
+
+		err_code Look_at (void);
+		err_code Look_at (const vec_3& pos, const vec_3& target);
+
+		const
+		CPosition&  Pos (void) const;
+		CPosition&  Pos (void);
+
+		err_code Reset (void);  // sets this camera to default state of its components: camera position, target position and camera's 'look at';
+		const
+		CRotation&  Rotate (void) const;
+		CRotation&  Rotate (void);
+		const
+		CTarget&    Target (void) const;
+		CTarget&    Target (void);
 
 	protected:
 		CVirtCamera& operator = (const CVirtCamera&) = delete; CVirtCamera& operator = (CVirtCamera&&) = delete;
 		CError m_error;
+
+		camera::opers::CPosition m_pos;
 		camera::opers::CRotation m_rotate;
+		camera::opers::CTarget   m_target;
 	};
 
 }}}
+
+typedef ex_ui::draw::open_gl::CVirtCamera TVirtCam;  TVirtCam& Get_virt_cam (void); // for test purposes one instance of the cam is enough;
 
 #endif/*_VIRT_CAMERA_H_INCLUDED*/

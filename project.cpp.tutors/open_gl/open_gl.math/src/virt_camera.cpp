@@ -8,9 +8,23 @@
 #include "shared.dbg.h"
 
 using namespace ex_ui::draw::open_gl;
+using namespace ex_ui::draw::open_gl::camera;
 using namespace ex_ui::draw::open_gl::camera::opers;
 
-#pragma region cls::CPosition{}
+#pragma region cls::CAxes{}
+
+CAxes::CAxes (void) {}
+const
+vec_3& CAxes::Get (const e_axes _e_axis) const { return this->m_v_axes[_e_axis]; }
+vec_3& CAxes::Get (const e_axes _e_axis)       { return this->m_v_axes[_e_axis]; }
+
+#pragma endregion
+#pragma region cls::CScene{}
+
+CScene::CScene (void) {}
+
+#pragma endregion
+#pragma region cls::CForward{}
 
 CForward::CForward (void) {}
 
@@ -19,10 +33,29 @@ CForward::CForward (void) {}
 
 CPosition::CPosition(void) {}
 
+const
+vec_3& CPosition::Get (void) const { return this->m_coords; }
+vec_3& CPosition::Get (void)       { return this->m_coords; }
+
+void   CPosition::Reset (void) {
+	this->m_coords.Set(0.0f, 0.0f, 0.0f);
+}
+
 #pragma endregion
 #pragma region cls::CRotation{}
 
-CRotation::CRotation (void) : m_b_oper(false), m_b_quat(false), m_f_dura(0.0f), m_f_time(0.0f) {}
+CRotation::CRotation (void) : m_b_oper(false), m_b_quat(false), m_f_dura(0.0f), m_f_time(0.0f) { this->Reset(); }
+const
+c_mat4x4& CRotation::Get (void) const { return this->m_rotate; }
+c_mat4x4& CRotation::Get (void)       { return this->m_rotate; }
+const
+s_quat&   CRotation::Quat (void) const { return this->m_quat; }
+s_quat&   CRotation::Quat (void)       { return this->m_quat; }
+
+void CRotation::Reset(void) {
+	this->Get().Identity();
+	this->Quat().Set(0.0f, 0.0f, 0.0f, 1.0f);
+}
 
 void CRotation::Set  (const float _x_angle, const float _y_angle, const float _z_angle) {
 	_x_angle; _y_angle; _z_angle;
@@ -81,10 +114,67 @@ void CRotation::Turn (const float _time_frame) {
 }
 
 #pragma endregion
+#pragma region cls::CTarget{}
+
+CTarget::CTarget (void) : m_dist(CTarget::f_dflt_dist) {}
+
+const
+vec_3&  CTarget::Angle (void) const { return this->m_angle; }
+vec_3&  CTarget::Angle (void)       { return this->m_angle; }
+const
+float&  CTarget::Distance (void) const { return this->m_dist; }
+float&  CTarget::Distance (void)       { return this->m_dist; }
+const
+vec_3&  CTarget::Get (void) const { return this->m_coords; }
+vec_3&  CTarget::Get (void)       { return this->m_coords; }
+
+void    CTarget::Reset (void) {
+	this->Distance() = CTarget::f_dflt_dist;
+	this->Get().Set(0.0f, 0.0f, 0.0f);
+}
+
+CTarget& CTarget::operator <<(const float _f_dist) { this->Distance() = _f_dist; return *this; }
+
+#pragma endregion
 #pragma region cls::CVirtCamera{}
 
 CVirtCamera::CVirtCamera (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-TError& CVirtCamera::Error (void) const { return this->m_error; }
+TError&  CVirtCamera::Error (void) const { return this->m_error; }
+
+err_code CVirtCamera::Look_at (void) {
+	return this->Look_at(this->Pos().Get(), this->Target().Get());
+}
+err_code CVirtCamera::Look_at (const vec_3& _pos, const vec_3& _tgt) {
+	_pos; _tgt;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (_pos == _tgt) {
+	}
+
+	return this->Error();
+}
+const
+CPosition&  CVirtCamera::Pos (void) const { return this->m_pos; }
+CPosition&  CVirtCamera::Pos (void)       { return this->m_pos; }
+
+err_code CVirtCamera::Reset (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	this->Pos().Reset();
+	this->Target().Reset();
+
+	return this->Error();
+}
+const
+CRotation&  CVirtCamera::Rotate (void) const { return this->m_rotate; }
+CRotation&  CVirtCamera::Rotate (void)       { return this->m_rotate; }
+const
+CTarget&    CVirtCamera::Target (void) const { return this->m_target; }
+CTarget&    CVirtCamera::Target (void)       { return this->m_target; }
+
+TVirtCam& ::Get_virt_cam (void) {
+	static TVirtCam virt_cam;
+	return virt_cam;
+}
 
 #pragma endregion

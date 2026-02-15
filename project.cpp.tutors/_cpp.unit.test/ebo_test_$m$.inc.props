@@ -20,6 +20,7 @@
     <_0>interface\</_0>
     <_1>src\</_1>
     <_2>src\test.cases\</_2> <!--combining two or more paths separated by a semicolon is unacceptable, as the path to a specific source file will be incorrect!-->
+    <_2-0>src\test.cases\shared\</_2-0>
     <_3>$(Shared)interface\</_3>
     <_4>$(Shared_Dbg)interface\</_4>
     <_5>$(GL_Math)interface\</_5>
@@ -30,7 +31,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_2-0);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

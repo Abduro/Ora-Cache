@@ -1,26 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060010}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060011}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_prec">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060012}</UniqueIdentifier>
-    </Filter>
+    <Filter Include="_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060010}</UniqueIdentifier></Filter>
+    <Filter Include="_root\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060011}</UniqueIdentifier></Filter>
+
+    <Filter Include="matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060012}</UniqueIdentifier></Filter>
+    <Filter Include="matrix\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060013}</UniqueIdentifier></Filter>
+
+    <Filter Include="vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060014}</UniqueIdentifier></Filter>
+    <Filter Include="vector\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060015}</UniqueIdentifier></Filter>
+
+    <Filter Include="virt.cam"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060016}</UniqueIdentifier></Filter>
+    <Filter Include="virt.cam\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060017}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
-    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2)ebo_test_$m$.defs.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.vector.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h"><Filter>virt.cam\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h"><Filter>virt.cam</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp"><Filter>virt.cam</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.matrix.h"><Filter>matrix\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.matrix.cpp"><Filter>matrix\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2)ebo_test_$m$.vector.h"><Filter>vector</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
   </ItemGroup>
 </Project>

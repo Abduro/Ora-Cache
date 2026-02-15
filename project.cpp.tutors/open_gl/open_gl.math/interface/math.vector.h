@@ -51,6 +51,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		float Sum (void) const; // gets the sum of the elements of this vector;
 
+		CString  To_str (_pc_sz _p_format = _T("%.7f")) const;
+
 		s_vec_3& operator  =(const s_vec_3&);
 		s_vec_3& operator *=(const s_vec_3&); // multiplies this vector by input one;
 
@@ -64,6 +66,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		float z;
 	};
+
+	bool operator == (const s_vec_3&, const s_vec_3&);
 
 	// https://en.cppreference.com/w/cpp/algorithm/transform.html ; this is not the case for vector emulation like the below class is;
 	struct s_vec_4 : public s_vec_3 {

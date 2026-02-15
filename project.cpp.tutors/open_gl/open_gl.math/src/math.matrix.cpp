@@ -330,8 +330,10 @@ c_mat4x4& c_mat4x4::c_cols::operator ()(void)       { return this->m_mat_ref; }
 #pragma endregion
 #pragma region cls::c_mat4x4{}
 
-c_mat4x4::c_mat4x4 (void) : m_cols(*this), m_rows(*this) { this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size); }
-c_mat4x4::c_mat4x4 (const c_mat4x4& _src) : c_mat4x4() { *this = _src; }
+c_mat4x4::c_mat4x4 (const bool _b_identity) : m_cols(*this), m_rows(*this) {
+	this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size); if (_b_identity) this->Identity();
+}
+c_mat4x4::c_mat4x4 (const c_mat4x4& _src) : c_mat4x4(false) { *this = _src; }
 c_mat4x4::c_mat4x4 (const t_seq_4x4& _arr_values) : c_mat4x4() { *this << _arr_values; }
 c_mat4x4::c_mat4x4 (c_mat4x4&& _victim) : c_mat4x4() { *this = _victim; }
 

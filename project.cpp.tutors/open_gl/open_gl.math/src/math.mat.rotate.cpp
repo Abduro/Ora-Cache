@@ -73,6 +73,10 @@ vec_3 c_rotate_3x3::Get_angle (void) const {
 	return vec_3(s_angles._pitch, s_angles._yaw, s_angles._roll);
 }
 
+vec_3 c_rotate_3x3::Get_forward (void) const { return vec_3((*this)()(2, 0), (*this)()(2, 1), (*this)()(2, 2)); } // gets data of col_#2 'z';
+vec_3 c_rotate_3x3::Get_left (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#0 'x';
+vec_3 c_rotate_3x3::Get_up (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#1 'y';
+
 c_mat3x3& c_rotate_3x3::operator ()(const float _f_angle, const float _x, const float _y, const float _z) { return this->Do(_f_angle, _x, _y, _z); }
 const
 c_mat3x3& c_rotate_3x3::operator ()(void) const { return (c_mat3x3&)*this; }
@@ -81,7 +85,7 @@ c_mat3x3& c_rotate_3x3::operator ()(void)       { return (c_mat3x3&)*this; }
 #pragma endregion
 #pragma region cls::c_rotate_4x4{}
 
-c_rotate_4x4::c_rotate_4x4 (void) : c_mat4x4() {}
+c_rotate_4x4::c_rotate_4x4 (void) : c_mat4x4(true) {} // regardless that the matrix is initialized by its identity by default, but for better readability;
 
 c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const float _x, const float _y, const float _z) {
 	_f_angle; _x; _y; _z;
@@ -130,7 +134,7 @@ c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const float _x, const float _y
 
 c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const vec_3& _coords) { return this->Do(_f_angle, _coords.x, _coords.y, _coords.z); }
 
-vec_3  c_rotate_4x4::Get_angle (void) const {
+vec_3 c_rotate_4x4::Get_angle (void) const {
 	return c_rotate_3x3(c_mat3x3(
 		{(*this)()(0, 0),(*this)()(0, 1),(*this)()(0, 2)},
 		{(*this)()(1, 0),(*this)()(1, 1),(*this)()(1, 2)},

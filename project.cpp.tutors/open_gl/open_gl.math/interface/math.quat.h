@@ -36,9 +36,14 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		float   Sum2 (void) const;       // this is the sum of all the elements, each of which is raised to the power of 2;
 
+		CString To_str (_pc_sz _p_format = _T("%.7f")) const;
+
 		s_quat& operator = (const s_quat&);
 		s_quat  operator * (const float) const;
 		s_quat  operator * (const s_quat&) const;
+
+		s_quat& operator <<(const float _w);
+		s_quat& operator <<(const vec_3 _v);
 
 		vec_3 v_3;
 		float w;

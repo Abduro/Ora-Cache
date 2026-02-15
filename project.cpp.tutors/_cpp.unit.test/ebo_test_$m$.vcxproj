@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -213,6 +213,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.matrix.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.matrix.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />
     <ClCompile Include="$(Shared)shared.std.afx.cpp" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -222,8 +234,6 @@
     </ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.defs.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
   </ItemGroup>

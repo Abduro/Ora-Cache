@@ -7,76 +7,7 @@
 
 using namespace ebo::boo::test::open_gl::math;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
-
-	class CPrint {
-	public:
-		CPrint (const CString& _cls_name, const bool _use_sign = false) : m_cls_name(_cls_name), m_use_sign(_use_sign) {}
-	public:
-		CString To_str (const t_mat3x3& _mat3x3, const bool _b_out) {
-			_mat3x3; _b_out;
-			CString  cs_out;
-			static _pc_sz pc_sz_fmt_0 = _T("%9.7f");
-			static _pc_sz pc_sz_fmt_1 = _T("%+9.7f");
-
-			for (uint32_t row_ = 0; row_ < t_mat3x3::u_rows; row_++) {
-				CString cs_row;
-				for (uint32_t col_ = 0; col_ < t_mat3x3::u_cols; col_++) {
-				#if (0)
-					cs_row += TString().Float(_mat3x3(col_, row_), t_fmt_spec::e_decimal, this->m_use_sign ? pc_sz_fmt_1 : pc_sz_fmt_0);
-				#else
-					if (false) {}
-					else if (this->m_use_sign && _mat3x3(col_, row_) < 0.0f) {} // the '-' sign will be added by sprintf();
-					else if (this->m_use_sign)
-					cs_row += _T(" ");
-					cs_row += TString().Float(_mat3x3(col_, row_), t_fmt_spec::e_decimal, pc_sz_fmt_0);
-				#endif
-					if (col_ < t_mat3x3::u_cols - 1)
-						cs_row += _T(" ");
-				}
-				cs_out += TString().Format(_T("%s%s%s"), predefs::_p_pfx, (_pc_sz) cs_row, predefs::_p_sfx);
-			}
-			if (_b_out) {
-				if (this->m_cls_name.IsEmpty())
-					this->m_cls_name = __CLASS__;
-				_out() += TString().Format(_T("cls::[%s].%s() >> [%s%s%s]"), (_pc_sz)this->m_cls_name, (_pc_sz)__METHOD__, predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
-			}
-
-			return  cs_out;
-		}
-
-		CString To_str (const t_mat4x4& _mat4x4, const bool _b_out) {
-			_mat4x4; _b_out;
-			CString  cs_out;
-			static _pc_sz pc_sz_fmt_0 = _T("%9.7f");
-
-			for (uint32_t row_ = 0; row_ < t_mat4x4::u_rows; row_++) {
-				CString cs_row;
-				for (uint32_t col_ = 0; col_ < t_mat4x4::u_cols; col_++) {
-					if (false) {}
-					else if (this->m_use_sign && _mat4x4(col_, row_) < 0.0f) {} // the '-' sign will be added by sprintf();
-					else if (this->m_use_sign)
-					cs_row += _T(" ");
-					cs_row += TString().Float(_mat4x4(col_, row_), t_fmt_spec::e_decimal, pc_sz_fmt_0);
-					if (col_ < t_mat4x4::u_cols - 1)
-						cs_row += _T(" ");
-				}
-				cs_out += TString().Format(_T("%s%s%s"), predefs::_p_pfx, (_pc_sz) cs_row, predefs::_p_sfx);
-			}
-			if (_b_out) {
-				if (this->m_cls_name.IsEmpty())
-					this->m_cls_name = __CLASS__;
-				_out() += TString().Format(_T("cls::[%s].%s() >> [%s%s%s]"), (_pc_sz)this->m_cls_name, (_pc_sz)__METHOD__,  predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
-			}
-			return  cs_out;
-		}
-	
-	private:
-		bool m_use_sign;    // if is set to 'true': each entry/element of the matrix will have the sign '-/+', otherwise the '-' if value is negative;
-		CString m_cls_name; // the source class name;
-	}; 
-
-}}}}}
+namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {}}}}}
 
 #pragma region cls::c_mat3x3{}
 
@@ -128,7 +59,7 @@ t_mat3x3& c_mat3x3::ref (void)       { return this->m_mat3x3; }
 CString   c_mat3x3::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
 	_p_prf; _p_sep; _p_sfx;
 
-	return _impl::CPrint(__CLASS__).To_str(this->ref(), this->m_b_verb);
+	return c_mtx_3x3().To_str(this->ref(), this->m_b_verb);
 }
 
 #pragma endregion
@@ -184,25 +115,7 @@ t_mat4x4& c_mat4x4::ref (void)       { return this->m_mat4x4; }
 
 CString c_mat4x4::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
 	_p_prf; _p_sep; _p_sfx;
-
-	static _pc_sz pc_sz_fmt = _T("%9.7f");
-
-	CString cs_out;
-
-	for (uint32_t row_ = 0; row_ < t_mat4x4::u_rows; row_++) {
-		CString cs_row;
-		for (uint32_t col_ = 0; col_ < t_mat4x4::u_cols; col_++) {
-			cs_row += TString().Float(this->ref().Cell(col_, row_), t_fmt_spec::e_decimal, pc_sz_fmt);
-			if (col_ < t_mat4x4::u_cols - 1)
-				cs_row += _p_sep;
-		}
-		cs_out += TString().Format(_T("%s%s%s"), _p_prf, (_pc_sz) cs_row, _p_sfx);
-	}
-	if (this->m_b_verb) {
-		_out() += TString().Format(_T("cls::[%s].%s() >> [%s%s%s]"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_sfx, (_pc_sz) cs_out, _p_prf);
-		_out()();
-	}
-	return cs_out;
+	return c_mtx_4x4().To_str(this->ref(), this->m_b_verb);
 }
 
 #pragma endregion
@@ -229,7 +142,8 @@ void      c_rot_3x3::Rotate_x (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_3x3().To_str(this->ref(), true);
+
 	c_vec3 x_axis(false); x_axis.ref().Set(1.0f, 0.0f, 0.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
@@ -242,7 +156,7 @@ void      c_rot_3x3::Rotate_x (void) {
 		this->ref().Do(f_angels[i_], x_axis.ref());
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		_out() +=  c_mtx_3x3().To_str(this->ref(), true);
 	}
 	_out()();
 }
@@ -251,7 +165,7 @@ void      c_rot_3x3::Rotate_y (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_3x3().To_str(this->ref(), true);
 	c_vec3 y_axis(false); y_axis.ref().Set(0.0f, 1.0f, 0.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
@@ -264,7 +178,7 @@ void      c_rot_3x3::Rotate_y (void) {
 		this->ref().Do(f_angels[i_], y_axis.ref());
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		c_mtx_3x3().To_str(this->ref(), true);
 	}
 	_out()();
 }
@@ -273,7 +187,7 @@ void      c_rot_3x3::Rotate_z (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_3x3().To_str(this->ref(), true);
 	c_vec3 z_axis(false); z_axis.ref().Set(0.0f, 0.0f, 1.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
@@ -286,13 +200,13 @@ void      c_rot_3x3::Rotate_z (void) {
 		this->ref().Do(f_angels[i_], z_axis.ref());
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		c_mtx_3x3().To_str(this->ref(), true);
 	}
 	_out()();
 }
 
 CString   c_rot_3x3::To_str (void) const {
-	CString cs_out = _impl::CPrint(__CLASS__).To_str(this->ref(), this->m_b_verb); if (this->m_b_verb) _out()();
+	CString cs_out = c_mtx_3x3().To_str(this->ref(), this->m_b_verb); if (this->m_b_verb) _out()();
 	return  cs_out;
 }
 
@@ -320,7 +234,7 @@ void c_rot_4x4::Rotate_free (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_4x4().To_str(this->ref(), true);
 
 	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
@@ -337,7 +251,7 @@ void c_rot_4x4::Rotate_free (void) {
 		this->ref().Do(f_angels[i_], axis.ref());
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		c_mtx_4x4().To_str(this->ref(), true);
 	}
 	_out()();
 }
@@ -346,7 +260,7 @@ void c_rot_4x4::Rotate_x (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_4x4().To_str(this->ref(), true);
 
 	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
@@ -361,7 +275,7 @@ void c_rot_4x4::Rotate_x (void) {
 		this->ref().On_x(f_angels[i_]);
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		c_mtx_4x4().To_str(this->ref(), true);
 	}
 	_out()();
 }
@@ -370,7 +284,7 @@ void c_rot_4x4::Rotate_y (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_4x4().To_str(this->ref(), true);
 
 	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
@@ -385,7 +299,7 @@ void c_rot_4x4::Rotate_y (void) {
 		this->ref().On_y(f_angels[i_]);
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		c_mtx_4x4().To_str(this->ref(), true);
 	}
 	_out()();
 }
@@ -394,7 +308,7 @@ void c_rot_4x4::Rotate_z (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_4x4().To_str(this->ref(), true);
 
 	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
@@ -409,7 +323,7 @@ void c_rot_4x4::Rotate_z (void) {
 		this->ref().On_z(f_angels[i_]);
 
 		_out() += _T("the matrix *after* rotate:");
-		_impl::CPrint(__CLASS__, true).To_str(this->ref(), true);
+		c_mtx_4x4().To_str(this->ref(), true);
 	}
 	_out()();
 }
@@ -420,7 +334,7 @@ void c_rot_4x4::Set (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *initial* state entries:");
 
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_4x4().To_str(this->ref(), true);
 	}
 	c_vec4
 	col_0(0.0f, 0.1f, 0.2f, 1.0f, false),
@@ -436,14 +350,14 @@ void c_rot_4x4::Set (void) {
 	this->ref().Cols().Set(col_0.ref(), col_1.ref(), col_2.ref(), col_3.ref());
 
 	_out() += _T("the matrix *after* setting data:");
-	_impl::CPrint(__CLASS__).To_str(this->ref(), true);
+	c_mtx_4x4().To_str(this->ref(), true);
 
 	if (this->m_b_verb) // if this method is called indirectly, the trace output may not be required yet;
 	_out()();
 }
 
 CString   c_rot_4x4::To_str (void) const {
-	CString cs_out = _impl::CPrint(__CLASS__).To_str(this->ref(), this->m_b_verb); if (this->m_b_verb) _out()();
+	CString cs_out = c_mtx_4x4().To_str(this->ref(), this->m_b_verb); if (this->m_b_verb) _out()();
 	return  cs_out;
 }
 

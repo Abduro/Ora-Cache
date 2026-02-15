@@ -73,6 +73,13 @@ s_vec_3& s_vec_3::Set (const float _x, const float _y, const float _z) {
 
 float    s_vec_3::Sum (void) const { return  s_vec_2::Sum() + this->z; }
 
+CString  s_vec_3::To_str (_pc_sz _p_format) const {
+	static _pc_sz pc_sz_pat = _T("x=%s;y=%s;z=%s");
+	CString cs_out; cs_out.Format(
+		pc_sz_pat, TString().Float(this->x, _p_format), TString().Float(this->y, _p_format), TString().Float(this->z, _p_format));
+	return  cs_out;
+}
+
 s_vec_3& s_vec_3::operator = (const s_vec_3& _src) { (s_vec_2&)*this = (const s_vec_2&)_src; this->z = _src.z; return *this; }
 s_vec_3& s_vec_3::operator*= (const s_vec_3& _multiplier) {
 	_multiplier;
@@ -122,6 +129,9 @@ s_vec_3& s_vec_4::operator ()(void)       { return (s_vec_3&)*this; }
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math { // otherwise: fatal error LNK1120: 1 unresolved externals ;
 
+bool operator == (const s_vec_3& _left, const s_vec_3& _right) {
+	return (_left.x == _right.x && _left.y == _right.y && _left.z == _right.z);
+}
 s_vec_3 operator * (const float _lft, const s_vec_3& _v_3) {
 	return s_vec_3(_lft * _v_3.x, _lft * _v_3.y, _lft * _v_3.z);
 }

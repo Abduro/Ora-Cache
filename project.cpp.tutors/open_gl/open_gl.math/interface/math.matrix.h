@@ -248,7 +248,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		};
 
 	public: static const uint32_t u_cols = c_cols::u_count, u_rows = c_rows::u_count, u_size = u_cols * u_rows;
-		c_mat4x4 (void); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&); ~c_mat4x4 (void) = default;
+		c_mat4x4 (const bool _b_identity = true); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&); ~c_mat4x4 (void) = default;
 		c_mat4x4 (const t_seq_4x4& _arr_values);
 
 		const

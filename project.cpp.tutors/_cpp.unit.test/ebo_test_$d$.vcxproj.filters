@@ -23,11 +23,13 @@
   <ItemGroup><!--precompiled headers and module;-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$d$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp"><Filter>_root</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--renderer and shapes;-->
-    <ClInclude Include="$(_2-0)test_case_$d$.render.h"><Filter>render</Filter></ClInclude>
+    <ClInclude Include="$(_2-0)test_case_$d$.render.h"><Filter>render\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.render.cpp"><Filter>render\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h"><Filter>render\shapes\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp"><Filter>render\shapes\shared</Filter></ClCompile>
