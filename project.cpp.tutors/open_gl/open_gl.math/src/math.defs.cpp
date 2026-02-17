@@ -6,7 +6,23 @@
 
 using namespace ex_ui::draw::open_gl::math;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl { void __warning_lnk_4221 (void) {}}}}}}
+namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl { void __warning_lnk_4221 (void) {}}
+	
+	float _pow_2(const float& _base) { return _base * _base; }
+	float _pow_3(const float& _base) { return _base * _base * _base; }
+
+	float _pow_n(const uint32_t _index, const float _base) {
+		_index; _base;
+		if (false) {}
+		else if (0 == _index) return 1.0f;
+		else if (1 == _index) return _base;
+		float f_result = _base;
+		for (uint32_t i_ = 0; i_ < _index; i_++)
+			f_result *= _base;
+		return f_result;
+	}
+
+}}}}
 
 #if (0) // not used;
 _2d::CPoint:: CPoint (void) : m_x(0.0f), m_y(0.0f) {}

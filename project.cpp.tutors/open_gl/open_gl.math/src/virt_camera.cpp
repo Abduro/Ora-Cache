@@ -11,19 +11,6 @@ using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::camera;
 using namespace ex_ui::draw::open_gl::camera::opers;
 
-#pragma region cls::CAxes{}
-
-CAxes::CAxes (void) {}
-const
-vec_3& CAxes::Get (const e_axes _e_axis) const { return this->m_v_axes[_e_axis]; }
-vec_3& CAxes::Get (const e_axes _e_axis)       { return this->m_v_axes[_e_axis]; }
-
-#pragma endregion
-#pragma region cls::CScene{}
-
-CScene::CScene (void) {}
-
-#pragma endregion
 #pragma region cls::CForward{}
 
 CForward::CForward (void) {}

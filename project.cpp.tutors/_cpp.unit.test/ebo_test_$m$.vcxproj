@@ -215,8 +215,12 @@
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.space.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.space.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$m$.matrix.h" />

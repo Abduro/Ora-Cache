@@ -20,12 +20,6 @@
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h"><Filter>virt.cam\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h"><Filter>virt.cam</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp"><Filter>virt.cam</Filter></ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$m$.matrix.h"><Filter>matrix\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.matrix.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
@@ -34,5 +28,15 @@
   <ItemGroup>
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h"><Filter>vector</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h"><Filter>virt.cam\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h"><Filter>virt.cam</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp"><Filter>virt.cam</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h"><Filter>virt.cam\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.space.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.space.h"><Filter>virt.cam</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp"><Filter>virt.cam</Filter></ClCompile>
   </ItemGroup>
 </Project>

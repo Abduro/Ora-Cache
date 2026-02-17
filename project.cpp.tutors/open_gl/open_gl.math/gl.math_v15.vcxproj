@@ -193,6 +193,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)math.defs.h" />
     <ClCompile Include="$(_1)math.defs.cpp" />
     <ClInclude Include="$(_0)math.lerp.h" />
@@ -207,8 +209,12 @@
     <ClCompile Include="$(_1)math.quat.cpp" />
     <ClInclude Include="$(_0)math.vector.h" />
     <ClCompile Include="$(_1)math.vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)virt_camera.h" />
     <ClCompile Include="$(_1)virt_camera.cpp" />
+    <ClInclude Include="$(_0)virt_space.h" />
+    <ClCompile Include="$(_1)virt_space.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

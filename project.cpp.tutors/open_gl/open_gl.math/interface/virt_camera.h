@@ -12,28 +12,6 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::defs; using namespace ex_ui::draw::open_gl::math;
 namespace camera {
-	class CAxes {
-	public:
-		enum e_axes : uint32_t { e_x_axis = 0x0, e_y_axis, e_z_axis }; static const uint32_t u_count = e_axes::e_z_axis + 1;
-		CAxes (void); CAxes (const CAxes&) = delete; CAxes (CAxes&&) = delete; ~CAxes (void) = default;
-		const
-		vec_3& Get (const e_axes) const;
-		vec_3& Get (const e_axes);
-
-	private:
-		CAxes& operator = (const CAxes&) = delete; CAxes& operator = (CAxes&&) = delete;
-		vec_3  m_v_axes[CAxes::u_count];
-	};
-
-	class CScene {
-	public:
-		enum e_axes : uint32_t { e_forward = CAxes::e_z_axis, e_left = CAxes::e_x_axis, e_up = CAxes::e_y_axis };
-		CScene (void); CScene (const CScene&) = delete; CScene (CScene&&) = delete; ~CScene (void) = default;
-	private:
-		CScene& operator = (const CScene&) = delete; CScene& operator = (CScene&&) = delete;
-		CAxes  m_axes;  // have unchangable angles between each other: 90 digrees; can be shifted to left|right|up|down, no rotation;
-		vec_3  m_dirs[CAxes::u_count]; // can be moved as above and to be turned/rotated too;
-	};
 namespace opers {
 	/* 'Upfront' refers to something done in advance or at the beginning of a process (e.g., upfront costs);
 	   'Forward' implies moving in a direction toward the front or future;

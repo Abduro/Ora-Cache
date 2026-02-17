@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0070}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0071}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_prec">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0072}</UniqueIdentifier>
-    </Filter>
+    <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0070}</UniqueIdentifier></Filter>
+    <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0071}</UniqueIdentifier></Filter>
+    <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0072}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0073}</UniqueIdentifier></Filter>
+    <Filter Include="src\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0074}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\virt_camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0075}</UniqueIdentifier></Filter>
+    <Filter Include="src\virt_camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0076}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -20,17 +20,23 @@
     <ClCompile Include="$(_1)math.defs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.lerp.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.lerp.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)math.mat.invert.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)math.mat.invert.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)math.mat.rotate.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)math.matrix.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)math.matrix.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.quat.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.quat.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)math.vector.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)math.vector.cpp"><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)virt_camera.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)virt_camera.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)math.mat.invert.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.mat.invert.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.mat.rotate.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.matrix.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.matrix.cpp"><Filter>src\matrix</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)virt_camera.h"><Filter>interface\virt_camera</Filter></ClInclude>
+    <ClCompile Include="$(_1)virt_camera.cpp"><Filter>src\virt_camera</Filter></ClCompile>
+    <ClInclude Include="$(_0)virt_space.h"><Filter>interface\virt_camera</Filter></ClInclude>
+    <ClCompile Include="$(_1)virt_space.cpp"><Filter>src\virt_camera</Filter></ClCompile>
   </ItemGroup>
 </Project>
