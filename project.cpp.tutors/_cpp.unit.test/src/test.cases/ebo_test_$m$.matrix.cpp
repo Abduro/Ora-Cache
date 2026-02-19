@@ -33,15 +33,12 @@ void c_mat3x3::Set (void) {
 
 	this->To_str();
 
-	c_vec3 col_0(false), col_1(false), col_2(false); // output flags to set to 'false';
-	col_0.ref().Set(0.0f, 1.0f, 2.0f);
-	col_1.ref().Set(3.0f, 4.0f, 5.0f);
-	col_2.ref().Set(6.0f, 7.0f, 8.0f);
-
+	c_tvec_3x3 col_0(0.0f, 1.0f, 2.0f), col_1(3.0f, 4.0f, 5.0f), col_2(6.0f, 7.0f, 8.0f);
+	
 	_out() += _T("*input* values:");
-	_out() += TString().Format(_T("col_#0: %s"), (_pc_sz) col_0.To_str());
-	_out() += TString().Format(_T("col_#1: %s"), (_pc_sz) col_1.To_str());
-	_out() += TString().Format(_T("col_#2: %s"), (_pc_sz) col_2.To_str());
+	_out() += TString().Format(_T("col_#0: %s"), (_pc_sz) col_0().To_str());
+	_out() += TString().Format(_T("col_#1: %s"), (_pc_sz) col_1().To_str());
+	_out() += TString().Format(_T("col_#2: %s"), (_pc_sz) col_2().To_str());
 
 	this->ref().Cols().Set(0, col_0.ref());
 	this->ref().Cols().Set(1, col_1.ref());
@@ -58,9 +55,12 @@ t_mat3x3& c_mat3x3::ref (void)       { return this->m_mat3x3; }
 
 CString   c_mat3x3::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
 	_p_prf; _p_sep; _p_sfx;
-
-	return c_mtx_3x3().To_str(this->ref(), this->m_b_verb);
+	return c_mtx_3x3().To_str((*this)(), this->m_b_verb);
 }
+
+const
+t_mat3x3&  c_mat3x3::operator ()(void) const { return this->ref(); }
+t_mat3x3&  c_mat3x3::operator ()(void)       { return this->ref(); }
 
 #pragma endregion
 #pragma region cls::c_mat4x4{}
@@ -82,31 +82,12 @@ void c_mat4x4::_ctor (void) {
 
 void c_mat4x4::Identity (void) {
 
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	this->ref().Identity();
-
-	this->m_b_verb = true;
-	this->To_str();
+	c_mtx_4x4().Identity(); _out()();
 }
 
 void c_mat4x4::Translate (void) {
-
-	c_vec3 vec3;
-	vec3.Set();
-
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *before* translate:");
-
-	this->ref().Rows().Set(t_mat4x4::u_rows - 1, 1.0f); // sets the last row of the matrix to some value that is not zero, otherwise there's no translation;
-
-	this->m_b_verb = true;
-	this->To_str();
-
-	this->ref().Translate(vec3.ref());
-
-	_out() += _T("the matrix *after* translate:");
-	this->To_str();
+	
+	c_mtx_4x4().Translate(c_tvec_3x3(0.0f, 0.1f, 0.0f)()); _out()();
 }
 
 const
@@ -144,14 +125,14 @@ void      c_rot_3x3::Rotate_x (void) {
 
 	c_mtx_3x3().To_str(this->ref(), true);
 
-	c_vec3 x_axis(false); x_axis.ref().Set(1.0f, 0.0f, 0.0f);
+	c_tvec_3x3 x_axis(1.0f, 0.0f, 0.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
 
 	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
 
 	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_], _T("x"), (_pc_sz) x_axis.To_str());
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_], _T("x"), (_pc_sz) x_axis().To_str());
 
 		this->ref().Do(f_angels[i_], x_axis.ref());
 
@@ -166,14 +147,14 @@ void      c_rot_3x3::Rotate_y (void) {
 	_out() += _T("the matrix *before* rotate:");
 
 	c_mtx_3x3().To_str(this->ref(), true);
-	c_vec3 y_axis(false); y_axis.ref().Set(0.0f, 1.0f, 0.0f);
+	c_tvec_3x3 y_axis(0.0f, 1.0f, 0.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
 
 	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
 
 	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_], _T("y"), (_pc_sz) y_axis.To_str());
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_], _T("y"), (_pc_sz) y_axis().To_str());
 
 		this->ref().Do(f_angels[i_], y_axis.ref());
 
@@ -188,14 +169,14 @@ void      c_rot_3x3::Rotate_z (void) {
 	_out() += _T("the matrix *before* rotate:");
 
 	c_mtx_3x3().To_str(this->ref(), true);
-	c_vec3 z_axis(false); z_axis.ref().Set(0.0f, 0.0f, 1.0f);
+	c_tvec_3x3 z_axis(0.0f, 0.0f, 1.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
 
 	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
 
 	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_], _T("z"), (_pc_sz) z_axis.To_str());
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_], _T("z"), (_pc_sz) z_axis().To_str());
 
 		this->ref().Do(f_angels[i_], z_axis.ref());
 
@@ -239,14 +220,14 @@ void c_rot_4x4::Rotate_free (void) {
 	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
 
-	c_vec3 axis(0.5f, 0.5f, 0.5f, false);
+	c_tvec_3x3 axis(0.5f, 0.5f, 0.5f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; axis = %s");
 
 	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
 
 	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_], (_pc_sz) axis.To_str() );
+		_out() += TString().Format(pc_sz_fmt, f_angels[i_], (_pc_sz) axis().To_str() );
 
 		this->ref().Do(f_angels[i_], axis.ref());
 

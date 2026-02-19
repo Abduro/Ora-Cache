@@ -26,6 +26,13 @@ s_vec_2& s_vec_2::Set (const float _x, const float _y) { _x; _y; this->x = _x; t
 
 float    s_vec_2::Sum (const uint32_t _u_exp/* = 1*/) const { return ::_pow_n(_u_exp, this->x) + ::_pow_n(_u_exp, this->y); }
 
+CString  s_vec_2::To_str (_pc_sz _p_format) const {
+	static _pc_sz pc_sz_pat = _T("x=%s;y=%s");
+	CString cs_out; cs_out.Format(
+		pc_sz_pat, TString().Float(this->x, _p_format), TString().Float(this->y, _p_format));
+	return  cs_out;
+}
+
 s_vec_2  s_vec_2::operator  - (void) const { return s_vec_2(-this->x, -this->y); }
 s_vec_2& s_vec_2::operator  - (void) { this->x *= -1.0f; this->y *= -1.0f; return *this; }
 
@@ -85,9 +92,9 @@ s_vec_3& s_vec_3::Set (const s_vec_2& _src, const float _z/* = 0.0f*/) { return 
 float    s_vec_3::Sum (const uint32_t _u_exp/* = 1*/) const { return s_vec_2::Sum(_u_exp) + ::_pow_n(_u_exp, this->z); }
 
 CString  s_vec_3::To_str (_pc_sz _p_format) const {
-	static _pc_sz pc_sz_pat = _T("x=%s;y=%s;z=%s");
+	static _pc_sz pc_sz_pat = _T("%s;z=%s");
 	CString cs_out; cs_out.Format(
-		pc_sz_pat, TString().Float(this->x, _p_format), TString().Float(this->y, _p_format), TString().Float(this->z, _p_format));
+		pc_sz_pat, (_pc_sz) s_vec_2::To_str(_p_format), TString().Float(this->z, _p_format));
 	return  cs_out;
 }
 
@@ -133,6 +140,13 @@ s_vec_4& s_vec_4::Set (const float _x, const float _y, const float _z, const flo
 s_vec_4& s_vec_4::Set (const s_vec_3& _src, const float _w/* = 0.0f*/) { return this->Set(_src.x, _src.y, _src.z, _w); }
 
 float    s_vec_4::Sum (const uint32_t _u_exp/* = 1*/) const { return s_vec_3::Sum(_u_exp) + ::_pow_n(_u_exp, this->w); }
+
+CString  s_vec_4::To_str (_pc_sz _p_format) const {
+	static _pc_sz pc_sz_pat = _T("%s;w=%s");
+	CString cs_out; cs_out.Format(
+		pc_sz_pat, (_pc_sz) s_vec_3::To_str(_p_format), TString().Float(this->w, _p_format));
+	return  cs_out;
+}
 
 s_vec_4  s_vec_4::operator - (void) const { return s_vec_4(-(s_vec_3&)*this, -this->w); }
 s_vec_4& s_vec_4::operator - (void) { -(s_vec_3&)*this; this->w *= -1.0f; return *this; }

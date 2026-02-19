@@ -4,7 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Dec-2025 at 08:10:22.332, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL math lib matrix uint test interface declaration file; 
 */
-#include "test_case_$m$.matrix.h"
+#include "test_case_$m$.mat3x3.h"
+#include "test_case_$m$.mat4x4.h"
+#include "test_case_$m$.vec3.h"
 #include "ebo_test_$m$.vector.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
@@ -20,7 +22,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		const
 		t_mat3x3&  ref (void) const;
 		t_mat3x3&  ref (void) ;
+
 		CString To_str (_pc_sz _p_pfx = predefs::_p_pfx, _pc_sz _p_sep = _T(" "), _pc_sz _p_sfx = predefs::_p_sfx) const;
+
+		const
+		t_mat3x3&  operator ()(void) const;
+		t_mat3x3&  operator ()(void) ;
 
 	private:
 		mutable bool     m_b_verb;
@@ -28,7 +35,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	};
 
 	/*note:
-	test case method cannot have 'const' qualifier, otherwise the compiler throws the error: ...C2440: 'static_cast': cannot convert from 'void'.... ; 
+	test case method cannot have 'const' qualifier, otherwise the compiler throws the error: ...C2440: 'static_cast': cannot convert from 'void'.... ;
+	Translate function test case must consist of the following steps:
+	(1) creating identity matrix, it is indicating the position by cell[3.3] == 1, otherwise direction '0' cannot be translated/transfered;
+	(2) creating the vertex position vector;
+	(3) multiplying the matrix by the vector;
+	(4) result matrix is the transfored vector; it is not different from input vector, because the matrix is the identity one; 
 	*/
 	__class (c_mat4x4) {
 	public:

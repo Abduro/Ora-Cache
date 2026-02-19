@@ -267,8 +267,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
-
-		c_mat4x4& Translate (const float _x, const float _y, const float _z); // view matrix converts points from world coords (global) to camera coords (local to the camera);
+		/* the example of translating the vertex position: this matrix * input vector = transformed vector;
+		   this matrix must indecate the position: cell[3,3] == 1, not 0, otherwise the direction cannot be translated/transformed;
+		*/
+		c_mat4x4& Translate (const float _x, const float _y, const float _z); // this matrix converts points from world coords (global) to camera coords (local to the camera);
 		c_mat4x4& Translate (const vec_3&);
 
 		c_mat4x4& operator = (const c_mat4x4&);

@@ -6,6 +6,7 @@
 */
 #include "math.defs.h"
 #include "math.matrix.h"
+#include "math.mat.rotate.h"
 
 #include "math.quat.h"
 #include "math.vector.h"
@@ -50,7 +51,6 @@ namespace space { namespace axes {
 		const vec_3& Up (void) const; vec_3& Up (void);
 	};
 }
-
 	class CBase {
 	protected:
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
@@ -58,9 +58,11 @@ namespace space { namespace axes {
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 	};
+#pragma region __refs_g
 	// https://learnopengl.com/Getting-started/Coordinate-Systems ;
 	// https://www.songho.ca/opengl/gl_transform.html ;
-
+	// https://stackoverflow.com/questions/5550620/the-purpose-of-model-view-projection-matrix << https://stackoverflow.com/a/5554162/4325555 ;
+#pragma endregion
 	/* Local space is the coordinate space that is local to an object (model), i.e. where the object begins in.
 	   the object coordinates are transformed to the eye/view coordinates with GL_MODELVIEW matrix;
 	*/
@@ -86,13 +88,9 @@ namespace space { namespace axes {
 		const
 		CAxes& Axes (void) const;
 		CAxes& Axes (void);
-		const
-		c_mat4x4& Get (void) const;
-		c_mat4x4& Get (void);
 
 	private:
 		CAxes    m_axes;
-		c_mat4x4 m_view;
 	};
 	/* This is the coordinate space in which all objects are located.
 	*/
@@ -103,9 +101,13 @@ namespace space { namespace axes {
 		const
 		CAxes& Axes (void) const;
 		CAxes& Axes (void);
+		const
+		c_mat4x4& View (void) const;
+		c_mat4x4& View (void);
 
 	private:
 		CAxes m_axes;
+		c_mat4x4 m_view;
 	};
 }
 }}}

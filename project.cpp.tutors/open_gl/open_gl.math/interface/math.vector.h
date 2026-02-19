@@ -6,8 +6,10 @@
 */
 #include "math.defs.h"
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
-	// https://learnopengl.com/Getting-started/Transformations ;
-	// In its most basic definition, vectors are directions and nothing more. A vector has a direction and a magnitude (also known as its strength or length).
+	/* https://learnopengl.com/Getting-started/Transformations ;
+	   In its most basic definition, vectors are directions and nothing more. A vector has a direction and a magnitude (also known as its strength or length).
+	   2 elements: double / pair / couple;
+	*/
 	struct s_vec_2 {
 		static const uint32_t u_count = 2; // the number of the fields' count;
 		s_vec_2 (void);
@@ -25,6 +27,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2& Negate (void);
 		float Sum (const uint32_t _u_exp = 1) const;  // gets the sum of the elements of this vector; each element can be in power of given exponent;
 
+		CString  To_str (_pc_sz _p_format = _T("%.7f")) const;
+
 		s_vec_2  operator - (void) const;             // unary operator (negate) returns new vector with reversed direction;
 		s_vec_2& operator - (void) ;                  // changes sign to opposite of all elements of this vector;
 		s_vec_2& operator  =(const s_vec_2&);
@@ -37,7 +41,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		float x, y;
 	};
-
+	/* https://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/ ;
+	   Homogeneous coordinates for vertex position as a (x,y,z) triplet or triple/trio;
+	*/
 	struct s_vec_3 : public s_vec_2 {
 		static const uint32_t u_count = s_vec_2::u_count + 1; // the number of the fields' count;
 		s_vec_3 (void);
@@ -85,7 +91,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	bool operator == (const s_vec_3&, const s_vec_3&);
 
-	// https://en.cppreference.com/w/cpp/algorithm/transform.html ; this is not the case for vector emulation like the below class is;
+	/* https://en.cppreference.com/w/cpp/algorithm/transform.html ; this is not the case for vector emulation like the below class is;
+	   4 elements (x,y,z,w) are quadruple or quartet, where (x,y,z) is coord triplet and the fourth element 'w' is 0 (direction) or 1 (position);
+	   in mathematics, a collection of four items is often referred to as a 4-tuple or an ordered quadruple;
+	*/
 	struct s_vec_4 : public s_vec_3 {
 		static const uint32_t u_count = s_vec_3::u_count + 1; // the number of the fields' count;
 		s_vec_4 (void);
@@ -101,6 +110,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_4& Set (const s_vec_3&, const float _w = 0.0f);
 
 		float Sum (const uint32_t _u_exp = 1) const;  // gets the sum of the elements of this vector; each element can be in power of given exponent;
+		CString  To_str (_pc_sz _p_format = _T("%.7f")) const;
 
 		s_vec_4  operator - (void) const;             // unary operator (negate) returns new vector with reversed direction;
 		s_vec_4& operator - (void) ;                  // changes sign to opposite of all elements of this vector;
@@ -122,7 +132,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	s_vec_3 operator * (const float, const s_vec_3&);
 	s_vec_4 operator * (const s_vec_4&, const s_vec_4&);
-
+	// what is about five elements: quintuple or quintet;
 }}}}
 
 typedef ex_ui::draw::open_gl::math::s_vec_2 vec_2;

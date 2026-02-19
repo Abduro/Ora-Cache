@@ -16,7 +16,9 @@ axes::CBase::CBase (void) {}
 #pragma endregion
 #pragma region axes::cls::CDynamic{}
 
-axes::CDynamic::CDynamic (void) {}
+axes::CDynamic::CDynamic (void) {
+	this->Fwd().Set(0.0f, 0.0f, 1.0f); this->Left().Set(1.0f, 0.0f, 0.0f); this->Up().Set(0.0f, 1.0f, 0.0f); // sets default values;
+}
 const
 vec_3& axes::CDynamic::Get (const e_axes _e_axis) const { return this->m_v_axes[_e_axis]; }
 vec_3& axes::CDynamic::Get (const e_axes _e_axis)       { return this->m_v_axes[_e_axis]; }
@@ -57,9 +59,6 @@ CView::CView (void) : CBase() {}
 const
 CView::CAxes& CView::Axes (void) const { return this->m_axes; }
 CView::CAxes& CView::Axes (void)       { return this->m_axes; }
-const
-c_mat4x4& CView::Get (void) const { return this->m_view; }
-c_mat4x4& CView::Get (void)       { return this->m_view; }
 
 #pragma endregion
 #pragma region cls::CWorld{}
@@ -68,5 +67,8 @@ CWorld::CWorld (void) : CBase() {}
 const
 CWorld::CAxes& CWorld::Axes (void) const { return this->m_axes; }
 CWorld::CAxes& CWorld::Axes (void)       { return this->m_axes; }
+const
+c_mat4x4& CWorld::View (void) const { return this->m_view; }
+c_mat4x4& CWorld::View (void)       { return this->m_view; }
 
 #pragma endregion

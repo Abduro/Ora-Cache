@@ -4,7 +4,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 14-Feb-2026 at 21:54:47.258, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL draw virtual camera wrapper interface declaration file for using in test cases' adapters;
 */
-#include "test_case_$m$.matrix.h"
+#include "test_case_$m$.mat3x3.h"
+#include "test_case_$m$.mat4x4.h"
 #include "virt_camera.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {

@@ -20,12 +20,16 @@
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2-0)test_case_$m$.matrix.h"><Filter>matrix\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$m$.matrix.cpp"><Filter>matrix\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.mat3x3.h"><Filter>matrix\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp"><Filter>matrix\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h"><Filter>matrix\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.vec3.h"><Filter>vector\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp"><Filter>vector\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h"><Filter>vector</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
   </ItemGroup>

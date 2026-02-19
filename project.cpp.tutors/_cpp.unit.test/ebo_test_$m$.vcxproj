@@ -223,8 +223,10 @@
     <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2-0)test_case_$m$.matrix.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.matrix.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.mat3x3.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
   </ItemGroup>
@@ -238,6 +240,8 @@
     </ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.defs.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.vec3.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
   </ItemGroup>

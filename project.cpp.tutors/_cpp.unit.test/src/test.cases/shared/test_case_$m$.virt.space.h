@@ -4,7 +4,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 17-Feb-2026 at 11:53:13.379, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL draw virtual space wrapper interface declaration file for using in test cases' adapters;
 */
-#include "test_case_$m$.matrix.h"
+#include "test_case_$m$.mat3x3.h"
+#include "test_case_$m$.mat4x4.h"
 #include "virt_space.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math { using namespace ex_ui::draw::open_gl::space;
