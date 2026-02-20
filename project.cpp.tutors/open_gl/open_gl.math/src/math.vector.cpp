@@ -70,14 +70,22 @@ float s_vec_3::Get_dot (const s_vec_3& _v_3) {
 s_vec_3& s_vec_3::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; return *this; }      
 s_vec_3  s_vec_3::Invert (const float _f_scale) const { return s_vec_3(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale); }
 
-float s_vec_3::Length (void) const { return ::sqrtf(this->x * this->x + this->y * this->y + this->z * this->z); }
+/* https://en.cppreference.com/w/c/numeric/math/sqrt.html ; */
+#include <errno.h>
+float s_vec_3::Length (void) const {
+	errno = 0;
+	const float f_len = ::sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
+	if (errno) {
+	}
+	return f_len;
+}
 
 s_vec_3& s_vec_3::Negate (void) {
 	s_vec_2::Negate(); this->z = -this->z; return *this;
 }
-s_vec_3& s_vec_3::Normalize (void) {
-	const float f_sum = this->x * this->x + this->y * this->y + this->z * this->z;
-	const float f_inv_len = 1.0f/::sqrtf(f_sum);
+s_vec_3& s_vec_3::Normalize (const bool _b_fast) {
+	_b_fast;
+	const float f_inv_len = (_b_fast ? ::_rsqrt(this->Sum(2)) : 1.0f/::sqrtf(this->Sum(2)));
 	this->x *=  f_inv_len;
 	this->y *=  f_inv_len;
 	this->z *=  f_inv_len; return *this;

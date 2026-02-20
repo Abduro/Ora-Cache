@@ -11,6 +11,33 @@ using namespace ebo::boo::test::open_gl::math;
 c_tvec_3x3::c_tvec_3x3 (void) {}
 c_tvec_3x3::c_tvec_3x3 (const float _x, const float _y, const float _z) : m_vec_3(_x, _y, _z) {}
 
+float   c_tvec_3x3::Length (const bool _b_log) const {
+	_b_log;
+	const float f_length = (*this)().Length();
+	if (_b_log) {
+		_pc_sz pc_sz_pat = _T("vec3 = {%s} has length: %s");
+		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out() += TString().Format(pc_sz_pat, (_pc_sz) (*this)().To_str(), TString().Float(f_length, _T("%.7f")));
+	}
+	return f_length;
+}
+
+vec_3&  c_tvec_3x3::Normalize (const bool _b_fast, const bool _b_log) {
+       _b_fast; _b_log;
+	if (_b_log) {
+		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out() += TString().Format(_T("*before*: {%s}"), (_pc_sz) (*this)().To_str());
+	}
+
+	(*this)().Normalize(_b_fast);
+
+	if (_b_log) {
+		_pc_sz pc_sz_pat = _T("*after* : {%s}");
+		_out() += TString().Format(pc_sz_pat, (_pc_sz) (*this)().To_str());
+	}
+	return (*this)();
+}
+
 const
 vec_3&  c_tvec_3x3::ref (void) const { return this->m_vec_3; }
 vec_3&  c_tvec_3x3::ref (void)       { return this->m_vec_3; }

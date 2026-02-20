@@ -8,10 +8,10 @@ using namespace ex_ui::draw::open_gl::math;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl { void __warning_lnk_4221 (void) {}}
 	
-	float _pow_2(const float& _base) { return _base * _base; }
-	float _pow_3(const float& _base) { return _base * _base * _base; }
+	float _pow_2 (const float& _base) { return _base * _base; }
+	float _pow_3 (const float& _base) { return _base * _base * _base; }
 
-	float _pow_n(const uint32_t _index, const float _base) {
+	float _pow_n (const uint32_t _index, const float _base) {
 		_index; _base;
 		if (false) {}
 		else if (0 == _index) return 1.0f;
@@ -22,6 +22,22 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespac
 		return f_result;
 	}
 
+	float _rsqrt (const float _f_value) {
+		_f_value;
+		static const float f_half_3 = 1.5f;
+		static const float f_half = 0.5f;
+
+		float f_half_of_val = _f_value * f_half;
+		float f_result = _f_value;
+		long 
+		bits_ = *(long*)&f_result;         // evil floating point bit level hacking;
+		bits_ = 0x5f3759df - (bits_ >> 1); // what the fuck?
+
+		f_result = *(float*) &bits_;
+		f_result = f_result * ( f_half_3 - (f_half_of_val * f_result * f_result));   // the 1st iteration;
+	//	f_result = f_result * ( f_half_3 - (f_half_of_val * f_result * f_result));   // the 2nd iteration;
+		return f_result;
+	}
 }}}}
 
 #if (0) // not used;

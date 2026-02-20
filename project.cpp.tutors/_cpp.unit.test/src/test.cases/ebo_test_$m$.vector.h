@@ -11,6 +11,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	__class (c_vec3) {
 	public:
 		c_vec3 (void); ~c_vec3 (void) = default;
+
+		__method (Length);
+		__method (Normalize);
 	};
 	/*
 		Unfortunately there is no possibility to create test method with input arguments,

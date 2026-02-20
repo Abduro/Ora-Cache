@@ -13,6 +13,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_tvec_3x3 (void); c_tvec_3x3 (const c_tvec_3x3&) = delete; c_tvec_3x3 (c_tvec_3x3&&) = delete; ~c_tvec_3x3 (void) = default;
 		c_tvec_3x3 (const float _x, const float _y, const float _z);
 
+		float   Length (const bool _b_log = true) const;
+		vec_3&  Normalize (const bool _b_fast, const bool _b_log = true); // normalizes the vector by using two methods: 'fast' and 'regular';
+
 		const
 		vec_3&  ref (void) const;
 		vec_3&  ref (void);

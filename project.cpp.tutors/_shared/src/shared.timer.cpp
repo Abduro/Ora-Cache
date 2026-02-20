@@ -5,13 +5,11 @@
 	Original file is created for SfxSOA common timer object on 8-Dec-2010 at 2:01:24am, GMT+3, Rostov-on-Don, Wednesday;
 */
 #include "shared.timer.h"
-#include <map>
-#include "sys.err.codes.h"
+#include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace shared::common;
 using namespace shared::sys_core;
-
-/////////////////////////////////////////////////////////////////////////////
 
 namespace shared { namespace common { namespace details {
 
@@ -62,29 +60,29 @@ namespace shared { namespace common { namespace details {
 
 }}}
 using namespace shared::common::details;
-/////////////////////////////////////////////////////////////////////////////
 
-CTimer_Base:: CTimer_Base(IWaitable_Events& _snk) : m_sink(_snk) {}
+#pragma region cls::CTimer_Base{}
+
+CTimer_Base:: CTimer_Base(IWaitable_Events& _snk) : m_sink(_snk) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CTimer_Base::~CTimer_Base(void) {}
 
-/////////////////////////////////////////////////////////////////////////////
+TError&  CTimer_Base::Error (void) const { return this->m_error; }
 
-CWaitableTimer:: CWaitableTimer(IWaitable_Events& _snk) : TTimer(_snk), m_timer(nullptr) {}
+#pragma endregion
+#pragma region cls::CWaitableTimer{}
+
+CWaitableTimer:: CWaitableTimer(IWaitable_Events& _snk) : TBase(_snk), m_timer(nullptr) { TBase::m_error >>__CLASS__<<__e_not_inited; }
 CWaitableTimer::~CWaitableTimer(void) {
 	if (nullptr != m_timer) {
 		::CloseHandle(m_timer); m_timer = nullptr;
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 bool  CWaitableTimer::IsValid(void) const { return (nullptr != m_timer); }
 
-/////////////////////////////////////////////////////////////////////////////
-
-err_code CWaitableTimer::Delay (const UINT _u_ms) {
+err_code CWaitableTimer::Delay (const uint32_t _u_ms) {
 	_u_ms;
-	err_code n_result = __s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 	//
 	// https://en.wikipedia.org/wiki/Nanosecond ;
 	//
@@ -93,16 +91,16 @@ err_code CWaitableTimer::Delay (const UINT _u_ms) {
 	// 10, 000 periods       - one millisecond (ms);
 	//
 	if (_u_ms < 1)
-		return (n_result = __e_inv_arg);
+		return (TBase::m_error <<__e_inv_arg);
 
 	if (this->IsValid() == true)
-		return n_result = (err_code) TErrCodes::eObject::eInited;
+		return TBase::m_error << (err_code) TErrCodes::eObject::eInited;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw ;
 
 	m_timer = ::CreateWaitableTimer(nullptr, false, nullptr);
 	if (nullptr == m_timer)
-		return (n_result = __LastErrToHresult());
+		return (TBase::m_error.Last());
 
 	LARGE_INTEGER delay_ = {0};
 	delay_.QuadPart = -(_u_ms * 10000LL);
@@ -122,77 +120,72 @@ err_code CWaitableTimer::Delay (const UINT _u_ms) {
 				} break;
 			default:
 				_ASSERTE(FALSE);
-				n_result = __e_not_expect;
+				TBase::m_error << __e_not_expect;
 			}
 		}
 	}
-	return n_result;
+	return TBase::Error();
 }
 
 err_code CWaitableTimer::Destroy(void) {
-
-	err_code n_result = __s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (this->IsValid() == false)
-		return (n_result = __e_not_inited);
+		return (TBase::m_error << __e_not_inited);
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle ;
 	if (false == !!::CloseHandle(m_timer))
-		n_result = __LastErrToHresult();
+		TBase::m_error.Last();
 	else
 		m_timer  = nullptr;
 
-	return n_result;
+	return TBase::Error();
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CStdTimer{}
 
-CStdTimer:: CStdTimer(IWaitable_Events& _snk) : TTimer(_snk),  m_tm_id(0) {}
-CStdTimer::~CStdTimer(void) {
+CStdTimer:: CStdTimer (IWaitable_Events& _snk) : TBase(_snk),  m_tm_id(0) { this->m_error >>__CLASS__<<__e_not_inited; }
+CStdTimer::~CStdTimer (void) {
 	if (this->IsValid())
 		this->Destroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////
+bool CStdTimer::IsValid (void) const { return (0 != m_tm_id); }
 
-bool CStdTimer::IsValid(void) const { return (0 != m_tm_id); }
-
-/////////////////////////////////////////////////////////////////////////////
-
-err_code CStdTimer::Create (const UINT _u_ms) {
+err_code CStdTimer::Create (const uint32_t _u_ms) {
 	_u_ms;
-	err_code n_result = __s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (0 == _u_ms)
-		return (n_result = __e_inv_arg);
+		return (TBase::m_error <<__e_inv_arg);
 
 	if (this->IsValid() == true)
-		return (n_result = (err_code) TErrCodes::eObject::eExists);
+		return (TBase::m_error <<(err_code) TErrCodes::eObject::eExists);
 
 	// learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-settimer ;
 
 	m_tm_id = ::SetTimer(0, 0, _u_ms, CWaitable_Helper::_timer_proc);
-	if (NULL == m_tm_id)
-		return (n_result = __LastErrToHresult());
+	if (0 == m_tm_id)
+		return TBase::m_error.Last();
 	
 	try {
 		CWaitable_StdRef()[m_tm_id] = &this->m_sink;
 	}
 	catch (::std::bad_alloc&) {
-		n_result = __e_no_memory;
+		TBase::m_error <<__e_no_memory;
 	}
 
-	return n_result;
+	return TBase::Error();
 }
 
 err_code CStdTimer::Destroy(void) {
-
-	err_code n_result = __s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (this->IsValid() == false)
-		return (n_result = __e_not_inited);
+		return (TBase::m_error <<__e_not_inited);
 
 	if (false == !!::KillTimer(nullptr, m_tm_id))
-		n_result = __LastErrToHresult();
+		TBase::m_error.Last();
 	else {
 		TStdTimers& tms_ = CWaitable_StdRef();
 		if (tms_.empty() == false) { // it is required for safe exit from the app that creates this timer, otherwise access violation error occurs;
@@ -202,5 +195,28 @@ err_code CStdTimer::Destroy(void) {
 		}
 		m_tm_id  = 0;
 	}
-	return n_result;
+	return TBase::Error();
 }
+
+#pragma endregion
+#pragma region cls::CChromo{}
+
+using namespace ::std::chrono;
+
+CChrono::CChrono (void) : m_stopped(true) { this->m_pt_start = high_resolution_clock::now(); this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError& CChrono::Error (void) const { return this->m_error; }
+
+err_code CChrono::Start (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	return this->Error();
+}
+
+err_code CChrono::Stop (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	return this->Error();
+}
+
+#pragma endregion

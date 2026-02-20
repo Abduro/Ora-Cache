@@ -11,6 +11,16 @@ using namespace ebo::boo::test::open_gl::math;
 
 c_vec3::c_vec3(void) {}
 
+void c_vec3::Length (void) {
+	c_tvec_3x3().Length(true); c_tvec_3x3(1.0f, 1.0f, 1.0f).Length(true);  _out()();
+}
+
+void c_vec3::Normalize (void) {
+	_out() += _T("Using fast inverse:"); c_tvec_3x3(1.0f, 1.0f, 1.0f).Normalize(true);
+	_out() += _T("Using regular inverse:"); c_tvec_3x3(1.0f, 1.0f, 1.0f).Normalize(false);
+	_out()();
+}
+
 #pragma endregion
 #pragma region cls::c_vec4{}
 

@@ -60,7 +60,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float Length (void) const;
 
 		s_vec_3& Negate (void);
-		s_vec_3& Normalize (void);
+		s_vec_3& Normalize (const bool _b_fast = true); // https://en.wikipedia.org/wiki/Fast_inverse_square_root ;
 
 		s_vec_3& Set (const float values[u_count]);   // values are assigned in the following order: x|y|z;
 		s_vec_3& Set (const float _x, const float _y, const float _z);
