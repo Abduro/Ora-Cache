@@ -74,9 +74,8 @@ s_vec_3  s_vec_3::Invert (const float _f_scale) const { return s_vec_3(this->x /
 #include <errno.h>
 float s_vec_3::Length (void) const {
 	errno = 0;
-	const float f_len = ::sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
-	if (errno) {
-	}
+	const float f_len = ::sqrtf(this->Sum(2));
+	if (errno) {}
 	return f_len;
 }
 
@@ -139,6 +138,25 @@ s_vec_4::s_vec_4 (const s_vec_3& _src, const float _w) : s_vec_4() { this->Set(_
 
 s_vec_4& s_vec_4::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; this->w /= _f_scale; return *this; }      
 s_vec_4  s_vec_4::Invert (const float _f_scale) const { return s_vec_4(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale, this->w / _f_scale); }
+
+float s_vec_4::Length (void) const {
+	errno = 0;
+	const float f_len = ::sqrtf(this->Sum(2));
+	if (errno) {}
+	return f_len;
+}
+
+s_vec_4& s_vec_4::Negate (void) {
+	s_vec_3::Negate(); this->w = -this->w; return *this;
+}
+s_vec_4& s_vec_4::Normalize (const bool _b_fast) {
+	_b_fast;
+	const float f_inv_len = (_b_fast ? ::_rsqrt(this->Sum(2)) : 1.0f/::sqrtf(this->Sum(2)));
+	this->x *=  f_inv_len;
+	this->y *=  f_inv_len;
+	this->z *=  f_inv_len;
+	this->w *=  f_inv_len; return *this;
+}
 
 s_vec_4& s_vec_4::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1], _values[2], _values[4]); }
 s_vec_4& s_vec_4::Set (const float _x, const float _y, const float _z, const float _w) {

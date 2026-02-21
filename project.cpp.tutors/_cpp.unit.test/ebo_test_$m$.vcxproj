@@ -242,6 +242,8 @@
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.vec3.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.vec4.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.vec4.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
   </ItemGroup>

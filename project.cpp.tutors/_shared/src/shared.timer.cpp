@@ -203,20 +203,55 @@ err_code CStdTimer::Destroy(void) {
 
 using namespace ::std::chrono;
 
-CChrono::CChrono (void) : m_stopped(true) { this->m_pt_start = high_resolution_clock::now(); this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CChrono::CChrono (void) : m_started(false), m_elapsed(0) {
+	this->m_pt_start = this->m_pt_stop = high_resolution_clock::now(); this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+}
+
+uint32_t CChrono::Elapsed (void) const { return this->m_elapsed; }
 
 TError& CChrono::Error (void) const { return this->m_error; }
+bool  CChrono::Is_started (void) const { return this->m_started; }
+
+CString  CChrono::Format (void) const {
+
+	static _pc_sz pc_sz_pat = _T("%u.%07u");
+
+	CString cs_out;
+	const uint32_t u_sec = (this->Elapsed()/1000);
+	const uint32_t u_dec = (this->Elapsed() - u_sec * 1000); cs_out.Format(pc_sz_pat, u_sec, u_dec);
+
+	return  cs_out;
+}
 
 err_code CChrono::Start (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+	if (this->Is_started())
+		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("the chronometer is already started;");
+
+	this->m_pt_start = high_resolution_clock::now(); this->m_started = true;
+	this->m_pt_stop  = this->m_pt_start; // the time interval does not exist yet;
+	this->m_elapsed  = 0;
 
 	return this->Error();
 }
 
 err_code CChrono::Stop (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+	if (false == this->Is_started())
+		return this->Error(); // keeps silence and returns the success;
+
+	this->m_pt_stop = high_resolution_clock::now(); this->m_started = false;
+	duration elapsed = this->m_pt_stop - this->m_pt_start;
+
+	this->m_elapsed = static_cast<uint32_t>(duration_cast<std::chrono::microseconds>(elapsed).count());
 
 	return this->Error();
 }
+
+#pragma endregion
+#pragma region cls::CChrono_auto{}
+
+CChrono_auto:: CChrono_auto (ISpent& _out) : TBase(), m_out(_out) { TBase::Start(); }
+CChrono_auto::~CChrono_auto (void) { TBase::Stop(); this->m_out.Put((_pc_sz) TBase::Format()); }
 
 #pragma endregion

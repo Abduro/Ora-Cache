@@ -80,22 +80,43 @@ namespace shared { namespace common {
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcoalescabletimer ; just for info;
+	// https://www.thewatchpages.com/what-is-the-difference-between-a-chronograph-and-a-chronometer/ ;
 	using time_point = ::std::chrono::time_point<::std::chrono::steady_clock>;
 	class CChrono {
 	public:
 		CChrono (void); CChrono (const CChrono&) = delete; CChrono (CChrono&&) = delete; ~CChrono (void) = default;
 
-		TError&  Error (void) const;
+		uint32_t Elapsed (void) const;  // gets elapsed time in microseconds;
+		TError&  Error   (void) const;
+		bool  Is_started (void) const;
+
+		CString  Format (void) const;   // gets formatted string of elapsed time;
 
 		err_code Start (void);
 		err_code Stop (void);
 
 	private:
 		CChrono& operator = (const CChrono&) = delete; CChrono& operator = (CChrono&&) = delete;
+		volatile bool m_started;
+
 		time_point m_pt_start;
 		time_point m_pt_stop ;
-		bool m_stopped;
+
 		CError m_error;
+		uint32_t m_elapsed; // elapsed period of time in microseconds;
+	};
+
+	interface ISpent {
+		virtual void  Put (_pc_sz) {}
+	};
+
+	class CChrono_auto : public CChrono { typedef CChrono TBase;
+	public:
+		CChrono_auto (ISpent&);
+		CChrono_auto (void) = delete; CChrono_auto (const CChrono_auto&) = delete; CChrono_auto (CChrono_auto&&) = delete; ~CChrono_auto (void);
+	private:
+		CChrono_auto& operator = (const CChrono_auto&) = delete;
+		ISpent& m_out;
 	};
 }}
 

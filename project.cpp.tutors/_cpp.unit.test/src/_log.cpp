@@ -189,6 +189,17 @@ CLogger& CLogger::operator ()(TError& _err) {
 }
 
 #pragma endregion
+#pragma region cls::CTime{}
+
+CTime::CTime (void) {}
+_pc_sz CTime::Spent (void) const { return (_pc_sz) this->m_spent; }
+_pc_sz CTime::operator ()(void) const { return this->Spent(); }
+
+void CTime::Put (_pc_sz _p_spent) {
+	this->m_spent.Format(_T("elapsed %s s."), _p_spent);
+}
+
+#pragma endregion
 
 TLogger& _out(void) {
 	static

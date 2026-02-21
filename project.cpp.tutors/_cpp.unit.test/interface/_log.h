@@ -6,6 +6,7 @@
 */
 #include "_defs.h"
 #include "shared.dbg.h"
+#include "shared.timer.h" // for using shared::common::CChrono and CChrono_auto classes;
 
 namespace ebo { namespace boo { namespace test {
 
@@ -16,6 +17,9 @@ namespace ebo { namespace boo { namespace test {
 	}
 	using TParts  = shared::defs::TParts;      // text lines actually; 
 	using TCached = shared::defs::TParts;      // buffered text for cache output;
+
+	using CChrono = shared::common::CChrono;
+	using CChrono_auto = shared::common::CChrono_auto;
 
 	class CCache {
 	public:
@@ -149,6 +153,17 @@ namespace ebo { namespace boo { namespace test {
 		CLog_Opts m_opts ;
 	};
 
+	class CTime : public shared::common::ISpent {
+	public:
+		CTime (void); CTime (const CTime&) = delete; CTime (CTime&&) = delete; ~CTime (void) = default;
+		_pc_sz Spent (void) const;
+		_pc_sz operator ()(void) const;
+	private:
+		CTime& operator = (const CTime&) = delete; CTime& operator = (CTime&&) = delete;
+		void Put (_pc_sz) override final;
+
+		CString m_spent;
+	};
 }}}
 
 typedef ebo::boo::test::CLog_Opts            TLog_Opts;

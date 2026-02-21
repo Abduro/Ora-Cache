@@ -12,70 +12,35 @@ using namespace ebo::boo::test::open_gl::math;
 c_vec3::c_vec3(void) {}
 
 void c_vec3::Length (void) {
-	c_tvec_3x3().Length(true); c_tvec_3x3(1.0f, 1.0f, 1.0f).Length(true);  _out()();
+	c_tvec_3().Length(true); c_tvec_3(1.0f, 1.0f, 1.0f).Length(true);  _out()();
+}
+
+void c_vec3::Negate (void) {
+	c_tvec_3 v_3(1.0f, 1.0f, 1.0f);
+	v_3.Negate(true);
+	v_3.Negate(true);
+	_out()();
 }
 
 void c_vec3::Normalize (void) {
-	_out() += _T("Using fast inverse:"); c_tvec_3x3(1.0f, 1.0f, 1.0f).Normalize(true);
-	_out() += _T("Using regular inverse:"); c_tvec_3x3(1.0f, 1.0f, 1.0f).Normalize(false);
+	_out() += _T("Using fast inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(true);
+	_out() += _T("Using regular inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(false);
 	_out()();
 }
 
 #pragma endregion
 #pragma region cls::c_vec4{}
 
-c_vec4::c_vec4(const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb && false) {
-		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
+c_vec4::c_vec4(void) {}
+
+void c_vec4::Length (void) {
+	c_tvec_4().Length(true); c_tvec_4(1.0f, 1.0f, 1.0f, 1.0f).Length(true);  _out()();
 }
 
-c_vec4::c_vec4 (const float _x, const float _y, const float _z, const float _w, const bool _b_verb) : m_b_verb(_b_verb), m_vec_4(_x, _y, _z, _w) {}
-
-void c_vec4::_ctor (void) {
-	
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	this->m_b_verb = true;
-	this->To_str();
-}
-
-void c_vec4::Set (void) {
-	
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	const float f_args[] = {1.101f, 2.202f, 3.303f, 0.101f };
-	_out() += TString().Format(_T("the input args: x = %9.7f; y = %9.7f; z = %9.7f; w = %9.7f"), f_args[0], f_args[1], f_args[2], f_args[3]);
-
-	this->ref().Set(f_args[0], f_args[1], f_args[2], f_args[3]);
-
-	this->m_b_verb = true;
-	this->To_str();
-}
-
-const
-vec_4&  c_vec4::ref (void) const { return this->m_vec_4; }
-vec_4&  c_vec4::ref (void)       { return this->m_vec_4; }
-
-CString c_vec4::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
-	_p_prf; _p_sep; _p_sfx;
-
-	static _pc_sz pc_sz_fmt = _T("%9.7f");
-	static _pc_sz pc_sz_pat = _T("[x = %s%sy = %s%sz = %s%sw = %s]");
-
-	CString cs_out = TString().Format(pc_sz_pat,
-		TString().Float(this->ref().x, t_fmt_spec::e_decimal, pc_sz_fmt), _p_sep,
-		TString().Float(this->ref().y, t_fmt_spec::e_decimal, pc_sz_fmt), _p_sep,
-		TString().Float(this->ref().z, t_fmt_spec::e_decimal, pc_sz_fmt), _p_sep,
-		TString().Float(this->ref().w, t_fmt_spec::e_decimal, pc_sz_fmt)
-	);
-
-	if (this->m_b_verb) {
-		_out() += TString().Format(_T("cls::[%s].%s() >> %s"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, (_pc_sz) cs_out);
-		_out()();
-	}
-	return cs_out;
+void c_vec4::Normalize (void) {
+	{c_tvec_4 v_4(2.0f, 2.0f, 2.0f, 2.0f); v_4.Length(true); _out() += _T("Using fast inverse:"); v_4.Normalize(true); }
+	{c_tvec_4 v_4(3.0f, 3.0f, 3.0f, 3.0f); v_4.Length(true); _out() += _T("Using regular inverse:"); v_4.Normalize(false); }
+	_out()();
 }
 
 #pragma endregion

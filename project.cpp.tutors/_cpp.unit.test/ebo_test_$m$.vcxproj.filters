@@ -30,6 +30,8 @@
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$m$.vec3.h"><Filter>vector\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp"><Filter>vector\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.vec4.h"><Filter>vector\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.vec4.cpp"><Filter>vector\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h"><Filter>vector</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
   </ItemGroup>

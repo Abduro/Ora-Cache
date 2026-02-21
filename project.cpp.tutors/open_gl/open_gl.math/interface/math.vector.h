@@ -105,6 +105,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_4& Invert (const float _f_scale);       // inverts this vector in accordance with given scale factor;
 		s_vec_4  Invert (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
 
+		float Length (void) const;
+
+		s_vec_4& Negate (void);
+		s_vec_4& Normalize (const bool _b_fast = true); // https://en.wikipedia.org/wiki/Fast_inverse_square_root ;
+
 		s_vec_4& Set (const float values[u_count]);   // values are assigned in the following order: x|y|z|w;
 		s_vec_4& Set (const float _x, const float _y, const float _z, const float _w);
 		s_vec_4& Set (const s_vec_3&, const float _w = 0.0f);

@@ -33,7 +33,7 @@ void c_mat3x3::Set (void) {
 
 	this->To_str();
 
-	c_tvec_3x3 col_0(0.0f, 1.0f, 2.0f), col_1(3.0f, 4.0f, 5.0f), col_2(6.0f, 7.0f, 8.0f);
+	c_tvec_3 col_0(0.0f, 1.0f, 2.0f), col_1(3.0f, 4.0f, 5.0f), col_2(6.0f, 7.0f, 8.0f);
 	
 	_out() += _T("*input* values:");
 	_out() += TString().Format(_T("col_#0: %s"), (_pc_sz) col_0().To_str());
@@ -87,7 +87,7 @@ void c_mat4x4::Identity (void) {
 
 void c_mat4x4::Translate (void) {
 	
-	c_mtx_4x4().Translate(c_tvec_3x3(0.0f, 0.1f, 0.0f)()); _out()();
+	c_mtx_4x4().Translate(c_tvec_3(0.0f, 0.1f, 0.0f)()); _out()();
 }
 
 const
@@ -125,7 +125,7 @@ void      c_rot_3x3::Rotate_x (void) {
 
 	c_mtx_3x3().To_str(this->ref(), true);
 
-	c_tvec_3x3 x_axis(1.0f, 0.0f, 0.0f);
+	c_tvec_3 x_axis(1.0f, 0.0f, 0.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
 
@@ -147,7 +147,7 @@ void      c_rot_3x3::Rotate_y (void) {
 	_out() += _T("the matrix *before* rotate:");
 
 	c_mtx_3x3().To_str(this->ref(), true);
-	c_tvec_3x3 y_axis(0.0f, 1.0f, 0.0f);
+	c_tvec_3 y_axis(0.0f, 1.0f, 0.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
 
@@ -169,7 +169,7 @@ void      c_rot_3x3::Rotate_z (void) {
 	_out() += _T("the matrix *before* rotate:");
 
 	c_mtx_3x3().To_str(this->ref(), true);
-	c_tvec_3x3 z_axis(0.0f, 0.0f, 1.0f);
+	c_tvec_3 z_axis(0.0f, 0.0f, 1.0f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; %s-axis = %s;");
 
@@ -220,7 +220,7 @@ void c_rot_4x4::Rotate_free (void) {
 	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
 
-	c_tvec_3x3 axis(0.5f, 0.5f, 0.5f);
+	c_tvec_3 axis(0.5f, 0.5f, 0.5f);
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; axis = %s");
 
@@ -317,16 +317,16 @@ void c_rot_4x4::Set (void) {
 
 	c_mtx_4x4().To_str(this->ref(), true);
 	}
-	c_vec4
-	col_0(0.0f, 0.1f, 0.2f, 1.0f, false),
-	col_1(0.4f, 0.5f, 0.6f, 1.0f, false),
-	col_2(0.7f, 0.8f, 0.9f, 1.0f, false),
-	col_3(0.5f, 0.5f, 0.5f, 1.0f, false);
+	c_tvec_4
+	col_0(0.0f, 0.1f, 0.2f, 1.0f),
+	col_1(0.4f, 0.5f, 0.6f, 1.0f),
+	col_2(0.7f, 0.8f, 0.9f, 1.0f),
+	col_3(0.5f, 0.5f, 0.5f, 1.0f);
 
-	_out() += TString().Format(_T("col_#_0: %s"), (_pc_sz) col_0.To_str());
-	_out() += TString().Format(_T("col_#_1: %s"), (_pc_sz) col_1.To_str());
-	_out() += TString().Format(_T("col_#_2: %s"), (_pc_sz) col_2.To_str());
-	_out() += TString().Format(_T("col_#_3: %s"), (_pc_sz) col_3.To_str());
+	_out() += TString().Format(_T("col_#_0: %s"), (_pc_sz) col_0().To_str());
+	_out() += TString().Format(_T("col_#_1: %s"), (_pc_sz) col_1().To_str());
+	_out() += TString().Format(_T("col_#_2: %s"), (_pc_sz) col_2().To_str());
+	_out() += TString().Format(_T("col_#_3: %s"), (_pc_sz) col_3().To_str());
 
 	this->ref().Cols().Set(col_0.ref(), col_1.ref(), col_2.ref(), col_3.ref());
 

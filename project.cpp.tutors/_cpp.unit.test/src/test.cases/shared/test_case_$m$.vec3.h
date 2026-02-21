@@ -8,12 +8,13 @@
 #include "math.vector.h"
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
-	class c_tvec_3x3 {
+	class c_tvec_3 {
 	public:
-		c_tvec_3x3 (void); c_tvec_3x3 (const c_tvec_3x3&) = delete; c_tvec_3x3 (c_tvec_3x3&&) = delete; ~c_tvec_3x3 (void) = default;
-		c_tvec_3x3 (const float _x, const float _y, const float _z);
+		c_tvec_3 (void); c_tvec_3 (const c_tvec_3&) = delete; c_tvec_3 (c_tvec_3&&) = delete; ~c_tvec_3 (void) = default;
+		c_tvec_3 (const float _x, const float _y, const float _z);
 
 		float   Length (const bool _b_log = true) const;
+		vec_3&  Negate (const bool _b_log = true);
 		vec_3&  Normalize (const bool _b_fast, const bool _b_log = true); // normalizes the vector by using two methods: 'fast' and 'regular';
 
 		const
@@ -25,7 +26,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		vec_3&  operator ()(void);
 
 	private:
-		c_tvec_3x3& operator = (const c_tvec_3x3&) = delete; c_tvec_3x3& operator = (c_tvec_3x3&&) = delete;
+		c_tvec_3& operator = (const c_tvec_3&) = delete; c_tvec_3& operator = (c_tvec_3&&) = delete;
 		vec_3 m_vec_3; // vector object being tested;
 	};
 

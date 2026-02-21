@@ -5,6 +5,7 @@
 	This is Ebo Pack OpenGL math lib vector uint test interface declaration file; 
 */
 #include "test_case_$m$.vec3.h"
+#include "test_case_$m$.vec4.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
@@ -13,6 +14,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_vec3 (void); ~c_vec3 (void) = default;
 
 		__method (Length);
+		__method (Negate);
 		__method (Normalize);
 	};
 	/*
@@ -22,25 +24,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	*/
 	__class (c_vec4) {
 	public:
-		 c_vec4 (const bool _b_verb = true);
-		 c_vec4 (const float _x, const float _y, const float _z, const float _w, const bool _b_verb = true);
-		~c_vec4 (void) = default;
+		c_vec4 (void); ~c_vec4 (void) = default;
 
-		__ctor (_ctor);
-		__method (Set);     // sets some data to the vector after its creation, that means does not using this class constructor;
-
-		const
-		vec_4&  ref (void) const;
-		vec_4&  ref (void) ;
-		CString To_str (_pc_sz _p_pfx = predefs::_p_pfx, _pc_sz _p_sep = _T("; "), _pc_sz _p_sfx = predefs::_p_sfx) const;
-		const
-		vec_4&  operator ()(void) const;
-		vec_4&  operator ()(void);
-		
-
-	private:
-		bool  m_b_verb;
-		vec_4 m_vec_4;
+		__method (Length);
+		__method (Normalize);
 	};
 
 }}}}}

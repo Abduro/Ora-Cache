@@ -7,6 +7,7 @@
 #include "test_case_$m$.mat3x3.h"
 #include "test_case_$m$.mat4x4.h"
 #include "test_case_$m$.vec3.h"
+#include "test_case_$m$.vec4.h"
 #include "ebo_test_$m$.vector.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
