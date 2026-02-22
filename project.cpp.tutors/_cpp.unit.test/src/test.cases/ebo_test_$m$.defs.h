@@ -5,9 +5,11 @@
 	This is Ebo Pack OpenGL math lib common definitions' uint test interface declaration file; 
 */
 #include "_log.h"
+#include "math.defs.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
+	using namespace ex_ui::draw::open_gl::math;
 	/*
 	...when a number with an infinite binary representation is stored in a float (which has a fixed, 32-bit size), it must be rounded to the nearest representable value...
 	1.0f is shown as 0.99999994, which is the nearest representable float value that is not exactly 1;

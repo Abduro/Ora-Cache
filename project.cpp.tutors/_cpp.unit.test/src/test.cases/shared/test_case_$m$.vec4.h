@@ -13,6 +13,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_tvec_4 (void); c_tvec_4 (const c_tvec_4&) = delete; c_tvec_4 (c_tvec_4&&) = delete; ~c_tvec_4 (void) = default;
 		c_tvec_4 (const float _x, const float _y, const float _z, const float _w);
 
+		float   Get_dot (const vec_4&) const;
+
 		float   Length (const bool _b_log = true) const;
 		vec_4&  Negate (const bool _b_log = true);
 		vec_4&  Normalize (const bool _b_fast, const bool _b_log = true); // normalizes the vector by using two methods: 'fast' and 'regular';

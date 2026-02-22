@@ -11,20 +11,60 @@ using namespace ebo::boo::test::open_gl::math;
 
 c_vec3::c_vec3(void) {}
 
+void c_vec3::Cross (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	c_tvec_3 v_3_0(0.0f, 1.0f, 0.0f); _out() += TString().Format(_T("v_0: {%s};"), (_pc_sz) v_3_0().To_str());
+	c_tvec_3 v_3_1(1.0f, 0.0f, 0.0f); _out() += TString().Format(_T("v_1: {%s};"), (_pc_sz) v_3_1().To_str());
+
+	vec_3 v_3 = v_3_0().Get_cross(v_3_1());
+	_out() += TString().Format(_T("[impt] result: %s;"), (_pc_sz) v_3.To_str());
+	_out()();
+}
+
+void c_vec3::Dot (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	c_tvec_3 v_3_0(0.0f, 1.0f, 0.0f); _out() += TString().Format(_T("v_0: {%s};"), (_pc_sz) v_3_0().To_str());
+	c_tvec_3 v_3_1(1.0f, 0.0f, 0.0f); _out() += TString().Format(_T("v_1: {%s};"), (_pc_sz) v_3_1().To_str());
+
+	float f_dot = v_3_0.Get_dot(v_3_1());
+	bool  b_dot = defs::f_epsilon > f_dot;
+
+	_pc_sz pc_sz_pat = _T("%s dot product: %.7f; vectors are: %s'orthogonal';");
+	_out() += TString().Format(pc_sz_pat, b_dot ? _T("[impt]") : _T("[warn]"), f_dot, b_dot ? _T("") : _T("not"));
+
+	v_3_1().Set(0.0f, 1.0f, 0.1f);
+	f_dot = v_3_0.Get_dot(v_3_1());
+	b_dot = defs::f_epsilon > f_dot;
+	
+	_out() += TString().Format(_T("v_0: {%s};"), (_pc_sz) v_3_1().To_str());
+	_out() += TString().Format(pc_sz_pat, b_dot ? _T("[impt]") : _T("[warn]"), f_dot, b_dot ? _T("") : _T("not"));
+	_out()();
+}
+
 void c_vec3::Length (void) {
 	c_tvec_3().Length(true); c_tvec_3(1.0f, 1.0f, 1.0f).Length(true);  _out()();
 }
 
 void c_vec3::Negate (void) {
-	c_tvec_3 v_3(1.0f, 1.0f, 1.0f);
-	v_3.Negate(true);
-	v_3.Negate(true);
+	c_tvec_3 v_3_0(1.0f, 1.0f, 1.0f);
+	c_tvec_3 v_3_1(1.0f, 1.0f, 1.0f);
+	v_3_0.Negate(true);
+	v_3_0.Negate(true);
+	_out() += v_3_1() == v_3_0() ? _T("[impt] result: test case is passed;") : _T("[error] test case is not passed;");
 	_out()();
 }
 
 void c_vec3::Normalize (void) {
-	_out() += _T("Using fast inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(true);
-	_out() += _T("Using regular inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(false);
+	_out() += _T("Using bits level inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(true);
+	_out() += _T("Using std::sqrtf inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(false);
+	_out() += _T("Trying to normalize 0-length vector:");
+
+	c_tvec_3 v_0; v_0.Normalize(false);
+	if (c_tvec_3()() == v_0()) // no change is expected;
+		_out() += TString().Format(_T("[error] The vector of length = %.7f cannot be normalized;"), v_0().Length());
+
 	_out()();
 }
 
@@ -33,13 +73,60 @@ void c_vec3::Normalize (void) {
 
 c_vec4::c_vec4(void) {}
 
+void c_vec4::Cross (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	c_tvec_4 v_4_0(0.0f, 1.0f, 0.0f, 0.0f); _out() += TString().Format(_T("v_0: {%s};"), (_pc_sz) v_4_0().To_str());
+	c_tvec_4 v_4_1(1.0f, 0.0f, 0.0f, 0.0f); _out() += TString().Format(_T("v_1: {%s};"), (_pc_sz) v_4_1().To_str());
+
+	vec_4 v_4 = v_4_0().Get_cross(v_4_1());
+	_out() += TString().Format(_T("[impt] result: %s;"), (_pc_sz) v_4.To_str());
+	_out()();
+}
+
+void c_vec4::Dot (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	c_tvec_4 v_4_0(0.0f, 1.0f, 0.0f, 0.0f); _out() += TString().Format(_T("v_0: {%s};"), (_pc_sz) v_4_0().To_str());
+	c_tvec_4 v_4_1(1.0f, 0.0f, 0.0f, 0.0f); _out() += TString().Format(_T("v_1: {%s};"), (_pc_sz) v_4_1().To_str());
+
+	float f_dot = v_4_0.Get_dot(v_4_1());
+	bool  b_dot = defs::f_epsilon > f_dot;
+
+	_pc_sz pc_sz_pat = _T("%s dot product: %.7f; vectors are: %s'orthogonal';");
+	_out() += TString().Format(pc_sz_pat, b_dot ? _T("[impt]") : _T("[warn]"), f_dot, b_dot ? _T("") : _T("not"));
+
+	v_4_1().Set(0.0f, 1.0f, 0.1f, 0.0f);
+	f_dot = v_4_0.Get_dot(v_4_1());
+	b_dot = defs::f_epsilon > f_dot;
+
+	_out() += TString().Format(_T("v_0: {%s};"), (_pc_sz) v_4_1().To_str());
+	_out() += TString().Format(pc_sz_pat, b_dot ? _T("[impt]") : _T("[warn]"), f_dot, b_dot ? _T("") : _T("not"));
+	_out()();
+}
+
 void c_vec4::Length (void) {
 	c_tvec_4().Length(true); c_tvec_4(1.0f, 1.0f, 1.0f, 1.0f).Length(true);  _out()();
 }
 
+void c_vec4::Negate (void) {
+	c_tvec_4 v_4_0(1.0f, 1.0f, 1.0f, 1.0f);
+	c_tvec_4 v_4_1(1.0f, 1.0f, 1.0f, 1.0f);
+	v_4_0.Negate(true);
+	v_4_0.Negate(true);
+	_out() += v_4_1() == v_4_0() ? _T("[impt] result: test case is passed;") : _T("[error] test case is not passed;");
+	_out()();
+}
+
 void c_vec4::Normalize (void) {
-	{c_tvec_4 v_4(2.0f, 2.0f, 2.0f, 2.0f); v_4.Length(true); _out() += _T("Using fast inverse:"); v_4.Normalize(true); }
-	{c_tvec_4 v_4(3.0f, 3.0f, 3.0f, 3.0f); v_4.Length(true); _out() += _T("Using regular inverse:"); v_4.Normalize(false); }
+	{c_tvec_4 v_4(2.0f, 2.0f, 2.0f, 2.0f); v_4.Length(true); _out() += _T("Using bits level inverse:"); v_4.Normalize(true); }
+	{c_tvec_4 v_4(3.0f, 3.0f, 3.0f, 3.0f); v_4.Length(true); _out() += _T("Using std::sqrtf inverse:"); v_4.Normalize(false); }
+	_out() += _T("Trying to normalize 0-length vector:");
+
+	c_tvec_4 v_0; v_0.Normalize(false);
+	if (c_tvec_4()() == v_0()) // no change is expected;
+		_out() += TString().Format(_T("[error] The vector of length = %.7f cannot be normalized;"), v_0().Length());
+
 	_out()();
 }
 

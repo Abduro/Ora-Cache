@@ -7,15 +7,21 @@
 #include "ebo_test_$m$.defs.h"
 #include "math.vector.h"
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
-
+	// (1) dot product: The lines are perpendicular (orthogonal) if and only if their dot product is zero.
+	/* (2) cross product: The result vector is orthogonal to given two vectors: their cross product yields the normal vector;
+	    it is essential for lighting calculations;
+	*/
 	class c_tvec_3 {
 	public:
 		c_tvec_3 (void); c_tvec_3 (const c_tvec_3&) = delete; c_tvec_3 (c_tvec_3&&) = delete; ~c_tvec_3 (void) = default;
 		c_tvec_3 (const float _x, const float _y, const float _z);
 
+		vec_3   Get_cross (const vec_3& _v_with); // gets cross product for given two input vectors;
+		float   Get_dot (const vec_3&) const;     // gets dot product of two vectors: this one and the input one;
+
 		float   Length (const bool _b_log = true) const;
 		vec_3&  Negate (const bool _b_log = true);
-		vec_3&  Normalize (const bool _b_fast, const bool _b_log = true); // normalizes the vector by using two methods: 'fast' and 'regular';
+		vec_3&  Normalize (const bool _b_bits, const bool _b_log = true); // normalizes the vector by using two methods: 'bits level' and '::std::sqrtf()';
 
 		const
 		vec_3&  ref (void) const;

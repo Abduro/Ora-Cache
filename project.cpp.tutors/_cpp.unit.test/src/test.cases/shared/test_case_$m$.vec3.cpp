@@ -11,6 +11,17 @@ using namespace ebo::boo::test::open_gl::math;
 c_tvec_3::c_tvec_3 (void) {}
 c_tvec_3::c_tvec_3 (const float _x, const float _y, const float _z) : m_vec_3(_x, _y, _z) {}
 
+vec_3   c_tvec_3::Get_cross (const vec_3& _v_with) {
+	_v_with;
+	return (*this)().Get_cross(_v_with);
+}
+
+float   c_tvec_3::Get_dot (const vec_3& _v_3) const {
+	_v_3;
+	const float f_dot = (*this)().Get_dot(_v_3);
+	return f_dot;
+}
+
 float   c_tvec_3::Length (const bool _b_log) const {
 	_b_log;
 	const float f_length = (*this)().Length();

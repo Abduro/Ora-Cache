@@ -12,10 +12,10 @@
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
-	__class (c_mat3x3) {
+	__class (c_mat_3x3) {
 	public:
-		 c_mat3x3 (const bool _b_verb = true);
-		~c_mat3x3 (void) = default;
+		 c_mat_3x3 (const bool _b_verb = true);
+		~c_mat_3x3 (void) = default;
 
 		__ctor (_ctor);
 		__method (Set);
@@ -43,10 +43,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	(3) multiplying the matrix by the vector;
 	(4) result matrix is the transfored vector; it is not different from input vector, because the matrix is the identity one; 
 	*/
-	__class (c_mat4x4) {
+	__class (c_mat_4x4) {
 	public:
-		 c_mat4x4 (const bool _b_verb = false);
-		~c_mat4x4 (void) = default;
+		 c_mat_4x4 (const bool _b_verb = false);
+		~c_mat_4x4 (void) = default;
 
 		__ctor (_ctor);       // this is visible for test framework, emulates the constructor of the class object being tested;
 		__method (Identity);  // checks the correctness of the matrix identity procedure;

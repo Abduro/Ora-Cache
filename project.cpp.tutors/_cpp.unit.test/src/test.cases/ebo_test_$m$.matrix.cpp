@@ -9,16 +9,16 @@ using namespace ebo::boo::test::open_gl::math;
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {}}}}}
 
-#pragma region cls::c_mat3x3{}
+#pragma region cls::c_mat_3x3{}
 
-c_mat3x3::c_mat3x3 (const bool _b_verb) : m_b_verb(_b_verb) {
+c_mat_3x3::c_mat_3x3 (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb && false) {
 		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		_out()();
 	}
 }
 
-void c_mat3x3::_ctor (void) {
+void c_mat_3x3::_ctor (void) {
 	
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -26,7 +26,7 @@ void c_mat3x3::_ctor (void) {
 	this->To_str();
 }
 
-void c_mat3x3::Set (void) {
+void c_mat_3x3::Set (void) {
 
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *initial* values:");
@@ -50,29 +50,29 @@ void c_mat3x3::Set (void) {
 }
 
 const
-t_mat3x3& c_mat3x3::ref (void) const { return this->m_mat3x3; }
-t_mat3x3& c_mat3x3::ref (void)       { return this->m_mat3x3; }
+t_mat3x3& c_mat_3x3::ref (void) const { return this->m_mat3x3; }
+t_mat3x3& c_mat_3x3::ref (void)       { return this->m_mat3x3; }
 
-CString   c_mat3x3::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
+CString   c_mat_3x3::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
 	_p_prf; _p_sep; _p_sfx;
 	return c_mtx_3x3().To_str((*this)(), this->m_b_verb);
 }
 
 const
-t_mat3x3&  c_mat3x3::operator ()(void) const { return this->ref(); }
-t_mat3x3&  c_mat3x3::operator ()(void)       { return this->ref(); }
+t_mat3x3&  c_mat_3x3::operator ()(void) const { return this->ref(); }
+t_mat3x3&  c_mat_3x3::operator ()(void)       { return this->ref(); }
 
 #pragma endregion
-#pragma region cls::c_mat4x4{}
+#pragma region cls::c_mat_4x4{}
 
-c_mat4x4::c_mat4x4 (const bool _b_verb) : m_b_verb(_b_verb) {
+c_mat_4x4::c_mat_4x4 (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb) {
 		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		_out()();
 	}
 }
 
-void c_mat4x4::_ctor (void) {
+void c_mat_4x4::_ctor (void) {
 	
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -80,21 +80,21 @@ void c_mat4x4::_ctor (void) {
 	this->To_str();
 }
 
-void c_mat4x4::Identity (void) {
+void c_mat_4x4::Identity (void) {
 
 	c_mtx_4x4().Identity(); _out()();
 }
 
-void c_mat4x4::Translate (void) {
+void c_mat_4x4::Translate (void) {
 	
 	c_mtx_4x4().Translate(c_tvec_3(0.0f, 0.1f, 0.0f)()); _out()();
 }
 
 const
-t_mat4x4& c_mat4x4::ref (void) const { return this->m_mat4x4; }
-t_mat4x4& c_mat4x4::ref (void)       { return this->m_mat4x4; }
+t_mat4x4& c_mat_4x4::ref (void) const { return this->m_mat4x4; }
+t_mat4x4& c_mat_4x4::ref (void)       { return this->m_mat4x4; }
 
-CString c_mat4x4::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
+CString c_mat_4x4::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
 	_p_prf; _p_sep; _p_sfx;
 	return c_mtx_4x4().To_str(this->ref(), this->m_b_verb);
 }
