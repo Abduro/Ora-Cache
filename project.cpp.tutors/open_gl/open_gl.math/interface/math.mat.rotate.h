@@ -55,4 +55,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	};
 }}}}
 
+typedef ex_ui::draw::open_gl::math::c_rotate_4x4 rot_4x4;
+
 #endif/*__MATH_MAT_ROTATE_H_INCLUDED*/

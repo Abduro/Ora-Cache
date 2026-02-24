@@ -9,6 +9,7 @@
 #include "math.matrix.h"
 #include "math.quat.h"
 #include "math.vector.h"
+#include "virt_space.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::defs; using namespace ex_ui::draw::open_gl::math;
 namespace camera {
@@ -111,6 +112,7 @@ namespace opers {
 		using CPosition = camera::opers::CPosition;
 		using CRotation = camera::opers::CRotation;
 		using CTarget   = camera::opers::CTarget  ;
+		using CView = space::CView;
 	public:
 		CVirtCamera (void); CVirtCamera (const CVirtCamera&) = delete; CVirtCamera (CVirtCamera&&) = delete; ~CVirtCamera (void) = default;
 		TError& Error (void) const;
@@ -129,6 +131,9 @@ namespace opers {
 		const
 		CTarget&    Target (void) const;
 		CTarget&    Target (void);
+		const
+		CView&  View (void) const; // gets the reference to the camera view space; (ro)
+		CView&  View (void);       // gets the reference to the camera view space; (rw)
 
 	protected:
 		CVirtCamera& operator = (const CVirtCamera&) = delete; CVirtCamera& operator = (CVirtCamera&&) = delete;
@@ -137,6 +142,8 @@ namespace opers {
 		camera::opers::CPosition m_pos;
 		camera::opers::CRotation m_rotate;
 		camera::opers::CTarget   m_target;
+
+		space::CView m_view;
 	};
 
 }}}

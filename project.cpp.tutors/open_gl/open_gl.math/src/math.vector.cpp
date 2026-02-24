@@ -15,10 +15,18 @@ s_vec_2::s_vec_2 (const float _x, const float _y) : x(_x), y(_y) {}
 s_vec_2& s_vec_2::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; return *this; }      
 s_vec_2  s_vec_2::Invert (const float _f_scale) const { return s_vec_2(this->x / _f_scale, this->y / _f_scale); }
 
+bool  s_vec_2::Is_unit (void) const { return this->Length() <= 1.0f; }
 float s_vec_2::Length (void) const { return ::sqrtf(this->Sum(2)); }
 
 s_vec_2& s_vec_2::Negate (void) {
 	this->x = -this->x; this->y = -this->y; return *this;
+}
+s_vec_2& s_vec_2::Normalize (void) {
+	if (defs::f_epsilon > this->Length())
+		return *this;
+	const float f_inv_len = 1.0f/::sqrtf(this->Sum(2));
+	this->x *=  f_inv_len;
+	this->y *=  f_inv_len; return *this;
 }
 
 s_vec_2& s_vec_2::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1]); }
@@ -40,9 +48,7 @@ s_vec_2& s_vec_2::operator  = (const s_vec_2& _src) { this->x = _src.x; this->y 
 s_vec_2& s_vec_2::operator *= (const s_vec_2& _multiplier) {
 	_multiplier;
 	this->x *= _multiplier.x;
-	this->y *= _multiplier.y;
-	
-	return *this;
+	this->y *= _multiplier.y; return *this;
 }
 
 s_vec_2& s_vec_2::operator += (const float _f_scalar) { this->x += _f_scalar; this->y += _f_scalar; return *this; }
@@ -63,13 +69,14 @@ s_vec_3 s_vec_3::Get_cross (const s_vec_3& _v_3) {
 	return s_vec_3(this->y * _v_3.z - this->z *_v_3.y, this->z * _v_3.x - this->x *_v_3.z, this->x * _v_3.y - this->y *_v_3.x);
 }
 
-float s_vec_3::Get_dot (const s_vec_3& _v_3) {
+float s_vec_3::Get_dot (const s_vec_3& _v_3) const {
 	return this->x * _v_3.x + this->y * _v_3.y + this->z * _v_3.z;
 }
 
-s_vec_3& s_vec_3::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; return *this; }      
+s_vec_3& s_vec_3::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; return *this; }
 s_vec_3  s_vec_3::Invert (const float _f_scale) const { return s_vec_3(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale); }
 
+bool s_vec_3::Is_unit (void) const { return this->Length() <= 1.0f; }
 /* https://en.cppreference.com/w/c/numeric/math/sqrt.html ; */
 #include <errno.h>
 float s_vec_3::Length (void) const {
@@ -82,9 +89,11 @@ float s_vec_3::Length (void) const {
 s_vec_3& s_vec_3::Negate (void) {
 	s_vec_2::Negate(); this->z = -this->z; return *this;
 }
-s_vec_3& s_vec_3::Normalize (const bool _b_fast) {
-	_b_fast;
-	const float f_inv_len = (_b_fast ? ::_rsqrt(this->Sum(2)) : 1.0f/::sqrtf(this->Sum(2)));
+s_vec_3& s_vec_3::Normalize (const bool _b_bits) { // https://registry.khronos.org/OpenGL-Refpages/gl4/html/normalize.xhtml ;
+	_b_bits;
+	if (defs::f_epsilon > this->Length())
+		return *this;
+	const float f_inv_len = (_b_bits ? ::_rsqrt(this->Sum(2)) : 1.0f/::sqrtf(this->Sum(2)));
 	this->x *=  f_inv_len;
 	this->y *=  f_inv_len;
 	this->z *=  f_inv_len; return *this;
@@ -136,8 +145,16 @@ s_vec_4::s_vec_4 (const float _values[u_count]) : s_vec_4(_values[0], _values[1]
 s_vec_4::s_vec_4 (const float _x, const float _y, const float _z, const float _w) : s_vec_3(_x, _y, _z), w(_w) {}
 s_vec_4::s_vec_4 (const s_vec_3& _src, const float _w) : s_vec_4() { this->Set(_src, _w); }
 
+s_vec_4 s_vec_4::Get_cross (const s_vec_3& _v_3) { return s_vec_4((*this)().Get_cross(_v_3), this->w); }
+s_vec_4 s_vec_4::Get_cross (const s_vec_4& _v_4) { return this->Get_cross(_v_4()); }
+
+float s_vec_4::Get_dot (const s_vec_3& _v_3) const { return (*this)().Get_dot(_v_3); }
+float s_vec_4::Get_dot (const s_vec_4& _v_4) const { return this->Get_dot(_v_4()); }
+
 s_vec_4& s_vec_4::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; this->z /= _f_scale; this->w /= _f_scale; return *this; }      
 s_vec_4  s_vec_4::Invert (const float _f_scale) const { return s_vec_4(this->x / _f_scale, this->y / _f_scale, this->z / _f_scale, this->w / _f_scale); }
+
+bool  s_vec_4::Is_unit (void) const { return this->Length() <= 1.0f; }
 
 float s_vec_4::Length (void) const {
 	errno = 0;
@@ -151,6 +168,8 @@ s_vec_4& s_vec_4::Negate (void) {
 }
 s_vec_4& s_vec_4::Normalize (const bool _b_fast) {
 	_b_fast;
+	if (defs::f_epsilon > this->Length())
+		return *this;
 	const float f_inv_len = (_b_fast ? ::_rsqrt(this->Sum(2)) : 1.0f/::sqrtf(this->Sum(2)));
 	this->x *=  f_inv_len;
 	this->y *=  f_inv_len;

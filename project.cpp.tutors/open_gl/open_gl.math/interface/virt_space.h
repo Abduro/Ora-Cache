@@ -54,7 +54,21 @@ namespace space { namespace axes {
 	class CBase {
 	protected:
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
+	public:
+		const
+		vec_3&    Angle (void) const;
+		vec_3&    Angle (void);
+		const
+		c_mat4x4& Get_matrix (void) const;
+		c_mat4x4& Get_matrix (void);
+		const
+		vec_3&    Pos (void) const;
+		vec_3&    Pos (void);
 
+	protected:
+		vec_3     m_angle; // angle: x:pitch|y:yaw|z:roll;
+		rot_4x4   m_mat;   // model|view|model-view matrix;
+		vec_3     m_pos;   // model/object position;
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 	};
@@ -64,33 +78,18 @@ namespace space { namespace axes {
 	// https://stackoverflow.com/questions/5550620/the-purpose-of-model-view-projection-matrix << https://stackoverflow.com/a/5554162/4325555 ;
 #pragma endregion
 	/* Local space is the coordinate space that is local to an object (model), i.e. where the object begins in.
-	   the object coordinates are transformed to the eye/view coordinates with GL_MODELVIEW matrix;
+	   the object/model coordinates are transformed to the eye/view coordinates with GL_MODELVIEW matrix;
 	*/
-	class CLocal : public CBase {
-	public:
-		CLocal (void); ~CLocal (void) = default;
-		const
-		c_mat4x4& Model (void) const;
-		c_mat4x4& Model (void);
-
-	private:
-		/* The model matrix is a transformation matrix that translates, scales and/or rotates an object to place it in the world at a location/orientation they belong to.
-		*/
-		c_mat4x4 m_model;
-	};
-	/* The view space is the space as seen from the camera's point of view. The world space coordinates are transfered by applying
-	   translation and/or rotation to view scene; These combined transformations are generally stored inside a view matrix that transforms world coordinates to view space.
-	*/
-	class CView : public CBase {
+	class CModel : public CBase {
 	public:
 		using CAxes = axes::CDynamic;
-		CView (void); ~CView (void) = default;
+		CModel (void); ~CModel (void) = default;
 		const
 		CAxes& Axes (void) const;
 		CAxes& Axes (void);
-
+		void Update (void); // updates model matrix: transforms objects from object/local space to world space; the order: rotate-Z >> rotate-Y >> rotate-X >> translation;
 	private:
-		CAxes    m_axes;
+		CAxes  m_axes;
 	};
 	/* This is the coordinate space in which all objects are located.
 	*/
@@ -102,15 +101,41 @@ namespace space { namespace axes {
 		CAxes& Axes (void) const;
 		CAxes& Axes (void);
 		const
-		c_mat4x4& View (void) const;
-		c_mat4x4& View (void);
+		CModel&   Model (void) const;
+		CModel&   Model (void);
+		/* https://www.songho.ca/opengl/gl_transform.html:
+		   GL_MODELVIEW matrix combines viewing matrix and modeling matrix into one matrix.
+		   
+		*/
+		const
+		c_mat4x4& Get_model_view (void) const;
+		c_mat4x4& Get_model_view (void);
 
 	private:
-		CAxes m_axes;
-		c_mat4x4 m_view;
+		CAxes  m_axes;
+		CModel m_model;
+	};
+	/* The view space is the space as seen from the camera's point of view. The world space coordinates are transfered by applying
+	   translation and/or rotation to view scene; These combined transformations are generally stored inside a view matrix that transforms world coordinates to view space.
+	*/
+	class CView : public CBase {
+	public:
+		using CAxes = axes::CDynamic;
+		CView (void); ~CView (void) = default;
+		const
+		CAxes& Axes (void) const;
+		CAxes& Axes (void);
+		// the translation of position values is negated, because the whole scene is moved with the inverse of camera transform;
+		void Update (void); // transforms the camera (viewing matrix) from world space to eye space; the order: translation >> rotate-X >> rotate-Y >> rotate-Z;
+		const
+		CWorld& World (void) const;
+		CWorld& World (void);
+
+	private:
+		CAxes   m_axes;
+		CWorld  m_world;
 	};
 }
 }}}
-
 
 #endif/*_VIRT_SPACE_H_INCLUDED*/

@@ -8,7 +8,8 @@
 #include "test_case_$m$.vec4.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
-
+	/* https://opengl-notes.readthedocs.io/en/latest/topics/transforms/vectors.html ;
+	*/
 	__class (c_vec3) {
 	public:
 		c_vec3 (void); ~c_vec3 (void) = default;
@@ -44,7 +45,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	__class (c_vec4) {
 	public:
 		c_vec4 (void); ~c_vec4 (void) = default;
-		/* (1) test case $dot is the same as for vec_3, but only with one condition: reference to 3D vector is gotten from 4D vector; */
+		/* (1) test case $dot is the same as for vec_3, but only with one condition: reference to 3D vector is gotten from 4D vector;
+		       https://stackoverflow.com/questions/10759206/how-to-calculate-vec4-cross-product-with-glm ;
+		*/
 		__method (Cross);
 		__method (Dot);
 		__method (Length);

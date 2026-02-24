@@ -45,7 +45,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	float _pow_n (const uint32_t _index, const float _base); // index:0::result 1; index:1::result '_base'; otherwise there result is multiply the number by itself '_index' times;
 	// https://en.wikipedia.org/wiki/Fast_inverse_square_root ; 
-	float _rsqrt (const float _f_value); // this function can be used for normalizing the vectors;
+	float _rsqrt (const float _f_value); // this function can be used for normalizing the vectors; *useless* and it is slower in comparison with ::std::sqrtf();
 
 #if (0) // not used;
 namespace _2d {
