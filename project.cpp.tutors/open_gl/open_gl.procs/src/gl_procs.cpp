@@ -227,30 +227,11 @@ bool    CParam::GetBool (const uint32_t _u_param_id) {
 
 	return !!u_result;
 }
-
+// https://docs.gl/gl2/glGet ;
 float   CParam::GetFloat (const uint32_t _u_param_id) {
 	_u_param_id;
-	/* Possible error codes:
-	GL_INVALID_ENUM : '_u_param_id' has unknown value;
-	*/
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	float f_result = 0.0f;
-
-	pfn_GetFloat p_fun = reinterpret_cast<pfn_GetFloat>(CBase::Get(param_fun_names[(uint32_t)e_param_fun_ndx::e_float]));
-	if (nullptr == p_fun) {
-		return f_result;
-	}
-
-	p_fun(_u_param_id, &f_result);
-	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' (%u) is unknown"), _u_param_id); break;
-	default:
-		if (!!u_err_code)
-			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
-	}
+	float  f_result = 0.0f;
+	this->Get_ptr(_u_param_id, &f_result);
 
 	return f_result;
 }
@@ -280,6 +261,37 @@ int32_t CParam::GetInt (const uint32_t _u_param_id) {
 	}
 
 	return n_result;
+}
+
+// https://docs.gl/gl2/glGet ;
+err_code CParam::Get_ptr (const uint32_t _u_param_id, float* _p_ptr) {
+	_u_param_id;
+	/* Possible error codes:
+	GL_INVALID_ENUM      : '_u_param_id' is not an accepted value;
+	GL_INVALID_OPERATION : glMatrixMode() is executed between the execution of glBegin() and the corresponding execution of glEnd();
+	*/
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	if (nullptr == _p_ptr)
+		return CBase::m_error <<__e_pointer = _T("#__e_ptr: input pointer is invalid");
+
+	pfn_GetFloat p_fun = reinterpret_cast<pfn_GetFloat>(CBase::Get(param_fun_names[(uint32_t)e_param_fun_ndx::e_float]));
+	if (nullptr == p_fun) {
+		return CBase::Error();
+	}
+
+	p_fun(_u_param_id, _p_ptr);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ){
+	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' 0x%04x (%u) is unknown"), _u_param_id, _u_param_id); break;
+	case GL_INVALID_OPERATION : CBase::m_error << __e_not_expect = _T("#__e_state: Invalid state for set matrix mode"); break;
+	default:
+		if (!!u_err_code)
+			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
+	}
+
+	return CBase::Error();
 }
 
 TParam& ::__get_param_procs (void) {

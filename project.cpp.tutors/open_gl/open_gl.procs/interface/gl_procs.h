@@ -54,8 +54,10 @@ namespace procs {
 		err_code Get_all (void);
 
 		bool    GetBool  (const uint32_t _u_param_id); // returns parameter value as boolean ;
-		float   GetFloat (const uint32_t _u_param_id); // returns parameter value as float number;
+		float   GetFloat (const uint32_t _u_param_id); // returns parameter value as float number; is not acceptable in some cases, for example how to get pointer to the matrix?
 		int32_t GetInt   (const uint32_t _u_param_id); // returns parameter value as integer ;
+
+		err_code Get_ptr (const uint32_t _u_param_id, float* _p_ptr);
 
 	private:
 		CParam& operator = (const CParam&) = delete; CParam& operator = (CParam&&) = delete;

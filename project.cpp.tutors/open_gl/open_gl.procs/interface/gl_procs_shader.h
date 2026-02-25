@@ -9,7 +9,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 namespace procs {
 
 	enum class e_shader_types : uint32_t {
-		/* alias    | value    | OpenGL symbolic def       | brief description ;
+		/* alias    | value    | OpenGL symbolic defs      | brief description ;
 		------------+----------+---------------------------+-------------------*/
 		e_undef     = 0x0000,  // the type is not set;     |
 		e_compute   = 0x91B9,  // GL_COMPUTE_SHADER        | for additional stages in animation or lighting algorithms (e.g. tiled forward rendering);

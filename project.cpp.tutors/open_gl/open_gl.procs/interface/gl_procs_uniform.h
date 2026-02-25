@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL uniform variable related functions' loader interface declaration file;
 */
 #include "gl_procs_base.h"
-namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
+namespace ex_ui { namespace draw { namespace open_gl { namespace procs { // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetActiveUniform.xhtml ;
 namespace vars {
 	class CUniform : public CBase {
 	typedef int32_t (__stdcall *pfn_Locate) (const uint32_t _prog_id, const char* _p_name); // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetUniformLocation.xhtml ;

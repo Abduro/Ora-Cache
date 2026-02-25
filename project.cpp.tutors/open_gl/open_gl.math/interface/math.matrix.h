@@ -284,7 +284,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) ;
 
 	protected:
-		::std::vector<float> m_data; // u_cols x u_rows = 16 elements;
+	//	::std::vector<float> m_data; // u_cols x u_rows = 16 elements;
+		t_seq_4x4 m_data;
 		c_cols    m_cols;
 		c_rows    m_rows;
 	};
