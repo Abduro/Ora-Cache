@@ -4,11 +4,13 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Dec-2025 at 08:10:22.332, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL math lib matrix uint test interface declaration file; 
 */
+#include "test_case_$d$.ctx.h"     // for using OpenGL API draw context must be created first;
 #include "test_case_$m$.mat3x3.h"
 #include "test_case_$m$.mat4x4.h"
 #include "test_case_$m$.vec3.h"
 #include "test_case_$m$.vec4.h"
 #include "ebo_test_$m$.vector.h"
+#include "test_case_$m$.stack.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
@@ -50,7 +52,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 
 		__ctor (_ctor);       // this is visible for test framework, emulates the constructor of the class object being tested;
 		__method (Identity);  // checks the correctness of the matrix identity procedure;
-		__method (Translate); // translates imput coordinates in world space to camera view matrix (camera local coordinates);
+		__method (Translate); // translates input coordinates in world space to camera view matrix (camera local coordinates);
 
 		const
 		t_mat4x4&  ref (void) const;
@@ -103,6 +105,24 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	private:
 		bool     m_b_verb;
 		t_rot4x4 m_rot4x4;
+	};
+
+	__class (c_stk_current) {
+	public:
+		 c_stk_current (void);
+		~c_stk_current (void) = default;
+
+	__method (Get);
+	__method (Set);
+	};
+
+	__class (c_mat_stack) {
+	public:
+		 c_mat_stack (void);
+		~c_mat_stack (void) = default;
+
+	__method (Pop);
+	__method (Push);
 	};
 
 }}}}}

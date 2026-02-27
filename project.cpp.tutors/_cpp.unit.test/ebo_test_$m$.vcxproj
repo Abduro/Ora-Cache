@@ -90,26 +90,29 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\</IntPath>
+    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_64>
+    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_86>
+    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\test.cases\</OutRoot_64>
+    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\test.cases\</OutRoot_86>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutRoot>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot>
-    <OutDir>$(OutRoot)test.cases\</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutRoot>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot>
-    <OutDir>$(OutRoot)test.cases\</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutRoot>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot>
-    <OutDir>$(OutRoot)test.cases\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntDir>
+    <IntDir>$(IntPath_64)</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutRoot>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot>
-    <OutDir>$(OutRoot)test.cases\</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -227,6 +230,8 @@
     <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
   </ItemGroup>
@@ -250,6 +255,12 @@
   <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ebo_test_$d$.lib.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-C000000C0000}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(GL_Procs)gl.procs_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0008}</Project>
     </ProjectReference>
     <ProjectReference Include="$(GL_Math)gl.math_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0007}</Project>

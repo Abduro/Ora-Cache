@@ -112,7 +112,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	 cols:    #0  #1   #2
 	 rows:#0 | 0 | 3 | 6 |
 	      #1 | 1 | 4 | 7 |
-		  #2 | 2 | 5 | 8 |
+	      #2 | 2 | 5 | 8 |
 	*/
 	class c_mat3x3 {
 	public:
@@ -282,6 +282,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) const;
 		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) ;
+		const
+		float*    operator ()(void) const;
+		float*    operator ()(void);
 
 	protected:
 	//	::std::vector<float> m_data; // u_cols x u_rows = 16 elements;

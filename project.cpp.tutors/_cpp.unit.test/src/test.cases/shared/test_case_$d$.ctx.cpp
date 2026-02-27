@@ -171,3 +171,7 @@ bool CCtx_auto::Is_created (void) const {
 }
 
 #pragma endregion
+
+TDevCtx& ::__get_dev_ctx (void) {
+	static TDevCtx dev_ctx; return dev_ctx;
+}

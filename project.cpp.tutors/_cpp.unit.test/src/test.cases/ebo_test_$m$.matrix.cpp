@@ -343,3 +343,24 @@ CString   c_rot_4x4::To_str (void) const {
 }
 
 #pragma endregion
+#pragma region cls::c_stk_current{}
+
+c_stk_current::c_stk_current (void) {}
+
+void c_stk_current::Get (void) { c_stk_target().Get(); _out()();  }
+void c_stk_current::Set (void) { c_stk_target().Set(e_mat_type::e_undef); _out()(); }
+
+#pragma endregion
+#pragma region cls::c_mat_stack{}
+
+c_mat_stack::c_mat_stack (void) {}
+
+void c_mat_stack::Pop (void) {
+	c_mtx_stack().Pop(); _out()();
+}
+
+void c_mat_stack::Push (void) {
+	c_mtx_stack().Push(t_mat4x4(), e_mat_type::e_undef); _out()();
+}
+
+#pragma endregion

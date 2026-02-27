@@ -24,6 +24,8 @@
     <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h"><Filter>matrix\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp"><Filter>matrix\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.stack.h"><Filter>matrix\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
   </ItemGroup>

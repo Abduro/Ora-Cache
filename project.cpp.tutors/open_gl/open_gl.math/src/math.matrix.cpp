@@ -3,13 +3,13 @@
 	This is Ebo Pack OpenGL tutorials' generic data matrix interface implementation file;
 */
 #include "math.matrix.h"
+#include "gl_procs_math.h"
+#include "matrix\gl_procs_mtx.stack.h"
+
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
 using namespace ex_ui::draw::open_gl::math;
-
-namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl {
-}}}}}
 
 #pragma region cls::c_mat2x2::c_cols{}
 
@@ -437,6 +437,9 @@ c_mat4x4& c_mat4x4::operator <<(const t_seq_4x4& _arr_values) {
 const
 float& c_mat4x4::operator ()(const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell(_u_col, _u_row); }
 float& c_mat4x4::operator ()(const uint32_t _u_col, const uint32_t _u_row)       { return this->Cell(_u_col, _u_row); }
+const
+float* c_mat4x4::operator ()(void) const { return this->m_data.data(); }
+float* c_mat4x4::operator ()(void)       { return this->m_data.data(); }
 
 #pragma endregion
 #pragma region cls::c_mat4x4::c_rows{}

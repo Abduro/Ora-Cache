@@ -30,6 +30,8 @@
     <ClCompile Include="$(_1)math.mat.invert.cpp"><Filter>src\matrix</Filter></ClCompile>
     <ClInclude Include="$(_0)math.mat.rotate.h"><Filter>interface\matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.mat.stack.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.mat.stack.cpp"><Filter>src\matrix</Filter></ClCompile>
     <ClInclude Include="$(_0)math.matrix.h"><Filter>interface\matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)math.matrix.cpp"><Filter>src\matrix</Filter></ClCompile>
   </ItemGroup>

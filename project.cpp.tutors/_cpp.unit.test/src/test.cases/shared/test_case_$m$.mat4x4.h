@@ -5,6 +5,7 @@
 	This is Ebo Pack OpenGL math lib matrix 4x4 uint test interface declaration file for using in test cases' adapters;
 */
 #include "test_case_$m$.mat3x3.h"
+#include "math.mat.stack.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 

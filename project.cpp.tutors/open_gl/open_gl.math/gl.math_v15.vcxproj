@@ -199,16 +199,20 @@
     <ClCompile Include="$(_1)math.defs.cpp" />
     <ClInclude Include="$(_0)math.lerp.h" />
     <ClCompile Include="$(_1)math.lerp.cpp" />
-    <ClInclude Include="$(_0)math.mat.invert.h" />
-    <ClCompile Include="$(_1)math.mat.invert.cpp" />
-    <ClInclude Include="$(_0)math.mat.rotate.h" />
-    <ClCompile Include="$(_1)math.mat.rotate.cpp" />
-    <ClInclude Include="$(_0)math.matrix.h" />
-    <ClCompile Include="$(_1)math.matrix.cpp" />
     <ClInclude Include="$(_0)math.quat.h" />
     <ClCompile Include="$(_1)math.quat.cpp" />
     <ClInclude Include="$(_0)math.vector.h" />
     <ClCompile Include="$(_1)math.vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)math.mat.invert.h" />
+    <ClCompile Include="$(_1)math.mat.invert.cpp" />
+    <ClInclude Include="$(_0)math.mat.rotate.h" />
+    <ClCompile Include="$(_1)math.mat.rotate.cpp" />
+    <ClInclude Include="$(_0)math.mat.stack.h" />
+    <ClCompile Include="$(_1)math.mat.stack.cpp" />
+    <ClInclude Include="$(_0)math.matrix.h" />
+    <ClCompile Include="$(_1)math.matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)virt_camera.h" />

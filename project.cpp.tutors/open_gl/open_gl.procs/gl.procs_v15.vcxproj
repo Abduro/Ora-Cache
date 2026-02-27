@@ -203,6 +203,14 @@
     <ClCompile Include="$(_1-0)gl_procs_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_procs_mtx.mode.h" />
+    <ClCompile Include="$(_1-1)gl_procs_mtx.mode.cpp" />
+    <ClInclude Include="$(_0-1)gl_procs_mtx.oper.h" />
+    <ClCompile Include="$(_1-1)gl_procs_mtx.oper.cpp" />
+    <ClInclude Include="$(_0-1)gl_procs_mtx.stack.h" />
+    <ClCompile Include="$(_1-1)gl_procs_mtx.stack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)gl_error.h" />
     <ClCompile Include="$(_1)gl_error.cpp" />
     <ClInclude Include="$(_0)gl_procs.h" />

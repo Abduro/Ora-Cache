@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0800}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0801}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_prec">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0802}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\buffer">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0803}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\buffer">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0804}</UniqueIdentifier>
-    </Filter>
+    <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0800}</UniqueIdentifier></Filter>
+    <Filter Include="interface\buffer"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0801}</UniqueIdentifier></Filter>
+    <Filter Include="interface\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0802}</UniqueIdentifier></Filter>
+
+    <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0803}</UniqueIdentifier></Filter>
+    <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0804}</UniqueIdentifier></Filter>
+    <Filter Include="src\buffer"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0805}</UniqueIdentifier></Filter>
+    <Filter Include="src\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0806}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -28,6 +21,14 @@
     <ClCompile Include="$(_1-0)gl_procs_buf.prop.cpp"><Filter>src\buffer</Filter></ClCompile>
     <ClInclude Include="$(_0-0)gl_procs_buffer.h"><Filter>interface\buffer</Filter></ClInclude>
     <ClCompile Include="$(_1-0)gl_procs_buffer.cpp"><Filter>src\buffer</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_procs_mtx.mode.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_procs_mtx.mode.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)gl_procs_mtx.oper.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_procs_mtx.oper.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)gl_procs_mtx.stack.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_procs_mtx.stack.cpp"><Filter>src\matrix</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_error.h"><Filter>interface</Filter></ClInclude>

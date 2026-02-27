@@ -58,6 +58,13 @@ PROC procs::CBase::Get (_pc_sz _p_proc_name) {
 			p_proc = ::GetProcAddress(h_module, cs_ansi.GetString());
 			if (0 == p_proc) {
 				this->m_error.Last(); this->m_error = TString().Format(_T("Getting the address of '%s' failed"), _p_proc_name);
+			} else {
+				try {
+					this->m_cached.insert(::std::make_pair(CString(_p_proc_name), p_proc));
+				}
+				catch (const ::std::bad_alloc&) {
+					this->m_error <<__METHOD__<< __e_no_memory;
+				}
 			}
 		}
 	}

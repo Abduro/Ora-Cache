@@ -10,7 +10,11 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\_shared\</Shared>
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
+    <Shared_Clr Condition="'$(Shared_Clr)'==''">..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
+    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\_shared.gui\</Shared_Gui> <!--window message and handle wrapper;-->
     <GL_Math Condition="'$(GL_Math)'==''">..\open_gl\open_gl.math\</GL_Math>
+    <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl\open_gl.procs\</GL_Procs>
+    <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl\open_gl.shared\</GL_Shared> <!--regular context device and draw renderer creator;-->
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib>
   </PropertyGroup>
   <PropertyGroup>
@@ -24,14 +28,14 @@
     <_3>$(Shared)interface\</_3>
     <_4>$(Shared_Dbg)interface\</_4>
     <_5>$(GL_Math)interface\</_5>
-    <_6></_6>
-    <_7></_7>
-    <_8></_8>
-    <_9></_9>
+    <_6>$(GL_Procs)interface</_6>
+    <_7>$(GL_Shared)interface\</_7>
+    <_8>$(Shared_Clr)interface\</_8>
+    <_9>$(Shared_Gui)interface\</_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_2-0);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_2);$(_2-0);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

@@ -18,7 +18,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	*/
 }}}}}
 
+#pragma comment(lib, "gl.procs_v15.lib")     // OpenGL procs loader project;
 #pragma comment(lib, "gl.math_v15.lib")      // this project is being tested by this unit test project;
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
+#pragma comment(lib, "ebo_test_$d$.shared.lib") // shared draw context test case library;
 
 #endif/*_EBO_TEST_$M$_DEFS_H_INCLUDED*/

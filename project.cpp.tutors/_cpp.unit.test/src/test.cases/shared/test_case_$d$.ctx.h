@@ -93,4 +93,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 }}}}}
 
+typedef ebo::boo::test::open_gl::draw::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (void);
+
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/

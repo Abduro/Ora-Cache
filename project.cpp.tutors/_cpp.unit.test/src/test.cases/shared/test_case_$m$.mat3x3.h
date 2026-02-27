@@ -21,7 +21,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 
 	protected:
 		c_mtx_base& operator = (const c_mtx_base&) = delete; c_mtx_base& operator = (c_mtx_base&&) = delete;
-		CError  m_error;
+		mutable CError m_error;
 	};
 
 	class c_mtx_3x3 : public c_mtx_base { typedef c_mtx_base TBase;
