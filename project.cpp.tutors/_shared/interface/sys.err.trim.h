@@ -178,7 +178,7 @@ namespace shared { namespace sys_core {
 		dword       Show  (const HWND  = ::GetActiveWindow()) const;
 		CErr_State& State (void)       ;
 		TErr_State& State (void) const ;
-#if defined(_DEBUG)
+#if defined(_DEBUG) || defined(TRUE)
 		enum e_print {
 		     e_all  = 0, // prints all parts of the error including: error base, error state, error context;
 		     e_base = 1, // prints error base content: win32 code, h_result, description;

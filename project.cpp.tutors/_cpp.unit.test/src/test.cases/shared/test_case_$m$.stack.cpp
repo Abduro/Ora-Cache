@@ -41,7 +41,8 @@ t_stk_target& c_stk_target::operator ()(void)       { return this->m_target; }
 #pragma endregion
 #pragma region cls::c_mtx_stack{}
 
-c_mtx_stack::c_mtx_stack (void) : TBase() { TBase::m_error >>__CLASS__; }
+c_mtx_stack:: c_mtx_stack (void) : TBase() { TBase::m_error >>__CLASS__; _out()(false); ::__get_dev_ctx().Create(); _out()(true); }
+c_mtx_stack::~c_mtx_stack (void) { ::__get_dev_ctx().Delete(); }
 
 err_code c_mtx_stack::Push (const c_mat4x4& _mat, const e_mat_type _e_type) {
 	_mat; _e_type;

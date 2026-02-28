@@ -14,7 +14,7 @@ namespace matrix {
 	/* alias    | value    | OpenGL symbolic defs(gl.h)| brief description ;
 	------------+----------+---------------------------+-------------------*/
 	e_color     = 0x1800,  // GL_COLOR                 | applies subsequent matrix operations to the color matrix stack;
-	e_modelview = 0x1700,  // GL_MODELVIEW             | applies subsequent matrix operations to the modelview matrix stack;
+	e_modelview = 0x1700,  // GL_MODELVIEW             | applies subsequent matrix operations to the modelview matrix stack; (default mode);
 	e_project   = 0x1701,  // GL_PROJECTION            | applies subsequent matrix operations to the projection matrix stack;
 	e_texture   = 0x1702,  // GL_TEXTURE               | applies subsequent matrix operations to the texture matrix stack;
 	e_undef     = 0x0,     // for error case;
@@ -33,8 +33,9 @@ namespace matrix {
 
 		e_mat_mode Get (void) const;       // returns e_mat_mode::e_undef in case of error;
 		err_code   Set (const e_mat_mode); // sets the current mode of the matrix stack;
-		static
-		_pc_sz  To_str (const e_mat_mode); // calls above function _mat_mode_2_str(), but for convenient call only;
+
+		static bool   Is_code (const e_mat_type); // checks for e_mat_mode::e_undef;
+		static _pc_sz To_str (const e_mat_mode);  // calls above function _mat_mode_2_str(), but for convenient call only; 
 
 	private:
 		CMode& operator = (const CMode&) = delete; CMode& operator = (CMode&&) = delete;

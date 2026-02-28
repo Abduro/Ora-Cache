@@ -375,13 +375,13 @@ dword     CError::Show  (const HWND _h_owner) const {
 CErr_State& CError::State (void)       { return m_state; }
 TErr_State& CError::State (void) const { return m_state; }
 
-#if defined(_DEBUG)
+#if defined(_DEBUG) || defined(TRUE)
 CString CError::Print (const e_print e_opt) const {
 
 	static _pc_sz lp_sz_pat_a = _T("cls::[%s]>>{state=[%s];context=[%s::%s()]}");
-	static _pc_sz lp_sz_pat_b = _T("cls::[%s]>>{code=%u;result=0x%x;desc='%s'}");
+	static _pc_sz lp_sz_pat_b = _T("cls::[%s]>>{code=0x%04x;result=0x%x;desc='%s'}"); // for keeping error code as is, for example, as in OpenGL;
 	static _pc_sz lp_sz_pat_c = _T("cls::[%s]>>{context=[%s::%s()]}");
-	static _pc_sz lp_sz_pat_r = _T("cls::[%s]>>{code=%u;result=0x%x;desc='%s';context=%s::%s()}");
+	static _pc_sz lp_sz_pat_r = _T("cls::[%s]>>{code=0x%04x;result=0x%x;desc='%s';context=%s::%s()}");
 
 	CString cs_out;
 	if (e_print::e_all == e_opt) cs_out.Format(lp_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)this->State().Print(), this->Class(), this->Method());

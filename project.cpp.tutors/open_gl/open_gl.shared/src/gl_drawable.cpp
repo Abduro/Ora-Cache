@@ -94,7 +94,9 @@ err_code CClr_flt::Get (const e_object _target) {
 
 	TBase::Set((rgb_color)CHex((_pc_sz) cs_clr)); // alpha channel is set to 0 (zero), but it is not important for because it is not taken into account yet;
 #if defined(_DEBUG)
+	if (e_object::e_grid == _target) {
 	__trace_info_2(_T("grid line color: {%s};\n"), (_pc_sz) TBase::Print(e_print::e_req)); 
+	}
 #endif
 	return this->Error();
 }

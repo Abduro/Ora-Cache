@@ -52,8 +52,8 @@ err_code CStack::Pop (void) {
 	const
 	uint32_t u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ){
-	case GL_INVALID_OPERATION : CBase::m_error << __e_not_expect = _T("#__e_state: Invalid state to pop the matrix from stack"); break;
-	case GL_STACK_UNDERFLOW : CBase::m_error << __e_not_expect = _T("#__e_underflow: the matrix stack is empty"); break;
+	case GL_INVALID_OPERATION : (CBase::m_error = (dword)u_err_code) = _T("#__e_state: Invalid state to pop the matrix from stack"); break;
+	case GL_STACK_UNDERFLOW : (CBase::m_error = (dword)u_err_code) = _T("#__e_underflow: the matrix stack is empty"); break;
 	default:
 		if (!!u_err_code)
 			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);

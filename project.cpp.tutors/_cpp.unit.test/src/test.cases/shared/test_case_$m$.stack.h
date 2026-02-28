@@ -31,7 +31,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 
 	class c_mtx_stack : public c_mtx_base { typedef c_mtx_base TBase;
 	public:
-		c_mtx_stack (void); ~c_mtx_stack (void) = default;
+		c_mtx_stack (void); ~c_mtx_stack (void);
 
 		err_code Push (const c_mat4x4&, const e_mat_type);
 		err_code Pop  (void);

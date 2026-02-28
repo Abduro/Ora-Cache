@@ -60,6 +60,9 @@ err_code CMode::Set (const e_mat_mode _e_mode) {
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
 
+	if (false == CMode::Is_code(_e_mode))
+		return (CBase::m_error = (dword)GL_INVALID_VALUE) = TString().Format(_T("'_e_mode' {'%s'(0x%04x)} is invalid"), CMode::To_str(_e_mode), _e_mode);
+
 	pfn_Set p_fun = reinterpret_cast<pfn_Set>(CBase::Get(mode_fun_names[(uint32_t)e_mode_fun_ndx::e_set]));
 	if (nullptr == p_fun)
 		return CBase::Error();
@@ -68,8 +71,8 @@ err_code CMode::Set (const e_mat_mode _e_mode) {
 	const
 	uint32_t u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ){
-	case GL_INVALID_VALUE : CBase::m_error << __e_inv_arg = TString().Format(_T("'_e_mode' 0x%04x (%u) is invalid"), _e_mode, _e_mode); break;
-	case GL_INVALID_OPERATION : CBase::m_error << __e_not_expect = _T("#__e_state: Invalid state for set matrix mode"); break;
+	case GL_INVALID_VALUE : (CBase::m_error = (dword)u_err_code) = TString().Format(_T("'_e_mode' 0x%04x (%u) is invalid"), _e_mode, _e_mode); break;
+	case GL_INVALID_OPERATION : (CBase::m_error = (dword)u_err_code) = _T("#__e_state: Invalid state for setting matrix mode"); break;
 	default:
 		if (!!u_err_code)
 			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);
@@ -88,6 +91,16 @@ err_code CMode::Get_all (void) {
 	return CBase::Error();
 }
 
+bool     CMode::Is_code (const e_mat_type _e_type) {
+	_e_type;
+	switch (_e_type) {
+	case e_mat_type::e_color    :
+	case e_mat_type::e_modelview:
+	case e_mat_type::e_project  :
+	case e_mat_type::e_texture  : return true;
+	default: return false;
+	}
+}
 _pc_sz   CMode::To_str (const e_mat_mode _e_mode) { return _mat_mode_2_str(_e_mode); }
 
 #pragma endregion
