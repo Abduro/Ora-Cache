@@ -21,8 +21,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CDevCtx (void);
 		CDevCtx (const CDevCtx&) = delete; CDevCtx (CDevCtx&&) = delete; ~CDevCtx (void) = default;
 
-		err_code Create (void);
-		err_code Delete (void);
+		err_code Create (const bool _b_verbose = true);
+		err_code Delete (const bool _b_verbose = true);
 		TError&  Error  (void) const;
 
 		bool Is_valid (void) const;
@@ -93,6 +93,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 
 }}}}}
 
-typedef ebo::boo::test::open_gl::draw::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (void);
+typedef ebo::boo::test::open_gl::draw::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (const bool _b_silent = false);
 
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/

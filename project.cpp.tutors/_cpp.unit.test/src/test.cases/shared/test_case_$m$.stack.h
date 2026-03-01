@@ -12,6 +12,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 
 	using t_mat_stack  = ex_ui::draw::open_gl::math::matrix::CStack;
 	using t_stk_target = ex_ui::draw::open_gl::math::matrix::CTarget;
+	using e_mat_mode   = ex_ui::draw::open_gl::procs::matrix::e_mat_mode;
 	using e_mat_type   = ex_ui::draw::open_gl::procs::matrix::e_mat_type;
 
 	class c_stk_target : public c_mtx_base { typedef c_mtx_base TBase;
@@ -33,6 +34,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	public:
 		c_mtx_stack (void); ~c_mtx_stack (void);
 
+		err_code Push (const c_mat4x4&, const e_mat_mode);
 		err_code Push (const c_mat4x4&, const e_mat_type);
 		err_code Pop  (void);
 

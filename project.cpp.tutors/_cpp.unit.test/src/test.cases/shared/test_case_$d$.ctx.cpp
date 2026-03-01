@@ -10,18 +10,22 @@ using namespace ebo::boo::test::open_gl::draw;
 
 CDevCtx::CDevCtx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 
-err_code CDevCtx::Create (void) {
+err_code CDevCtx::Create (const bool _b_verbose/* = true*/) {
+	_b_verbose;
 	this->m_error <<__METHOD__<<__s_ok;
+	
+	const bool b_locked = _out().Cached().Locked(); // to-do: must be re-viewed, some sort triggering the lock state would be useful;
+	_out()(_b_verbose);
 
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += this->Window().To_str();
 
 	if (this->Window().Error()) {
-		return this->m_error = this->Window().Error();
+		_out()(!b_locked); return this->m_error = this->Window().Error();
 	}
 
 	if (this->Is_valid()) {
-		_out() += _T("the device context is already created;"); return this->Error();
+		_out() += _T("the device context is already created;"); _out()(!b_locked); return this->Error();
 	}
 
 	TRenderer& renderer = ::Get_renderer();
@@ -33,12 +37,16 @@ err_code CDevCtx::Create (void) {
 		this->m_error = dev_ref.Error();
 		_out()(this->Error());
 	}
-
-	return this->Error();
+	_out()(!b_locked); return this->Error();
 }
 
-err_code CDevCtx::Delete (void) {
+err_code CDevCtx::Delete (const bool _b_verbose/* = true*/) {
+	_b_verbose;
 	this->m_error <<__METHOD__<<__s_ok;
+
+	const bool b_locked = _out().Cached().Locked();
+	_out()(_b_verbose);
+
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	TRenderer& renderer = ::Get_renderer();
@@ -50,7 +58,7 @@ err_code CDevCtx::Delete (void) {
 	if (renderer.Scene().Ctx().Device().Is_valid())
 		renderer.Scene().Ctx().Device().Destroy();
 
-	return this->Error();
+	_out()(!b_locked); return this->Error();
 }
 
 TError&  CDevCtx::Error (void) const { return this->m_error; }
@@ -172,6 +180,7 @@ bool CCtx_auto::Is_created (void) const {
 
 #pragma endregion
 
-TDevCtx& ::__get_dev_ctx (void) {
+TDevCtx& ::__get_dev_ctx (const bool _b_silent) {
+	_b_silent;
 	static TDevCtx dev_ctx; return dev_ctx;
 }

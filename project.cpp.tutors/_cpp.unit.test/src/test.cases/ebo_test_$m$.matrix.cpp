@@ -363,7 +363,7 @@ void c_mat_stack::Push (void) {
 
 	c_mtx_stack stack;
 
-	if (__failed(stack.Push(t_mat4x4(), /*e_mat_type::e_undef*/c_stk_target()().Get()))) {} else stack.Pop(); _out()();
+	if (__failed(stack.Push(t_mat4x4(), /*e_mat_type::e_undef*/ c_stk_target()().Get()))) {} else stack.Pop(); _out()();
 }
 
 #pragma endregion

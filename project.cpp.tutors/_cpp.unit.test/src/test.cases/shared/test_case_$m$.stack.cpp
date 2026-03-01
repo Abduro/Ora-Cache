@@ -8,8 +8,8 @@ using namespace ebo::boo::test::open_gl::math;
 
 #pragma region cls::c_stk_target{}
 
-c_stk_target:: c_stk_target (void) : TBase() { TBase::m_error >>__CLASS__; ::__get_dev_ctx().Create(); }
-c_stk_target::~c_stk_target (void) { ::__get_dev_ctx().Delete(); }
+c_stk_target:: c_stk_target (void) : TBase() { TBase::m_error >>__CLASS__; ::__get_dev_ctx().Create(false); }
+c_stk_target::~c_stk_target (void) { ::__get_dev_ctx().Delete(false); }
 
 err_code  c_stk_target::Get (void) const {
 	TBase::m_error <<__METHOD__<<__s_ok;
@@ -41,8 +41,20 @@ t_stk_target& c_stk_target::operator ()(void)       { return this->m_target; }
 #pragma endregion
 #pragma region cls::c_mtx_stack{}
 
-c_mtx_stack:: c_mtx_stack (void) : TBase() { TBase::m_error >>__CLASS__; _out()(false); ::__get_dev_ctx().Create(); _out()(true); }
-c_mtx_stack::~c_mtx_stack (void) { ::__get_dev_ctx().Delete(); }
+c_mtx_stack:: c_mtx_stack (void) : TBase() { TBase::m_error >>__CLASS__; ::__get_dev_ctx().Create(false); }
+c_mtx_stack::~c_mtx_stack (void) { ::__get_dev_ctx().Delete(false); }
+
+err_code c_mtx_stack::Push (const c_mat4x4& _mat, const e_mat_mode _e_mode) {
+	_mat; _e_mode;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed((*this)().Push(_mat(), _e_mode))) {
+		_out() += TBase::m_error = (*this)().Error();
+	} else { _out() += _T("[impt] result: success;"); }
+
+	return TBase::Error();
+}
 
 err_code c_mtx_stack::Push (const c_mat4x4& _mat, const e_mat_type _e_type) {
 	_mat; _e_type;

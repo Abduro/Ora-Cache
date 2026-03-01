@@ -64,6 +64,8 @@ const
 CCache&  CCache::operator ()(void) const { this->Output(); return *this; }
 CCache&  CCache::operator ()(const bool _b_verb) { this->Locked() = !_b_verb; return *this; }
 
+CCache::operator bool (void) const { return this->Locked(); }
+
 #pragma endregion
 #pragma region cls::CLog_Opts{}
 

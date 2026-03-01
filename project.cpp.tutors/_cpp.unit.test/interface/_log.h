@@ -23,12 +23,8 @@ namespace ebo { namespace boo { namespace test {
 
 	class CCache {
 	public:
-		 CCache (void);
-		 CCache (const CCache&) = delete;
-		 CCache (CCache&&) = delete;
-		~CCache (void);
+		CCache (void); CCache (const CCache&) = delete; CCache (CCache&&) = delete; ~CCache (void);
 
-	public:
 		void  Clear(void);
 
 		const TCached& Get (void) const; // gets a reference to a vector of buffered strings (ro); 
@@ -46,6 +42,7 @@ namespace ebo { namespace boo { namespace test {
 		void   Output (void) const;
 
 	public:
+#pragma region opers
 		CCache& operator = (const CCache&) = delete;
 		CCache& operator = (CCache&&) = delete;
 
@@ -59,7 +56,8 @@ namespace ebo { namespace boo { namespace test {
 		const
 		CCache& operator ()(void) const;     // ouputs this cache content to 'Test' ouput panel;
 		CCache& operator ()(const bool _b_verb); // if '_b_verb' is 'true' there's no lock for adding a message, otherwise the lock is turned on;
-
+		operator bool (void) const;          // returns current lock status of this cache;
+#pragma endregion
 	private:
 		bool m_locked; // the flag for indicating the block of adding new messages to this cache; is set to 'false' by default;
 		TCached  m_strings;
