@@ -268,7 +268,7 @@ err_code CParam::Get_ptr (const uint32_t _u_param_id, float* _p_ptr) {
 	_u_param_id;
 	/* Possible error codes:
 	GL_INVALID_ENUM      : '_u_param_id' is not an accepted value;
-	GL_INVALID_OPERATION : glMatrixMode() is executed between the execution of glBegin() and the corresponding execution of glEnd();
+	GL_INVALID_OPERATION : glGet() is executed between the execution of glBegin() and the corresponding execution of glEnd();
 	*/
 	CBase::m_error << __METHOD__ << __s_ok;
 
@@ -285,7 +285,7 @@ err_code CParam::Get_ptr (const uint32_t _u_param_id, float* _p_ptr) {
 	uint32_t u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ){
 	case GL_INVALID_ENUM: CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_enum: '_u_param_id' 0x%04x (%u) is unknown"), _u_param_id, _u_param_id); break;
-	case GL_INVALID_OPERATION : CBase::m_error << __e_not_expect = _T("#__e_state: Invalid state for set matrix mode"); break;
+	case GL_INVALID_OPERATION : (CBase::m_error = (dword)u_err_code) = _T("#__e_state: Invalid state for getting the pointer"); break;
 	default:
 		if (!!u_err_code)
 			CBase::m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%d)"), u_err_code, u_err_code);

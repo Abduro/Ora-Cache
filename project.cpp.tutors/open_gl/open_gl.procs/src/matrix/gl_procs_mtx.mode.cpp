@@ -91,13 +91,13 @@ err_code CMode::Get_all (void) {
 	return CBase::Error();
 }
 
-bool     CMode::Is_code (const e_mat_type _e_type) {
+bool     CMode::Is_code (const e_mat_mode _e_type) {
 	_e_type;
 	switch (_e_type) {
-	case e_mat_type::e_color    :
-	case e_mat_type::e_modelview:
-	case e_mat_type::e_project  :
-	case e_mat_type::e_texture  : return true;
+	case e_mat_mode::e_color    :
+	case e_mat_mode::e_modelview:
+	case e_mat_mode::e_project  :
+	case e_mat_mode::e_texture  : return true;
 	default: return false;
 	}
 }

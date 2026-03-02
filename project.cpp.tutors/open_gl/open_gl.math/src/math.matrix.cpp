@@ -94,6 +94,15 @@ c_mat2x2::c_cols& c_mat2x2::Cols (void)       { return this->m_cols; }
 
 float  c_mat2x2::Get (const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell (_u_col, _u_row); }
 
+c_mat2x2&  c_mat2x2::Transpose (void) {
+	/*
+		[ 0, 2 ] >> [ 0, 1 ] :: entries being swapped are symmetrically located on opposite sides of the matrix diagonal;
+		[ 1, 3 ]    [ 2, 3 ]    pair(s) of indices being swapped {1, 2};
+	*/
+	try { ::std::swap (this->Cell(0, 0), this->Cell(1, 0)); } catch (const ::std::bad_alloc&) {} // try-catch block is not required here;
+	return *this;
+}
+
 c_mat2x2&  c_mat2x2::operator = (const c_mat2x2& _src) { this->m_data = _src.m_data; return *this; }
 c_mat2x2&  c_mat2x2::operator = (c_mat2x2&& _victim) { this->m_data.swap(_victim.m_data); return *this; }
 
@@ -253,6 +262,18 @@ const
 c_mat3x3::c_rows& c_mat3x3::Rows (void) const { return this->m_rows; }
 c_mat3x3::c_rows& c_mat3x3::Rows (void)       { return this->m_rows; }
 
+c_mat3x3& c_mat3x3::Transpose (void) {
+	/*cols:    0  1  2        0  1  2
+	 rows: 0 [ 0, 3, 6 ]    [ 0, 1, 2 ]    indexes that are symmetrically located on opposite sides of the matrix diagonal;
+	       1 [ 1, 4, 7 ] >> [ 3, 4, 5 ] :: the pears of indices being swapped: {1,3}{2,6}{5,7} 
+	       2 [ 2, 5, 8 ]    [ 6, 7, 8 ]
+	*/
+	::std::swap(this->Cell(0, 1), this->Cell(1, 0));
+	::std::swap(this->Cell(0, 2), this->Cell(2, 0));
+	::std::swap(this->Cell(1, 2), this->Cell(2, 1));
+	return *this;
+}
+
 c_mat3x3& c_mat3x3::operator = (const c_mat3x3& _src) { this->m_data = _src.m_data; return *this; }
 c_mat3x3& c_mat3x3::operator = (c_mat3x3&& _victim) { this->m_data.swap(_victim.m_data); return *this; }
 
@@ -354,6 +375,10 @@ const
 c_mat4x4::c_cols& c_mat4x4::Cols (void) const { return this->m_cols; }
 c_mat4x4::c_cols& c_mat4x4::Cols (void)       { return this->m_cols; }
 
+const
+t_seq_4x4& c_mat4x4::Data (void) const { return this->m_data; }
+t_seq_4x4& c_mat4x4::Data (void)       { return this->m_data; }
+
 c_mat3x3 c_mat4x4::Exclude (const uint32_t _u_col, const uint32_t _u_row) const {
 	_u_col; _u_row;
 	if (_u_col > c_mat4x4::u_cols - 1) { __trace_err_2(_T("#e__inv_arg: col index = %u;\n"), _u_col); return c_mat3x3(); }
@@ -415,6 +440,21 @@ c_mat4x4& c_mat4x4::Translate (const float _x, const float _y, const float _z) {
 }
 
 c_mat4x4& c_mat4x4::Translate (const vec_3& _v_3) { return this->Translate(_v_3.x, _v_3.y, _v_3.z); }
+c_mat4x4& c_mat4x4::Transpose (void) {
+	/* cols:  0  1  2  3        0  1  2  3
+	rows: 0 [ 0, 4, 8, c ]    [ 0, 4, 8, c ]
+	      1 [ 1, 5, 9, d ] >> [ 1, 5, 9, d ] :: entries being swapped are symmetrically located on opposite sides of the matrix diagonal;   
+	      2 [ 2, 6, a, e ]	  [ 2, 6, a, e ]    pair(s) of indices being swapped {1, 4}, {2, 8}, {3, c}, {6, 9}, {7, d}, {b, e};
+	      3 [ 3, 7, b, f ]	  [ 3, 7, b, f ]
+	*/
+	typedef ::std::map<uint32_t, uint32_t> t_pairs;
+	static const t_pairs pairs = {{0x1, 0x4}, {0x2, 0x8}, {0x3, 0xc}, {0x6, 0x9}, {0x7, 0xd}, {0xb, 0xe}};
+
+	for (t_pairs::const_iterator it_ = pairs.begin(); it_ != pairs.end(); ++it_)
+		::std::swap(this->m_data.at(it_->first), this->m_data.at(it_->second));
+
+	return *this;
+}
 
 c_mat4x4& c_mat4x4::operator = (const c_mat4x4& _src) { this->m_data = _src.m_data; return *this; }
 c_mat4x4& c_mat4x4::operator = (c_mat4x4&& _victim) { this->m_data.swap(_victim.m_data);  return *this;}

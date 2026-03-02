@@ -46,8 +46,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CGraphCtx (void) ;
 		CGraphCtx (const CGraphCtx&) = delete; CGraphCtx (CGraphCtx&&) = delete; ~CGraphCtx (void) = default;
 
-		err_code Create (const HWND _h_target); // for the test cases the fake window handle is used;
-		err_code Delete (void);
+		err_code Create (const HWND _h_target, const bool _b_verbose = true); // for the test cases the fake window handle is used;
+		err_code Delete (const bool _b_verbose = true);
 		TError&  Error  (void) const;
 
 		bool Is_valid (void) const;
@@ -71,8 +71,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CCtx_auto (const bool _b_auto = true); ~CCtx_auto (void);
 		CCtx_auto (const CCtx_auto&) = delete; CCtx_auto (CCtx_auto&&) = delete;
 
-		err_code Create (void);
-		err_code Delete (void);
+		err_code Create (const bool _b_verbose = true);
+		err_code Delete (const bool _b_verbose = true);
 
 		const
 		CDevCtx& Device (void) const;
@@ -94,5 +94,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 }}}}}
 
 typedef ebo::boo::test::open_gl::draw::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (const bool _b_silent = false);
+typedef ebo::boo::test::open_gl::draw::CCtx_auto TGraph; TGraph& __get_graph (void); // CCtx_auto is used as a creator the graphics context;
 
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/

@@ -6,28 +6,35 @@
 */
 #include "math.matrix.h"
 #include "matrix\gl_procs_mtx.mode.h"
+#include "matrix\gl_procs_mtx.stack.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 namespace matrix {
+	using e_mat_mode = ex_ui::draw::open_gl::procs::matrix::e_mat_mode;
 	using e_mat_type = ex_ui::draw::open_gl::procs::matrix::e_mat_type;
+
+	e_mat_type _mode_2_type (const e_mat_mode);
+	e_mat_mode _type_2_mode (const e_mat_type);
+
 	class CTarget {
 	public:
 		CTarget (void); CTarget (const CTarget&) = delete; CTarget (CTarget&&) = delete; ~CTarget (void);
 		TError& Error (void) const;
 
-		e_mat_type Get (void) const;       // gets currently set matrix mode;
-		err_code   Set (const e_mat_type); // sets matrix mode;
+		e_mat_mode Get (void) const;       // gets currently set matrix mode;
+		err_code   Set (const e_mat_mode); // sets matrix mode;
+		err_code   Set (const e_mat_type);
 
 		const
-		CTarget& operator >>(e_mat_type&) const;
-		CTarget& operator <<(const e_mat_type);
+		CTarget& operator >>(e_mat_mode&) const;
+		CTarget& operator <<(const e_mat_mode);
 
-		e_mat_type operator ()(void) const;
+		e_mat_mode operator ()(void) const;
 
 	private:
 		CTarget& operator = (const CTarget&) = delete; CTarget& operator = (CTarget&&) = delete;
 		mutable CError m_error;
-		mutable e_mat_type m_type;
+		mutable e_mat_mode m_mode;
 	};
 
 	class CStack {
@@ -40,8 +47,10 @@ namespace matrix {
 		TError& Error (void) const;
 		bool Is_pushed (void) const;
 
+		err_code Get  (const e_mat_type, c_mat4x4&);  // gets the matrix currently set on the top of the stack;
 		err_code Pop  (void);
 		err_code Push (void);
+		err_code Push (const c_mat4x4&, const e_mat_mode);
 		err_code Push (const c_mat4x4&, const e_mat_type);
 
 	private:

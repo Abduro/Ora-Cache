@@ -25,16 +25,6 @@ CMatrix::CMatrix (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s
 	CBase::m_error.Class(cs_cls, false);
 }
 
-err_code CMatrix::Get (const e_mat_type _type, t_arr_4x4& _mat_4x4) {
-	_type; _mat_4x4;
-	CBase::m_error << __METHOD__ << __s_ok;
-
-	if (__failed(::__get_param_procs().Get_ptr((uint32_t)_type, _mat_4x4.data())))
-		CBase::m_error = ::__get_param_procs().Error();
-
-	return CBase::Error();
-}
-
 err_code CMatrix::Get_all (void) {
 	CBase::m_error << __METHOD__ << __s_ok;
 

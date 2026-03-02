@@ -22,8 +22,6 @@ namespace matrix {
 
 	_pc_sz _mat_mode_2_str(const e_mat_mode);
 
-	typedef e_mat_mode e_mat_type;
-
 	class CMode : public CBase {
 	typedef void (__stdcall *pfn_Set)(const uint32_t u_mode);
 	public:
@@ -34,7 +32,7 @@ namespace matrix {
 		e_mat_mode Get (void) const;       // returns e_mat_mode::e_undef in case of error;
 		err_code   Set (const e_mat_mode); // sets the current mode of the matrix stack;
 
-		static bool   Is_code (const e_mat_type); // checks for e_mat_mode::e_undef;
+		static bool   Is_code (const e_mat_mode); // checks for e_mat_mode::e_undef;
 		static _pc_sz To_str (const e_mat_mode);  // calls above function _mat_mode_2_str(), but for convenient call only; 
 
 	private:

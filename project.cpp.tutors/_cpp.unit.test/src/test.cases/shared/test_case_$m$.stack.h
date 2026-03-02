@@ -34,6 +34,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	public:
 		c_mtx_stack (void); ~c_mtx_stack (void);
 
+		err_code Get  (const e_mat_type, t_mat4x4& _mat);
 		err_code Push (const c_mat4x4&, const e_mat_mode);
 		err_code Push (const c_mat4x4&, const e_mat_type);
 		err_code Pop  (void);

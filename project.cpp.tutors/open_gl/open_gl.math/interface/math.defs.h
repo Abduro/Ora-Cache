@@ -8,6 +8,7 @@
 #include <functional>
 #include <cmath>
 #include <numeric>       // required for std::accumulate();
+#include <utility>       // required for std::swap();
 #include "shared.defs.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {

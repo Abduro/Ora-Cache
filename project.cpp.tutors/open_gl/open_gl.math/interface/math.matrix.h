@@ -86,6 +86,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
 
+		c_mat2x2& Transpose (void);
+
 		c_mat2x2& operator = (const c_mat2x2&);
 		c_mat2x2& operator = (c_mat2x2&&);
 
@@ -182,6 +184,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
 
+		c_mat3x3& Transpose (void);
+
 		const
 		float&  operator ()(const uint32_t _u_col, const uint32_t _u_row) const; // gets the reference to the required matrix cell/entry;
 		float&  operator ()(const uint32_t _u_col, const uint32_t _u_row) ;		 // gets the reference to the required matrix cell/entry;
@@ -258,6 +262,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
+		const
+		t_seq_4x4& Data (void) const;
+		t_seq_4x4& Data (void) ;
 
 		c_mat3x3 Exclude (const uint32_t _u_col, const uint32_t _u_row) const; // gets matrix 3x3 by excluding particular colomn and row;
 		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // returns the value of the matrix entry by given column and row indices;
@@ -272,6 +279,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		*/
 		c_mat4x4& Translate (const float _x, const float _y, const float _z); // this matrix converts points from world coords (global) to camera coords (local to the camera);
 		c_mat4x4& Translate (const vec_3&);
+		c_mat4x4& Transpose (void);        // swaps elements for transforming this col-major matrix to row-major one and vice versa;
 
 		c_mat4x4& operator = (const c_mat4x4&);
 		c_mat4x4& operator = (c_mat4x4&&); // https://en.cppreference.com/w/cpp/container/vector/swap ;

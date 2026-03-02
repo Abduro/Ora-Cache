@@ -77,15 +77,18 @@ CDevice&  CDevCtx::operator ()(void)       { return ::Get_renderer().Scene().Ctx
 
 CGraphCtx::CGraphCtx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 
-err_code CGraphCtx::Create (const HWND _h_target) {
-	_h_target;
+err_code CGraphCtx::Create (const HWND _h_target, const bool _b_verbose/* = true*/) {
+	_h_target; _b_verbose;
 	this->m_error <<__METHOD__<<__s_ok;
+
+	const bool b_locked = _out().Cached().Locked();
+	_out()(_b_verbose);
 
 	CString cs_cls = TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__);
 	_out() += TString().Format(_T("[warn] cls::[%s].%s():"), (_pc_sz) cs_cls, (_pc_sz)__METHOD__);
 
 	if (this->Is_valid()) {
-		_out() += _T("the graphics context is already created;"); return this->Error();
+		_out() += _T("the graphics context is already created;"); _out()(!b_locked); return this->Error();
 	}
 				
 	TRenderer& renderer = Get_renderer();
@@ -99,11 +102,16 @@ err_code CGraphCtx::Create (const HWND _h_target) {
 		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out()(this->Error());
 	}
 
-	return this->Error();
+	_out()(!b_locked); return this->Error();
 }
 
-err_code CGraphCtx::Delete (void) {
+err_code CGraphCtx::Delete (const bool _b_verbose/* = true*/) {
+	_b_verbose;
 	this->m_error <<__METHOD__<<__s_ok;
+
+	const bool b_locked = _out().Cached().Locked();
+	_out()(_b_verbose);
+
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	TRenderer& renderer = ::Get_renderer();
@@ -115,7 +123,7 @@ err_code CGraphCtx::Delete (void) {
 	if (renderer.Scene().Ctx().Graphics().Is_valid())
 		renderer.Scene().Ctx().Graphics().Destroy(); // to-do: possible error of this procedure may be of interest;
 
-	return this->Error();
+	_out()(!b_locked); return this->Error();
 }
 
 TError&  CGraphCtx::Error (void) const { return this->m_error; }
@@ -147,20 +155,21 @@ CCtx_auto:: CCtx_auto (const bool _b_auto) {
 }
 CCtx_auto::~CCtx_auto (void) { this->Delete(); }
 
-err_code CCtx_auto::Create (void) {
+err_code CCtx_auto::Create (const bool _b_verbose/* = true*/) {
+	_b_verbose;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false) {}
-	else if (__failed(this->Device().Create())) this->m_error = this->Device().Error();
-	else if (__failed(this->Graph().Create(this->Device().Window()))) this->m_error = this->Graph().Error();
+	else if (__failed(this->Device().Create(_b_verbose))) this->m_error = this->Device().Error();
+	else if (__failed(this->Graph().Create(this->Device().Window(), _b_verbose))) this->m_error = this->Graph().Error();
 
 	return this->Error();
 }
-err_code CCtx_auto::Delete (void) {
+err_code CCtx_auto::Delete (const bool _b_verbose/* = true*/) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Graph().Delete())) this->m_error = this->Graph().Error();
-	if (__failed(this->Device().Delete())) this->m_error = this->Device().Error();
+	if (__failed(this->Graph().Delete(_b_verbose))) this->m_error = this->Graph().Error();
+	if (__failed(this->Device().Delete(_b_verbose))) this->m_error = this->Device().Error();
 	
 	return this->Error();
 }
@@ -184,3 +193,7 @@ TDevCtx& ::__get_dev_ctx (const bool _b_silent) {
 	_b_silent;
 	static TDevCtx dev_ctx; return dev_ctx;
 }
+
+ TGraph& ::__get_graph (void) {
+	 static TGraph graph(false); return graph;
+ }

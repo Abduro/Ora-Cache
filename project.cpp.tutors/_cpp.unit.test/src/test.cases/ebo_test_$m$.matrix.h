@@ -36,14 +36,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		mutable bool     m_b_verb;
 		mutable t_mat3x3 m_mat3x3;
 	};
-
 	/*note:
 	test case method cannot have 'const' qualifier, otherwise the compiler throws the error: ...C2440: 'static_cast': cannot convert from 'void'.... ;
 	Translate function test case must consist of the following steps:
 	(1) creating identity matrix, it is indicating the position by cell[3.3] == 1, otherwise direction '0' cannot be translated/transfered;
 	(2) creating the vertex position vector;
 	(3) multiplying the matrix by the vector;
-	(4) result matrix is the transfored vector; it is not different from input vector, because the matrix is the identity one; 
+	(4) result matrix is the transformed vector; it is not different from input vector, because the matrix is the identity one; 
 	*/
 	__class (c_mat_4x4) {
 	public:
@@ -106,7 +105,11 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		bool     m_b_verb;
 		t_rot4x4 m_rot4x4;
 	};
-
+	/* The matrix stack functionality (glMatrixMode, glGetFloatv, glLoadIdentity, etc.) is part of the "fixed-function pipeline" and has been deprecated since OpenGL 3.1.
+	   OpenGL (3.1+ Core Profile, OpenGL ES 2.0+) requires to manage matrices in application code and pass them to shaders using uniforms;
+	   Thus, testing functionality of classes below is useless:
+	   cls::[CError]>>{code=0x0502;result=0x80070502;desc='#__e_state: Invalid state for getting the pointer';context=CBase::CParam::Get_ptr()}
+	*/
 	__class (c_stk_current) {
 	public:
 		 c_stk_current (void);
@@ -121,6 +124,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		 c_mat_stack (void);
 		~c_mat_stack (void) = default;
 
+	__method (Get);
 	__method (Pop);
 	__method (Push);
 	};

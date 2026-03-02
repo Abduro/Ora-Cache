@@ -11,7 +11,6 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 namespace math { using namespace ex_ui::draw::open_gl::procs::matrix;
-	typedef ::std::array<float, 0x10u> t_arr_4x4; // the matrix defines its data as t_seq_4x4 that is the same with t_arr_4x4, but for creating a weak dependency between projects, typedefs are defined separately;
 
 	class CMatrix : public CBase {
 	typedef void (__stdcall *pfn_Identity)(void); // https://docs.gl/gl3/glLoadIdentity ; https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glLoadIdentity.xml ;
@@ -23,7 +22,6 @@ namespace math { using namespace ex_ui::draw::open_gl::procs::matrix;
 		CMatrix (void); ~CMatrix (void) = default;
 
 		err_code Get_all (void);
-		err_code Get (const e_mat_type, t_arr_4x4&); // fills the input array by matrix data (array of 16 floats); in case of error input array data is not changed;
 
 		err_code Identity (void);  // replaces the current matrix with the identity matrix;
 		err_code Load (const float* _p_mat4x4, const bool _b_transp = false); // replaces the current matrix with the specified matrix; the input pointer is checked for null only;

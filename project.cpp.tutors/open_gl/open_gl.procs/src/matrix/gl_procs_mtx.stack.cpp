@@ -36,6 +36,19 @@ err_code CStack::Get_all (void) {
 	return CBase::Error();
 }
 
+err_code CStack::Get (const e_mat_type _type, t_arr_4x4& _mat_4x4) {
+	_type; _mat_4x4;
+	CBase::m_error << __METHOD__ << __s_ok;
+
+	if (e_mat_type::e_undef == _type)
+		return CBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_type' '%s' is not valid"), CStack::To_str(_type));
+
+	if (__failed(::__get_param_procs().Get_ptr((uint32_t)_type, _mat_4x4.data())))
+		CBase::m_error = ::__get_param_procs().Error();
+
+	return CBase::Error();
+}
+
 err_code CStack::Pop (void) {
 	/* Possible error codes:
 	GL_INVALID_OPERATION : glPopMatrix() is executed between the execution of glBegin() and the corresponding execution of glEnd();
@@ -85,6 +98,20 @@ err_code CStack::Push (void) {
 	}
 
 	return CBase::Error();
+}
+
+_pc_sz   CStack::To_str (const e_mat_type _e_type) {
+	_e_type;
+	static CString cs_out;
+	switch (_e_type) {
+	case e_mat_type::e_color     : cs_out = _T("$color"); break;
+	case e_mat_type::e_modelview : cs_out = _T("$modelview"); break;
+	case e_mat_type::e_project   : cs_out = _T("$project"); break;
+	case e_mat_type::e_texture   : cs_out = _T("$texture"); break;
+	default: cs_out = _T("#undef");
+	}
+
+	return (_pc_sz) cs_out;
 }
 
 #pragma endregion
