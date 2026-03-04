@@ -75,3 +75,44 @@ TPipe&   c_shaders::operator ()(void) const { return this->m_pipe; }
 TPipe&   c_shaders::operator ()(void)       { return this->m_pipe; }
 
 #pragma endregion
+#pragma region cls::c_persist{}
+
+c_persist::c_persist (void) {}
+
+void c_persist::Get_itmes (void) {
+
+	C$Persist pers;
+	if (__succeeded(pers.Enum())) {
+	}
+	_out()();
+}
+
+void c_persist::Get_root (void) {
+
+	C$Persist pers; CString cs_root = pers.Root();
+
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	if (false == pers.Error())
+	      _out() += TString().Format(_T("[impt] result: root_dir = '%s';"), (_pc_sz) cs_root);
+	else {_out() += pers.Error(); }
+
+	_out()();
+}
+
+#pragma endregion
+#pragma region cls::c_test_cases{}
+
+c_test_cases::c_test_cases (void) {}
+
+void c_test_cases::Load (void) {
+
+	C$TestCases t_cases;
+	t_names sub_kye_names;
+
+	if (__succeeded(t_cases.Load())) {
+		C$TestCases::To_str(sub_kye_names);
+	}
+	_out()();
+}
+
+#pragma endregion

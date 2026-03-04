@@ -21,9 +21,10 @@ namespace shared { namespace sys_core { namespace storage {
 		~CRegistry (void);
 
 		TError&  Error (void) const;
-
+		// if empty string is returned, the error occurs;
 		CString  Value (const e_element) const;  // returns color value (hex) of element specified; 
-		CString  Value (_pc_sz _p_object, const e_shaders) const; // returns the path to the shader source file; if empty string is returned, the error occurs;
+		CString  Value (_pc_sz _p_object, const e_shaders) const; // returns the path to the shader source file;
+		CString  Value (_pc_sz _p_key_path, _pc_sz _p_value_name) const; // returns value of the key by value name; empty value name means '(default)';
 
 		CRegistry& operator = (const CRegistry&) = delete;
 		CRegistry& operator = (CRegistry&&) = delete;
@@ -32,6 +33,8 @@ namespace shared { namespace sys_core { namespace storage {
 		mutable
 		CError   m_error;
 	};
+
+	typedef ::std::vector<CString> TSubKeys; // the enumeration of subkeys' names;
 
 	class CRegKey_Ex {
 	public:
@@ -51,6 +54,28 @@ namespace shared { namespace sys_core { namespace storage {
 		private:
 			CString  m_name; // a name of the key value; empty string is accepted;
 			CString  m_path; // a path to the registry key; empty string is not accepted;
+		};
+		class CSubKeys {
+		public:
+			using CKey = CRegKey_Ex;
+			 CSubKeys (CKey& _parent); CSubKeys (void) = delete; CSubKeys (const CSubKeys&) = delete; CSubKeys (CSubKeys&&) = delete;
+			~CSubKeys (void) = default;
+
+			uint32_t  Count (void) const;
+			TError&   Error (void) const;
+			err_code  Enum  (void);
+
+			static err_code Enum (const HKEY _h_parent, TSubKeys&, CError&);                        // returns only names of all sub-keys;
+			static err_code Enum (_pc_sz _p_key_path, TSubKeys&, CError&, const bool _b_full_path); // returns full path of each sub-key if necessary;
+			
+			const
+			TSubKeys& Names (void) const;
+
+		private:
+			CSubKeys& operator = (const CSubKeys&) = delete; CSubKeys& operator = (CSubKeys&&) = delete;
+			CKey&    m_parent;
+			TSubKeys m_names;
+			CError   m_error;
 		};
 		class CValue {
 		public:
@@ -85,10 +110,15 @@ namespace shared { namespace sys_core { namespace storage {
 
 	public:
 		 CRegKey_Ex (void); CRegKey_Ex (const CRegKey_Ex&) = delete; CRegKey_Ex (CRegKey_Ex&&) = delete;
+		 CRegKey_Ex (_pc_sz _p_key_path);
 		~CRegKey_Ex (void);
 
 	public:
 		TError& Error (void) const;
+		err_code Open (_pc_sz _p_key_path);
+		const
+		CSubKeys& SubKeys (void) const;
+		CSubKeys& SubKeys (void);
 		const
 		CValue& Value (void) const;
 		CValue& Value (void) ;
@@ -108,9 +138,10 @@ namespace shared { namespace sys_core { namespace storage {
 
 	private:
 		mutable
-		CError  m_error;
-		CValue  m_value;
-		CRegKey m_key  ;
+		CError   m_error;
+		CValue   m_value;
+		CRegKey  m_key  ;
+		CSubKeys m_sub_keys;
 		friend class CValue;
 	};
 }}}

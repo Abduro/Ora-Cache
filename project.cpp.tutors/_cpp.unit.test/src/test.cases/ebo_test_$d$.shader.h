@@ -10,6 +10,17 @@
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
 	using namespace ebo::boo::test;
 
+	__class (c_persist) {
+	public:
+		c_persist (void); c_persist (const c_persist&) = delete; c_persist (c_persist&&) = delete; ~c_persist (void) = default;
+
+		__method (Get_itmes);
+		__method (Get_root);
+
+	private:
+		c_persist& operator = (const c_persist&) = delete; c_persist& operator = (c_persist&&) = delete;
+	};
+
 	__class (c_shaders) { // test class cannot be inherited from any class unfortunately;
 	public:
 		class COpts : private no_copy {
@@ -42,6 +53,15 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		TPipe  m_pipe;
 	};
 
+	__class (c_test_cases) {
+	public:
+		c_test_cases (void); c_test_cases (const c_test_cases&) = delete; c_test_cases (c_test_cases&&) = delete; ~c_test_cases (void) = default;
+
+		__method (Load);
+
+	private:
+		c_test_cases& operator = (const c_test_cases&) = delete; c_test_cases& operator = (c_test_cases&&) = delete;
+	};
 }}}}}
 
 #endif/*_EBO_TEST_$D$_SHADER_H_INCLUDED*/

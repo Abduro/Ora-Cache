@@ -46,6 +46,20 @@ CString  CRegistry::Value (_pc_sz _p_object, const e_shaders _e_type) const {
 	return  cs_value;
 }
 
+CString  CRegistry::Value (_pc_sz _p_key_path, _pc_sz _p_value_name) const {
+	_p_key_path; _p_value_name;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
+		this->m_error <<__e_inv_arg = _T("#__e_inv_arg: key path is invalid");
+	}
+
+	CRegKey_Ex reg_key;
+
+	CString cs_value = reg_key.Value().GetString(_p_key_path, _p_value_name); if (reg_key.Error()) this->m_error = reg_key.Error();
+	return  cs_value;
+}
+
 CRegistry& ::Get_registry (void) {
 	static CRegistry registry;
 	return registry;
@@ -97,6 +111,76 @@ CRegKey_Ex::CCache& CRegKey_Ex::CCache::operator << (_pc_sz _p_path) { this->Pat
 CRegKey_Ex::CCache& CRegKey_Ex::CCache::operator >> (_pc_sz _p_name) { this->Name(_p_name); return *this; }
 
 #pragma endregion
+#pragma region cls::CRegKey_Ex::CSubKeys{}
+
+using CSubKeys = CRegKey_Ex::CSubKeys;
+
+CSubKeys::CSubKeys (CKey& _the_key) : m_parent(_the_key) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+
+uint32_t  CSubKeys::Count (void) const { return static_cast<uint32_t>(this->Names().size()); }
+TError&   CSubKeys::Error (void) const { return this->m_error; }
+
+err_code  CSubKeys::Enum (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	return CSubKeys::Enum(this->m_parent(), this->m_names, this->m_error);
+}
+
+err_code  CSubKeys::Enum (_pc_sz _p_key_path, TSubKeys& _names, CError& _err, const bool _b_full_path) {
+	_p_key_path; _names; _err; _b_full_path;
+#if (0) // reg_key.Open() tracks it itself;
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path))
+		return _err <<__e_inv_arg = _T("#__e_inv_arg: parent key path is invalid");
+#endif
+	CRegKey_Ex reg_key;
+	if (__failed(reg_key.Open(_p_key_path)))
+		return _err = reg_key.Error();
+
+	if (__failed(CSubKeys::Enum(reg_key(), _names, _err)))
+		return _err;
+	if (_b_full_path && _names.empty() == false) {
+		for (uint32_t i_ = 0; i_ < _names.size(); i_++)
+			_names.at(i_) = TString().Format(_T("%s\\%s"), _p_key_path, (_pc_sz) _names.at(i_)); // replaces the name by full path to sub-key;
+	}
+
+	return _err;
+}
+err_code  CSubKeys::Enum (const HKEY _h_parent, TSubKeys& _names, CError& _err) {
+	_h_parent; _names; _err;
+	if (nullptr == _h_parent){
+		return _err <<__e_inv_arg = _T("The parent key handle is invalid");
+	}
+
+	if (_names.empty() == false)
+		_names.clear();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw ;
+	dword u_count = 0;
+	LSTATUS n_result = ::RegQueryInfoKey(_h_parent, 0, 0, 0, &u_count, 0, 0, 0, 0, 0, 0, 0);
+	if (!!n_result) {
+		return _err = (dword) n_result;
+	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw ;
+	static const uint32_t req_sz = 256;
+	dword u_length = 0;
+
+	for (uint32_t i_ = 0; i_ < u_count; i_++) {
+		u_length = req_sz;
+		CString cs_name;
+		n_result = ::RegEnumKeyEx(_h_parent, i_, cs_name.GetBuffer(req_sz), &u_length, 0, 0, 0, 0);
+		if (!!n_result) {
+			return _err = (dword) n_result;
+		}
+		try {
+			_names.push_back(cs_name);
+		} catch (const ::std::bad_alloc&) { _err << __e_no_memory; }
+	}
+
+	return _err;
+}
+
+const
+TSubKeys& CSubKeys::Names (void) const { return this->m_names; }
+
+#pragma endregion
 #pragma region cls::CRegKey_Ex::CValue{}
 
 CRegKey_Ex::CValue:: CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
@@ -125,20 +209,13 @@ uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
 
 uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_key_path, _pc_sz _p_name) {
 	_p_key_path; _p_name;
-	m_the_key[(long)0] <<__METHOD__<<__s_ok;
-	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
-		m_the_key.m_error << __e_inv_arg = _T("Input registry key path is invalid"); return 0u;
-	}
-	else
-		(*this)() << _p_key_path; // puts the path to the cache;
-
-	LSTATUS n_result = __s_ok;
+	m_the_key[(long)0] <<__METHOD__<<__s_ok; // not readable assignment to error object;
+	
 	if (nullptr == m_the_key()){
-		n_result = m_the_key().Open(Get_reg_router().Root().Key(), _p_key_path);
-		if (!!n_result) {
-			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path); return 0u;
-		}
+		if (__failed(this->m_the_key.Open(_p_key_path))) return 0u;
 	}
+	else (*this)() << _p_key_path; // puts the path to the cache;
+
 	return this->GetDword(_p_name);
 }
 
@@ -165,21 +242,12 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_name) {
 
 CString CRegKey_Ex::CValue::GetString (_pc_sz _p_key_path, _pc_sz _p_name) {
 	_p_key_path; _p_name;
-
-	m_the_key[(long)0] <<__METHOD__<<__s_ok; // not readable assignment to error object;
-	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
-		m_the_key.m_error << __e_inv_arg = _T("Input registry key path is invalid"); return CString();
-	}
-	else
-		(*this)() << _p_key_path; // puts the path to the cache;
-
-	LSTATUS n_result = __s_ok;
+	this->m_the_key.m_error <<__METHOD__<<__s_ok;
+	
 	if (nullptr == m_the_key()){
-		n_result = m_the_key().Open(Get_reg_router().Root().Key(), (_pc_sz) _p_key_path);
-		if (!!n_result) {
-			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), (_pc_sz)_p_key_path); return CString();
-		}
+		if (__failed(this->m_the_key.Open(_p_key_path))) return CString();
 	}
+	else (*this)() << _p_key_path; // puts the path to the cache;
 	return this->GetString(_p_name);
 }
 
@@ -204,10 +272,7 @@ err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint
 
 	LSTATUS n_result = __s_ok;
 	if (nullptr == m_the_key()){ // the key is not open yet;
-		n_result = m_the_key().Open(Get_reg_router().Root().Key(), _p_key_path);
-		if (!!n_result) {
-			(m_the_key.m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path); return m_the_key.Error();
-		}
+		if (__failed(this->m_the_key.Open(_p_key_path))) return this->m_the_key.Error();
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw ;
 	n_result = m_the_key().SetDWORDValue(_p_name, _u_value);
@@ -223,10 +288,34 @@ CRegKey_Ex::CValue::operator _pc_sz (void) /*const*/ { return this->GetString((*
 #pragma endregion
 #pragma region cls::CRegKey_Ex{}
 
-CRegKey_Ex:: CRegKey_Ex (void) : m_value(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CRegKey_Ex:: CRegKey_Ex (void) : m_value(*this), m_sub_keys(*this) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CRegKey_Ex:: CRegKey_Ex (_pc_sz _p_key_path) : CRegKey_Ex() { this->Open(_p_key_path); }
 CRegKey_Ex::~CRegKey_Ex (void) {}
 
 TError& CRegKey_Ex::Error (void) const { return this->m_error; }
+err_code CRegKey_Ex::Open (_pc_sz _p_key_path) {
+	_p_key_path;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr != (*this)())
+		return this->m_error <<(err_code)TErrCodes::eExecute::eState = _T("#__inv_state: the key is open");
+
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
+		CString cs_err = nullptr == _p_key_path ? _T("(nullptr)") : _T("(empty)");
+		this->m_error << __e_inv_arg = TString().Format(_T("Input registry key path '%s' is invalid"), (_pc_sz) cs_err); return this->Error();
+	}
+	const
+	LSTATUS n_result = (*this)().Open(Get_reg_router().Root().Key(), _p_key_path);
+	if (!!n_result) {
+		(this->m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path);
+	}
+
+	return this->Error();
+}
+const
+CSubKeys& CRegKey_Ex::SubKeys (void) const { return this->m_sub_keys; }
+CSubKeys& CRegKey_Ex::SubKeys (void)       { return this->m_sub_keys; }
+
 const
 CRegKey_Ex::CValue& CRegKey_Ex::Value (void) const { return this->m_value; }
 CRegKey_Ex::CValue& CRegKey_Ex::Value (void)       { return this->m_value; }

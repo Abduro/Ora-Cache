@@ -255,3 +255,100 @@ $Vertex& C$_enum::Vertex (void) const { return ::Get_renderer().Scene().Progs().
 $Vertex& C$_enum::Vertex (void)       { return ::Get_renderer().Scene().Progs().Get(TPipe::Target()).Shaders().Vertex(); }
 
 #pragma endregion
+#pragma region cls::C$Persist{}
+
+C$Persist::C$Persist (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+err_code C$Persist::Enum (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	this->m_error <<__METHOD__<<__s_ok;
+
+	static _pc_sz pc_sz_pat = _T("[impt] result: %sitems: {%s%s%s};");
+
+	if (__failed((*this)().Enum())) _out() += this->m_error = (*this)().Error();
+	else _out() += TString().Format(pc_sz_pat,
+		predefs::_p_new_ln, predefs::_p_sfx, (_pc_sz) C$Persist::To_str((*this)().Get()), predefs::_p_new_ln
+	);
+	return this->Error();
+}
+
+TError& C$Persist::Error (void) const { return this->m_error; }
+
+CString C$Persist::Root  (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+	CString cs_root = (*this)().Root();
+	if (cs_root.IsEmpty()) this->m_error = (*this)().Error();
+	return cs_root;
+}
+
+CString C$Persist::To_str (const $PersItem& _item) {
+	_item;
+	static _pc_sz pc_sz_pat = _T("name = %s; path = %s");
+
+	CString cs_out; cs_out.Format(pc_sz_pat, _item.Name(), _item.Path());
+	return  cs_out;
+}
+
+CString C$Persist::To_str (const t_dat_map& _map) {
+	_map;
+	static _pc_sz pc_sz_pat = _T("type: %s; source: %s");
+	if (_map.empty())
+		return CString(_T("$no_data"));
+
+	uint32_t u_ndx = 0;
+
+	CString cs_out;
+	for (t_dat_map::const_iterator it_ = _map.begin(); it_ != _map.end(); ++it_) {
+		cs_out += predefs::_p_pfx;
+		cs_out += TString().Format(pc_sz_pat, (_pc_sz)::Get_reg_router().Shaders().Name($Persist::Get(it_->first)), (_pc_sz) it_->second);
+		if (u_ndx < _map.size() - 1)
+			cs_out += predefs::_p_sfx;
+	}
+	return  cs_out;
+}
+
+CString C$Persist::To_str (const t_items& _items) {
+	_items;
+	if (_items.empty())
+		return CString(_T("$no_items"));
+
+	CString cs_out;
+	for (uint32_t i_ = 0; i_ < _items.size(); i_++) {
+
+		cs_out += predefs::_p_pfx;
+		cs_out += C$Persist::To_str(_items.at(i_));
+
+		if (i_ < _items.size() - 1)
+			cs_out += predefs::_p_sfx;
+	}
+	return  cs_out;
+}
+
+const
+$Persist& C$Persist::operator ()(void) const { return this->m_pers; }
+$Persist& C$Persist::operator ()(void)       { return this->m_pers; }
+
+#pragma endregion
+#pragma region cls::C$TestCases{}
+
+C$TestCases::C$TestCases (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+err_code C$TestCases::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	$TestCases t_cases;
+	if (__failed(t_cases.Load()))
+		this->m_error = t_cases.Error();
+
+	return this->Error();
+}
+
+TError& C$TestCases::Error (void) const { return this->m_error; }
+
+CString C$TestCases::To_str (const t_names&) {
+
+	CString cs_out;
+	return  cs_out;
+}
+
+#pragma endregion

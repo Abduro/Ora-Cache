@@ -82,6 +82,52 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError   m_error;
 	};
 
+	using $Persist = ex_ui::draw::open_gl::shader::CPersist;
+	using $PersItem = ex_ui::draw::open_gl::shader::CPersist::CItem;
+	using $TestCases = $Persist::CTestCases;
+
+	using t_items = ex_ui::draw::open_gl::shader::CPersist::TPersItems;
+	using t_names = ex_ui::draw::open_gl::shader::t_names;
+	using t_dat_map = $PersItem::TDataMap;
+
+	class C$Persist {
+	public:
+		C$Persist (void); C$Persist (const C$Persist&) = delete; C$Persist (C$Persist&&) = delete; ~C$Persist (void) = default;
+
+		err_code Enum  (void);
+		TError&  Error (void) const;
+		CString  Root  (void) const;
+
+		const
+		$Persist& operator ()(void) const;
+		$Persist& operator ()(void);
+
+		static CString To_str (const $PersItem&);
+		static CString To_str (const t_dat_map&);
+		static CString To_str (const t_items&);
+
+	private:
+		C$Persist& operator = (const C$Persist&) = delete; C$Persist& operator = (C$Persist&&) = delete;
+		mutable CError   m_error;    // using 'mutable' in contex of this class must be reviewed;
+		mutable $Persist m_pers ;
+	};
+
+	class C$TestCases {
+	public:
+		C$TestCases (void); C$TestCases (const C$TestCases&) = delete; C$TestCases (C$TestCases&&) = delete; ~C$TestCases (void) = default;
+
+		TError&  Error (void) const;
+		err_code Load  (void);
+
+		static
+		CString To_str (const t_names&);
+
+	private:
+		C$TestCases& operator = (const C$TestCases&) = delete; C$TestCases& operator = (C$TestCases&&) = delete;
+		CError  m_error;
+		t_names m_names;
+	};
+
 }}}}}
 
 #endif/*_TEST_CASE_$D$_SHADER_H_INCLUDED*/

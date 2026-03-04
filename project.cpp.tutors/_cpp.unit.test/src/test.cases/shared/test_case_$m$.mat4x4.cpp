@@ -32,7 +32,7 @@ err_code c_mtx_4x4::Translate(vec_3& v_pos) {
 	return TBase::Error();
 }
 
-_pc_sz  c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
+_pc_sz   c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
          _mat_4x4; _b_cls;
 	static CString  cs_out;
 	static _pc_sz pc_sz_fmt_0 = _T("%9.7f");

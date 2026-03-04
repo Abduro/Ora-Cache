@@ -7,10 +7,70 @@
 #include "gl_defs.h"
 #include "win.app.res.h"
 #include "shader\gl_shd_type.h"
+#include "sys.registry.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace shader {
 
 	using namespace shared::app::res;
+	using t_names = shared::sys_core::storage::TSubKeys;
+
+	class CPersist {
+	public:
+		using e_shaders = shared::sys_core::storage::route::CShaders::e_types;
+		class CItem {
+		public:
+			typedef ::std::map<$Type, CString> TDataMap; // key: shader type; value: path to shader source file;
+			CItem (void); CItem (const CItem&); CItem (CItem&&); ~CItem (void) = default;
+			const
+			TDataMap& DataMap (void) const; // gets the reference to map of data files to shader types;
+			TError&   Error (void) const;
+			err_code  Load (void);          // loads paths to data files;
+
+			_pc_sz Name (void) const;       // gets the registry key name;
+			bool   Name (_pc_sz _p_name);   // sets the name of the registry key;
+
+			_pc_sz Path (void) const;       // gets path of the registry key;
+			bool   Path (_pc_sz _path);     // sets path to the registry key;
+
+		public:
+			CItem& operator = (const CItem&); CItem& operator = (CItem&&); // no move operation, just copy;
+		private:
+			CString  m_key_name;
+			CString  m_key_path;
+			TDataMap m_dat_map;
+			CError   m_error;
+		};
+		class CTestCases {
+		public:
+			CTestCases (void); CTestCases (const CTestCases&) = delete; CTestCases (CTestCases&&) = delete; ~CTestCases (void) = default;
+			TError& Error (void) const;
+
+			err_code Load (void);
+
+		private:
+			CTestCases& operator = (const CTestCases&) = delete; CTestCases& operator = (CTestCases&&) = delete;
+			CError m_error;
+		};
+	public:
+		typedef ::std::vector<CItem> TPersItems;
+
+		CPersist (void); CPersist (const CPersist&) = delete; CPersist (CPersist&&) = delete; ~CPersist (void) = default;
+		TError& Error (void) const;
+
+		err_code Enum (void);        // enumerates all subkeys of the shaders' regestry key;
+		_pc_sz   Root (void) const;  // returns nullptr in case of error or root directory path is not specified in the registry storage;
+		const
+		TPersItems& Get (void) const;
+
+		static  e_shaders Get (const $Type _from);
+		static  $Type Get (const e_shaders _from);
+
+	private:
+		CPersist& operator = (const CPersist&) = delete; CPersist& operator = (CPersist&&) = delete;
+		mutable CError  m_error;
+		mutable CString m_root ;
+		TPersItems m_items;
+	};
 
 	class CSrc_Cfg {
 	public:

@@ -6,7 +6,6 @@
 #include "gl_shader.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
-#include "sys.registry.h"
 
 #include "gl_procs_shader.h"
 
@@ -18,7 +17,119 @@ using namespace shared::app;
 using namespace shared::sys_core::storage;
 
 using e_shaders = route::CShaders::e_types;
+using CItem = CPersist::CItem;
+using CTestCases = CPersist::CTestCases;
+using TPersItems = CPersist::TPersItems;
+using TDataMap = CItem::TDataMap;
 
+#pragma region cls::CItem{}
+
+CItem::CItem (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CItem::CItem (const CItem& _src) : CItem() { *this = _src; }
+CItem::CItem (CItem&& _victim) : CItem() { *this = _victim; }
+const
+TDataMap& CItem::DataMap (void) const { return this->m_dat_map; }
+TError& CItem::Error (void) const { return this->m_error; }
+
+err_code CItem::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_key_path.IsEmpty())
+		return this->m_error <<__e_inv_arg = _T("#e__inv_arg: registry key path is not set");
+
+	static const $Type types[] = {$Type::e_fragment, $Type::e_vertex};
+	for (uint32_t i_ = 0; i_ < _countof(types); i_++) {
+
+		CString cs_path(::Get_registry().Value(this->Path(), (_pc_sz)::Get_reg_router().Shaders().Name(CPersist::Get(types[i_]))));
+
+		if (cs_path.IsEmpty()) {
+			this->m_error = ::Get_registry().Error(); break;
+		}
+		try { this->m_dat_map.insert(::std::make_pair(types[i_], cs_path));
+		} catch (const ::std::bad_alloc&) { this->m_error <<__e_no_memory; break; }
+	}
+	return this->Error();
+}
+
+_pc_sz CItem::Name (void) const { return (_pc_sz) this->m_key_name; }
+bool   CItem::Name (_pc_sz _p_name) {
+	const bool b_changed = this->m_key_name.CompareNoCase(_p_name); if (b_changed) this->m_key_name = _p_name; return b_changed;
+}
+_pc_sz CItem::Path (void) const { return (_pc_sz) this->m_key_path; }
+bool   CItem::Path (_pc_sz _p_path) {
+	const bool b_changed = this->m_key_path.CompareNoCase(_p_path); if (b_changed) this->m_key_path = _p_path; return b_changed;
+}
+
+CItem& CItem::operator = (const CItem& _src) {
+	this->m_key_name = _src.Name(); this->m_key_path = _src.Path(); this->m_dat_map = _src.DataMap(); return *this;
+}
+CItem& CItem::operator = (CItem&& _victim) { *this = (const CItem&)_victim; return *this; }
+
+#pragma endregion
+#pragma region cls::CPersist{}
+
+CPersist::CPersist (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+err_code CPersist::Enum (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using t_names = shared::sys_core::storage::TSubKeys; t_names sub_key_names;
+	using t_paths = shared::sys_core::storage::TSubKeys; t_paths sub_key_paths;
+	// calling twice the same function is not good approach, but it is okay for current implementation;
+	TRegKeyEx::CSubKeys::Enum(::Get_reg_router().Shaders().Root(), sub_key_names, this->m_error, false); if (this->Error()) return this->Error();
+	TRegKeyEx::CSubKeys::Enum(::Get_reg_router().Shaders().Root(), sub_key_paths, this->m_error, true ); if (this->Error()) return this->Error();
+
+	if (this->m_items.empty() == false)
+		this->m_items.clear();
+
+	// assume the both vectors has the same size;
+	for (uint32_t i_ = 0; i_ < sub_key_names.size() && i_ < sub_key_paths.size(); i_++) {
+		CItem item;
+		item.Name((_pc_sz) sub_key_names.at(i_));
+		item.Path((_pc_sz) sub_key_paths.at(i_));
+		if (__failed(item.Load())) {
+			this->m_error = item.Error(); break;
+		}
+		try {
+			this->m_items.push_back(item);
+		} catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; break; }
+	}
+
+	return this->Error();
+}
+const
+TPersItems& CPersist::Get (void) const { return this->m_items; }
+TError& CPersist::Error (void) const { return this->m_error; }
+
+_pc_sz  CPersist::Root (void) const {
+
+	if (this->m_root.IsEmpty() == false)
+		return (_pc_sz)this->m_root;
+
+	this->m_error <<__METHOD__<<__s_ok;
+	this->m_root = ::Get_registry().Value(::Get_reg_router().Shaders().Root(), _T("root_dir"));
+
+	return (_pc_sz)this->m_root;
+}
+
+e_shaders CPersist::Get (const $Type _from) {
+	_from;
+	switch (_from) {
+	case $Type::e_fragment: return e_shaders::e_fragment;
+	case $Type::e_vertex  : return e_shaders::e_vertex;
+	default: return e_shaders::e__undef;
+	}
+}
+$Type CPersist::Get (const e_shaders _from) {
+	_from;
+	switch (_from) {
+	case e_shaders::e_fragment: return $Type::e_fragment;
+	case e_shaders::e_vertex  : return $Type::e_vertex;
+	default: return $Type::e_undef;
+	}
+}
+
+#pragma endregion
 #pragma region cls::CSrc_Cfg{}
 
 CSrc_Cfg:: CSrc_Cfg (void) : m_prefer(e_prefer::e_undef), m_res_id(0) {
@@ -234,3 +345,22 @@ err_code CSource::Load (_pc_sz _p_path, const uint32_t _u_shader_id) {
 
 CSource& CSource::operator = (const CSource& _src) { this->m_buffer = _src.Get(); return *this; }
 CSource& CSource::operator <<(const uint32_t _shader_id) { this->$Id(_shader_id); return *this; }
+
+#pragma endregion
+#pragma region cls::CTestCases{}
+
+CTestCases::CTestCases (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError&  CTestCases::Error (void) const { return this->m_error; }
+
+err_code CTestCases::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using t_names = shared::sys_core::storage::TSubKeys; t_names sub_key_names;
+
+	TRegKeyEx::CSubKeys::Enum(::Get_reg_router().Shaders().Root(), sub_key_names, this->m_error, true);
+
+	return this->Error();
+}
+
+#pragma endregion
