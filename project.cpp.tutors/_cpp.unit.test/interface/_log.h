@@ -13,13 +13,19 @@ namespace ebo { namespace boo { namespace test {
 	namespace predefs {
 	static _pc_sz _p_pfx = _T("\t\t");         // the indentation at the start of the line;
 	static _pc_sz _p_sfx = _T("\n");           // new line only;
-	static _pc_sz _p_new_ln = _T("\n\t");    // new line with indentation;
+	static _pc_sz _p_new_ln = _T("\n\t");      // new line with indentation;
 	}
 	using TParts  = shared::defs::TParts;      // text lines actually; 
 	using TCached = shared::defs::TParts;      // buffered text for cache output;
 
 	using CChrono = shared::common::CChrono;
 	using CChrono_auto = shared::common::CChrono_auto;
+
+	class CIndent_auto {
+	public:
+		CIndent_auto (void); CIndent_auto (const CIndent_auto&) = delete; CIndent_auto (CIndent_auto&&) = delete; ~CIndent_auto (void);
+		operator _pc_sz (void) const;
+	};
 
 	class CCache {
 	public:
@@ -65,35 +71,6 @@ namespace ebo { namespace boo { namespace test {
 		CString  m_suffix ;
 	};
 
-	class CLog_Opts {
-	public:
-		enum _accepted : uint32_t {
-			e_none = 0,
-			e_new_line = 1, // if is turned on, i.e. is set to options, new line is applied before the next output to the log;
-			e_emp_line = 2, // appens an empty line, no symbols;
-		};
-	public:
-		 CLog_Opts (void) ;
-		 CLog_Opts (const CLog_Opts&) = delete;
-		 CLog_Opts (CLog_Opts&&) = delete;
-		~CLog_Opts (void) ;
-
-	public:
-		bool Get (CLog_Opts::_accepted) const;        // gets the requested option set; returns either true or false;
-		void Set (CLog_Opts::_accepted, bool _b_set); // sets the input option to on/off or true/false;
-
-	public:
-		CLog_Opts& operator +=(const CLog_Opts::_accepted _opt); // sets the input option;
-		CLog_Opts& operator -=(const CLog_Opts::_accepted _opt); // remove the input option from the options' set;
-
-	private:
-		CLog_Opts& operator = (const CLog_Opts&) = delete;
-		CLog_Opts& operator = (CLog_Opts&&) = delete;
-
-	private:
-		uint32_t m_accepted;  // this is the set of accepted options for applying to log output content format;
-	};
-
 	class CLogger : public shared::dbg::ITestOutput {
 	public:
 		 CLogger (void); CLogger (const CLogger&) = delete; CLogger (CLogger&&) = delete; ~CLogger (void) = default;
@@ -111,10 +88,7 @@ namespace ebo { namespace boo { namespace test {
 	public:
 		void Out (const CString&) const;
 		void Out (_pc_sz _lp_sz_text) const;
-		const
-		CLog_Opts& Opts(void) const;
-		CLog_Opts& Opts(void) ;
-
+		
 	public: // https://en.cppreference.com/w/cpp/language/operators ;
 	        // https://en.cppreference.com/w/cpp/language/user_literal ;	
 		CLogger& operator = (const CLogger&) = delete;
@@ -122,11 +96,6 @@ namespace ebo { namespace boo { namespace test {
 
 		const CLogger& operator <<(const CString&) const;
 		const CLogger& operator <<(_pc_sz _lp_sz_text) const;
-		/*
-			the following two operators work for output by this class only, cached messages' object does not know anything of the output options; :(
-		*/
-		CLogger& operator +=(const CLog_Opts::_accepted _opt); // sets the input option; this is for direct call the CLog_Opts::Set(..., true );
-		CLogger& operator -=(const CLog_Opts::_accepted _opt); // remove the input option from the options' set; the CLog_Opts::Set(..., false);
 
 		CLogger& operator +=(const CString& cs_out);     // appends the input string object to the cache; [for simplicity of input];
 		CLogger& operator +=(_pc_sz _p_sz_out);          // appends the raw text to the cache; [for simplicity of input];
@@ -148,7 +117,6 @@ namespace ebo { namespace boo { namespace test {
 		mutable
 		CCache    m_cache;
 		CString   m_pattern; // not used yet;
-		CLog_Opts m_opts ;
 	};
 
 	class CTime : public shared::common::ISpent {
@@ -164,8 +132,6 @@ namespace ebo { namespace boo { namespace test {
 	};
 }}}
 
-typedef ebo::boo::test::CLog_Opts            TLog_Opts;
-typedef ebo::boo::test::CLog_Opts::_accepted TLog_Acc ;
 typedef ebo::boo::test::CLogger TLogger;
 // returns a reference to a singleton of the logger object; no const is required due to some settings of logger attributes is possible;
 /*const*/TLogger& _out(void);

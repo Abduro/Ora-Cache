@@ -312,11 +312,14 @@ CString C$Persist::To_str (const t_items& _items) {
 	if (_items.empty())
 		return CString(_T("$no_items"));
 
+	CIndent_auto();
+
 	CString cs_out;
 	for (uint32_t i_ = 0; i_ < _items.size(); i_++) {
 
 		cs_out += predefs::_p_pfx;
-		cs_out += C$Persist::To_str(_items.at(i_));
+		cs_out += C$Persist::To_str(_items.at(i_)); cs_out += predefs::_p_sfx;
+		cs_out += C$Persist::To_str(_items.at(i_).DataMap());
 
 		if (i_ < _items.size() - 1)
 			cs_out += predefs::_p_sfx;

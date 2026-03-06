@@ -6,6 +6,48 @@
 
 using namespace ebo::boo::test;
 
+namespace ebo { namespace boo { namespace test { namespace _impl {
+
+	class CIndent {
+	public:
+		CIndent (const CIndent&) = delete; CIndent (CIndent&&) = delete; ~CIndent (void) = default;
+		CIndent (void) : m_value(1) {
+			this->m_indent.Format(_T("%*c"), this->m_value, _T('\t'));
+		}
+
+		void operator ++(int) { this->m_value += 1; this->m_indent.Format(_T("%*c"), this->m_value, _T('\t')); }
+		void operator --(int) { if (this->m_value > 0) m_value -= 1; this->m_indent.Format(_T("%*c"), this->m_value, _T('\t')); }
+
+		CIndent& operator += (const uint32_t _u_steps) {
+			this->m_value += _u_steps; this->m_indent.Empty();
+			for (uint32_t i_ = 0; i_ < this->m_value; i_++)
+				this->m_indent +=  _T("\t");
+			return *this;
+		}
+		CIndent& operator -= (const uint32_t _u_steps) {
+			if (this->m_value >= _u_steps)
+				this->m_value -= _u_steps;
+			this->m_indent.Empty();
+			for (uint32_t i_ = 0; i_ < this->m_value; i_++)
+				this->m_indent +=  _T("\t");
+			return *this;
+		}
+
+		operator _pc_sz (void) const { return (_pc_sz) this->m_indent; }
+
+	private:
+		CIndent& operator = (const CIndent&) = delete; CIndent& operator = (CIndent&&) = delete;
+		uint32_t m_value ;
+		CString  m_indent;
+	};
+
+	CIndent& _get_indent (void) {
+		static CIndent indent; return indent;
+	}
+
+}}}}
+using namespace _impl;
+
 #pragma region cls::CCache{}
 
 CCache:: CCache (void) : m_prefix(_T("\t")), m_suffix(_T("\n")), m_locked(false) {}
@@ -39,7 +81,8 @@ void     CCache::Output (void) const {
 	for (size_t i_ = 0; i_ < this->m_strings.size(); i_++) {
 		const CString& cs_str = this->m_strings.at(i_);
 
-		cs_fmt.Format(_T("%s%s%s"), (b_prefix ? this->Prefix() : _T("")), cs_str.GetString(), (b_suffix ? this->Suffix() : _T("")));
+	//	cs_fmt.Format(_T("%s%s%s"), (b_prefix ? this->Prefix() : _T("")), cs_str.GetString(), (b_suffix ? this->Suffix() : _T("")));
+		cs_fmt.Format(_T("%s%s%s"), (_pc_sz)_get_indent(), cs_str.GetString(), (b_suffix ? this->Suffix() : _T("")));
 		cs_out += cs_fmt;
 	}
 
@@ -67,25 +110,12 @@ CCache&  CCache::operator ()(const bool _b_verb) { this->Locked() = !_b_verb; re
 CCache::operator bool (void) const { return this->Locked(); }
 
 #pragma endregion
-#pragma region cls::CLog_Opts{}
+#pragma region cls::CIndent_auto{}
 
-CLog_Opts:: CLog_Opts (void) : m_accepted(_accepted::e_none) {}
-CLog_Opts::~CLog_Opts (void) {}
+CIndent_auto::CIndent_auto (void) { _get_indent() += 1; }
+CIndent_auto::~CIndent_auto (void) { _get_indent() -= 1; }
 
-bool CLog_Opts::Get (_accepted _opt) const { return !!(_opt & this->m_accepted); }
-void CLog_Opts::Set (_accepted _opt, bool _b_set) {
-	if ( _b_set) this->m_accepted |= _opt;
-	if (!_b_set) this->m_accepted &=~_opt; // https://stackoverflow.com/questions/3920307/how-can-i-remove-a-flag-in-c ;)
-}
-
-CLog_Opts& CLog_Opts::operator +=(const CLog_Opts::_accepted _opt) {
-	this->Set(_opt, true );
-	return *this;
-}
-CLog_Opts& CLog_Opts::operator -=(const CLog_Opts::_accepted _opt) {
-	this->Set(_opt, false);
-	return *this;
-}
+CIndent_auto::operator _pc_sz (void) const { return _get_indent(); }
 
 #pragma endregion
 #pragma region cls::CLogger{}
@@ -128,24 +158,11 @@ void CLogger::Out (_pc_sz _lp_sz_text) const {
 		ms_logger::WriteMessage(cs_out.GetString());
 	}
 	else {
-		if (false) {}
-		else if (this->Opts().Get(CLog_Opts::e_new_line)) {
-			CString cs_out(_T("\n")); cs_out += _lp_sz_text;
-			ms_logger::WriteMessage((_pc_sz)cs_out);
-		}
-		else if (this->Opts().Get(CLog_Opts::e_emp_line)) {
-			ms_logger::WriteMessage(_T(""));
-			ms_logger::WriteMessage(_lp_sz_text);
-		}
-		else
 		ms_logger::WriteMessage(_lp_sz_text);
 	}
 
 	this->m_cache.Clear();
 }
-const
-CLog_Opts& CLogger::Opts(void) const { return this->m_opts; }
-CLog_Opts& CLogger::Opts(void)       { return this->m_opts; }
 
 void CLogger::Write (_pc_sz _p_msg) {
 	_p_msg;
@@ -163,13 +180,6 @@ void CLogger::Write (_pc_sz _p_msg) {
 
 const CLogger& CLogger::operator << (const CString& _str) const { this->Out(_str); return *this; }
 const CLogger& CLogger::operator << (_pc_sz  _lp_sz_text) const { this->Out(_lp_sz_text); return *this; }
-
-CLogger& CLogger::operator +=(const CLog_Opts::_accepted _opt)  {
-	// adds new empty string to the cached maeesages' object;
-	this->Cached() += _T("");
-	this->Opts() += _opt;return *this;
-}
-CLogger& CLogger::operator -=(const CLog_Opts::_accepted _opt)  { this->Opts() -= _opt; return *this; }
 
 CLogger& CLogger::operator +=(const CString& cs_out) { this->Cached() += cs_out; return *this; }
 CLogger& CLogger::operator +=(_pc_sz _p_sz_out) { this->Cached() += _p_sz_out; return *this; }
