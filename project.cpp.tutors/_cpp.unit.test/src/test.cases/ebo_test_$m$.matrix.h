@@ -46,21 +46,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	*/
 	__class (c_mat_4x4) {
 	public:
-		 c_mat_4x4 (const bool _b_verb = false);
+		 c_mat_4x4 (void) = default;
 		~c_mat_4x4 (void) = default;
 
-		__ctor (_ctor);       // this is visible for test framework, emulates the constructor of the class object being tested;
 		__method (Identity);  // checks the correctness of the matrix identity procedure;
 		__method (Translate); // translates input coordinates in world space to camera view matrix (camera local coordinates);
-
-		const
-		t_mat4x4&  ref (void) const;
-		t_mat4x4&  ref (void) ;
-		CString To_str (_pc_sz _p_pfx = predefs::_p_pfx, _pc_sz _p_sep = _T(" "), _pc_sz _p_sfx = predefs::_p_sfx) const;
-
-	private:
-		mutable bool     m_b_verb;
-		mutable t_mat4x4 m_mat4x4;
+		__method (Transpose); // converts a matrix from column-major to row-major matrix and vice versa;
 	};
 
 	__class (c_rot_3x3) {

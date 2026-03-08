@@ -226,6 +226,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 			c_mat4x4& Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3);
 			c_mat4x4& Set (const uint32_t _u_col, const vec_3& _xyz ); // sets the column of given index to the values provided;
 
+			c_mat4x4& Set (const uint32_t _u_col, const t_seq_4&);
+
 			const
 			c_mat4x4& operator ()(void) const;
 			c_mat4x4& operator ()(void) ;
@@ -254,6 +256,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	public: static const uint32_t u_cols = c_cols::u_count, u_rows = c_rows::u_count, u_size = u_cols * u_rows;
 		c_mat4x4 (const bool _b_identity = true); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&); ~c_mat4x4 (void) = default;
 		c_mat4x4 (const t_seq_4x4& _arr_values);
+		c_mat4x4 (const t_seq_4&, const t_seq_4&, const t_seq_4&, const t_seq_4&); // sets columns' values: from left to right: col_#0...col_#3;
 
 		const
 		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of range, the reference to invalid entry is returned; (ro)
@@ -274,6 +277,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
+
+		static
+		err_code  Set (c_mat4x4&, const float*, CError&); // this method is inteanded for copying data from glm::mat4x4, especially for test-cases;
+		c_mat4x4& Set (const float*);  // it is assumed the pointer is to 16-elements' array of float data type; 
+
 		/* the example of translating the vertex position: this matrix * input vector = transformed vector;
 		   this matrix must indecate the position: cell[3,3] == 1, not 0, otherwise the direction cannot be translated/transformed;
 		*/
@@ -284,8 +292,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_mat4x4& operator = (const c_mat4x4&);
 		c_mat4x4& operator = (c_mat4x4&&); // https://en.cppreference.com/w/cpp/container/vector/swap ;
 
-		c_mat4x4& operator*= (const float _f_scale);
+		c_mat4x4& operator *=(const float _f_scale);
 		c_mat4x4& operator <<(const t_seq_4x4& _arr_values);
+
+		bool operator == (const c_mat4x4&) const; // no epsilon is used, just strict comparison each entry/cell of both matrices;
+		bool operator != (const c_mat4x4&) const;
 
 		const
 		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) const;

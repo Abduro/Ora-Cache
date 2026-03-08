@@ -65,38 +65,73 @@ t_mat3x3&  c_mat_3x3::operator ()(void)       { return this->ref(); }
 #pragma endregion
 #pragma region cls::c_mat_4x4{}
 
-c_mat_4x4::c_mat_4x4 (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb) {
-		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
-}
-
-void c_mat_4x4::_ctor (void) {
-	
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	this->m_b_verb = true;
-	this->To_str();
-}
-
 void c_mat_4x4::Identity (void) {
 
-	c_mtx_4x4().Identity(); _out()();
+	c_mtx_4x4 mat_this; mat_this.Identity();
+	c_mtx_4x4 mat_glm(glm::mat4x4(1.f));
+
+	_out() += _T("[warn] glm::mat4x4 identity:");
+	c_mtx_4x4::To_str(mat_glm(), false);
+
+	if (mat_this() == mat_glm())
+	     _out() += _T("[impt] result: matrices are equal;");
+	else _out() += _T("[error] result: matrices are not equal;");
+	_out()();
 }
 
 void c_mat_4x4::Translate (void) {
-	
-	c_mtx_4x4().Translate(c_tvec_3(0.0f, 0.1f, 0.0f)()); _out()();
+	// https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml ;
+	c_mtx_4x4 mat_this; mat_this.Translate(c_tvec_3(0.0f, 0.1f, 0.0f)());
+	c_mtx_4x4 mat_glm = glm::translate(glm::mat4x4(1.0f), glm::vec3(0.0f, 0.1f, 0.0f));
+
+	_out() += _T("[warn] glm::mat4x4 translated:");
+	c_mtx_4x4::To_str(mat_glm(), false);
+
+	if (mat_this() == mat_glm())
+	     _out() += _T("[impt] result: matrices are equal;");
+	else _out() += _T("[error] result: matrices are not equal;");
+	_out()();
 }
 
-const
-t_mat4x4& c_mat_4x4::ref (void) const { return this->m_mat4x4; }
-t_mat4x4& c_mat_4x4::ref (void)       { return this->m_mat4x4; }
+void c_mat_4x4::Transpose (void) {
 
-CString c_mat_4x4::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
-	_p_prf; _p_sep; _p_sfx;
-	return c_mtx_4x4().To_str(this->ref(), this->m_b_verb);
+	c_mtx_4x4 mat_this; mat_this().Cols().Set(0, t_seq_4{0.0f, 1.0f, 2.0f, 3.0f});
+	c_mtx_4x4 mat_copy; mat_copy() = mat_this(); // makes the transpose matrix copy;
+
+	_out() += _T("[warn] The matrix *before* transpose:");
+	c_mtx_4x4::To_str(mat_this(), false);
+
+	mat_this().Transpose();
+	c_mtx_4x4 mat_trans; mat_trans() = mat_this(); // makes a copy of the matrix transponed;
+
+	_out() += _T("[warn] The matrix *after* transpose:");
+	c_mtx_4x4::To_str(mat_this(), false);
+
+	mat_this().Transpose(); // rolls back the transpose, i.e. restores the matrix to initial state;
+
+	_out() += _T("[warn] The matrix *roll-back* transpose:");
+	c_mtx_4x4::To_str(mat_this(), false);
+
+	if (mat_this() == mat_copy())
+	     _out() += _T("[impt] result: the matrix is restored;");
+	else _out() += _T("[error] result: the matrix is not restored;");
+
+	// glm::transpose() function flips the matrix along its main diagonal, effectively swapping rows and columns ;
+	// https://stackoverflow.com/questions/40760841/how-are-glmvec3-and-glmmat4-initialised ;
+	glm::mat4x4 mat_glm(0.0f); mat_glm[0] = glm::vec4(0.0f, 1.0f, 2.0f, 3.0f);
+
+	_out() += _T("[warn] The glm::matrix *before* transpose:");
+	c_mtx_4x4::To_str(c_mtx_4x4(mat_glm)(), false);
+
+	glm::mat4x4 mat_glm_trans = ::glm::transpose(mat_glm);
+	_out() += _T("[warn] The glm::matrix *after* transpose:");
+	c_mtx_4x4::To_str(c_mtx_4x4(mat_glm_trans)(), false);
+
+	if (mat_trans() == c_mtx_4x4(mat_glm_trans)())
+	     _out() += _T("[impt] result: the transposed matrices 'glm::mat' and 'math::c_mat4x4' are equal;");
+	else _out() += _T("[error] result: the transposed matrices 'glm::mat' and 'math::c_mat4x4' are *not* equal;");
+
+	_out()();
 }
 
 #pragma endregion

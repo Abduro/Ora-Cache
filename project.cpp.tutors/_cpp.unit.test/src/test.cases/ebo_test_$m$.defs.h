@@ -6,6 +6,9 @@
 */
 #include "_log.h"
 #include "math.defs.h"
+#include "glm/glm.hpp"  // #define GLM_FORCE_CTOR_INIT is not required due to it creates identity matrix that is not the case, but glm::mat4x4 (0.0f);
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
@@ -18,9 +21,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	*/
 }}}}}
 
-#pragma comment(lib, "gl.procs_v15.lib")     // OpenGL procs loader project;
-#pragma comment(lib, "gl.math_v15.lib")      // this project is being tested by this unit test project;
-#pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
+#pragma comment(lib, "glm_v15.lib")      // OpenGL mathematics project;
+#pragma comment(lib, "gl.procs_v15.lib") // OpenGL procs loader project;
+#pragma comment(lib, "gl.math_v15.lib")  // this project is being tested by this unit test project;
+#pragma comment(lib, "ebo_test_$$$.lib") // shared unit test library for common definition(s);
 #pragma comment(lib, "ebo_test_$d$.shared.lib") // shared draw context test case library;
 
 #endif/*_EBO_TEST_$M$_DEFS_H_INCLUDED*/

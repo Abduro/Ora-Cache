@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!test.resource", "!test.res
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd_party", "3rd_party", "{00000C13-EEEE-BBBB-6667-100000000300}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glm", "3rd_party\glm\glm.vcxproj", "{00000C13-EEEE-BBBB-6667-3000000A0000}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glm", "3rd_party\glm\glm_v15.vcxproj", "{00000C13-EEEE-BBBB-6667-3000000A0000}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{00000C13-EEEE-BBBB-6667-100000000210}"
 	ProjectSection(SolutionItems) = preProject

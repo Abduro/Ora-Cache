@@ -11,8 +11,9 @@
 namespace ebo { namespace boo { namespace test {
 
 	namespace predefs {
-	static _pc_sz _p_pfx = _T("\t\t");         // the indentation at the start of the line;
-	static _pc_sz _p_sfx = _T("\n");           // new line only;
+	static _pc_sz _p_pfx    = _T("\t\t");      // the indentation at the start of the line;
+	static _pc_sz _p_pfx_hf = _T("\t");        // the half of indentation at the start of the line;
+	static _pc_sz _p_sfx    = _T("\n");        // new line only;
 	static _pc_sz _p_new_ln = _T("\n\t");      // new line with indentation;
 	}
 	using TParts  = shared::defs::TParts;      // text lines actually; 

@@ -8,8 +8,11 @@ using namespace ebo::boo::test::open_gl::math;
 
 #pragma region cls::c_mtx_4x4{}
 
-c_mtx_4x4::c_mtx_4x4 (void) : TBase() { TBase::m_error >>__CLASS__; }
-
+c_mtx_4x4::c_mtx_4x4 (void) : TBase(), m_mat4x4(false) { TBase::m_error >>__CLASS__; } // no identity matrix by default construction;
+c_mtx_4x4::c_mtx_4x4 (const ::glm::mat4x4& _mat4x4) {
+	TBase::m_error >>__CLASS__;
+	t_mat4x4::Set((*this)(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), this->m_error);
+}
 
 err_code c_mtx_4x4::Identity (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
@@ -21,21 +24,37 @@ err_code c_mtx_4x4::Identity (void) {
 
 err_code c_mtx_4x4::Translate(vec_3& v_pos) {
 	v_pos;
+	/* translate matrix:
+	cols:    #0 #1 #2 #3
+	rows: #0  1  0  0  X
+	      #1  0  1  0  Y
+	      #2  0  0  1  Z
+	      #3  0  0  0  1, where X,Y,Z the coordinates to move/change vertex position;
+	*/
 	TBase::m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += TString().Format(_T("Input vector *before* translate: {%s}"), (_pc_sz) v_pos.To_str());
-
-	_out() += _T("Test case #0: *no* transformation");
 	_out() += _T("Translate matrix:");
-	this->To_str((*this)().Identity(), true); // sets the last matrix cell to 1.0f value, otherwise there's no translation for direction;
+	this->To_str((*this)().Translate(v_pos), true); // the matrix is the identity in its initial stage;
 
 	return TBase::Error();
 }
 
+err_code c_mtx_4x4::Transpose (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	this->To_str((*this)().Transpose(), true);
+	return TBase::Error();
+}
+
 _pc_sz   c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
-         _mat_4x4; _b_cls;
+	_mat_4x4; _b_cls;
 	static CString  cs_out;
 	static _pc_sz pc_sz_fmt_0 = _T("%9.7f");
+
+	if (cs_out.IsEmpty() == false)
+		cs_out.Empty();
 
 	for (uint32_t row_ = 0; row_ < t_mat4x4::u_rows; row_++) {
 		CString cs_row;
@@ -52,6 +71,9 @@ _pc_sz   c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
 	}
 	if (_b_cls) {
 		_out() += TString().Format(_T("cls::[%s].%s() >> [%s%s%s]"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__,  predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
+	}
+	else {
+		_out() += TString().Format(_T("%s[%s%s%s]"), predefs::_p_pfx_hf, predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
 	}
 	return (_pc_sz) cs_out;
 }

@@ -344,6 +344,10 @@ c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const vec_3& _xyz ) {
 	(*this)()(_u_col, 2) = _xyz.z; return this->m_mat_ref;
 }
 
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const t_seq_4& _arr_values) {
+	return this->Set(_u_col, _arr_values.at(0), _arr_values.at(1), _arr_values.at(2), _arr_values.at(3));
+}
+
 const
 c_mat4x4& c_mat4x4::c_cols::operator ()(void) const { return this->m_mat_ref; }
 c_mat4x4& c_mat4x4::c_cols::operator ()(void)       { return this->m_mat_ref; }
@@ -351,14 +355,19 @@ c_mat4x4& c_mat4x4::c_cols::operator ()(void)       { return this->m_mat_ref; }
 #pragma endregion
 #pragma region cls::c_mat4x4{}
 
-c_mat4x4::c_mat4x4 (const bool _b_identity) : m_cols(*this), m_rows(*this) {
+c_mat4x4::c_mat4x4 (const bool _b_identity) : m_cols(*this), m_rows(*this), m_data{0.0f} {
 //	this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size);
 	if (_b_identity) this->Identity();
 }
 c_mat4x4::c_mat4x4 (const c_mat4x4& _src) : c_mat4x4(false) { *this = _src; }
 c_mat4x4::c_mat4x4 (const t_seq_4x4& _arr_values) : c_mat4x4() { *this << _arr_values; }
 c_mat4x4::c_mat4x4 (c_mat4x4&& _victim) : c_mat4x4() { *this = _victim; }
-
+c_mat4x4::c_mat4x4 (const t_seq_4& _col_0, const t_seq_4& _col_1, const t_seq_4& _col_2, const t_seq_4&  _col_3) : c_mat4x4() {
+	this->Cols().Set(0, _col_0);
+	this->Cols().Set(1, _col_1);
+	this->Cols().Set(2, _col_2);
+	this->Cols().Set(3, _col_3);
+}
 const
 float& c_mat4x4::Cell (const uint32_t _u_col, const uint32_t _u_row) const {
 	_u_col; _u_row;
@@ -413,10 +422,37 @@ c_mat4x4& c_mat4x4::Identity (void) {
 	}
 	return *this;
 }
-
 const
 c_mat4x4::c_rows& c_mat4x4::Rows (void) const { return this->m_rows; }
 c_mat4x4::c_rows& c_mat4x4::Rows (void)       { return this->m_rows; }
+
+c_mat4x4& c_mat4x4::Set (const float* _p_data) {
+	if (nullptr == _p_data)
+		return *this;
+	try {
+		// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		const errno_t n_error = ::memcpy_s(this->m_data.data(), sizeof(t_seq_4x4), _p_data, sizeof(t_seq_4x4));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory));
+		}
+	} catch (...) {}
+
+	return *this;
+}
+
+err_code  c_mat4x4::Set (c_mat4x4& _dest, const float* _p_src, CError& _err) {
+	if (nullptr == _p_src)
+		return _err <<__e_pointer;
+	try {
+		// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		const errno_t n_error = ::memcpy_s(_dest.m_data.data(), sizeof(t_seq_4x4), _p_src, sizeof(t_seq_4x4));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_no_memory;
+		}
+	} catch (...) {}
+
+	return _err;
+}
 
 c_mat4x4& c_mat4x4::Translate (const float _x, const float _y, const float _z) {
 	_x; _y; _z;
@@ -480,6 +516,17 @@ float& c_mat4x4::operator ()(const uint32_t _u_col, const uint32_t _u_row)      
 const
 float* c_mat4x4::operator ()(void) const { return this->m_data.data(); }
 float* c_mat4x4::operator ()(void)       { return this->m_data.data(); }
+
+bool   c_mat4x4::operator ==(const c_mat4x4& _compare) const {
+	_compare;
+	for (uint32_t i_ = 0; i_ < this->m_data.size(); i_++)
+		if (this->m_data.at(i_) != _compare.m_data.at(i_))
+			return false;
+	return true;
+}
+bool   c_mat4x4::operator !=(const c_mat4x4& _compare) const {
+	return false == (*this == _compare);
+}
 
 #pragma endregion
 #pragma region cls::c_mat4x4::c_rows{}

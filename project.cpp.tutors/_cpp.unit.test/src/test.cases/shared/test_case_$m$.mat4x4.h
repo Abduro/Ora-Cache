@@ -15,15 +15,17 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	   the first 3x3 elements (indices 0-2, 4-6, 8-10) represent rotation and scaling:
 	   row #0: [0, 4, 8] is the pitch vector (x,y,z);
 	   row #1: [1, 5, 9] is the yaw vector (x,y,x); (heading);
-	   row #2: [0, 4, 8] is the roll vector (x,y,z);
+	   row #2: [2, 6, a] is the roll vector (x,y,z);
 	   while the elements at indices 12, 13, and 14 represent the X, Y, and Z translation components, respectively.
 	*/
 	class c_mtx_4x4 : public c_mtx_base { typedef c_mtx_base TBase;
 	public:
 		c_mtx_4x4 (void); ~c_mtx_4x4 (void) = default;
+		c_mtx_4x4 (const ::glm::mat4x4&);
 
-		err_code Identity();  // checks the correctness of the matrix identity procedure;
-		err_code Translate(vec_3&); // translates input vertex position;
+		err_code Identity ();        // checks the correctness of the matrix identity procedure;
+		err_code Translate (vec_3&); // translates input vertex position;
+		err_code Transpose (void);   // transforms the column-major matrix to the row-major matrix and vice versa;
 		static
 		_pc_sz To_str (const t_mat4x4&, const bool _b_cls); // returns just the string of input matrix content, no output to the logger yet;
 
