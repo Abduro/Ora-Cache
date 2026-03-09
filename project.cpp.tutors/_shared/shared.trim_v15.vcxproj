@@ -201,10 +201,16 @@
     <ClCompile Include="$(_1)shared.preproc.cpp" />
     <ClInclude Include="$(_0)shared.props.h" />
     <ClCompile Include="$(_1)shared.props.cpp" />
-    <ClInclude Include="$(_0)shared.timer.h" />
-    <ClCompile Include="$(_1)shared.timer.cpp" />
+    <ClInclude Include="$(_0)shared.random.h" />
+    <ClCompile Include="$(_1)shared.random.cpp" />
     <ClInclude Include="$(_0)shared.types.h" />
     <ClCompile Include="$(_1)shared.types.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)shared.timer.h" />
+    <ClCompile Include="$(_1)shared.timer.cpp" />
+    <ClInclude Include="$(_0)sys.gen.time.h" />
+    <ClCompile Include="$(_1)sys.gen.time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)sys.reg.router.h" />
@@ -220,8 +226,6 @@
     <ClCompile Include="$(_1)sys.mem.heap.cpp" />
     <ClInclude Include="$(_0)sys.err.trim.h" />
     <ClCompile Include="$(_1)sys.err.trim.cpp" />
-    <ClInclude Include="$(_0)sys.gen.time.h" />
-    <ClCompile Include="$(_1)sys.gen.time.cpp" />
     <ClInclude Include="$(_0)sys.sync_obj.h" />
     <ClCompile Include="$(_1)sys.sync_obj.cpp" />
   </ItemGroup>

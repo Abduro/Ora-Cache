@@ -9,6 +9,25 @@
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	// https://en.wikipedia.org/wiki/Rotation_matrix ;
+	class c_rotate_2x2 : public c_mat2x2 { typedef c_mat2x2 TBase;
+	public:
+		c_rotate_2x2 (void); c_rotate_2x2 (const c_rotate_2x2&) = delete; c_rotate_2x2 (c_rotate_2x2&&) = delete; ~c_rotate_2x2 (void) = default;
+		c_rotate_2x2 (const c_mat2x2&);
+		c_rotate_2x2 (const float _f_angle);
+
+		c_mat2x2& Prepare (const float _f_angle); // prepares the rotate matrix for angle in degree;
+
+		const
+		c_mat2x2& operator ()(void) const;
+		c_mat2x2& operator ()(void);
+
+		c_rotate_2x2& operator <<(const float _f_angle); // prepares this matrix for rotation;
+		c_mat2x2& operator ^ (c_mat2x2&) const;      // rotates input matrix; it is assumed this matrix is prepared for rotation;
+
+	private:
+		c_rotate_2x2& operator = (const c_rotate_2x2&) = delete; c_rotate_2x2& operator = (c_rotate_2x2&&) = delete;
+	};
+
 	class c_rotate_3x3 : public c_mat3x3 { typedef c_mat3x3 TBase;
 	public:
 		c_rotate_3x3 (void); c_rotate_3x3 (const c_rotate_3x3&) = delete; c_rotate_3x3 (c_rotate_3x3&&) = delete; ~c_rotate_3x3 (void) = default;
@@ -35,7 +54,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	class c_rotate_4x4 : public c_mat4x4 {
 	public:
-		c_rotate_4x4 (void); c_rotate_4x4 (const c_rotate_4x4&) = delete; c_rotate_4x4 (c_rotate_4x4&&) = delete; ~c_rotate_4x4 (void) = default;
+		c_rotate_4x4 (const bool _b_identity = true); c_rotate_4x4 (const c_rotate_4x4&) = delete; c_rotate_4x4 (c_rotate_4x4&&) = delete; ~c_rotate_4x4 (void) = default;
 
 		c_mat4x4& Do (const float _f_angle, const float _x, const float _y, const float _z); //  rotates angle(degree) about the given axix;
 		c_mat4x4& Do (const float _f_angle, const vec_3&);

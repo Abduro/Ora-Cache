@@ -5,6 +5,7 @@
 	This is Ebo Pack OpenGL math lib matrix uint test interface declaration file; 
 */
 #include "test_case_$d$.ctx.h"     // for using OpenGL API draw context must be created first;
+#include "test_case_$m$.mat2x2.h"
 #include "test_case_$m$.mat3x3.h"
 #include "test_case_$m$.mat4x4.h"
 #include "test_case_$m$.vec3.h"
@@ -73,28 +74,36 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		t_rot3x3 m_rot3x3;
 	};
 
+#if (0)
 	__class (c_rot_4x4) {
 	public:
-		 c_rot_4x4 (const bool _b_verb = true);
-		~c_rot_4x4 (void) = default;
-
-		__ctor (_ctor);
-
 		__method (Rotate_free); // rotates on set of different angles about any axis specified by particular vector data ;
 
-		__method (Rotate_x);    // rotates on set of different angles about x-axis;
 		__method (Rotate_y);    // rotates on set of different angles about y-axis;
 		__method (Rotate_z);    // rotates on set of different angles about z-axis;
 		__method (Set);         // sets initial data for passing rotation test cases, there is no result with 0-filled matrix;
 
-		const
-		t_rot4x4&  ref (void) const;
-		t_rot4x4&  ref (void) ;
 		CString To_str (void) const;
 
 	private:
-		bool     m_b_verb;
 		t_rot4x4 m_rot4x4;
+	};
+#endif
+	__class (c_t_rotate_2x2) {
+	public:
+		 c_t_rotate_2x2 (void) = default;
+		~c_t_rotate_2x2 (void) = default;
+
+		__method (Prepare); // prepares the matrix for rotation by certain angle;
+		__method (Rotate);  // rotates the given matrix by certain angle;
+	};
+
+	__class (c_t_rotate_4x4) {
+	public:
+		 c_t_rotate_4x4 (void) = default;
+		~c_t_rotate_4x4 (void) = default;
+
+		__method (On_X); // rotates on set of different angles about x-axis;
 	};
 	/* The matrix stack functionality (glMatrixMode, glGetFloatv, glLoadIdentity, etc.) is part of the "fixed-function pipeline" and has been deprecated since OpenGL 3.1.
 	   OpenGL (3.1+ Core Profile, OpenGL ES 2.0+) requires to manage matrices in application code and pass them to shaders using uniforms;

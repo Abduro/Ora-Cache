@@ -4,6 +4,9 @@
 */
 #include "math.vector.h"
 
+#include "shared.dbg.h"
+#include "shared.preproc.h"
+
 using namespace ex_ui::draw::open_gl::math;
 
 #pragma region s_vec_2{}
@@ -57,6 +60,8 @@ s_vec_2& s_vec_2::operator -= (const float _f_scalar) { this->x -= _f_scalar; th
 s_vec_2& s_vec_2::operator /= (const float _f_scale)       { return this->Invert(_f_scale); }     
 s_vec_2  s_vec_2::operator /  (const float _f_scale) const { return this->Invert(_f_scale); } // double times of copying the result; not good :(
 
+bool s_vec_2::operator == (const s_vec_2& _rhv) const { return (this->x == _rhv.x && this->y == _rhv.y); }
+
 #pragma endregion
 #pragma region s_vec_3{}
 
@@ -99,12 +104,22 @@ s_vec_3& s_vec_3::Normalize (const bool _b_bits) { // https://registry.khronos.o
 	this->z *=  f_inv_len; return *this;
 }
 
-s_vec_3& s_vec_3::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1], _values[2]); }
+s_vec_3& s_vec_3::Set (const float _values[u_count]) {
+	if (nullptr == _values) {
+		return *this;
+	}
+	try {
+		this->Set(_values[0], _values[1], _values[2]);
+	} catch (...) { __trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_fail)); }
+
+	return *this;
+}
 s_vec_3& s_vec_3::Set (const float _x, const float _y, const float _z) {
 	s_vec_2::Set(_x, _y);
 	this->z = _z; return *this;
 }
 s_vec_3& s_vec_3::Set (const s_vec_2& _src, const float _z/* = 0.0f*/) { return this->Set(_src.x, _src.y, _z); }
+
 float    s_vec_3::Sum (const uint32_t _u_exp/* = 1*/) const { return s_vec_2::Sum(_u_exp) + ::_pow_n(_u_exp, this->z); }
 
 CString  s_vec_3::To_str (_pc_sz _p_format) const {
@@ -135,7 +150,9 @@ s_vec_3& s_vec_3::operator -=(const float _f_scalar) { (s_vec_2&)*this -= _f_sca
 
 const
 s_vec_2& s_vec_3::operator ()(void) const { return (s_vec_2&)*this; }
-s_vec_2& s_vec_3::operator ()(void)       { return (s_vec_2&)*this; }     
+s_vec_2& s_vec_3::operator ()(void)       { return (s_vec_2&)*this; }
+
+bool s_vec_3::operator == (const s_vec_3& _rhv) const { return (*this)() == _rhv() && this->z == _rhv.z; }
 
 #pragma endregion
 #pragma region s_vec_4{}
@@ -212,10 +229,11 @@ s_vec_3& s_vec_4::operator ()(void)       { return (s_vec_3&)*this; }
 #pragma endregion
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math { // otherwise: fatal error LNK1120: 1 unresolved externals ;
-
+#if (0)
 bool operator == (const s_vec_3& _left, const s_vec_3& _right) {
 	return (_left.x == _right.x && _left.y == _right.y && _left.z == _right.z);
 }
+#endif
 s_vec_3 operator * (const float _lft, const s_vec_3& _v_3) {
 	return s_vec_3(_lft * _v_3.x, _lft * _v_3.y, _lft * _v_3.z);
 }

@@ -11,147 +11,6 @@
 
 using namespace ex_ui::draw::open_gl::math;
 
-#pragma region cls::c_mat2x2::c_cols{}
-
-c_mat2x2::c_cols::c_cols (c_mat2x2& _mat_ref) : m_mat_ref(_mat_ref) {}
-
-vec_2 c_mat2x2::c_cols::Get (const uint32_t _u_col) const { return vec_2((*this)()(_u_col, 0), (*this)()(_u_col, 1)); }
-
-c_mat2x2& c_mat2x2::c_cols::Set (const t_seq_2& _col_0, const t_seq_2& _col_1) {
-	this->Set((uint32_t)0, _col_0); // error C2668: 'ex_ui::draw::open_gl::math::c_mat2x2::c_cols::Set': ambiguous call to overloaded function ;
-	this->Set((uint32_t)1, _col_1);
-	return this->m_mat_ref;
-}
-c_mat2x2& c_mat2x2::c_cols::Set (const uint32_t _u_col, const t_seq_2& _xy) { return this->Set(_u_col, _xy[0], _xy[1]); }
-c_mat2x2& c_mat2x2::c_cols::Set (const uint32_t _u_col, const float _x, const float _y) {
-	_u_col; _x; _y;
-	if (_u_col > c_cols::u_count - 1) { // just returns the reference to unchanged matrix;
-		__trace_err_2(_T("#__e_inv_ndx: the col index (%u) is out of acceptable range;\n"), _u_col);
-		return this->m_mat_ref;
-	}
-	(*this)()(_u_col, 0) = _x;
-	(*this)()(_u_col, 1) = _y;
-
-	return this->m_mat_ref;
-}
-
-c_mat2x2& c_mat2x2::c_cols::Set (const uint32_t _u_col, const vec_2& _xy) { return this->Set(_u_col, _xy.x, _xy.y); }
-c_mat2x2& c_mat2x2::c_cols::Set (const vec_2&   _col_0, const vec_2& _col_1) {
-	this->Set(0, _col_0);
-	this->Set(1, _col_1); return this->m_mat_ref;
-}
-
-const
-c_mat2x2& c_mat2x2::c_cols::operator ()(void) const { return this->m_mat_ref; }
-c_mat2x2& c_mat2x2::c_cols::operator ()(void)       { return this->m_mat_ref; }
-
-c_mat2x2& c_mat2x2::c_cols::operator ()(const uint32_t _u_col, const t_seq_2& _xy) { return this->Set(_u_col, _xy);}
-c_mat2x2& c_mat2x2::c_cols::operator ()(const uint32_t _u_col, const float _x, const float _y) { return this->Set(_u_col, _x, _y); }
-c_mat2x2& c_mat2x2::c_cols::operator ()(const uint32_t _u_col, const vec_2& _xy) { return this->Set(_u_col, _xy); }
-
-#pragma endregion
-#pragma region cls::c_mat2x2::c_rows{}
-
-c_mat2x2::c_rows::c_rows (c_mat2x2& _mat_ref) : m_mat_ref(_mat_ref) {}
-
-vec_2 c_mat2x2::c_rows::Get (const uint32_t _n_row) const { return vec_2((*this)()(0, _n_row), (*this)()(1, _n_row)); }
-void  c_mat2x2::c_rows::Set (const uint32_t _n_row, const float _f_val) {
-	_n_row; _f_val;
-	if (_n_row > c_mat2x2::u_rows - 1)
-		return;
-	for (uint32_t u_col = 0; u_col < c_mat2x2::u_cols; u_col++) {
-		(*this)()(u_col, _n_row) = _f_val;
-	}
-}
-
-const
-c_mat2x2& c_mat2x2::c_rows::operator ()(void) const { return this->m_mat_ref; }
-c_mat2x2& c_mat2x2::c_rows::operator ()(void)       { return this->m_mat_ref; }
-
-#pragma endregion
-#pragma region cls::c_mat2x2{}
-
-c_mat2x2::c_mat2x2 (void) : m_cols(*this), m_rows(*this) { this->m_data.resize(c_mat2x2::u_size, 0x0f); this->m_data.reserve(c_mat2x2::u_size); }
-c_mat2x2::c_mat2x2 (const c_mat2x2& _src) : c_mat2x2() { *this = _src; }
-c_mat2x2::c_mat2x2 (const t_seq_2x2& _arr_values) : c_mat2x2() { *this << _arr_values; }
-c_mat2x2::c_mat2x2 (c_mat2x2&& _victim) : c_mat2x2() { *this = _victim; }
-
-const
-float& c_mat2x2::Cell (const uint32_t _u_col, const uint32_t _u_row) const {
-	_u_col; _u_row;
-	try { return this->m_data.at(_u_col * c_mat2x2::u_rows + _u_row); }
-	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
-}
-float& c_mat2x2::Cell (const uint32_t _u_col, const uint32_t _u_row) {
-	_u_col; _u_row;
-	try { return this->m_data.at(_u_col * c_mat2x2::u_rows + _u_row); }
-	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
-}
-
-const
-c_mat2x2::c_cols& c_mat2x2::Cols (void) const { return this->m_cols; }
-c_mat2x2::c_cols& c_mat2x2::Cols (void)       { return this->m_cols; }
-
-float  c_mat2x2::Get (const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell (_u_col, _u_row); }
-
-c_mat2x2&  c_mat2x2::Transpose (void) {
-	/*
-		[ 0, 2 ] >> [ 0, 1 ] :: entries being swapped are symmetrically located on opposite sides of the matrix diagonal;
-		[ 1, 3 ]    [ 2, 3 ]    pair(s) of indices being swapped {1, 2};
-	*/
-	try { ::std::swap (this->Cell(0, 0), this->Cell(1, 0)); } catch (const ::std::bad_alloc&) {} // try-catch block is not required here;
-	return *this;
-}
-
-c_mat2x2&  c_mat2x2::operator = (const c_mat2x2& _src) { this->m_data = _src.m_data; return *this; }
-c_mat2x2&  c_mat2x2::operator = (c_mat2x2&& _victim) { this->m_data.swap(_victim.m_data); return *this; }
-
-const
-float& c_mat2x2::operator ()(const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell(_u_col, _u_row); }
-float& c_mat2x2::operator ()(const uint32_t _u_col, const uint32_t _u_row)       { return this->Cell(_u_col, _u_row); }
-
-c_mat2x2& c_mat2x2::operator <<(const t_seq_2x2& _arr_values) {
-	_arr_values;
-	this->Cols().Set(0, _arr_values.at(0), _arr_values.at(1));
-	this->Cols().Set(1, _arr_values.at(3), _arr_values.at(4));
-	return *this;
-}
-
-c_mat2x2& c_mat2x2::operator *=(const float _f_scale) {
-	_f_scale;
-	for (uint32_t u_col = 0; u_col < c_mat2x2::u_cols; u_col++)
-		for (uint32_t u_row = 0; u_row < c_mat2x2::u_rows; u_row++)
-			(*this)(u_col, u_row) *= _f_scale;
-	return *this;
-}
-
-c_mat2x2  operator * (const c_mat2x2& _left, const c_mat2x2& _right) {
-	_left; _right;
-	return c_mat2x2({
-		_left(0,0) * _right(0,0) + _left(1,0) * _right(0,1),  _left(0,1) * _right(0,0) + _left(1,1) * _right(0,1),
-		_left(0,0) * _right(1,0) + _left(1,0) * _right(1,1),  _left(0,1) * _right(1,0) + _left(1,1) * _right(1,1)
-	});
-}
-
-c_mat2x2  operator + (const c_mat2x2& _left, const c_mat2x2& _right) {
-	_left; _right;
-	return c_mat2x2({
-		_left(0,0) + _right(0,0), _left(0,1) + _right(0,1),  _left(1,0) + _right(1,0), _left(1,1) + _right(1,1)
-	});
-}
-
-c_mat2x2  operator - (const c_mat2x2& _left, const c_mat2x2& _right) {
-	_left; _right;
-	return c_mat2x2({
-		_left(0,0) - _right(0,0), _left(0,1) - _right(0,1),  _left(1,0) - _right(1,0), _left(1,1) - _right(1,1)
-	});
-}
-
-c_mat2x2  operator - (const c_mat2x2& _mat) {
-	return c_mat2x2({-1.0f * _mat(0,0), -1.0f * _mat(0,1), -1.0f * _mat(1,0), -1.0f * _mat(1,1)});
-}
-
-#pragma endregion
 #pragma region cls::c_mat3x3::c_cols{}
 
 c_mat3x3::c_cols::c_cols (c_mat3x3& _mat_ref) : m_mat_ref(_mat_ref) {}
@@ -448,6 +307,21 @@ err_code  c_mat4x4::Set (c_mat4x4& _dest, const float* _p_src, CError& _err) {
 		const errno_t n_error = ::memcpy_s(_dest.m_data.data(), sizeof(t_seq_4x4), _p_src, sizeof(t_seq_4x4));
 		if (n_error) {
 			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_no_memory;
+		}
+	} catch (...) {}
+
+	return _err;
+}
+
+err_code  c_mat4x4::Set (float* _p_out, CError& _err) const {
+	_p_out; _err;
+	if (nullptr == _p_out)
+		return _err << __e_pointer;
+
+	try {
+		const errno_t n_error = ::memcpy_s(_p_out, sizeof(t_seq_4x4), this->m_data.data(), sizeof(t_seq_4x4));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_fail;
 		}
 	} catch (...) {}
 

@@ -57,6 +57,7 @@ void c_vec3::Negate (void) {
 }
 
 void c_vec3::Normalize (void) {
+#if (0)
 	_out() += _T("Using bits level inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(true);
 	_out() += _T("Using std::sqrtf inverse:"); c_tvec_3(1.0f, 1.0f, 1.0f).Normalize(false);
 	_out() += _T("Trying to normalize 0-length vector:");
@@ -64,7 +65,23 @@ void c_vec3::Normalize (void) {
 	c_tvec_3 v_0; v_0.Normalize(false);
 	if (c_tvec_3()() == v_0()) // no change is expected;
 		_out() += TString().Format(_T("[error] The vector of length = %.7f cannot be normalized;"), v_0().Length());
+#else
+	c_tvec_3 v3_val (1.0f, 1.0f, 1.0f);
+	c_tvec_3 v3_norm; v3_norm() = v3_val(); v3_norm.Normalize(false);
+	
+	::glm::vec3 v3_glm(0.0f); v3_val >> v3_glm;
+	CTime spent;
+	{ CChrono_auto chrono(spent); v3_glm = ::glm::normalize(v3_glm); }
+	
+	c_tvec_3 v3_result(v3_glm);
+	_out() += _T("[warn]::glm::vec3.normalize():");
+	_out() += TString().Format(_T("*after* : {%s} %s"), (_pc_sz) v3_result().To_str(), (_pc_sz) spent());
 
+	if (v3_result() == v3_norm())
+	     _out() += _T("[impt] result: glm::vec3 and math::vec_3 are equal after normalize();");
+	else _out() += _T("[error] result: glm::vec3 and math::vec_3 are *not* equal after normalize();");
+
+#endif
 	_out()();
 }
 

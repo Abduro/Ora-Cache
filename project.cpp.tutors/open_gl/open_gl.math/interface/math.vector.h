@@ -42,6 +42,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2& operator /=(const float _f_scale) ;      // makes inversion of this vector in accordance with given scale factor;
 		s_vec_2  operator / (const float _f_scale) const; // makes inversion of this vector in accordance with given scale factor;
 
+		bool operator == (const s_vec_2&) const;
+
 		float x, y;
 	};
 	/* https://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/ ;
@@ -67,7 +69,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_3& Negate (void);
 		s_vec_3& Normalize (const bool _b_bits = false); // using bits level hacking is slower in comparison with ::std::sqrtf();
 
-		s_vec_3& Set (const float values[u_count]);   // values are assigned in the following order: x|y|z;
+		s_vec_3& Set (const float values[u_count]);   // values are assigned in the following order: x|y|z; it is intended for setting data from glm::vec3;
 		s_vec_3& Set (const float _x, const float _y, const float _z);
 		s_vec_3& Set (const s_vec_2&, const float _z = 0.0f);
 
@@ -91,11 +93,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2& operator ()(void) const;     // gets the reference to the parent structure object; (ro)
 		s_vec_2& operator ()(void) ;          // gets the reference to the parent structure object; (rw)
 
+		bool operator == (const s_vec_3&) const;
+
 		float z;
 	};
-
+#if (0)
 	bool operator == (const s_vec_3&, const s_vec_3&);
-
+#endif
 	/* https://en.cppreference.com/w/cpp/algorithm/transform.html ; this is not the case for vector emulation like the below class is;
 	   4 elements (x,y,z,w) are quadruple or quartet, where (x,y,z) is coord triplet and the fourth element 'w' is 0 (direction) or 1 (position);
 	   in mathematics, a collection of four items is often referred to as a 4-tuple or an ordered quadruple;

@@ -11,6 +11,20 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 
 	using t_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
 	using t_rot4x4 = ex_ui::draw::open_gl::math::c_rotate_4x4;
+
+	// this class is an adapter for copying matrix data between glm::mat and math::c_mat4x4;
+	class c_ada_4x4 : public c_mtx_base { typedef c_mtx_base TBase;
+	public:
+		 c_ada_4x4 (t_mat4x4&);
+		~c_ada_4x4 (void) = default;
+
+		t_mat4x4& operator << (const ::glm::mat4x4&);
+		::glm::mat4x4& operator >> (::glm::mat4x4&) const;
+
+	private:
+		t_mat4x4& m_mat_ref;
+	};
+
 	/* matrix structure:
 	   the first 3x3 elements (indices 0-2, 4-6, 8-10) represent rotation and scaling:
 	   row #0: [0, 4, 8] is the pitch vector (x,y,z);
@@ -23,6 +37,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_mtx_4x4 (void); ~c_mtx_4x4 (void) = default;
 		c_mtx_4x4 (const ::glm::mat4x4&);
 
+		static
+		t_mat4x4 Generate (const float _f_min, const float _f_max); // generates matrix with random values in specified range;
+
 		err_code Identity ();        // checks the correctness of the matrix identity procedure;
 		err_code Translate (vec_3&); // translates input vertex position;
 		err_code Transpose (void);   // transforms the column-major matrix to the row-major matrix and vice versa;
@@ -32,8 +49,27 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		const
 		t_mat4x4& operator ()(void) const;
 		t_mat4x4& operator ()(void);
+
+		t_mat4x4& operator << (const ::glm::mat4x4&);
+		::glm::mat4x4& operator >> (::glm::mat4x4&) const;
+
 	private:
 		t_mat4x4 m_mat4x4;
+	};
+
+	class c_rot_4x4 : public c_mtx_base { typedef c_mtx_base TBase;
+	public:
+		c_rot_4x4 (void); ~c_rot_4x4 (void) = default;
+		c_rot_4x4 (const ::glm::mat4x4&);
+
+		err_code  On_X (const float _f_angle); // rotates on set of different angles about x-axis; to-do: using error object is useless in this context;
+
+		const
+		t_rot4x4& operator ()(void) const;
+		t_rot4x4& operator ()(void);
+
+	private:
+		t_rot4x4 m_rot4x4;
 	};
 
 }}}}}

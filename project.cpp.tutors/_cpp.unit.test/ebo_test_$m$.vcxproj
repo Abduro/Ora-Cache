@@ -226,6 +226,8 @@
     <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.mat2x2.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.mat2x2.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat3x3.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h" />

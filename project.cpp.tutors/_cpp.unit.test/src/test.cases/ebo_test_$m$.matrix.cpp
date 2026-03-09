@@ -227,32 +227,34 @@ CString   c_rot_3x3::To_str (void) const {
 }
 
 #pragma endregion
-#pragma region cls::c_rot_4x4{}
+#pragma region cls::c_t_rotate_2x2{}
 
-c_rot_4x4::c_rot_4x4 (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb && false) {
-		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
+void c_t_rotate_2x2::Prepare (void) {
+
+	c_rot_2x2().Prepare(+90.0f);
+	c_rot_2x2().Prepare(-90.0f);
+	_out()();
 }
 
-void c_rot_4x4::_ctor (void) {
+void c_t_rotate_2x2::Rotate (void) {
+
+	t_mat2x2 m_2_rot({0.5f, 0.5f, 0.5f, 0.5f});
+	c_rot_2x2 m_mat_rot;
+
+	c_rot_2x2().Rotate(90.0f, m_2_rot);
 	
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	this->To_str();
+	_out()();
 }
 
-const
-t_rot4x4& c_rot_4x4::ref (void) const { return this->m_rot4x4; }
-t_rot4x4& c_rot_4x4::ref (void)       { return this->m_rot4x4; }
-
+#pragma endregion
+#pragma region cls::c_rot_4x4{}
+#if (0)
 void c_rot_4x4::Rotate_free (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("the matrix *before* rotate:");
 
 	c_mtx_4x4().To_str(this->ref(), true);
 
-	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
 
 	c_tvec_3 axis(0.5f, 0.5f, 0.5f);
@@ -278,7 +280,6 @@ void c_rot_4x4::Rotate_x (void) {
 
 	c_mtx_4x4().To_str(this->ref(), true);
 
-	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
@@ -302,7 +303,6 @@ void c_rot_4x4::Rotate_y (void) {
 
 	c_mtx_4x4().To_str(this->ref(), true);
 
-	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
@@ -326,7 +326,6 @@ void c_rot_4x4::Rotate_z (void) {
 
 	c_mtx_4x4().To_str(this->ref(), true);
 
-	this->m_b_verb = false; // disables trace output to test console temporarily;
 	this->Set();
 
 	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
@@ -346,12 +345,6 @@ void c_rot_4x4::Rotate_z (void) {
 
 void c_rot_4x4::Set (void) {
 
-	if (this->m_b_verb) { // if this method is called indirectly, this data output is not required;
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *initial* state entries:");
-
-	c_mtx_4x4().To_str(this->ref(), true);
-	}
 	c_tvec_4
 	col_0(0.0f, 0.1f, 0.2f, 1.0f),
 	col_1(0.4f, 0.5f, 0.6f, 1.0f),
@@ -368,13 +361,50 @@ void c_rot_4x4::Set (void) {
 	_out() += _T("the matrix *after* setting data:");
 	c_mtx_4x4().To_str(this->ref(), true);
 
-	if (this->m_b_verb) // if this method is called indirectly, the trace output may not be required yet;
 	_out()();
 }
 
 CString   c_rot_4x4::To_str (void) const {
-	CString cs_out = c_mtx_4x4().To_str(this->ref(), this->m_b_verb); if (this->m_b_verb) _out()();
+	CString cs_out = c_mtx_4x4().To_str(this->ref(), true); _out()();
 	return  cs_out;
+}
+#endif
+
+void c_t_rotate_4x4::On_X (void) {
+	// generates random-value-matrix;
+	c_rot_4x4 this_rot; this_rot()() = c_mtx_4x4::Generate(-1.0f, +1.0f);
+	c_rot_4x4 this_cpy; this_cpy()() = this_rot()(); // makes a copy of original matrix before its rotation;
+
+	_out() += _T("[warn] c_rot_4x4 *before* rotation:");
+	c_mtx_4x4::To_str(this_rot(), false);
+
+	this_rot.On_X(+90.0f); // rotate function outputs result matrix itself;
+#if (0)
+	c_rot_4x4 mat_rot_90; mat_rot_90()() = this_rot()(); // copies the matrix data after rotation to 90 degree angle;
+
+	_out() += _T("[warn] c_rot_4x4 rotate the matrix back:");
+	this_rot.On_X(-90.0f);
+
+	if (this_rot()() == this_cpy()())
+	     _out() += _T("[impt] result: the matrix data is set to initial values;");
+	else _out() += _T("[error] result: the matrix data is not set to initial values;");
+#endif
+//	::glm::mat2x2 mat_glm_2(0.0f); mat_glm_2 =::glm::rotate(mat_glm_2, glm::radians(+90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	::glm::mat4x4 mat_glm(0.0f);
+
+	c_ada_4x4(this_cpy()()) >> mat_glm;
+
+	mat_glm = glm::rotate(mat_glm, glm::radians(+90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	_out() += _T("[warn] glm::mat4x4 after rotation:");
+
+	c_ada_4x4(this_cpy()()) << mat_glm;  // copies data from glm::mat4x4 to data copy matrix in order to compare the result of rotation of both matrices;
+	c_mtx_4x4::To_str(this_cpy()(), false);
+
+	if (this_rot()() == this_cpy()())
+	     _out() += _T("[impt] result: glm::mat4x4 and c_mat4x4 are equal after rotation;");
+	else _out() += _T("[error] result: glm::mat4x4 and c_mat4x4 are *not* equal after rotation;");
+
+	_out()();
 }
 
 #pragma endregion

@@ -10,6 +10,7 @@ using namespace ebo::boo::test::open_gl::math;
 
 c_tvec_3::c_tvec_3 (void) {}
 c_tvec_3::c_tvec_3 (const float _x, const float _y, const float _z) : m_vec_3(_x, _y, _z) {}
+c_tvec_3::c_tvec_3 (const ::glm::vec3& _vec3) : c_tvec_3() { *this << _vec3; }
 
 vec_3   c_tvec_3::Get_cross (const vec_3& _v_with) {
 	_v_with;
@@ -50,7 +51,7 @@ vec_3&  c_tvec_3::Negate (const bool _b_log/* = true*/) {
 vec_3&  c_tvec_3::Normalize (const bool _b_fast, const bool _b_log) {
        _b_fast; _b_log;
 	if (_b_log) {
-		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		_out() += TString().Format(_T("*before*: {%s}"), (_pc_sz) (*this)().To_str());
 	}
 
@@ -62,7 +63,6 @@ vec_3&  c_tvec_3::Normalize (const bool _b_fast, const bool _b_log) {
 	}
 	return (*this)();
 }
-
 const
 vec_3&  c_tvec_3::ref (void) const { return this->m_vec_3; }
 vec_3&  c_tvec_3::ref (void)       { return this->m_vec_3; }
@@ -70,5 +70,16 @@ vec_3&  c_tvec_3::ref (void)       { return this->m_vec_3; }
 const
 vec_3&  c_tvec_3::operator ()(void) const { return this->ref(); }
 vec_3&  c_tvec_3::operator ()(void)       { return this->ref(); }
+
+vec_3&  c_tvec_3::operator <<(const ::glm::vec3& _vec3) {
+	(*this)().Set(_vec3.x, _vec3.y, _vec3.z);
+	return (*this)();
+}
+::glm::vec3& c_tvec_3::operator >> (::glm::vec3& _vec3) const {
+	_vec3.x = (*this)().x;
+	_vec3.y = (*this)().y;
+	_vec3.z = (*this)().z;
+	return _vec3;
+}
 
 #pragma endregion

@@ -10,6 +10,7 @@
 #include <numeric>       // required for std::accumulate();
 #include <utility>       // required for std::swap();
 #include "shared.defs.h"
+#include "shared.random.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
