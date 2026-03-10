@@ -48,8 +48,8 @@ _pc_sz  c_mtx_2x2::To_str (const t_mat2x2& _mat_2x2, const bool _b_cls) {
 
 static _pc_sz pc_sz_fmt_angle = _T("Input values: rotate angle = %.2f;");
 
-t_rot2x2& c_rot_2x2::Prepare (const float _f_angle) {
-	_f_angle;
+t_rot2x2& c_rot_2x2::Prepare (const float _f_angle, const bool _b_cls/* = true*/) {
+	if (_b_cls)
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += TString().Format(pc_sz_fmt_angle, _f_angle);
 
@@ -74,6 +74,16 @@ t_mat2x2& c_rot_2x2::Rotate (const float _f_angle, t_mat2x2& _mat_to_rot) {
 	_out() += _T("[inpt] input c_mtx_2x2 *after* rotation:"); (*this)().Prepare(_f_angle); c_mtx_2x2::To_str(_mat_to_rot, false);
 
 	return _mat_to_rot;
+}
+
+vec_2& c_rot_2x2::Rotate (const float _f_angle, vec_2& _vec2, const bool _b_use_eps) {
+	_f_angle; _vec2; _b_use_eps;
+	this->Prepare(_f_angle, false);
+	_out() += TString().Format(_T("Input vec_2: %s;"), (_pc_sz) _vec2.To_str());
+	_vec2   = (*this)().Mltply(_vec2, _b_use_eps);  // assigning to the reference to itself is not necessary, but for better readability;
+	_out() += TString().Format(_T("[impt] rotation result: %s;"), (_pc_sz) _vec2.To_str());
+
+	return _vec2;
 }
 
 const

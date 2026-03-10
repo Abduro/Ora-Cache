@@ -172,6 +172,6 @@ typedef shared::console::CConsole out_;
 
 /////////////////////////////////////////////////////////////////////////////
 
-static out_ _out;
+static out_ _con;
 
 #endif/*_OUT_H_INCLUDED*/

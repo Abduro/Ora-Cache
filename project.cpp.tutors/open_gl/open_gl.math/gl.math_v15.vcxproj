@@ -201,8 +201,6 @@
     <ClCompile Include="$(_1)math.lerp.cpp" />
     <ClInclude Include="$(_0)math.quat.h" />
     <ClCompile Include="$(_1)math.quat.cpp" />
-    <ClInclude Include="$(_0)math.vector.h" />
-    <ClCompile Include="$(_1)math.vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)math.mat.2x2.h" />
@@ -215,6 +213,12 @@
     <ClCompile Include="$(_1)math.mat.stack.cpp" />
     <ClInclude Include="$(_0)math.matrix.h" />
     <ClCompile Include="$(_1)math.matrix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)math.vec.2x2.h" />
+    <ClCompile Include="$(_1)math.vec.2x2.cpp" />
+    <ClInclude Include="$(_0)math.vector.h" />
+    <ClCompile Include="$(_1)math.vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)virt_camera.h" />

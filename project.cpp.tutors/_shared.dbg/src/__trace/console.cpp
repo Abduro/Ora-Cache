@@ -29,7 +29,7 @@ namespace shared { namespace console  { namespace _impl {
 	class CScreenBuffer {
 		CScreenBuffer (const CScreenBuffer&) = delete; CScreenBuffer (CScreenBuffer&&) = delete;
 	public:
-		CScreenBuffer (void) : m_info{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; } ~CScreenBuffer(void) {}
+		CScreenBuffer (void) : m_info{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); } ~CScreenBuffer(void) {}
 		TError&  Error(void) const { return this->m_error; }
 
 		const
@@ -66,7 +66,7 @@ namespace shared { namespace console  { namespace _impl {
 	class CScreenBufferEx {
 		 CScreenBufferEx (const CScreenBufferEx&) = delete; CScreenBufferEx (CScreenBufferEx&&) = delete;
 	public:
-		 CScreenBufferEx (void) : m_info_ex{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; this->m_info_ex.cbSize = sizeof(TScrBufInfoEx); }
+		 CScreenBufferEx (void) : m_info_ex{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); this->m_info_ex.cbSize = sizeof(TScrBufInfoEx); }
 		~CScreenBufferEx (void) {}
 		TError&  Error(void) const { return this->m_error; }
 
@@ -109,7 +109,7 @@ using namespace shared::console::_impl;
 /* regardless the class fields are initialized by zero,
    the error state indicates the class is still not initialized, i.e. neither Color() nor Index() is called yet;
 */
-CFormat::CBkgnd:: CBkgnd (void) : m_clr_ref(0), m_clr_ndx(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CFormat::CBkgnd:: CBkgnd (void) : m_clr_ref(0), m_clr_ndx(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 CFormat::CBkgnd::~CBkgnd (void) {}
 
 TError& CFormat::CBkgnd::Error (void) const { return this->m_error; }
@@ -138,7 +138,7 @@ err_code CFormat::CBkgnd::Color (const colorref _clr) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CConsole:: CConsole (void) : m_con_wnd(0), m_handles{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CConsole:: CConsole (void) : m_con_wnd(0), m_handles{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 CConsole::~CConsole (void) {
 	this->Close(); // if it was called before the returned error code is ignored;
 }
@@ -281,7 +281,7 @@ CConsole::operator const HWND (void) const { return this->Handle(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout:: CLayout (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CLayout:: CLayout (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 
 TError&   CLayout::Error (void) const { return this->m_error; }
 const
@@ -290,13 +290,13 @@ CLayout::COutput& CLayout::Output (void)       { return this->m_output; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout::COutput:: COutput (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CLayout::COutput:: COutput (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 
 TError&   CLayout::COutput::Error (void) const { return this->m_error; }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout::COutput::CHScroll:: CHScroll (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+CLayout::COutput::CHScroll:: CHScroll (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 
 TError&  CLayout::COutput::CHScroll::Error (void) const { return this->m_error; }
 

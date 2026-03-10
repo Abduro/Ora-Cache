@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL math lib matrix 2x2 uint test interface declaration file for using in test cases' adapters;
 */
 #include "ebo_test_$m$.defs.h"
-#include "math.matrix.h"
+#include "math.mat.2x2.h"
 #include "math.mat.rotate.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
@@ -28,8 +28,14 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		 c_rot_2x2 (void) = default;
 		~c_rot_2x2 (void) = default;
 
-		t_rot2x2& Prepare (const float _f_angle); // returns the matrix prepared for rotation;
-		t_mat2x2& Rotate  (const float _f_angle, t_mat2x2& _mat_to_rot); // returns rotated input matrix;
+		t_rot2x2& Prepare (const float _f_angle, const bool _b_cls = true); // returns the matrix prepared for rotation; _b_cls is for class name output;
+		t_mat2x2& Rotate  (const float _f_angle, t_mat2x2& _mat_to_rot);    // returns rotated input matrix;
+		/* steps:
+		(1) prepare the rotate matrix for rotate angle;
+		(2) multiplies the prepared matrix by input vector;
+		    result: the vector of changed vslues;
+		*/
+		vec_2& Rotate (const float _f_angle, vec_2&, const bool _b_use_eps); // returns vertex pos rotated in 2D space; using epsilon is for better result readability, not accuracy;
 
 		const
 		t_rot2x2& operator ()(void) const;

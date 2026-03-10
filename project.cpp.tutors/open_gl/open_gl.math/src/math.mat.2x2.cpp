@@ -89,13 +89,29 @@ float& c_mat2x2::Cell (const uint32_t _u_col, const uint32_t _u_row) {
 const
 c_mat2x2::c_cols& c_mat2x2::Cols (void) const { return this->m_cols; }
 c_mat2x2::c_cols& c_mat2x2::Cols (void)       { return this->m_cols; }
+
+float  c_mat2x2::Get (const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell (_u_col, _u_row); }
+vec_2& c_mat2x2::Mltply (vec_2& _vec2, const bool _b_epsilon/* = false*/) const {
+	_vec2; _b_epsilon;
+	/*cols:    0#   #1      #0                                #0  #1 (i stads for an index)
+	rows: #0  (0,0) (1,0) * [x] = [(0,0) * x + (1,0) * y]  == i_0 i_2 * [x] = [ i_0 * x + i_2 * y]
+	      #1  (0,1) (1,1)   [y]   [(0,1) * x + (1,1) * y];    i_1 i_3   [y]   [ i_1 * x + i_3 * y];
+	*/
+	_vec2.Set(
+		(*this)()[0] * _vec2.x + (*this)()[2] * _vec2.y,
+		(*this)()[1] * _vec2.x + (*this)()[3] * _vec2.y
+	);
+	if (_b_epsilon) {
+		if (::abs(_vec2.x) < defs::f_epsilon) _vec2.x = 0.0f;
+		if (::abs(_vec2.y) < defs::f_epsilon) _vec2.y = 0.0f;
+	}
+	return _vec2;
+}
 const
 t_seq_2x2& c_mat2x2::Raw (void) const { return this->m_data; }
 t_seq_2x2& c_mat2x2::Raw (void)       { return this->m_data; }
 
-float  c_mat2x2::Get (const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell (_u_col, _u_row); }
-
-c_mat2x2& c_mat2x2::Seed (const float _f_by/* = 0.0f*/) {
+c_mat2x2&  c_mat2x2::Seed (const float _f_by/* = 0.0f*/) {
 	_f_by;
 #if (1)
 	this->Raw().fill(_f_by);
@@ -104,7 +120,6 @@ c_mat2x2& c_mat2x2::Seed (const float _f_by/* = 0.0f*/) {
 #endif
 	return *this;
 }
-
 c_mat2x2&  c_mat2x2::Transpose (void) {
 	/*
 		[ 0, 2 ] >> [ 0, 1 ] :: entries being swapped are symmetrically located on opposite sides of the matrix diagonal;
@@ -187,3 +202,8 @@ bool c_mat2x2::operator ==(const c_mat2x2& _mat2x2) const {
 }
 
 #pragma endregion
+
+vec_2& operator * (const cmat2x2_t& _mat2x2, vec_2& _vec2) {
+	_mat2x2; _vec2;
+	return _mat2x2.Mltply(_vec2, false);
+}

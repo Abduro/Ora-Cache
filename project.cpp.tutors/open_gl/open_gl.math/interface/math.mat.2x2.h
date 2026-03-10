@@ -93,6 +93,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // gets the value of the matrix entry by given column and row indices;
 
 		c_mat2x2& Identity (void);
+		vec_2& Mltply (vec_2&, const bool _b_epsilon = false) const;    // https://en.wikipedia.org/wiki/Multiplication ;
+
 		const
 		t_seq_2x2& Raw (void) const;
 		t_seq_2x2& Raw (void) ;
@@ -133,5 +135,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	c_mat2x2 operator - (const c_mat2x2&) ; // negates the input matrix, i.e. (-1) * (input matrix); this is a form of scalar multiplication;
 
 }}}}
+
+typedef ex_ui::draw::open_gl::math::c_mat2x2 cmat2x2_t;
+
+vec_2& operator * (const cmat2x2_t&, vec_2&); // returns the reference to the input vector multiplied by the matrix; no using the epsilon;
 
 #endif/*__MATH_MAT_2x2_H_INCLUDED*/

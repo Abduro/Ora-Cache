@@ -85,13 +85,13 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_1
 		// (1) creates the console output window;
-		if (__failed(_out.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
-			__trace_err_3(_T("%s\n"), (_pc_sz) _out.Error().Print(TError::e_req));
-			_out.Error().Show();
+		if (__failed(_con.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
+			__trace_err_3(_T("%s\n"), (_pc_sz) _con.Error().Print(TError::e_req));
+			_con.Error().Show();
 			break;
 		}
 		__trace::Use_con(true);
-		layout.Bottom().Target(_out.Handle());
+		layout.Bottom().Target(_con.Handle());
 		layout.Update();
 		b_error = false;
 

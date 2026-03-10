@@ -95,7 +95,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		~c_t_rotate_2x2 (void) = default;
 
 		__method (Prepare); // prepares the matrix for rotation by certain angle;
-		__method (Rotate);  // rotates the given matrix by certain angle;
+		__method (Matrix);  // rotates the given matrix 2x2 by certain angle;
+		__method (Vector);  // rotates the given vector 2 by certain angle;
 	};
 
 	__class (c_t_rotate_4x4) {

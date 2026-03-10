@@ -236,13 +236,45 @@ void c_t_rotate_2x2::Prepare (void) {
 	_out()();
 }
 
-void c_t_rotate_2x2::Rotate (void) {
+void c_t_rotate_2x2::Matrix (void) {
 
 	t_mat2x2 m_2_rot({0.5f, 0.5f, 0.5f, 0.5f});
 	c_rot_2x2 m_mat_rot;
 
 	c_rot_2x2().Rotate(90.0f, m_2_rot);
 	
+	_out()();
+}
+
+void c_t_rotate_2x2::Vector (void) {
+	/*steps:
+	(1) creating the vector with the target point on X-axis (x=1.0f;y=0.0f);
+	(2) preparing the rotate matrix for 90 degree angle;
+	(3) to get the expected result: x~=0.0f;y=1.0f; for better accuracy of the result values it seems using the comparison with epsilon is required;
+	*/
+	vec_2  v_2_rot({1.0f, 0.0f});
+	c_rot_2x2 m_mat_rot;
+
+	c_rot_2x2().Rotate(+90.0f, v_2_rot, true); v_2_rot.Set(1.0f, 0.0f); // restores the initial values;
+	c_rot_2x2().Rotate(-90.0f, v_2_rot, true); v_2_rot.Set(1.0f, 0.0f); // expected result is: x=0.0f;y=-1.0f;
+#if (0)
+	c_rot_2x2().Rotate(+60.0f, v_2_rot, true); v_2_rot.Set(1.0f, 0.0f);
+	/* how to get the sin() and cos() specific value;
+	   the angle equals to asinf(val) and acosf(val), where val is required value of the sinf() or cosf(); it gives different angles;
+	*/
+	const float f_angle_cos = ::acosf(0.5f) * ::defs::rad_2_deg; f_angle_cos;
+	const float f_angle_sin = ::asinf(0.5f) * ::defs::rad_2_deg; f_angle_sin;
+#endif
+	v_2_rot.Set(1.0f, 1.0f); CError error(__CLASS__, __METHOD__, __s_ok);        // sets values for getting the angle that is required for these values;
+	const float f_req = v_2_rot.Get_angle(true, error); v_2_rot.Set(1.0f, 0.0f); // restores origin values;
+
+	if (error) {_out() += error; _out()(); return; }
+	c_rot_2x2().Rotate(f_req, v_2_rot, true);
+
+	if (::defs::f_epsilon > ::abs(v_2_rot.x - v_2_rot.y)) // checks for valid result: x & y must have the same value for the angle 45;
+	_out() += TString().Format(_T("The result is confirmed: x (%.7f) ~= y (%.7f)"), v_2_rot.x, v_2_rot.y); 
+	else
+	_out() += TString().Format(_T("[error] The result is not confirmed: x(%.7f) != y(%.7f);"), v_2_rot.x, v_2_rot.y);
 	_out()();
 }
 
