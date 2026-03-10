@@ -48,8 +48,8 @@ const
 vec_3&    CBase::Angle (void) const { return this->m_angle; }
 vec_3&    CBase::Angle (void)       { return this->m_angle; }
 const
-c_mat4x4& CBase::Get_matrix (void) const { return this->m_mat; }
-c_mat4x4& CBase::Get_matrix (void)       { return this->m_mat; }
+c_mat4x4& CBase::Get_matrix (void) const { return this->m_mat(); }
+c_mat4x4& CBase::Get_matrix (void)       { return this->m_mat(); }
 const
 vec_3&    CBase::Pos (void) const { return this->m_pos; }
 vec_3&    CBase::Pos (void)       { return this->m_pos; }

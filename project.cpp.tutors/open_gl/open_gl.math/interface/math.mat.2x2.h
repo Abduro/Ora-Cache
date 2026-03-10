@@ -9,30 +9,6 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
-	/* (google AI)
-	In a standard rotation matrix:
-	the 1st column represents the transformed x-axis (the image of the unit vector),
-	the 2nd column represents the transformed y-axis (the image of the unit vector).
-
-	The Rotation Matrix:
-	for a counterclockwise rotation by an angle 'A', the transformation matrix is defined as:
-	cosl:      #0      #1
-	rows: #0 [ cos(A) -sin(A) ]
-	      #1 [ sin(A)  cos(A) ]
-	where,
-	the x-basis (col #0): [ cos(A) ] represents the new position of the point (1,0); how origin x-coord contributes to the new x and y values;
-	                      [ sin(A) ]
-	the y-baaia (col #1): [-sin(A) ] represents the new position of the point (0,1).
-	                      [ cos(A) ]
-	Coordinate Transformation:
-	  when multiplying a vector [x] 
-	                            [y] by this matrix, the resulting coordinates are:
-	  x' = x * cos(A) - y * sin(A);
-	  y' = x * sin(A) + y * cos(A);
-	Key Consideration:
-	  The first column is always the "destination" of the X unit vector, and the second column is the "destination" of the Y unit vector.
-	  This is a fundamental property of all linear transformation matrices.
-	*/
 	class c_mat2x2 {
 	public:
 		class c_cols {

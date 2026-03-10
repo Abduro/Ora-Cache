@@ -67,7 +67,7 @@ namespace space { namespace axes {
 
 	protected:
 		vec_3     m_angle; // angle: x:pitch|y:yaw|z:roll;
-		rot_4x4   m_mat;   // model|view|model-view matrix;
+		rot_4x4_t m_mat;   // model|view|model-view matrix;
 		vec_3     m_pos;   // model/object position;
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
