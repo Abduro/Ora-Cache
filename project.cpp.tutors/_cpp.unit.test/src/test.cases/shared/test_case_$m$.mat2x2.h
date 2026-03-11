@@ -31,11 +31,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		t_rot2x2& Prepare (const float _f_angle, const bool _b_cls = true); // returns the matrix prepared for rotation; _b_cls is for class name output;
 		t_mat2x2& Rotate  (const float _f_angle, t_mat2x2& _mat_to_rot);    // returns rotated input matrix;
 		/* steps:
-		(1) prepare the rotate matrix for rotate angle;
+		(1) prepare the rotation matrix for rotate angle;
 		(2) multiplies the prepared matrix by input vector;
-		    result: the vector of changed vslues;
+		    result: the vector of changed vslues; that means the vector2 (the point of x&y) is rotated around origin of axes (0;0);
 		*/
-		vec_2& Rotate (const float _f_angle, vec_2&, const bool _b_use_eps); // returns vertex pos rotated in 2D space; using epsilon is for better result readability, not accuracy;
+		vec_2& Rotate (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps); // returns vertex pos rotated in 2D space; using epsilon is for better result readability, not accuracy;
+		vec_2& Rotate (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps); // rotates the input vector around pivot point;
 
 		const
 		t_rot2x2& operator ()(void) const;

@@ -229,13 +229,6 @@ CString   c_rot_3x3::To_str (void) const {
 #pragma endregion
 #pragma region cls::c_t_rotate_2x2{}
 
-void c_t_rotate_2x2::Prepare (void) {
-
-	c_rot_2x2().Prepare(+90.0f);
-	c_rot_2x2().Prepare(-90.0f);
-	_out()();
-}
-
 void c_t_rotate_2x2::Matrix (void) {
 
 	t_mat2x2 m_2_rot({0.5f, 0.5f, 0.5f, 0.5f});
@@ -243,6 +236,30 @@ void c_t_rotate_2x2::Matrix (void) {
 
 	c_rot_2x2().Rotate(90.0f, m_2_rot);
 	
+	_out()();
+}
+
+void c_t_rotate_2x2::Pivot (void) {
+	/*steps:
+	(1) create the target vector with the target point on X-axis (x=1.0f;y=0.0f);
+	(2) create the pivot point vector in axes origin (x=0.0f;y=0.0f);
+	(3) prepare the rotate matrix;
+	(4) rotate the target with taking into account the pivot point; 
+	*/
+	// (1),(2):
+	vec_2  v_2_rot({1.0f, 0.0f}); // on X-axis;
+	vec_2  v_pivot({0.0f, 0.0f}); // at the origin;
+
+	// (3),(4):
+	const float f_angle = 90.0f;
+	c_rot_2x2 m_mat_rot; m_mat_rot.Rotate(f_angle, v_pivot, v_2_rot, true);
+	_out()();
+}
+
+void c_t_rotate_2x2::Prepare (void) {
+
+	c_rot_2x2().Prepare(+90.0f);
+	c_rot_2x2().Prepare(-90.0f);
 	_out()();
 }
 

@@ -1,0 +1,294 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 11-Mar-2026 at 11:11:39.610, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack OpenGL tutorials' generic data matrix 4x4 interface implementation file;
+*/
+#include "math.mat.4x4.h"
+
+#include "shared.dbg.h"
+#include "shared.preproc.h"
+
+using namespace ex_ui::draw::open_gl::math;
+
+#pragma region cls::c_mat4x4::c_cols{}
+
+c_mat4x4::c_cols::c_cols (c_mat4x4& _mat_ref) : m_mat_ref(_mat_ref) {}
+
+vec_4 c_mat4x4::c_cols::Get (const uint32_t _u_col) const { return vec_4((*this)()(_u_col, 0), (*this)()(_u_col, 1), (*this)()(_u_col, 2), (*this)()(_u_col, 3)); }
+
+c_mat4x4& c_mat4x4::c_cols::Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count], const float _col_3[u_count]) {
+	this->Set(0, _col_0);
+	this->Set(1, _col_1);
+	this->Set(2, _col_2);
+	this->Set(3, _col_3);
+	return this->m_mat_ref;
+}
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const float _xyzw[u_count]) { return this->Set(_u_col, _xyzw[0], _xyzw[1], _xyzw[2], _xyzw[3]); }
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const float _x, const float _y, const float _z, const float _w) {
+	_u_col; _x; _y; _z; _w;
+	if (_u_col > c_cols::u_count - 1) { // just returns the reference to unchanged matrix;
+		__trace_err_2(_T("#__e_inv_ndx: the col index (%u) is out of acceptable range;\n"), _u_col);
+		return this->m_mat_ref;
+	}
+	(*this)()(_u_col, 0) = _x;
+	(*this)()(_u_col, 1) = _y;
+	(*this)()(_u_col, 2) = _z;
+	(*this)()(_u_col, 3) = _w;
+
+	return this->m_mat_ref;
+}
+
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const vec_4& _xyzw) { return this->Set(_u_col, _xyzw.x, _xyzw.y, _xyzw.z, _xyzw.w); }
+c_mat4x4& c_mat4x4::c_cols::Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3) {
+	this->Set(0, _col_0);
+	this->Set(1, _col_1);
+	this->Set(2, _col_2);
+	this->Set(3, _col_3); return this->m_mat_ref;
+}
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const vec_3& _xyz ) {
+	_u_col; _xyz;
+	if (_u_col > c_cols::u_count - 1) { // just returns the reference to unchanged matrix;
+		__trace_err_2(_T("#__e_inv_ndx: the col index (%u) is out of acceptable range;\n"), _u_col);
+		return this->m_mat_ref;
+	}
+	(*this)()(_u_col, 0) = _xyz.x;
+	(*this)()(_u_col, 1) = _xyz.y;
+	(*this)()(_u_col, 2) = _xyz.z; return this->m_mat_ref;
+}
+
+c_mat4x4& c_mat4x4::c_cols::Set (const uint32_t _u_col, const t_seq_4& _arr_values) {
+	return this->Set(_u_col, _arr_values.at(0), _arr_values.at(1), _arr_values.at(2), _arr_values.at(3));
+}
+
+const
+c_mat4x4& c_mat4x4::c_cols::operator ()(void) const { return this->m_mat_ref; }
+c_mat4x4& c_mat4x4::c_cols::operator ()(void)       { return this->m_mat_ref; }
+
+#pragma endregion
+#pragma region cls::c_mat4x4{}
+
+c_mat4x4::c_mat4x4 (const bool _b_identity) : m_cols(*this), m_rows(*this), m_data{0.0f} {
+//	this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size);
+	if (_b_identity) this->Identity();
+}
+c_mat4x4::c_mat4x4 (const c_mat4x4& _src) : c_mat4x4(false) { *this = _src; }
+c_mat4x4::c_mat4x4 (const t_seq_4x4& _arr_values) : c_mat4x4() { *this << _arr_values; }
+c_mat4x4::c_mat4x4 (c_mat4x4&& _victim) : c_mat4x4() { *this = _victim; }
+c_mat4x4::c_mat4x4 (const t_seq_4& _col_0, const t_seq_4& _col_1, const t_seq_4& _col_2, const t_seq_4&  _col_3) : c_mat4x4() {
+	this->Cols().Set(0, _col_0);
+	this->Cols().Set(1, _col_1);
+	this->Cols().Set(2, _col_2);
+	this->Cols().Set(3, _col_3);
+}
+const
+float& c_mat4x4::Cell (const uint32_t _u_col, const uint32_t _u_row) const {
+	_u_col; _u_row;
+	try { return this->m_data.at(_u_col * c_mat4x4::u_rows + _u_row); }
+	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
+}
+float& c_mat4x4::Cell (const uint32_t _u_col, const uint32_t _u_row) {
+	_u_col; _u_row;
+	try { return this->m_data.at(_u_col * c_mat4x4::u_rows + _u_row); }
+	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
+}
+
+const
+c_mat4x4::c_cols& c_mat4x4::Cols (void) const { return this->m_cols; }
+c_mat4x4::c_cols& c_mat4x4::Cols (void)       { return this->m_cols; }
+
+const
+t_seq_4x4& c_mat4x4::Data (void) const { return this->m_data; }
+t_seq_4x4& c_mat4x4::Data (void)       { return this->m_data; }
+
+c_mat3x3 c_mat4x4::Exclude (const uint32_t _u_col, const uint32_t _u_row) const {
+	_u_col; _u_row;
+	if (_u_col > c_mat4x4::u_cols - 1) { __trace_err_2(_T("#e__inv_arg: col index = %u;\n"), _u_col); return c_mat3x3(); }
+	if (_u_row > c_mat4x4::u_rows - 1) { __trace_err_2(_T("#e__inv_arg: row index = %u;\n"), _u_row); return c_mat3x3(); }
+
+	c_mat3x3 mat_;
+
+	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++)
+		if (_u_col != u_col)
+			for (uint32_t u_row = 0; u_row < c_mat4x4::u_rows; u_row++)
+				if (_u_row != u_row)
+					mat_(u_col, u_row) = (*this)(u_col, u_row);
+
+	return mat_;
+}
+
+float c_mat4x4::Get (const uint32_t _u_col, const uint32_t _u_row) const { return (*this)(_u_col, _u_row); }
+
+c_mat4x4& c_mat4x4::Identity (void) {
+
+//	this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size);
+	this->m_data.fill(0.0f);
+
+	uint32_t i_ = 0;
+	try {
+		for (; i_ < c_mat4x4::u_size; i_+= (c_mat4x4::u_rows + 1)) {
+			this->m_data.at(i_) = 1.0f;
+		}
+	}
+	catch ( const ::std::out_of_range&) {
+		__trace_err_2(_T("#__out_of_range: _ndx=%u|size=%u;\n"), i_, c_mat4x4::u_size);
+	}
+	return *this;
+}
+const
+c_mat4x4::c_rows& c_mat4x4::Rows (void) const { return this->m_rows; }
+c_mat4x4::c_rows& c_mat4x4::Rows (void)       { return this->m_rows; }
+
+c_mat4x4& c_mat4x4::Set (const float* _p_data) {
+	if (nullptr == _p_data)
+		return *this;
+	try {
+		// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		const errno_t n_error = ::memcpy_s(this->m_data.data(), sizeof(t_seq_4x4), _p_data, sizeof(t_seq_4x4));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory));
+		}
+	} catch (...) {}
+
+	return *this;
+}
+
+err_code  c_mat4x4::Set (c_mat4x4& _dest, const float* _p_src, CError& _err) {
+	if (nullptr == _p_src)
+		return _err <<__e_pointer;
+	try {
+		// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		const errno_t n_error = ::memcpy_s(_dest.m_data.data(), sizeof(t_seq_4x4), _p_src, sizeof(t_seq_4x4));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_no_memory;
+		}
+	} catch (...) {}
+
+	return _err;
+}
+
+err_code  c_mat4x4::Set (float* _p_out, CError& _err) const {
+	_p_out; _err;
+	if (nullptr == _p_out)
+		return _err << __e_pointer;
+
+	try {
+		const errno_t n_error = ::memcpy_s(_p_out, sizeof(t_seq_4x4), this->m_data.data(), sizeof(t_seq_4x4));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_fail;
+		}
+	} catch (...) {}
+
+	return _err;
+}
+
+c_mat4x4& c_mat4x4::Translate (const float _x, const float _y, const float _z) {
+	_x; _y; _z;
+	/* cols:  1st         2nd         3rd         4th
+	rows: 1st 0 += 3 * x  4 += 7 * x  8 += b * x  c += f * x
+	      2nd 1 += 3 * y  5 += 7 * y  9 += b * y  d += f * y
+	      3rd 2 += 3 * z  6 += 7 * z  a += b * z  e += f * z
+	      4th 3 == 3      7 == 7      b == b      f == f
+	*/
+	const float* w_coords[] = {&_x, &_y, &_z}; // input world coordinates;
+
+	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++) {
+		for (uint32_t u_row = 0; u_row < c_mat4x4::u_rows - 1; u_row++) { // the last cell of the column 'w' remains the same (u_rows - 1);
+
+			float& f_val = this->Cell (u_col, u_row);
+			f_val += this->Get (u_col, c_mat4x4::u_rows - 1) * *w_coords[u_row];
+		}
+	}
+
+	return *this;
+}
+
+c_mat4x4& c_mat4x4::Translate (const vec_3& _v_3) { return this->Translate(_v_3.x, _v_3.y, _v_3.z); }
+c_mat4x4& c_mat4x4::Transpose (void) {
+	/* cols:  0  1  2  3        0  1  2  3
+	rows: 0 [ 0, 4, 8, c ]    [ 0, 4, 8, c ]
+	      1 [ 1, 5, 9, d ] >> [ 1, 5, 9, d ] :: entries being swapped are symmetrically located on opposite sides of the matrix diagonal;   
+	      2 [ 2, 6, a, e ]	  [ 2, 6, a, e ]    pair(s) of indices being swapped {1, 4}, {2, 8}, {3, c}, {6, 9}, {7, d}, {b, e};
+	      3 [ 3, 7, b, f ]	  [ 3, 7, b, f ]
+	*/
+	typedef ::std::map<uint32_t, uint32_t> t_pairs;
+	static const t_pairs pairs = {{0x1, 0x4}, {0x2, 0x8}, {0x3, 0xc}, {0x6, 0x9}, {0x7, 0xd}, {0xb, 0xe}};
+
+	for (t_pairs::const_iterator it_ = pairs.begin(); it_ != pairs.end(); ++it_)
+		::std::swap(this->m_data.at(it_->first), this->m_data.at(it_->second));
+
+	return *this;
+}
+
+c_mat4x4& c_mat4x4::operator = (const c_mat4x4& _src) { this->m_data = _src.m_data; return *this; }
+c_mat4x4& c_mat4x4::operator = (c_mat4x4&& _victim) { this->m_data.swap(_victim.m_data);  return *this;}
+c_mat4x4& c_mat4x4::operator*= (const float _f_scale) {
+	_f_scale;
+	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++)
+		for (uint32_t u_row = 0; u_row < c_mat4x4::u_rows; u_row++)
+			(*this)(u_col, u_row) *= _f_scale;
+	return *this;
+}
+c_mat4x4& c_mat4x4::operator <<(const t_seq_4x4& _arr_values) {
+	_arr_values;
+	this->Cols().Set(0, _arr_values.at(0x0), _arr_values.at(0x1), _arr_values.at(0x2), _arr_values.at(0x3));
+	this->Cols().Set(1, _arr_values.at(0x4), _arr_values.at(0x5), _arr_values.at(0x6), _arr_values.at(0x7));
+	this->Cols().Set(2, _arr_values.at(0x8), _arr_values.at(0x9), _arr_values.at(0xa), _arr_values.at(0xb));
+	this->Cols().Set(3, _arr_values.at(0xc), _arr_values.at(0xd), _arr_values.at(0xe), _arr_values.at(0xf));
+	return *this;
+}
+
+const
+float& c_mat4x4::operator ()(const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell(_u_col, _u_row); }
+float& c_mat4x4::operator ()(const uint32_t _u_col, const uint32_t _u_row)       { return this->Cell(_u_col, _u_row); }
+const
+float* c_mat4x4::operator ()(void) const { return this->m_data.data(); }
+float* c_mat4x4::operator ()(void)       { return this->m_data.data(); }
+
+bool   c_mat4x4::operator ==(const c_mat4x4& _compare) const {
+	_compare;
+	for (uint32_t i_ = 0; i_ < this->m_data.size(); i_++)
+		if (this->m_data.at(i_) != _compare.m_data.at(i_))
+			return false;
+	return true;
+}
+bool   c_mat4x4::operator !=(const c_mat4x4& _compare) const {
+	return false == (*this == _compare);
+}
+
+#pragma endregion
+#pragma region cls::c_mat4x4::c_rows{}
+
+c_mat4x4::c_rows::c_rows (c_mat4x4& _mat_ref) : m_mat_ref(_mat_ref) {}
+
+vec_4 c_mat4x4::c_rows::Get (const uint32_t _n_row) const { return vec_4((*this)()(0, _n_row), (*this)()(1, _n_row), (*this)()(2, _n_row), (*this)()(3, _n_row)); }
+void  c_mat4x4::c_rows::Set (const uint32_t _n_row, const float _f_val) {
+	_n_row; _f_val;
+	if (_n_row > c_mat4x4::u_rows - 1)
+		return;
+	for (uint32_t u_col = 0; u_col < c_mat4x4::u_cols; u_col++) {
+		(*this)()(u_col, _n_row) = _f_val;
+	}
+}
+
+const
+c_mat4x4& c_mat4x4::c_rows::operator ()(void) const { return this->m_mat_ref; }
+c_mat4x4& c_mat4x4::c_rows::operator ()(void)       { return this->m_mat_ref; }
+
+#pragma endregion
+
+c_mat4x4 operator * (const c_mat4x4& _left, const c_mat4x4& _right) {
+	_left; _right;
+	c_mat4x4 result;
+	// no check for number of rows of the left matrix for coincident or be the same with the number of columns of the right matrix: arguments are the same type;
+	for (uint32_t u_col = 0; u_col < c_mat4x4::c_cols::u_count; u_col++) {
+
+		vec_4 col = _right.Cols().Get(u_col);
+
+		for (uint32_t u_row = 0; u_row < c_mat4x4::c_rows::u_count; u_row++) {
+			vec_4 row = _left.Rows().Get(u_row);
+			vec_4 res = col * row;
+			result(u_col, u_row) = res.Sum(); // result.Cell(u_col, u_row) = (_left.Rows(u_row) * _right.Cols(u_col)).Sum();
+		}
+	}
+	
+	return result;
+}

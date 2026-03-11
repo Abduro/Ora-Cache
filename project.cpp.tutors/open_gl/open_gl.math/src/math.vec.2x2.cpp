@@ -44,6 +44,14 @@ s_vec_2& s_vec_2::Normalize (void) {
 	this->y *=  f_inv_len; return *this;
 }
 
+s_vec_2& s_vec_2::Round (void) {
+	
+	if (::abs(this->x) < defs::f_epsilon) this->x = 0.0f; else if (0.0f > this->x) this->x = ::std::floor(this->x); else this->x = ::std::ceil(this->x);
+	if (::abs(this->y) < defs::f_epsilon) this->y = 0.0f; else if (0.0f > this->y) this->y = ::std::floor(this->y); else this->y = ::std::ceil(this->y);
+
+	return *this;
+}
+
 s_vec_2& s_vec_2::Set (const float _values[u_count]) { return this->Set(_values[0], _values[1]); }
 s_vec_2& s_vec_2::Set (const float _x, const float _y) { _x; _y; this->x = _x; this->y = _y;  return *this; }
 
@@ -66,6 +74,10 @@ s_vec_2& s_vec_2::operator *= (const s_vec_2& _multiplier) {
 	this->y *= _multiplier.y; return *this;
 }
 
+s_vec_2& s_vec_2::operator +=(const s_vec_2& _v_2) {
+	return this->Set(this->x + _v_2.x, this->y += _v_2.y);
+}
+
 s_vec_2& s_vec_2::operator += (const float _f_scalar) { this->x += _f_scalar; this->y += _f_scalar; return *this; }
 s_vec_2& s_vec_2::operator -= (const float _f_scalar) { this->x -= _f_scalar; this->y -= _f_scalar; return *this; }
 
@@ -74,4 +86,12 @@ s_vec_2  s_vec_2::operator /  (const float _f_scale) const { return this->Invert
 
 bool s_vec_2::operator == (const s_vec_2& _rhv) const { return (this->x == _rhv.x && this->y == _rhv.y); }
 
+s_vec_2  s_vec_2::operator - (const s_vec_2& _v_what) const {
+	return vec_2(this->x - _v_what.x, this->y - _v_what.y);
+}
+
 #pragma endregion
+
+vec_2 operator - (const vec_2& _v_from, const vec_2& _v_what) {
+	return vec_2(_v_from.x - _v_what.x, _v_from.y - _v_what.y);
+}

@@ -88,9 +88,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float& operator ()(const uint32_t _u_col, const uint32_t _u_row) const; // sets the cell/entry of this matrix by given column and row indices;
 		float& operator ()(const uint32_t _u_col, const uint32_t _u_row) ;      // sets the cell/entry of this matrix by given column and row indices;
 
-		c_mat2x2& operator <<(const t_seq_2x2& _arr_values);
-		c_mat2x2& operator *=(const float _f_scale);
-		c_mat2x2& operator *=(const c_mat2x2&);
+		c_mat2x2& operator << (const t_seq_2x2& _arr_values);
+		c_mat2x2& operator *= (const float _f_scale);
+		c_mat2x2& operator *= (const c_mat2x2&);
+
+		vec_2& operator *= (vec_2& _v_2) const; // multiplies input vector by this matrix and returned the reference to it;
 
 		bool operator ==(const c_mat2x2&) const;
 		const
@@ -109,7 +111,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	c_mat2x2 operator - (const c_mat2x2& _left, const c_mat2x2& _right); // (_left - _right); https://en.wikipedia.org/wiki/Matrix_addition ; and subtraction;
 
 	c_mat2x2 operator - (const c_mat2x2&) ; // negates the input matrix, i.e. (-1) * (input matrix); this is a form of scalar multiplication;
-
 }}}}
 
 typedef ex_ui::draw::open_gl::math::c_mat2x2 cmat2x2_t;

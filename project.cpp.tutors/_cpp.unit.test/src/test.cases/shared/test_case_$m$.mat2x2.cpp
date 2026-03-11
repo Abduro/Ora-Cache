@@ -76,14 +76,30 @@ t_mat2x2& c_rot_2x2::Rotate (const float _f_angle, t_mat2x2& _mat_to_rot) {
 	return _mat_to_rot;
 }
 
-vec_2& c_rot_2x2::Rotate (const float _f_angle, vec_2& _vec2, const bool _b_use_eps) {
-	_f_angle; _vec2; _b_use_eps;
+vec_2& c_rot_2x2::Rotate (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps) {
+	_f_angle; _to_rot; _b_use_eps;
 	this->Prepare(_f_angle, false);
-	_out() += TString().Format(_T("Input vec_2: %s;"), (_pc_sz) _vec2.To_str());
-	_vec2   = (*this)().Mltply(_vec2, _b_use_eps);  // assigning to the reference to itself is not necessary, but for better readability;
-	_out() += TString().Format(_T("[impt] rotation result: %s;"), (_pc_sz) _vec2.To_str());
+	_out() += TString().Format(_T("Input vec_2: %s;"), (_pc_sz) _to_rot.To_str());
+	_to_rot = (*this)().Mltply(_to_rot, _b_use_eps);  // assigning to the reference to itself is not necessary, but for better readability;
+	_out() += TString().Format(_T("[impt] rotation result: %s;"), (_pc_sz) _to_rot.To_str());
 
-	return _vec2;
+	return _to_rot;
+}
+
+vec_2& c_rot_2x2::Rotate (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps) {
+	_f_angle; _v_pivot; _to_rot; _b_use_eps;
+	/* good question and good answer as the example of how to make things happen :)
+	   https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d << https://stackoverflow.com/a/2259502/4325555 ;
+	*/
+	this->Prepare(_f_angle, false);
+	_out() += TString().Format(_T("Input vec_2: %s;"), (_pc_sz) _to_rot.To_str());
+	_out() += TString().Format(_T("Pivot point: %s;"), (_pc_sz) _v_pivot.To_str());
+
+	(*this)().Do(_f_angle, _v_pivot, _to_rot, true);
+
+	_out() += TString().Format(_T("[impt] rotation result: %s;"), (_pc_sz) _to_rot.To_str());
+
+	return _to_rot;
 }
 
 const

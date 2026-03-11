@@ -8,6 +8,7 @@
 #include "math.vector.h"
 #include "math.mat.2x2.h"
 #include "math.mat.3x3.h"
+#include "math.mat.4x4.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
@@ -17,120 +18,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	...as the storage of a std::vector is *heap-allocated* in order to allow it to be resized, the overall structure is *non-contiguous*,
 	   which is a requirement for moving data to and from a device via a SYCL buffer... the excerpt from the answer given by gordonbrown589;
 	   perhaps, using fixed-sized std::array is the more preferable way in comparison with std::vector;
-	*/
-	/* entry positions or in other words, entry's indices:
-	 cols:    #0  #1   #2  #3
-	 rows:#0 | 0 | 4 | 8 | c |
-	      #1 | 1 | 5 | 9 | d |
-	      #2 | 2 | 6 | a | e |
-	      #3 | 3 | 7 | b | f |
-	*/
-	class c_mat4x4 {
-	public:
-		class c_cols {
-		public: static const uint32_t u_count = 4;
-			c_cols (c_mat4x4&); c_cols (void) = delete; c_cols (const c_cols&) = delete; c_cols (c_cols&&) = delete; ~c_cols (void) = default;
-			
-			vec_4 Get (const uint32_t _u_col) const;  // returns the vector of column values by given column index; if the column index is out of range, the empty vector is returned;
-
-			c_mat4x4& Set (const float _col_0[u_count], const float _col_1[u_count], const float _col_2[u_count], const float _col_3[u_count]); // sets all columns of the matrix;
-			c_mat4x4& Set (const uint32_t _u_col, const float _values[u_count]); // sets the column of given index to the values provided: x|y|z|w;
-			c_mat4x4& Set (const uint32_t _u_col, const float _x, const float _y, const float _z, const float _w = 1.0f); // sets the column of given index to the values provided;
-
-			c_mat4x4& Set (const uint32_t _u_col, const vec_4& _xyzw); // sets the column of given index to the values provided;
-			c_mat4x4& Set (const vec_4&   _col_0, const vec_4& _col_1, const vec_4& _col_2, const vec_4& _col_3);
-			c_mat4x4& Set (const uint32_t _u_col, const vec_3& _xyz ); // sets the column of given index to the values provided;
-
-			c_mat4x4& Set (const uint32_t _u_col, const t_seq_4&);
-
-			const
-			c_mat4x4& operator ()(void) const;
-			c_mat4x4& operator ()(void) ;
-
-		private:
-			c_cols& operator = (const c_cols&) = delete; c_cols& operator = (c_cols&&) = delete;
-			c_mat4x4& m_mat_ref;
-		};
-
-		class c_rows {
-		public: static const uint32_t u_count = 4;
-			c_rows (c_mat4x4&); c_rows (void) = delete; c_rows (const c_rows&) = delete; c_rows (c_rows&&) = delete; ~c_rows (void) = default;
-
-			vec_4 Get (const uint32_t _n_row) const;               // gets a copy of the row by given index; if the index out of range, empty vector is returned;
-			void  Set (const uint32_t _n_row, const float _f_val); // sets the input value to all elements of the row specified by index; if the index is out of range, nothing occurs;
-
-			const
-			c_mat4x4& operator ()(void) const;
-			c_mat4x4& operator ()(void) ;
-
-		private:
-			c_rows& operator = (const c_rows&) = delete; c_rows& operator = (c_rows&&) = delete;
-			c_mat4x4& m_mat_ref;
-		};
-
-	public: static const uint32_t u_cols = c_cols::u_count, u_rows = c_rows::u_count, u_size = u_cols * u_rows;
-		c_mat4x4 (const bool _b_identity = true); c_mat4x4 (const c_mat4x4&); c_mat4x4 (c_mat4x4&&); ~c_mat4x4 (void) = default;
-		c_mat4x4 (const t_seq_4x4& _arr_values);
-		c_mat4x4 (const t_seq_4&, const t_seq_4&, const t_seq_4&, const t_seq_4&); // sets columns' values: from left to right: col_#0...col_#3;
-
-		const
-		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of range, the reference to invalid entry is returned; (ro)
-		float& Cell (const uint32_t _u_col, const uint32_t _u_row);       // if column or row index is out of range, the reference to invalid entry is returned; (rw)
-
-		const
-		c_cols& Cols (void) const;
-		c_cols& Cols (void) ;
-		const
-		t_seq_4x4& Data (void) const;
-		t_seq_4x4& Data (void) ;
-
-		c_mat3x3 Exclude (const uint32_t _u_col, const uint32_t _u_row) const; // gets matrix 3x3 by excluding particular colomn and row;
-		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // returns the value of the matrix entry by given column and row indices;
-
-		c_mat4x4& Identity (void);
-
-		const
-		c_rows& Rows (void) const;
-		c_rows& Rows (void) ;
-		
-		static
-		err_code  Set (c_mat4x4&, const float*, CError&); // this method is inteanded for copying data from glm::mat4x4, especially for test-cases;
-		c_mat4x4& Set (const float*);  // it is assumed the pointer is to 16-elements' array of float data type;
-		err_code  Set (float* _p_out, CError&) const; // copies data of this matrinx to the input pointer, it is assumed the pointer to data of glm::mat4x4;
-
-		/* the example of translating the vertex position: this matrix * input vector = transformed vector;
-		   this matrix must indecate the position: cell[3,3] == 1, not 0, otherwise the direction cannot be translated/transformed;
-		*/
-		c_mat4x4& Translate (const float _x, const float _y, const float _z); // this matrix converts points from world coords (global) to camera coords (local to the camera);
-		c_mat4x4& Translate (const vec_3&);
-		c_mat4x4& Transpose (void);        // swaps elements for transforming this col-major matrix to row-major one and vice versa;
-
-		c_mat4x4& operator = (const c_mat4x4&);
-		c_mat4x4& operator = (c_mat4x4&&); // https://en.cppreference.com/w/cpp/container/vector/swap ;
-
-		c_mat4x4& operator *=(const float _f_scale);
-		c_mat4x4& operator <<(const t_seq_4x4& _arr_values);
-
-		bool operator == (const c_mat4x4&) const; // no epsilon is used, just strict comparison each entry/cell of both matrices;
-		bool operator != (const c_mat4x4&) const;
-
-		const
-		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) const;
-		float&    operator ()(const uint32_t _u_col, const uint32_t _u_row) ;
-		const
-		float*    operator ()(void) const;
-		float*    operator ()(void);
-
-	protected:
-	//	::std::vector<float> m_data; // u_cols x u_rows = 16 elements;
-		t_seq_4x4 m_data;
-		c_cols    m_cols;
-		c_rows    m_rows;
-	};
-
-	// the multiplication operator cannot return reference due to the intermediate result requires buffering: neither _left nor _right is able to change;
-	c_mat4x4 operator * (const c_mat4x4&, const c_mat4x4&); // https://en.wikipedia.org/wiki/Matrix_multiplication ;
-	
+	*/	
 }}}}
 
 #endif/*__MATH_MATRIX_H_INCLUDED*/

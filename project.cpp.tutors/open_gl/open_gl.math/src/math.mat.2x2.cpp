@@ -168,6 +168,18 @@ c_mat2x2& c_mat2x2::operator *=(const c_mat2x2& _mat2x2) {
 	return *this;
 }
 
+vec_2& c_mat2x2::operator *= (vec_2& _v_2) const {
+	_v_2;
+	/* cols:  #0   #1
+	rows: #0  i_0 i_2 * [x] = [ i_0 * x + i_2 * y]
+	      #1  i_1 i_3   [2]   [ i_1 * x + i_3 * y];
+	*/
+	return _v_2.Set(
+		(*this)()[0] * _v_2.x + (*this)()[2] * _v_2.y,
+		(*this)()[1] * _v_2.x + (*this)()[3] * _v_2.y
+	);
+}
+
 c_mat2x2  operator * (const c_mat2x2& _left, const c_mat2x2& _right) {
 	_left; _right;
 	return c_mat2x2({

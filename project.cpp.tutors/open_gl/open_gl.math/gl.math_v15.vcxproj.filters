@@ -8,11 +8,14 @@
     <Filter Include="interface\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0073}</UniqueIdentifier></Filter>
     <Filter Include="src\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0074}</UniqueIdentifier></Filter>
 
-    <Filter Include="interface\vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0075}</UniqueIdentifier></Filter>
-    <Filter Include="src\vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0076}</UniqueIdentifier></Filter>
+    <Filter Include="interface\rotate"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0075}</UniqueIdentifier></Filter>
+    <Filter Include="src\rotate"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0076}</UniqueIdentifier></Filter>
 
-    <Filter Include="interface\virt_camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0076}</UniqueIdentifier></Filter>
-    <Filter Include="src\virt_camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0077}</UniqueIdentifier></Filter>
+    <Filter Include="interface\vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0077}</UniqueIdentifier></Filter>
+    <Filter Include="src\vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0078}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\virt_camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0079}</UniqueIdentifier></Filter>
+    <Filter Include="src\virt_camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B007a}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -31,14 +34,24 @@
     <ClCompile Include="$(_1)math.mat.2x2.cpp"><Filter>src\matrix</Filter></ClCompile>
     <ClInclude Include="$(_0)math.mat.3x3.h"><Filter>interface\matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)math.mat.3x3.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.mat.4x4.h"><Filter>interface\matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.mat.4x4.cpp"><Filter>src\matrix</Filter></ClCompile>
     <ClInclude Include="$(_0)math.mat.invert.h"><Filter>interface\matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)math.mat.invert.cpp"><Filter>src\matrix</Filter></ClCompile>
-    <ClInclude Include="$(_0)math.mat.rotate.h"><Filter>interface\matrix</Filter></ClInclude>
-    <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src\matrix</Filter></ClCompile>
     <ClInclude Include="$(_0)math.mat.stack.h"><Filter>interface\matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)math.mat.stack.cpp"><Filter>src\matrix</Filter></ClCompile>
     <ClInclude Include="$(_0)math.matrix.h"><Filter>interface\matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)math.matrix.cpp"><Filter>src\matrix</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)math.rot.2x2.h"><Filter>interface\rotate</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.rot.2x2.cpp"><Filter>src\rotate</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.rot.3x3.h"><Filter>interface\rotate</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.rot.3x3.cpp"><Filter>src\rotate</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.rot.4x4.h"><Filter>interface\rotate</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.rot.4x4.cpp"><Filter>src\rotate</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.mat.rotate.h"><Filter>interface\rotate</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src\rotate</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)math.vec.2x2.h"><Filter>interface\vector</Filter></ClInclude>
