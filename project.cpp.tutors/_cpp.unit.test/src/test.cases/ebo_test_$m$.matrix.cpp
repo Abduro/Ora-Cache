@@ -11,57 +11,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 #pragma region cls::c_mat_3x3{}
 
-c_mat_3x3::c_mat_3x3 (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb && false) {
-		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
-}
-
-void c_mat_3x3::_ctor (void) {
-	
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	this->m_b_verb = true;
-	this->To_str();
-}
-
-void c_mat_3x3::Set (void) {
-
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *initial* values:");
-
-	this->To_str();
-
-	c_tvec_3 col_0(0.0f, 1.0f, 2.0f), col_1(3.0f, 4.0f, 5.0f), col_2(6.0f, 7.0f, 8.0f);
-	
-	_out() += _T("*input* values:");
-	_out() += TString().Format(_T("col_#0: %s"), (_pc_sz) col_0().To_str());
-	_out() += TString().Format(_T("col_#1: %s"), (_pc_sz) col_1().To_str());
-	_out() += TString().Format(_T("col_#2: %s"), (_pc_sz) col_2().To_str());
-
-	this->ref().Cols().Set(0, col_0.ref());
-	this->ref().Cols().Set(1, col_1.ref());
-	this->ref().Cols().Set(2, col_2.ref());
-
-	_out() += _T("the matrix *result* values:");
-	this->To_str();
-	_out()();
-}
-
-const
-t_mat3x3& c_mat_3x3::ref (void) const { return this->m_mat3x3; }
-t_mat3x3& c_mat_3x3::ref (void)       { return this->m_mat3x3; }
-
-CString   c_mat_3x3::To_str (_pc_sz _p_prf, _pc_sz _p_sep, _pc_sz _p_sfx) const {
-	_p_prf; _p_sep; _p_sfx;
-	return c_mtx_3x3().To_str((*this)(), this->m_b_verb);
-}
-
-const
-t_mat3x3&  c_mat_3x3::operator ()(void) const { return this->ref(); }
-t_mat3x3&  c_mat_3x3::operator ()(void)       { return this->ref(); }
-
 #pragma endregion
 #pragma region cls::c_mat_4x4{}
 
@@ -136,7 +85,7 @@ void c_mat_4x4::Transpose (void) {
 
 #pragma endregion
 #pragma region cls::c_rot_3x3{}
-
+#if (0)
 c_rot_3x3::c_rot_3x3 (const bool _b_verb) : m_b_verb(_b_verb) {
 	if (this->m_b_verb && false) {
 		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -225,7 +174,7 @@ CString   c_rot_3x3::To_str (void) const {
 	CString cs_out = c_mtx_3x3().To_str(this->ref(), this->m_b_verb); if (this->m_b_verb) _out()();
 	return  cs_out;
 }
-
+#endif
 #pragma endregion
 #pragma region cls::c_t_rotate_2x2{}
 
@@ -246,13 +195,29 @@ void c_t_rotate_2x2::Pivot (void) {
 	(3) prepare the rotate matrix;
 	(4) rotate the target with taking into account the pivot point; 
 	*/
+	// the 1st test case with pivot point at orign of the axes;
+	// expected result: no change for position of rotated vector;
 	// (1),(2):
 	vec_2  v_2_rot({1.0f, 0.0f}); // on X-axis;
 	vec_2  v_pivot({0.0f, 0.0f}); // at the origin;
 
 	// (3),(4):
 	const float f_angle = 90.0f;
-	c_rot_2x2 m_mat_rot; m_mat_rot.Rotate(f_angle, v_pivot, v_2_rot, true);
+	c_rot_2x2 m_rot_2x2; m_rot_2x2.Rotate(f_angle, v_pivot, v_2_rot, true);
+
+	// the 2nd test case with pivot point located at *not* the axes origin; 
+	// expected result: rotated vector will be moved in accordance with pivot point;
+	v_2_rot.Set(1.0f, 0.0f);
+	v_pivot.Set(0.0f, 1.0f);
+
+	m_rot_2x2.Rotate(f_angle, v_pivot, v_2_rot, true);
+
+	// the 3rd test case with pivot point located at *not* the axes origin; 
+	v_2_rot.Set(1.0f, 0.0f);
+	v_pivot.Set(1.0f, 1.0f);
+
+	m_rot_2x2.Rotate(f_angle, v_pivot, v_2_rot, true);
+
 	_out()();
 }
 
@@ -292,6 +257,16 @@ void c_t_rotate_2x2::Vector (void) {
 	_out() += TString().Format(_T("The result is confirmed: x (%.7f) ~= y (%.7f)"), v_2_rot.x, v_2_rot.y); 
 	else // equality of x and y coordinates by value (not sign) is available for the following angles only: 45, 135, 225, 315 counter clockwise;
 	_out() += TString().Format(_T("[error] The result is not confirmed: x(%.7f) != y(%.7f);"), v_2_rot.x, v_2_rot.y);
+	_out()();
+}
+
+#pragma endregion
+#pragma region cls::c_t_rotate_3x3{}
+
+void c_t_rotate_3x3::Prepare (void) {
+
+	c_rot_3x3().Prepare(+90.0f);
+	c_rot_3x3().Prepare(-90.0f);
 	_out()();
 }
 

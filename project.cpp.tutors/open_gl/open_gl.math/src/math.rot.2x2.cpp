@@ -44,10 +44,9 @@ vec_2& c_rotate_2x2::Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to
 		return _to_rot;
 
 	this->Prepare(_f_angle);
-	vec_2 v_shift = _to_rot - _v_pivot;
 
 	_to_rot = (*this)() *= _to_rot;
-	_to_rot += v_shift;
+	_to_rot += _v_pivot; // adds pivot point coords in order to take into account that the rotation is made around the pivot point;
 
 	if (_b_use_eps) {
 		_to_rot.Round();
@@ -70,8 +69,12 @@ c_mat2x2& c_rotate_2x2::Prepare (const float _f_angle) {
 	rows:  #0 cos(angle) -sin(angle)
 	       #1 sin(angle)  cos(angle)
 	*/
-	(*this)().Raw() = {f_cos, f_sin, -f_sin, f_cos}; // ready for maltiplication with the matrix being rotated;
-	return *this;
+#if (0)
+	(*this)().m_data = {f_cos, f_sin, -f_sin, f_cos}; // ready for multiplication with the matrix being rotated; it doesn't work;
+#else
+	TBase::m_data = {f_cos, f_sin, -f_sin, f_cos}; // through typedef it definitely works;
+#endif
+	return (*this)();
 }
 
 const

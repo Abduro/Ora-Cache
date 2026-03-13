@@ -56,7 +56,18 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	private: c_det& operator = (const c_det&) = delete; c_det& operator = (c_det&&) = delete;
 	};
-
+	/* query: the difference between transpose and inverse of matrix in opengl >> Google AI;
+	   Inverse Definition: The inverse of a matrix (m^-1) is the unique matrix such that m * m^-1 equals the identity matrix.
+	   An inverse only exists for square, non-singular matrices.
+	   Usage of the inverse:
+	   (1) Normal Transformation (General Case): to correctly transform normal vectors under non-uniform scaling or shearing,
+	       the transpose of the inverse of the model-view matrix must be used (aka the normal matrix);
+	   (2) Undoing Transformations: The inverse is used to reverse a series of transformations, for example,
+	       transforming from world space back to camera space (using the inverse of the view matrix);
+	   (3) Performance: Calculating the inverse of a general matrix is a computationally *expensive* operation (e.g., using Gauss-Jordan elimination).
+	       Inverting on the CPU and passing the result as a uniform is generally more efficient than doing it per-vertex in a shader,
+		   although GLSL does provide an inverse() function. 
+	*/
 	/* https://registry.khronos.org/OpenGL-Refpages/gl4/html/inverse.xhtml ;
 	for getting the inverse of the matrix:
 	(1) calculating the determinant of the natrix; if the determinant is zero, the matrix is singular and cannot be inverted;
@@ -86,6 +97,16 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	};
 
 	// https://registry.khronos.org/OpenGL-Refpages/gl4/html/transpose.xhtml ;
+	/* query: the difference between transpose and inverse of matrix in opengl >> Google AI;
+	   Definition: The transpose of a matrix (m^t) is created by swapping its rows and columns along the main diagonal.
+	   Usage:
+	   (1) Data Reordering: OpenGL expects matrices in column-major order by default.
+	       If your data is in row-major order (common in C/C++), you can use the GL_TRUE flag in functions like glUniformMatrix4fv() to transpose it upon upload,
+	       or use the built-in GLSL transpose() function in a shader;
+	   (2) Normal Transformation (Special Case):
+	       For a matrix that only represents rotations (an orthogonal matrix), its inverse is equal to its transpose (m^-1 == m^t).
+	   (3) Performance: Transposing a matrix is a simple operation O(n^2), which is very fast.
+	*/
 	class c_trans {
 	public:
 		c_trans (void); c_trans (const c_trans&) = delete; c_trans (c_trans&&) = delete; ~c_trans (void) = default;

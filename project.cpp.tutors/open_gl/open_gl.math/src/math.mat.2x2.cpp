@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' generic data matrix 2x2 implementation declaration file;
 */
 #include "math.mat.2x2.h"
+#include "math.mat.invert.h"
 
 #include "shared.dbg.h"
 #include "shared.preproc.h"
@@ -68,23 +69,27 @@ c_mat2x2& c_mat2x2::c_rows::operator ()(void)       { return this->m_mat_ref; }
 
 #pragma endregion
 #pragma region cls::c_mat2x2{}
-
-c_mat2x2::c_mat2x2 (void) : m_cols(*this), m_rows(*this) {/*this->m_data.resize(c_mat2x2::u_size, 0x0f); this->m_data.reserve(c_mat2x2::u_size); */}
+/* important: vector::resize() only fills new elements if the new size is *larger* than the current size; */
+c_mat2x2::c_mat2x2 (void) : m_cols(*this), m_rows(*this), m_data{0.0f} { /*this->m_data.resize(c_mat2x2::u_size, 0x0f); this->m_data.reserve(c_mat2x2::u_size);*/ }
 c_mat2x2::c_mat2x2 (const c_mat2x2& _src) : c_mat2x2() { *this = _src; }
 c_mat2x2::c_mat2x2 (const t_seq_2x2& _arr_values) : c_mat2x2() { *this << _arr_values; }
 c_mat2x2::c_mat2x2 (c_mat2x2&& _victim) : c_mat2x2() { *this = _victim; }
+
+static _pc_sz p_sz_err_out_of_range = _T("#__out_of_range: col=%u|row=%u;\n");
 
 const
 float& c_mat2x2::Cell (const uint32_t _u_col, const uint32_t _u_row) const {
 	_u_col; _u_row;
 	try { return this->m_data.at(_u_col * c_mat2x2::u_rows + _u_row); }
-	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
+	catch (const ::std::out_of_range&) { __trace_err_2(p_sz_err_out_of_range, _u_col, _u_row); return ::defs::$na; }
 }
 float& c_mat2x2::Cell (const uint32_t _u_col, const uint32_t _u_row) {
 	_u_col; _u_row;
 	try { return this->m_data.at(_u_col * c_mat2x2::u_rows + _u_row); }
-	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
+	catch (const ::std::out_of_range&) { __trace_err_2(p_sz_err_out_of_range, _u_col, _u_row); return ::defs::$na; }
 }
+
+c_mat2x2& c_mat2x2::Clear (void) { /*this->Raw().fill(0.0f);*/ ::std::fill(this->m_data.begin(), this->m_data.end(), 0.0f); return *this; }
 
 const
 c_mat2x2::c_cols& c_mat2x2::Cols (void) const { return this->m_cols; }
@@ -107,16 +112,17 @@ vec_2& c_mat2x2::Mltply (vec_2& _vec2, const bool _b_epsilon/* = false*/) const 
 	}
 	return _vec2;
 }
+#if (0)
 const
 t_seq_2x2& c_mat2x2::Raw (void) const { return this->m_data; }
 t_seq_2x2& c_mat2x2::Raw (void)       { return this->m_data; }
-
+#endif
 c_mat2x2&  c_mat2x2::Seed (const float _f_by/* = 0.0f*/) {
 	_f_by;
-#if (1)
+#if (0)
 	this->Raw().fill(_f_by);
 #else
-	::std::fill(this->Raw().begin(), this->Raw().end(), _f_by);
+	::std::fill(this->m_data.begin(), this->m_data.end(), _f_by);
 #endif
 	return *this;
 }
@@ -126,6 +132,9 @@ c_mat2x2&  c_mat2x2::Transpose (void) {
 		[ 1, 3 ]    [ 2, 3 ]    pair(s) of indices being swapped {1, 2};
 	*/
 	try { ::std::swap (this->Cell(0, 0), this->Cell(1, 0)); } catch (const ::std::bad_alloc&) {} // try-catch block is not required here;
+#if (0)
+	*this = c_trans::Get(*this); // this function makes a copy of data, looks like not so efficient;
+#endif
 	return *this;
 }
 
@@ -159,7 +168,7 @@ c_mat2x2& c_mat2x2::operator *=(const c_mat2x2& _mat2x2) {
 	rows: #0 t0  t2 * r0  r2  = t[0]*r[0] + t[2]*r[1]  t[0]*r[2] + t[2]*r[3] >> t(0,0)*r(0,0) + t(1,0)*r(0,1) t(0,0)*r(1,0) + t(1,0)*r(1,1)
 	      #1 t1  t3   r1  r3    m[1]*r[0] + m[3]*r[1]  t[1]*r[2] + t[3]*r[3]    t(0,1)*r(0,0) + t(1,1)*r(0,1) t(0,1)*r(1,0) + t(1,1)*r(1,1)
 	*/
-	this->Raw() = {
+	this->m_data = {
 		(*this)(0, 0) * _mat2x2(0, 0) + (*this)(1, 0) * _mat2x2(0, 1), // col:0;row:0;
 		(*this)(0, 1) * _mat2x2(0, 0) + (*this)(1, 1) * _mat2x2(0, 1), // col:0;row:1;
 		(*this)(0, 0) * _mat2x2(1, 0) + (*this)(1, 0) * _mat2x2(1, 1), // col:1;row:0;
@@ -206,11 +215,11 @@ c_mat2x2  operator - (const c_mat2x2& _mat) {
 	return c_mat2x2({-1.0f * _mat(0,0), -1.0f * _mat(0,1), -1.0f * _mat(1,0), -1.0f * _mat(1,1)});
 }
 const
-float* c_mat2x2::operator ()(void) const { return this->Raw().data(); }
-float* c_mat2x2::operator ()(void)       { return this->Raw().data(); }
+float* c_mat2x2::operator ()(void) const { return this->m_data.data(); }
+float* c_mat2x2::operator ()(void)       { return this->m_data.data(); }
 
 bool c_mat2x2::operator ==(const c_mat2x2& _mat2x2) const {
-	return (this->Raw() == _mat2x2.Raw());
+	return (this->m_data == _mat2x2.m_data);
 }
 
 #pragma endregion

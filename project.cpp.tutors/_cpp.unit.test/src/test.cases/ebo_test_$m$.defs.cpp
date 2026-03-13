@@ -7,3 +7,11 @@
 using namespace ebo::boo::test::open_gl::math;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_3 { void __warning_lnk_4006 (void) {}}}}}
+
+#pragma region cls::c_mtx_base
+
+c_mtx_base::c_mtx_base (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError& c_mtx_base::Error (void) const { return this->m_error; }
+
+#pragma endregion

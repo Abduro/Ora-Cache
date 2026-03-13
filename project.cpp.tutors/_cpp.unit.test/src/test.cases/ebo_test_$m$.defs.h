@@ -13,12 +13,25 @@
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
 	using namespace ex_ui::draw::open_gl::math;
+	using namespace shared::defs;
 	/*
 	...when a number with an infinite binary representation is stored in a float (which has a fixed, 32-bit size), it must be rounded to the nearest representable value...
 	1.0f is shown as 0.99999994, which is the nearest representable float value that is not exactly 1;
 	...how to manage this inexactness:
 	use double for higher precision: the double data type uses 64 bits and provides about 15-18 significant decimal digits of precision, compared to float's 6-9 digits...
 	*/
+
+	class c_mtx_base {
+	public:
+		c_mtx_base (void); c_mtx_base (const c_mtx_base&) = delete; c_mtx_base (c_mtx_base&&) = delete; ~c_mtx_base (void) = default;
+
+		TError& Error (void) const;
+
+	protected:
+		c_mtx_base& operator = (const c_mtx_base&) = delete; c_mtx_base& operator = (c_mtx_base&&) = delete;
+		mutable CError m_error;
+	};
+
 }}}}}
 
 #pragma comment(lib, "glm_v15.lib")      // OpenGL mathematics project;

@@ -72,7 +72,7 @@ c_mat3x3& c_mat3x3::c_rows::operator ()(void)       { return this->m_mat_ref; }
 #pragma endregion
 #pragma region cls::c_mat3x3{}
 
-c_mat3x3::c_mat3x3 (void) : m_cols(*this), m_rows(*this) { this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size); }
+c_mat3x3::c_mat3x3 (void) : m_cols(*this), m_rows(*this) { /*this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size);*/ }
 c_mat3x3::c_mat3x3 (const c_mat3x3& _src) : c_mat3x3() { *this = _src; }
 c_mat3x3::c_mat3x3 (const t_seq_3x3& _arr_values) : c_mat3x3() { *this << _arr_values; }
 c_mat3x3::c_mat3x3 (const t_seq_3& _col_0, const t_seq_3& _col_1, const t_seq_3& _col_2) : c_mat3x3() {
@@ -93,6 +93,9 @@ float& c_mat3x3::Cell (const uint32_t _u_col, const uint32_t _u_row) {
 	try { return this->m_data.at(_u_col * c_mat3x3::u_rows + _u_row); }
 	catch (const ::std::out_of_range&) { __trace_err_2(_T("#__out_of_range: col=%u|row=%u;\n"), _u_col, _u_row); return ::defs::$na; }
 }
+
+c_mat3x3& c_mat3x3::Clear (void) { this->m_data.fill(0.0f); return *this; }
+
 const
 c_mat3x3::c_cols& c_mat3x3::Cols (void) const { return this->m_cols; }
 c_mat3x3::c_cols& c_mat3x3::Cols (void)       { return this->m_cols; }
@@ -100,9 +103,7 @@ c_mat3x3::c_cols& c_mat3x3::Cols (void)       { return this->m_cols; }
 float c_mat3x3::Get  (const uint32_t _u_col, const uint32_t _u_row) const { return (*this)(_u_col, _u_row); }
 
 c_mat3x3& c_mat3x3::Identity (void) {
-
-	this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size);
-
+//	this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size);
 	uint32_t i_ = 0;
 	try {
 		for (; i_ < c_mat3x3::u_size; i_+= (c_mat3x3::u_rows + 1)) {
@@ -119,6 +120,14 @@ const
 c_mat3x3::c_rows& c_mat3x3::Rows (void) const { return this->m_rows; }
 c_mat3x3::c_rows& c_mat3x3::Rows (void)       { return this->m_rows; }
 
+c_mat3x3& c_mat3x3::Set (const c_mat2x2& _mat_2) {
+	_mat_2;
+	(*this)(0,0) = _mat_2(0,0); (*this)(1,0) = _mat_2(1,0);
+	(*this)(0,1) = _mat_2(0,1); (*this)(1,1) = _mat_2(1,1);
+
+	return *this;
+}
+
 c_mat3x3& c_mat3x3::Transpose (void) {
 	/*cols:    0  1  2        0  1  2
 	 rows: 0 [ 0, 3, 6 ]    [ 0, 1, 2 ]    indexes that are symmetrically located on opposite sides of the matrix diagonal;
@@ -128,6 +137,9 @@ c_mat3x3& c_mat3x3::Transpose (void) {
 	::std::swap(this->Cell(0, 1), this->Cell(1, 0));
 	::std::swap(this->Cell(0, 2), this->Cell(2, 0));
 	::std::swap(this->Cell(1, 2), this->Cell(2, 1));
+#if (0)
+	*this = c_trans::Get (*this); // is not used due to it makes the input matrix copy;
+#endif
 	return *this;
 }
 
@@ -152,6 +164,12 @@ c_mat3x3& c_mat3x3::operator *=(const float _f_scale) {
 		for (uint32_t u_row = 0; u_row < c_mat3x3::u_rows; u_row++)
 			(*this)(u_col, u_row) *= _f_scale;
 	return *this;
+}
+
+c_mat3x3::operator c_mat2x2 (void) const {
+	return c_mat2x2(
+		{(*this)(0,0), (*this)(0,1), (*this)(1,0), (*this)(1,1)}
+	);
 }
 
 #pragma endregion

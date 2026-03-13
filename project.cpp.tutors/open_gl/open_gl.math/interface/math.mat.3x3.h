@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' generic data matrix 3x3 interface declaration file;
 */
 #include "math.defs.h"
-#include "math.vector.h"
+#include "math.mat.2x2.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	/* entry positions or in other words, entry's indices:
@@ -70,6 +70,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float&  Cell (const uint32_t _u_col, const uint32_t _u_row) const; // gets the reference to the value by given column and row indices;
 		float&  Cell (const uint32_t _u_col, const uint32_t _u_row);       // gets the reference to the value by given column and row indices;
 
+		c_mat3x3& Clear (void);
+
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
@@ -81,6 +83,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
+
+		c_mat3x3& Set (const c_mat2x2&); // sets values of input mat 2x2; outer entries are not applied;
 
 		c_mat3x3& Transpose (void);
 
@@ -95,11 +99,14 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		c_mat3x3& operator <<(const t_seq_3x3& _arr_values);
 		c_mat3x3& operator *=(const float _f_scale);
+		
+		operator c_mat2x2 (void) const;
 
 	protected:
-		::std::vector<float> m_data; // u_cols x u_rows = 9 elements;
-		c_cols m_cols;
-		c_rows m_rows;
+	//	::std::vector<float> m_data; // u_cols x u_rows = 9 elements;
+		t_seq_3x3 m_data;
+		c_cols    m_cols;
+		c_rows    m_rows;
 	};
 
 }}}}

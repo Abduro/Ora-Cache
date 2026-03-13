@@ -10,32 +10,15 @@
 #include "test_case_$m$.mat4x4.h"
 #include "test_case_$m$.vec3.h"
 #include "test_case_$m$.vec4.h"
-#include "ebo_test_$m$.vector.h"
 #include "test_case_$m$.stack.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
 	__class (c_mat_3x3) {
 	public:
-		 c_mat_3x3 (const bool _b_verb = true);
+		 c_mat_3x3 (void) = default;
 		~c_mat_3x3 (void) = default;
 
-		__ctor (_ctor);
-		__method (Set);
-
-		const
-		t_mat3x3&  ref (void) const;
-		t_mat3x3&  ref (void) ;
-
-		CString To_str (_pc_sz _p_pfx = predefs::_p_pfx, _pc_sz _p_sep = _T(" "), _pc_sz _p_sfx = predefs::_p_sfx) const;
-
-		const
-		t_mat3x3&  operator ()(void) const;
-		t_mat3x3&  operator ()(void) ;
-
-	private:
-		mutable bool     m_b_verb;
-		mutable t_mat3x3 m_mat3x3;
 	};
 	/*note:
 	test case method cannot have 'const' qualifier, otherwise the compiler throws the error: ...C2440: 'static_cast': cannot convert from 'void'.... ;
@@ -54,7 +37,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		__method (Translate); // translates input coordinates in world space to camera view matrix (camera local coordinates);
 		__method (Transpose); // converts a matrix from column-major to row-major matrix and vice versa;
 	};
-
+#if (0)
 	__class (c_rot_3x3) {
 	public:
 		 c_rot_3x3 (const bool _b_verb = true);
@@ -73,7 +56,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		bool     m_b_verb;
 		t_rot3x3 m_rot3x3;
 	};
-
+#endif
 #if (0)
 	__class (c_rot_4x4) {
 	public:
@@ -98,6 +81,14 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		__method (Pivot);   // rotates the vec_2 around pivot point for certain angle;
 		__method (Prepare); // prepares the matrix for rotation by certain angle;
 		__method (Vector);  // rotates the given vector 2 by certain angle;
+	};
+
+	__class (c_t_rotate_3x3) {
+	public:
+		 c_t_rotate_3x3 (void) = default;
+		~c_t_rotate_3x3 (void) = default;
+
+		__method (Prepare); // prepares the matrix for rotation by certain angle;
 	};
 
 	__class (c_t_rotate_4x4) {

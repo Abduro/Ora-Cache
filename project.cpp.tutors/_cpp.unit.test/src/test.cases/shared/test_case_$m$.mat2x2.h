@@ -6,7 +6,7 @@
 */
 #include "ebo_test_$m$.defs.h"
 #include "math.mat.2x2.h"
-#include "math.mat.rotate.h"
+#include "math.rot.2x2.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 

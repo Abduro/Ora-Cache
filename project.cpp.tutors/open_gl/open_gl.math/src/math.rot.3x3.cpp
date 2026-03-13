@@ -15,6 +15,17 @@ c_rotate_3x3::c_rotate_3x3 (void) : TBase() {}
 c_rotate_3x3::c_rotate_3x3 (const c_mat3x3& _src) : TBase(_src) {}
 c_rotate_3x3::c_rotate_3x3 (const float _f_angle, const float _x, const float _y, const float _z) { (*this)(_f_angle, _x, _y, _z); }
 
+vec_2&    c_rotate_3x3::Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _b_use_eps;
+	// (1) prepares this matrix for rotation by given ahgle; this->Prepate uses matrix_2x2::Prepare();
+	this->Prepare(_f_angle);
+	// (2) calculates the target point coords: x and y; this is also the work for matrix_2x2;
+	((c_mat2x2)(*this)()).Mltply(_to_rot);
+	// (3) applies the translate point;
+	_to_rot += vec_2((*this)()(2,0), (*this)()(2,1));
+	return _to_rot;
+}
+
 c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const float _x, const float _y, const float _z) {
 	_f_angle; _x; _y; _z;
 	const float cos_ = ::cosf(_f_angle * ::defs::deg_2_rad);
@@ -79,6 +90,21 @@ vec_3 c_rotate_3x3::Get_angle (void) const {
 vec_3 c_rotate_3x3::Get_forward (void) const { return vec_3((*this)()(2, 0), (*this)()(2, 1), (*this)()(2, 2)); } // gets data of col_#2 'z';
 vec_3 c_rotate_3x3::Get_left (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#0 'x';
 vec_3 c_rotate_3x3::Get_up (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#1 'y';
+
+c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle) {
+	_f_angle;
+	/* create the rotation matrix: it is done by creating rotation sub-matrix 2x2;
+	        mat_2x2            this mat_3x3
+	cols:   #0      #1         #0  #1  #2
+	rows:#0 cos(a) -sin(a) >>  m2  m2   0
+	     #1 sin(a)  cos(a)     m2  m2   0
+	     #2                     0   0   1
+	*/
+	(*this)().Identity();
+	(*this)().Set(c_rotate_2x2().Prepare(_f_angle));
+
+	return (*this)();
+}
 
 c_mat3x3& c_rotate_3x3::operator ()(const float _f_angle, const float _x, const float _y, const float _z) { return this->Do(_f_angle, _x, _y, _z); }
 const

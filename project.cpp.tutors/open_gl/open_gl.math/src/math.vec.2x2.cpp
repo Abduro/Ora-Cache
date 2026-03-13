@@ -74,8 +74,13 @@ s_vec_2& s_vec_2::operator *= (const s_vec_2& _multiplier) {
 	this->y *= _multiplier.y; return *this;
 }
 
-s_vec_2& s_vec_2::operator +=(const s_vec_2& _v_2) {
-	return this->Set(this->x + _v_2.x, this->y += _v_2.y);
+s_vec_2& s_vec_2::operator += (const s_vec_2& _v_2) {
+	this->x += _v_2.x;
+	this->y += _v_2.y; return *this;
+}
+s_vec_2& s_vec_2::operator -= (const s_vec_2& _v_2) {
+	this->x -= _v_2.x;
+	this->y -= _v_2.y; return *this;
 }
 
 s_vec_2& s_vec_2::operator += (const float _f_scalar) { this->x += _f_scalar; this->y += _f_scalar; return *this; }

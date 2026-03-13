@@ -8,23 +8,27 @@ using namespace ebo::boo::test::open_gl::math;
 
 #pragma region cls::c_ada_4x4{}
 
-c_ada_4x4::c_ada_4x4 (t_mat4x4& _mat_ref) : m_mat_ref(_mat_ref) { TBase::m_error >>__CLASS__; }
+c_ada_4x4::c_ada_4x4 (t_mat4x4& _mat_ref) : m_mat_ref(_mat_ref) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError& c_ada_4x4::Error (void) const { return this->m_error; }
 
 t_mat4x4& c_ada_4x4::operator << (const ::glm::mat4x4& _mat4x4) {
-	t_mat4x4::Set(this->m_mat_ref, static_cast<const float*>(::glm::value_ptr(_mat4x4)), TBase::m_error);
+	this->m_error <<__METHOD__<<__s_ok;
+	t_mat4x4::Set(this->m_mat_ref, static_cast<const float*>(::glm::value_ptr(_mat4x4)), this->m_error);
 	return this->m_mat_ref;
 }
 
 ::glm::mat4x4& c_ada_4x4::operator >> (::glm::mat4x4& _mat4x4) const {
 	_mat4x4;
-	this->m_mat_ref.Set(static_cast<float*>(::glm::value_ptr(_mat4x4)), TBase::m_error);
+	this->m_error <<__METHOD__<<__s_ok;
+	this->m_mat_ref.Set(static_cast<float*>(::glm::value_ptr(_mat4x4)), this->m_error);
 	return _mat4x4;
 }
 
 #pragma endregion
 #pragma region cls::c_mtx_4x4{}
 
-c_mtx_4x4::c_mtx_4x4 (void) : TBase(), m_mat4x4(false) { TBase::m_error >>__CLASS__; } // no identity matrix by default construction;
+c_mtx_4x4::c_mtx_4x4 (void) : m_mat4x4(false) {} // no identity matrix by default construction;
 c_mtx_4x4::c_mtx_4x4 (const ::glm::mat4x4& _mat4x4) : c_mtx_4x4() {
 #if (0)
 	t_mat4x4::Set((*this)(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), this->m_error);
@@ -33,7 +37,7 @@ c_mtx_4x4::c_mtx_4x4 (const ::glm::mat4x4& _mat4x4) : c_mtx_4x4() {
 #endif
 }
 
-t_mat4x4 c_mtx_4x4::Generate (const float _f_min, const float _f_max) {
+t_mat4x4  c_mtx_4x4::Generate (const float _f_min, const float _f_max) {
 	_f_min; _f_max;
 	t_mat4x4 mat_result;
 
@@ -43,15 +47,14 @@ t_mat4x4 c_mtx_4x4::Generate (const float _f_min, const float _f_max) {
 	return mat_result;
 }
 
-err_code c_mtx_4x4::Identity (void) {
-	TBase::m_error <<__METHOD__<<__s_ok;
+t_mat4x4& c_mtx_4x4::Identity (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	this->To_str((*this)().Identity(), true);
-	return TBase::Error();
+	return (*this)();
 }
 
-err_code c_mtx_4x4::Translate(vec_3& v_pos) {
+t_mat4x4& c_mtx_4x4::Translate(vec_3& v_pos) {
 	v_pos;
 	/* translate matrix:
 	cols:    #0 #1 #2 #3
@@ -60,24 +63,22 @@ err_code c_mtx_4x4::Translate(vec_3& v_pos) {
 	      #2  0  0  1  Z
 	      #3  0  0  0  1, where X,Y,Z the coordinates to move/change vertex position;
 	*/
-	TBase::m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += TString().Format(_T("Input vector *before* translate: {%s}"), (_pc_sz) v_pos.To_str());
 	_out() += _T("Translate matrix:");
 	this->To_str((*this)().Translate(v_pos), true); // the matrix is the identity in its initial stage;
 
-	return TBase::Error();
+	return (*this)();
 }
 
-err_code c_mtx_4x4::Transpose (void) {
-	TBase::m_error <<__METHOD__<<__s_ok;
+t_mat4x4& c_mtx_4x4::Transpose (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	this->To_str((*this)().Transpose(), true);
-	return TBase::Error();
+	return (*this)();
 }
 
-_pc_sz   c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
+_pc_sz    c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
 	_mat_4x4; _b_cls;
 	static CString  cs_out;
 	static _pc_sz pc_sz_fmt_0 = _T("%9.7f");
@@ -124,8 +125,10 @@ t_mat4x4& c_mtx_4x4::operator <<(const ::glm::mat4x4& _mat4x4) {
 }
 
 ::glm::mat4x4& c_mtx_4x4::operator >> (::glm::mat4x4& _mat4x4) const {
+	_mat4x4;
+	CError error(__CLASS__, __METHOD__, __s_ok);
 
-	(*this)().Set(static_cast<float*>(::glm::value_ptr(_mat4x4)), TBase::m_error);
+	(*this)().Set(static_cast<float*>(::glm::value_ptr(_mat4x4)), error);
 	return _mat4x4;
 }
 
@@ -135,14 +138,15 @@ t_mat4x4& c_mtx_4x4::operator <<(const ::glm::mat4x4& _mat4x4) {
 static _pc_sz pc_sz_fmt_angle = _T("Input values: rotate angle = %.1f;");
 static const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
 
-c_rot_4x4::c_rot_4x4 (void) : m_rot4x4(false) { TBase::m_error >>__CLASS__; } // no identity matrix by default construction;
+c_rot_4x4::c_rot_4x4 (void) : m_rot4x4(false) {} // no identity matrix by default construction;
 c_rot_4x4::c_rot_4x4 (const ::glm::mat4x4& _mat4x4) : c_rot_4x4() {
-	t_mat4x4::Set((*this)()(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), this->m_error);
+	_mat4x4;
+	CError error(__CLASS__, __METHOD__, __s_ok);
+	t_mat4x4::Set((*this)()(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), error);
 }
 
-err_code   c_rot_4x4::On_X (const float _f_angle) {
+t_mat4x4&  c_rot_4x4::On_X (const float _f_angle) {
 	_f_angle;
-	TBase::m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 #if (0)
 	for (uint32_t i_ = 1; i_ < _countof(f_angels) && i_ < 2; i_++) {
@@ -161,7 +165,7 @@ err_code   c_rot_4x4::On_X (const float _f_angle) {
 	c_mtx_4x4().To_str((*this)(), false);
 
 #endif
-	return TBase::Error();
+	return (*this)();
 }
 
 const

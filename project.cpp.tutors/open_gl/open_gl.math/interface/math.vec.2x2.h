@@ -37,9 +37,12 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		s_vec_2  operator - (void) const;             // unary operator (negate) returns new vector with reversed direction;
 		s_vec_2& operator - (void) ;                  // changes sign to opposite of all elements of this vector;
+
 		s_vec_2& operator  =(const s_vec_2&);
 		s_vec_2& operator *=(const s_vec_2&); // multiplies this vector by input one;
-		s_vec_2& operator +=(const s_vec_2&);
+		s_vec_2& operator +=(const s_vec_2&); // increments this vector values by input one;
+		s_vec_2& operator -=(const s_vec_2&); // decrements this vector values by input one;
+
 		s_vec_2& operator +=(const float _f_scalar);      // adds scalar value to this vector;
 		s_vec_2& operator -=(const float _f_scalar);      // substracts scalar value from this vector;
 		s_vec_2& operator /=(const float _f_scale) ;      // makes inversion of this vector in accordance with given scale factor;

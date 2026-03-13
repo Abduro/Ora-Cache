@@ -62,6 +62,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float& Cell (const uint32_t _u_col, const uint32_t _u_row) const; // if column or row index is out of acceptable range, the reference to invalid cell is returned; (ro)
 		float& Cell (const uint32_t _u_col, const uint32_t _u_row) ;      // if column or row index is out of acceptable range, the reference to invalid cell is returned; (rw)
 
+		c_mat2x2& Clear (void);
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
@@ -70,16 +71,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		c_mat2x2& Identity (void);
 		vec_2& Mltply (vec_2&, const bool _b_epsilon = false) const;    // https://en.wikipedia.org/wiki/Multiplication ;
-
+#if (0)
 		const
 		t_seq_2x2& Raw (void) const;
 		t_seq_2x2& Raw (void) ;
+#endif
 		const
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
 
 		c_mat2x2& Seed (const float _f_by = 0.0f);
-		c_mat2x2& Transpose (void);
+		c_mat2x2& Transpose (void); /*The transpose of a matrix is created by swapping its rows and columns along the main diagonal.*/
 
 		c_mat2x2& operator = (const c_mat2x2&);
 		c_mat2x2& operator = (c_mat2x2&&);
@@ -100,10 +102,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float*    operator ()(void);
 
 	protected:
-	//	::std::vector<float> m_data; // u_cols x u_rows = 4 elements;
-		t_seq_2x2 m_data;
-		c_cols    m_cols;
-		c_rows    m_rows;
+	// 	t_dyna_set m_data; // u_cols x u_rows = 4 elements;
+		t_seq_2x2  m_data;
+		c_cols     m_cols;
+		c_rows     m_rows;
+	//	data_ptr_t m_cells; // https://en.cppreference.com/w/cpp/memory/unique_ptr.html
 	};
 
 	c_mat2x2 operator * (const c_mat2x2& _left, const c_mat2x2& _right); // (_left * _right); https://en.wikipedia.org/wiki/Matrix_multiplication ;

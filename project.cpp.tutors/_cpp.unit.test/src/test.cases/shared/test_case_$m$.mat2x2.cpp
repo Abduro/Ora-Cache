@@ -88,9 +88,6 @@ vec_2& c_rot_2x2::Rotate (const float _f_angle, vec_2& _to_rot, const bool _b_us
 
 vec_2& c_rot_2x2::Rotate (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps) {
 	_f_angle; _v_pivot; _to_rot; _b_use_eps;
-	/* good question and good answer as the example of how to make things happen :)
-	   https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d << https://stackoverflow.com/a/2259502/4325555 ;
-	*/
 	this->Prepare(_f_angle, false);
 	_out() += TString().Format(_T("Input vec_2: %s;"), (_pc_sz) _to_rot.To_str());
 	_out() += TString().Format(_T("Pivot point: %s;"), (_pc_sz) _v_pivot.To_str());

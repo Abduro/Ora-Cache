@@ -4,6 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 29-Nov-2025 at 03:10:43.568, UTC+4, Batumi, Saturday;
 	This is Ebo Pack OpenGL tutorials' geometry generic elements' interface declaration file;
 */
+#pragma region __includes
 #include <algorithm>
 #include <functional>
 #include <cmath>
@@ -11,7 +12,7 @@
 #include <utility>       // required for std::swap();
 #include "shared.defs.h"
 #include "shared.random.h"
-
+#pragma endregion
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	using namespace shared::defs;
@@ -41,6 +42,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	typedef ::std::array<float, 0x02u> t_set_2;
 	typedef ::std::array<float, 0x03u> t_set_3;
 	typedef ::std::vector<float> t_dyna_set;
+
+	typedef ::std::unique_ptr<float> data_ptr_t;
 	
 	float _pow_2 (const float& _base); // a value of '_base' of a number raised to exponent of '2'; (squared);
 	float _pow_3 (const float& _base); // a value of '_base' of a number raised to exponent of '3'; (cubed);
