@@ -217,8 +217,10 @@
     <ClCompile Include="$(_1)math.matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)math.vec.2x2.h" />
-    <ClCompile Include="$(_1)math.vec.2x2.cpp" />
+    <ClInclude Include="$(_0)math.vec.2.h" />
+    <ClCompile Include="$(_1)math.vec.2.cpp" />
+    <ClInclude Include="$(_0)math.vec.3.h" />
+    <ClCompile Include="$(_1)math.vec.3.cpp" />
     <ClInclude Include="$(_0)math.vector.h" />
     <ClCompile Include="$(_1)math.vector.cpp" />
   </ItemGroup>
@@ -237,6 +239,8 @@
     <ClCompile Include="$(_1)virt_camera.cpp" />
     <ClInclude Include="$(_0)virt_space.h" />
     <ClCompile Include="$(_1)virt_space.cpp" />
+    <ClInclude Include="$(_0)virt_view.h" />
+    <ClCompile Include="$(_1)virt_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

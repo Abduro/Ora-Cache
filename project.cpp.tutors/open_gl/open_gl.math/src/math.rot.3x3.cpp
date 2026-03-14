@@ -17,13 +17,26 @@ c_rotate_3x3::c_rotate_3x3 (const float _f_angle, const float _x, const float _y
 
 vec_2&    c_rotate_3x3::Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
 	_f_angle; _to_rot; _b_use_eps;
-	// (1) prepares this matrix for rotation by given ahgle; this->Prepate uses matrix_2x2::Prepare();
-	this->Prepare(_f_angle);
-	// (2) calculates the target point coords: x and y; this is also the work for matrix_2x2;
+	// (1) saves the translare point;
+	const vec_2 v_pivot((*this)()(2,0), (*this)()(2,1));
+	// (2) prepares this matrix for rotation by given ahgle; this->Prepate uses matrix_2x2::Prepare();
+	this->Prepare (_f_angle, axes_t::e_z_axis);
+	// (3) calculates the target point coords: x and y; this is also the work for matrix_2x2;
 	((c_mat2x2)(*this)()).Mltply(_to_rot);
-	// (3) applies the translate point;
-	_to_rot += vec_2((*this)()(2,0), (*this)()(2,1));
+	// (4) restores the pivot point;
+	(*this) << v_pivot;
+	// (5) applies the translate point;
+	_to_rot += v_pivot;
+	if (_b_use_eps) {
+		_to_rot.Round();
+	}
 	return _to_rot;
+}
+
+vec_2&    c_rotate_3x3::Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _b_use_eps;
+	(*this) << _v_pivot;
+	return this->Do(_f_angle, _to_rot, _b_use_eps);
 }
 
 c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const float _x, const float _y, const float _z) {
@@ -91,17 +104,51 @@ vec_3 c_rotate_3x3::Get_forward (void) const { return vec_3((*this)()(2, 0), (*t
 vec_3 c_rotate_3x3::Get_left (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#0 'x';
 vec_3 c_rotate_3x3::Get_up (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#1 'y';
 
-c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle) {
-	_f_angle;
+c_mat3x3& c_rotate_3x3::On_x (const float _f_angle) { _f_angle; return *this; }
+c_mat3x3& c_rotate_3x3::On_y (const float _f_angle) { _f_angle; return *this; }
+c_mat3x3& c_rotate_3x3::On_z (const float _f_angle) { _f_angle; return *this; }
+
+c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle, const axes_t::e_axes _e_axis/* = axes_t::e_z_axis*/) {
+	_f_angle; _e_axis;
 	/* create the rotation matrix: it is done by creating rotation sub-matrix 2x2;
-	        mat_2x2            this mat_3x3
+	*/
+	c_rotate_2x2 mat_2x2; mat_2x2.Prepare(_f_angle);
+	(*this)().Identity();
+
+	if (false) {}
+	else if (axes_t::e_x_axis == _e_axis) {
+	/*      mat_2x2            this mat_3x3
+	cols:   #0      #1         #0  #1  #2
+	rows:#0 cos(a) -sin(a) >>   1   0   0
+	     #1 sin(a)  cos(a)      0  m2  m2
+	     #2                     0  m2  m2 ; matrix_2x2 is applied to bottom-right corner;
+	*/
+	(*this)()(1, 1) = mat_2x2()(0,0); /*cos(a)*/ (*this)()(2, 1) = mat_2x2()(1,0); /*-sin(a)*/
+	(*this)()(1, 2) = mat_2x2()(0,1); /*sin(a)*/ (*this)()(2, 2) = mat_2x2()(1,1); /* cos(a)*/
+	}
+	else if (axes_t::e_y_axis == _e_axis) {
+	/*      mat_2x2            this mat_3x3
+	cols:   #0      #1         #0  #1  #2
+	rows:#0 cos(a) -sin(a) >>  m2   0  m2
+	     #1 sin(a)  cos(a)      0   1   0
+	     #2                    m2   0  m2 ; matrix_2x2 is torn at all corners; note: the matrix_2x2 is inverted along the main diagonal;
+	*/
+	(*this)()(0, 0) = mat_2x2()(0,0); /* cos(a)*/ (*this)()(2, 0) = mat_2x2()(0,1); /*sin(a)*/
+	(*this)()(0, 2) = mat_2x2()(1,0); /*-sin(a)*/ (*this)()(2, 2) = mat_2x2()(1,1); /*cos(a)*/
+	}
+	else if (axes_t::e_z_axis == _e_axis) {
+	/*      mat_2x2            this mat_3x3
 	cols:   #0      #1         #0  #1  #2
 	rows:#0 cos(a) -sin(a) >>  m2  m2   0
 	     #1 sin(a)  cos(a)     m2  m2   0
-	     #2                     0   0   1
+	     #2                     0   0   1 ; matrix_2x2 is applied to top-left corner;
 	*/
-	(*this)().Identity();
-	(*this)().Set(c_rotate_2x2().Prepare(_f_angle));
+	(*this)()(0, 0) = mat_2x2()(0,0); /*cos(a)*/ (*this)()(1, 0) = mat_2x2()(1,0); /*-sin(a)*/
+	(*this)()(0, 1) = mat_2x2()(0,1); /*sin(a)*/ (*this)()(1, 1) = mat_2x2()(1,1); /* cos(a)*/
+	}
+	else {
+		__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_inv_arg) = TString().Format(_T("#__e_inv_arg: %04u"), (uint32_t)_e_axis));
+	}
 
 	return (*this)();
 }
@@ -110,5 +157,8 @@ c_mat3x3& c_rotate_3x3::operator ()(const float _f_angle, const float _x, const 
 const
 c_mat3x3& c_rotate_3x3::operator ()(void) const { return (c_mat3x3&)*this; }
 c_mat3x3& c_rotate_3x3::operator ()(void)       { return (c_mat3x3&)*this; }
+
+c_mat3x3& c_rotate_3x3::operator <<(const vec_2& _v_pivot) { (*this)()(2,0) = _v_pivot.x; (*this)()(2,1) = _v_pivot.y; return *this; }
+const c_mat3x3& c_rotate_3x3::operator >>(vec_2& _v_pivot) const { _v_pivot.Set((*this)()(2,0), (*this)()(2,1)); return *this; }
 
 #pragma endregion

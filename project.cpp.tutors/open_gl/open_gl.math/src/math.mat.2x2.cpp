@@ -94,10 +94,13 @@ c_mat2x2& c_mat2x2::Clear (void) { /*this->Raw().fill(0.0f);*/ ::std::fill(this-
 const
 c_mat2x2::c_cols& c_mat2x2::Cols (void) const { return this->m_cols; }
 c_mat2x2::c_cols& c_mat2x2::Cols (void)       { return this->m_cols; }
+const
+t_seq_2x2& c_mat2x2::Data (void) const { return this->m_data; }
+t_seq_2x2& c_mat2x2::Data (void)       { return this->m_data; }
 
 float  c_mat2x2::Get (const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell (_u_col, _u_row); }
-vec_2& c_mat2x2::Mltply (vec_2& _vec2, const bool _b_epsilon/* = false*/) const {
-	_vec2; _b_epsilon;
+vec_2& c_mat2x2::Mltply (vec_2& _vec2, const bool _b_round/* = false*/, const float _threshold/* = defs::f_epsilon*/) const {
+	_vec2; _b_round; _threshold;
 	/*cols:    0#   #1      #0                                #0  #1 (i stads for an index)
 	rows: #0  (0,0) (1,0) * [x] = [(0,0) * x + (1,0) * y]  == i_0 i_2 * [x] = [ i_0 * x + i_2 * y]
 	      #1  (0,1) (1,1)   [y]   [(0,1) * x + (1,1) * y];    i_1 i_3   [y]   [ i_1 * x + i_3 * y];
@@ -106,10 +109,14 @@ vec_2& c_mat2x2::Mltply (vec_2& _vec2, const bool _b_epsilon/* = false*/) const 
 		(*this)()[0] * _vec2.x + (*this)()[2] * _vec2.y,
 		(*this)()[1] * _vec2.x + (*this)()[3] * _vec2.y
 	);
+#if (0)
 	if (_b_epsilon) {
 		if (::abs(_vec2.x) < defs::f_epsilon) _vec2.x = 0.0f;
 		if (::abs(_vec2.y) < defs::f_epsilon) _vec2.y = 0.0f;
 	}
+#else
+	if (_b_round) _vec2.Round(_threshold);
+#endif
 	return _vec2;
 }
 #if (0)
@@ -221,6 +228,9 @@ float* c_mat2x2::operator ()(void)       { return this->m_data.data(); }
 bool c_mat2x2::operator ==(const c_mat2x2& _mat2x2) const {
 	return (this->m_data == _mat2x2.m_data);
 }
+
+c_mat2x2::operator const t_seq_2x2& (void) const { return this->Data(); }
+c_mat2x2::operator       t_seq_2x2& (void)       { return this->Data(); }
 
 #pragma endregion
 

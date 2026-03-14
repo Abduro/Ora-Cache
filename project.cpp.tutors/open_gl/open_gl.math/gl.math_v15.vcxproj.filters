@@ -54,8 +54,10 @@
     <ClCompile Include="$(_1)math.mat.rotate.cpp"><Filter>src\rotate</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)math.vec.2x2.h"><Filter>interface\vector</Filter></ClInclude>
-    <ClCompile Include="$(_1)math.vec.2x2.cpp"><Filter>src\vector</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.vec.2.h"><Filter>interface\vector</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.vec.2.cpp"><Filter>src\vector</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.vec.3.h"><Filter>interface\vector</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.vec.3.cpp"><Filter>src\vector</Filter></ClCompile>
     <ClInclude Include="$(_0)math.vector.h"><Filter>interface\vector</Filter></ClInclude>
     <ClCompile Include="$(_1)math.vector.cpp"><Filter>src\vector</Filter></ClCompile>
   </ItemGroup>
@@ -64,5 +66,7 @@
     <ClCompile Include="$(_1)virt_camera.cpp"><Filter>src\virt_camera</Filter></ClCompile>
     <ClInclude Include="$(_0)virt_space.h"><Filter>interface\virt_camera</Filter></ClInclude>
     <ClCompile Include="$(_1)virt_space.cpp"><Filter>src\virt_camera</Filter></ClCompile>
+    <ClInclude Include="$(_0)virt_view.h"><Filter>interface\virt_camera</Filter></ClInclude>
+    <ClCompile Include="$(_1)virt_view.cpp"><Filter>src\virt_camera</Filter></ClCompile>
   </ItemGroup>
 </Project>

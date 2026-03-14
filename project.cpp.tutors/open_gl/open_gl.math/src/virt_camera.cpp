@@ -159,8 +159,8 @@ const
 CTarget&    CVirtCamera::Target (void) const { return this->m_target; }
 CTarget&    CVirtCamera::Target (void)       { return this->m_target; }
 const
-space::CView&  CVirtCamera::View (void) const { return this->m_view; }
-space::CView&  CVirtCamera::View (void)       { return this->m_view; }      
+views::CView&  CVirtCamera::View (void) const { return this->m_view; }
+views::CView&  CVirtCamera::View (void)       { return this->m_view; }      
 
 TVirtCam& ::Get_virt_cam (void) {
 	static TVirtCam virt_cam;

@@ -38,7 +38,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		rows: #0  cos(a) -sin(a) 0   0  X-axis coord values change;
 		      #1  sin(a   cos(a  0   0  Y-axis coord values change;
 		      #2  0       0      1   0  cell (2,2) == 1, because this is the rotation around Z-axis;
-		      #3  0       0      0   1  *note*: rotation sub-matrix 2x2 at the top-left cerner of this matrix;
+		      #3  0       0      0   1  *note*: rotation sub-matrix 2x2 at the top-left corner of this matrix;
 		*/
 		c_mat4x4& On_z (const float _f_angle); // rotates on Z-axis, the angle is in degrees;
 

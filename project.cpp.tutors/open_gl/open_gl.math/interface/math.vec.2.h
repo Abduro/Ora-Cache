@@ -13,6 +13,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	struct s_vec_2 {
 		static const uint32_t u_count = 2; // the number of the fields' count;
 		s_vec_2 (void);
+		s_vec_2 (const t_set_2&);
 		s_vec_2 (const float _values[u_count]);       // values are assigned in the following order: x|y;
 		s_vec_2 (const float _x, const float _y);
 
@@ -26,7 +27,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		s_vec_2& Negate (void);
 		s_vec_2& Normalize (void);                    // if this vector length is less than defs::f_epsilon, no normalizing occurs;
-		s_vec_2& Round (void);     // compares elements of this vector with ::defs::f_epsilon and make appropriate rounding if necessary;
+		s_vec_2& Round (const float _threshold = defs::f_epsilon); // compares elements of this vector with accuracy threshold and makes appropriate rounding if necessary;
 
 		s_vec_2& Set (const float values[u_count]);   // values are assigned in the following order: x|y|z|w;
 		s_vec_2& Set (const float _x, const float _y);

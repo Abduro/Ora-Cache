@@ -7,7 +7,50 @@
 
 using namespace ebo::boo::test::open_gl::math;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {}}}}}
+namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
+	// https://en.wikipedia.org/wiki/Prep >> preparatory; 
+	class CPrep {
+	public:
+		 CPrep (void) = default; CPrep (const CPrep&) = delete; CPrep (CPrep&&) = delete;
+		~CPrep (void) = default;
+
+		static
+		void Do_it (const float _f_angle, const axes_t::e_axes _e_axis) {
+			_f_angle; _e_axis;
+			c_rot_3x3 mat_3x3; mat_3x3.Prepare(s_rot_cri_t(_f_angle, _e_axis, true));
+
+			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
+			::glm::vec3 v_axis(0.0f, 0.0f, 0.0f);
+
+			switch (_e_axis) {
+			case axes_t::e_x_axis: v_axis = {1.0f, 0.0f, 0.0f}; break;
+			case axes_t::e_y_axis: v_axis = {0.0f, 1.0f, 0.0f}; break;
+			case axes_t::e_z_axis: v_axis = {0.0f, 0.0f, 1.0f}; break;
+			}
+
+			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix aroung Z-axis;
+
+			::glm::mat3x3 mat_glm_3x3 = mat_glm;
+			t_mat3x3 mat_cpy = c_adapter() << mat_glm_3x3;
+
+			_out() += TString().Format(_T("[impt] mat_glm_3x3 *after* rotation:"));
+			c_mtx_3x3::To_str(mat_cpy, false);
+
+			const float f_cmp_thresh = 0.0000003f;
+
+			static _pc_sz pc_sz_pat_success = _T("[impt] result: glm::mat3x3 and c_mat3x3 are equal (compare threshold = %.7f);");
+			static _pc_sz pc_sz_pat_failure = _T("[error] result: glm::mat3x3 and c_mat3x3 are *not* equal (compare threshold = %.7f);");
+
+			if (c_comparator::Do_it(mat_cpy, mat_3x3()(), f_cmp_thresh))
+				 _out() += TString().Format(pc_sz_pat_success, f_cmp_thresh);
+			else _out() += TString().Format(pc_sz_pat_failure, f_cmp_thresh);
+		}
+
+	private:
+		CPrep& operator = (const CPrep&) = delete; CPrep& operator = (CPrep&&) = delete;
+	};
+
+}}}}}
 
 #pragma region cls::c_mat_3x3{}
 
@@ -263,10 +306,35 @@ void c_t_rotate_2x2::Vector (void) {
 #pragma endregion
 #pragma region cls::c_t_rotate_3x3{}
 
+void c_t_rotate_3x3::Pivot (void) {
+
+	vec_2 v_2_rot(1.0f, 0.0f);
+	vec_2 v_point(1.0f, 1.0f); // pivot point is set through ctor of s_rot_cri_ex({1.0f, 1.0f}, true);
+
+	c_rot_3x3().Rotate((s_rot_cri_ex({1.0f, 1.0f}, true) << 90.0f << axes_t::e_z_axis), v_2_rot);
+
+	_out()();
+}
+
+void c_t_rotate_3x3::Point (void) {
+
+	vec_2 v_2_rot(1.0f, 0.0f);
+
+	c_rot_3x3().Rotate((s_rot_cri_ex() << 90.0f << axes_t::e_z_axis), v_2_rot); // pivot point is set to axes'origin (0,0) and does not affect the rotation;
+
+	_out()();
+}
+
 void c_t_rotate_3x3::Prepare (void) {
 
-	c_rot_3x3().Prepare(+90.0f);
-	c_rot_3x3().Prepare(-90.0f);
+//	c_rot_3x3().Prepare(f_angle); f_angle = -90.0f;
+//	c_rot_3x3().Prepare(f_angle); f_angle =  90.0f;
+
+	float f_angle = 90.0f;
+	_impl::CPrep::Do_it(f_angle, axes_t::e_x_axis);
+	_impl::CPrep::Do_it(f_angle, axes_t::e_y_axis);
+	_impl::CPrep::Do_it(f_angle, axes_t::e_z_axis);
+
 	_out()();
 }
 
@@ -416,12 +484,12 @@ void c_t_rotate_4x4::On_X (void) {
 //	::glm::mat2x2 mat_glm_2(0.0f); mat_glm_2 =::glm::rotate(mat_glm_2, glm::radians(+90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	::glm::mat4x4 mat_glm(0.0f);
 
-	c_ada_4x4(this_cpy()()) >> mat_glm;
+	c_adapter() << this_cpy()() >> mat_glm;
 
 	mat_glm = glm::rotate(mat_glm, glm::radians(+90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	_out() += _T("[warn] glm::mat4x4 after rotation:");
 
-	c_ada_4x4(this_cpy()()) << mat_glm;  // copies data from glm::mat4x4 to data copy matrix in order to compare the result of rotation of both matrices;
+	c_adapter() << this_cpy()() << mat_glm;  // copies data from glm::mat4x4 to data copy matrix in order to compare the result of rotation of both matrices;
 	c_mtx_4x4::To_str(this_cpy()(), false);
 
 	if (this_rot()() == this_cpy()())

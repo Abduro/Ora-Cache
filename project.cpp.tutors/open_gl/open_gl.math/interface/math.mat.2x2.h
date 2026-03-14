@@ -66,11 +66,14 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
+		const
+		t_seq_2x2& Data (void) const;
+		t_seq_2x2& Data (void) ;
 
 		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // gets the value of the matrix entry by given column and row indices;
 
 		c_mat2x2& Identity (void);
-		vec_2& Mltply (vec_2&, const bool _b_epsilon = false) const;    // https://en.wikipedia.org/wiki/Multiplication ;
+		vec_2& Mltply (vec_2&, const bool _b_round = false, const float _threshold = defs::f_epsilon) const; // https://en.wikipedia.org/wiki/Multiplication ;
 #if (0)
 		const
 		t_seq_2x2& Raw (void) const;
@@ -94,12 +97,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_mat2x2& operator *= (const float _f_scale);
 		c_mat2x2& operator *= (const c_mat2x2&);
 
-		vec_2& operator *= (vec_2& _v_2) const; // multiplies input vector by this matrix and returned the reference to it;
+		vec_2& operator *= (vec_2& _v_2) const; // multiplies input vector by this matrix and returns the reference to it;
 
 		bool operator ==(const c_mat2x2&) const;
 		const
 		float*    operator ()(void) const;
-		float*    operator ()(void);
+		float*    operator ()(void) ;
+
+		operator const t_seq_2x2& (void) const;
+		operator       t_seq_2x2& (void) ;
 
 	protected:
 	// 	t_dyna_set m_data; // u_cols x u_rows = 4 elements;

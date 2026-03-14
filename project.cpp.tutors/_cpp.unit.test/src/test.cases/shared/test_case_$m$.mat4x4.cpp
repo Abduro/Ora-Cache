@@ -6,26 +6,6 @@
 
 using namespace ebo::boo::test::open_gl::math;
 
-#pragma region cls::c_ada_4x4{}
-
-c_ada_4x4::c_ada_4x4 (t_mat4x4& _mat_ref) : m_mat_ref(_mat_ref) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-TError& c_ada_4x4::Error (void) const { return this->m_error; }
-
-t_mat4x4& c_ada_4x4::operator << (const ::glm::mat4x4& _mat4x4) {
-	this->m_error <<__METHOD__<<__s_ok;
-	t_mat4x4::Set(this->m_mat_ref, static_cast<const float*>(::glm::value_ptr(_mat4x4)), this->m_error);
-	return this->m_mat_ref;
-}
-
-::glm::mat4x4& c_ada_4x4::operator >> (::glm::mat4x4& _mat4x4) const {
-	_mat4x4;
-	this->m_error <<__METHOD__<<__s_ok;
-	this->m_mat_ref.Set(static_cast<float*>(::glm::value_ptr(_mat4x4)), this->m_error);
-	return _mat4x4;
-}
-
-#pragma endregion
 #pragma region cls::c_mtx_4x4{}
 
 c_mtx_4x4::c_mtx_4x4 (void) : m_mat4x4(false) {} // no identity matrix by default construction;
@@ -33,7 +13,7 @@ c_mtx_4x4::c_mtx_4x4 (const ::glm::mat4x4& _mat4x4) : c_mtx_4x4() {
 #if (0)
 	t_mat4x4::Set((*this)(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), this->m_error);
 #else
-	c_ada_4x4((*this)()) << _mat4x4;
+	(*this)() = c_adapter() << _mat4x4;
 #endif
 }
 
@@ -121,7 +101,7 @@ t_mat4x4& c_mtx_4x4::operator ()(void) const { return this->m_mat4x4; }
 t_mat4x4& c_mtx_4x4::operator ()(void)       { return this->m_mat4x4; }
 
 t_mat4x4& c_mtx_4x4::operator <<(const ::glm::mat4x4& _mat4x4) {
-	return c_ada_4x4((*this)()) << _mat4x4;
+	return (*this)() = c_adapter() << _mat4x4;
 }
 
 ::glm::mat4x4& c_mtx_4x4::operator >> (::glm::mat4x4& _mat4x4) const {

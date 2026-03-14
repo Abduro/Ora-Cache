@@ -72,7 +72,7 @@ c_mat3x3& c_mat3x3::c_rows::operator ()(void)       { return this->m_mat_ref; }
 #pragma endregion
 #pragma region cls::c_mat3x3{}
 
-c_mat3x3::c_mat3x3 (void) : m_cols(*this), m_rows(*this) { /*this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size);*/ }
+c_mat3x3::c_mat3x3 (void) : m_cols(*this), m_rows(*this), m_data{0.0f} { /*this->m_data.resize(c_mat3x3::u_size, 0.0f); this->m_data.reserve(c_mat3x3::u_size);*/ }
 c_mat3x3::c_mat3x3 (const c_mat3x3& _src) : c_mat3x3() { *this = _src; }
 c_mat3x3::c_mat3x3 (const t_seq_3x3& _arr_values) : c_mat3x3() { *this << _arr_values; }
 c_mat3x3::c_mat3x3 (const t_seq_3& _col_0, const t_seq_3& _col_1, const t_seq_3& _col_2) : c_mat3x3() {
@@ -99,6 +99,9 @@ c_mat3x3& c_mat3x3::Clear (void) { this->m_data.fill(0.0f); return *this; }
 const
 c_mat3x3::c_cols& c_mat3x3::Cols (void) const { return this->m_cols; }
 c_mat3x3::c_cols& c_mat3x3::Cols (void)       { return this->m_cols; }
+const
+t_seq_3x3& c_mat3x3::Data (void) const { return this->m_data; }
+t_seq_3x3& c_mat3x3::Data (void)       { return this->m_data; }
 
 float c_mat3x3::Get  (const uint32_t _u_col, const uint32_t _u_row) const { return (*this)(_u_col, _u_row); }
 
@@ -115,6 +118,21 @@ c_mat3x3& c_mat3x3::Identity (void) {
 	}
 	return *this;
 }
+vec_3& c_mat3x3::Mltply (vec_3& _vec3, const bool _b_round/* = false*/, const float _threshold/* = defs::f_epsilon*/) const {
+	_vec3; _b_round; _threshold;
+	/*cols:    0#   #1    #2      #0                                             #0  #1  #2 (i stads for an index)
+	rows: #0  (0,0) (1,0) (2,0)   [x]   [(0,0) * x + (1,0) * y  + (2,0) * z]    i_0 i_3 i_6   [x]   [ i_0 * x + i_3 * y + i_6 * z]
+	      #1  (0,1) (1,1) (2,1) * [y] = [(0,1) * x + (1,1) * y  + (2,1) * z] == i_1 i_4 i_7 * [y] = [ i_1 * x + i_4 * y + i_7 * z]
+	      #2  (0,2) (1,2) (2,2)   [z]   [(0,2) * x + (1,2) * y  + (2,2) * z];   i_2 i_5 i_8   [z]   [ i_2 * x + i_5 * y + i_8 * z];
+	*/
+	_vec3.Set(
+		(*this)()[0] * _vec3.x + (*this)()[3] * _vec3.y + (*this)()[6] * _vec3.z, // x-coord;
+		(*this)()[1] * _vec3.x + (*this)()[4] * _vec3.y + (*this)()[7] * _vec3.z, // y-coord;
+		(*this)()[2] * _vec3.x + (*this)()[5] * _vec3.y + (*this)()[8] * _vec3.z  // z-coord;
+	);
+	if (_b_round) _vec3.Round(_threshold);
+	return _vec3;
+}
 
 const
 c_mat3x3::c_rows& c_mat3x3::Rows (void) const { return this->m_rows; }
@@ -126,6 +144,49 @@ c_mat3x3& c_mat3x3::Set (const c_mat2x2& _mat_2) {
 	(*this)(0,1) = _mat_2(0,1); (*this)(1,1) = _mat_2(1,1);
 
 	return *this;
+}
+
+c_mat3x3& c_mat3x3::Set (const float* _p_data) {
+	if (nullptr == _p_data)
+		return *this;
+	try {
+		// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		const errno_t n_error = ::memcpy_s(this->m_data.data(), sizeof(t_seq_3x3), _p_data, sizeof(t_seq_3x3));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory));
+		}
+	} catch (...) {}
+
+	return *this;
+}
+
+err_code  c_mat3x3::Set (c_mat3x3& _dest, const float* _p_src, CError& _err) {
+	if (nullptr == _p_src)
+		return _err <<__e_pointer;
+	try {
+		// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-s-wmemcpy-s ;
+		const errno_t n_error = ::memcpy_s(_dest.m_data.data(), sizeof(t_seq_3x3), _p_src, sizeof(t_seq_3x3));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_no_memory;
+		}
+	} catch (...) {}
+
+	return _err;
+}
+
+err_code  c_mat3x3::Set (float* _p_out, CError& _err) const {
+	_p_out; _err;
+	if (nullptr == _p_out)
+		return _err << __e_pointer;
+
+	try {
+		const errno_t n_error = ::memcpy_s(_p_out, sizeof(t_seq_3x3), this->m_data.data(), sizeof(t_seq_3x3));
+		if (n_error) {
+			__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_no_memory)); _err <<__e_fail;
+		}
+	} catch (...) {}
+
+	return _err;
 }
 
 c_mat3x3& c_mat3x3::Transpose (void) {
@@ -166,10 +227,29 @@ c_mat3x3& c_mat3x3::operator *=(const float _f_scale) {
 	return *this;
 }
 
+vec_3& c_mat3x3::operator *= (vec_3& _v_3) const {
+	return this->Mltply(_v_3);
+}
+
 c_mat3x3::operator c_mat2x2 (void) const {
 	return c_mat2x2(
 		{(*this)(0,0), (*this)(0,1), (*this)(1,0), (*this)(1,1)}
 	);
 }
+
+bool c_mat3x3::operator == (const c_mat3x3& _mat3x3) const {
+	_mat3x3;
+	for (uint32_t i_ = 0; i_ < this->m_data.size() && i_ < _mat3x3.m_data.size(); i_++)
+		if (this->m_data.at(i_) != _mat3x3.m_data.at(i_))
+			return false;
+
+	return true;
+}
+const
+float* c_mat3x3::operator ()(void) const { return this->Data().data(); }
+float* c_mat3x3::operator ()(void)       { return this->Data().data(); }
+
+c_mat3x3::operator const t_seq_3x3& (void) const { return this->Data(); }
+c_mat3x3::operator       t_seq_3x3& (void)       { return this->Data(); }
 
 #pragma endregion

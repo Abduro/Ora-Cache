@@ -52,6 +52,21 @@ rows: #0  0  2   0   2   6   0   2   6 0xc
       #2         4   5   8   4   5   8 0xe
       #3                     9 0xa 0xb 0xf; these matrices can be defined as static volatile;
 */
+	class c_comparator {
+	public:
+		 c_comparator (const float _f_threshold = defs::f_epsilon); c_comparator (const c_comparator&) = delete; c_comparator (c_comparator&&) = delete;
+		~c_comparator (void) = default;
+
+		static
+		bool  Do_it (const c_mat3x3& _lhs, const c_mat3x3& _rhs, const float _f_threshold = defs::f_epsilon);
+
+		float Threshold (void) const;
+		void  Threshold (const float);
+
+	private:
+		c_comparator& operator = (const c_comparator&) = delete; c_comparator& operator = (c_comparator&&) = delete;
+		float m_threshold;
+	};
 }}}}
 
 #endif/*__MATH_MATRIX_H_INCLUDED*/

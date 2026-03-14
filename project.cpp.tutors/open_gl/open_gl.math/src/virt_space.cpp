@@ -30,7 +30,11 @@ const vec_3& axes::CDynamic::Up (void) const { return this->Get(e_axes::e_up); }
 #pragma endregion
 #pragma region axes::cls::CFixed{}
 
-axes::CFixed::CFixed (void) {}
+axes::CFixed::CFixed (void) {
+	this->X() = {1.0f, 0.0f, 0.0f};
+	this->Y() = {0.0f, 1.0f, 0.0f};
+	this->Z() = {0.0f, 0.0f, 1.0f};
+}
 const
 vec_3& axes::CFixed::Get (const e_axes _e_axis) const { return this->m_v_axes[_e_axis]; }
 vec_3& axes::CFixed::Get (const e_axes _e_axis)       { return this->m_v_axes[_e_axis]; }
@@ -38,71 +42,5 @@ vec_3& axes::CFixed::Get (const e_axes _e_axis)       { return this->m_v_axes[_e
 const vec_3& axes::CFixed::X (void) const { return this->Get(e_axes::e_x_axis); } vec_3& axes::CFixed::X (void) { return this->Get(e_axes::e_x_axis); }
 const vec_3& axes::CFixed::Y (void) const { return this->Get(e_axes::e_y_axis); } vec_3& axes::CFixed::Y (void) { return this->Get(e_axes::e_y_axis); }
 const vec_3& axes::CFixed::Z (void) const { return this->Get(e_axes::e_z_axis); } vec_3& axes::CFixed::Z (void) { return this->Get(e_axes::e_z_axis); }
-
-#pragma endregion
-#pragma region cls::CBase{}
-
-CBase::CBase (void) {}
-
-const
-vec_3&    CBase::Angle (void) const { return this->m_angle; }
-vec_3&    CBase::Angle (void)       { return this->m_angle; }
-const
-c_mat4x4& CBase::Get_matrix (void) const { return this->m_mat(); }
-c_mat4x4& CBase::Get_matrix (void)       { return this->m_mat(); }
-const
-vec_3&    CBase::Pos (void) const { return this->m_pos; }
-vec_3&    CBase::Pos (void)       { return this->m_pos; }
-
-#pragma endregion
-#pragma region cls::CModel{}
-
-CModel::CModel (void) : CBase() {}
-const
-CModel::CAxes& CModel::Axes (void) const { return this->m_axes; }
-CModel::CAxes& CModel::Axes (void)       { return this->m_axes; }
-
-void    CModel::Update (void) {
-	CBase::m_mat.Identity();
-	CBase::m_mat.On_z(CBase::Angle().z);
-	CBase::m_mat.On_y(CBase::Angle().y);
-	CBase::m_mat.On_x(CBase::Angle().x);
-	CBase::m_mat.Translate(CBase::Pos());
-}
-
-#pragma endregion
-#pragma region cls::CView{}
-
-CView::CView (void) : CBase() {}
-const
-CView::CAxes& CView::Axes (void) const { return this->m_axes; }
-CView::CAxes& CView::Axes (void)       { return this->m_axes; }
-
-void CView::Update (void) {
-
-	CBase::m_mat.Identity();
-	CBase::m_mat.Translate(-CBase::Pos());
-	CBase::m_mat.On_x( CBase::Angle().x);
-	CBase::m_mat.On_y(-CBase::Angle().y);
-	CBase::m_mat.On_z( CBase::Angle().z);
-}
-
-const
-CWorld& CView::World (void) const { return this->m_world; }
-CWorld& CView::World (void)       { return this->m_world; }
-
-#pragma endregion
-#pragma region cls::CWorld{}
-
-CWorld::CWorld (void) : CBase() {}
-const
-CWorld::CAxes& CWorld::Axes (void) const { return this->m_axes; }
-CWorld::CAxes& CWorld::Axes (void)       { return this->m_axes; }
-const
-c_mat4x4& CWorld::Get_model_view (void) const { return CBase::Get_matrix(); }
-c_mat4x4& CWorld::Get_model_view (void)       { return CBase::Get_matrix(); }
-const
-CModel&   CWorld::Model (void) const { return this->m_model; }
-CModel&   CWorld::Model (void)       { return this->m_model; }
 
 #pragma endregion

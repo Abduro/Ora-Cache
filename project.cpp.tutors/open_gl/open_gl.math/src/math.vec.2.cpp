@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 10-Mar-2026 at 12:07:00.084, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL tutorials' generic data vector 2 interface implementation file;
 */
-#include "math.vec.2x2.h"
+#include "math.vec.2.h"
 
 #include "shared.dbg.h"
 #include "shared.preproc.h"
@@ -12,6 +12,7 @@ using namespace ex_ui::draw::open_gl::math;
 #pragma region s_vec_2{}
 
 s_vec_2::s_vec_2 (void) : x(0.0f), y(0.0f) {}
+s_vec_2::s_vec_2 (const t_set_2& _arr_values) : x(_arr_values.at(0)), y(_arr_values.at(1)) {}
 s_vec_2::s_vec_2 (const float _values[u_count]) : s_vec_2(_values[0], _values[1]) {}
 s_vec_2::s_vec_2 (const float _x, const float _y) : x(_x), y(_y) {}
 
@@ -44,10 +45,11 @@ s_vec_2& s_vec_2::Normalize (void) {
 	this->y *=  f_inv_len; return *this;
 }
 
-s_vec_2& s_vec_2::Round (void) {
-	
-	if (::abs(this->x) < defs::f_epsilon) this->x = 0.0f; else if (0.0f > this->x) this->x = ::std::floor(this->x); else this->x = ::std::ceil(this->x);
-	if (::abs(this->y) < defs::f_epsilon) this->y = 0.0f; else if (0.0f > this->y) this->y = ::std::floor(this->y); else this->y = ::std::ceil(this->y);
+s_vec_2& s_vec_2::Round (const float _threshold/* = defs::f_epsilon*/) {
+	_threshold;
+	const float f_delta = ::abs(_threshold);
+	if (::abs(this->x) < f_delta) this->x = 0.0f; else if (0.0f > this->x) this->x = ::std::floor(this->x); else this->x = ::std::ceil(this->x);
+	if (::abs(this->y) < f_delta) this->y = 0.0f; else if (0.0f > this->y) this->y = ::std::floor(this->y); else this->y = ::std::ceil(this->y);
 
 	return *this;
 }

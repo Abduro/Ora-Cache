@@ -5,36 +5,14 @@
 	This is Ebo Pack OpenGL math lib matrix 4x4 uint test interface declaration file for using in test cases' adapters;
 */
 #include "ebo_test_$m$.defs.h"
-#include "math.mat.4x4.h"
-#include "math.rot.4x4.h"
 #include "math.mat.stack.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
-	using t_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
-	using t_rot4x4 = ex_ui::draw::open_gl::math::c_rotate_4x4;
-
-	// this class is an adapter for copying matrix data between glm::mat and math::c_mat4x4;
-	class c_ada_4x4 {
-	public:
-		 c_ada_4x4 (void); c_ada_4x4 (t_mat4x4&); c_ada_4x4 (const c_ada_4x4&) = delete; c_ada_4x4 (c_ada_4x4&&) = delete;
-		~c_ada_4x4 (void) = default;
-
-		TError& Error (void) const;
-
-		t_mat4x4& operator << (const ::glm::mat4x4&);
-		::glm::mat4x4& operator >> (::glm::mat4x4&) const;
-
-	private:
-		c_ada_4x4& operator = (const c_ada_4x4&) = delete; c_ada_4x4& operator = (c_ada_4x4&&) = delete;
-		t_mat4x4& m_mat_ref;
-		mutable CError m_error;
-	};
-
 	/* matrix structure:
 	   the first 3x3 elements (indices 0-2, 4-6, 8-10) represent rotation and scaling:
 	   row #0: [0, 4, 8] is the pitch vector (x,y,z);
-	   row #1: [1, 5, 9] is the yaw vector (x,y,x); (heading);
+	   row #1: [1, 5, 9] is the yaw vector (x,y,z); (heading);
 	   row #2: [2, 6, a] is the roll vector (x,y,z);
 	   while the elements at indices 12, 13, and 14 represent the X, Y, and Z translation components, respectively.
 	*/

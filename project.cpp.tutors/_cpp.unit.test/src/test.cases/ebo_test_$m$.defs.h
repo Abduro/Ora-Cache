@@ -5,10 +5,15 @@
 	This is Ebo Pack OpenGL math lib common definitions' uint test interface declaration file; 
 */
 #include "_log.h"
-#include "math.defs.h"
 #include "glm/glm.hpp"  // #define GLM_FORCE_CTOR_INIT is not required due to it creates identity matrix that is not the case, but glm::mat4x4 (0.0f);
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
+#include "math.defs.h"
+#include "math.mat.3x3.h"
+#include "math.rot.3x3.h"
+#include "math.mat.4x4.h"
+#include "math.rot.4x4.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
@@ -20,6 +25,35 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	...how to manage this inexactness:
 	use double for higher precision: the double data type uses 64 bits and provides about 15-18 significant decimal digits of precision, compared to float's 6-9 digits...
 	*/
+	using t_mat3x3 = ex_ui::draw::open_gl::math::c_mat3x3;
+	using t_rot3x3 = ex_ui::draw::open_gl::math::c_rotate_3x3;
+	using t_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
+	using t_rot4x4 = ex_ui::draw::open_gl::math::c_rotate_4x4;
+
+	// this class is an adapter for copying matrix data between glm::mat and math::c_mat4x4;
+	class c_adapter {
+	public:
+		 c_adapter (void); c_adapter (const c_adapter&) = delete; c_adapter (c_adapter&&) = delete;
+		~c_adapter (void) = default;
+
+		TError& Error (void) const;
+
+		t_mat3x3& operator << (const ::glm::mat3x3&);
+		t_mat4x4& operator << (const ::glm::mat4x4&);
+
+		::glm::mat3x3& operator >> (::glm::mat3x3&) const;
+		::glm::mat4x4& operator >> (::glm::mat4x4&) const;
+
+		c_adapter& operator << (const t_mat3x3&); // sets data to cached matrix3x3;
+		c_adapter& operator << (const t_mat4x4&); // sets data to cached matrix4x4;
+
+		const c_adapter& operator >> (t_mat3x3&) const; // gets data from cached matrix3x3;
+		const c_adapter& operator >> (t_mat4x4&) const; // gets data from cached matrix4x4;
+
+	private:
+		c_adapter& operator = (const c_adapter&) = delete; c_adapter& operator = (c_adapter&&) = delete;
+		mutable CError m_error;
+	};
 
 	class c_mtx_base {
 	public:

@@ -38,7 +38,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_rotate_2x2 (const c_mat2x2&);
 		c_rotate_2x2 (const float _f_angle);
 
-		c_mat2x2& Do (const float _f_angle, c_mat2x2& _to_rot); // rotates input matrix to specified rotation angle around axes origin (0,0);
+		c_mat2x2& Do (const float _f_angle, c_mat2x2& _to_rot); // rotates input matrix by given rotation angle around axes origin (0,0);
 		vec_2&    Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps = false); // rotates point around pivot point;
 
 		c_mat2x2& Prepare (const float _f_angle); // prepares the rotate matrix for angle in degree;

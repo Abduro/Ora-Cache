@@ -88,7 +88,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		 c_t_rotate_3x3 (void) = default;
 		~c_t_rotate_3x3 (void) = default;
 
-		__method (Prepare); // prepares the matrix for rotation by certain angle;
+		__method (Pivot);   // rotates point around pivot point;
+		__method (Point);   // rotates point around Z-axis from axes origin (0,0);
+		__method (Prepare); // prepares the matrix for rotation by certain angle and around particular axis (x, y or z);
 	};
 
 	__class (c_t_rotate_4x4) {

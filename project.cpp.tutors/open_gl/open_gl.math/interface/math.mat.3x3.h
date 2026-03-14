@@ -8,12 +8,7 @@
 #include "math.mat.2x2.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
-	/* entry positions or in other words, entry's indices:
-	 cols:    #0  #1   #2
-	 rows:#0 | 0 | 3 | 6 |
-	      #1 | 1 | 4 | 7 |
-	      #2 | 2 | 5 | 8 |
-	*/
+	
 	class c_mat3x3 {
 	public:
 		class c_cols {
@@ -75,16 +70,24 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_cols& Cols (void) const;
 		c_cols& Cols (void) ;
+		const
+		t_seq_3x3& Data (void) const;
+		t_seq_3x3& Data (void) ;
 
 		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // gets the value of the matrix entry by given column and row indices;
 
 		c_mat3x3& Identity (void);
+		vec_3& Mltply (vec_3&, const bool _b_round = false, const float _threshold = defs::f_epsilon) const;
 
 		const
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
 
-		c_mat3x3& Set (const c_mat2x2&); // sets values of input mat 2x2; outer entries are not applied;
+		c_mat3x3& Set (const c_mat2x2&); // sets values of input mat 2x2; outer entries are not applied; the input matrix is assignd to top-left corner of this matrix;
+		static
+		err_code  Set (c_mat3x3&, const float*, CError&); // this method is inteanded for copying data from glm::mat3x3, especially for test-cases;
+		c_mat3x3& Set (const float*);  // it is assumed the pointer is to 9-elements' array of float data type;
+		err_code  Set (float* _p_out, CError&) const; // copies data of this matrinx to the input pointer, it is assumed the pointer to data of glm::mat3x3;
 
 		c_mat3x3& Transpose (void);
 
@@ -101,6 +104,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_mat3x3& operator *=(const float _f_scale);
 		
 		operator c_mat2x2 (void) const;
+		vec_3& operator *= (vec_3& _v_3) const; // multiplies input vector by this matrix and returns the reference to it; no round, no epsilon;
+
+		bool operator == (const c_mat3x3&) const;
+		const
+		float*    operator ()(void) const;
+		float*    operator ()(void) ;
+
+		operator const t_seq_3x3& (void) const;
+		operator       t_seq_3x3& (void) ;
 
 	protected:
 	//	::std::vector<float> m_data; // u_cols x u_rows = 9 elements;

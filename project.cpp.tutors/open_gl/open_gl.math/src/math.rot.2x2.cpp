@@ -7,7 +7,7 @@
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
-#include "math.vec.2x2.h"
+#include "math.vec.2.h"
 
 using namespace ex_ui::draw::open_gl::math;
 
