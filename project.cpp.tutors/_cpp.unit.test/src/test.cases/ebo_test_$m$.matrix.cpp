@@ -67,6 +67,22 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 		~CRotator (void) = default;
 
 		static
+		void   Compare (const float _f_angle, const axes_t::e_axes _e_axis) {
+			_f_angle; _e_axis;
+			vec_3 v_to_rot_0(1.0f, 1.0f, 1.0f); // is used by creating glm::vec3;
+			vec_3 v_to_rot_1(1.0f, 1.0f, 1.0f); // is used by creating math::vec_3;
+
+			_impl::CRotator::Do_it(_f_angle, _e_axis, v_to_rot_0);                   // uses GLM lib;
+			c_rot_3x3().Rotate((s_rot_cri_v3() << _f_angle << _e_axis), v_to_rot_1); // uses math lib;
+
+			const float f_cmp_thresh = 0.0000003f;
+
+			if (c_comparator::Do_it(v_to_rot_0, v_to_rot_1 , f_cmp_thresh))
+				 _out() += TString().Format(pc_sz_vec_equal, f_cmp_thresh);
+			else _out() += TString().Format(pc_sz_vec_diff , f_cmp_thresh);
+		}
+
+		static
 		vec_3& Do_it (const float _f_angle, const axes_t::e_axes _e_axis, vec_3& _to_rot) { // rotates input vector by using GLM lib;
 			_f_angle; _e_axis;
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
@@ -86,9 +102,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			_out() += TString().Format(_T("[impt] mat_glm_4x4 *after* rotation:")); c_mtx_4x4::To_str(mat_cpy_4x4, false);
 			_out() += TString().Format(_T("[impt] mat_glm_3x3 *after* rotation:")); c_mtx_3x3::To_str(mat_cpy_3x3, false);
 
-			_out() += TString().Format(_T("Input glm::vec_3 *before* : %s;"), (_pc_sz) _to_rot.To_str());
+			_out() += TString().Format(_T("Input glm::vec3 *before*: %s;"), (_pc_sz) _to_rot.To_str());
 			_to_rot.Set(v_res_glm.x, v_res_glm.y, v_res_glm.z);
-			_out() += TString().Format(_T("Input glm::vec_3 *after*  : %s;"), (_pc_sz) _to_rot.To_str());
+			_out() += TString().Format(_T("Input glm::vec3 *after* : %s;"), (_pc_sz) _to_rot.To_str());
 
 			return _to_rot;
 		}
@@ -338,6 +354,24 @@ void c_t_rotate_2x2::Vector (void) {
 #pragma endregion
 #pragma region cls::c_t_rotate_3x3{}
 
+void c_t_rotate_3x3::On_X (void) {
+	float f_angle = -90.0f;
+	CRotator::Compare(f_angle, axes_t::e_x_axis);
+	_out()();
+}
+
+void c_t_rotate_3x3::On_Y (void) {
+	float f_angle = -90.0f;
+	CRotator::Compare(f_angle, axes_t::e_y_axis);
+	_out()();
+}
+
+void c_t_rotate_3x3::On_Z (void) {
+	float f_angle = -90.0f;
+	CRotator::Compare(f_angle, axes_t::e_z_axis);
+	_out()();
+}
+
 void c_t_rotate_3x3::Pivot (void) {
 
 	vec_2 v_2_rot(1.0f, 0.0f);
@@ -366,25 +400,6 @@ void c_t_rotate_3x3::Prepare (void) {
 	_impl::CPrep::Do_it(f_angle, axes_t::e_x_axis);
 	_impl::CPrep::Do_it(f_angle, axes_t::e_y_axis);
 	_impl::CPrep::Do_it(f_angle, axes_t::e_z_axis);
-
-	_out()();
-}
-
-void c_t_rotate_3x3::Vector (void) {
-
-	float f_angle = 90.0f;
-
-	vec_3 v_to_rot_0(1.0f, 1.0f, 1.0f);
-	vec_3 v_to_rot_1(1.0f, 1.0f, 1.0f);
-
-	_impl::CRotator::Do_it(f_angle, axes_t::e_x_axis, v_to_rot_0);                   // uses GLM lib;
-	c_rot_3x3().Rotate((s_rot_cri_v3() << f_angle << axes_t::e_x_axis), v_to_rot_1); // uses math lib;
-
-	const float f_cmp_thresh = 0.0000003f;
-
-	if (c_comparator::Do_it(v_to_rot_0, v_to_rot_1 , f_cmp_thresh))
-		 _out() += TString().Format(pc_sz_vec_equal, f_cmp_thresh);
-	else _out() += TString().Format(pc_sz_vec_diff , f_cmp_thresh);
 
 	_out()();
 }

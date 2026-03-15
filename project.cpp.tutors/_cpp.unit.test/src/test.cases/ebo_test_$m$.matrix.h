@@ -87,10 +87,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		 c_t_rotate_3x3 (void) = default;
 		~c_t_rotate_3x3 (void) = default;
 
+		__method (On_X);    // rotates 3d-vector around X-axis by certain angle;
+		__method (On_Y);    // rotates 3d-vector around Y-axis by certain angle;
+		__method (On_Z);    // rotates 3d-vector around Z-axis by certain angle;
+
 		__method (Pivot);   // rotates 2d-point around pivot point in X,Y plane;
 		__method (Point);   // rotates 2d-point around Z-axis from axes's origin (0,0);
 		__method (Prepare); // prepares the matrix for rotation by certain angle and around particular axis (X, Y or Z);
-		__method (Vector);  // rotates 3d-vector around particular axis (X, Y or Z) by certain angle;
 	};
 
 	__class (c_t_rotate_4x4) {

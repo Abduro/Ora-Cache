@@ -45,10 +45,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespac
 	//	f_result = f_result * ( f_half_3 - (f_half_of_val * f_result * f_result));   // the 2nd iteration;
 		return f_result;
 	}
-
+	// https://stackoverflow.com/questions/1343890/how-do-i-round-a-number-to-2-decimal-places-in-c << https://stackoverflow.com/a/54197024/4325555 ;
 	float _round (const float _f_value, const uint32_t _u_dec_places/* = 5*/) {
 		_f_value; _u_dec_places;
-		return 0.0f;
+		return static_cast<float>(::std::floor(_f_value * ::std::pow(10, _u_dec_places) + .5) / ::std::pow(10, _u_dec_places));
 	}
 }}}}
 
