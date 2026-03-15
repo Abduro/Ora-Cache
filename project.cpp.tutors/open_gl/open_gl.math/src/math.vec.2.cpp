@@ -60,9 +60,8 @@ s_vec_2& s_vec_2::Set (const float _x, const float _y) { _x; _y; this->x = _x; t
 float    s_vec_2::Sum (const uint32_t _u_exp/* = 1*/) const { return ::_pow_n(_u_exp, this->x) + ::_pow_n(_u_exp, this->y); }
 
 CString  s_vec_2::To_str (_pc_sz _p_format) const {
-	static _pc_sz pc_sz_pat = _T("x=%s;y=%s");
-	CString cs_out; cs_out.Format(
-		pc_sz_pat, TString().Float(this->x, _p_format), TString().Float(this->y, _p_format));
+	static _pc_sz pc_sz_pat = _T("x =%s; y =%s");
+	CString cs_out; cs_out.Format( pc_sz_pat, _format(this->x, _p_format), _format(this->y, _p_format));
 	return  cs_out;
 }
 

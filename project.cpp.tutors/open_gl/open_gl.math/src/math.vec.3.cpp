@@ -12,6 +12,7 @@ using namespace ex_ui::draw::open_gl::math;
 #pragma region s_vec_3{}
 
 s_vec_3::s_vec_3 (void) : s_vec_2(), z(0.0f) {}
+s_vec_3::s_vec_3 (const t_set_3& _arr_values) : s_vec_3(_arr_values.at(0), _arr_values.at(1), _arr_values.at(2)) {}
 s_vec_3::s_vec_3 (const float _values[u_count]) : s_vec_3(_values[0], _values[1], _values[2]) {}
 s_vec_3::s_vec_3 (const float _x, const float _y, const float _z) : s_vec_2(_x, _y), z(_z) {}
 s_vec_3::s_vec_3 (const s_vec_2& _src, const float _z/* = 0.0f*/) : s_vec_3() { this->Set(_src, _z); }
@@ -79,9 +80,8 @@ s_vec_3& s_vec_3::Set (const s_vec_2& _src, const float _z/* = 0.0f*/) { return 
 float    s_vec_3::Sum (const uint32_t _u_exp/* = 1*/) const { return s_vec_2::Sum(_u_exp) + ::_pow_n(_u_exp, this->z); }
 
 CString  s_vec_3::To_str (_pc_sz _p_format) const {
-	static _pc_sz pc_sz_pat = _T("%s;z=%s");
-	CString cs_out; cs_out.Format(
-		pc_sz_pat, (_pc_sz) s_vec_2::To_str(_p_format), TString().Float(this->z, _p_format));
+	static _pc_sz pc_sz_pat = _T("%s; z =%s");
+	CString cs_out; cs_out.Format(pc_sz_pat, (_pc_sz) s_vec_2::To_str(_p_format), _format(this->z, _p_format));
 	return  cs_out;
 }
 
@@ -89,6 +89,9 @@ s_vec_3  s_vec_3::operator - (void) const { return s_vec_3(-(s_vec_2&)*this, -th
 s_vec_3& s_vec_3::operator - (void) { -(s_vec_2&)*this; this->z *= -1.0f; return *this; }
 
 s_vec_3& s_vec_3::operator = (const s_vec_3& _src) { (s_vec_2&)*this = (const s_vec_2&)_src; this->z = _src.z; return *this; }
+s_vec_3& s_vec_3::operator +=(const s_vec_3& _v_3) {
+	(s_vec_2&)*this += (const s_vec_2&)_v_3; this->z += _v_3.z; return *this;
+}
 s_vec_3& s_vec_3::operator*= (const s_vec_3& _multiplier) {
 	_multiplier;
 	(*this)() *= (_multiplier)(); this->z *= _multiplier.z; return *this;

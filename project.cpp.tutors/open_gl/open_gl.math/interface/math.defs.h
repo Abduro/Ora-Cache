@@ -44,13 +44,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	typedef ::std::vector<float> t_dyna_set;
 
 	typedef ::std::unique_ptr<float> data_ptr_t;
-	
+
+	_pc_sz _format (const float _f_value, _pc_sz _p_format = _T("%.7f")); // formats float number value and makes the indent for '-' (minus) sign if necessary;
+
 	float _pow_2 (const float& _base); // a value of '_base' of a number raised to exponent of '2'; (squared);
 	float _pow_3 (const float& _base); // a value of '_base' of a number raised to exponent of '3'; (cubed);
 
 	float _pow_n (const uint32_t _index, const float _base); // index:0::result 1; index:1::result '_base'; otherwise there result is multiply the number by itself '_index' times;
 	// https://en.wikipedia.org/wiki/Fast_inverse_square_root ; 
 	float _rsqrt (const float _f_value); // this function can be used for normalizing the vectors; *useless* and it is slower in comparison with ::std::sqrtf();
+
+	float _round (const float _f_value, const uint32_t _u_dec_places = 5);
 
 #if (0) // not used;
 namespace _2d {

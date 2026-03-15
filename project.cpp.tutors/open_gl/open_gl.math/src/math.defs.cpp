@@ -7,7 +7,14 @@
 using namespace ex_ui::draw::open_gl::math;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl { void __warning_lnk_4221 (void) {}}
-	
+
+	_pc_sz _format (const float _f_value, _pc_sz _p_format/* = _T("%.7f")*/) {
+		_f_value; _p_format;
+		static CString  cs_val; cs_val = TString().Float(_f_value, _p_format);
+		static CString  cs_out; cs_out.Empty(); if (_T('-') == cs_val.Left(1)) {} else { cs_out += _T(" "); } cs_out += cs_val;
+		return (_pc_sz) cs_out;
+	}
+
 	float _pow_2 (const float& _base) { return _base * _base; }
 	float _pow_3 (const float& _base) { return _base * _base * _base; }
 
@@ -37,6 +44,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespac
 		f_result = f_result * ( f_half_3 - (f_half_of_val * f_result * f_result));   // the 1st iteration;
 	//	f_result = f_result * ( f_half_3 - (f_half_of_val * f_result * f_result));   // the 2nd iteration;
 		return f_result;
+	}
+
+	float _round (const float _f_value, const uint32_t _u_dec_places/* = 5*/) {
+		_f_value; _u_dec_places;
+		return 0.0f;
 	}
 }}}}
 

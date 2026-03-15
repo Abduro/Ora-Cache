@@ -30,6 +30,8 @@
     <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.stack.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp"><Filter>matrix</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$m$.vec3.h"><Filter>vector\shared</Filter></ClInclude>

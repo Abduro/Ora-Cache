@@ -22,10 +22,21 @@ bool  c_comparator::Do_it (const c_mat3x3& _lhs, const c_mat3x3& _rhs, const flo
 		const float f_diff = ::abs(::abs(_lhs.Data().at(i_)) - ::abs(_rhs.Data().at(i_)));
 
 		if (::abs(_f_threshold) < f_diff) {
-			cs_diff.Format(_T("%9.7f"), f_diff);
+			cs_diff.Format(_T("%9.7f"), f_diff); // for debug purposes, it's better to see decimal representation of float in comparison with exponential;
 			return false;
 		}
 	}
+	return true;
+}
+
+bool  c_comparator::Do_it (const s_vec_3& _lhs, const s_vec_3& _rhs, const float _f_threshold/* = defs::f_epsilon*/) {
+	_lhs; _rhs; _f_threshold;
+	static CString cs_diff;
+	static float f_diff = 0.0f;
+
+	if (::abs(_f_threshold) < ::abs((f_diff = _lhs.x - _rhs.x))) { cs_diff.Format(_T("%9.7f"), f_diff); return false; }
+	if (::abs(_f_threshold) < ::abs((f_diff = _lhs.y - _rhs.y))) { cs_diff.Format(_T("%9.7f"), f_diff); return false; }
+	if (::abs(_f_threshold) < ::abs((f_diff = _lhs.z - _rhs.z))) { cs_diff.Format(_T("%9.7f"), f_diff); return false; }
 	return true;
 }
 

@@ -15,30 +15,6 @@ c_rotate_3x3::c_rotate_3x3 (void) : TBase() {}
 c_rotate_3x3::c_rotate_3x3 (const c_mat3x3& _src) : TBase(_src) {}
 c_rotate_3x3::c_rotate_3x3 (const float _f_angle, const float _x, const float _y, const float _z) { (*this)(_f_angle, _x, _y, _z); }
 
-vec_2&    c_rotate_3x3::Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
-	_f_angle; _to_rot; _b_use_eps;
-	// (1) saves the translare point;
-	const vec_2 v_pivot((*this)()(2,0), (*this)()(2,1));
-	// (2) prepares this matrix for rotation by given ahgle; this->Prepate uses matrix_2x2::Prepare();
-	this->Prepare (_f_angle, axes_t::e_z_axis);
-	// (3) calculates the target point coords: x and y; this is also the work for matrix_2x2;
-	((c_mat2x2)(*this)()).Mltply(_to_rot);
-	// (4) restores the pivot point;
-	(*this) << v_pivot;
-	// (5) applies the translate point;
-	_to_rot += v_pivot;
-	if (_b_use_eps) {
-		_to_rot.Round();
-	}
-	return _to_rot;
-}
-
-vec_2&    c_rotate_3x3::Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
-	_f_angle; _to_rot; _b_use_eps;
-	(*this) << _v_pivot;
-	return this->Do(_f_angle, _to_rot, _b_use_eps);
-}
-
 c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const float _x, const float _y, const float _z) {
 	_f_angle; _x; _y; _z;
 	const float cos_ = ::cosf(_f_angle * ::defs::deg_2_rad);
@@ -67,8 +43,42 @@ c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const float _x, const float _y
 }
 
 c_mat3x3& c_rotate_3x3::Do (const float _f_angle, const vec_3& _axis) { return this->Do(_f_angle, _axis.x, _axis.y, _axis.z); }
+
+vec_2&    c_rotate_3x3::Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _b_use_eps;
+	// (1) saves the translare point;
+	const vec_2 v_pivot((*this)()(2,0), (*this)()(2,1));
+	// (2) prepares this matrix for rotation by given ahgle; this->Prepate uses matrix_2x2::Prepare();
+	this->Prepare (_f_angle, axes_t::e_z_axis);
+	// (3) calculates the target point coords: x and y; this is also the work for matrix_2x2;
+	((c_mat2x2)(*this)()).Mltply(_to_rot);
+	// (4) restores the pivot point;
+	(*this) << v_pivot;
+	// (5) applies the translation;
+	_to_rot += v_pivot;
+	if (_b_use_eps) { _to_rot.Round(); /*uses default threashold: defs::f_epsilon;*/ }
+	return _to_rot;
+}
+
+vec_2&    c_rotate_3x3::Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _b_use_eps;
+	(*this) << _v_pivot;
+	return this->Do(_f_angle, _to_rot, _b_use_eps);
+}
+
+vec_3&    c_rotate_3x3::Do (const float _f_angle, vec_3& _to_rot, const axes_t::e_axes _e_axis, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _e_axis; _b_use_eps;
+	// (1) prepares this matrix for rotation around given axis; 
+	//    *attention*: this matrix does not contain a pivot point for rotation in 3d space, but only for rotation in 2d space!
+	this->Prepare(_f_angle, _e_axis);
+	// (2) calculates the target point coords: x and y;
+	(*this)().Mltply(_to_rot);
+	if (_b_use_eps) { _to_rot.Round(); /*uses default threashold: defs::f_epsilon;*/ }
+	return _to_rot;
+}
+
 /* retrieves angles in degree from rotation matrix, M = rx * ry * rz:
-   where, rx - the rotation about x-axis or 'pitch', ry - the rotation about y-axis or 'yaw/heading' and rx - the rotation about z-axis or 'roll';
+   where, rx - the rotation about x-axis or 'pitch', ry - the rotation about y-axis or 'yaw/heading' and rz - the rotation about z-axis or 'roll';
 */
 vec_3 c_rotate_3x3::Get_angle (void) const {
 	/*          rx('pitch')            ry('yaw')              rz('roll')
@@ -104,9 +114,9 @@ vec_3 c_rotate_3x3::Get_forward (void) const { return vec_3((*this)()(2, 0), (*t
 vec_3 c_rotate_3x3::Get_left (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#0 'x';
 vec_3 c_rotate_3x3::Get_up (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#1 'y';
 
-c_mat3x3& c_rotate_3x3::On_x (const float _f_angle) { _f_angle; return *this; }
-c_mat3x3& c_rotate_3x3::On_y (const float _f_angle) { _f_angle; return *this; }
-c_mat3x3& c_rotate_3x3::On_z (const float _f_angle) { _f_angle; return *this; }
+vec_3& c_rotate_3x3::On_x (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_x_axis, _b_use_eps); }
+vec_3& c_rotate_3x3::On_y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_y_axis, _b_use_eps); }
+vec_3& c_rotate_3x3::On_z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_z_axis, _b_use_eps); }
 
 c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle, const axes_t::e_axes _e_axis/* = axes_t::e_z_axis*/) {
 	_f_angle; _e_axis;
@@ -160,5 +170,8 @@ c_mat3x3& c_rotate_3x3::operator ()(void)       { return (c_mat3x3&)*this; }
 
 c_mat3x3& c_rotate_3x3::operator <<(const vec_2& _v_pivot) { (*this)()(2,0) = _v_pivot.x; (*this)()(2,1) = _v_pivot.y; return *this; }
 const c_mat3x3& c_rotate_3x3::operator >>(vec_2& _v_pivot) const { _v_pivot.Set((*this)()(2,0), (*this)()(2,1)); return *this; }
+
+c_mat3x3& c_rotate_3x3::operator <<(const vec_3& _v_pivot) { (*this)()(2,0) = _v_pivot.x; (*this)()(2,1) = _v_pivot.y; (*this)()(2,2) = _v_pivot.z; return *this; }
+const c_mat3x3& c_rotate_3x3::operator >>(vec_3& _v_pivot) const { _v_pivot.Set((*this)()(2,0), (*this)()(2,1), (*this)()(2,2)); return *this; }
 
 #pragma endregion

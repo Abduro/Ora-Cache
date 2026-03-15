@@ -8,6 +8,7 @@
 using namespace ebo::boo::test::open_gl::math;
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
+
 	// https://en.wikipedia.org/wiki/Prep >> preparatory; 
 	class CPrep {
 	public:
@@ -20,15 +21,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			c_rot_3x3 mat_3x3; mat_3x3.Prepare(s_rot_cri_t(_f_angle, _e_axis, true));
 
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
-			::glm::vec3 v_axis(0.0f, 0.0f, 0.0f);
+			::glm::vec3 v_axis = CPrep::Get_axis(_e_axis);
 
-			switch (_e_axis) {
-			case axes_t::e_x_axis: v_axis = {1.0f, 0.0f, 0.0f}; break;
-			case axes_t::e_y_axis: v_axis = {0.0f, 1.0f, 0.0f}; break;
-			case axes_t::e_z_axis: v_axis = {0.0f, 0.0f, 1.0f}; break;
-			}
-
-			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix aroung Z-axis;
+			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
 
 			::glm::mat3x3 mat_glm_3x3 = mat_glm;
 			t_mat3x3 mat_cpy = c_adapter() << mat_glm_3x3;
@@ -46,11 +41,64 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			else _out() += TString().Format(pc_sz_pat_failure, f_cmp_thresh);
 		}
 
+		static ::glm::vec3 Get_axis (const axes_t::e_axes _e_axis) {
+			_e_axis;
+			switch (_e_axis) {
+			case axes_t::e_x_axis: return ::glm::vec3(1.0f, 0.0f, 0.0f);
+			case axes_t::e_y_axis: return ::glm::vec3(0.0f, 1.0f, 0.0f);
+			case axes_t::e_z_axis: return ::glm::vec3(0.0f, 0.0f, 1.0f);
+			default: return ::glm::vec3(0.0f, 0.0f, 0.0f);
+			}
+		}
+
 	private:
 		CPrep& operator = (const CPrep&) = delete; CPrep& operator = (CPrep&&) = delete;
 	};
 
+	static _pc_sz pc_sz_mat_equal = _T("[impt] result: matrices are equal;");
+	static _pc_sz pc_sz_mat_diff  = _T("[error] result: matrices are *not* equal;");
+
+	static _pc_sz pc_sz_vec_equal = _T("[impt] result: vectors are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_vec_diff  = _T("[error] result: vectors are *not* equal (compare threshold = %.7f);");
+
+	class CRotator {
+	public:
+		 CRotator (void) = default; CRotator (const CRotator&) = delete; CRotator (CRotator&&) = delete;
+		~CRotator (void) = default;
+
+		static
+		vec_3& Do_it (const float _f_angle, const axes_t::e_axes _e_axis, vec_3& _to_rot) { // rotates input vector by using GLM lib;
+			_f_angle; _e_axis;
+			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
+			::glm::vec3 v_axis = CPrep::Get_axis(_e_axis);
+			::glm::vec3 v_res_glm(_to_rot.x, _to_rot.y, _to_rot.z);
+
+			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
+
+			::glm::mat3x3 mat_glm_3x3 = mat_glm; // casts to matrix_3x3;
+			v_res_glm = mat_glm_3x3 * v_res_glm; // applies the rotation matrix to the vector being rotated;
+
+			s_rot_cri_t::To_str(_f_angle, _e_axis, true);
+
+			t_mat3x3 mat_cpy_3x3 = c_adapter() << mat_glm_3x3;
+			t_mat4x4 mat_cpy_4x4 = c_adapter() << mat_glm;
+
+			_out() += TString().Format(_T("[impt] mat_glm_4x4 *after* rotation:")); c_mtx_4x4::To_str(mat_cpy_4x4, false);
+			_out() += TString().Format(_T("[impt] mat_glm_3x3 *after* rotation:")); c_mtx_3x3::To_str(mat_cpy_3x3, false);
+
+			_out() += TString().Format(_T("Input glm::vec_3 *before* : %s;"), (_pc_sz) _to_rot.To_str());
+			_to_rot.Set(v_res_glm.x, v_res_glm.y, v_res_glm.z);
+			_out() += TString().Format(_T("Input glm::vec_3 *after*  : %s;"), (_pc_sz) _to_rot.To_str());
+
+			return _to_rot;
+		}
+
+	private:
+		CRotator& operator = (const CRotator&) = delete; CRotator& operator = (CRotator&&) = delete;
+	};
+
 }}}}}
+using namespace ebo::boo::test::open_gl::_impl;
 
 #pragma region cls::c_mat_3x3{}
 
@@ -66,8 +114,8 @@ void c_mat_4x4::Identity (void) {
 	c_mtx_4x4::To_str(mat_glm(), false);
 
 	if (mat_this() == mat_glm())
-	     _out() += _T("[impt] result: matrices are equal;");
-	else _out() += _T("[error] result: matrices are not equal;");
+	     _out() += pc_sz_mat_equal;
+	else _out() += pc_sz_mat_diff;
 	_out()();
 }
 
@@ -80,8 +128,8 @@ void c_mat_4x4::Translate (void) {
 	c_mtx_4x4::To_str(mat_glm(), false);
 
 	if (mat_this() == mat_glm())
-	     _out() += _T("[impt] result: matrices are equal;");
-	else _out() += _T("[error] result: matrices are not equal;");
+	     _out() += pc_sz_mat_equal;
+	else _out() += pc_sz_mat_diff;
 	_out()();
 }
 
@@ -129,22 +177,6 @@ void c_mat_4x4::Transpose (void) {
 #pragma endregion
 #pragma region cls::c_rot_3x3{}
 #if (0)
-c_rot_3x3::c_rot_3x3 (const bool _b_verb) : m_b_verb(_b_verb) {
-	if (this->m_b_verb && false) {
-		_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-		_out()();
-	}
-}
-
-void c_rot_3x3::_ctor (void) {
-	
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	this->To_str();
-}
-
-const
-t_rot3x3& c_rot_3x3::ref (void) const { return this->m_rot3x3; }
-t_rot3x3& c_rot_3x3::ref (void)       { return this->m_rot3x3; }
 
 void      c_rot_3x3::Rotate_x (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -309,9 +341,9 @@ void c_t_rotate_2x2::Vector (void) {
 void c_t_rotate_3x3::Pivot (void) {
 
 	vec_2 v_2_rot(1.0f, 0.0f);
-	vec_2 v_point(1.0f, 1.0f); // pivot point is set through ctor of s_rot_cri_ex({1.0f, 1.0f}, true);
+	vec_2 v_point(1.0f, 1.0f); // pivot point is set through ctor of s_rot_cri_v2({1.0f, 1.0f}, true);
 
-	c_rot_3x3().Rotate((s_rot_cri_ex({1.0f, 1.0f}, true) << 90.0f << axes_t::e_z_axis), v_2_rot);
+	c_rot_3x3().Rotate((s_rot_cri_v2({1.0f, 1.0f}, true) << 90.0f << axes_t::e_z_axis), v_2_rot);
 
 	_out()();
 }
@@ -320,7 +352,7 @@ void c_t_rotate_3x3::Point (void) {
 
 	vec_2 v_2_rot(1.0f, 0.0f);
 
-	c_rot_3x3().Rotate((s_rot_cri_ex() << 90.0f << axes_t::e_z_axis), v_2_rot); // pivot point is set to axes'origin (0,0) and does not affect the rotation;
+	c_rot_3x3().Rotate((s_rot_cri_v2() << 90.0f << axes_t::e_z_axis), v_2_rot); // pivot point is set to axes'origin (0,0) and does not affect the rotation;
 
 	_out()();
 }
@@ -334,6 +366,25 @@ void c_t_rotate_3x3::Prepare (void) {
 	_impl::CPrep::Do_it(f_angle, axes_t::e_x_axis);
 	_impl::CPrep::Do_it(f_angle, axes_t::e_y_axis);
 	_impl::CPrep::Do_it(f_angle, axes_t::e_z_axis);
+
+	_out()();
+}
+
+void c_t_rotate_3x3::Vector (void) {
+
+	float f_angle = 90.0f;
+
+	vec_3 v_to_rot_0(1.0f, 1.0f, 1.0f);
+	vec_3 v_to_rot_1(1.0f, 1.0f, 1.0f);
+
+	_impl::CRotator::Do_it(f_angle, axes_t::e_x_axis, v_to_rot_0);                   // uses GLM lib;
+	c_rot_3x3().Rotate((s_rot_cri_v3() << f_angle << axes_t::e_x_axis), v_to_rot_1); // uses math lib;
+
+	const float f_cmp_thresh = 0.0000003f;
+
+	if (c_comparator::Do_it(v_to_rot_0, v_to_rot_1 , f_cmp_thresh))
+		 _out() += TString().Format(pc_sz_vec_equal, f_cmp_thresh);
+	else _out() += TString().Format(pc_sz_vec_diff , f_cmp_thresh);
 
 	_out()();
 }
@@ -497,46 +548,6 @@ void c_t_rotate_4x4::On_X (void) {
 	else _out() += _T("[error] result: glm::mat4x4 and c_mat4x4 are *not* equal after rotation;");
 
 	_out()();
-}
-
-#pragma endregion
-#pragma region cls::c_stk_current{}
-
-c_stk_current::c_stk_current (void) {}
-
-void c_stk_current::Get (void) { c_stk_target().Get(); _out()();  }
-void c_stk_current::Set (void) { c_stk_target().Set(e_mat_type::e_undef); _out()(); }
-
-#pragma endregion
-#pragma region cls::c_mat_stack{}
-
-c_mat_stack::c_mat_stack (void) {}
-
-void c_mat_stack::Get (void) {
-	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	c_mtx_4x4 mat_4; mat_4().Cell(0,1) = 0.1f;
-	c_mtx_stack stack;
-
-	_out() += TString().Format(_T("The metrix *before* pushing to stack:\n%s"), (_pc_sz)c_mtx_4x4::To_str(mat_4(), false));
-
-	if (__failed(stack.Push(mat_4(), c_stk_target()().Get()))) { _out()(); return; }
-	if (__failed(stack.Get(e_mat_type::e_modelview, mat_4()))) { _out()(); return; }
-
-	_out() += TString().Format(_T("The metrix *after* pushing to stack:\n%s"), (_pc_sz)c_mtx_4x4::To_str(mat_4(), false));
-
-	_out()();
-}
-
-void c_mat_stack::Pop (void) {
-	c_mtx_stack().Pop(); _out()();
-}
-
-void c_mat_stack::Push (void) {
-
-	c_mtx_stack stack;
-
-	if (__failed(stack.Push(t_mat4x4(), /*e_mat_type::e_undef*/ c_stk_target()().Get()))) {} else stack.Pop(); _out()();
 }
 
 #pragma endregion

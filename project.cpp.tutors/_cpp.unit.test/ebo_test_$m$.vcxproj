@@ -236,6 +236,8 @@
     <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.stack.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />

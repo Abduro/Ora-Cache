@@ -15,6 +15,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	struct s_vec_3 : public s_vec_2 {
 		static const uint32_t u_count = s_vec_2::u_count + 1; // the number of the fields' count;
 		s_vec_3 (void);
+		s_vec_3 (const t_set_3&);
 		s_vec_3 (const float _values[u_count]);       // values are assigned in the following order: x|y|z;
 		s_vec_3 (const float _x, const float _y, const float _z);
 		s_vec_3 (const s_vec_2&, const float _z = 0.0f);
@@ -45,7 +46,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_3& operator - (void) ;                  // changes sign to opposite of all elements of this vector;
 
 		s_vec_3& operator  =(const s_vec_3&);
-		s_vec_3& operator *=(const s_vec_3&);         // multiplies this vector by input one;
+		s_vec_3& operator +=(const s_vec_3&);         // multiplies this vector by input one;
+		s_vec_3& operator *=(const s_vec_3&);
 
 		s_vec_3& operator /=(const float _f_scale) ;      // makes inversion of this vector in accordance with given scale factor;
 		s_vec_3  operator / (const float _f_scale) const; // makes inversion of this vector in accordance with given scale factor;

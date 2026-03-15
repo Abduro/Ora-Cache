@@ -39,6 +39,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		vec_2&    Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps = false);   // rotates given point (vec_2) around Z-axis (z = 1);
 		vec_2&    Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps = false); // pivot point is put as translation to this matrix;
+		vec_3&    Do (const float _f_angle, vec_3& _to_rot, const axes_t::e_axes, const bool _b_use_eps = false); // rotates 3d vector around given axis by certain angle;
 
 		vec_3 Get_angle (void) const;  // gets rotation angle from this matrix {x:pitch;y:yaw;z:roll};
 		vec_3 Get_forward (void) const;
@@ -50,31 +51,34 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #1  0  cos(a) -sin(a)  Y-axis coord values change;
 		      #2  0  sin(a)  cos(a)  Z-axis coord values change;
 		*/
-		c_mat3x3& On_x (const float _f_angle); // rotates on X-axis, the angle is in degrees;
+		vec_3& On_x (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on X-axis, the angle is in degrees;
 		/*rotation around the Y-axis (Yaw/Heading):
 		cols:    #0     #1  #2     
 		rows: #0  cos(a) 0   sin(a)  X-axis coord values change;
 		      #1  0      1   0       cell (1,1) == 1, because this is the rotation around Y-axis;
 		      #2 -sin(a) 0   cos(a)  Z-axis coord values change;
 		*/
-		c_mat3x3& On_y (const float _f_angle); // rotates on Y-axis, the angle is in degrees;
+		vec_3& On_y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Y-axis, the angle is in degrees;
 		/*rotation around the Z-axis (Roll):
 		cols:    #0      #1     #2
 		rows: #0  cos(a) -sin(a) 0   X-axis coord values change;
 		      #1  sin(a)  cos(a) 0   Y-axis coord values change;
 		      #2  0       0      1   cell (2,2) == 1, because this is the rotation around Z-axis;
 		*/
-		c_mat3x3& On_z (const float _f_angle); // rotates on Z-axis, the angle is in degrees;
+		vec_3& On_z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Z-axis, the angle is in degrees;
 		c_mat3x3& Prepare (const float _f_angle, const axes_t::e_axes = axes_t::e_z_axis); // prepares *this* matrix for making rotation by given angle;
 
 		c_mat3x3& operator ()(const float _f_angle, const float _x, const float _y, const float _z); // rotates this matrix by calling this::Do(...);
 
 		const
-		c_mat3x3& operator ()(void) const;
-		c_mat3x3& operator ()(void);
+		c_mat3x3& operator ()(void) const; // gets the reference to the parent class object;
+		c_mat3x3& operator ()(void);       // gets the reference to the parent class object;
 
-		c_mat3x3& operator <<(const vec_2& _v_pivot); // sets the pivot/translation point;
-		const c_mat3x3& operator >>(vec_2& _v_pivot) const; // gets the pivot/translation point;
+		c_mat3x3& operator <<(const vec_2& _v_pivot);       // sets the 2d pivot/translation point;
+		const c_mat3x3& operator >>(vec_2& _v_pivot) const; // gets the 2d pivot/translation point;
+
+		c_mat3x3& operator <<(const vec_3& _v_pivot);       // sets the 3d pivot/translation point;
+		const c_mat3x3& operator >>(vec_3& _v_pivot) const; // gets the 3d pivot/translation point;
 
 	private:
 		c_rotate_3x3& operator = (const c_rotate_3x3&) = delete; c_rotate_3x3& operator = (c_rotate_3x3&&) = delete;

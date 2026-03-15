@@ -57,8 +57,8 @@ rows: #0  0  2   0   2   6   0   2   6 0xc
 		 c_comparator (const float _f_threshold = defs::f_epsilon); c_comparator (const c_comparator&) = delete; c_comparator (c_comparator&&) = delete;
 		~c_comparator (void) = default;
 
-		static
-		bool  Do_it (const c_mat3x3& _lhs, const c_mat3x3& _rhs, const float _f_threshold = defs::f_epsilon);
+		static bool Do_it (const c_mat3x3& _lhs, const c_mat3x3& _rhs, const float _f_threshold = defs::f_epsilon);
+		static bool Do_it (const s_vec_3& _lhs, const s_vec_3& _rhs, const float _f_threshold = defs::f_epsilon);
 
 		float Threshold (void) const;
 		void  Threshold (const float);

@@ -10,7 +10,6 @@
 #include "test_case_$m$.mat4x4.h"
 #include "test_case_$m$.vec3.h"
 #include "test_case_$m$.vec4.h"
-#include "test_case_$m$.stack.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
@@ -88,9 +87,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		 c_t_rotate_3x3 (void) = default;
 		~c_t_rotate_3x3 (void) = default;
 
-		__method (Pivot);   // rotates point around pivot point;
-		__method (Point);   // rotates point around Z-axis from axes origin (0,0);
-		__method (Prepare); // prepares the matrix for rotation by certain angle and around particular axis (x, y or z);
+		__method (Pivot);   // rotates 2d-point around pivot point in X,Y plane;
+		__method (Point);   // rotates 2d-point around Z-axis from axes's origin (0,0);
+		__method (Prepare); // prepares the matrix for rotation by certain angle and around particular axis (X, Y or Z);
+		__method (Vector);  // rotates 3d-vector around particular axis (X, Y or Z) by certain angle;
 	};
 
 	__class (c_t_rotate_4x4) {
@@ -99,29 +99,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		~c_t_rotate_4x4 (void) = default;
 
 		__method (On_X); // rotates on set of different angles about x-axis;
-	};
-	/* The matrix stack functionality (glMatrixMode, glGetFloatv, glLoadIdentity, etc.) is part of the "fixed-function pipeline" and has been deprecated since OpenGL 3.1.
-	   OpenGL (3.1+ Core Profile, OpenGL ES 2.0+) requires to manage matrices in application code and pass them to shaders using uniforms;
-	   Thus, testing functionality of classes below is useless:
-	   cls::[CError]>>{code=0x0502;result=0x80070502;desc='#__e_state: Invalid state for getting the pointer';context=CBase::CParam::Get_ptr()}
-	*/
-	__class (c_stk_current) {
-	public:
-		 c_stk_current (void);
-		~c_stk_current (void) = default;
-
-	__method (Get);
-	__method (Set);
-	};
-
-	__class (c_mat_stack) {
-	public:
-		 c_mat_stack (void);
-		~c_mat_stack (void) = default;
-
-	__method (Get);
-	__method (Pop);
-	__method (Push);
 	};
 
 }}}}}
