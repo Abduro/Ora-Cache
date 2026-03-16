@@ -68,8 +68,11 @@ vec_3 c_rotate_4x4::Get_angle (void) const {
 	).Get_angle();
 }
 
-c_mat4x4& c_rotate_4x4::On_x (const float _f_angle) {
+c_mat4x4& c_rotate_4x4::On_x (const float _f_angle, const bool _b_use_inherit/* = false*/) {
 	_f_angle;
+	this->Identity();
+
+	if (false == _b_use_inherit) {
 	const float cos_ = ::cosf(_f_angle * ::defs::deg_2_rad);
 	const float sin_ = ::sinf(_f_angle * ::defs::deg_2_rad);
 	// copies original data before making the calculations;
@@ -101,7 +104,12 @@ c_mat4x4& c_rotate_4x4::On_x (const float _f_angle) {
 	// col_#_4
 	(*this)()(3, 1) = col_3._y * cos_ + col_3._z *-sin_;
 	(*this)()(3, 2) = col_3._y * sin_ + col_3._z * cos_;
-
+	}
+	else {
+		c_rotate_3x3 rot_3x3((c_mat3x3&)(*this));
+		rot_3x3.Prepare(_f_angle, axes_t::e_x_axis);
+		(*this) << rot_3x3();
+	}
 	return (*this)();
 }
 
@@ -175,6 +183,59 @@ c_mat4x4& c_rotate_4x4::On_z (const float _f_angle) {
 	// col_#_4
 	(*this)()(3, 0) = col_3._x * cos_ + col_3._y *-sin_;
 	(*this)()(3, 1) = col_3._x * sin_ + col_3._y * cos_;
+
+	return (*this)();
+}
+
+c_mat4x4& c_rotate_4x4::Prepare (const float _f_angle, const axes_t::e_axes _e_axis/* = axes_t::e_z_axis*/) {
+	_f_angle; _e_axis;
+	/* creates the rotation matrix: it is done by creating rotation sub-matrix 3x3;
+	*/
+	c_rotate_3x3 mat_3x3; mat_3x3.Prepare(_f_angle);
+	(*this)().Identity();
+
+	if (false) {}
+	else if (axes_t::e_x_axis == _e_axis) {
+	/*      mat_2x2           mat_3x3        this mat_4x4
+	cols:   #0      #1        #0  #1  #2     #0  #1  #2  #3
+	rows:#0 cos(a) -sin(a)     1   0   0     m3  m3  m3   0
+	     #1 sin(a)  cos(a) >>  0  m2  m2  >> m3  m3  m3   0
+	     #2                    0  m2  m2     m3  m3  m3   0
+	     #3                                   0   0   0   1
+		 *notes*:
+	       (1) matrix_2x2 is applied to bottom-right corner of the matrix_3x3;
+	       (2) matrix 3x3 is applied to top-left corner of this matrix;
+	*/
+	(*this)() << mat_3x3;
+	}
+	else if (axes_t::e_y_axis == _e_axis) {
+	/*      mat_2x2           mat_3x3        this mat_4x4
+	cols:   #0      #1        #0  #1  #2     #0  #1  #2  #3
+	rows:#0 cos(a) -sin(a)    m2   0  m2     m3  m3  m3   0
+	     #1 sin(a)  cos(a) >>  0   1   0  >> m3  m3  m3   0
+	     #2                   m2   0  m2     m3  m3  m3   0
+	     #3                                   0   0   0   1
+	     *notes*:
+	       (1) matrix_2x2 is torn at all corners;
+	       (2) the matrix_2x2 is inverted along the main diagonal;
+	*/
+	(*this)() << mat_3x3;
+	}
+	else if (axes_t::e_z_axis == _e_axis) {
+	/*      mat_2x2           mat_3x3        this mat_4x4
+	cols:   #0      #1        #0  #1  #2     #0  #1  #2  #3
+	rows:#0 cos(a) -sin(a) >> m2  m2   0     m3  m3  m3   0
+	     #1 sin(a)  cos(a)    m2  m2   0  >> m3  m3  m3   0
+	     #2                    0   0   1     m3  m3  m3   0
+         #3                                   0   0   0   1
+	     *notes*:
+	       (1) matrix_2x2 is applied to top-left corner;
+	*/
+	(*this)() << mat_3x3;
+	}
+	else {
+		__trace_err_ex_2(CError(__CLASS__, __METHOD__, __e_inv_arg) = TString().Format(_T("#__e_inv_arg: %04u"), (uint32_t)_e_axis));
+	}
 
 	return (*this)();
 }

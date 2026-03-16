@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' generic data matrix 4x4 rotation interface declaration file;
 */
 #include "math.rot.3x3.h"
-#include "math.matrix.h"
+#include "math.matrix.h"   // to-do: included file list must be reviewed;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
@@ -24,7 +24,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #2  0  sin(a)  cos(a)  0  Z-axis coord values change;
 		      #3  0  0       0       1  *note*: rotation sub-matrix 2x2 at the center of this matrix;
 		*/
-		c_mat4x4& On_x (const float _f_angle); // rotates on X-axis, the angle is in degrees;
+		c_mat4x4& On_x (const float _f_angle, const bool _b_use_inherit = false); // rotates on X-axis, the angle is in degrees;
 		/*rotation around the Y-axis (Yaw/Heading):
 		cols:    #0     #1  #2      #3
 		rows: #0  cos(a) 0   sin(a)  0  X-axis coord values change;
@@ -41,6 +41,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #3  0       0      0   1  *note*: rotation sub-matrix 2x2 at the top-left corner of this matrix;
 		*/
 		c_mat4x4& On_z (const float _f_angle); // rotates on Z-axis, the angle is in degrees;
+
+		// prepares *this* matrix for making rotation by given angle; this function uses c_rotate_3x3::Prepare() as the base function;
+		c_mat4x4& Prepare (const float _f_angle, const axes_t::e_axes = axes_t::e_z_axis);
 
 		const
 		c_mat4x4& operator ()(void) const;

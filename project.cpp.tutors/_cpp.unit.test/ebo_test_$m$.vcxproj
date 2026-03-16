@@ -232,10 +232,16 @@
     <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp" />
-    <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.mat3x3.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.mat3x3.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.mat4x4.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.mat4x4.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.stack.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp" />
   </ItemGroup>

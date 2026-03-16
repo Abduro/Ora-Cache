@@ -76,10 +76,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		c_mat3x3& operator <<(const vec_2& _v_pivot);       // sets the 2d pivot/translation point;
 		const c_mat3x3& operator >>(vec_2& _v_pivot) const; // gets the 2d pivot/translation point;
-
+#if(0)
 		c_mat3x3& operator <<(const vec_3& _v_pivot);       // sets the 3d pivot/translation point;
 		const c_mat3x3& operator >>(vec_3& _v_pivot) const; // gets the 3d pivot/translation point;
-
+#endif
 	private:
 		c_rotate_3x3& operator = (const c_rotate_3x3&) = delete; c_rotate_3x3& operator = (c_rotate_3x3&&) = delete;
 	};

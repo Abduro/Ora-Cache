@@ -254,6 +254,35 @@ bool   c_mat4x4::operator !=(const c_mat4x4& _compare) const {
 	return false == (*this == _compare);
 }
 
+c_mat4x4::operator c_mat3x3 (void) const {
+	/* this matrix: (indices);  mat_3x3
+	cols:   #0  #1  #2  #3    #0  #1  #2
+	rows:#0  0   4   8   c >>  0   4   8
+	     #1  1   5   9   d     1   5   9
+	     #2  2   6   a   e     2   6   a
+	     #3  3   7   b   f     -   -   -
+	*/
+	return c_mat3x3(
+		{(*this)(0,0), (*this)(0,1), (*this)(0,2)},   // col_#0;
+		{(*this)(1,0), (*this)(1,1), (*this)(1,2)},   // col_#1;
+		{(*this)(2,0), (*this)(2,1), (*this)(2,2)}    // col_#2;
+	);
+}
+
+c_mat4x4& c_mat4x4::operator <<(const c_mat3x3& _mat_3x3) {
+	_mat_3x3; // this matrix is being copied to the top-left corner of this matrix;
+	          // to-do: perhaps using memcpy_s is faster than this one:
+	(*this)(0,0) = _mat_3x3(0,0); (*this)(0,1) = _mat_3x3(0,1); (*this)(0,2) = _mat_3x3(0,2); // col_#0;
+	(*this)(1,0) = _mat_3x3(1,0); (*this)(1,1) = _mat_3x3(1,1); (*this)(1,2) = _mat_3x3(1,2); // col_#1;
+	(*this)(2,0) = _mat_3x3(2,0); (*this)(2,1) = _mat_3x3(2,1); (*this)(2,2) = _mat_3x3(2,2); // col_#2;
+	return *this;
+}
+const
+c_mat4x4& c_mat4x4::operator >>(c_mat3x3& _m_3x3) const {
+	_m_3x3 = (c_mat3x3)(*this);
+	return *this;
+}
+
 #pragma endregion
 #pragma region cls::c_mat4x4::c_rows{}
 

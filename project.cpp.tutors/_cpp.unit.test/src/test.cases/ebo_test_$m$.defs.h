@@ -66,6 +66,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		mutable CError m_error;
 	};
 
+	static _pc_sz pc_sz_mat_equal = _T("[impt] result: matrices are equal;");
+	static _pc_sz pc_sz_mat_diff  = _T("[error] result: matrices are *not* equal;");
+
+	static _pc_sz pc_sz_vec_equal = _T("[impt] result: vectors are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_vec_diff  = _T("[error] result: vectors are *not* equal (compare threshold = %.7f);");
+
 }}}}}
 
 #pragma comment(lib, "glm_v15.lib")      // OpenGL mathematics project;

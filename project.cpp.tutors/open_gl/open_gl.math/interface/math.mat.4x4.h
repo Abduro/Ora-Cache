@@ -10,13 +10,6 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
-	/* entry positions or in other words, entry's indices:
-	 cols:    #0  #1   #2  #3
-	 rows:#0 | 0 | 4 | 8 | c |
-	      #1 | 1 | 5 | 9 | d |
-	      #2 | 2 | 6 | a | e |
-	      #3 | 3 | 7 | b | f |
-	*/
 	class c_mat4x4 {
 	public:
 		class c_cols {
@@ -112,6 +105,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		float*    operator ()(void) const;
 		float*    operator ()(void);
+
+		operator  c_mat3x3 (void) const; // it is not different so much in comparison with c_mat4x4& operator >>(c_mat3x3&);
+
+		c_mat4x4& operator <<(const c_mat3x3&);
+		const c_mat4x4& operator >>(c_mat3x3&) const;
 
 	protected:
 	//	::std::vector<float> m_data; // u_cols x u_rows = 16 elements;

@@ -68,8 +68,14 @@ vec_2&    c_rotate_3x3::Do (const float _f_angle, const vec_2& _v_pivot, vec_2& 
 
 vec_3&    c_rotate_3x3::Do (const float _f_angle, vec_3& _to_rot, const axes_t::e_axes _e_axis, const bool _b_use_eps/* = false*/) {
 	_f_angle; _to_rot; _e_axis; _b_use_eps;
-	// (1) prepares this matrix for rotation around given axis; 
-	//    *attention*: this matrix does not contain a pivot point for rotation in 3d space, but only for rotation in 2d space!
+	/* (1) prepares this matrix for rotation around given axis; 
+	      *attention*: this matrix does not contain a pivot point for rotation in 3d space, but only for rotation in 2d space!
+	   but, https://stackoverflow.com/questions/16663647/3x3-matrix-rotation-in-c << https://stackoverflow.com/questions/16663647/3x3-matrix-rotation-in-c ;
+	   cols:    #0      #1     #2
+	   rows:#0  cos(a) -sin(a) x - (cos(a) * x - sin(a) * y)
+	        #1  sin(a)  cos(a) y - (sin(a) * x + cos(a) * y)
+	        #2  0       0      1 , where x and y is pivot point coords;
+	*/
 	this->Prepare(_f_angle, _e_axis);
 	// (2) calculates the target point coords: x and y;
 	(*this)().Mltply(_to_rot);
@@ -120,7 +126,7 @@ vec_3& c_rotate_3x3::On_z (const float _f_angle, vec_3& _to_rot, const bool _b_u
 
 c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle, const axes_t::e_axes _e_axis/* = axes_t::e_z_axis*/) {
 	_f_angle; _e_axis;
-	/* create the rotation matrix: it is done by creating rotation sub-matrix 2x2;
+	/* creates the rotation matrix: it is done by creating rotation sub-matrix 2x2;
 	*/
 	c_rotate_2x2 mat_2x2; mat_2x2.Prepare(_f_angle);
 	(*this)().Identity();
@@ -170,8 +176,8 @@ c_mat3x3& c_rotate_3x3::operator ()(void)       { return (c_mat3x3&)*this; }
 
 c_mat3x3& c_rotate_3x3::operator <<(const vec_2& _v_pivot) { (*this)()(2,0) = _v_pivot.x; (*this)()(2,1) = _v_pivot.y; return *this; }
 const c_mat3x3& c_rotate_3x3::operator >>(vec_2& _v_pivot) const { _v_pivot.Set((*this)()(2,0), (*this)()(2,1)); return *this; }
-
+#if(0)
 c_mat3x3& c_rotate_3x3::operator <<(const vec_3& _v_pivot) { (*this)()(2,0) = _v_pivot.x; (*this)()(2,1) = _v_pivot.y; (*this)()(2,2) = _v_pivot.z; return *this; }
 const c_mat3x3& c_rotate_3x3::operator >>(vec_3& _v_pivot) const { _v_pivot.Set((*this)()(2,0), (*this)()(2,1), (*this)()(2,2)); return *this; }
-
+#endif
 #pragma endregion
