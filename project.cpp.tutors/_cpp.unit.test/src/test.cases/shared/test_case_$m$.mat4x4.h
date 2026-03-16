@@ -46,7 +46,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_rot_4x4 (void); ~c_rot_4x4 (void) = default;
 		c_rot_4x4 (const ::glm::mat4x4&);
 
-		t_mat4x4& On_X (const float _f_angle); // rotates on set of different angles about x-axis; to-do: using error object is useless in this context;
+		t_mat4x4& Around_X (const float _f_angle); // rotates on set of different angles about x-axis; to-do: using error object is useless in this context;
 
 		const
 		t_rot4x4& operator ()(void) const;

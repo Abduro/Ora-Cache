@@ -66,7 +66,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 #if (0)
 	bool operator == (const s_vec_3&, const s_vec_3&);
 #endif
-
+	s_vec_3 operator * (const float, const s_vec_3&);
 }}}}
 
 typedef ex_ui::draw::open_gl::math::s_vec_3 vec_3;

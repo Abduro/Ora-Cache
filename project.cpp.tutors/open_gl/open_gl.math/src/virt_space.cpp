@@ -8,6 +8,7 @@
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::space;
+using namespace ex_ui::draw::open_gl::space::axes;
 
 #pragma region axes::cls::CBase{}
 
@@ -38,6 +39,19 @@ axes::CFixed::CFixed (void) {
 const
 vec_3& axes::CFixed::Get (const e_axes _e_axis) const { return this->m_v_axes[_e_axis]; }
 vec_3& axes::CFixed::Get (const e_axes _e_axis)       { return this->m_v_axes[_e_axis]; }
+
+_pc_sz axes::CFixed::To_str (const axes_t::e_axes _e_axis) {
+	_e_axis;
+	static CString  cs_out;
+	switch (_e_axis) {
+	case axes_t::e_axes::e_x_axis: cs_out = _T("x-axis"); break;
+	case axes_t::e_axes::e_y_axis: cs_out = _T("y-axis"); break;
+	case axes_t::e_axes::e_z_axis: cs_out = _T("z-axis"); break;
+	default: cs_out = _T("#undef");
+	}
+
+	return (_pc_sz) cs_out;
+}
 
 const vec_3& axes::CFixed::X (void) const { return this->Get(e_axes::e_x_axis); } vec_3& axes::CFixed::X (void) { return this->Get(e_axes::e_x_axis); }
 const vec_3& axes::CFixed::Y (void) const { return this->Get(e_axes::e_y_axis); } vec_3& axes::CFixed::Y (void) { return this->Get(e_axes::e_y_axis); }

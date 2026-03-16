@@ -73,6 +73,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		float Get (const uint32_t _u_col, const uint32_t _u_row) const; // returns the value of the matrix entry by given column and row indices;
 
 		c_mat4x4& Identity (void);
+		vec_4& Mltply (vec_4&, const bool _b_round = false, const float _threshold = defs::f_epsilon) const;
 
 		const
 		c_rows& Rows (void) const;

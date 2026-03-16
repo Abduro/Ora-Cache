@@ -12,10 +12,10 @@ using namespace ebo::boo::test::open_gl::math;
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
 
 	// https://en.wikipedia.org/wiki/Prep >> preparatory; 
-	class CPrep {
+	class CPrep_3x3 {
 	public:
-		 CPrep (void) = default; CPrep (const CPrep&) = delete; CPrep (CPrep&&) = delete;
-		~CPrep (void) = default;
+		 CPrep_3x3 (void) = default; CPrep_3x3 (const CPrep_3x3&) = delete; CPrep_3x3 (CPrep_3x3&&) = delete;
+		~CPrep_3x3 (void) = default;
 
 		static
 		void Do_it (const float _f_angle, const axes_t::e_axes _e_axis) {
@@ -23,7 +23,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			c_rot_3x3 mat_3x3; mat_3x3.Prepare(s_rot_cri_t(_f_angle, _e_axis, true));
 
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
-			::glm::vec3 v_axis = CPrep::Get_axis(_e_axis);
+			::glm::vec3 v_axis = CPrep_3x3::Get_axis(_e_axis);
 
 			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
 
@@ -54,13 +54,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 		}
 
 	private:
-		CPrep& operator = (const CPrep&) = delete; CPrep& operator = (CPrep&&) = delete;
+		CPrep_3x3& operator = (const CPrep_3x3&) = delete; CPrep_3x3& operator = (CPrep_3x3&&) = delete;
 	};
 
-	class CRotator {
+	class CRot_3x3 {
 	public:
-		 CRotator (void) = default; CRotator (const CRotator&) = delete; CRotator (CRotator&&) = delete;
-		~CRotator (void) = default;
+		 CRot_3x3 (void) = default; CRot_3x3 (const CRot_3x3&) = delete; CRot_3x3 (CRot_3x3&&) = delete;
+		~CRot_3x3 (void) = default;
 
 		static
 		void   Compare (const float _f_angle, const axes_t::e_axes _e_axis) {
@@ -68,7 +68,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			vec_3 v_to_rot_0(1.0f, 1.0f, 1.0f); // is used by creating glm::vec3;
 			vec_3 v_to_rot_1(1.0f, 1.0f, 1.0f); // is used by creating math::vec_3;
 
-			_impl::CRotator::Do_it(_f_angle, _e_axis, v_to_rot_0);                   // uses GLM lib;
+			_impl::CRot_3x3::Do_it(_f_angle, _e_axis, v_to_rot_0);                   // uses GLM lib;
 			c_rot_3x3().Rotate((s_rot_cri_v3() << _f_angle << _e_axis), v_to_rot_1); // uses math lib;
 
 			const float f_cmp_thresh = 0.0000003f;
@@ -82,7 +82,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 		vec_3& Do_it (const float _f_angle, const axes_t::e_axes _e_axis, vec_3& _to_rot) { // rotates input vector by using GLM lib;
 			_f_angle; _e_axis;
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
-			::glm::vec3 v_axis = CPrep::Get_axis(_e_axis);
+			::glm::vec3 v_axis = CPrep_3x3::Get_axis(_e_axis);
 			::glm::vec3 v_res_glm(_to_rot.x, _to_rot.y, _to_rot.z);
 
 			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
@@ -106,7 +106,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 		}
 
 	private:
-		CRotator& operator = (const CRotator&) = delete; CRotator& operator = (CRotator&&) = delete;
+		CRot_3x3& operator = (const CRot_3x3&) = delete; CRot_3x3& operator = (CRot_3x3&&) = delete;
 	};
 
 }}}}}
@@ -114,21 +114,21 @@ using namespace ebo::boo::test::open_gl::_impl;
 
 #pragma region cls::c_t_rotate_3x3{}
 
-void c_t_rotate_3x3::On_X (void) {
+void c_t_rotate_3x3::Around_X (void) {
 	float f_angle = -90.0f;
-	CRotator::Compare(f_angle, axes_t::e_x_axis);
+	CRot_3x3::Compare(f_angle, axes_t::e_x_axis);
 	_out()();
 }
 
-void c_t_rotate_3x3::On_Y (void) {
+void c_t_rotate_3x3::Around_Y (void) {
 	float f_angle = -90.0f;
-	CRotator::Compare(f_angle, axes_t::e_y_axis);
+	CRot_3x3::Compare(f_angle, axes_t::e_y_axis);
 	_out()();
 }
 
-void c_t_rotate_3x3::On_Z (void) {
+void c_t_rotate_3x3::Around_Z (void) {
 	float f_angle = -90.0f;
-	CRotator::Compare(f_angle, axes_t::e_z_axis);
+	CRot_3x3::Compare(f_angle, axes_t::e_z_axis);
 	_out()();
 }
 
@@ -157,9 +157,9 @@ void c_t_rotate_3x3::Prepare (void) {
 //	c_rot_3x3().Prepare(f_angle); f_angle =  90.0f;
 
 	float f_angle = 90.0f;
-	_impl::CPrep::Do_it(f_angle, axes_t::e_x_axis);
-	_impl::CPrep::Do_it(f_angle, axes_t::e_y_axis);
-	_impl::CPrep::Do_it(f_angle, axes_t::e_z_axis);
+	_impl::CPrep_3x3::Do_it(f_angle, axes_t::e_x_axis);
+	_impl::CPrep_3x3::Do_it(f_angle, axes_t::e_y_axis);
+	_impl::CPrep_3x3::Do_it(f_angle, axes_t::e_z_axis);
 
 	_out()();
 }

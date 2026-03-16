@@ -125,7 +125,7 @@ c_rot_4x4::c_rot_4x4 (const ::glm::mat4x4& _mat4x4) : c_rot_4x4() {
 	t_mat4x4::Set((*this)()(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), error);
 }
 
-t_mat4x4&  c_rot_4x4::On_X (const float _f_angle) {
+t_mat4x4&  c_rot_4x4::Around_X (const float _f_angle) {
 	_f_angle;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 #if (0)
@@ -139,7 +139,7 @@ t_mat4x4&  c_rot_4x4::On_X (const float _f_angle) {
 	}
 #else
 	_out() += TString().Format(pc_sz_fmt_angle, _f_angle);
-	(*this)().On_x(_f_angle);
+	(*this)().Around_X(_f_angle);
 
 	_out() += _T("the matrix *after* rotation:");
 	c_mtx_4x4().To_str((*this)(), false);

@@ -60,6 +60,16 @@ c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const float _x, const float _y
 
 c_mat4x4& c_rotate_4x4::Do (const float _f_angle, const vec_3& _coords) { return this->Do(_f_angle, _coords.x, _coords.y, _coords.z); }
 
+vec_4&    c_rotate_4x4::Do (const float _f_angle, vec_4& _to_rot, const axes_t::e_axes _e_axis, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _e_axis; _b_use_eps;
+	/* (1) prepares this matrix for rotation around given axis; */
+	this->Prepare(_f_angle, _e_axis);
+	// (2) calculates the target vector values: x,y and z, w element does not participate actually;
+	(*this)().Mltply(_to_rot);
+	if (_b_use_eps) { _to_rot.Round(); /*uses default threashold: defs::f_epsilon;*/ }
+	return _to_rot;
+}
+
 vec_3 c_rotate_4x4::Get_angle (void) const {
 	return c_rotate_3x3(c_mat3x3(
 		{(*this)()(0, 0),(*this)()(0, 1),(*this)()(0, 2)},
@@ -68,7 +78,7 @@ vec_3 c_rotate_4x4::Get_angle (void) const {
 	).Get_angle();
 }
 
-c_mat4x4& c_rotate_4x4::On_x (const float _f_angle, const bool _b_use_inherit/* = false*/) {
+c_mat4x4& c_rotate_4x4::Around_X (const float _f_angle, const bool _b_use_inherit/* = false*/) {
 	_f_angle;
 	this->Identity();
 
@@ -113,7 +123,7 @@ c_mat4x4& c_rotate_4x4::On_x (const float _f_angle, const bool _b_use_inherit/* 
 	return (*this)();
 }
 
-c_mat4x4& c_rotate_4x4::On_y (const float _f_angle) {
+c_mat4x4& c_rotate_4x4::Around_Y (const float _f_angle) {
 	_f_angle;
 	const float cos_ = ::cosf(_f_angle * ::defs::deg_2_rad);
 	const float sin_ = ::sinf(_f_angle * ::defs::deg_2_rad);
@@ -150,7 +160,7 @@ c_mat4x4& c_rotate_4x4::On_y (const float _f_angle) {
 	return (*this)();
 }
 
-c_mat4x4& c_rotate_4x4::On_z (const float _f_angle) {
+c_mat4x4& c_rotate_4x4::Around_Z (const float _f_angle) {
 	_f_angle;
 	const float cos_ = ::cosf(_f_angle * ::defs::deg_2_rad);
 	const float sin_ = ::sinf(_f_angle * ::defs::deg_2_rad);
@@ -187,11 +197,11 @@ c_mat4x4& c_rotate_4x4::On_z (const float _f_angle) {
 	return (*this)();
 }
 
-c_mat4x4& c_rotate_4x4::Prepare (const float _f_angle, const axes_t::e_axes _e_axis/* = axes_t::e_z_axis*/) {
+c_mat4x4& c_rotate_4x4::Prepare (const float _f_angle, const axes_t::e_axes _e_axis) {
 	_f_angle; _e_axis;
 	/* creates the rotation matrix: it is done by creating rotation sub-matrix 3x3;
 	*/
-	c_rotate_3x3 mat_3x3; mat_3x3.Prepare(_f_angle);
+	c_rotate_3x3 mat_3x3; mat_3x3.Prepare(_f_angle, _e_axis);
 	(*this)().Identity();
 
 	if (false) {}

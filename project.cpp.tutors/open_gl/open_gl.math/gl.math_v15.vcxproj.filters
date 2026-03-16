@@ -58,6 +58,8 @@
     <ClCompile Include="$(_1)math.vec.2.cpp"><Filter>src\vector</Filter></ClCompile>
     <ClInclude Include="$(_0)math.vec.3.h"><Filter>interface\vector</Filter></ClInclude>
     <ClCompile Include="$(_1)math.vec.3.cpp"><Filter>src\vector</Filter></ClCompile>
+    <ClInclude Include="$(_0)math.vec.4.h"><Filter>interface\vector</Filter></ClInclude>
+    <ClCompile Include="$(_1)math.vec.4.cpp"><Filter>src\vector</Filter></ClCompile>
     <ClInclude Include="$(_0)math.vector.h"><Filter>interface\vector</Filter></ClInclude>
     <ClCompile Include="$(_1)math.vector.cpp"><Filter>src\vector</Filter></ClCompile>
   </ItemGroup>

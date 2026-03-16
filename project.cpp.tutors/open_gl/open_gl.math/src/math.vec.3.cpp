@@ -119,3 +119,14 @@ s_vec_2& s_vec_3::operator ()(void)       { return (s_vec_2&)*this; }
 bool s_vec_3::operator == (const s_vec_3& _rhv) const { return (*this)() == _rhv() && this->z == _rhv.z; }
 
 #pragma endregion
+namespace ex_ui { namespace draw { namespace open_gl { namespace math { // otherwise: fatal error LNK1120: 1 unresolved externals ;
+#if (0)
+bool operator == (const s_vec_3& _left, const s_vec_3& _right) {
+	return (_left.x == _right.x && _left.y == _right.y && _left.z == _right.z);
+}
+#endif
+s_vec_3 operator * (const float _lft, const s_vec_3& _v_3) {
+	return s_vec_3(_lft * _v_3.x, _lft * _v_3.y, _lft * _v_3.z);
+}
+
+}}}}

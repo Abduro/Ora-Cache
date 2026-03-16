@@ -7,8 +7,8 @@
 #include "math.defs.h"
 #include "math.vector.h"
 
-namespace ex_ui { namespace draw { namespace open_gl {/* using namespace shared::defs; using namespace ex_ui::draw::open_gl::math;*/
-namespace space { namespace axes {
+namespace ex_ui { namespace draw { namespace open_gl {
+namespace space { namespace axes { using namespace shared::defs; using namespace ex_ui::draw::open_gl::math;
 #pragma region __refs_g
 	// https://learnopengl.com/Getting-started/Coordinate-Systems ;
 	// https://www.songho.ca/opengl/gl_transform.html ;
@@ -31,6 +31,8 @@ namespace space { namespace axes {
 		const
 		vec_3& Get (const e_axes) const;
 		vec_3& Get (const e_axes);
+		static
+		_pc_sz To_str (const CFixed::e_axes);
 
 		const vec_3& X (void) const; vec_3& X (void);
 		const vec_3& Y (void) const; vec_3& Y (void);

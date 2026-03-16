@@ -38,8 +38,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		c_mat3x3& Do (const float _f_angle, const vec_3& _axis);
 
 		vec_2&    Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps = false);   // rotates given point (vec_2) around Z-axis (z = 1);
+		// uding pivot point within matrix 3x3 requires special calculation that takes into account the col #2 contains pivot point coords; it is not implemented yet;
 		vec_2&    Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps = false); // pivot point is put as translation to this matrix;
-		vec_3&    Do (const float _f_angle, vec_3& _to_rot, const axes_t::e_axes, const bool _b_use_eps = false); // rotates 3d vector around given axis by certain angle;
+		vec_3&    Do (const float _f_angle, vec_3& _to_rot, const axes_t::e_axes, const bool _b_use_eps = false);  // rotates vec_3 around given axis by certain angle;
 
 		vec_3 Get_angle (void) const;  // gets rotation angle from this matrix {x:pitch;y:yaw;z:roll};
 		vec_3 Get_forward (void) const;
@@ -51,22 +52,23 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #1  0  cos(a) -sin(a)  Y-axis coord values change;
 		      #2  0  sin(a)  cos(a)  Z-axis coord values change;
 		*/
-		vec_3& On_x (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on X-axis, the angle is in degrees;
+		vec_3& Around_X (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates given vector around X-axis, the angle is in degrees;
 		/*rotation around the Y-axis (Yaw/Heading):
 		cols:    #0     #1  #2     
 		rows: #0  cos(a) 0   sin(a)  X-axis coord values change;
 		      #1  0      1   0       cell (1,1) == 1, because this is the rotation around Y-axis;
 		      #2 -sin(a) 0   cos(a)  Z-axis coord values change;
 		*/
-		vec_3& On_y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Y-axis, the angle is in degrees;
+		vec_3& Around_Y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Y-axis, the angle is in degrees;
 		/*rotation around the Z-axis (Roll):
 		cols:    #0      #1     #2
 		rows: #0  cos(a) -sin(a) 0   X-axis coord values change;
 		      #1  sin(a)  cos(a) 0   Y-axis coord values change;
 		      #2  0       0      1   cell (2,2) == 1, because this is the rotation around Z-axis;
 		*/
-		vec_3& On_z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Z-axis, the angle is in degrees;
-		c_mat3x3& Prepare (const float _f_angle, const axes_t::e_axes = axes_t::e_z_axis); // prepares *this* matrix for making rotation by given angle;
+		vec_3& Around_Z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Z-axis, the angle is in degrees;
+		//  *attenstion!*: do not use default value for axes_t::e_axes, otherwise it may lead to failure result in passing test cases;
+		c_mat3x3& Prepare (const float _f_angle, const axes_t::e_axes);  // prepares *this* matrix for making rotation by given angle;
 
 		c_mat3x3& operator ()(const float _f_angle, const float _x, const float _y, const float _z); // rotates this matrix by calling this::Do(...);
 

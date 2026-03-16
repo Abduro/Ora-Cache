@@ -20,6 +20,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			_f_angle; _e_axis;
 			c_rot_4x4 mat_4x4; mat_4x4().Prepare(_f_angle, _e_axis);
 
+			_out() += TString().Format(pc_sz_fmt_args, _f_angle, axes_t::To_str(_e_axis));
 			_out() += TString().Format(_T("[impt] c_mat4x4 is prepared:"));
 			c_mtx_4x4::To_str(mat_4x4(), false);
 
@@ -56,7 +57,11 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 	private:
 		CPrep_4x4& operator = (const CPrep_4x4&) = delete; CPrep_4x4& operator = (CPrep_4x4&&) = delete;
 	};
-
+	class CRot_4x4 {
+	public:
+		 CRot_4x4 (void) = default; CRot_4x4 (const CRot_4x4&) = delete; CRot_4x4 (CRot_4x4&&) = delete;
+		~CRot_4x4 (void) = default;
+	};
 }}}}}
 using namespace ebo::boo::test::open_gl::_impl;
 
@@ -134,7 +139,7 @@ void c_mat_4x4::Transpose (void) {
 #pragma endregion
 #pragma region cls::c_rot_4x4{}
 #if (0)
-void c_t_rotate_4x4::On_X (void) {
+void c_t_rotate_4x4::Around_X (void) {
 	// generates random-value-matrix;
 	c_rot_4x4 this_rot; this_rot()() = c_mtx_4x4::Generate(-1.0f, +1.0f);
 	c_rot_4x4 this_cpy; this_cpy()() = this_rot()(); // makes a copy of original matrix before its rotation;
@@ -142,12 +147,12 @@ void c_t_rotate_4x4::On_X (void) {
 	_out() += _T("[warn] c_rot_4x4 *before* rotation:");
 	c_mtx_4x4::To_str(this_rot(), false);
 
-	this_rot.On_X(+90.0f); // rotate function outputs result matrix itself;
+	this_rot.Around_X(+90.0f); // rotate function outputs result matrix itself;
 #if (0)
 	c_rot_4x4 mat_rot_90; mat_rot_90()() = this_rot()(); // copies the matrix data after rotation to 90 degree angle;
 
 	_out() += _T("[warn] c_rot_4x4 rotate the matrix back:");
-	this_rot.On_X(-90.0f);
+	this_rot.Around_X(-90.0f);
 
 	if (this_rot()() == this_cpy()())
 	     _out() += _T("[impt] result: the matrix data is set to initial values;");

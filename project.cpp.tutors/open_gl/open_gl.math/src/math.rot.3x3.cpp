@@ -77,7 +77,7 @@ vec_3&    c_rotate_3x3::Do (const float _f_angle, vec_3& _to_rot, const axes_t::
 	        #2  0       0      1 , where x and y is pivot point coords;
 	*/
 	this->Prepare(_f_angle, _e_axis);
-	// (2) calculates the target point coords: x and y;
+	// (2) calculates the target vector values: x,y and z;
 	(*this)().Mltply(_to_rot);
 	if (_b_use_eps) { _to_rot.Round(); /*uses default threashold: defs::f_epsilon;*/ }
 	return _to_rot;
@@ -120,11 +120,11 @@ vec_3 c_rotate_3x3::Get_forward (void) const { return vec_3((*this)()(2, 0), (*t
 vec_3 c_rotate_3x3::Get_left (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#0 'x';
 vec_3 c_rotate_3x3::Get_up (void) const { return vec_3((*this)()(0, 0), (*this)()(0, 1), (*this)()(0, 2)); } //  gets data of col_#1 'y';
 
-vec_3& c_rotate_3x3::On_x (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_x_axis, _b_use_eps); }
-vec_3& c_rotate_3x3::On_y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_y_axis, _b_use_eps); }
-vec_3& c_rotate_3x3::On_z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_z_axis, _b_use_eps); }
+vec_3& c_rotate_3x3::Around_X (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_x_axis, _b_use_eps); }
+vec_3& c_rotate_3x3::Around_Y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_y_axis, _b_use_eps); }
+vec_3& c_rotate_3x3::Around_Z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps/*=false*/) { return this->Do(_f_angle, _to_rot, axes_t::e_z_axis, _b_use_eps); }
 
-c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle, const axes_t::e_axes _e_axis/* = axes_t::e_z_axis*/) {
+c_mat3x3& c_rotate_3x3::Prepare (const float _f_angle, const axes_t::e_axes _e_axis) {
 	_f_angle; _e_axis;
 	/* creates the rotation matrix: it is done by creating rotation sub-matrix 2x2;
 	*/

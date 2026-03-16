@@ -221,6 +221,8 @@
     <ClCompile Include="$(_1)math.vec.2.cpp" />
     <ClInclude Include="$(_0)math.vec.3.h" />
     <ClCompile Include="$(_1)math.vec.3.cpp" />
+    <ClInclude Include="$(_0)math.vec.4.h" />
+    <ClCompile Include="$(_1)math.vec.4.cpp" />
     <ClInclude Include="$(_0)math.vector.h" />
     <ClCompile Include="$(_1)math.vector.cpp" />
   </ItemGroup>

@@ -118,7 +118,6 @@ c_mat3x3 c_mat4x4::Exclude (const uint32_t _u_col, const uint32_t _u_row) const 
 float c_mat4x4::Get (const uint32_t _u_col, const uint32_t _u_row) const { return (*this)(_u_col, _u_row); }
 
 c_mat4x4& c_mat4x4::Identity (void) {
-
 //	this->m_data.resize(c_mat4x4::u_size, 0.0f); this->m_data.reserve(c_mat4x4::u_size);
 	this->m_data.fill(0.0f);
 
@@ -132,6 +131,12 @@ c_mat4x4& c_mat4x4::Identity (void) {
 		__trace_err_2(_T("#__out_of_range: _ndx=%u|size=%u;\n"), i_, c_mat4x4::u_size);
 	}
 	return *this;
+}
+
+vec_4& c_mat4x4::Mltply (vec_4& _v_4, const bool _b_round/* = false*/, const float _threshold/* = defs::f_epsilon*/) const {
+	_v_4; _b_round; _threshold;
+	((c_mat3x3)(*this)).Mltply(_v_4, _b_round, _threshold);
+	return _v_4;
 }
 const
 c_mat4x4::c_rows& c_mat4x4::Rows (void) const { return this->m_rows; }

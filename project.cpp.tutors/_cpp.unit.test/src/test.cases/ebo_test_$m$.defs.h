@@ -66,6 +66,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		mutable CError m_error;
 	};
 
+	static _pc_sz pc_sz_fmt_args  = _T("Rotate args: angle = %.2f; around %s");
 	static _pc_sz pc_sz_mat_equal = _T("[impt] result: matrices are equal;");
 	static _pc_sz pc_sz_mat_diff  = _T("[error] result: matrices are *not* equal;");
 
