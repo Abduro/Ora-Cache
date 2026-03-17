@@ -115,36 +115,34 @@ t_mat4x4& c_mtx_4x4::operator <<(const ::glm::mat4x4& _mat4x4) {
 #pragma endregion
 #pragma region cls::c_rot_4x4{}
 
-static _pc_sz pc_sz_fmt_angle = _T("Input values: rotate angle = %.1f;");
-static const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
+vec_4& c_rot_4x4::Do (const s_rot_cri_v4& _cri, vec_4& _to_rot) {
+	_cri; _to_rot;
+	_out() += TString().Format(pc_sz_fmt_args, _cri.m_f_angle, axes_t::To_str(_cri.m_e_axis));
 
-c_rot_4x4::c_rot_4x4 (void) : m_rot4x4(false) {} // no identity matrix by default construction;
-c_rot_4x4::c_rot_4x4 (const ::glm::mat4x4& _mat4x4) : c_rot_4x4() {
-	_mat4x4;
-	CError error(__CLASS__, __METHOD__, __s_ok);
-	t_mat4x4::Set((*this)()(), static_cast<const float*>(::glm::value_ptr(_mat4x4)), error);
+	vec_4 v4_cpy = _to_rot; // makes the copy of input vector for making comparison after rotation;
+
+	_to_rot = (*this)().Do(_cri.m_f_angle, _to_rot, _cri.m_e_axis, _cri.m_b_use_eps);
+
+	_out() += _T("[impt] c_mtx_4x4 is prepared for rotation:");
+	c_mtx_4x4::To_str((*this)()(), false);
+
+	_out() += TString().Format(_T("Input math::vec_4 *before*: %s;"), (_pc_sz) v4_cpy.To_str());
+	_out() += TString().Format(_T("Input math::vec_4 *after* : %s;"), (_pc_sz) _to_rot.To_str());
+
+	return _to_rot;
 }
 
-t_mat4x4&  c_rot_4x4::Around_X (const float _f_angle) {
-	_f_angle;
+t_rot4x4& c_rot_4x4::Prepare (const s_rot_cri_t& _cri) {
+	_cri;
+	if (_cri.m_b_print_cls)
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-#if (0)
-	for (uint32_t i_ = 1; i_ < _countof(f_angels) && i_ < 2; i_++) {
-		_out() += TString().Format(pc_sz_fmt_angle, f_angels[i_]);
+	_out() += TString().Format(pc_sz_fmt_args, _cri.m_f_angle, axes_t::To_str(_cri.m_e_axis));
 
-		(*this)().On_x(f_angels[i_]);
+	(*this)().Prepare(_cri.m_f_angle, _cri.m_e_axis);
 
-		_out() += _T("the matrix *after* rotation:");
-		c_mtx_4x4().To_str((*this)(), false);
-	}
-#else
-	_out() += TString().Format(pc_sz_fmt_angle, _f_angle);
-	(*this)().Around_X(_f_angle);
+	_out() += _T("[impt] c_mtx_4x4 is prepared for rotation:");
+	c_mtx_4x4::To_str((*this)()(), false);
 
-	_out() += _T("the matrix *after* rotation:");
-	c_mtx_4x4().To_str((*this)(), false);
-
-#endif
 	return (*this)();
 }
 

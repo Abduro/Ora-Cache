@@ -46,28 +46,7 @@ _pc_sz  c_mtx_3x3::To_str (const t_mat3x3& _mat_3x3, const bool _b_cls) {
 #pragma endregion
 #pragma region cls::c_rot_3x3
 
-_pc_sz s_rot_cri_t::To_str (const float _f_angle, const axes_t::e_axes _e_axis, const bool _b_print/* = false*/) {
-	_f_angle; _e_axis; _b_print;
-	static CString cs_out; cs_out.Format(pc_sz_fmt_args, _f_angle, axes_t::To_str(_e_axis));
-	if (_b_print) _out() += cs_out;
-	return (_pc_sz)cs_out;
-}
-
-t_rot3x3& c_rot_3x3::Prepare (const s_rot_cri_t& _cri) {
-	_cri;
-	if (_cri.m_b_print_cls)
-	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TString().Format(pc_sz_fmt_args, _cri.m_f_angle, axes_t::To_str(_cri.m_e_axis));
-
-	(*this)().Prepare(_cri.m_f_angle, _cri.m_e_axis);
-
-	_out() += _T("[impt] c_mtx_3x3 is prepared for rotation:");
-	c_mtx_3x3::To_str((*this)()(), false);
-
-	return (*this)();
-}
-
-vec_2& c_rot_3x3::Rotate (const s_rot_cri_v2& _cri, vec_2& _to_rot) {
+vec_2& c_rot_3x3::Do (const s_rot_cri_v2& _cri, vec_2& _to_rot) {
 	_cri; _to_rot;
 	this->Prepare(_cri()); // actually calling this function is not necessary, but just for detailed info output;
 
@@ -83,9 +62,8 @@ vec_2& c_rot_3x3::Rotate (const s_rot_cri_v2& _cri, vec_2& _to_rot) {
 	return _to_rot;
 }
 
-vec_3& c_rot_3x3::Rotate (const s_rot_cri_v3& _cri, vec_3& _to_rot) {
+vec_3& c_rot_3x3::Do (const s_rot_cri_v3& _cri, vec_3& _to_rot) {
 	_cri; _to_rot;
-
 	_out() += TString().Format(pc_sz_fmt_args, _cri.m_f_angle, axes_t::To_str(_cri.m_e_axis));
 
 	vec_3 v3_cpy = _to_rot; // makes the copy of input vector for making comparison after rotation;
@@ -95,10 +73,24 @@ vec_3& c_rot_3x3::Rotate (const s_rot_cri_v3& _cri, vec_3& _to_rot) {
 	_out() += _T("[impt] c_mtx_3x3 is prepared for rotation:");
 	c_mtx_3x3::To_str((*this)()(), false);
 
-	_out() += TString().Format(_T("Input vec_3 *before*: %s;"), (_pc_sz) v3_cpy.To_str());
-	_out() += TString().Format(_T("Input vec_3 *after* : %s;"), (_pc_sz) _to_rot.To_str());
+	_out() += TString().Format(_T("Input math::vec_3 *before*: %s;"), (_pc_sz) v3_cpy.To_str());
+	_out() += TString().Format(_T("Input math::vec_3 *after* : %s;"), (_pc_sz) _to_rot.To_str());
 
 	return _to_rot;
+}
+
+t_rot3x3& c_rot_3x3::Prepare (const s_rot_cri_t& _cri) {
+	_cri;
+	if (_cri.m_b_print_cls)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(pc_sz_fmt_args, _cri.m_f_angle, axes_t::To_str(_cri.m_e_axis));
+
+	(*this)().Prepare(_cri.m_f_angle, _cri.m_e_axis);
+
+	_out() += _T("[impt] c_mtx_3x3 is prepared for rotation:");
+	c_mtx_3x3::To_str((*this)()(), false);
+
+	return (*this)();
 }
 
 const

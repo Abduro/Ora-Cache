@@ -33,6 +33,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		 c_t_rotate_4x4 (void) = default;
 		~c_t_rotate_4x4 (void) = default;
 
+		__method (Around_X);  // rotates 3d-vector around X-axis by certain angle;
+		__method (Around_Y);  // rotates 3d-vector around Y-axis by certain angle;
+		__method (Around_Z);  // rotates 3d-vector around Z-axis by certain angle;
+
 		__method (Prepare);   // prepares the matrix for rotation by certain angle and around particular axis (X, Y or Z);
 	};
 

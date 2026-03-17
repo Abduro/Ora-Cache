@@ -51,6 +51,18 @@ const c_adapter& c_adapter::operator >> (t_mat3x3& _out_3x3) const { _out_3x3 = 
 const c_adapter& c_adapter::operator >> (t_mat4x4& _out_4x4) const { _out_4x4 = ::cached_4x4; return *this; }
 
 #pragma endregion
+#pragma region cls::c_axes{}
+
+::glm::vec3 c_axes::Get_axis (const axes_t::e_axes _e_axis) {
+	_e_axis;
+	switch (_e_axis) {
+	case axes_t::e_x_axis: return ::glm::vec3(1.0f, 0.0f, 0.0f);
+	case axes_t::e_y_axis: return ::glm::vec3(0.0f, 1.0f, 0.0f);
+	case axes_t::e_z_axis: return ::glm::vec3(0.0f, 0.0f, 1.0f);
+	default: return ::glm::vec3(0.0f, 0.0f, 0.0f);
+	}
+}
+#pragma endregion
 #pragma region cls::c_mtx_base
 
 c_mtx_base::c_mtx_base (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }

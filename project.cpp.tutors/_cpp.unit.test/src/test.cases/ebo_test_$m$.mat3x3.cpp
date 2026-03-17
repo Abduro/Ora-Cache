@@ -23,7 +23,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			c_rot_3x3 mat_3x3; mat_3x3.Prepare(s_rot_cri_t(_f_angle, _e_axis, true));
 
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
-			::glm::vec3 v_axis = CPrep_3x3::Get_axis(_e_axis);
+			::glm::vec3 v_axis = c_axes::Get_axis(_e_axis);
 
 			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
 
@@ -43,16 +43,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			else _out() += TString().Format(pc_sz_pat_failure, f_cmp_thresh);
 		}
 
-		static ::glm::vec3 Get_axis (const axes_t::e_axes _e_axis) {
-			_e_axis;
-			switch (_e_axis) {
-			case axes_t::e_x_axis: return ::glm::vec3(1.0f, 0.0f, 0.0f);
-			case axes_t::e_y_axis: return ::glm::vec3(0.0f, 1.0f, 0.0f);
-			case axes_t::e_z_axis: return ::glm::vec3(0.0f, 0.0f, 1.0f);
-			default: return ::glm::vec3(0.0f, 0.0f, 0.0f);
-			}
-		}
-
 	private:
 		CPrep_3x3& operator = (const CPrep_3x3&) = delete; CPrep_3x3& operator = (CPrep_3x3&&) = delete;
 	};
@@ -68,8 +58,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			vec_3 v_to_rot_0(1.0f, 1.0f, 1.0f); // is used by creating glm::vec3;
 			vec_3 v_to_rot_1(1.0f, 1.0f, 1.0f); // is used by creating math::vec_3;
 
-			_impl::CRot_3x3::Do_it(_f_angle, _e_axis, v_to_rot_0);                   // uses GLM lib;
-			c_rot_3x3().Rotate((s_rot_cri_v3() << _f_angle << _e_axis), v_to_rot_1); // uses math lib;
+			CRot_3x3::Do_it(_f_angle, _e_axis, v_to_rot_0);                      // uses GLM lib;
+			c_rot_3x3().Do((s_rot_cri_v3() << _f_angle << _e_axis), v_to_rot_1); // uses math lib;
 
 			const float f_cmp_thresh = 0.0000003f;
 
@@ -80,10 +70,10 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 		static
 		vec_3& Do_it (const float _f_angle, const axes_t::e_axes _e_axis, vec_3& _to_rot) { // rotates input vector by using GLM lib;
-			_f_angle; _e_axis;
+			_f_angle; _e_axis; _to_rot;
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
-			::glm::vec3 v_axis = CPrep_3x3::Get_axis(_e_axis);
-			::glm::vec3 v_res_glm(_to_rot.x, _to_rot.y, _to_rot.z);
+			::glm::vec3 v_axis = c_axes::Get_axis(_e_axis);
+			::glm::vec3 v_res_glm(_to_rot.x, _to_rot.y, _to_rot.z); // this is the vector being rotated, i.e. the transformed or result vector;
 
 			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
 
@@ -137,7 +127,7 @@ void c_t_rotate_3x3::Pivot (void) {
 	vec_2 v_2_rot(1.0f, 0.0f);
 	vec_2 v_point(1.0f, 1.0f); // pivot point is set through ctor of s_rot_cri_v2({1.0f, 1.0f}, true);
 
-	c_rot_3x3().Rotate((s_rot_cri_v2({1.0f, 1.0f}, true) << 90.0f << axes_t::e_z_axis), v_2_rot);
+	c_rot_3x3().Do((s_rot_cri_v2({1.0f, 1.0f}, true) << 90.0f << axes_t::e_z_axis), v_2_rot);
 
 	_out()();
 }
@@ -146,7 +136,7 @@ void c_t_rotate_3x3::Point (void) {
 
 	vec_2 v_2_rot(1.0f, 0.0f);
 
-	c_rot_3x3().Rotate((s_rot_cri_v2() << 90.0f << axes_t::e_z_axis), v_2_rot); // pivot point is set to axes'origin (0,0) and does not affect the rotation;
+	c_rot_3x3().Do((s_rot_cri_v2() << 90.0f << axes_t::e_z_axis), v_2_rot); // pivot point is set to axes'origin (0,0) and does not affect the rotation;
 
 	_out()();
 }

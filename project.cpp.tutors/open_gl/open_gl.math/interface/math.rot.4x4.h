@@ -26,7 +26,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #2  0  sin(a)  cos(a)  0  Z-axis coord values change;
 		      #3  0  0       0       1  *note*: rotation sub-matrix 2x2 at the center of this matrix;
 		*/
-		c_mat4x4& Around_X (const float _f_angle, const bool _b_use_inherit = false); // rotates on X-axis, the angle is in degrees;
+		vec_4& Around_X (const float _f_angle, vec_4& _to_rot, const bool _b_use_eps = false); // rotates given vector around X-axis, the angle is in degrees;
 		/*rotation around the Y-axis (Yaw/Heading):
 		cols:    #0     #1  #2      #3
 		rows: #0  cos(a) 0   sin(a)  0  X-axis coord values change;
@@ -34,7 +34,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #2 -sin(a) 0   cos(a)  0  Z-axis coord values change;
 		      #3  0      0   0       1
 		*/
-		c_mat4x4& Around_Y (const float _f_angle); // rotates on Y-axis, the angle is in degrees;
+		vec_4& Around_Y (const float _f_angle, vec_4& _to_rot, const bool _b_use_eps = false); // rotates given vector around Y-axis, the angle is in degrees;
 		/*rotation around the Z-axis (Roll):
 		cols:    #0      #1     #2  #3
 		rows: #0  cos(a) -sin(a) 0   0  X-axis coord values change;
@@ -42,7 +42,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #2  0       0      1   0  cell (2,2) == 1, because this is the rotation around Z-axis;
 		      #3  0       0      0   1  *note*: rotation sub-matrix 2x2 at the top-left corner of this matrix;
 		*/
-		c_mat4x4& Around_Z (const float _f_angle); // rotates on Z-axis, the angle is in degrees;
+		vec_4& Around_Z (const float _f_angle, vec_4& _to_rot, const bool _b_use_eps = false); // rotates given vector around Z-axis, the angle is in degrees;
 
 		// prepares *this* matrix for making rotation by given angle; this function uses c_rotate_3x3::Prepare() as the base function;
 		// *attenstion!*: do not use default value for axes_t::e_axes, otherwise it will lead to failure result in passing test cases;

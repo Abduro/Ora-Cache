@@ -26,8 +26,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	use double for higher precision: the double data type uses 64 bits and provides about 15-18 significant decimal digits of precision, compared to float's 6-9 digits...
 	*/
 	using t_mat3x3 = ex_ui::draw::open_gl::math::c_mat3x3;
-	using t_rot3x3 = ex_ui::draw::open_gl::math::c_rotate_3x3;
 	using t_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
+	using t_rot3x3 = ex_ui::draw::open_gl::math::c_rotate_3x3;
 	using t_rot4x4 = ex_ui::draw::open_gl::math::c_rotate_4x4;
 
 	// this class is an adapter for copying matrix data between glm::mat and math::c_mat4x4;
@@ -55,6 +55,17 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		mutable CError m_error;
 	};
 
+	class c_axes {
+	public:
+		 c_axes (void) = default; c_axes (const c_adapter&) = delete; c_axes (c_axes&&) = delete;
+		~c_axes (void) = default;
+
+		static ::glm::vec3 Get_axis (const axes_t::e_axes _e_axis);
+
+	private:
+		c_axes& operator = (const c_axes&) = delete; c_axes& operator = (c_axes&&) = delete;
+	};
+
 	class c_mtx_base {
 	public:
 		c_mtx_base (void); c_mtx_base (const c_mtx_base&) = delete; c_mtx_base (c_mtx_base&&) = delete; ~c_mtx_base (void) = default;
@@ -70,8 +81,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	static _pc_sz pc_sz_mat_equal = _T("[impt] result: matrices are equal;");
 	static _pc_sz pc_sz_mat_diff  = _T("[error] result: matrices are *not* equal;");
 
-	static _pc_sz pc_sz_vec_equal = _T("[impt] result: vectors are equal (compare threshold = %.7f);");
-	static _pc_sz pc_sz_vec_diff  = _T("[error] result: vectors are *not* equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_vec_equal = _T("[impt] result: glm::vec and math::vec are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_vec_diff  = _T("[error] result: glm::vec and math::vec are *not* equal (compare threshold = %.7f);");
 
 }}}}}
 

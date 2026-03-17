@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL math lib matrix4x4 unit test adapter interface implementation file; 
 */
 #include "ebo_test_$m$.mat4x4.h"
+#include "test_case_$m$.mat3x3.h" // it is required for printing glm::mat4x4 after casting to glm::mat3x3;
 #include "shared.preproc.h"
 
 using namespace ebo::boo::test::open_gl::math;
@@ -18,14 +19,14 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 		static
 		void Do_it (const float _f_angle, const axes_t::e_axes _e_axis) {
 			_f_angle; _e_axis;
-			c_rot_4x4 mat_4x4; mat_4x4().Prepare(_f_angle, _e_axis);
-
+			c_rot_4x4 mat_4x4; mat_4x4.Prepare(s_rot_cri_t(_f_angle, _e_axis, true)); /*mat_4x4().Prepare(_f_angle, _e_axis);*/
+#if (0) //	mat_4x4.Prepare() outputs all of this information;
 			_out() += TString().Format(pc_sz_fmt_args, _f_angle, axes_t::To_str(_e_axis));
 			_out() += TString().Format(_T("[impt] c_mat4x4 is prepared:"));
 			c_mtx_4x4::To_str(mat_4x4(), false);
-
+#endif
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
-			::glm::vec3 v_axis = CPrep_4x4::Get_axis(_e_axis);
+			::glm::vec3 v_axis = c_axes::Get_axis(_e_axis);
 
 			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
 
@@ -44,16 +45,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			else _out() += TString().Format(pc_sz_pat_failure, f_cmp_thresh);
 		}
 
-		static ::glm::vec3 Get_axis (const axes_t::e_axes _e_axis) {
-			_e_axis;
-			switch (_e_axis) {
-			case axes_t::e_x_axis: return ::glm::vec3(1.0f, 0.0f, 0.0f);
-			case axes_t::e_y_axis: return ::glm::vec3(0.0f, 1.0f, 0.0f);
-			case axes_t::e_z_axis: return ::glm::vec3(0.0f, 0.0f, 1.0f);
-			default: return ::glm::vec3(0.0f, 0.0f, 0.0f);
-			}
-		}
-
 	private:
 		CPrep_4x4& operator = (const CPrep_4x4&) = delete; CPrep_4x4& operator = (CPrep_4x4&&) = delete;
 	};
@@ -61,6 +52,52 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 	public:
 		 CRot_4x4 (void) = default; CRot_4x4 (const CRot_4x4&) = delete; CRot_4x4 (CRot_4x4&&) = delete;
 		~CRot_4x4 (void) = default;
+
+		static
+		void   Compare (const float _f_angle, const axes_t::e_axes _e_axis) {
+			_f_angle; _e_axis;
+			vec_4 v_to_rot_0(1.0f, 1.0f, 1.0f, 1.0f); // is used by creating glm::vec4; 'w' element is set to 1.0f, because it is position;
+			vec_4 v_to_rot_1(1.0f, 1.0f, 1.0f, 1.0f); // is used by creating math::vec_4; 'w' element is set to 1.0f, because it is position;
+
+			CRot_4x4::Do_it(_f_angle, _e_axis, v_to_rot_0);     // uses GLM lib;
+	//		c_rot_4x4()().Around_X(_f_angle, v_to_rot_1, true); // uses these tutorials' math lib; no direct call;
+			c_rot_4x4().Do((s_rot_cri_v4() << _f_angle << _e_axis), v_to_rot_1); // uses math lib;
+
+			const float f_cmp_thresh = 0.0000003f;
+
+			if (c_comparator::Do_it(v_to_rot_0, v_to_rot_1 , f_cmp_thresh))
+				 _out() += TString().Format(pc_sz_vec_equal, f_cmp_thresh);
+			else _out() += TString().Format(pc_sz_vec_diff , f_cmp_thresh);
+		}
+		static
+		vec_4& Do_it (const float _f_angle, const axes_t::e_axes _e_axis, vec_4& _to_rot) { // rotates input vector by using GLM lib;
+			_f_angle; _e_axis; _to_rot;
+			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
+			::glm::vec3 v_axis = c_axes::Get_axis(_e_axis);
+			::glm::vec3 v_res_glm(_to_rot.x, _to_rot.y, _to_rot.z); // this is the vector being rotated, i.e. the transformed or result vector;
+
+			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
+
+			::glm::mat3x3 mat_glm_3x3 = mat_glm; // casts to matrix_3x3;
+			v_res_glm = mat_glm_3x3 * v_res_glm; // applies the rotation matrix to the vector being rotated;
+
+			s_rot_cri_t::To_str(_f_angle, _e_axis, true);
+
+			t_mat3x3 mat_cpy_3x3 = c_adapter() << mat_glm_3x3;
+			t_mat4x4 mat_cpy_4x4 = c_adapter() << mat_glm;
+
+			_out() += TString().Format(_T("[impt] mat_glm_4x4 *after* rotation:")); c_mtx_4x4::To_str(mat_cpy_4x4, false);
+	//		_out() += TString().Format(_T("[impt] mat_glm_3x3 *after* rotation:")); c_mtx_3x3::To_str(mat_cpy_3x3, false);
+
+			_out() += TString().Format(_T("Input glm::vec4 *before*: %s;"), (_pc_sz) _to_rot.To_str());
+			_to_rot.Set(v_res_glm.x, v_res_glm.y, v_res_glm.z, 1.0f);
+			_out() += TString().Format(_T("Input glm::vec4 *after* : %s;"), (_pc_sz) _to_rot.To_str());
+
+			return _to_rot;
+		}
+
+	private:
+		CRot_4x4& operator = (const CRot_4x4&) = delete; CRot_4x4& operator = (CRot_4x4&&) = delete;
 	};
 }}}}}
 using namespace ebo::boo::test::open_gl::_impl;
@@ -138,44 +175,29 @@ void c_mat_4x4::Transpose (void) {
 
 #pragma endregion
 #pragma region cls::c_rot_4x4{}
-#if (0)
+
 void c_t_rotate_4x4::Around_X (void) {
-	// generates random-value-matrix;
-	c_rot_4x4 this_rot; this_rot()() = c_mtx_4x4::Generate(-1.0f, +1.0f);
-	c_rot_4x4 this_cpy; this_cpy()() = this_rot()(); // makes a copy of original matrix before its rotation;
-
-	_out() += _T("[warn] c_rot_4x4 *before* rotation:");
-	c_mtx_4x4::To_str(this_rot(), false);
-
-	this_rot.Around_X(+90.0f); // rotate function outputs result matrix itself;
-#if (0)
-	c_rot_4x4 mat_rot_90; mat_rot_90()() = this_rot()(); // copies the matrix data after rotation to 90 degree angle;
-
-	_out() += _T("[warn] c_rot_4x4 rotate the matrix back:");
-	this_rot.Around_X(-90.0f);
-
-	if (this_rot()() == this_cpy()())
-	     _out() += _T("[impt] result: the matrix data is set to initial values;");
-	else _out() += _T("[error] result: the matrix data is not set to initial values;");
-#endif
-//	::glm::mat2x2 mat_glm_2(0.0f); mat_glm_2 =::glm::rotate(mat_glm_2, glm::radians(+90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	::glm::mat4x4 mat_glm(0.0f);
-
-	c_adapter() << this_cpy()() >> mat_glm;
-
-	mat_glm = glm::rotate(mat_glm, glm::radians(+90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_out() += _T("[warn] glm::mat4x4 after rotation:");
-
-	c_adapter() << this_cpy()() << mat_glm;  // copies data from glm::mat4x4 to data copy matrix in order to compare the result of rotation of both matrices;
-	c_mtx_4x4::To_str(this_cpy()(), false);
-
-	if (this_rot()() == this_cpy()())
-	     _out() += _T("[impt] result: glm::mat4x4 and c_mat4x4 are equal after rotation;");
-	else _out() += _T("[error] result: glm::mat4x4 and c_mat4x4 are *not* equal after rotation;");
-
+	float f_angle = -90.0f;
+	CRot_4x4::Compare(f_angle, axes_t::e_x_axis);
 	_out()();
 }
-#endif
+
+void c_t_rotate_4x4::Around_Y (void) {
+	/* In OpenGL/C++ (using GLM), a vec4 (homogeneous coordinate) with w-component of -1 after a 180-degree rotation typically signifies
+	   that the vertex has been mirrored or flipped relative to the coordinate origin in a way that reverses its orientation;
+	What to Do:
+	   projection matrix must handle orientation properly, as 'w' of -1 is often considered a "flipped" or "inside-out" coordinate in homogeneous space;
+	*/
+	float f_angle = 180.0f;
+	CRot_4x4::Compare(f_angle, axes_t::e_y_axis);
+	_out()();
+}
+
+void c_t_rotate_4x4::Around_Z (void) {
+	float f_angle = -45.0f;
+	CRot_4x4::Compare(f_angle, axes_t::e_z_axis);
+	_out()();
+}
 
 void c_t_rotate_4x4::Prepare (void) {
 

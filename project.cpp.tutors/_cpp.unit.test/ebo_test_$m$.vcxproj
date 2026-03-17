@@ -216,22 +216,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
-    <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.virt.space.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.space.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$m$.mat2x2.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat2x2.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat3x3.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.rot.args.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.rot.args.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.mat3x3.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.mat3x3.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.mat4x4.h" />
@@ -261,6 +253,16 @@
     <ClCompile Include="$(_2-0)test_case_$m$.vec4.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.virt.space.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.virt.space.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">

@@ -4,8 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Feb-2026 at 14:00:50.123, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL math lib matrix 4x4 uint test interface declaration file for using in test cases' adapters;
 */
-#include "ebo_test_$m$.defs.h"
-#include "math.mat.stack.h"
+#include "test_case_$m$.rot.args.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
@@ -43,16 +42,19 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 
 	class c_rot_4x4 {
 	public:
-		c_rot_4x4 (void); ~c_rot_4x4 (void) = default;
-		c_rot_4x4 (const ::glm::mat4x4&);
+		 c_rot_4x4 (void) = default; c_rot_4x4 (const c_rot_4x4&) = delete; c_rot_4x4 (c_rot_4x4&&) = delete;
+		~c_rot_4x4 (void) = default;
 
-		t_mat4x4& Around_X (const float _f_angle); // rotates on set of different angles about x-axis; to-do: using error object is useless in this context;
+		vec_4& Do (const s_rot_cri_v4&, vec_4& _to_rot); // rotates the given vector around particular axis specified in input args;
+
+		t_rot4x4& Prepare (const s_rot_cri_t&); // returns the matrix prepared for rotation; _b_cls is for class name output;
 
 		const
 		t_rot4x4& operator ()(void) const;
 		t_rot4x4& operator ()(void);
 
 	private:
+		c_rot_4x4& operator = (const c_rot_4x4&) = delete; c_rot_4x4& operator = (c_rot_4x4&&) = delete;
 		t_rot4x4 m_rot4x4;
 	};
 

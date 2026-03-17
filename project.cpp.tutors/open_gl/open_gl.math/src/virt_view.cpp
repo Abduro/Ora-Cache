@@ -33,11 +33,13 @@ CModel::CAxes& CModel::Axes (void) const { return this->m_axes; }
 CModel::CAxes& CModel::Axes (void)       { return this->m_axes; }
 
 void    CModel::Update (void) {
+#if (0)
 	CBase::m_mat.Identity();
 	CBase::m_mat.Around_Z (CBase::Angle().z);
 	CBase::m_mat.Around_Y (CBase::Angle().y);
 	CBase::m_mat.Around_X (CBase::Angle().x);
 	CBase::m_mat.Translate(CBase::Pos());
+#endif
 }
 
 #pragma endregion
@@ -49,12 +51,13 @@ CView::CAxes& CView::Axes (void) const { return this->m_axes; }
 CView::CAxes& CView::Axes (void)       { return this->m_axes; }
 
 void CView::Update (void) {
-
+#if (0)
 	CBase::m_mat.Identity();
 	CBase::m_mat.Translate(-CBase::Pos());
 	CBase::m_mat.Around_X ( CBase::Angle().x);
 	CBase::m_mat.Around_Y (-CBase::Angle().y);
 	CBase::m_mat.Around_Z ( CBase::Angle().z);
+#endif
 }
 
 const

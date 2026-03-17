@@ -58,9 +58,8 @@ s_vec_4& s_vec_4::Set (const s_vec_3& _src, const float _w/* = 0.0f*/) { return 
 float    s_vec_4::Sum (const uint32_t _u_exp/* = 1*/) const { return s_vec_3::Sum(_u_exp) + ::_pow_n(_u_exp, this->w); }
 
 CString  s_vec_4::To_str (_pc_sz _p_format) const {
-	static _pc_sz pc_sz_pat = _T("%s;w=%s");
-	CString cs_out; cs_out.Format(
-		pc_sz_pat, (_pc_sz) s_vec_3::To_str(_p_format), TString().Float(this->w, _p_format));
+	static _pc_sz pc_sz_pat = _T("%s; w =%s");
+	CString cs_out; cs_out.Format(pc_sz_pat, (_pc_sz) s_vec_3::To_str(_p_format), _format(this->w, _p_format));
 	return  cs_out;
 }
 

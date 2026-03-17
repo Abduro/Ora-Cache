@@ -59,14 +59,14 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		      #1  0      1   0       cell (1,1) == 1, because this is the rotation around Y-axis;
 		      #2 -sin(a) 0   cos(a)  Z-axis coord values change;
 		*/
-		vec_3& Around_Y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Y-axis, the angle is in degrees;
+		vec_3& Around_Y (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates given vector around Y-axis, the angle is in degrees;
 		/*rotation around the Z-axis (Roll):
 		cols:    #0      #1     #2
 		rows: #0  cos(a) -sin(a) 0   X-axis coord values change;
 		      #1  sin(a)  cos(a) 0   Y-axis coord values change;
 		      #2  0       0      1   cell (2,2) == 1, because this is the rotation around Z-axis;
 		*/
-		vec_3& Around_Z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates on Z-axis, the angle is in degrees;
+		vec_3& Around_Z (const float _f_angle, vec_3& _to_rot, const bool _b_use_eps = false); // rotates given vector around Z-axis, the angle is in degrees;
 		//  *attenstion!*: do not use default value for axes_t::e_axes, otherwise it may lead to failure result in passing test cases;
 		c_mat3x3& Prepare (const float _f_angle, const axes_t::e_axes);  // prepares *this* matrix for making rotation by given angle;
 

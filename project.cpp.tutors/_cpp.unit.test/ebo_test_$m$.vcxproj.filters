@@ -28,6 +28,8 @@
     <ClCompile Include="$(_2-0)test_case_$m$.mat3x3.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.mat4x4.h"><Filter>matrix\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp"><Filter>matrix\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$m$.rot.args.h"><Filter>matrix\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.rot.args.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.mat3x3.h"><Filter>matrix</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.mat3x3.cpp"><Filter>matrix</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.mat4x4.h"><Filter>matrix</Filter></ClInclude>
