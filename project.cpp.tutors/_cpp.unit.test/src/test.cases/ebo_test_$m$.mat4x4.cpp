@@ -28,7 +28,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 			::glm::mat4x4 mat_glm(1.0f); // creates the identity matrix;
 			::glm::vec3 v_axis = c_axes::Get_axis(_e_axis);
 
-			mat_glm = glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
+			mat_glm = ::glm::rotate(mat_glm, glm::radians(_f_angle), v_axis); // rotates the matrix around given axis;
 
 			t_mat4x4 mat_cpy = c_adapter() << mat_glm;
 
@@ -37,17 +37,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 			const float f_cmp_thresh = 0.0000003f;
 
-			static _pc_sz pc_sz_pat_success = _T("[impt] result: glm::mat4x4 and c_mat4x4 are equal (compare threshold = %.7f);");
-			static _pc_sz pc_sz_pat_failure = _T("[error] result: glm::mat4x4 and c_mat4x4 are *not* equal (compare threshold = %.7f);");
-
-			if (c_comparator::Do_it(mat_cpy, mat_4x4()(), f_cmp_thresh))
-				 _out() += TString().Format(pc_sz_pat_success, f_cmp_thresh);
-			else _out() += TString().Format(pc_sz_pat_failure, f_cmp_thresh);
+			c_compare()(mat_cpy, mat_4x4()(), f_cmp_thresh);
 		}
 
 	private:
 		CPrep_4x4& operator = (const CPrep_4x4&) = delete; CPrep_4x4& operator = (CPrep_4x4&&) = delete;
 	};
+
 	class CRot_4x4 {
 	public:
 		 CRot_4x4 (void) = default; CRot_4x4 (const CRot_4x4&) = delete; CRot_4x4 (CRot_4x4&&) = delete;
@@ -65,9 +61,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 			const float f_cmp_thresh = 0.0000003f;
 
-			if (c_comparator::Do_it(v_to_rot_0, v_to_rot_1 , f_cmp_thresh))
-				 _out() += TString().Format(pc_sz_vec_equal, f_cmp_thresh);
-			else _out() += TString().Format(pc_sz_vec_diff , f_cmp_thresh);
+			c_compare()(v_to_rot_0, v_to_rot_1, f_cmp_thresh);
 		}
 		static
 		vec_4& Do_it (const float _f_angle, const axes_t::e_axes _e_axis, vec_4& _to_rot) { // rotates input vector by using GLM lib;
@@ -98,6 +92,35 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 	private:
 		CRot_4x4& operator = (const CRot_4x4&) = delete; CRot_4x4& operator = (CRot_4x4&&) = delete;
+	};
+
+	class CSeq_4x4 {
+	public:
+		 CSeq_4x4 (void) = default; CSeq_4x4 (const CSeq_4x4&) = delete; CSeq_4x4 (CSeq_4x4&&) = delete;
+		~CSeq_4x4 (void) = default;
+
+		static
+		t_mat4x4  Do_it (const float _f_angle) {
+			_f_angle;
+			_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+			::glm::mat4x4 mat_glm_x(1.0f); mat_glm_x = ::glm::rotate(mat_glm_x, glm::radians(_f_angle), c_axes::Get_axis(axes_t::e_x_axis));
+			::glm::mat4x4 mat_glm_y(1.0f); mat_glm_y = ::glm::rotate(mat_glm_y, glm::radians(_f_angle), c_axes::Get_axis(axes_t::e_y_axis));
+			::glm::mat4x4 mat_glm_z(1.0f); mat_glm_z = ::glm::rotate(mat_glm_z, glm::radians(_f_angle), c_axes::Get_axis(axes_t::e_z_axis));
+
+			::glm::mat4x4 mat_glm_res = mat_glm_z * mat_glm_y * mat_glm_x;
+
+			static
+			t_mat4x4 mat_res; mat_res = c_adapter() << mat_glm_res;
+
+			_out() += _T("[impt] the result glm::mat4x4 is :");
+			c_mtx_4x4::To_str(mat_res, false);
+
+			return mat_res;
+		}
+
+	private:
+		CSeq_4x4& operator = (const CSeq_4x4&) = delete; CSeq_4x4& operator = (CSeq_4x4&&) = delete;
 	};
 }}}}}
 using namespace ebo::boo::test::open_gl::_impl;
@@ -183,7 +206,8 @@ void c_t_rotate_4x4::Around_X (void) {
 }
 
 void c_t_rotate_4x4::Around_Y (void) {
-	/* In OpenGL/C++ (using GLM), a vec4 (homogeneous coordinate) with w-component of -1 after a 180-degree rotation typically signifies
+	/* query: what does mean value -1 'w' component of vec4 in opengl c++ after rotation to 180 degree?
+	   In OpenGL/C++ (using GLM), a vec4 (homogeneous coordinate) with w-component of -1 after a 180-degree rotation typically signifies
 	   that the vertex has been mirrored or flipped relative to the coordinate origin in a way that reverses its orientation;
 	What to Do:
 	   projection matrix must handle orientation properly, as 'w' of -1 is often considered a "flipped" or "inside-out" coordinate in homogeneous space;
@@ -205,6 +229,19 @@ void c_t_rotate_4x4::Prepare (void) {
 	_impl::CPrep_4x4::Do_it(f_angle, axes_t::e_x_axis);
 	_impl::CPrep_4x4::Do_it(f_angle, axes_t::e_y_axis);
 	_impl::CPrep_4x4::Do_it(f_angle, axes_t::e_z_axis);
+
+	_out()();
+}
+
+void c_t_rotate_4x4::Sequence (void) {
+	float f_angle = -90.0f;
+
+	t_mat4x4 mat_res_0 = c_rot_4x4().Sequence(f_angle,  true);
+	t_mat4x4 mat_res_1 = CSeq_4x4().Do_it(f_angle);
+
+	const float f_cmp_thresh = 0.0000003f;
+
+	c_compare()(mat_res_0, mat_res_1, f_cmp_thresh);
 
 	_out()();
 }

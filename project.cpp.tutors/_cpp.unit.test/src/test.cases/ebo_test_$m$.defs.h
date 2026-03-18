@@ -66,6 +66,21 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_axes& operator = (const c_axes&) = delete; c_axes& operator = (c_axes&&) = delete;
 	};
 
+	class c_compare : public c_comparator { typedef c_comparator base_t;
+	public:
+		 c_compare (void) = default; c_compare (const c_compare&) = delete; c_compare (c_compare&&) = delete;
+		~c_compare (void) = default;
+
+		bool operator ()(const t_mat3x3& _lhs, const t_mat3x3& _rhs, const float _f_threshold = defs::f_epsilon);
+		bool operator ()(const t_mat4x4& _lhs, const t_mat4x4& _rhs, const float _f_threshold = defs::f_epsilon);
+
+		bool operator ()(const vec_3& _lhs, const vec_3& _rhs, const float _f_threshold = defs::f_epsilon);
+		bool operator ()(const vec_4& _lhs, const vec_4& _rhs, const float _f_threshold = defs::f_epsilon);
+
+	private:
+		c_compare& operator = (const c_compare&) = delete; c_compare& operator = (c_compare&&) = delete;
+	};
+
 	class c_mtx_base {
 	public:
 		c_mtx_base (void); c_mtx_base (const c_mtx_base&) = delete; c_mtx_base (c_mtx_base&&) = delete; ~c_mtx_base (void) = default;
@@ -80,9 +95,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	static _pc_sz pc_sz_fmt_args  = _T("Rotate args: angle = %.2f; around %s");
 	static _pc_sz pc_sz_mat_equal = _T("[impt] result: matrices are equal;");
 	static _pc_sz pc_sz_mat_diff  = _T("[error] result: matrices are *not* equal;");
-
-	static _pc_sz pc_sz_vec_equal = _T("[impt] result: glm::vec and math::vec are equal (compare threshold = %.7f);");
-	static _pc_sz pc_sz_vec_diff  = _T("[error] result: glm::vec and math::vec are *not* equal (compare threshold = %.7f);");
 
 }}}}}
 

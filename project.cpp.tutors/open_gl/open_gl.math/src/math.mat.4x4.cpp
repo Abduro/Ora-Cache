@@ -309,6 +309,8 @@ c_mat4x4& c_mat4x4::c_rows::operator ()(void)       { return this->m_mat_ref; }
 
 #pragma endregion
 
+namespace ex_ui { namespace draw { namespace open_gl { namespace math {
+
 c_mat4x4 operator * (const c_mat4x4& _left, const c_mat4x4& _right) {
 	_left; _right;
 	c_mat4x4 result;
@@ -326,3 +328,4 @@ c_mat4x4 operator * (const c_mat4x4& _left, const c_mat4x4& _right) {
 	
 	return result;
 }
+}}}}

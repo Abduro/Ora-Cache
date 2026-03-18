@@ -35,12 +35,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 			const float f_cmp_thresh = 0.0000003f;
 
-			static _pc_sz pc_sz_pat_success = _T("[impt] result: glm::mat3x3 and c_mat3x3 are equal (compare threshold = %.7f);");
-			static _pc_sz pc_sz_pat_failure = _T("[error] result: glm::mat3x3 and c_mat3x3 are *not* equal (compare threshold = %.7f);");
-
-			if (c_comparator::Do_it(mat_cpy, mat_3x3()(), f_cmp_thresh))
-				 _out() += TString().Format(pc_sz_pat_success, f_cmp_thresh);
-			else _out() += TString().Format(pc_sz_pat_failure, f_cmp_thresh);
+			c_compare()(mat_cpy, mat_3x3()(), f_cmp_thresh);
 		}
 
 	private:
@@ -63,9 +58,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 
 			const float f_cmp_thresh = 0.0000003f;
 
-			if (c_comparator::Do_it(v_to_rot_0, v_to_rot_1 , f_cmp_thresh))
-				 _out() += TString().Format(pc_sz_vec_equal, f_cmp_thresh);
-			else _out() += TString().Format(pc_sz_vec_diff , f_cmp_thresh);
+			c_compare()(v_to_rot_0, v_to_rot_1, f_cmp_thresh);
 		}
 
 		static

@@ -38,6 +38,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		__method (Around_Z);  // rotates 3d-vector around Z-axis by certain angle;
 
 		__method (Prepare);   // prepares the matrix for rotation by certain angle and around particular axis (X, Y or Z);
+		__method (Sequence);  // multiplies rotations matrices in order Z * Y * X (or roll-yaw-pitch);
 	};
 
 }}}}}

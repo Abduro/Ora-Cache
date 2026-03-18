@@ -63,6 +63,65 @@ const c_adapter& c_adapter::operator >> (t_mat4x4& _out_4x4) const { _out_4x4 = 
 	}
 }
 #pragma endregion
+#pragma region cls::c_compare{}
+
+bool c_compare::operator ()(const t_mat3x3& _lhs, const t_mat3x3& _rhs, const float _f_threshold/* = defs::f_epsilon*/) {
+	_lhs; _rhs; _f_threshold;
+	static _pc_sz pc_sz_pat_equ = _T("[impt] result: glm::mat3x3 and c_mat3x3 are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_pat_err = _T("[error] result: glm::mat3x3 and c_mat3x3 are *not* equal (compare threshold = %.7f);");
+
+	const bool b_result = base_t()(_lhs, _rhs, _f_threshold);
+
+	if (b_result)
+	     _out() += TString().Format(pc_sz_pat_equ, _f_threshold);
+	else _out() += TString().Format(pc_sz_pat_err, _f_threshold);
+
+	return b_result;
+}
+
+bool c_compare::operator ()(const t_mat4x4& _lhs, const t_mat4x4& _rhs, const float _f_threshold/* = defs::f_epsilon*/) {
+	_lhs; _rhs; _f_threshold;
+	static _pc_sz pc_sz_pat_equ = _T("[impt] result: glm::mat4x4 and c_mat4x4 are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_pat_err = _T("[error] result: glm::mat4x4 and c_mat4x4 are *not* equal (compare threshold = %.7f);");
+
+	const bool b_result = base_t()(_lhs, _rhs, _f_threshold);
+
+	if (b_result)
+	     _out() += TString().Format(pc_sz_pat_equ, _f_threshold);
+	else _out() += TString().Format(pc_sz_pat_err, _f_threshold);
+
+	return b_result;
+}
+
+bool c_compare::operator ()(const vec_3& _lhs, const vec_3& _rhs, const float _f_threshold/* = defs::f_epsilon*/) {
+	_lhs; _rhs; _f_threshold;
+	static _pc_sz pc_sz_vec_equ = _T("[impt] result: glm::vec3 and math::vec_3 are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_vec_err = _T("[error] result: glm::vec3 and math::vec_3 are *not* equal (compare threshold = %.7f);");
+
+	const bool b_result = base_t()(_lhs, _rhs, _f_threshold);
+
+	if (b_result)
+	     _out() += TString().Format(pc_sz_vec_equ, _f_threshold);
+	else _out() += TString().Format(pc_sz_vec_err, _f_threshold);
+
+	return b_result;
+}
+
+bool c_compare::operator ()(const vec_4& _lhs, const vec_4& _rhs, const float _f_threshold/* = defs::f_epsilon*/) {
+	_lhs; _rhs; _f_threshold;
+	static _pc_sz pc_sz_vec_equ = _T("[impt] result: glm::vec4 and math::vec_4 are equal (compare threshold = %.7f);");
+	static _pc_sz pc_sz_vec_err = _T("[error] result: glm::vec4 and math::vec_4 are *not* equal (compare threshold = %.7f);");
+
+	const bool b_result = base_t()(_lhs, _rhs, _f_threshold);
+
+	if (b_result)
+	     _out() += TString().Format(pc_sz_vec_equ, _f_threshold);
+	else _out() += TString().Format(pc_sz_vec_err, _f_threshold);
+
+	return b_result;
+}
+
+#pragma endregion
 #pragma region cls::c_mtx_base
 
 c_mtx_base::c_mtx_base (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }

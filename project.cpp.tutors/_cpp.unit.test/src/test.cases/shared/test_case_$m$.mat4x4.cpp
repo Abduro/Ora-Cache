@@ -146,6 +146,22 @@ t_rot4x4& c_rot_4x4::Prepare (const s_rot_cri_t& _cri) {
 	return (*this)();
 }
 
+t_mat4x4& c_rot_4x4::Sequence (const float _f_angle, const bool _b_output) {
+	_f_angle; _b_output;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	// gets the matrices ready for rotation around X,Y & Z axes;
+	t_mat4x4 mat_rot_x = (*this)().Prepare(_f_angle, axes_t::e_x_axis);
+	t_mat4x4 mat_rot_y = (*this)().Prepare(_f_angle, axes_t::e_y_axis);
+	t_mat4x4 mat_rot_z = (*this)().Prepare(_f_angle, axes_t::e_z_axis);
+	static
+	t_mat4x4 mat_res; mat_res = mat_rot_z * mat_rot_y * mat_rot_x;
+
+	_out() += _T("[impt] the result c_mat4x4 is :");
+	c_mtx_4x4::To_str(mat_res, false);
+
+	return mat_res;
+}
+
 const
 t_rot4x4&  c_rot_4x4::operator ()(void) const { return this->m_rot4x4; }
 t_rot4x4&  c_rot_4x4::operator ()(void)       { return this->m_rot4x4; }

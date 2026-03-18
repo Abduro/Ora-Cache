@@ -48,7 +48,11 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		vec_4& Do (const s_rot_cri_v4&, vec_4& _to_rot); // rotates the given vector around particular axis specified in input args;
 
 		t_rot4x4& Prepare (const s_rot_cri_t&); // returns the matrix prepared for rotation; _b_cls is for class name output;
-
+		/* https://en.wikipedia.org/wiki/Euler_angles ;
+		   The standard rotation order to achieve a specific orientation using Euler angles (pitch, yaw, roll) is typically;
+		   the function below applies the reversed order of matrix multiplication as it is required by using OpenGL API;
+		*/
+		t_mat4x4& Sequence (const float _f_angle, const bool _b_output); // the sequence of rotations of given vector around Z*Y*X (or roll-yaw-pitch) axes;
 		const
 		t_rot4x4& operator ()(void) const;
 		t_rot4x4& operator ()(void);
