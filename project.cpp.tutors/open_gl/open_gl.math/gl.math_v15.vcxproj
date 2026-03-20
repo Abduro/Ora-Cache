@@ -216,6 +216,10 @@
     <ClInclude Include="$(_0)math.matrix.h" />
     <ClCompile Include="$(_1)math.matrix.cpp" />
   </ItemGroup>
+  <ItemGroup><!--shapes-->
+    <ClInclude Include="$(_0)math.rect.2d.h" />
+    <ClCompile Include="$(_1)math.rect.2d.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)math.vec.2.h" />
     <ClCompile Include="$(_1)math.vec.2.cpp" />

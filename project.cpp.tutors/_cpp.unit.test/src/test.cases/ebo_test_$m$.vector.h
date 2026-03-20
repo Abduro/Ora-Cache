@@ -4,15 +4,29 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Dec-2025 at 16:33:25.764, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL math lib vector uint test interface declaration file; 
 */
+#include "test_case_$m$.vec2.h"
 #include "test_case_$m$.vec3.h"
 #include "test_case_$m$.vec4.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	/* https://opengl-notes.readthedocs.io/en/latest/topics/transforms/vectors.html ;
 	*/
+	__class (c_vec2) {
+	public:
+		 c_vec2 (void) = default; c_vec2 (const c_vec2&) = delete; c_vec2 (c_vec2&&) = delete;
+		~c_vec2 (void) = default;
+
+		__method (Get_angle);
+		__method (Get_dot);
+
+	private:
+		c_vec2& operator = (const c_vec2&) = delete; c_vec2& operator = (c_vec2&&) = delete;
+	};
+
 	__class (c_vec3) {
 	public:
-		c_vec3 (void); ~c_vec3 (void) = default;
+		 c_vec3 (void) = default; c_vec3 (const c_vec3&) = delete; c_vec3 (c_vec3&&) = delete;
+		~c_vec3 (void) = default;
 	/* (1) test case $dot:
 	   (1.1) creating 2 (two) vectors along x-axis and y-axis and getting their dot product;
 	         result: dot product equals to 0.0f (comparison with epsilon value is required), vectors are orthogonal;
@@ -36,6 +50,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	         result: the vector being normalized remains the same;
 	*/
 		__method (Normalize);
+	private:
+		c_vec3& operator = (const c_vec3&) = delete; c_vec3& operator = (c_vec3&&) = delete;
 	};
 	/*
 		Unfortunately there is no possibility to create test method with input arguments,
@@ -44,7 +60,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	*/
 	__class (c_vec4) {
 	public:
-		c_vec4 (void); ~c_vec4 (void) = default;
+		 c_vec4 (void) = default; c_vec4 (const c_vec4&) = delete; c_vec4 (c_vec4&&) = delete;
+		~c_vec4 (void) = default;
 		/* (1) test case $dot is the same as for vec_3, but only with one condition: reference to 3D vector is gotten from 4D vector;
 		       https://stackoverflow.com/questions/10759206/how-to-calculate-vec4-cross-product-with-glm ;
 		*/
@@ -53,6 +70,9 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		__method (Length);
 		__method (Negate);
 		__method (Normalize);
+
+	private:
+		c_vec4& operator = (const c_vec4&) = delete; c_vec4& operator = (c_vec4&&) = delete;
 	};
 
 }}}}}

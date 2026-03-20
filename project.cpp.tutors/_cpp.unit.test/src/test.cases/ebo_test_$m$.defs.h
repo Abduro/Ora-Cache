@@ -14,6 +14,9 @@
 #include "math.rot.3x3.h"
 #include "math.mat.4x4.h"
 #include "math.rot.4x4.h"
+#include "math.vec.2.h"
+#include "math.vec.3.h"
+#include "math.vec.4.h"
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;

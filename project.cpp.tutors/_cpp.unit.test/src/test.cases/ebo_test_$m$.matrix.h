@@ -9,21 +9,6 @@
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
-#if (0)
-	__class (c_rot_4x4) {
-	public:
-		__method (Rotate_free); // rotates on set of different angles about any axis specified by particular vector data ;
-
-		__method (Rotate_y);    // rotates on set of different angles about y-axis;
-		__method (Rotate_z);    // rotates on set of different angles about z-axis;
-		__method (Set);         // sets initial data for passing rotation test cases, there is no result with 0-filled matrix;
-
-		CString To_str (void) const;
-
-	private:
-		t_rot4x4 m_rot4x4;
-	};
-#endif
 	__class (c_t_rotate_2x2) {
 	public:
 		 c_t_rotate_2x2 (void) = default;

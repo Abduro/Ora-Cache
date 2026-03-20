@@ -215,7 +215,7 @@
       </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
+  <ItemGroup><!--matrix-->
     <ClInclude Include="$(_2-0)test_case_$m$.mat2x2.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.mat2x2.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.mat3x3.h" />
@@ -231,13 +231,19 @@
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup><!--shape-->
+    <ClInclude Include="$(_2-0)test_case_$m$.shape.2d.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.shape.2d.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$m$.shape.2d.h" />
+    <ClCompile Include="$(_2)ebo_test_$m$.shape.2d.cpp" />
+  </ItemGroup>
+  <ItemGroup><!--matrix stack-->
     <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
     <ClInclude Include="$(_2)ebo_test_$m$.stack.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h" />
     <ClCompile Include="$(Shared)shared.std.afx.cpp" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -247,6 +253,10 @@
     </ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.defs.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp" />
+  </ItemGroup>
+  <ItemGroup><!--vectors-->
+    <ClInclude Include="$(_2-0)test_case_$m$.vec2.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.vec2.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.vec3.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.vec4.h" />
@@ -254,7 +264,7 @@
     <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
     <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup><!--virtual camera and space-->
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />

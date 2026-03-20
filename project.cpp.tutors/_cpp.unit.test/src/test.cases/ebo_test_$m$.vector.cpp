@@ -7,9 +7,81 @@
 
 using namespace ebo::boo::test::open_gl::math;
 
-#pragma region cls::c_vec3{}
+namespace ebo { namespace boo { namespace test { namespace _impl {
 
-c_vec3::c_vec3(void) {}
+	class c_dot_v2 {
+	public:
+		 c_dot_v2 (void) = default; c_dot_v2 (const c_dot_v2&) = delete; c_dot_v2 (c_dot_v2&&) = delete;
+		~c_dot_v2 (void) = default;
+
+		static
+		float Get (const vec_2& _v2_0, const vec_2& _v2_1, const bool _b_cls_out = true) {
+			_v2_0; _v2_1; _b_cls_out;
+			if (_b_cls_out)
+			_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+			_out() += TString().Format(_T("Input the 1st vec_2: %s"), (_pc_sz) _v2_0.To_str());
+			_out() += TString().Format(_T("Input the 2nd vec_2: %s"), (_pc_sz) _v2_1.To_str());
+
+			::glm::vec2 v2_0_(_v2_0.x, _v2_0.y);
+			::glm::vec2 v2_1_(_v2_1.x, _v2_1.y);
+
+			float f_dot = 0.0f;
+
+			CTime spent;
+		//	{ CChrono_auto chrono(spent); f_dot = ::glm::clamp(::glm::dot(v2_0_, v2_1_), -1.0f, 1.0f); }
+			{ CChrono_auto chrono(spent); f_dot = ::glm::dot(v2_0_, v2_1_); }
+			if (_b_cls_out)
+			_out() += TString().Format(_T("[impt] ::glm::dot = %.2f (%s)"), f_dot, (_pc_sz) spent());
+
+			return f_dot;
+		}
+
+	private:
+		c_dot_v2& operator = (const c_dot_v2&) = delete; c_dot_v2& operator = (c_dot_v2&&) = delete;
+	};
+
+}}}}
+using namespace ebo::boo::test::_impl;
+
+#pragma region cls::c_vec2{}
+
+void c_vec2::Get_angle (void) {
+
+	vec_2 v2_0(0.0f, 1.0f);
+	vec_2 v2_1(1.0f, 0.0f);
+
+	const float f_angle_0 = c_tvec_2().Get_angle(v2_0, v2_1, true);
+	const float f_angle_1 = ::glm::acos(c_dot_v2::Get(v2_0, v2_1, false));
+	/* query: how to get angle between to vec2 opengl c++:
+	float angle = glm::atan2(b.y, b.x) - glm::atan2(a.y, a.x);
+    
+    // normalizes the result to the [-PI, PI] range;
+    if (angle >  glm::pi<float>()) angle -= 2.0f * glm::pi<float>();
+    if (angle <=-glm::pi<float>()) angle += 2.0f * glm::pi<float>();
+	*/
+	_out() += TString().Format(_T("[impt] ::glm::angle = %.2f;"), defs::rad_2_deg * f_angle_1);
+
+	_out()();
+}
+
+void c_vec2::Get_dot (void) {
+
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	vec_2 v_2_0(0.0f, 1.0f);
+	vec_2 v_2_1(1.0f, 0.0f);
+
+	_out() += _T("[imprt] Expected angle == 90 deg.:"); c_tvec_2().Get_dot(v_2_0, v_2_1, false);
+	_out() += _T("[imprt] Expected angle < 90 deg.:");  c_tvec_2().Get_dot(v_2_1, v_2_1, false);  // gets the dot product on the same vector;
+	_out() += _T("[imprt] Expected angle > 90 deg.:");  c_tvec_2().Get_dot(v_2_0, vec_2(1.0f, -1.0f), false);
+
+	const float f_dot_glm = c_dot_v2::Get(vec_2(1.0f, 0.0f), vec_2(1.0f, 0.0f), true);
+
+	_out()();
+}
+
+#pragma endregion
+#pragma region cls::c_vec3{}
 
 void c_vec3::Cross (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -87,8 +159,6 @@ void c_vec3::Normalize (void) {
 
 #pragma endregion
 #pragma region cls::c_vec4{}
-
-c_vec4::c_vec4(void) {}
 
 void c_vec4::Cross (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);

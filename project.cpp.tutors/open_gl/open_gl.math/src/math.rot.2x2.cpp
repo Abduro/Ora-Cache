@@ -7,19 +7,7 @@
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
-#include "math.vec.2.h"
-
 using namespace ex_ui::draw::open_gl::math;
-
-static _pc_sz pc_sz_err_angle = _T("#__e_inv_arg: the rotate angle %.7f is less than epsilon;\n");
-
-__inline bool __chk_angle (const float _f_angle) {
-	if (defs::f_epsilon > abs(_f_angle)) {
-		__trace_warn_2(pc_sz_err_angle, _f_angle);
-		return false;
-	}
-	else return true;
-}
 
 #pragma region cls::c_rotate_2x2{}
 
@@ -30,17 +18,33 @@ c_rotate_2x2::c_rotate_2x2 (const float _f_angle) : TBase() { *this << _f_angle;
 c_mat2x2& c_rotate_2x2::Do (const float _f_angle, c_mat2x2& _to_rot) {
 	_f_angle; _to_rot;
 
-	if (false == __chk_angle(_f_angle))
+	if (false == __chk_angle(_f_angle)) // to-do: this condition must be optional or made outside of this function;
 		return _to_rot;
 
 	this->Prepare(_f_angle);
 	return _to_rot *= (*this)();
 }
 
+vec_2& c_rotate_2x2::Do (const float _f_angle, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
+	_f_angle; _to_rot; _b_use_eps;
+	if (false == __chk_angle(_f_angle)) // to-do: this condition must be optional or made outside of this function;
+		return _to_rot;
+
+	this->Prepare(_f_angle);
+
+	_to_rot = (*this)() *= _to_rot;
+
+	if (_b_use_eps) {
+		_to_rot.Round();
+	}
+
+	return _to_rot;
+}
+
 vec_2& c_rotate_2x2::Do (const float _f_angle, const vec_2& _v_pivot, vec_2& _to_rot, const bool _b_use_eps/* = false*/) {
 	_f_angle; _v_pivot; _to_rot; _b_use_eps;
 
-	if (false == __chk_angle(_f_angle))
+	if (false == __chk_angle(_f_angle)) // to-do: this condition must be optional or made outside of this function;
 		return _to_rot;
 
 	this->Prepare(_f_angle);

@@ -124,6 +124,10 @@ const
 t_seq_2x2& c_mat2x2::Raw (void) const { return this->m_data; }
 t_seq_2x2& c_mat2x2::Raw (void)       { return this->m_data; }
 #endif
+const
+c_mat2x2::c_rows& c_mat2x2::Rows (void) const { return this->m_rows; }
+c_mat2x2::c_rows& c_mat2x2::Rows (void)       { return this->m_rows; }
+
 c_mat2x2&  c_mat2x2::Seed (const float _f_by/* = 0.0f*/) {
 	_f_by;
 #if (0)
@@ -152,13 +156,7 @@ const
 float& c_mat2x2::operator ()(const uint32_t _u_col, const uint32_t _u_row) const { return this->Cell(_u_col, _u_row); }
 float& c_mat2x2::operator ()(const uint32_t _u_col, const uint32_t _u_row)       { return this->Cell(_u_col, _u_row); }
 
-c_mat2x2& c_mat2x2::operator <<(const t_seq_2x2& _arr_values) {
-	_arr_values;
-	this->Cols().Set(0, _arr_values.at(0), _arr_values.at(1));
-	this->Cols().Set(1, _arr_values.at(2), _arr_values.at(3));
-	return *this;
-}
-
+c_mat2x2& c_mat2x2::operator <<(const t_seq_2x2& _arr_values) { this->m_data = _arr_values; return *this; }
 c_mat2x2& c_mat2x2::operator *=(const float _f_scale) {
 	_f_scale;
 	for (uint32_t u_col = 0; u_col < c_mat2x2::u_cols; u_col++)
@@ -166,7 +164,6 @@ c_mat2x2& c_mat2x2::operator *=(const float _f_scale) {
 			(*this)(u_col, u_row) *= _f_scale;
 	return *this;
 }
-
 c_mat2x2& c_mat2x2::operator *=(const c_mat2x2& _mat2x2) {
 	_mat2x2;
 	/*

@@ -43,7 +43,7 @@ s_vec_3& s_vec_3::Negate (void) {
 }
 s_vec_3& s_vec_3::Normalize (const bool _b_bits) { // https://registry.khronos.org/OpenGL-Refpages/gl4/html/normalize.xhtml ;
 	_b_bits;
-	if (defs::f_epsilon > this->Length())
+	if (defs::f_epsilon > ::abs(this->Length()))   // protects from division by 0.0f;
 		return *this;
 	const float f_inv_len = (_b_bits ? ::_rsqrt(this->Sum(2)) : 1.0f/::sqrtf(this->Sum(2)));
 	this->x *=  f_inv_len;
@@ -53,14 +53,12 @@ s_vec_3& s_vec_3::Normalize (const bool _b_bits) { // https://registry.khronos.o
 
 s_vec_3& s_vec_3::Round (const float _threshold/* = defs::f_epsilon*/) {
 	_threshold;
-	const float f_delta = ::abs(_threshold);
+	const
+	float f_delta = ::abs(_threshold);
+	s_vec_2::Round(_threshold);
 #if (0)
-	if (::abs(this->x) < f_delta) this->x = 0.0f; else if (0.0f > this->x) this->x = ::std::floor(this->x); else this->x = ::std::ceil(this->x);
-	if (::abs(this->y) < f_delta) this->y = 0.0f; else if (0.0f > this->y) this->y = ::std::floor(this->y); else this->y = ::std::ceil(this->y);
 	if (::abs(this->z) < f_delta) this->z = 0.0f; else if (0.0f > this->z) this->z = ::std::floor(this->z); else this->z = ::std::ceil(this->z);
 #else
-	if (::abs(this->x) < f_delta) _round(this->x);
-	if (::abs(this->y) < f_delta) _round(this->y);
 	if (::abs(this->z) < f_delta) _round(this->z);
 #endif
 	return *this;

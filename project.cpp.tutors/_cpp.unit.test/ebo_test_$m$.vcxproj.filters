@@ -9,11 +9,14 @@
 
     <Filter Include="matrix\stack"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060014}</UniqueIdentifier></Filter>
 
-    <Filter Include="vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060015}</UniqueIdentifier></Filter>
-    <Filter Include="vector\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060016}</UniqueIdentifier></Filter>
+    <Filter Include="shape"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060015}</UniqueIdentifier></Filter>
+    <Filter Include="shape\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060016}</UniqueIdentifier></Filter>
 
-    <Filter Include="virt.cam"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060017}</UniqueIdentifier></Filter>
-    <Filter Include="virt.cam\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060018}</UniqueIdentifier></Filter>
+    <Filter Include="vector"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060017}</UniqueIdentifier></Filter>
+    <Filter Include="vector\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060018}</UniqueIdentifier></Filter>
+
+    <Filter Include="virt.cam"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060019}</UniqueIdentifier></Filter>
+    <Filter Include="virt.cam\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006001A}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -37,13 +40,21 @@
     <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
   </ItemGroup>
+  <ItemGroup><!--shapes-->
+    <ClInclude Include="$(_2-0)test_case_$m$.shape.2d.h"><Filter>shape\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.shape.2d.cpp"><Filter>shape\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$m$.shape.2d.h"><Filter>shape</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$m$.shape.2d.cpp"><Filter>shape</Filter></ClCompile>
+  </ItemGroup>
   <ItemGroup><!--matrix stack-->
     <ClInclude Include="$(_2-0)test_case_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup><!--vector/shared-->
+  <ItemGroup><!--vectors-->
+    <ClInclude Include="$(_2-0)test_case_$m$.vec2.h"><Filter>vector\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.vec2.cpp"><Filter>vector\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.vec3.h"><Filter>vector\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp"><Filter>vector\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.vec4.h"><Filter>vector\shared</Filter></ClInclude>

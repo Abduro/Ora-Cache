@@ -16,20 +16,36 @@ s_vec_2::s_vec_2 (const t_set_2& _arr_values) : x(_arr_values.at(0)), y(_arr_val
 s_vec_2::s_vec_2 (const float _values[u_count]) : s_vec_2(_values[0], _values[1]) {}
 s_vec_2::s_vec_2 (const float _x, const float _y) : x(_x), y(_y) {}
 
-float s_vec_2::Get_angle (const bool b_round, CError& _err) const {
+float s_vec_2::Get_angle (const bool b_round) const {
 	b_round;
 	if (::abs(this->x) > 1.0f || ::abs(this->y) > 1.0f) {
-		_err << (err_code) TErrCodes::eData::eInvalid = _T("The vector is not normalized;"); return 0.0f;
+		__trace_err_2 (_T("The vector is not normalized;\n")); return 0.0f;
 	}
 	float f_angle = ::std::atan2f(this->y, this->x) * ::defs::rad_2_deg;
 	if (b_round) {
+#if (0)
 		if (0.0f > f_angle) f_angle = ::std::floor(f_angle); else f_angle = ::std::ceil(f_angle);
+#else
+		_round(f_angle);
+#endif
 	}
 	return f_angle;
 }
 
-s_vec_2& s_vec_2::Invert (const float _f_scale)       { this->x /= _f_scale; this->y /= _f_scale; return *this; }      
-s_vec_2  s_vec_2::Invert (const float _f_scale) const { return s_vec_2(this->x / _f_scale, this->y / _f_scale); }
+s_vec_2& s_vec_2::Invert (const float _f_scale) {
+	if (defs::f_epsilon > ::abs(_f_scale)) { // protects for division by 0.0f;
+		__trace_err_2(_T("#__err_inv_arg: scale %.7f is invalid;\n"), _f_scale);
+		return *this;
+	}
+	this->x /= _f_scale; this->y /= _f_scale; return *this;
+}
+s_vec_2  s_vec_2::Invert (const float _f_scale) const {
+	if (defs::f_epsilon > ::abs(_f_scale)) { // protects for division by 0.0f;
+		__trace_err_2(_T("#__err_inv_arg: scale %.7f is invalid;\n"), _f_scale);
+		return s_vec_2();
+	}
+	return s_vec_2(this->x / _f_scale, this->y / _f_scale);
+}
 
 bool  s_vec_2::Is_unit (void) const { return this->Length() <= 1.0f; }
 float s_vec_2::Length (void) const { return ::sqrtf(this->Sum(2)); }
@@ -38,7 +54,7 @@ s_vec_2& s_vec_2::Negate (void) {
 	this->x = -this->x; this->y = -this->y; return *this;
 }
 s_vec_2& s_vec_2::Normalize (void) {
-	if (defs::f_epsilon > this->Length())
+	if (defs::f_epsilon > ::abs(this->Length())) // protects from division by 0.0f;
 		return *this;
 	const float f_inv_len = 1.0f/::sqrtf(this->Sum(2));
 	this->x *=  f_inv_len;
@@ -47,10 +63,14 @@ s_vec_2& s_vec_2::Normalize (void) {
 
 s_vec_2& s_vec_2::Round (const float _threshold/* = defs::f_epsilon*/) {
 	_threshold;
+#if (0)
 	const float f_delta = ::abs(_threshold);
 	if (::abs(this->x) < f_delta) this->x = 0.0f; else if (0.0f > this->x) this->x = ::std::floor(this->x); else this->x = ::std::ceil(this->x);
 	if (::abs(this->y) < f_delta) this->y = 0.0f; else if (0.0f > this->y) this->y = ::std::floor(this->y); else this->y = ::std::ceil(this->y);
-
+#else
+	if (::abs(this->x) < ::abs(_threshold)) _round(this->x);
+	if (::abs(this->y) < ::abs(_threshold)) _round(this->y);
+#endif
 	return *this;
 }
 
@@ -100,4 +120,29 @@ s_vec_2  s_vec_2::operator - (const s_vec_2& _v_what) const {
 
 vec_2 operator - (const vec_2& _v_from, const vec_2& _v_what) {
 	return vec_2(_v_from.x - _v_what.x, _v_from.y - _v_what.y);
+}
+
+float ::Get_angle (const vec_2& _v_for, const vec_2& _v_with) {
+	_v_for; _v_with;
+	const float f_dot = ::Get_dot(_v_for, _v_with);
+	
+	float f_angle = f_dot / (_v_for.Length() * _v_with.Length());
+
+	if (false) {}
+	else if (f_angle >= 1.0f) f_angle = 0.0f;
+    else if (f_angle <=-1.0f) f_angle = __pi;
+    else f_angle = ::std::acosf(f_angle);
+
+	return f_angle;
+}
+
+float ::Get_cross (const vec_2& _v_for, const vec_2& _v_with) {
+	_v_for; _v_with;
+	// it can be used 'to see if two successive edges in a polygon bend left or right'; the excerpt from the Bram's answer;
+	return _v_for.x * _v_with.y - _v_with.x * _v_for.y;
+}
+
+float Get_dot (const vec_2& _v_for, const vec_2& _v_with) {
+	_v_for; _v_with;
+	return _v_for.x * _v_with.x + _v_for.y * _v_with.y;
 }

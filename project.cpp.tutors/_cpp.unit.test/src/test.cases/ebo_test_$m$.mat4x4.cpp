@@ -8,7 +8,7 @@
 
 using namespace ebo::boo::test::open_gl::math;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
+namespace ebo { namespace boo { namespace test { namespace _impl {
 
 	// https://en.wikipedia.org/wiki/Prep >> preparatory; 
 	class CPrep_4x4 {
@@ -122,8 +122,8 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 	private:
 		CSeq_4x4& operator = (const CSeq_4x4&) = delete; CSeq_4x4& operator = (CSeq_4x4&&) = delete;
 	};
-}}}}}
-using namespace ebo::boo::test::open_gl::_impl;
+}}}}
+using namespace ebo::boo::test::_impl;
 
 #pragma region cls::c_mat_4x4{}
 
@@ -206,12 +206,6 @@ void c_t_rotate_4x4::Around_X (void) {
 }
 
 void c_t_rotate_4x4::Around_Y (void) {
-	/* query: what does mean value -1 'w' component of vec4 in opengl c++ after rotation to 180 degree?
-	   In OpenGL/C++ (using GLM), a vec4 (homogeneous coordinate) with w-component of -1 after a 180-degree rotation typically signifies
-	   that the vertex has been mirrored or flipped relative to the coordinate origin in a way that reverses its orientation;
-	What to Do:
-	   projection matrix must handle orientation properly, as 'w' of -1 is often considered a "flipped" or "inside-out" coordinate in homogeneous space;
-	*/
 	float f_angle = 180.0f;
 	CRot_4x4::Compare(f_angle, axes_t::e_y_axis);
 	_out()();

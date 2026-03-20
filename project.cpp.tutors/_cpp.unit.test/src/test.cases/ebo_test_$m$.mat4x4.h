@@ -27,7 +27,12 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		__method (Translate); // translates input coordinates in world space to camera view matrix (camera local coordinates);
 		__method (Transpose); // converts a matrix from column-major to row-major matrix and vice versa;
 	};
-
+	/* query: what does mean value -1 'w' component of vec4 in opengl c++ after rotation to 180 degree?
+	   In OpenGL/C++ (using GLM), a vec4 (homogeneous coordinate) with w-component of -1 after a 180-degree rotation typically signifies
+	   that the vertex has been mirrored or flipped relative to the coordinate origin in a way that reverses its orientation;
+	What to Do:
+	   projection matrix must handle orientation properly, as 'w' of -1 is often considered a "flipped" or "inside-out" coordinate in homogeneous space;
+	*/
 	__class (c_t_rotate_4x4) {
 	public:
 		 c_t_rotate_4x4 (void) = default;

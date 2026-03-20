@@ -17,7 +17,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2 (const float _values[u_count]);       // values are assigned in the following order: x|y;
 		s_vec_2 (const float _x, const float _y);
 
-		float Get_angle (const bool b_round, CError&) const; // gets angle of this vector in 2D coord system, it is assumed the vector is normalized;
+		float Get_angle (const bool b_round) const;   // gets angle of this vector in 2D coord system, it is assumed the vector is normalized;
 
 		s_vec_2& Invert (const float _f_scale);       // inverts this vector in accordance with given scale factor;
 		s_vec_2  Invert (const float _f_scale) const; // creates inverse vector from this one in accordance with given scale factor;
@@ -29,7 +29,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		s_vec_2& Normalize (void);                    // if this vector length is less than defs::f_epsilon, no normalizing occurs;
 		s_vec_2& Round (const float _threshold = defs::f_epsilon); // compares elements of this vector with accuracy threshold and makes appropriate rounding if necessary;
 
-		s_vec_2& Set (const float values[u_count]);   // values are assigned in the following order: x|y|z|w;
+		s_vec_2& Set (const float values[u_count]);   // values are assigned in the following order: x|y;
 		s_vec_2& Set (const float _x, const float _y);
 
 		float Sum (const uint32_t _u_exp = 1) const;  // gets the sum of the elements of this vector; each element can be in power of given exponent;
@@ -67,5 +67,19 @@ typedef ex_ui::draw::open_gl::math::s_vec_2 vec_2;
 // this operator cannot be used inside of matrix function, because the matrix class has unary subtract operator too:
 // C2678: binary '-': no operator found which takes a left-hand operand of type 'const vec_2';
 vec_2 operator - (const vec_2& _v_from, const vec_2& _v_what);
+/* taking acos() looks like faster in comparison with atan2():
+   https://stackoverflow.com/questions/15888180/calculating-the-angle-between-points << https://stackoverflow.com/a/15888243/4325555 ;
+*/
+float Get_angle (const vec_2& _v_for, const vec_2& _v_with);
+/* the cross product is not available for 2d space due to it is a normal vector to X-Y plane and should be Z-axis, but:
+   https://stackoverflow.com/questions/243945/calculating-a-2d-vectors-cross-product << https://stackoverflow.com/a/50703927/4325555 ;
+*/
+float Get_cross (const vec_2& _v_for, const vec_2& _v_with); // returns the angle value in radians; it is expected the input vectors are normalized;
+/* https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html :
+   if (dot product > 0.0f) the angle between vectors < 90.0f;
+   if (dot product = 0.0f) the angle between vectors = 90.0f;
+   if (dot product < 0.0f) the angle between vectors > 90.0f;
+*/
+float Get_dot (const vec_2& _v_for, const vec_2& _v_with);
 
 #endif/*__MATH_VEC_2x2_H_INCLUDED*/

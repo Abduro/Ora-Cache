@@ -4,9 +4,21 @@
 */
 #include "math.defs.h"
 
+#include "shared.dbg.h"
+#include "shared.preproc.h"
+
 using namespace ex_ui::draw::open_gl::math;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace math { namespace _impl { void __warning_lnk_4221 (void) {}}
+namespace ex_ui { namespace draw { namespace open_gl { namespace math {
+
+	static _pc_sz pc_sz_err_angle = _T("#__e_inv_arg: the rotate angle %.7f is less than epsilon;\n");
+
+	bool __chk_angle (const float _f_angle) {
+		if (defs::f_epsilon > abs(_f_angle)) {
+			__trace_warn_2(pc_sz_err_angle, _f_angle); return false;
+		}
+		else return true;
+	}
 
 	_pc_sz _format (const float _f_value, _pc_sz _p_format/* = _T("%.7f")*/) {
 		_f_value; _p_format;

@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL math lib vector of 3 elements uint test interface declaration file for using in test cases' adapters; 
 */
 #include "ebo_test_$m$.defs.h"
-#include "math.vector.h"
+
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
 
 	// (1) dot product: The lines are perpendicular (orthogonal) if and only if their dot product is zero.

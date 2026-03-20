@@ -78,10 +78,9 @@ void c_t_rotate_2x2::Vector (void) {
 	const float f_angle_cos = ::acosf(0.5f) * ::defs::rad_2_deg; f_angle_cos;
 	const float f_angle_sin = ::asinf(0.5f) * ::defs::rad_2_deg; f_angle_sin;
 #endif
-	v_2_rot.Set(1.0f, 1.0f); CError error(__CLASS__, __METHOD__, __s_ok);        // sets values for getting the angle that is required for these values;
-	const float f_req = v_2_rot.Get_angle(true, error); v_2_rot.Set(1.0f, 0.0f); // restores origin values;
+	v_2_rot.Set(1.0f, 1.0f); // sets values for getting the angle that is required for these values;
+	const float f_req = v_2_rot.Get_angle(true); v_2_rot.Set(1.0f, 0.0f); // restores origin values;
 
-	if (error) {_out() += error; _out()(); return; }
 	c_rot_2x2().Rotate(f_req, v_2_rot, true);
 
 	if (::defs::f_epsilon > ::abs(v_2_rot.x - v_2_rot.y)) // checks for valid result: x & y must have the same value for the angle 45;
@@ -91,127 +90,4 @@ void c_t_rotate_2x2::Vector (void) {
 	_out()();
 }
 
-#pragma endregion
-#pragma region cls::c_rot_4x4{}
-#if (0)
-void c_rot_4x4::Rotate_free (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *before* rotate:");
-
-	c_mtx_4x4().To_str(this->ref(), true);
-
-	this->Set();
-
-	c_tvec_3 axis(0.5f, 0.5f, 0.5f);
-
-	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f; axis = %s");
-
-	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
-
-	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_], (_pc_sz) axis().To_str() );
-
-		this->ref().Do(f_angels[i_], axis.ref());
-
-		_out() += _T("the matrix *after* rotate:");
-		c_mtx_4x4().To_str(this->ref(), true);
-	}
-	_out()();
-}
-
-void c_rot_4x4::Rotate_x (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *before* rotate:");
-
-	c_mtx_4x4().To_str(this->ref(), true);
-
-	this->Set();
-
-	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
-
-	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
-
-	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_]);
-
-		this->ref().On_x(f_angels[i_]);
-
-		_out() += _T("the matrix *after* rotate:");
-		c_mtx_4x4().To_str(this->ref(), true);
-	}
-	_out()();
-}
-
-void c_rot_4x4::Rotate_y (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *before* rotate:");
-
-	c_mtx_4x4().To_str(this->ref(), true);
-
-	this->Set();
-
-	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
-
-	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
-
-	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_]);
-
-		this->ref().On_y(f_angels[i_]);
-
-		_out() += _T("the matrix *after* rotate:");
-		c_mtx_4x4().To_str(this->ref(), true);
-	}
-	_out()();
-}
-
-void c_rot_4x4::Rotate_z (void) {
-	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += _T("the matrix *before* rotate:");
-
-	c_mtx_4x4().To_str(this->ref(), true);
-
-	this->Set();
-
-	static _pc_sz pc_sz_fmt = _T("input values: rotate angle = %.1f;");
-
-	const float f_angels[] = {0.0f, +90.0f, -90.0f, +180.0f, -180.0f, +270.0f, -270.0f, +360.0f, -360.0f};
-
-	for (uint32_t i_ = 0; i_ < _countof(f_angels); i_++) {
-		_out() += TString().Format(pc_sz_fmt, f_angels[i_]);
-
-		this->ref().On_z(f_angels[i_]);
-
-		_out() += _T("the matrix *after* rotate:");
-		c_mtx_4x4().To_str(this->ref(), true);
-	}
-	_out()();
-}
-
-void c_rot_4x4::Set (void) {
-
-	c_tvec_4
-	col_0(0.0f, 0.1f, 0.2f, 1.0f),
-	col_1(0.4f, 0.5f, 0.6f, 1.0f),
-	col_2(0.7f, 0.8f, 0.9f, 1.0f),
-	col_3(0.5f, 0.5f, 0.5f, 1.0f);
-
-	_out() += TString().Format(_T("col_#_0: %s"), (_pc_sz) col_0().To_str());
-	_out() += TString().Format(_T("col_#_1: %s"), (_pc_sz) col_1().To_str());
-	_out() += TString().Format(_T("col_#_2: %s"), (_pc_sz) col_2().To_str());
-	_out() += TString().Format(_T("col_#_3: %s"), (_pc_sz) col_3().To_str());
-
-	this->ref().Cols().Set(col_0.ref(), col_1.ref(), col_2.ref(), col_3.ref());
-
-	_out() += _T("the matrix *after* setting data:");
-	c_mtx_4x4().To_str(this->ref(), true);
-
-	_out()();
-}
-
-CString   c_rot_4x4::To_str (void) const {
-	CString cs_out = c_mtx_4x4().To_str(this->ref(), true); _out()();
-	return  cs_out;
-}
-#endif
 #pragma endregion
