@@ -16,6 +16,8 @@
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ctx_menu_wrapper.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="ctx_menu_wrapper.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="open_gl_tutor.3.wnd.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="open_gl_tutor.3.wnd.h"><Filter>interface</Filter></ClInclude>
   </ItemGroup>

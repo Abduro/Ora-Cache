@@ -1,7 +1,7 @@
 #ifndef _SHARED_PROPS_H_INCLUDED
 #define _SHARED_PROPS_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 21-Jun-2025 at 04:39:42.954, UTC+4, Batume, Saturday;
+	Created by Tech_dog (ebontrop@gmail.com) on 21-Jun-2025 at 04:39:42.954, UTC+4, Batumi, Saturday;
 	This is Ebo Pack generic property interface declaration file;
 */
 #include "shared.defs.h"

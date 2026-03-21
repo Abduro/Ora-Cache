@@ -33,16 +33,24 @@ vec_2&  c_corners::D (void) const { return this->Get(e_corners::e_d); }
 //vec_2&  c_corners::D (void)     { return this->Get(e_corners::e_d); }
 const
 vec_2&  c_corners::Get (const e_corners _e_corner) const {
-	if (e_corners::e_a == _e_corner) return this->m_rect.m_data[0];
-	else if (e_corners::e_b == _e_corner) return this->m_rect.m_data[1];
-	else if (e_corners::e_c == _e_corner) return this->m_rect.m_data[2];
-	else return this->m_rect.m_data[3];
+	_e_corner;
+	switch (_e_corner) {
+	case e_corners::e_a: return this->m_rect.m_data[e_corners::e_a];
+	case e_corners::e_b: return this->m_rect.m_data[e_corners::e_b];
+	case e_corners::e_c: return this->m_rect.m_data[e_corners::e_c];
+	case e_corners::e_d: return this->m_rect.m_data[e_corners::e_d];
+	default: static vec_2 v2_inv; return v2_inv;
+	}
 }
 vec_2&  c_corners::Get (const e_corners _e_corner) {
-	if (e_corners::e_a == _e_corner) return this->m_rect.m_data[0];
-	else if (e_corners::e_b == _e_corner) return this->m_rect.m_data[1];
-	else if (e_corners::e_c == _e_corner) return this->m_rect.m_data[2];
-	else return this->m_rect.m_data[3];
+	_e_corner;
+	switch (_e_corner) {
+	case e_corners::e_a: return this->m_rect.m_data[e_corners::e_a];
+	case e_corners::e_b: return this->m_rect.m_data[e_corners::e_b];
+	case e_corners::e_c: return this->m_rect.m_data[e_corners::e_c];
+	case e_corners::e_d: return this->m_rect.m_data[e_corners::e_d];
+	default: static vec_2 v2_inv; return v2_inv;
+	}
 }
 
 void c_corners::Set_Bottom (const float _f_y) { this->Get(e_corners::e_c).y = _f_y; this->Get(e_corners::e_d).y = _f_y; }
@@ -103,6 +111,17 @@ bool c_rect::Is_valid (void) const {
 	if (0.0f != ::Get_dot((*this)().B(), (*this)().C())) return false; // gets the angle of the corner B with the adjacent corner C;
 	// (2) emptiness of this rectangle is not checked yet;
 	return true;
+}
+
+c_rect& c_rect::Shift (const uint32_t _where, const float _f_x, const float _f_y) {
+	_where; _f_x; _f_y;
+	if (false) {}
+	else if (e_shift::e_bottom & _where) { for (uint32_t i_ = 0; i_ < c_rect::u_corners; i_ ++) c_rect::m_data[i_].y -= _f_y; }
+	else if (e_shift::e_left   & _where) { for (uint32_t i_ = 0; i_ < c_rect::u_corners; i_ ++) c_rect::m_data[i_].x -= _f_x; }
+	else if (e_shift::e_right  & _where) { for (uint32_t i_ = 0; i_ < c_rect::u_corners; i_ ++) c_rect::m_data[i_].x += _f_x; }
+	else if (e_shift::e_top    & _where) { for (uint32_t i_ = 0; i_ < c_rect::u_corners; i_ ++) c_rect::m_data[i_].y += _f_y; }
+
+	return *this;
 }
 
 float c_rect::Width (void) const { return (*this)().A().x - (*this)().B().x; } // it is not necessary to check D().x - C().x;

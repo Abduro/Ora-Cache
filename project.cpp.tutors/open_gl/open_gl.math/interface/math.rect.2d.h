@@ -16,9 +16,20 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	*/
 	class c_rect {
 	public:
-		enum e_corners : uint32_t {
-			e_a = 0x0, /*top-left;*/ e_b, /* top-right;*/ e_c, /*bottom-right;*/ e_d /*bottom-left;*/
+		enum e_corners : uint32_t { // note: this enumeration elements' values are exact indices of the corner vec_2 in fixed array storage;
+			e_a = 0x1, /*top-left;*/ e_b = 0x2, /* top-right;*/ e_c = 0x3, /*bottom-right;*/ e_d = 0x0 /*bottom-left;*/
 		};
+		enum e_shift : uint32_t {
+			e_none = 0x0,  e_left = 0x1, e_top = 0x2, e_right = 0x4, e_bottom = 0x8
+		};
+	/* query: how to define a square shape in 2d by column-major matrix 2x4:
+	cols:    #0  #1  #2  #3
+	rows: #0  0   1   1   0 >> corner 'd': (x=c0:r0;y=c0:r1); corner 'a': (x=c1:r0;y=c1:r1);
+	      #1  0   0   1   1    corner 'b': {x=c2:r0;y=c2:r1}; corner 'c': {x=c3:r0;y=c3:r1};
+	or in vectors as column of the matrix:
+	corners:  D   A   B   C
+	         v0  v1  v2  v3;
+	*/
 		static const uint32_t u_corners = 4;
 		class c_corners { // this class is just an accessor to vector array of this rectangle shape;
 		public:
@@ -58,14 +69,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	public:
 		 c_rect (void); c_rect (const c_rect&); c_rect (c_rect&&) = delete;
 		~c_rect (void) = default;
-		/* unit square/rectangle: (x,y) notation;
-		cols:    #0  #1  #2  #3
-		rows: #0  0   1   1   0 >> corner 'a': (x=c0:r0;y=c0:r1); corner 'b': (x=c1:r0;y=c1:r1);
-		      #1  0   0   1   1    corner 'c': {x=c2:r0;y=c2:r1}; corner 'd': {x=c3:r0;y=c3:r1};
-		or in vectors as column of the matrix:
-		corners:  A   B   C   D
-		          v0  v1  v2  v3;
-		*/
 		const
 		c_corners& Corners (void) const;
 		c_corners& Corners (void) ;
@@ -76,6 +79,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 		bool  Is_empty (void) const; // sometimes the rectangle appears as a line or even a dot;
 		bool  Is_valid (void) const; // opposite sides must have the same length and all corners equal to 90 degrees;
+
+		c_rect& Shift (const uint32_t _where, const float _f_x, const float _f_y); // shifts this shape in accordance with the set of enum e_shift elements;
 
 		float Width (void) const; // gets the width of this shape; it is supposed the rectangularity is still kept;
 

@@ -12,6 +12,8 @@
 #include <stdio.h>        // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/printf-printf-l-wprintf-wprintf-l ;
 #include <iostream>
 #include <consoleapi2.h>  // for CONSOLE_SCREEN_BUFFER_INFOEX;
+#include <io.h>           // for _open_osfhandle ;
+#include <fcntl.h>        // for constant decl, like to _O_TEXT ;
 
 namespace shared { namespace console {
 
@@ -22,14 +24,26 @@ namespace shared { namespace console {
 
 	class CHandles {
 	public:
-		CHandles (void) = default; CHandles (const CHandles&) = delete; CHandles (CHandles&&) = delete; ~CHandles (void) = default;
+		enum e_index : uint32_t { e_input = 0, e_output, e_error };
+		static const uint32_t u_count = 3;
 
-		static const HANDLE Err (void);
-		static const HANDLE In  (void);
-		static const HANDLE Out (void);
+		 CHandles (void); CHandles (const CHandles&) = delete; CHandles (CHandles&&) = delete;
+		~CHandles (void);
+
+		void*  Get (const e_index) const;
+		void   Set (void);
+
+		void On_close (void);
+
+	// https://learn.microsoft.com/en-us/windows/console/getstdhandle ;
+	// these functions may return nullptr in case of error and the get_last_error is required for details;
+		static void* Err (void);
+		static void* In  (void);
+		static void* Out (void);
 
 	private:
 		CHandles& operator = (const CHandles&) = delete; CHandles& operator = (CHandles&&) = delete;
+		void*     m_handles[u_count]; // 0: is for std_input_handle; 1: is for std_output_handle; 2: is for std_err_handle;
 	};
 
 #define __err_handle CHandles::Err()

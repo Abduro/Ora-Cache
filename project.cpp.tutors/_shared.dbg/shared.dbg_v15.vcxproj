@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -197,10 +197,18 @@
     <ClCompile Include="$(_1)shared.dbg.cpp" />
     <ClInclude Include="$(_0-0)console.h" />
     <ClCompile Include="$(_1-0)console.cpp" />
+    <ClInclude Include="$(_0-0)console.buffer.h" />
+    <ClCompile Include="$(_1-0)console.buffer.cpp" />
     <ClInclude Include="$(_0-0)console.defs.h" />
     <ClCompile Include="$(_1-0)console.defs.cpp" />
     <ClInclude Include="$(_0-0)console.font.h" />
     <ClCompile Include="$(_1-0)console.font.cpp" />
+    <ClInclude Include="$(_0-0)console.format.h" />
+    <ClCompile Include="$(_1-0)console.format.cpp" />
+    <ClInclude Include="$(_0-0)console.layout.h" />
+    <ClCompile Include="$(_1-0)console.layout.cpp" />
+    <ClInclude Include="$(_0-0)console.mode.h" />
+    <ClCompile Include="$(_1-0)console.mode.cpp" />
     <ClInclude Include="$(_0-0)console.out.h" />
     <ClCompile Include="$(_1-0)console.out.cpp" />
   </ItemGroup>

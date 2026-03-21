@@ -15,6 +15,7 @@
 
 #include "__trace\console.h"
 #include "__trace\console.font.h"
+#include "__trace\console.format.h"
 
 #include "win.gui.wnd.h"
 
@@ -63,6 +64,10 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	bool b_error = true;
 
+	// should be placed here for testing otherwise creating console after main window will cause the error;
+	shared::console::CWrap con_wrap;
+	con_wrap.Create(true);
+
 	CAppWnd& app_wnd = ::Get_app_wnd();
 	camera::CWnd cam_wnd; // the draw context window;
 
@@ -89,7 +94,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) _con.Error().Print(TError::e_req));
 			_con.Error().Show();
 			break;
-		}
+		} else shared::console::CCtxMenu().Enable(true);
 		__trace::Use_con(true);
 		layout.Bottom().Target(_con.Handle());
 		layout.Update();
@@ -97,11 +102,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 
-		shared::console::CFormat::CBkgnd con_bkg;
+		shared::console::CBkgnd con_bkg;
 		con_bkg.Color(::Get_theme().Bkgnd_rgb());
 		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
 		layout.Update();
-		shared::console::CLayout().Output().HScroll().Set(true);
+		shared::console::layout::CHScroll().Set(true);
 
 		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
 #pragma endregion

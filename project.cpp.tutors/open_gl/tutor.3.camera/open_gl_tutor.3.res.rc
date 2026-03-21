@@ -84,6 +84,11 @@ IDR_TUTOR_3_CTX_MENU_0 MENU { POPUP "" {
 			}
 		}
 	}}
+	MENUITEM SEPARATOR
+	POPUP "Console" {
+		MENUITEM "Clear" , IDR_TUTOR_3_CON_CLEAR
+		MENUITEM "Show"  , IDR_TUTOR_3_CON_VISIBLE
+	}
 }}
 
 // https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
