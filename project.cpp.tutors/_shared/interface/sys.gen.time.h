@@ -9,9 +9,6 @@
 	Adopted to Geometry Curve project on 18-Feb-2024 at 14:25:42.7173072, UTC+7, Novosibirsk, Sunday;
 */
 #include "shared.defs.h"
-namespace std {
-	#include <time.h>
-}
 #include "sys.err.codes.h"
 
 namespace shared { namespace sys_core {

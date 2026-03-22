@@ -39,7 +39,6 @@ err_code CCameraModule::PreMessageLoop (int nShowCmd) {
 		return n_result = __s_ok; // forces to continue working with pumping windows' messages;
 }
 
-/////////////////////////////////////////////////////////////////////////////
 /*
 	api-ms-win-core-synch-l1-2-0 cannot be loaded >> access violation error may occur in case when this solution must be re-built;
 */
@@ -94,7 +93,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			__trace_err_3(_T("%s\n"), (_pc_sz) _con.Error().Print(TError::e_req));
 			_con.Error().Show();
 			break;
-		} else shared::console::CCtxMenu().Enable(true);
+		} else shared::console::content::CCtxMenu().Enable(true);
 		__trace::Use_con(true);
 		layout.Bottom().Target(_con.Handle());
 		layout.Update();

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060030}</UniqueIdentifier></Filter>
+    <Filter Include="_root\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060031}</UniqueIdentifier></Filter>
+
+    <Filter Include="console"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060032}</UniqueIdentifier></Filter>
+    <Filter Include="console\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060033}</UniqueIdentifier></Filter>
+
+  </ItemGroup>
+  <ItemGroup><!--_root-->
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$w$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$w$.defs.cpp"><Filter>_root</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--console-->
+    <ClInclude Include="$(_2-0)test_case_$w$.con.h"><Filter>console\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.con.cpp"><Filter>console\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$w$.con.h"><Filter>console</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$w$.con.cpp"><Filter>console</Filter></ClCompile>
+  </ItemGroup>
+</Project>

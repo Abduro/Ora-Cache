@@ -8,6 +8,9 @@
 
 namespace shared { namespace console { namespace modes { using namespace shared::console;
 
+	// https://learn.microsoft.com/en-us/windows/console/getconsolemode ;
+	// https://learn.microsoft.com/en-us/windows/console/setconsolemode ;
+
 	class CBase {
 	protected:
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
@@ -28,10 +31,12 @@ namespace shared { namespace console { namespace modes { using namespace shared:
 		CInput (void); ~CInput (void) = default;
 
 		err_code Get (void);
-		err_code Set (void);
+		err_code Set (const ulong _u_flags);
 
-		static
-		_pc_sz To_str (const ulong _u_flags);
+		static bool Has (const ulong _u_flags); // returns 'true' in case if given flag set contains at least one flag that is acceptable for input buffer;
+		static _pc_sz To_str (const ulong _u_flags);
+
+		err_code operator <<(const ulong _u_flags);
 	};
 
 	class COutput : public CBase {
@@ -39,31 +44,12 @@ namespace shared { namespace console { namespace modes { using namespace shared:
 		COutput (void); ~COutput (void) = default;
 
 		err_code Get (void);
-		err_code Set (void);
+		err_code Set (const ulong _u_flags);
 
-		static
-		_pc_sz To_str (const ulong _u_flags);
-	};
+		static bool Has (const ulong _u_flags); // returns 'true' in case if given flag set contains at least one flag that is acceptable for output buffer;
+		static _pc_sz To_str (const ulong _u_flags);
 
-	// https://learn.microsoft.com/en-us/windows/console/getconsolemode ;
-	// https://learn.microsoft.com/en-us/windows/console/setconsolemode ;
-
-	class CMode {
-	public:
-		 CMode (void) = default; CMode (const CMode&) = delete; CMode (CMode&&) = delete;
-		~CMode (void) = default;
-
-		const
-		CInput& In (void) const;
-		CInput& In (void) ;
-		const
-		COutput& Out (void) const;
-		COutput& Out (void) ;
-
-	private:
-		CMode& operator = (const CMode&) = delete; CMode& operator = (CMode&&) = delete;
-		CInput  m_input;
-		COutput m_output;
+		err_code operator <<(const ulong _u_flags);
 	};
 }}}
 

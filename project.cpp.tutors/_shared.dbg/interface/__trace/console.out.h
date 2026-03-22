@@ -5,6 +5,7 @@
 	This is Ebo Pack console output text blocks interface declaration files;
 */
 #include "console.defs.h"
+#include "console.format.h"
 
 namespace shared { namespace console {
 

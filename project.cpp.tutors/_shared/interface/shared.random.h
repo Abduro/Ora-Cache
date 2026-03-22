@@ -12,9 +12,7 @@
 #include <limits>
 #include <guiddef.h>
 #include <random>
-namespace std {
-#include <time.h>
-}
+
 #include "shared.defs.h"
 #include "shared.types.h"
 

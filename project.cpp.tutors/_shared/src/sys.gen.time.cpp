@@ -721,9 +721,9 @@ time_t& CUnixTime::Current(void){
 
 	if (TBase::IsLocal()){
 	     struct tm info_ = {0};
-	     ::std::localtime_s(&info_, &m_time);
+	     ::localtime_s(&info_, &m_time);
 	}
-	else ::std::time(&m_time);
+	else ::time(&m_time);
 	return *this;
 }
 
@@ -735,8 +735,7 @@ INT     CUnixTime::GapWith(const time_t& _time)const {
 INT     CUnixTime::GapWithCurrent(void) const {
 	struct tm info_ = {0};
 	time_t current_ = ::std::time(0);
-	if (TBase::IsLocal()) ::std::localtime_s(&info_, &current_);
-	else                  ::std::time(&current_);
+	if (TBase::IsLocal()) ::localtime_s(&info_, &current_); else ::time(&current_);
 	return this->GapWith(current_);
 }
 
@@ -766,9 +765,9 @@ HRESULT CUnixTime::ToString(const bool bFormatted, CString& _result)const {
 		struct tm p_tm = {0};
 
 		if (TBase::IsLocal())
-			::std::localtime_s(&p_tm, &this->m_time);
+			::localtime_s(&p_tm, &this->m_time);
 		else
-			::std::gmtime_s(&p_tm, &this->m_time);
+			::gmtime_s(&p_tm, &this->m_time);
 
 
 			if (::wcsftime(

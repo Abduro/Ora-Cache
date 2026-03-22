@@ -12,9 +12,11 @@
 #include <array>          // for using fixed-size data sets;
 #include <map>            // window message router uses this header;
 #include <set>            // is used for cache of draw objects' identifiers;
-#include <vector>         // preprocessor wrapper uses this header;
-#include <typeinfo>       // typeinfo >> exception >> vcruntime_exception >> ::std::bad_alloc;
 #include <stdexcept>      // required for std::out_of_range;
+#include <thread>         // for using std::thread class;
+#include <ctime>          // for using in time & date wrappers, random iface is also uses it;
+#include <typeinfo>       // typeinfo >> exception >> vcruntime_exception >> ::std::bad_alloc;
+#include <vector>         // preprocessor wrapper uses this header;
 
 #include "sys.err.trim.h" // includes error codes;
 

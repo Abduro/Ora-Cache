@@ -6,6 +6,7 @@
 	Adopted to Ebo Pack on 23-Oct-2018 at 11:26:25a, UTC+7, Novosibirsk, Tuesday; [a voluntary project]
 */
 #include "shared.random.h"
+#include <ctime>
 
 using namespace shared::common;
 
@@ -17,7 +18,7 @@ namespace shared { namespace common { namespace _impl {
 
 		if (bInitialized == false) {
 			bInitialized  = true;
-			::std::srand((unsigned)::std::time(0));
+			::std::srand((unsigned)::time(0));
 		}
 	}
 

@@ -76,43 +76,11 @@ err_code CWrap::Create (const bool _b_visible) {
 TError& CWrap::Error (void) const { return this->m_error; }
 
 #pragma endregion;
-
-#pragma region cls::CCtxMenu{}
-
-CCtxMenu::CCtxMenu (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-err_code CCtxMenu::Enable (const bool _b_state) {
-	_b_state;
-	this->m_error << __METHOD__<<__s_ok;
-
-	void* p_input = /*_con.Get_in()*/__in_handle;
-	unsigned long u_mode = 0;
-
-	// https://learn.microsoft.com/en-us/windows/console/getconsolemode ;
-	if (false == !!::GetConsoleMode(p_input, &u_mode))
-		return this->m_error.Last();
-
-	static const uint32_t u_req = (ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS);
-
-	if (_b_state) u_mode |= u_req;
-	else u_mode &= ~u_req;
-
-	// https://learn.microsoft.com/en-us/windows/console/setconsolemode ;
-	if (false == !!::SetConsoleMode(p_input, u_mode))
-		this->m_error.Last();
-
-	return this->Error();
-}
-
-TError& CCtxMenu::Error (void) const { return this->m_error; }
-
-#pragma endregion
-
 #pragma region cls::CCondole{}
 
 CConsole:: CConsole (void) : m_con_wnd(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 CConsole::~CConsole (void) {
-	this->Close(); // if it was called before the returned error code is ignored;
+//	this->Close(); // if it was called before the returned error code is ignored;
 }
 
 err_code   CConsole::Close (void) {
@@ -145,7 +113,7 @@ err_code CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, con
 	if (::IsRectEmpty(&_rect_wnd_pos))
 		return this->m_error << __e_rect = _T("The input rectangle is empty");
 
-	if (false == !!::AllocConsole())
+	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
 		return this->m_error.Last();
 	else
 		this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
@@ -161,7 +129,7 @@ err_code CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, con
 	COut::Info (_T("this is the info;\n"));
 	COut::Warn (_T("this is the warn;\n"));
 #else
-	// https://cplusplus.com/forum/windows/58206/ ; how to make thisngs better: redirect ::std::ios to this console;
+	// https://cplusplus.com/forum/windows/58206/ ; how to make things better: redirect ::std::ios to this console;
 #endif
 	return this->Error();
 }

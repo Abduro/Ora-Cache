@@ -15,10 +15,14 @@
   <ItemGroup>
     <ClInclude Include="$(_0-0)console.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.cpp"><Filter>src\__trace</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.content.h"><Filter>interface\__trace</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.content.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.buffer.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.buffer.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.defs.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.defs.cpp"><Filter>src\__trace</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.event.h"><Filter>interface\__trace</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.event.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.font.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.font.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.format.h"><Filter>interface\__trace</Filter></ClInclude>
