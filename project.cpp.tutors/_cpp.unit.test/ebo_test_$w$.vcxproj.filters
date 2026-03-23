@@ -7,6 +7,12 @@
     <Filter Include="console"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060032}</UniqueIdentifier></Filter>
     <Filter Include="console\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060033}</UniqueIdentifier></Filter>
 
+    <Filter Include="console\event"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060034}</UniqueIdentifier></Filter>
+    <Filter Include="console\event\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060035}</UniqueIdentifier></Filter>
+
+    <Filter Include="console\mode"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060036}</UniqueIdentifier></Filter>
+    <Filter Include="console\mode\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060037}</UniqueIdentifier></Filter>
+
   </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -19,5 +25,17 @@
     <ClCompile Include="$(_2-0)test_case_$w$.con.cpp"><Filter>console\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$w$.con.h"><Filter>console</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$w$.con.cpp"><Filter>console</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--console events-->
+    <ClInclude Include="$(_2-0)test_case_$w$.con.evt.h"><Filter>console\event\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.con.evt.cpp"><Filter>console\event\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$w$.con.evt.h"><Filter>console\event</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$w$.con.evt.cpp"><Filter>console\event</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--console modes-->
+    <ClInclude Include="$(_2-0)test_case_$w$.con.mode.h"><Filter>console\mode\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.con.mode.cpp"><Filter>console\mode\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$w$.con.mode.h"><Filter>console\mode</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$w$.con.mode.cpp"><Filter>console\mode</Filter></ClCompile>
   </ItemGroup>
 </Project>

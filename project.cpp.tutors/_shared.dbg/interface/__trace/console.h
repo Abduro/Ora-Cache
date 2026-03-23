@@ -25,8 +25,11 @@ namespace shared { namespace console {
 		 CWrap (void); CWrap (const CWrap&) = delete; CWrap (CWrap&&) = delete;
 		~CWrap (void);
 
-		err_code Create (const bool _b_visible); // creates the console process through CreateProcess() procs;
+		err_code Create (const bool _b_visible, const bool _b_attach = true); // creates the console process through CreateProcess() procs;
+		err_code Detach (void); // dettaches from the console, to close console host process the operating does it itself;
 		TError&  Error (void) const;
+
+		bool Is_attached (void) const;
 
 	private:
 		CWrap& operator = (const CWrap&) = delete; CWrap& operator = (CWrap&&) = delete;

@@ -229,8 +229,16 @@
   <ItemGroup><!--console-->
     <ClInclude Include="$(_2-0)test_case_$w$.con.h" />
     <ClCompile Include="$(_2-0)test_case_$w$.con.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$w$.con.evt.h" />
+    <ClCompile Include="$(_2-0)test_case_$w$.con.evt.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$w$.con.mode.h" />
+    <ClCompile Include="$(_2-0)test_case_$w$.con.mode.cpp" />
     <ClInclude Include="$(_2)ebo_test_$w$.con.h" />
     <ClCompile Include="$(_2)ebo_test_$w$.con.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$w$.con.evt.h" />
+    <ClCompile Include="$(_2)ebo_test_$w$.con.evt.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$w$.con.mode.h" />
+    <ClCompile Include="$(_2)ebo_test_$w$.con.mode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

@@ -8,16 +8,17 @@
 using namespace shared::console;
 using namespace shared::console::events;
 
-#pragma region cls::ctrl::CHandler{}
+#pragma region cls::ctrl::CRouter{}
 
-ctrl::CHandler::CHandler (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+ctrl::CRouter::CRouter (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-TError& ctrl::CHandler::Error (void) const { return this->m_error; }
+TError& ctrl::CRouter::Error (void) const { return this->m_error; }
 
 #pragma endregion
 #pragma region cls::input::CRouter{}
 
-input::CRouter::CRouter (void) : m_turned(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+input::CRouter:: CRouter (void) : m_turned(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+input::CRouter::~CRouter (void) { if (this->Is_on()) this->Turn(false); }
 
 TError&  input::CRouter::Error (void) const { return this->m_error; }
 bool     input::CRouter::Is_on (void) const { return this->m_turned; }
@@ -27,14 +28,14 @@ err_code input::CRouter::Turn  (const bool _b_on_off) {
 
 	if (_b_on_off) {
 		if (this->Is_on())
-			return this->Error();
+			return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Router is already turned on");
 
 		this->m_thread = ::std::thread(&input::CRouter::Receive_evt, this);
 		this->m_turned = true;
 	}
 	else {
 		if (this->Is_on() == false)
-			return this->Error();
+			return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Router is already turned off");
 
 		this->m_turned = false;
 		this->m_thread.join();

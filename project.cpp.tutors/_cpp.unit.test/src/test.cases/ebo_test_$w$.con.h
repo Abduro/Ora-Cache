@@ -6,30 +6,17 @@
 */
 #include "test_case_$w$.con.h"
 
-namespace ebo { namespace boo { namespace test { namespace console {
+namespace ebo { namespace boo { namespace test { namespace con {
 
-	__class (c_input) {
+	__class (c_wrap) {
 	public:
-		 c_input (void) = default; c_input (const c_input&) = delete; c_input (c_input&&) = delete;
-		~c_input (void) = default;
+		 c_wrap (void) = default; c_wrap (const c_wrap&) = delete; c_wrap (c_wrap&&) = delete;
+		~c_wrap (void) = default;
 
-		__method (Get);
-		__method (Set);
+		__method(Create);
 
 	private:
-		c_input& operator = (const c_input&) = delete; c_input& operator = (c_input&&) = delete;
-	};
-
-	__class (c_output) {
-	public:
-		 c_output (void) = default; c_output (const c_output&) = delete; c_output (c_output&&) = delete;
-		~c_output (void) = default;
-
-		__method (Get);
-		__method (Set);
-
-	private:
-		c_output& operator = (const c_output&) = delete; c_output& operator = (c_output&&) = delete;
+		c_wrap& operator = (const c_wrap&) = delete; c_wrap& operator = (c_wrap&&) = delete;
 	};
 
 }}}}

@@ -4,40 +4,17 @@
 */
 #include "ebo_test_$w$.con.h"
 
-using namespace ebo::boo::test::console;
+using namespace ebo::boo::test::con;
 
-#pragma region cls::c_input{}
+#pragma region cls::c_wrap{}
 
-void c_input::Get (void) {
+void c_wrap::Create (void) {
 
-	const uint32_t u_flags = c_mode_input().Get(); u_flags;
+	c_con_wrap wrapper;
 
-	_out()();
-}
+	wrapper.Create();
+	wrapper.Detach();
 
-void c_input::Set (void) {
-	// (1) trying to set flags of 0 value; (error is expected);
-	c_mode_input().Set(0);
-	// (2) possibly the flag set is expected to be succeeded;
-	c_mode_input().Set(10);
-	_out()();
-}
-
-#pragma endregion
-#pragma region cls::c_output{}
-
-void c_output::Get (void) {
-
-	const uint32_t u_flags = c_mode_output().Get(); u_flags;
-
-	_out()();
-}
-
-void c_output::Set (void) {
-	// (1) trying to set flags of 0 value; (error is expected);
-	c_mode_output().Set(0);
-	// (2) possibly the flag set is expected to be succeeded;
-	c_mode_output().Set(10);
 	_out()();
 }
 

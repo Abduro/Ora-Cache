@@ -4,46 +4,40 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Mar-2026 at 20:59:27.699, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL tutorials' trace console interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$w$.defs.h"
-#include "console.mode.h"
+#include "test_case_$w$.con.evt.h"
+#include "test_case_$w$.con.mode.h"
+#include "console.h"
 
-namespace ebo { namespace boo { namespace test { namespace console {
+namespace ebo { namespace boo { namespace test { namespace con {
 
-	using t_input = shared::console::modes::CInput;
-	using t_output = shared::console::modes::COutput;
+	/* query: can console window be created from test case of MSTest Framework (to Google AI);
+	   In the MSTest Framework, a standard console window is *not* automatically created or displayed when a test case is executed.
+	   Instead, MSTest redirects all standard output to the test results for later viewing;
+	   Possible solutions:
+	   (1) open a physical console window (advanced) by using AllocConsole();
+	       This forces the operating system to attach a console window to the current test process; (possibly good approach);
+	   (2) use the MSTest console runner:
+	       VSTest.Console.exe command-line options are here https://learn.microsoft.com/en-us/visualstudio/test/vstest-console-options?view=visualstudio ;
+	   (3) debug via a console app wrapper, it seems to be the best solution;
+	*/
 
-	class c_mode_input {
+	using t_wrap = shared::console::CWrap;
+
+	class c_con_wrap {
 	public:
-		 c_mode_input (void) = default; c_mode_input (const c_mode_input&) = delete; c_mode_input (c_mode_input&&) = delete;
-		~c_mode_input (void) = default;
+		 c_con_wrap (void) = default; c_con_wrap (const c_con_wrap&) = delete; c_con_wrap (c_con_wrap&&) = delete;
+		~c_con_wrap (void) = default;
 
-		uint32_t Get  (void);
-		err_code Set  (const uint32_t);
+		err_code Create (void); // creates console process with visible window and attaches to the process;
+		err_code Detach (void); // detaches from the console; the console process must be ended automatically by OS;
 
 		const
-		t_input& operator ()(void) const;
-		t_input& operator ()(void) ;
+		t_wrap& operator ()(void) const;
+		t_wrap& operator ()(void) ;
 
 	private:
-		c_mode_input& operator = (const c_mode_input&) = delete; c_mode_input& operator = (c_mode_input&&) = delete;
-		t_input m_input;
-	};
-
-	class c_mode_output {
-	public:
-		 c_mode_output (void) = default; c_mode_output (const c_mode_output&) = delete; c_mode_output (c_mode_output&&) = delete;
-		~c_mode_output (void) = default;
-
-		uint32_t Get  (void);
-		err_code Set  (const uint32_t);
-
-		const
-		t_output& operator ()(void) const;
-		t_output& operator ()(void) ;
-
-	private:
-		c_mode_output& operator = (const c_mode_output&) = delete; c_mode_output& operator = (c_mode_output&&) = delete;
-		t_output m_output;
+		c_con_wrap& operator = (const c_con_wrap&) = delete; c_con_wrap& operator = (c_con_wrap&&) = delete;
+		t_wrap m_wrap; // it is required for keeping console attached between calling this class methods;
 	};
 
 }}}}

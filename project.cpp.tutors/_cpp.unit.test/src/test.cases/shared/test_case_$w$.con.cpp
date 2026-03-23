@@ -4,65 +4,30 @@
 */
 #include "test_case_$w$.con.h"
 
-using namespace ebo::boo::test::console;
+using namespace ebo::boo::test::con;
 
-#pragma region cls::c_mode_input{}
+#pragma region cls::c_con_wrap{}
 
-uint32_t c_mode_input::Get (void) {
+err_code c_con_wrap::Create (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	if (__failed((*this)().Get())) { _out() += (*this)().Error(); }
+	if (__failed((*this)().Create(true, true))) { _out() += (*this)().Error(); }
+	else _out() += _T("[impt] result: console process is created;");
 
-	const uint32_t u_flags = (*this)().Flags();
-
-	_out() += TString().Format(_T("[impt] result: %s (%u);"), (*this)().To_str(u_flags), u_flags);
-
-	return u_flags;
+	return (*this)().Error();
 }
 
-err_code c_mode_input::Set (const uint32_t _u_flags) {
-	_u_flags;
+err_code c_con_wrap::Detach (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TString().Format(_T("%s (%u);") , (*this)().To_str(_u_flags), _u_flags);
 
-	if (__failed((*this)().Set(_u_flags))) { _out() += (*this)().Error(); }
-	else { _out() += TString().Format(_T("[impt] result: input buffer flags (%u) is set successfully;"), _u_flags); }
+	if (__failed((*this)().Detach())) { _out() += (*this)().Error(); }
+	else _out() += _T("[impt] result: console process is dettached;");
 
 	return (*this)().Error();
 }
 
 const
-t_input& c_mode_input::operator ()(void) const { return this->m_input; }
-t_input& c_mode_input::operator ()(void)       { return this->m_input; }
-
-#pragma endregion
-#pragma region cls::c_mode_output{}
-
-uint32_t c_mode_output::Get (void) {
-	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	if (__failed((*this)().Get())) { _out() += (*this)().Error(); }
-
-	const uint32_t u_flags = (*this)().Flags();
-
-	_out() += TString().Format(_T("[impt] result: %s (%u);"), (*this)().To_str(u_flags), u_flags);
-
-	return u_flags;
-}
-
-err_code c_mode_output::Set (const uint32_t _u_flags) {
-	_u_flags;
-	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TString().Format(_T("%s (%u);") , (*this)().To_str(_u_flags), _u_flags);
-
-	if (__failed((*this)().Set(_u_flags))) { _out() += (*this)().Error(); }
-	else { _out() += TString().Format(_T("[impt] result: output buffer flags (%u) is set successfully;"), _u_flags); }
-
-	return (*this)().Error();
-}
-
-const
-t_output& c_mode_output::operator ()(void) const { return this->m_output; }
-t_output& c_mode_output::operator ()(void)       { return this->m_output; }
+t_wrap& c_con_wrap::operator ()(void) const { return this->m_wrap; }
+t_wrap& c_con_wrap::operator ()(void)       { return this->m_wrap; }
 
 #pragma endregion

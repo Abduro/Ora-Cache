@@ -36,12 +36,14 @@ PROCESS_INFORMATION s_proc = {0}; // https://learn.microsoft.com/en-us/windows/w
 
 CWrap:: CWrap (void) : m_hwnd(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CWrap::~CWrap (void) {
+	if (this->Is_attached())
+		this->Detach();
 	if (s_proc.hProcess) { ::CloseHandle( s_proc.hProcess ); }
 	if (s_proc.hThread ) { ::CloseHandle( s_proc.hThread ); } s_proc = {0};
 }
 
-err_code CWrap::Create (const bool _b_visible) {
-	_b_visible;
+err_code CWrap::Create (const bool _b_visible, const bool _b_attach) {
+	_b_visible; _b_attach;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr != ::GetConsoleWindow()) // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
@@ -66,22 +68,39 @@ err_code CWrap::Create (const bool _b_visible) {
 
 	CScreenBuffer().Clear();
 
-	// https://learn.microsoft.com/en-us/windows/console/freeconsole
-	if (false == !!::FreeConsole())
+	if (false == _b_attach) { // if not specified to keep the console attached, tries to disattach it;
+
+		if (false == !!::FreeConsole()) // https://learn.microsoft.com/en-us/windows/console/freeconsole;
+			this->m_error.Last();
+		else
+			this->m_hwnd = 0;
+	}
+	return this->Error();
+}
+
+err_code CWrap::Detach (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_attached())
+		return this->Error();
+
+	if (false == !!::FreeConsole()) // https://learn.microsoft.com/en-us/windows/console/freeconsole;
 		this->m_error.Last();
+	else
+		this->m_hwnd = 0;
 
 	return this->Error();
 }
 
-TError& CWrap::Error (void) const { return this->m_error; }
+TError&  CWrap::Error (void) const { return this->m_error; }
+
+bool CWrap::Is_attached (void) const { return 0 != ::GetConsoleWindow(); }
 
 #pragma endregion;
 #pragma region cls::CCondole{}
 
 CConsole:: CConsole (void) : m_con_wnd(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
-CConsole::~CConsole (void) {
-//	this->Close(); // if it was called before the returned error code is ignored;
-}
+CConsole::~CConsole (void) {}
 
 err_code   CConsole::Close (void) {
 
@@ -134,9 +153,9 @@ err_code CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, con
 	return this->Error();
 }
 
-HWND   CConsole::Handle (void) const { return this->m_con_wnd; }
+HWND CConsole::Handle (void) const { return this->m_con_wnd; }
 
-bool   CConsole::Is_valid (void) const {
+bool CConsole::Is_valid (void) const {
 	return (0 != this->m_con_wnd && ::IsWindow(this->m_con_wnd));
 }
 

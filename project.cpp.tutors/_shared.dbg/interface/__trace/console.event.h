@@ -28,14 +28,14 @@ namespace ctrl   { using namespace shared::console;
 		CEvent& operator = (const CEvent&) = delete; CEvent& operator = (CEvent&&) = delete;
 	};
 
-	class CHandler {
+	class CRouter {
 	public:
-		CHandler (void); CHandler (const CHandler&) = delete; CHandler (CHandler&&) = delete;
+		CRouter (void); CRouter (const CRouter&) = delete; CRouter (CRouter&&) = delete;
 
 		TError&  Error (void) const;
 
 	private:
-		CHandler& operator = (const CHandler&) = delete; CHandler& operator = (CHandler&&) = delete;
+		CRouter& operator = (const CRouter&) = delete; CRouter& operator = (CRouter&&) = delete;
 		CError m_error;
 	};
 
@@ -71,7 +71,8 @@ namespace input  { using namespace shared::console;
 
 	class CRouter {
 	public:
-		CRouter (void); CRouter (const CRouter&) = delete; CRouter (CRouter&&) = delete;
+		 CRouter (void); CRouter (const CRouter&) = delete; CRouter (CRouter&&) = delete;
+		~CRouter (void); // auto-turn-off is required;
 
 		TError&  Error (void) const;
 		bool     Is_on (void) const;
