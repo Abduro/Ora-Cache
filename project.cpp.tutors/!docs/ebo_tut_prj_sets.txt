@@ -1,3 +1,7 @@
+:: to get a project done in time:
+HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+ShowSecondsInSystemClock = 1
+
 ::*important*:
 :: in the project file each node <ItemDefinitionGroup>/<ClCompile> must contain <PreprocessorDefinitions> sub-node for working preprocessor defs properly:
 :: for example:
