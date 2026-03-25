@@ -38,7 +38,7 @@ namespace shared { namespace dbg {
 
 	class CModule {
 	public:
-		static CString  Get_path (CError&); // gets full path to dyna-lib, it is especially intended for MSTest projects;
+		static _pc_sz Get_path (CError&); // gets full path to dyna-lib and executable file too; it is especially intended for MSTest projects;
 	private:
 		CModule (void) = delete; CModule (const CModule&) = delete; CModule (CModule&&) = delete; ~CModule (void) = delete;
 		CModule& operator = (const CModule&) = delete; CModule& operator = (CModule&&) = delete;

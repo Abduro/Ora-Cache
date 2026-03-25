@@ -65,7 +65,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	// should be placed here for testing otherwise creating console after main window will cause the error;
 	shared::console::CWrap con_wrap;
-	con_wrap.Create(true);
+	con_wrap.Create(_T(""), true);
 
 	CAppWnd& app_wnd = ::Get_app_wnd();
 	camera::CWnd cam_wnd; // the draw context window;

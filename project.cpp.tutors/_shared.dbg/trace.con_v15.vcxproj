@@ -70,17 +70,18 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\</IntPath>
-    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntPath_64>
-    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntPath_86>
-    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
-    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot_86>
+    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\test.cases\</IntPath_64>
+    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\test.cases\</IntPath_86>
+    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\test.cases\</OutRoot_64>
+    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\test.cases\</OutRoot_86>
+    <ExeName>trace_console</ExeName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutRoot_86)</OutDir>
     <IntDir>$(IntPath_86)</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(ExeName)</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -89,7 +90,7 @@
     <IntDir>$(IntPath_64)</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(ExeName)</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -98,7 +99,7 @@
     <IntDir>$(IntPath_86)</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(ExeName)</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -107,7 +108,7 @@
     <IntDir>$(IntPath_64)</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
-    <TargetName>$(ProjectName)</TargetName>
+    <TargetName>$(ExeName)</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>

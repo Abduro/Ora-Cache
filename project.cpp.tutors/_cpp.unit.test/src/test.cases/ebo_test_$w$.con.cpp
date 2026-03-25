@@ -8,12 +8,28 @@ using namespace ebo::boo::test::con;
 
 #pragma region cls::c_wrap{}
 
+void c_locator::Path (void) {
+
+	c_con_loc().Get_path(); _out()();
+}
+
+#pragma endregion
+#pragma region cls::c_wrap{}
+
 void c_wrap::Create (void) {
 
 	c_con_wrap wrapper;
 
-	wrapper.Create();
+	wrapper.Create(c_con_loc().Get_path());
 	wrapper.Detach();
+
+	_out()();
+}
+
+void c_wrap::Path (void) {
+	CError error(__CLASS__, __METHOD__, __s_ok);
+
+	c_con_wrap::Get_path(error);
 
 	_out()();
 }

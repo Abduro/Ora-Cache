@@ -14,20 +14,40 @@
 #include "console.layout.h"
 
 namespace shared { namespace console {
+	/* the locator class is for getting path to trace console executable in the following order:
+	   (1) checking the registry for possible specifying where the console wrapper resides;
+	   (2) in case if registry does not contain such path or the specified path is wrong,
+	       the locator gets absolute path to the app process either tutorial app or test case dyna-lib,
+	       than composes the relative path to the trace console;
+	*/
+	class CLocator {
+	public:
+		 CLocator (void); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete;
+		~CLocator (void) = default;
+
+		TError&  Error (void) const;
+		_pc_sz   Get_path (void);    // if returned pointer to path string is null, the error object contains the error detailes;
+
+	private:
+		CLocator& operator = (const CLocator&) = delete; CLocator& operator = (CLocator&&) = delete;
+		CError m_error;
+	};
+
 	/* query: how to create console process with hidden window winapi (Google AI):
 	   To create a console process with a hidden window using the Win32 API,
 	   the most effective method is using the CreateProcess function with specific flags;
 	(1) Using CREATE_NO_WINDOW flag: no console window is created for a process. This avoids the "flicker" of a window appearing and then disappearing;
 	(2) Using STARTUPINFO with SW_HIDE: { dwFlags = STARTF_USESHOWWINDOW; wShowWindow = SW_HIDE; }
 	*/
+
 	class CWrap {
 	public:
 		 CWrap (void); CWrap (const CWrap&) = delete; CWrap (CWrap&&) = delete;
 		~CWrap (void);
 
-		err_code Create (const bool _b_visible, const bool _b_attach = true); // creates the console process through CreateProcess() procs;
+		err_code Create (_pc_sz _p_path, const bool _b_visible, const bool _b_attach = true); // creates the console process through CreateProcess() procs;
 		err_code Detach (void); // dettaches from the console, to close console host process the operating does it itself;
-		TError&  Error (void) const;
+		TError&  Error  (void) const;
 
 		bool Is_attached (void) const;
 

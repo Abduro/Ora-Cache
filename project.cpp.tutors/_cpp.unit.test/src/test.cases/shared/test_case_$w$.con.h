@@ -8,7 +8,7 @@
 #include "test_case_$w$.con.mode.h"
 #include "console.h"
 
-namespace ebo { namespace boo { namespace test { namespace con {
+namespace ebo { namespace boo { namespace test { namespace con { using namespace ebo::boo::test;
 
 	/* query: can console window be created from test case of MSTest Framework (to Google AI);
 	   In the MSTest Framework, a standard console window is *not* automatically created or displayed when a test case is executed.
@@ -21,15 +21,31 @@ namespace ebo { namespace boo { namespace test { namespace con {
 	   (3) debug via a console app wrapper, it seems to be the best solution;
 	*/
 
-	using t_wrap = shared::console::CWrap;
+	using t_wrap   = shared::console::CWrap;
+	using t_module = shared::dbg::CModule;
+	using t_locate = shared::console::CLocator;
+
+	class c_con_loc {
+	public:
+		 c_con_loc (void) = default; c_con_loc (const c_con_loc&) = delete; c_con_loc (c_con_loc&&) = delete;
+		~c_con_loc (void) = default;
+
+		_pc_sz Get_path (void);
+
+	private:
+		c_con_loc& operator = (const c_con_loc&) = delete; c_con_loc& operator = (c_con_loc&&) = delete;
+	};
 
 	class c_con_wrap {
 	public:
 		 c_con_wrap (void) = default; c_con_wrap (const c_con_wrap&) = delete; c_con_wrap (c_con_wrap&&) = delete;
 		~c_con_wrap (void) = default;
 
-		err_code Create (void); // creates console process with visible window and attaches to the process;
-		err_code Detach (void); // detaches from the console; the console process must be ended automatically by OS;
+		err_code Create (_pc_sz _p_path); // creates console process with visible window and attaches to the process;
+		err_code Detach (void);           // detaches from the console; the console process must be ended automatically by OS;
+
+		static
+		_pc_sz Get_path (CError&); // returns the path to this test case dyna-lib which is loaded by testhost.exe;
 
 		const
 		t_wrap& operator ()(void) const;

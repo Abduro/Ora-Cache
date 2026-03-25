@@ -29,18 +29,21 @@ using namespace shared::console;
 #if defined(_DEBUG)
 namespace shared { namespace dbg {
 
-CString  CModule::Get_path (CError& _err) {
+_pc_sz  CModule::Get_path (CError& _err) {
 	_err;
 	HMODULE This = nullptr;
+	// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw ;
 	if (0 == ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (_pc_sz)&CModule::Get_path, &This)) {
 		_err.Last(); return CString();
 	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew ;
 	const uint32_t u_req_len = 512;
+	static
 	CString cs_out;
 	if (0 == ::GetModuleFileName(This, cs_out.GetBuffer(u_req_len), u_req_len * sizeof(t_char))) {
 		_err.Last();
 	}
-	return cs_out;
+	return (_pc_sz) cs_out;
 }
 
 namespace _impl {
