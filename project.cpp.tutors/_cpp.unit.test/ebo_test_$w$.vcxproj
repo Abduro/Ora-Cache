@@ -240,6 +240,12 @@
     <ClInclude Include="$(_2)ebo_test_$w$.con.mode.h" />
     <ClCompile Include="$(_2)ebo_test_$w$.con.mode.cpp" />
   </ItemGroup>
+  <ItemGroup><!--thread pool-->
+    <ClInclude Include="$(_2-0)test_case_$w$.event.h" />
+    <ClCompile Include="$(_2-0)test_case_$w$.event.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$w$.thread.h" />
+    <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
@@ -249,6 +255,9 @@
     </ProjectReference>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Runnable)runnable_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000007}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

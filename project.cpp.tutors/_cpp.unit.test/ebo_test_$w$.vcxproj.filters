@@ -13,6 +13,9 @@
     <Filter Include="console\mode"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060036}</UniqueIdentifier></Filter>
     <Filter Include="console\mode\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060037}</UniqueIdentifier></Filter>
 
+    <Filter Include="thread"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060038}</UniqueIdentifier></Filter>
+    <Filter Include="thread\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060039}</UniqueIdentifier></Filter>
+
   </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -37,5 +40,11 @@
     <ClCompile Include="$(_2-0)test_case_$w$.con.mode.cpp"><Filter>console\mode\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$w$.con.mode.h"><Filter>console\mode</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$w$.con.mode.cpp"><Filter>console\mode</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--thread pool-->
+    <ClInclude Include="$(_2-0)test_case_$w$.event.h"><Filter>thread\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.event.cpp"><Filter>thread\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$w$.thread.h"><Filter>thread</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp"><Filter>thread</Filter></ClCompile>
   </ItemGroup>
 </Project>
