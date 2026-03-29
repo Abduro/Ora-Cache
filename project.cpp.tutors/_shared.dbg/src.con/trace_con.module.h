@@ -15,4 +15,8 @@
 #define out_t ::std::cout
 #endif
 
+#pragma comment(lib, "shared.dbg_v15.lib")    // shared debug outpu/trace console;
+#pragma comment(lib, "shared.gui_v15.lib")    // shared GUI lib for creating main/app window;
+#pragma comment(lib, "shared.trim_v15.lib")   // shared wrappers of required system functionality;
+
 #endif/*_TRACE_CON_MODULE_H_INCLUDED*/

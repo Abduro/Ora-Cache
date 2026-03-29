@@ -126,7 +126,12 @@ CPrimary::~CPrimary (void) {}
 
 t_rect  CPrimary::Autosize (void) const {
 	
-	const t_size_u  sz_req = { static_cast<uint32_t>(abs(__W(TBase().Rect()))) / 2, static_cast<uint32_t>(abs(__H(TBase().Rect()) / 4) * 2) };
+	const long w_ = ::abs(__W(TBase().Rect())) / 2;
+	const long h_ = ::abs(__H(TBase().Rect()) / 4) * 2;
+
+	t_size_u sz_req;
+	sz_req.cx = static_cast<uint32_t>(w_);
+	sz_req.cy = static_cast<uint32_t>(h_);
 	
 	return this->Centered(sz_req);
 }
@@ -145,9 +150,9 @@ t_rect  CPrimary::Centered (const t_size_u & _sz_req) const {
 t_size  CPrimary::Default  (const float _coeff) const {
 
 	if (0.0 == _coeff)
-		return t_size { _long(__W(TBase().Rect())), _long(__H(TBase().Rect())) };
+		return t_size { _long(__W(TBase::Rect())), _long(__H(TBase::Rect())) };
 	else
-		return t_size { _long(__W(TBase().Rect())/_coeff), _long(__H(TBase().Rect())/_coeff) };
+		return t_size { _long(__W(TBase::Rect())/_coeff), _long(__H(TBase::Rect())/_coeff) };
 }
 
 _pc_sz  CPrimary::Name (void) const { return (_pc_sz)this->m_name; }

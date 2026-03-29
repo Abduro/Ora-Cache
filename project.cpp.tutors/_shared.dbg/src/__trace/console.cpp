@@ -35,10 +35,7 @@ _pc_sz  CLocator::Get_path (void) {
 	// (2) tries to get the part of the current prosses executable;
 	//     it is assumed the call is made from test case, otherwise, the trace console does not make this call itself;
 
-	/**attention*: using such type of creating the string object, the object is marked to be 'empty'!
 	CString cs_lib = CModule::Get_path(this->m_error);
-	*/
-	CString cs_lib = CModule::Get_path(this->m_error); // cs_lib = _T("c:\\this\\trace_$5$_console.dll");
 	if (cs_lib.IsEmpty())
 		return this->Error();
 

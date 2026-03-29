@@ -236,7 +236,11 @@ err_code CLayout::Recalc (void) {
 
 	err_code n_result = __s_ok;
 	// (1) sets the main window position and size first;
-	t_rect rc_client  = layout::CPrimary().Centered(layout::t_size_u{uint32_t(layout::CRatios().Get().at(0).cx), uint32_t(layout::CRatios().Get().at(0).cy)});
+	layout::t_size_u size;
+	size.cx = uint32_t(layout::CRatios().Get().at(0).cx);
+	size.cy = uint32_t(layout::CRatios().Get().at(0).cy);
+
+	t_rect rc_client = layout::CPrimary().Centered(size);
 	this->m_rect = rc_client; // sets the main window client area rectangle;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrect ;

@@ -192,6 +192,19 @@ CString CTestCase::Key_path (const uint32_t _u_number) {
 }
 
 #pragma endregion
+#pragma region cls::CTrace{}
+
+_pc_sz  CTrace::Root (void) const {
+
+	static CString cs_trace;
+
+	if (cs_trace.IsEmpty()) {
+		cs_trace.Format(_T("%s\\Trace"), ::Get_reg_router().Root().Path());
+	}
+	return (_pc_sz) cs_trace;
+}
+
+#pragma endregion
 #pragma region cls::CTheme{}
 
 CTheme::CTheme (void) {}
@@ -323,6 +336,9 @@ CShaders& CReg_router::Shaders (void)       { return this->m_shaders; }
 const
 CTheme&  CReg_router::Theme (void) const { return this->m_theme; }
 CTheme&  CReg_router::Theme (void)       { return this->m_theme; }
+const
+CTrace&  CReg_router::Trace (void) const { return this->m_trace; }
+CTrace&  CReg_router::Trace (void)       { return this->m_trace; }
 
 const
 CViewport& CReg_router::Viewport (void) const { return this->m_v_port; }

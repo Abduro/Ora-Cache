@@ -19,9 +19,9 @@ namespace shared { namespace common {
 
 	class CTimer_Base {
 	protected:
-	    CTimer_Base (IWaitable_Events&);
-		CTimer_Base (void) = delete; CTimer_Base (const CTimer_Base&) = delete; CTimer_Base (CTimer_Base&&) = delete;
-	   ~CTimer_Base (void);
+		 CTimer_Base (IWaitable_Events&);
+		 CTimer_Base (void) = delete; CTimer_Base (const CTimer_Base&) = delete; CTimer_Base (CTimer_Base&&) = delete;
+		~CTimer_Base (void);
 
 	public:
 		virtual bool  IsValid(void) const = 0; // ToDo: the pure virtuality is not necessary; the kid classes may simply override it;
@@ -41,9 +41,9 @@ namespace shared { namespace common {
 	class CWaitableTimer : public CTimer_Base {
 	                      typedef CTimer_Base TBase;
 	public:
-	    CWaitableTimer (IWaitable_Events&);
-		CWaitableTimer (void) = delete; CWaitableTimer (const CWaitableTimer&) = delete; CWaitableTimer (CWaitableTimer&&) = delete;
-	   ~CWaitableTimer (void);
+		 CWaitableTimer (IWaitable_Events&);
+		 CWaitableTimer (void) = delete; CWaitableTimer (const CWaitableTimer&) = delete; CWaitableTimer (CWaitableTimer&&) = delete;
+		~CWaitableTimer (void);
 
 	public:
 		virtual bool  IsValid(void) const override; // valid for cases when timer handle is not null;

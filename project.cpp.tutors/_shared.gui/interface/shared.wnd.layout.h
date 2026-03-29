@@ -68,6 +68,8 @@ namespace ex_ui { namespace popup { namespace layout {
 	struct t_size_u {
 		uint32_t cx = 0;
 		uint32_t cy = 0;
+		t_size_u (void) : cx(0), cy(0) {}
+		t_size_u (const t_size& _size) { this->cx = ::abs(_size.cx); this->cy = ::abs(_size.cy); }
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;

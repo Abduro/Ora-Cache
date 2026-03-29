@@ -7,7 +7,11 @@
 #include "shared.defs.h"
 namespace shared { namespace sys_core { namespace storage {
 namespace route { using namespace shared::defs;
-
+	/* the mistaking that is made here, i.e. in class definition of the registry parth, is:
+	   (1) it is absolutely not necessary to provide value names, because particular registry data access implementor must care about this;
+	   (2) the same reason is for definition of registry subkeys paths: the implementation class does still care about this too;
+	   The main reason that needs to be achieved is that only root entry points are defined;
+	*/
 	class CApp {
 	public:
 		class CWindow {
@@ -163,7 +167,7 @@ namespace route { using namespace shared::defs;
 		e_bkgnd  = 0x0, // background color;
 		e_border = 0x1, // border color (any state of the control that the border belongs to);
 		};
-		CTheme (void) ; CTheme (const CTheme&) = delete; CTheme (CTheme&&) = delete; ~CTheme (void) = default;
+		CTheme (void); CTheme (const CTheme&) = delete; CTheme (CTheme&&) = delete; ~CTheme (void) = default;
 
 		CString Path (const e_element) const; // returns the registry path to the color value of the element specified;
 		_pc_sz  Root (void) const;
@@ -173,6 +177,17 @@ namespace route { using namespace shared::defs;
 
 	private:
 		CTheme& operator = (const CTheme&) = delete; CTheme& operator = (CTheme&&) = delete;
+	};
+
+	class CTrace {
+	public:
+		 CTrace (void) = default; CTrace (const CTheme&) = delete; CTrace (CTrace&&) = delete;
+		~CTrace (void) = default;
+
+		_pc_sz  Root (void) const;
+
+	private:
+		CTrace& operator = (const CTrace&) = delete; CTrace& operator = (CTrace&&) = delete;
 	};
 
 	class CViewport {
@@ -210,6 +225,9 @@ namespace route { using namespace shared::defs;
 		CTheme& Theme (void) const;
 		CTheme& Theme (void) ;
 		const
+		CTrace& Trace (void) const;
+		CTrace& Trace (void) ;
+		const
 		CViewport& Viewport (void) const;
 		CViewport& Viewport (void) ;
 
@@ -223,15 +241,14 @@ namespace route { using namespace shared::defs;
 		CRoot  m_root;
 		CShaders  m_shaders;
 		CTheme    m_theme;
+		CTrace    m_trace;
 		CViewport m_v_port;
 	};
 
 }}}
 
-typedef shared::sys_core::storage::CReg_router TReg_router;
+typedef shared::sys_core::storage::CReg_router TReg_router; TReg_router&  Get_reg_router (void);
 typedef shared::sys_core::storage::route::CShaders TReg_shaders;
 typedef TReg_shaders::CTestCase TReg_test_case;
-
-shared::sys_core::storage::CReg_router&  Get_reg_router (void); // returns the reference to the singleton of the router object;
 
 #endif/*_SYS_REG_ROUTER_H_INCLUDED*/

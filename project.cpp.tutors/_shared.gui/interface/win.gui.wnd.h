@@ -18,7 +18,9 @@ namespace shared { namespace gui {
 	using namespace ex_ui::popup;
 
 	using CWindow = ::ATL::CWindow;
-
+	/* using the singleton of the main window class does not allow to apply settings to a window that is different,
+	   for example, console window;
+	*/
 	class CFrame {
 	public:
 		class CIcons { // declaration this class here is just trying to create an illusion of the object-oriented programming;
@@ -26,6 +28,8 @@ namespace shared { namespace gui {
 			CIcons (void); CIcons (const CIcons&) = delete; CIcons (CIcons&&) = delete; ~CIcons (void) = default;
 
 			TError&  Error (void) const;
+			static
+			err_code Set (const uint16_t _u_res_id, const HWND _h_wnd, CError&);
 			err_code Set (const uint16_t _u_res_id); // sets icons of both sizes (small: 16x16px & large: 32x32px) to the app window;
 
 		private:

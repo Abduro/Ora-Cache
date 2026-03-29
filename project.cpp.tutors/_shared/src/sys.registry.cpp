@@ -183,6 +183,12 @@ TSubKeys& CSubKeys::Names (void) const { return this->m_names; }
 #pragma endregion
 #pragma region cls::CRegKey_Ex::CValue{}
 
+static _pc_sz p_err_inv_path = _T("Input registry key path is invalid");
+static _pc_sz p_err_inv_name = _T("Input registry value name is invalid");
+
+static _pc_sz p_err_no_name  = _T("The value name is not set");
+static _pc_sz p_err_no_path  = _T("The key path is not set");
+
 CRegKey_Ex::CValue:: CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
 
 const
@@ -217,6 +223,35 @@ uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_key_path, _pc_sz _p_name) {
 	else (*this)() << _p_key_path; // puts the path to the cache;
 
 	return this->GetDword(_p_name);
+}
+
+long CRegKey_Ex::CValue::GetLong (_pc_sz _p_name) {
+	_p_name;
+	CString cs_value = this->GetString(_p_name);
+	return ::_tstol(cs_value);
+}
+
+long CRegKey_Ex::CValue::GetLong (_pc_sz _p_key_path, _pc_sz _p_name) {
+	_p_key_path; _p_name;
+	CString cs_value = this->GetString(_p_key_path, _p_name);
+	return ::_tstol(cs_value);
+}
+
+t_rect  CRegKey_Ex::CValue::GetRect (_pc_sz _p_key_path) {
+	_p_key_path;
+	this->m_the_key.m_error <<__METHOD__<<__s_ok;
+
+	t_rect rc_result = {0};
+
+	if (nullptr == m_the_key()){
+		if (__failed(this->m_the_key.Open(_p_key_path))) return rc_result;
+	}
+	rc_result.left   = this->GetLong(_T("left"));
+	rc_result.top    = this->GetLong(_T("top"));
+	rc_result.right  = this->GetLong(_T("right"));
+	rc_result.bottom = this->GetLong(_T("bottom"));
+
+	return rc_result;
 }
 
 CString CRegKey_Ex::CValue::GetString (_pc_sz _p_name) {
@@ -255,11 +290,54 @@ const
 CRegKey_Ex::CCache&  CRegKey_Ex::CValue::operator ()(void) const { return this->m_cache; }
 CRegKey_Ex::CCache&  CRegKey_Ex::CValue::operator ()(void)       { return this->m_cache; }
 
+err_code CRegKey_Ex::CValue::Set (_pc_sz _p_value) {
+	_p_value;
+	m_the_key.m_error <<__METHOD__<<__s_ok;
+
+	if (false == (*this)().Is()) return m_the_key.m_error << __e_inv_arg = p_err_no_path;
+	if (nullptr == (*this)().Name()) return m_the_key.m_error << __e_inv_arg = p_err_no_name;
+
+	return this->Set((*this)().Path(), (*this)().Name(), _p_value);
+}
+
+err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, _pc_sz _p_value) {
+	_p_key_path; _p_name; _p_value;
+	m_the_key.m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) { return m_the_key.m_error << __e_inv_arg = p_err_inv_path; }
+
+	LSTATUS n_result = __s_ok;
+	if (nullptr == m_the_key()){ // the key is not open yet;
+		if (__failed(this->m_the_key.Open(_p_key_path))) return this->m_the_key.Error();
+	}
+	n_result = m_the_key().SetStringValue(_p_name, _p_value);
+	if (!!n_result) {
+		(m_the_key.m_error = dword(n_result)) = TString().Format(_T("Set value '%s' to '%s' is failed"), _p_name, _p_value);
+	}
+
+	return m_the_key.Error();
+}
+
+err_code CRegKey_Ex::CValue::SetLong (const long _u_value) {
+	_u_value;
+	m_the_key.m_error <<__METHOD__<<__s_ok;
+
+	if (false == (*this)().Is()) return m_the_key.m_error << __e_inv_arg = p_err_no_path;
+	if (nullptr == (*this)().Name()) return m_the_key.m_error << __e_inv_arg = p_err_no_name;
+
+	return this->Set((*this)().Path(), (*this)().Name(), _u_value);
+}
+
+err_code CRegKey_Ex::CValue::SetLong (_pc_sz _p_key_path, _pc_sz _p_name, const long _u_value) {
+	_p_key_path; _p_name; _u_value;
+	return this->Set(_p_key_path, _p_name, TString().Long(_u_value));
+}
+
 err_code CRegKey_Ex::CValue::Set (const uint32_t _u_value) {
 	_u_value;
 	m_the_key.m_error <<__METHOD__<<__s_ok;
-	if (false == (*this)().Is()) return m_the_key.m_error << __e_inv_arg = _T("The key path is not set");
-	if (nullptr == (*this)().Name()) return m_the_key.m_error << __e_inv_arg = _T("The value name is not set");
+
+	if (false == (*this)().Is()) return m_the_key.m_error << __e_inv_arg = p_err_no_path;
+	if (nullptr == (*this)().Name()) return m_the_key.m_error << __e_inv_arg = p_err_no_name;
 
 	return this->Set((*this)().Path(), (*this)().Name(), _u_value);
 }
@@ -267,8 +345,8 @@ err_code CRegKey_Ex::CValue::Set (const uint32_t _u_value) {
 err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value) {
 	_p_key_path; _p_name; _u_value;
 	m_the_key.m_error <<__METHOD__<<__s_ok;
-	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) { return m_the_key.m_error << __e_inv_arg = _T("Input registry key path is invalid"); }
-	if (nullptr == _p_name || 0 == ::_tcslen(_p_name)) { return m_the_key.m_error << __e_inv_arg = _T("Input registry value name is invalid"); }
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) { return m_the_key.m_error << __e_inv_arg = p_err_inv_path; }
+	if (nullptr == _p_name || 0 == ::_tcslen(_p_name)) { return m_the_key.m_error << __e_inv_arg = p_err_inv_name; }
 
 	LSTATUS n_result = __s_ok;
 	if (nullptr == m_the_key()){ // the key is not open yet;
@@ -283,6 +361,20 @@ err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint
 	return m_the_key.Error();
 }
 
+err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, const t_rect& _rect) {
+	_p_key_path; _rect;
+	m_the_key.m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) { return m_the_key.m_error << __e_inv_arg = p_err_inv_path; }
+
+	if (__failed(this->SetLong(_p_key_path, _T("left"), _rect.left))) return m_the_key.Error();
+	if (__failed(this->SetLong(_p_key_path, _T("top"), _rect.top))) return m_the_key.Error();
+	if (__failed(this->SetLong(_p_key_path, _T("right"), _rect.right))) return m_the_key.Error();
+	if (__failed(this->SetLong(_p_key_path, _T("bottom"), _rect.bottom))) return m_the_key.Error();
+
+	return m_the_key.Error();
+}
+
 CRegKey_Ex::CValue::operator _pc_sz (void) /*const*/ { return this->GetString((*this)().Path(), (*this)().Name()); }
 
 #pragma endregion
@@ -292,7 +384,20 @@ CRegKey_Ex:: CRegKey_Ex (void) : m_value(*this), m_sub_keys(*this) { this->m_err
 CRegKey_Ex:: CRegKey_Ex (_pc_sz _p_key_path) : CRegKey_Ex() { this->Open(_p_key_path); }
 CRegKey_Ex::~CRegKey_Ex (void) {}
 
-TError& CRegKey_Ex::Error (void) const { return this->m_error; }
+TError&  CRegKey_Ex::Error (void) const { return this->m_error; }
+
+bool CRegKey_Ex::Is_exist (_pc_sz _p_key_path) const {
+	_p_key_path;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	bool b_result = false;
+	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) {
+		this->m_error <<__e_inv_arg = _T("#__e_inv_key: '_p_key_path' is invalid"); return b_result;
+	}
+	b_result = 0 == CRegKey().Open(Get_reg_router().Root().Key(), _p_key_path); // cannot use m_key field due to this is the 'const' method;
+	return b_result;
+}
+
 err_code CRegKey_Ex::Open (_pc_sz _p_key_path) {
 	_p_key_path;
 	this->m_error <<__METHOD__<<__s_ok;
@@ -304,6 +409,12 @@ err_code CRegKey_Ex::Open (_pc_sz _p_key_path) {
 		CString cs_err = nullptr == _p_key_path ? _T("(nullptr)") : _T("(empty)");
 		this->m_error << __e_inv_arg = TString().Format(_T("Input registry key path '%s' is invalid"), (_pc_sz) cs_err); return this->Error();
 	}
+	// checks the existance of the registry key first;
+	if (this->Is_exist(_p_key_path) == false) {
+		if (0 != CRegKey().Create(::Get_reg_router().Root().Key(), _p_key_path))
+			return this->m_error << __e_fail = TString().Format(_T("#__e_failure: cannot create '%s' key"), _p_key_path);
+	}
+
 	const
 	LSTATUS n_result = (*this)().Open(Get_reg_router().Root().Key(), _p_key_path);
 	if (!!n_result) {

@@ -163,23 +163,26 @@ TError&   CFrame::CIcons::Error (void) const { return this->m_error; }
 err_code  CFrame::CIcons::Set (const uint16_t _u_res_id) {
 	_u_res_id;
 	this->m_error <<__METHOD__<<__s_ok;
-	
+	return CFrame::CIcons::Set(_u_res_id, ::Get_app_wnd()(), this->m_error);
+}
+
+err_code  CFrame::CIcons::Set (const uint16_t _u_res_id, const HWND _h_wnd, CError& _err) {
+	_u_res_id; _h_wnd; _err;
+	if (0 == _h_wnd || false == !!::IsWindow(_h_wnd))
+		return _err << __e_hwnd = _T("#__e_hwnd: the window handle is invalid");
+
 	if (false == !!_u_res_id)
-		return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: res_id (%u) is not valid"), _u_res_id);
+		return _err <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: res_id (%u) is invalid"), _u_res_id);
 
-	CAppWnd& app_wnd = ::Get_app_wnd();
-
-	if (app_wnd.Is_valid() == false)
-		return this->m_error << __e_hwnd = _T("#__e_hwnd: the window handle is invalid");
 	/* https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-seticon ;
 	   there is no error handling: sending this message does not set the last error in case of failure;
 	   the following reqs must be met:
 	   the icon being referenced must have predefined icon size: 16x16 px for small icon and 32x32 px for the large one;
 	*/
-	::SendMessage(app_wnd()(), WM_SETICON, 0, (l_param) ex_ui::resource::CIcon().Load(_u_res_id, 0));
-	::SendMessage(app_wnd()(), WM_SETICON, 1, (l_param) ex_ui::resource::CIcon().Load(_u_res_id, 1));
+	::SendMessage(_h_wnd, WM_SETICON, 0, (l_param) ex_ui::resource::CIcon().Load(_u_res_id, 0));
+	::SendMessage(_h_wnd, WM_SETICON, 1, (l_param) ex_ui::resource::CIcon().Load(_u_res_id, 1));
 
-	return this->Error();
+	return _err;
 }
 
 #pragma endregion

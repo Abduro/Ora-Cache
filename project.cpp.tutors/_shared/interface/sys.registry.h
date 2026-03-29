@@ -89,11 +89,24 @@ namespace shared { namespace sys_core { namespace storage {
 			uint32_t GetDword (_pc_sz _p_name);
 			uint32_t GetDword (_pc_sz _p_key_path, _pc_sz _p_name);
 
-			CString GetString (_pc_sz _p_name); // it is assumed the key is already open; empty value name means (default);
+			long GetLong (_pc_sz _p_name);
+			long GetLong (_pc_sz _p_key_path, _pc_sz _p_name);
+
+			t_rect  GetRect (_pc_sz _p_key_path); // uses the pre-defined key names: 'left','top','right','bottom';
+
+			CString GetString (_pc_sz _p_name);   // it is assumed the key is already open; empty value name means (default);
 			CString GetString (_pc_sz _p_key_path, _pc_sz _p_name)/* const*/; // returns empty string in case of error;
+
+			err_code Set (_pc_sz _p_value);
+			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, _pc_sz _p_value);
 
 			err_code Set (const uint32_t _u_value); // it is assumed the value name and key path are already set to the cache;
 			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value);
+
+			err_code SetLong (const long _u_value);
+			err_code SetLong (_pc_sz _p_key_path, _pc_sz _p_name, const long _u_value);
+
+			err_code Set (_pc_sz _p_key_path, const t_rect&);// uses the pre-defined key names: 'left','top','right','bottom';
 
 		public:
 			CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
@@ -115,6 +128,7 @@ namespace shared { namespace sys_core { namespace storage {
 
 	public:
 		TError& Error (void) const;
+		bool Is_exist (_pc_sz _p_key_path) const;
 		err_code Open (_pc_sz _p_key_path);
 		const
 		CSubKeys& SubKeys (void) const;
