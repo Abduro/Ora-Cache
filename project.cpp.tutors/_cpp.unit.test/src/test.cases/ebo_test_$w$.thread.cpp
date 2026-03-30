@@ -6,6 +6,9 @@
 
 using namespace ebo::boo::test::thread;
 
+#pragma region cls::c_crt_runner{}
+
+#pragma endregion
 #pragma region cls::c_event{}
 
 void c_event::Create (void) { CTstEvent().Create(); _out()(); }
@@ -16,6 +19,56 @@ void c_event::Destroy (void) {
 
 	event.Create();
 	event.Destroy(); _out()();
+}
+
+void c_event::Signaled (void) {
+
+	CTstEvent event;
+	event.Create();
+	event.Signaled (true);
+	event.Signaled (false);
+	event.Destroy();
+	_out()();
+}
+
+#pragma endregion
+#pragma region cls::c_marshaller{}
+
+void c_marshaller::Create (void) {
+
+	CTstNotifier notifier;
+	if (__succeeded(notifier.Create()))
+		notifier.Destroy();
+
+	_out()();
+}
+
+void c_marshaller::Destroy (void) {
+
+	CTstNotifier notifier;
+	notifier.Destroy();
+	_out()();
+}
+
+void c_marshaller::Notify (void) {
+
+	CTstEvent event;
+	CTstNotifier notifier;
+
+	const bool b_async = false; // the test case exits immediately with no waiting the receiving the notification asynchronously; 
+#if (0)
+	notifier.Notify(b_async);   // receiving the error is expected;
+#endif
+	event.Create();
+
+	notifier.Create();
+	notifier.Notify(b_async);
+
+	event().Wait(100); // the waiting occurs in the one thread of this test case, thus nothing can be delivered to receiver/listener;
+
+	notifier.Destroy();
+
+	_out()();
 }
 
 #pragma endregion

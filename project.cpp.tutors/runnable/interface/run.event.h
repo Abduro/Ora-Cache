@@ -16,9 +16,9 @@ namespace shared { namespace runnable {
 
 	interface IGenericEventNotify // ToDo: the name of the interface looks like not so appropriate as should be;
 	{
-		virtual err_code  GenEvt_OnNotify(const _variant_t v_evt_id) { v_evt_id; return __e_not_impl; }
-		virtual err_code  GenEvt_OnNotify(const _long n_evt_id) { n_evt_id; return __e_not_impl; }
-		virtual err_code  GenEvt_OnNotify(const _long n_evt_id, const _variant_t v_data) { n_evt_id; v_data; return __e_not_impl; }
+		virtual err_code  GenEvt_OnNotify (const _variant_t v_evt_id) { v_evt_id; return __e_not_impl; }
+		virtual err_code  GenEvt_OnNotify (const _long n_evt_id) { n_evt_id; return __e_not_impl; }
+		virtual err_code  GenEvt_OnNotify (const _long n_evt_id, const _variant_t v_data) { n_evt_id; v_data; return __e_not_impl; }
 	};
 
 	class CEvent {
@@ -34,9 +34,14 @@ namespace shared { namespace runnable {
 
 		_pc_sz   Name (void) const;
 		bool  Is_signaled (void) const;
-		err_code Signaled (const bool _yes_or_no); // sets signaled state to signaled or to non-signaled one;
+		err_code Signaled (const bool _yes_or_no);   // sets signaled state to signaled or to non-signaled one;
+
+		bool Wait (const uint32_t _u_timeout) const; // returns 'true' if the waiting operation succeeds (WAIT_OBJECT_0) after specified timeout (msec);
 
 		CEvent& operator <<(const bool _yes_or_no);
+		const
+		HANDLE& operator ()(void) const;
+		HANDLE& operator ()(void) ;
 
 	private:
 		CEvent& operator = (const CEvent&) = delete; CEvent& operator = (CEvent&&) = delete;
@@ -45,59 +50,63 @@ namespace shared { namespace runnable {
 		HANDLE  m_event;
 		CString m_name ;
 	};
-
+	/* the class below creates message-only window:
+	   https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features#message-only-windows ;
+	   the instance of this class must be accessible in worker thread for sending messages to main thread through the window being hidden;
+	*/
 	class CMarshaller {
 	public:
-		CMarshaller(IGenericEventNotify&, const _variant_t& v_evt_id);
-		virtual ~CMarshaller(void);
+		 CMarshaller (IGenericEventNotify&, const _variant_t& v_evt_id); CMarshaller (void) = delete; CMarshaller (CMarshaller&&) = delete;
+		~CMarshaller (void);
 
-	public:
 		virtual err_code  Create (void);
-		virtual err_code  Destroy(void);
-		virtual HWND      GetHandle_Safe(void) const;
+		virtual err_code  Destroy (void);
+
+		virtual err_code  Fire (const bool _b_async = true);
+		virtual err_code  Fire2(void);   // posts a message directly to thread by using PostThreadMessage();
+		static  err_code  Fire (const HWND hHandler, CError&, const bool _b_async = true);
+
+		TError& Error (void) const;
+		virtual HWND  GetHandle_Safe (void) const; // returns message-only-window handle, otherwise nullptr;
+		const bool    Is_valid (void) const;       // checks message-only-window handle;
+
+	protected:
+		void*   m_handler;  // the pointer to class which creates message-only window;
+		CError  m_error;
 
 	private:
-		CMarshaller (void) = delete;
-		CMarshaller (const CMarshaller&) = delete;
-		CMarshaller (CMarshaller&&) = delete;
-
 		CMarshaller& operator = (const CMarshaller&) = delete;
 		CMarshaller& operator = (CMarshaller&&) = delete;
-
-	public:
-		virtual err_code  Fire (const bool bAsynch = true);
-		virtual err_code  Fire2(void);
-
-	public:
-		static  err_code  Fire (const HWND hHandler, const bool bAsynch = true);
-	protected:
-		HANDLE m_handler;
 	};
-
-	class CDelayEvent
-	{
+	/* this class is intended to be used in worker thread procedure in order to create so delay in time, especially,
+	   in iterative loops of the processing data;
+	*/
+	class CDelayEvent {
 	public:
-		enum _frm : d_word {
+		enum e_frame : d_word {
 			e_na      = 0,
 			eInfinite = (d_word)-1
 		};
-	protected:
-		volatile d_word     m_nTimeSlice;    // time space in milliseconds;
-		volatile d_word     m_nTimeFrame;    // total time to wait for;
-	protected:
-		d_word    m_nCurrent;                // current time;
-	public:
-		CDelayEvent(const d_word nTimeSlice, const d_word nTimeFrame);
-		virtual ~CDelayEvent(void);
-	public:
-		virtual bool Elapsed(void) const;
-		virtual bool IsReset(void) const;
-
-		virtual void Reset  (const d_word nTimeSlice = _frm::e_na, const d_word nTimeFrame = _frm::e_na);
-		virtual void Wait   (void);
 
 	public:
-		CDelayEvent& operator= (const d_word) ; // sets time frame value for waiting for;
+		 CDelayEvent (const d_word nTimeSlice = e_frame::e_na, const d_word nTimeFrame = e_frame::e_na);
+		 CDelayEvent (const CDelayEvent&) = delete; CDelayEvent (CDelayEvent&&) = delete;
+		~CDelayEvent (void) = default;
+
+		virtual bool Elapsed (void) const;
+		virtual bool IsReset (void) const;
+
+		virtual void Reset (const d_word nTimeSlice = e_frame::e_na, const d_word nTimeFrame = e_frame::e_na);
+		virtual void Wait  (void);
+
+		CDelayEvent& operator = (const CDelayEvent&) = delete; CDelayEvent& operator = (CDelayEvent&&) = delete;
+		CDelayEvent& operator <<(const d_word) ; // sets time frame value of waiting for;
+
+	protected:
+		volatile d_word m_nTimeSlice; // time slice in milliseconds;
+		volatile d_word m_nTimeFrame; // total time to wait for;
+	
+		d_word m_nCurrent; // current time;
 	};
 
 }}

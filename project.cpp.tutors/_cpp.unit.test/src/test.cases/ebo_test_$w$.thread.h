@@ -8,6 +8,15 @@
 
 namespace ebo { namespace boo { namespace test { namespace thread {
 
+	__class (c_crt_runner) {
+	public:
+		 c_crt_runner (void) = default; c_crt_runner (const c_crt_runner&) = delete; c_crt_runner (c_crt_runner&&) = delete;
+		~c_crt_runner (void) = default;
+
+	private:
+		c_crt_runner& operator = (const c_crt_runner&) = delete; c_crt_runner& operator = (c_crt_runner&&) = delete;
+	};
+
 	__class (c_event) {
 	public:
 		 c_event (void) = default; c_event (const c_event&) = delete; c_event (c_event&&) = delete;
@@ -15,9 +24,23 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 
 		__method (Create);
 		__method (Destroy);
+		__method (Signaled);
 
 	private:
 		c_event& operator = (const c_event&) = delete; c_event& operator = (c_event&&) = delete;
+	};
+
+	__class (c_marshaller) {
+	public:
+		 c_marshaller (void) = default; c_marshaller (const c_marshaller&) = delete; c_marshaller (c_marshaller&&) = delete;
+		~c_marshaller (void) = default;
+
+		__method (Create);
+		__method (Destroy);
+		__method (Notify);
+
+	private:
+		c_marshaller& operator = (const c_marshaller&) = delete; c_marshaller& operator = (c_marshaller&&) = delete;
 	};
 
 }}}}

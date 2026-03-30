@@ -3,8 +3,14 @@
 	This is Ebo Pack UIX libs unit test logger interface implementation file.
 */
 #include "_log.h"
+#include <mutex>
 
 using namespace ebo::boo::test;
+
+typedef ::std::lock_guard<std::recursive_mutex> TGuard;
+static  ::std::recursive_mutex the_lock;
+
+#define TSafe_Log() shared::sys_core::TGuard locker(shared::sys_core::the_lock);
 
 namespace ebo { namespace boo { namespace test { namespace _impl {
 
@@ -59,8 +65,8 @@ const
 TCached& CCache::Get (void) const { return this->m_strings; }
 TCached& CCache::Get (void)       { return this->m_strings; }
 const
-bool&    CCache::Locked (void) const { return this->m_locked; }
-bool&    CCache::Locked (void)       { return this->m_locked; }
+bool&    CCache::Locked (void) const { TSafe_Log(); return this->m_locked; }
+bool&    CCache::Locked (void)       {  return this->m_locked; }
 
 _pc_sz   CCache::Prefix (void) const   { return this->m_prefix.GetString(); }
 void     CCache::Prefix (_pc_sz _prfx) { this->m_prefix = _prfx; }
@@ -89,17 +95,24 @@ void     CCache::Output (void) const {
 	_out() << cs_out;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+CCache&  CCache::operator +=(_pc_sz _p_out) {
+	if (false == this->Locked()) { TSafe_Log(); this->Get().push_back(CString(_p_out));} return *this;
+}
 
-CCache&  CCache::operator +=(_pc_sz _p_out) { if (false == this->Locked()) this->Get().push_back(CString(_p_out)); return *this; };
+CCache&  CCache::operator +=(const CString& _str) {
+	if (false == this->Locked()) { TSafe_Log(); this->Get().push_back(_str);} return *this;
+}
 
-CCache&  CCache::operator +=(const CString& _str)   { if (false == this->Locked()) this->Get().push_back(_str); return *this; }
 CCache&  CCache::operator +=(const TParts& _parts)  { if (false == this->Locked()) 
 	// https://en.cppreference.com/w/cpp/container/vector/insert ;
+	TSafe_Log();
 	this->Get().insert(this->Get().end(), _parts.begin(), _parts.end());  // people saying there is no exception for catching, but maybe it's just words;
 	return *this;
 }
-CCache&  CCache::operator +=(TError& _err) { this->Get().push_back(_err.Print(TError::e_print::e_req)); return *this; }
+CCache&  CCache::operator +=(TError& _err) {
+	TSafe_Log();
+	this->Get().push_back(_err.Print(TError::e_print::e_req)); return *this;
+}
 
 CCache&  CCache::operator <<(_pc_sz _lp_sz_prefix) { this->Prefix(_lp_sz_prefix); return *this; }
 CCache&  CCache::operator >>(_pc_sz _lp_sz_suffix) { this->Suffix(_lp_sz_suffix); return *this; }
@@ -149,6 +162,8 @@ void CLogger::Out (_pc_sz _lp_sz_text) const {
 
 	using ms_logger = Microsoft::VisualStudio::CppUnitTestFramework::Logger;
 
+	TSafe_Log();
+
 	const bool b_is_pat = this->m_pattern.IsEmpty() == false;
 	if (b_is_pat) {
 
@@ -173,10 +188,10 @@ void CLogger::Write (_pc_sz _p_msg) {
 	if (-1 != cs_msg.ReverseFind(_T('\n')))
 		cs_msg = cs_msg.Left(cs_msg.GetLength() - 1);
 
+	TSafe_Log();
+
 	this->Cached().Get().push_back(cs_msg);
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 const CLogger& CLogger::operator << (const CString& _str) const { this->Out(_str); return *this; }
 const CLogger& CLogger::operator << (_pc_sz  _lp_sz_text) const { this->Out(_lp_sz_text); return *this; }

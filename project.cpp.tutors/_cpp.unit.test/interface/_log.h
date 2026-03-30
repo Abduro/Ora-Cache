@@ -66,7 +66,7 @@ namespace ebo { namespace boo { namespace test {
 		operator bool (void) const;          // returns current lock status of this cache;
 #pragma endregion
 	private:
-		bool m_locked; // the flag for indicating the block of adding new messages to this cache; is set to 'false' by default;
+		bool     m_locked; // the flag for indicating the block of adding new messages to this cache; is set to 'false' by default;
 		TCached  m_strings;
 		CString  m_prefix ;
 		CString  m_suffix ;
@@ -86,7 +86,11 @@ namespace ebo { namespace boo { namespace test {
 		CCache&  Cached (void) const;   // gets a reference to cached strings (ro);
 		CCache&  Cached (void)      ;   // gets a reference to cached strings (rw);
 
-	public:
+		/*query: CppUnitTestFramework::Logger WriteMessage is thread safe (Google AI);
+		  Historically, the Microsoft::VisualStudio::CppUnitTestFramework::Logger::WriteMessage method has not been thread-safe.
+		  conformation for defect:
+		  https://developercommunity.visualstudio.com/t/Logger::WriteMessage-of-the-C-Unit-Tes/10782399
+		*/
 		void Out (const CString&) const;
 		void Out (_pc_sz _lp_sz_text) const;
 		

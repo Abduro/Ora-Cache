@@ -7,28 +7,36 @@
 	Adopted to Fake GPS project on 23-Apr-2020 at 11:35:05p, UTC+7, Novosibirsk, Thursday;
 */
 #include "runner.crt.h"
+#include "shared.preproc.h"
 
 using namespace shared::runnable;
 
 namespace shared { namespace runnable { namespace details
 {
-	HRESULT Runner_ForceToTerminate(HANDLE event_, HANDLE thread_)
-	{
-		HRESULT hr_ = S_OK;
-		const DWORD dwRet = ::WaitForSingleObject(event_, 10);
-		if (WAIT_OBJECT_0!= dwRet)
-		{
-			if (thread_)
-			{
-				::TerminateThread(thread_, DWORD(-1));
-			}
+	err_code Runner_ForceToTerminate(const CEvent& _event, const HANDLE _thread, CError& _err) {
+		_event; _thread; _err;
+		if (__e_handle == _thread || 0 == _thread)
+			return _err <<__e_inv_arg = _T("#__e_inv_arg: thread handle is invalid");
+
+		if (false == _event.Wait(10)) {
+			if (_event.Error())
+				return _err = _event.Error();
+			// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread ;
+			// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread ;
+#if (1)
+			// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex << is recommended for use;
+			::_endthreadex(STILL_ACTIVE);
+#else
+			if (0 == ::TerminateThread(_thread, /*dword(-1)*/STILL_ACTIVE))
+				_err.Last();
+#endif
 		}
-		return  hr_;
+		return _err;
 	}
 
-	DWORD   Runner_RunPriorityToDword(const TRunPriority ePriority)
+	dword Runner_RunPriorityToDword(const TRunPriority ePriority)
 	{
-		switch (ePriority)
+		switch (ePriority) // https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities ;
 		{
 		case CRunPriority::eHigh  :   return ABOVE_NORMAL_PRIORITY_CLASS;
 		case CRunPriority::eNormal:   return NORMAL_PRIORITY_CLASS;
@@ -40,100 +48,98 @@ using namespace shared::runnable::details;
 
 #pragma region cls::CCrtRunner{}
 
-CCrtRunner::CCrtRunner(TRunnableFunc func, IGenericEventNotify& sink_ref, const _variant_t& v_evt_id):
-	m_async_evt(sink_ref, v_evt_id),
-	m_hThread(0),
-	m_hEvent(0),
-	m_bStopped(true),
-	m_function(func)
-{
-	m_hEvent = ::CreateEvent(0, TRUE, TRUE, 0);
-	if (INVALID_HANDLE_VALUE == m_hEvent || NULL == m_hEvent)
-	{
-		ATLASSERT(FALSE); m_hEvent = NULL;
-	}
+CCrtRunner::CCrtRunner (TRunnableFunc func, IGenericEventNotify& sink_ref, const _variant_t& v_evt_id):
+	m_notifier(sink_ref, v_evt_id), m_hThread(0), m_bStopped(true), m_function(func) {
+
+	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: c-runtime thread is not created");
+
+	if (__succeeded(this->m_event.Create()))
+		this->m_event.Signaled(true);
 }
 
-CCrtRunner::~CCrtRunner(void)
-{
-	if (m_hEvent)
-	{
-		::CloseHandle(m_hEvent); 
-		m_hEvent = NULL;
-	}
-}
+CCrtRunner::~CCrtRunner(void) { this->m_event.Destroy(); }
 
+TError& CCrtRunner::Error (void) const { return this->m_error; }
 CMarshaller&
-        CCrtRunner::Event(void)           { return m_async_evt; }
-bool    CCrtRunner::IsRunning(void) const { return(m_hThread && !m_bStopped); }
-bool    CCrtRunner::IsStopped(void) const { return m_bStopped;  }
-void    CCrtRunner::MarkCompleted(void)   { if (m_hEvent) { ::SetEvent(m_hEvent); } }
+     CCrtRunner::Notifier (void)        { return m_notifier; }
+bool CCrtRunner::IsRunning (void) const { return m_hThread && false == m_bStopped; }
+bool CCrtRunner::IsStopped (void) const { return m_bStopped;  }
+void CCrtRunner::MarkCompleted (void)   { this->m_event.Signaled(true); }
 
-HRESULT CCrtRunner::Start(const TRunPriority ePriority)
-{
-	if (NULL == m_hEvent) return OLE_E_BLANK;
-	if (!IsStopped()) return S_OK;
-	if (m_hThread)
-	{
-		::CloseHandle(m_hThread);
-		m_hThread = NULL;
+err_code CCrtRunner::Start (const TRunPriority ePriority) {
+	ePriority;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->m_event.Is_valid())
+		return this->m_error = this->m_event.Error();
+
+	if (false == IsStopped())
+		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is already started");
+
+	if (this->m_hThread) {
+		if (false == !!::CloseHandle(this->m_hThread))
+			return this->m_error.Last();
+		else
+			this->m_hThread = nullptr;
 	}
-	m_hThread  = (HANDLE)::_beginthreadex(NULL, NULL, m_function, this, CREATE_SUSPENDED, 0);
-	if (INVALID_HANDLE_VALUE == m_hThread || NULL == m_hThread)
-	{
-		return E_OUTOFMEMORY;
-	}
-	m_bStopped = false;
-	::ResetEvent(m_hEvent);
-	::SetThreadPriority(m_hThread, details::Runner_RunPriorityToDword(ePriority));
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex << contains the example of symbol output to console;
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/standard-types << data type of returned value is 'uintptr_t';
+	this->m_hThread = reinterpret_cast<void*>(::_beginthreadex(0, 0, m_function, this, CREATE_SUSPENDED, 0));
+	if (0 == m_hThread || __e_handle == m_hThread)
+		return this->m_error << __e_no_memory = _T("#__e_fail: cannot create c-runtime thread");
 
-	m_async_evt.Create();
+	this->m_bStopped = false;
+	this->m_event << false;
+	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority ;
+	// https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities ;
+	if (0 == ::SetThreadPriority(m_hThread, details::Runner_RunPriorityToDword(ePriority)))
+		return this->m_error.Last();
 
-	::ResumeThread(m_hThread);
+	if (__failed(this->m_notifier.Create()))
+		return this->m_error = this->m_notifier.Error();
+	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread ;
+	if ((dword)-1 == ::ResumeThread(this->m_hThread))
+		this->m_error.Last();
 
-	HRESULT hr__ = S_OK;
-	return  hr__;
+	return this->Error();
 }
 
-HRESULT CCrtRunner::Stop(const bool bForced)
-{
-	m_async_evt.Destroy();
+err_code CCrtRunner::Stop (const bool bForced) {
+	bForced;
+	this->m_error <<__METHOD__<<__s_ok;
 
-	if (IsStopped())
-		return S_OK;
+	if (true == this->IsStopped())
+		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is already stopped");
 
-	m_bStopped = true;
+	this->m_bStopped = true;
 
-	if (NULL == m_hThread) return S_OK;
+	if (__failed(this->m_notifier.Destroy()))
+		return this->m_error = this->m_notifier.Error();
+	
 	if (bForced) {
-		details::Runner_ForceToTerminate(m_hEvent, m_hThread);
+		if (__failed(details::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error)))
+			return this->Error();
 	}
 	else {
-		INT cnt_ = 0;
-		while (WAIT_OBJECT_0 != ::WaitForSingleObject(m_hEvent, 200))
-		{
-			::Sleep(100);
+		uint32_t cnt_ = 0;
+		while (false == this->m_event.Wait(200)) { // the hardcoded value of the wait timeout possibly must be reviewed;
 			cnt_ ++;
-			if (cnt_ > 10) { // anti-blocker, actually should never happen
-				return details::Runner_ForceToTerminate(m_hEvent, m_hThread);
+			if (cnt_ > 10) { // anti-blocker, actually should never happen;
+				return details::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error);
 			}
 		}
 	}
-	if (m_hThread)
-	{
-		::CloseHandle(m_hThread);
-		m_hThread = NULL;
+	/* https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex
+	   the excerpt from the above article:
+	   therefore, when you use _beginthreadex and _endthreadex, you must close the thread handle by calling the Win32 CloseHandle...;
+	*/
+	if (this->m_hThread) { // the thread handle must be still valid otherwise calling this function should never occur;
+		if (0 == ::CloseHandle(m_hThread))
+			this->m_error.Last();
+		else
+			this->m_hThread = 0;
 	}
-	HRESULT hr__ = S_OK;
-	return  hr__;
+	return this->Error();
 }
-
-HRESULT CCrtRunner::Wait(const DWORD dPeriod)
-{
-	const DWORD dResult = ::WaitForSingleObject(m_hEvent, (dPeriod < 1 ? INFINITE : dPeriod));
-	return (WAIT_OBJECT_0 == dResult ? S_OK : S_FALSE);
-}
-
-HANDLE  CCrtRunner::EventHandle(void)const { return m_hEvent; }
 
 #pragma endregion
