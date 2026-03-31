@@ -57,7 +57,7 @@ CCrtRunner::CCrtRunner (TRunnableFunc func, IEventNotify& sink_ref, const _varia
 		this->m_event.Signaled(true); // means the work thread is not started yet;
 }
 
-CCrtRunner::~CCrtRunner(void) { this->m_event.Destroy(); }
+CCrtRunner::~CCrtRunner(void) { if (this->IsRunning()) this->Stop(true); this->m_event.Destroy(); }
 
 TError& CCrtRunner::Error (void) const { return this->m_error; }
 CMarshaller&
@@ -85,18 +85,18 @@ err_code CCrtRunner::Start (const TRunPriority ePriority) {
 	}
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex << contains the example of symbol output to console;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/standard-types << data type of returned value is 'uintptr_t';
-	this->m_hThread = reinterpret_cast<void*>(::_beginthreadex(0, 0, m_function, this, CREATE_SUSPENDED, 0));
+	this->m_hThread = reinterpret_cast<HANDLE>(::_beginthreadex(0, 0, m_function, this, CREATE_SUSPENDED, 0));
 	if (0 == m_hThread || __e_handle == m_hThread)
 		return this->m_error << __e_no_memory = _T("#__e_fail: cannot create c-runtime thread");
 
 	this->m_bStopped = false;
-	this->m_event << false;    // sets the event to nonsignal state, i.e. work thread is started its job;
-
+	this->m_event << false;    // sets the event to nonsignal state, i.e. worker thread wiil be able to start its job;
+#if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority ;
 	// https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities ;
 	if (0 == ::SetThreadPriority(m_hThread, _impl::Runner_RunPriorityToDword(ePriority)))
 		return this->m_error.Last();
-
+#endif
 	// prepares marshaller object for sending notification(s);
 	if (__failed(this->m_notifier.Create()))
 		return this->m_error = this->m_notifier.Error();
@@ -112,7 +112,7 @@ err_code CCrtRunner::Stop (const bool bForced) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (true == this->IsStopped())
-		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is already stopped");
+		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is not running");
 
 	this->m_bStopped = true;
 

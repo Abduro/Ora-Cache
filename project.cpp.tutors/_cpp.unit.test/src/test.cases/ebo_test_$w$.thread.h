@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Mar-2026 at 00:55:27.998, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL tutorials' thread pool unit test adapter interface declaration file; 
 */
-#include "test_case_$w$.event.h"
+#include "test_case_$w$.run.crt.h"
 
 namespace ebo { namespace boo { namespace test { namespace thread {
 
@@ -24,8 +24,16 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		 c_crt_runner (void) = default; c_crt_runner (const c_crt_runner&) = delete; c_crt_runner (c_crt_runner&&) = delete;
 		~c_crt_runner (void) = default;
 
+		__method (Start);
+		__method (Stop);
+
+		const
+		CTstRunner& operator ()(void) const;
+		CTstRunner& operator ()(void) ;
+
 	private:
 		c_crt_runner& operator = (const c_crt_runner&) = delete; c_crt_runner& operator = (c_crt_runner&&) = delete;
+		CTstRunner m_crt_run;
 	};
 
 	__class (c_event) {

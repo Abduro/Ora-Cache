@@ -9,7 +9,7 @@ using namespace ebo::boo::test::thread;
 #pragma region cls::CTstAwait{}
 
 CTstAwait::~CTstAwait (void) {
-	if ((*this)().Event().Is_valid()) {
+	if ((*this)().Event().Is_valid()) { // in the fact, the event object destroys itself in its destructor;
 		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 		if (__failed((*this)().Event().Destroy())) _out() += (*this)().Event().Error();

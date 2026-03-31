@@ -51,12 +51,12 @@ namespace shared { namespace runnable
 
 	private:
 		CCrtRunner& operator = (const CCrtRunner&) = delete; CCrtRunner& operator = (CCrtRunner&&) = delete;
-		mutable CError        m_error;
-		CMarshaller           m_notifier ;  // for sending notifications from worker thread to main one;
-		void*                 m_hThread  ;  // thread handle that runs a procedure;
-	/*	volatile */ CEvent    m_event    ;  // synch primitive;
-		volatile mutable bool m_bStopped ;  // this flag is set from worker thread owner and is read from worker thread procedure;
-		TRunnableFunc         m_function ;  // worker thread procedure pointer that is applied to _beginthreadex();
+		mutable CError     m_error;
+		CMarshaller        m_notifier ;  // for sending notifications from worker thread to main one;
+		HANDLE             m_hThread  ;  // thread handle that runs a procedure;
+	/*	volatile */ CEvent m_event    ;  // synch primitive; /*object cannot be volatile*/
+		volatile bool      m_bStopped ;  // this flag is set from worker thread owner and is read from worker thread procedure; /* mutable */ is not acceptable;
+		TRunnableFunc      m_function ;  // worker thread procedure pointer that is applied to _beginthreadex();
 	};
 }}
 

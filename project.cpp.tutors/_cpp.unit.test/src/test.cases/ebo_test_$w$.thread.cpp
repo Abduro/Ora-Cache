@@ -19,6 +19,20 @@ void c_await::Wait (void) {
 #pragma endregion
 #pragma region cls::c_crt_runner{}
 
+void c_crt_runner::Start (void) {
+
+	(*this)().Start();
+	(*this)().Stop(true); _out()();
+}
+
+void c_crt_runner::Stop (void) {
+	(*this)().Stop(true); _out()();
+}
+
+const
+CTstRunner& c_crt_runner::operator ()(void) const { return this->m_crt_run; }
+CTstRunner& c_crt_runner::operator ()(void)       { return this->m_crt_run; }
+
 #pragma endregion
 #pragma region cls::c_event{}
 

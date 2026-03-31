@@ -166,6 +166,7 @@ namespace shared { namespace runnable { namespace _impl
 			MESSAGE_HANDLER(CFakeWnd::eInternalMsgId, OnEventNotify)
 		END_MSG_MAP()
 
+		bool  Is_valid (void) const { return this->IsWindow(); }
 		d_word  _OwnerThreadId (void) const { return m_threadId; }
 
 	private:
@@ -182,7 +183,29 @@ namespace shared { namespace runnable { namespace _impl
 		const _variant_t m_event_id;
 		d_word           m_threadId;
 	};
-}}}
+
+	class CFakeNotify : public IEventNotify {
+	public:
+		 CFakeNotify (void) = default; CFakeNotify (const CFakeNotify&) = delete; CFakeNotify (CFakeNotify&&) = delete;
+		~CFakeNotify (void) = default;
+
+		 IEventNotify& Get_Iface (void) {
+			 static CFakeNotify inv_iface; return inv_iface;
+		 }
+
+	private:
+		CFakeNotify& operator = (const CFakeNotify&) = delete; CFakeNotify& operator = (CFakeNotify&&) = delete;
+	};
+
+	_impl::CFakeWnd&  _get_msg_wnd (void* _p_handle) {
+		_p_handle;
+		_impl::CFakeWnd* p_fake = reinterpret_cast<CFakeWnd*>(_p_handle);
+		if (nullptr == p_fake) {
+			static CFakeWnd inv_wnd(CFakeNotify().Get_Iface(), _variant_t(0L)); return inv_wnd;
+		}
+		else return *p_fake;
+	}
+}}} using namespace shared::runnable::_impl;
 
 #define __handler_ptr()  reinterpret_cast<_impl::CFakeWnd*>(this->m_handler)
 
@@ -199,9 +222,7 @@ CMarshaller:: CMarshaller (IEventNotify& sink_ref, const _variant_t& v_evt_id) :
 	catch(::std::bad_alloc&){ this->m_error <<__e_no_memory = _T("#__e_fail: message handler creation is failed"); }
 }
 
-CMarshaller::~CMarshaller (void) {
-	Destroy();
-}
+CMarshaller::~CMarshaller (void) { this->Destroy(); }
 
 err_code  CMarshaller::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -212,7 +233,7 @@ err_code  CMarshaller::Create (void) {
 	if (true == this->Is_valid())
 		return this->m_error << __e_not_inited = _T("#__e_not_inited: the marshaller is already created");
 
-	__handler_ptr()->Create(HWND_MESSAGE);
+	_impl::_get_msg_wnd(this->m_handler).Create(HWND_MESSAGE);
 	if (false == this->Is_valid())
 		this->m_error.Last();
 
@@ -229,10 +250,13 @@ err_code  CMarshaller::Destroy (void) {
 	if (false == this->Is_valid())
 		this->m_error << __e_not_inited = _T("#__e_not_inited: the marshaller is not created"); // this error can be overwritten too;
 
-	if (__handler_ptr()->DestroyWindow())
-		__handler_ptr()->m_hWnd = nullptr;
-	else this->m_error.Last(); // this error may be overwritten in case of getting the error while deleting the handler object;
+	_impl::CFakeWnd& fake_wnd = _impl::_get_msg_wnd(this->m_handler);
 
+	if (fake_wnd.Is_valid()) {
+	if (fake_wnd.DestroyWindow())
+		fake_wnd.m_hWnd = nullptr;
+	else this->m_error.Last(); // this error may be overwritten in case of getting the error while deleting the handler object;
+	}
 	try {
 		delete m_handler; m_handler = nullptr;
 	}
@@ -268,23 +292,27 @@ err_code  CMarshaller::Fire (const HWND _h_handler, CError& _err, const bool _b_
 
 		if (0 == ::SendMessageTimeout(_h_handler, u_msg_code, (w_param)0, (l_param)0, u_req_flags, u_timeout, &u_result)) {
 			_err.Last();
-			if (ERROR_SUCCESS == _err.Code())
+			if (__s_ok == _err.Code())
 				_err <<__e_fail = _T("#__e_fail: generic error occurs");
 		}
 #else
 		::SendMessage(_h_handler, _impl::CFakeWnd::eInternalMsgId, (WPARAM)0, (LPARAM)0);
 #endif
 	}
-	return __s_ok;
+	return _err;
 }
 
 TError&   CMarshaller::Error (void) const {return this->m_error; }
 
 HWND CMarshaller::GetHandle_Safe (void) const
 {
+#if (0)
 	if (nullptr == m_handler)
 		return nullptr;
 	return (__handler_ptr()->IsWindow() ? __handler_ptr()->m_hWnd : nullptr);
+#else
+	return _impl::_get_msg_wnd(this->m_handler); // atl::cwindow has the operator hwnd;
+#endif
 }
 
 const bool CMarshaller::Is_valid (void) const {

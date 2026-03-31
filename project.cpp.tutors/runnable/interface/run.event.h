@@ -78,7 +78,7 @@ namespace shared { namespace runnable {
 		const bool    Is_valid (void) const;       // checks message-only-window handle;
 
 	protected:
-		void*   m_handler;  // the pointer to class which creates message-only window;
+		void*   m_handler;  // the pointer to class which creates message-only window; to-do: such hidden of the implementatiom must be reviewed;
 		CError  m_error;
 
 	private:
