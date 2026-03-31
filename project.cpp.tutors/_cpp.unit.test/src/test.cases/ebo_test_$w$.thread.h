@@ -8,6 +8,17 @@
 
 namespace ebo { namespace boo { namespace test { namespace thread {
 
+	__class (c_await) {
+	public:
+		 c_await (void) = default; c_await (const c_await&) = delete; c_await (c_await&&) = delete;
+		~c_await (void) = default;
+
+		__method (Wait);
+
+	private:
+		c_await& operator = (const c_await&) = delete; c_await& operator = (c_await&&) = delete;
+	};
+
 	__class (c_crt_runner) {
 	public:
 		 c_crt_runner (void) = default; c_crt_runner (const c_crt_runner&) = delete; c_crt_runner (c_crt_runner&&) = delete;

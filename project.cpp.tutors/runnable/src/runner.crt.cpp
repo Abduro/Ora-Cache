@@ -11,7 +11,7 @@
 
 using namespace shared::runnable;
 
-namespace shared { namespace runnable { namespace details
+namespace shared { namespace runnable { namespace _impl
 {
 	err_code Runner_ForceToTerminate(const CEvent& _event, const HANDLE _thread, CError& _err) {
 		_event; _thread; _err;
@@ -44,17 +44,17 @@ namespace shared { namespace runnable { namespace details
 		return BELOW_NORMAL_PRIORITY_CLASS;
 	}
 }}}
-using namespace shared::runnable::details;
+using namespace shared::runnable::_impl;
 
 #pragma region cls::CCrtRunner{}
 
-CCrtRunner::CCrtRunner (TRunnableFunc func, IGenericEventNotify& sink_ref, const _variant_t& v_evt_id):
+CCrtRunner::CCrtRunner (TRunnableFunc func, IEventNotify& sink_ref, const _variant_t& v_evt_id):
 	m_notifier(sink_ref, v_evt_id), m_hThread(0), m_bStopped(true), m_function(func) {
 
 	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: c-runtime thread is not created");
 
 	if (__succeeded(this->m_event.Create()))
-		this->m_event.Signaled(true);
+		this->m_event.Signaled(true); // means the work thread is not started yet;
 }
 
 CCrtRunner::~CCrtRunner(void) { this->m_event.Destroy(); }
@@ -76,6 +76,7 @@ err_code CCrtRunner::Start (const TRunPriority ePriority) {
 	if (false == IsStopped())
 		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is already started");
 
+	// if the worker thread was previously started, but somehow the thread handle is not cleared; to-do: it must be checked;
 	if (this->m_hThread) {
 		if (false == !!::CloseHandle(this->m_hThread))
 			return this->m_error.Last();
@@ -89,12 +90,14 @@ err_code CCrtRunner::Start (const TRunPriority ePriority) {
 		return this->m_error << __e_no_memory = _T("#__e_fail: cannot create c-runtime thread");
 
 	this->m_bStopped = false;
-	this->m_event << false;
+	this->m_event << false;    // sets the event to nonsignal state, i.e. work thread is started its job;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority ;
 	// https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities ;
-	if (0 == ::SetThreadPriority(m_hThread, details::Runner_RunPriorityToDword(ePriority)))
+	if (0 == ::SetThreadPriority(m_hThread, _impl::Runner_RunPriorityToDword(ePriority)))
 		return this->m_error.Last();
 
+	// prepares marshaller object for sending notification(s);
 	if (__failed(this->m_notifier.Create()))
 		return this->m_error = this->m_notifier.Error();
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread ;
@@ -115,9 +118,10 @@ err_code CCrtRunner::Stop (const bool bForced) {
 
 	if (__failed(this->m_notifier.Destroy()))
 		return this->m_error = this->m_notifier.Error();
-	
+	// if the input flag 'bForced' is set to 'true' that means the event object is not set to signaled state by the worker thread yet;
+	// otherwise, it is expected the thread has already made its job and has set the event to signal state;
 	if (bForced) {
-		if (__failed(details::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error)))
+		if (__failed(_impl::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error)))
 			return this->Error();
 	}
 	else {
@@ -125,7 +129,7 @@ err_code CCrtRunner::Stop (const bool bForced) {
 		while (false == this->m_event.Wait(200)) { // the hardcoded value of the wait timeout possibly must be reviewed;
 			cnt_ ++;
 			if (cnt_ > 10) { // anti-blocker, actually should never happen;
-				return details::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error);
+				return _impl::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error);
 			}
 		}
 	}

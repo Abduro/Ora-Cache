@@ -17,9 +17,10 @@ using namespace shared::sys_core;
 #pragma region cls::CEvent{}
 
 static uint32_t u_evt_count = 0;
+static _pc_sz p_err_evt_not_inited = _T("#__e_not_inited: the event object is not created");
 
 CEvent:: CEvent (void) : m_event(0) {
-	this->m_name.Format(_T("cls::[%s]_#%u"), (_pc_sz)__CLASS__, ++u_evt_count); this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: the event object is not created"); }
+	this->m_name.Format(_T("cls::[%s]_#%u"), (_pc_sz)__CLASS__, ++u_evt_count); this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = p_err_evt_not_inited; }
 CEvent::~CEvent (void) { if (this->Is_valid()) this->Destroy(); u_evt_count--; }
 
 err_code CEvent::Create (void) {
@@ -32,6 +33,30 @@ err_code CEvent::Create (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/sync/using-event-objects ;
 	
 	if (0 == (m_event = ::CreateEvent(nullptr, true, false, this->Name()))) // it is expected the name of the event is unique, no check for ERROR_ALREADY_EXISTS;
+		this->m_error.Last();
+
+	return this->Error();
+}
+
+err_code CEvent::Dup (const CEvent& _event) {
+	return this->Dup (_event(), ::GetCurrentProcess());
+}
+
+err_code CEvent::Dup (const HANDLE _h_event, const HANDLE _process) {
+	_h_event; _process;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid())
+		return this->m_error <<(err_code)TErrCodes::eObject::eExists = _T("#__e_state: the event object already exists");
+
+	if ((*this) == _h_event)
+		return this->m_error <<__e_inv_arg = _T("#__e_inv_arg: cannot duplicate the same handle");
+
+	const dword this_proc_id = ::GetCurrentProcessId();  this_proc_id;
+	const dword that_proc_id = ::GetProcessId(_process); that_proc_id;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle ;
+	if (0 == ::DuplicateHandle(_process, _h_event, ::GetCurrentProcess(), &this->m_event, 0, false, DUPLICATE_SAME_ACCESS))
 		this->m_error.Last();
 
 	return this->Error();
@@ -53,8 +78,17 @@ err_code CEvent::Destroy (void) {
 }
 
 TError&  CEvent::Error (void) const {return this->m_error; }
-bool  CEvent::Is_valid (void) const {
-	return 0 != this->m_event && __e_handle != this->m_event;
+bool  CEvent::Is_valid (const bool _b_set_error/* = false*/) const {
+	_b_set_error;
+	const bool b_valid = (0 != this->m_event && __e_handle != this->m_event);
+
+	if (_b_set_error) {
+		this->m_error <<__METHOD__<<__s_ok;
+		if (false == b_valid)
+		this->m_error <<__e_not_inited <<__e_not_inited = p_err_evt_not_inited;
+	}
+
+	return b_valid;
 }
 
 _pc_sz CEvent::Name (void) const { return this->m_name.GetString(); }
@@ -106,67 +140,61 @@ bool CEvent::Wait (const uint32_t _u_timeout) const {
 }
 
 CEvent& CEvent::operator <<(const bool _yes_or_no) { this->Signaled(_yes_or_no); return *this; }
-
+CEvent& CEvent::operator <<(const HANDLE _h_event) { this->Dup(_h_event, ::GetCurrentProcess()); return *this; }
+CEvent& CEvent::operator <<(const CEvent& _event ) { (*this) << _event(); return *this; }
 const
 HANDLE& CEvent::operator ()(void) const { return this->m_event; }
 HANDLE& CEvent::operator ()(void)       { return this->m_event; }
+
+bool CEvent::operator == (const HANDLE _h_event) const {
+	return ::CompareObjectHandles(this->m_event, _h_event);
+}
 
 #pragma endregion
 
 namespace shared { namespace runnable { namespace _impl
 {
-	class CMessageHandler:
-		public ::ATL::CWindowImpl<CMessageHandler>
+	class CFakeWnd:
+		public ::ATL::CWindowImpl<CFakeWnd>
 	{
 	public:
-		enum {
-			eInternalMsgId = WM_USER + 1,
-		};
-	private:
-		IGenericEventNotify& m_sink_ref;
-		const _variant_t     m_event_id;
-		d_word               m_threadId;
-	public:
-		BEGIN_MSG_MAP(CMessageHandler)
-			MESSAGE_HANDLER(CMessageHandler::eInternalMsgId, OnGenericEventNotify)
+		CFakeWnd (IEventNotify& sink_ref, const _variant_t& v_evt_id) :  m_sink_ref(sink_ref), m_event_id(v_evt_id), m_threadId(::GetCurrentThreadId()) {}
+		virtual ~CFakeWnd(void) {}
+
+		enum { eInternalMsgId = WM_USER + 1 };
+		BEGIN_MSG_MAP(CFakeWnd)
+			MESSAGE_HANDLER(CFakeWnd::eInternalMsgId, OnEventNotify)
 		END_MSG_MAP()
+
+		d_word  _OwnerThreadId (void) const { return m_threadId; }
+
 	private:
-		virtual LRESULT  OnGenericEventNotify(_uint, w_param, l_param, _bool&)
+		virtual LRESULT OnEventNotify (_uint, w_param, l_param, _bool&)
 		{
 			err_code hr_ = (TErrCodes::eExecute::eState);
 			if (__failed(hr_)) hr_ = m_sink_ref.GenEvt_OnNotify(m_event_id);
-			if (__failed(hr_)) hr_ = m_sink_ref.GenEvt_OnNotify((LONG)m_event_id);
-			return 0;
+			if (__failed(hr_)) hr_ = m_sink_ref.GenEvt_OnNotify((long)m_event_id);
+			return hr_;
 		}
-	public:
-		CMessageHandler(IGenericEventNotify& sink_ref, const _variant_t& v_evt_id):
-			m_sink_ref(sink_ref),
-			m_event_id(v_evt_id),
-			m_threadId(::GetCurrentThreadId())
-		{
-		}
-		virtual ~CMessageHandler(void)
-		{
-		}
-	public:
-		d_word  _OwnerThreadId(void)const
-		{
-			return m_threadId;
-		}
+		
+	private:
+		IEventNotify&    m_sink_ref;
+		const _variant_t m_event_id;
+		d_word           m_threadId;
 	};
 }}}
 
-#define __handler_ptr()  reinterpret_cast<_impl::CMessageHandler*>(this->m_handler)
+#define __handler_ptr()  reinterpret_cast<_impl::CFakeWnd*>(this->m_handler)
 
 #pragma region cls::CMarshaller{}
 
 static _pc_sz p_err_inv_handler = _T("#__e_handler: the message handler is invalid");
 static _pc_sz p_err_wnd_not_inited = _T("#__e_not_inited: message window is not created");
 
-CMarshaller:: CMarshaller (IGenericEventNotify& sink_ref, const _variant_t& v_evt_id) : m_handler(nullptr) {
+CMarshaller:: CMarshaller (IEventNotify& sink_ref, const _variant_t& v_evt_id) : m_handler(nullptr) {
 	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = p_err_wnd_not_inited;
 	try {
-		m_handler = new _impl::CMessageHandler(sink_ref, v_evt_id);
+		m_handler = new _impl::CFakeWnd(sink_ref, v_evt_id);
 	}
 	catch(::std::bad_alloc&){ this->m_error <<__e_no_memory = _T("#__e_fail: message handler creation is failed"); }
 }
@@ -218,26 +246,13 @@ err_code  CMarshaller::Fire (const bool _b_async) {
 	return CMarshaller::Fire(this->GetHandle_Safe(), this->m_error, _b_async);
 }
 
-err_code  CMarshaller::Fire2 (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	if (nullptr == m_handler) return this->m_error << __e_not_inited = p_err_inv_handler;
-	if (false == this->Is_valid()) return this->m_error << __e_not_inited = p_err_wnd_not_inited;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew ;
-	if (0 == ::PostThreadMessage( __handler_ptr()->_OwnerThreadId(), _impl::CMessageHandler::eInternalMsgId, 0, 0 ))
-		this->m_error.Last();
-
-	return this->Error();
-}
-
 err_code  CMarshaller::Fire (const HWND _h_handler, CError& _err, const bool _b_async) {
 	_h_handler; _err; _b_async;
 
 	if (0 == _h_handler || false == !!::IsWindow(_h_handler))
 		return _err <<__e_hwnd = _T("#__e_hwnd: window handle is invalid");
 
-	static const uint32_t u_msg_code = _impl::CMessageHandler::eInternalMsgId;
+	static const uint32_t u_msg_code = _impl::CFakeWnd::eInternalMsgId;
 
 	if (_b_async) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew ;
@@ -257,7 +272,7 @@ err_code  CMarshaller::Fire (const HWND _h_handler, CError& _err, const bool _b_
 				_err <<__e_fail = _T("#__e_fail: generic error occurs");
 		}
 #else
-		::SendMessage(_h_handler, _impl::CMessageHandler::eInternalMsgId, (WPARAM)0, (LPARAM)0);
+		::SendMessage(_h_handler, _impl::CFakeWnd::eInternalMsgId, (WPARAM)0, (LPARAM)0);
 #endif
 	}
 	return __s_ok;
@@ -276,28 +291,141 @@ const bool CMarshaller::Is_valid (void) const {
 	return nullptr != this->GetHandle_Safe();
 }
 
-#pragma endregion
-#pragma region cls::CDelayEvent{}
+err_code  CMarshaller::Post (void) {
+	this->m_error <<__METHOD__<<__s_ok;
 
-CDelayEvent:: CDelayEvent(const d_word nTimeSlice, const d_word nTimeFrame) : m_nTimeSlice(e_frame::e_na), m_nTimeFrame(e_frame::e_na), m_nCurrent(0) {
-	this->Reset(nTimeSlice, nTimeFrame);
+	if (nullptr == m_handler) return this->m_error << __e_not_inited = p_err_inv_handler;
+	if (false == this->Is_valid()) return this->m_error << __e_not_inited = p_err_wnd_not_inited;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew ;
+	if (0 == ::PostThreadMessage( __handler_ptr()->_OwnerThreadId(), _impl::CFakeWnd::eInternalMsgId, 0, 0 ))
+		this->m_error.Last();
+
+	return this->Error();
 }
-bool CDelayEvent::Elapsed (void) const { return (m_nCurrent >= m_nTimeFrame); }
-bool CDelayEvent::IsReset (void) const { return (m_nCurrent == 0); }
 
-void CDelayEvent::Reset  (const d_word nTimeSlice, const d_word nTimeFrame)
-{
-	if (0 < nTimeSlice) m_nTimeSlice = nTimeSlice; ATLASSERT(m_nTimeSlice);
-	if (0 < nTimeFrame) m_nTimeFrame = nTimeFrame; ATLASSERT(m_nTimeFrame);
+#pragma endregion
+#pragma region cls::CDelay{}
+
+CDelay::CDelay (const d_word nTimeSlice, const d_word nTimeFrame) : m_nTimeSlice(e_frame::e_na), m_nTimeFrame(e_frame::e_na), m_nCurrent(0) {
+	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; this->Reset(nTimeSlice, nTimeFrame);
+}
+CDelay::CDelay (const CDelay& _src) : CDelay() { *this = _src; }
+
+dword    CDelay::Frame (void) const { return this->m_nTimeFrame; }
+err_code CDelay::Frame (const dword _d_value) {
+	_d_value;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == _d_value)
+		return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: input frame value (%u) msec is invalid"), _d_value);
+
+	this->m_nTimeFrame = _d_value; // there is no comparison with time slice value, Is_valid() cares about that;
+
+	return this->Error();
+}
+
+dword    CDelay::Slice (void) const { return this->m_nTimeSlice; }
+err_code CDelay::Slice (const dword _d_value) {
+	_d_value;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == _d_value)
+		return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: input slice value (%u) msec is invalid"), _d_value);
+
+	this->m_nTimeSlice = _d_value; // there is no comparison with time frame value, Is_valid() cares about that;
+
+	return this->Error();
+}
+
+TError&  CDelay::Error (void) const { return this->m_error; }
+
+bool CDelay::Elapsed (void) const { return (this->m_nCurrent >= this->Frame()); }
+bool CDelay::IsReset (void) const { return (this->m_nCurrent == 0); }
+
+bool CDelay::Is_valid (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == this->Frame()) { this->m_error <<__e_inv_arg = _T("#__e_inv_arg: time frame is 0 (zero)");  return false; }
+	if (0 == this->Slice()) { this->m_error <<__e_inv_arg = _T("#__e_inv_arg: time slice is 0 (zero)");  return false; }
+
+	static _pc_sz pc_sz_err_pat = _T("__e_inv_arg: time slice (%u) msec is greater than frame (%u) msec");
+	if (this->Slice() > this->Frame()) this->m_error <<__e_inv_arg = TString().Format(pc_sz_err_pat, this->Slice(), this->Frame());
+
+	return false == this->Error().Is();
+}
+
+err_code CDelay::Reset (void) {
+	m_nCurrent = 0;
+	return __s_ok;
+}
+
+err_code CDelay::Reset (const d_word nTimeSlice, const d_word nTimeFrame) {
+	nTimeSlice; nTimeFrame;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Frame(nTimeFrame))) return this->Error();
+	if (__failed(this->Slice(nTimeSlice))) return this->Error();
 
 	m_nCurrent = 0;
+	return this->Error();
 }
 
-void CDelayEvent::Wait(void) {
-	::Sleep(m_nTimeSlice);
-	m_nCurrent += m_nTimeSlice;
+CString  CDelay::To_str (void) const {
+
+	CString cs_out; cs_out.Format(_T("cls::[%s::%s] >> {frame = %u msec; slice = %u msec}"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, this->Frame(), this->Slice());
+	return  cs_out;
 }
 
-CDelayEvent& CDelayEvent::operator <<(const d_word _v) { if (_v) { this->m_nTimeFrame = _v; }  return *this; }
+err_code CDelay::Wait(void) {
+
+	::Sleep(this->Slice());
+	m_nCurrent += this->Slice();
+
+	return __s_ok;
+}
+
+CDelay& CDelay::operator = (const CDelay& _src) { *this << _src.Frame() >> _src.Slice(); return *this; }
+CDelay& CDelay::operator <<(const d_word _v) { this->Frame(_v); return *this; }
+CDelay& CDelay::operator >>(const d_word _v) { this->Slice(_v); return *this; }
+
+#pragma endregion
+#pragma region cls::CAwait{}
+
+CAwait::CAwait (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CAwait::CAwait (const CDelay&, const CEvent&) : CAwait() {}
+const
+CDelay& CAwait::Delay (void) const { return this->m_delay; }
+CDelay& CAwait::Delay (void)       { return this->m_delay; }
+const
+CEvent& CAwait::Event (void) const { return this->m_event; }
+CEvent& CAwait::Event (void)       { return this->m_event; }
+
+TError& CAwait::Error (void) const { return this->m_error; }
+bool    CAwait::Is_valid (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Delay().Is_valid()) return false == (this->m_error = this->Delay().Error());
+	if (false == this->Event().Is_valid(true)) return false == (this->m_error = this->Delay().Error()); // the error is required if event object is invalid;
+
+	return false == this->Error();
+}
+
+err_code CAwait::Wait (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == this->Is_valid()) return this->Error();
+
+	while (this->Event().Is_signaled()) {
+		this->Delay().Wait();
+
+		if (this->Delay().Elapsed())
+			this->Delay().Reset();
+	}
+
+	return this->Error();
+}
+
+CAwait& CAwait::operator <<(const CDelay& _delay) { this->Delay() = _delay; return *this; }
+CAwait& CAwait::operator <<(const CEvent& _event) { this->Event()<< _event; return *this; }
 
 #pragma endregion

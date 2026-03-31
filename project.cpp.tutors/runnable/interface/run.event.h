@@ -14,13 +14,14 @@
 
 namespace shared { namespace runnable {
 
-	interface IGenericEventNotify // ToDo: the name of the interface looks like not so appropriate as should be;
+	interface IEventNotify // ToDo: the name of the interface looks like not so appropriate as should be;
 	{
 		virtual err_code  GenEvt_OnNotify (const _variant_t v_evt_id) { v_evt_id; return __e_not_impl; }
 		virtual err_code  GenEvt_OnNotify (const _long n_evt_id) { n_evt_id; return __e_not_impl; }
 		virtual err_code  GenEvt_OnNotify (const _long n_evt_id, const _variant_t v_data) { n_evt_id; v_data; return __e_not_impl; }
 	};
-
+	/* this class is for managing a thread procedure: to start or to stop it;
+	*/
 	class CEvent {
 	public:
 		 CEvent (void); CEvent (const CEvent&) = delete; CEvent (CEvent&&) = delete;
@@ -28,20 +29,27 @@ namespace shared { namespace runnable {
 
 		err_code Create (void);
 		err_code Destroy (void);
+		// https://english.stackexchange.com/questions/239815/can-dupe-be-used-as-a-verb-instead-of-duplicate ;
+		err_code Dup (const HANDLE _h_event, const HANDLE _process); // makes a duplicate of the input/given event handle;
+		err_code Dup (const CEvent&); // duplicates input event handle for the current process;
 
 		TError&  Error (void) const;
-		bool  Is_valid (void) const;
+		bool  Is_valid (const bool _b_set_error = false) const; // sets error object if not valid for test cases if necessary;
 
 		_pc_sz   Name (void) const;
 		bool  Is_signaled (void) const;
-		err_code Signaled (const bool _yes_or_no);   // sets signaled state to signaled or to non-signaled one;
+		err_code Signaled (const bool _yes_or_no);   // sets this event state to signaled or to non-signaled;
 
 		bool Wait (const uint32_t _u_timeout) const; // returns 'true' if the waiting operation succeeds (WAIT_OBJECT_0) after specified timeout (msec);
 
-		CEvent& operator <<(const bool _yes_or_no);
+		CEvent& operator <<(const bool _yes_or_no);  // sets this event state to signaled or to non-signaled;
+		CEvent& operator <<(const CEvent&);          // duplicates the event handle of input event object for *this* process;
+		CEvent& operator <<(const HANDLE _h_event);  // duplicates the given event handle for *this* process;
 		const
 		HANDLE& operator ()(void) const;
 		HANDLE& operator ()(void) ;
+		// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-compareobjecthandles ;
+		bool operator == (const HANDLE _h_event) const; // makes a comparison of input handle with the handle of this object;
 
 	private:
 		CEvent& operator = (const CEvent&) = delete; CEvent& operator = (CEvent&&) = delete;
@@ -50,21 +58,20 @@ namespace shared { namespace runnable {
 		HANDLE  m_event;
 		CString m_name ;
 	};
-	/* the class below creates message-only window:
-	   https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features#message-only-windows ;
+	/* this class creates message-only window: https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features#message-only-windows ;
 	   the instance of this class must be accessible in worker thread for sending messages to main thread through the window being hidden;
 	*/
 	class CMarshaller {
 	public:
-		 CMarshaller (IGenericEventNotify&, const _variant_t& v_evt_id); CMarshaller (void) = delete; CMarshaller (CMarshaller&&) = delete;
+		 CMarshaller (IEventNotify&, const _variant_t& v_evt_id); CMarshaller (void) = delete; CMarshaller (CMarshaller&&) = delete;
 		~CMarshaller (void);
-
+		// the virtual functions/methods must be go first in declaraion of the class for better performance, but it is not important for now;
 		virtual err_code  Create (void);
 		virtual err_code  Destroy (void);
 
 		virtual err_code  Fire (const bool _b_async = true);
-		virtual err_code  Fire2(void);   // posts a message directly to thread by using PostThreadMessage();
-		static  err_code  Fire (const HWND hHandler, CError&, const bool _b_async = true);
+		static  err_code  Fire (const HWND hHandler, CError&, const bool _b_async = true); // hwnd is the window for receiving messages, it is expected to be message-only window;
+		virtual err_code  Post (void);   // posts a message directly to thread by using PostThreadMessage();
 
 		TError& Error (void) const;
 		virtual HWND  GetHandle_Safe (void) const; // returns message-only-window handle, otherwise nullptr;
@@ -80,8 +87,9 @@ namespace shared { namespace runnable {
 	};
 	/* this class is intended to be used in worker thread procedure in order to create so delay in time, especially,
 	   in iterative loops of the processing data;
+	   also, this class may be used in the main thread for waiting when worker thead ends its job, for example, in test cases;
 	*/
-	class CDelayEvent {
+	class CDelay {
 	public:
 		enum e_frame : d_word {
 			e_na      = 0,
@@ -89,24 +97,66 @@ namespace shared { namespace runnable {
 		};
 
 	public:
-		 CDelayEvent (const d_word nTimeSlice = e_frame::e_na, const d_word nTimeFrame = e_frame::e_na);
-		 CDelayEvent (const CDelayEvent&) = delete; CDelayEvent (CDelayEvent&&) = delete;
-		~CDelayEvent (void) = default;
+		 CDelay (const dword nTimeSlice = e_frame::e_na, const dword nTimeFrame = e_frame::e_na);
+		 CDelay (const CDelay&); CDelay (CDelay&&) = delete;
+		~CDelay (void) = default;
 
-		virtual bool Elapsed (void) const;
-		virtual bool IsReset (void) const;
+		dword    Frame (void) const ; // gets time frame value in msec;
+		err_code Frame (const dword); // sets time frame value in msec; if input value equals to 0, error code is returne;
+		dword    Slice (void) const ; // gets time slice or step value that increments the elapsed time till the total or frame period of time;
+		err_code Slice (const dword); // sets time slice in msec; error code is returned in cases: input equals to '0' or grater than time frame;
 
-		virtual void Reset (const d_word nTimeSlice = e_frame::e_na, const d_word nTimeFrame = e_frame::e_na);
-		virtual void Wait  (void);
+		TError&  Error (void) const;
 
-		CDelayEvent& operator = (const CDelayEvent&) = delete; CDelayEvent& operator = (CDelayEvent&&) = delete;
-		CDelayEvent& operator <<(const d_word) ; // sets time frame value of waiting for;
+		bool  Elapsed  (void) const;  // returns 'true' in case when elapsed time equals to or greater than time frame and 'reset' is required;
+		bool  IsReset  (void) const;  // returns 'true' in case the elapsed time, i.e. current time value, equals to '0' that means a start point for delaying;
+		bool  Is_valid (void) const;  // checks values of the elapced/current time and time frame; it it returns 'false' the error object contains the description;
+
+		err_code Reset (void);        // resets the current/elapsed time to 0 (zero) for starting new iteration of delaying process;
+		err_code Reset (const d_word nTimeSlice, const d_word nTimeFrame); // sets new time slice and frame values; 
+		err_code Wait  (void);        // starts to delay for specified time frame; there is no check for error because ::Sleep(0) works also;
+
+		CString  To_str (void) const; // converts this class object fields to string representation for test cases' output;
+
+		CDelay& operator = (const CDelay&); CDelay& operator = (CDelay&&) = delete;
+		CDelay& operator <<(const d_word); // sets time frame value of waiting for;
+		CDelay& operator >>(const d_word); // sets time slice value for incresing the elapsed time;
 
 	protected:
-		volatile d_word m_nTimeSlice; // time slice in milliseconds;
+		volatile d_word m_nTimeSlice; // time slice in milliseconds; 'volatile' specificator is required because values can be changed from different threads;
 		volatile d_word m_nTimeFrame; // total time to wait for;
-	
+		mutable
+		CError m_error;
 		d_word m_nCurrent; // current time;
+	};
+	/* this class is for waiting till a worker thread ends its job, or similar asynchronous work;
+	*/
+	class CAwait {
+	public:
+		 CAwait (void); CAwait (const CAwait&) = delete; CAwait (CAwait&&) = delete;
+		~CAwait (void) = default;
+		 CAwait (const CDelay&, const CEvent&);
+		const
+		CDelay&  Delay (void) const;
+		CDelay&  Delay (void) ;
+		const
+		CEvent&  Event (void) const; // gets reference to the event object that must be duplicated from event that is used by worker thread; (ro)
+		CEvent&  Event (void) ;      // gets reference to the event object that must be duplicated from event that is used by worker thread; (rw)
+
+		TError&  Error (void) const;
+		bool  Is_valid (void) const;
+
+		err_code Wait  (void) ;
+
+		CAwait&  operator <<(const CDelay&);
+		CAwait&  operator <<(const CEvent&);
+
+	private:
+		CAwait&  operator = (const CAwait&) = delete; CAwait& operator = (CAwait&&) = delete;
+		mutable
+		CError   m_error;
+		CDelay   m_delay;
+		CEvent   m_event;
 	};
 
 }}

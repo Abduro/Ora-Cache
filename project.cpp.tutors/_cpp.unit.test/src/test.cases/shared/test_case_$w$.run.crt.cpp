@@ -29,6 +29,22 @@ unsigned int __stdcall CTstRunner::Thread_Func (void* pObject) {
 	}
 	catch(::std::bad_cast&) { return u_result; }
 
+	const dword u_slice = 10;    // this is the counter/slice of time to increment the elapsed time;
+	const dword u_frame = 100;   // this is time frame to wait for; (msec);
+
+	CDelay delay_evt(u_slice, u_frame);
+
+	while (false == p_runner->IsStopped()) {
+		
+		delay_evt.Wait();        // waits for a particular time slice; (u_slice)
+		if (delay_evt.Elapsed()) // the time frame being waited for is reached; (u_frame)
+			delay_evt.Reset();
+
+		p_runner->Notifier().Fire(false); // sends a notification to the listener;
+	}
+
+	p_runner->MarkCompleted();
+
 	return (u_result = 0);
 }
 

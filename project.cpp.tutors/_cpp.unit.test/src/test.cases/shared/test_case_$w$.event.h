@@ -9,14 +9,16 @@
 
 namespace ebo { namespace boo { namespace test { namespace thread {
 
+	using CAwait = shared::runnable::CAwait;
+	using CDelay = shared::runnable::CDelay;
 	using CEvent = shared::runnable::CEvent;
 	using CMarshaller = shared::runnable::CMarshaller;
-	using IEvtNotify = shared::runnable::IGenericEventNotify;
+	using IEvtNotify = shared::runnable::IEventNotify;
 
 	class CTstEvent {
 	public:
 		 CTstEvent (void) = default; CTstEvent (const CTstEvent&) = delete; CTstEvent (CTstEvent&&) = delete;
-		~CTstEvent (void) = default;
+		~CTstEvent (void); // the destructor is necessary for output that the encapsulated object(s) is destroyed too;
 
 		err_code Create (void);
 		err_code Destroy (void);
@@ -29,6 +31,23 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 	private:
 		CTstEvent& operator = (const CTstEvent&) = delete; CTstEvent& operator = (CTstEvent&&) = delete;
 		CEvent m_event; 
+	};
+
+	class CTstAwait {
+	public:
+		 CTstAwait (void) = default; CTstAwait (const CTstAwait&) = delete; CTstAwait (CTstAwait&&) = delete;
+		~CTstAwait (void); // the destructor is necessary for output that the encapsulated object(s) is destroyed too;
+
+		err_code Wait (void);
+
+		const
+		CAwait& operator ()(void) const;
+		CAwait& operator ()(void) ;
+
+	private:
+		CTstAwait& operator = (const CTstAwait&) = delete; CTstAwait& operator = (CTstAwait&&) = delete;
+		CAwait    m_await;
+		CTstEvent m_event; // this event is used as external event object for emulating a thread's event that used for indicating the thread work is done;
 	};
 
 	using namespace shared::types;

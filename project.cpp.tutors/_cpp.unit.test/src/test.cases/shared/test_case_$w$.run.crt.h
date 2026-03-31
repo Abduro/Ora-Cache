@@ -11,6 +11,7 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 
 	using CCrtRunner = shared::runnable::CCrtRunner;
 	using TRunnableFunc = shared::runnable::TRunnableFunc;
+	using CDelay = shared::runnable::CDelay;
 
 	class CTstRunner {
 	public:

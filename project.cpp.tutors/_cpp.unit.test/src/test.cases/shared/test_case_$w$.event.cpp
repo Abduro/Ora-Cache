@@ -6,7 +6,67 @@
 
 using namespace ebo::boo::test::thread;
 
+#pragma region cls::CTstAwait{}
+
+CTstAwait::~CTstAwait (void) {
+	if ((*this)().Event().Is_valid()) {
+		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+		if (__failed((*this)().Event().Destroy())) _out() += (*this)().Event().Error();
+		else _out() += TString().Format(_T("[impt] The event object (name = '%s') is destroyed;"), (_pc_sz) (*this)().Event().Name());
+
+		_out()();
+	}
+}
+
+err_code CTstAwait::Wait (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() +=_T("Creating external event object:");
+
+	if (__failed(this->m_event.Create())) return this->m_event().Error(); // the error is added to output by test case itself;
+	if (__failed((*this)().Event().Dup(this->m_event()))) { _out() += (*this)().Event().Error(); return (*this)().Event().Error(); } // this is direct call;
+	else _out() += TString().Format(_T("The external event '%s' is duplicated by '%s';"), this->m_event().Name(), (*this)().Event().Name());
+
+	if (__failed((*this)().Delay().Reset(100, 1000))) { _out() += (*this)().Delay().Error(); return (*this)().Delay().Error(); } // this is direct call;
+	else _out() += TString().Format(_T("%s;"), (_pc_sz) (*this)().Delay().To_str());
+
+	if (false == (*this)().Is_valid()) { _out() += (*this)().Error(); return (*this)().Error(); } // this is direct call;
+	else _out() += TString().Format(_T("[impt] The await object is ready;"));
+
+	uint32_t u_count = 0;
+
+	while (false == (*this)().Event().Is_signaled()) {
+		(*this)().Delay().Wait();
+		if (false == (*this)().Delay().Elapsed())
+			_out() += TString().Format(_T("wait notify #%u;"), ++u_count);
+		else {
+			_out() += _T("[warn] the time frame is elapsed;");
+			(*this)().Event() << true; // this is the signal to stop this iteration;
+			(*this)().Delay().Reset();
+		}
+	}
+	_out() += _T("[impt] result: the delaying is ended;");
+
+	return (*this)().Error();
+}
+
+const
+CAwait& CTstAwait::operator ()(void) const { return this->m_await; }
+CAwait& CTstAwait::operator ()(void)       { return this->m_await; }
+
+#pragma endregion
 #pragma region cls::CTstEvent{}
+
+CTstEvent::~CTstEvent (void) {
+	if ((*this)().Is_valid()) {
+		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+		if (__failed((*this)().Destroy())) _out() += (*this)().Error();
+		else _out() += TString().Format(_T("[impt] The event object (name = '%s') is destroyed;"), (_pc_sz) (*this)().Name());
+
+		_out()();
+	}
+}
 
 err_code CTstEvent::Create (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);

@@ -6,6 +6,17 @@
 
 using namespace ebo::boo::test::thread;
 
+#pragma region cls::c_await{}
+
+void c_await::Wait (void) {
+
+	CTstAwait await;
+	await.Wait();
+
+	_out()();
+}
+
+#pragma endregion
 #pragma region cls::c_crt_runner{}
 
 #pragma endregion

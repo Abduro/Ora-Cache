@@ -31,7 +31,7 @@ namespace shared { namespace runnable
 	*/
 	class CCrtRunner {
 	public:
-		CCrtRunner (TRunnableFunc, IGenericEventNotify&, const _variant_t& v_evt_id);
+		CCrtRunner (TRunnableFunc, IEventNotify&, const _variant_t& v_evt_id);
 		CCrtRunner (void) = delete; CCrtRunner (const CCrtRunner&) = delete; CCrtRunner (CCrtRunner&&) = delete;
 		virtual ~CCrtRunner(void);
 
@@ -41,13 +41,13 @@ namespace shared { namespace runnable
 		CEvent& Event (void) const; // gets the reference to the event object that is used for waiting in worker thread; (ro)
 		CEvent& Event (void) ;      // gets the reference to the event object that is used for waiting in worker thread; (rw)
 		
-		virtual bool         IsRunning (void) const;
-		virtual bool         IsStopped (void) const;
-		virtual void         MarkCompleted (void);
+		virtual bool         IsRunning (void) const; // checks: (1) worker thread handle is created and (2) the thread is running;
+		virtual bool         IsStopped (void) const; // manages the working thread: in case of set to 'true' the thread stops its work;
+		virtual void         MarkCompleted (void);   // is set from working thread for reporting its job is done;
 		virtual CMarshaller& Notifier (void);
 
-		virtual err_code     Start (const CRunPriority::e_level = CRunPriority::eLow);
-		virtual err_code     Stop  (const bool bForced);
+		virtual err_code     Start (const CRunPriority::e_level = CRunPriority::eLow); // calls _beginthreadex();
+		virtual err_code     Stop  (const bool bForced); // calls _endthreadex();
 
 	private:
 		CCrtRunner& operator = (const CCrtRunner&) = delete; CCrtRunner& operator = (CCrtRunner&&) = delete;
@@ -55,8 +55,8 @@ namespace shared { namespace runnable
 		CMarshaller           m_notifier ;  // for sending notifications from worker thread to main one;
 		void*                 m_hThread  ;  // thread handle that runs a procedure;
 	/*	volatile */ CEvent    m_event    ;  // synch primitive;
-		volatile mutable bool m_bStopped ;
-		TRunnableFunc         m_function ;
+		volatile mutable bool m_bStopped ;  // this flag is set from worker thread owner and is read from worker thread procedure;
+		TRunnableFunc         m_function ;  // worker thread procedure pointer that is applied to _beginthreadex();
 	};
 }}
 

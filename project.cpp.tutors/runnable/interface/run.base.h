@@ -26,4 +26,8 @@ namespace shared { namespace runnable {
 	typedef ::std::unique_ptr<c_unknown, c_unknown> unk_ptr_t;
 }}
 
+// error LNK2019: unresolved external symbol __imp_CompareObjectHandles referenced in function "public: bool __cdecl shared::runnable::CEvent::operator==...
+// https://stackoverflow.com/questions/76035778/compareobjecthandleshandle-handle-windows-function << example of how to solve the above linking error;
+#pragma comment(lib, "mincore")
+
 #endif/*_RUN_BASE_H_INCLUDED*/
