@@ -1,7 +1,7 @@
 #ifndef _RUNNER_TPL_H_INCLUDED
 #define _RUNNER_TPL_H_INCLUDED
-/*
- *******************************************************************************
+
+/******************************************************************************\
  * Copyright (c) Microsoft Corporation.                                        *
  *                                                                             *
  * The class was designed by Kenny Kerr. It provides the ability to queue      *
@@ -17,25 +17,22 @@
  * See http://www.microsoft.com/en-us/openness/resources/licenses.aspx#MPL.    *
  * All other rights reserved.                                                  *
  *                                                                             *
- * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, * 
+ * THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, *
  * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED       *
  * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.      *
  *-----------------------------------------------------------------------------*
- *  This is Ebo Pack shared library system thread pool class declaration file. *
+ * This is Ebo Pack shared library system thread pool class declaration file.  *
  *-----------------------------------------------------------------------------*
  * Adopted and extended by Tech_dog (ebontrop@gmail.com)                       *
  * on 21-Sep-2015 at 12:48:06am, GMT+7, Phuket, Rawai, Monday;                 *
- *******************************************************************************
-*/
-#define _HAS_AUTO_PTR_ETC 1
-#pragma warning(push)
-#pragma warning(disable:4995)
-#include <memory>
-#pragma warning(pop)
+\******************************************************************************/
 
 #include "run.event.h"
-
-namespace shared { namespace runnable { using namespace shared::defs;
+#if (0)
+// https://stackoverflow.com/questions/48882439/how-to-restore-auto-ptr-in-visual-studio-c17 ;
+// https://stackoverflow.com/questions/3451099/stdauto-ptr-to-stdunique-ptr ;
+#endif
+namespace shared { namespace runnable { namespace threads { using namespace shared::defs; using namespace shared::runnable;
 
 	using namespace shared::types;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-registerwaitforsingleobject ;
@@ -49,10 +46,11 @@ namespace shared { namespace runnable { using namespace shared::defs;
 		  eUIThread = WT_EXECUTEINUITHREAD   , // for use calls to APC: https://learn.microsoft.com/en-us/windows/win32/sync/asynchronous-procedure-calls ;
 		  eLongOper = WT_EXECUTELONGFUNCTION , // the callback function can perform a long wait;
 		};
-		// the other flags that are available to set heap optimization structure through:
-		// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation ;
-		// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-heap_optimize_resources_information ;
-		// https://learn.microsoft.com/en-us/windows/win32/memory/memory-management-structures ;
+		/* the other flags that are available to set heap optimization structure through:
+		   https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation ;
+		   https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-heap_optimize_resources_information ;
+		   https://learn.microsoft.com/en-us/windows/win32/memory/memory-management-structures ;
+		*/
 	};
 	// https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/ ;
 	// https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-queueuserworkitem ;
@@ -62,8 +60,8 @@ namespace shared { namespace runnable { using namespace shared::defs;
 		static int QueueUserWorkItem (void (T::*pfn)(void),  T* pObject, ULONG flags = CThreadType::eLongOper) {
 			pObject; flags;
 			typedef std::pair<void (T::*)(), T*> CallbackType;
-			std::auto_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
-			// https://en.cppreference.com/w/cpp/memory/auto_ptr.html ;
+			::std::unique_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
+
 			if (::QueueUserWorkItem(ThreadProc<T>, ptr_.get(), flags)) {
 				ptr_.release(); // the ownership of the encapsulated pointer is given to system procedure;
 				return true;
@@ -75,7 +73,7 @@ namespace shared { namespace runnable { using namespace shared::defs;
 		static int QueueUserWorkItemEx (void (T::*pfn)(T*), T* pObject, ULONG flags = CThreadType::eLongOper) {
 			pObject; flags;
 			typedef std::pair<void (T::*)(T*), T*> CallbackType;
-			std::auto_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
+			::std::unique_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
 
 			if (::QueueUserWorkItem(ThreadProcEx<T>, ptr_.get(), flags)) {
 				ptr_.release(); // the ownership of the encapsulated pointer is given to system procedure;
@@ -90,9 +88,9 @@ namespace shared { namespace runnable { using namespace shared::defs;
 			_p_context;
 			typedef std::pair<void (T::*)(), T*> CallbackType;
 
-			std::auto_ptr<CallbackType> p(static_cast<CallbackType*>(_p_context));
+			::std::unique_ptr<CallbackType> ptr_(static_cast<CallbackType*>(_p_context));
 
-			(p->second->*p->first)();
+			(ptr_->second->*ptr_->first)();
 			return 0;
 		}
 
@@ -101,78 +99,88 @@ namespace shared { namespace runnable { using namespace shared::defs;
 			_p_context;
 			typedef std::pair<void (T::*)(T*), T*> CallbackType;
 
-			std::auto_ptr<CallbackType> ptr_(static_cast<CallbackType*>(_p_context));
+			::std::unique_ptr<CallbackType> ptr_(static_cast<CallbackType*>(_p_context));
 
 			(ptr_->second->*ptr_->first)(ptr_->second);
 			return 0;
 		}
 	};
 
-	class CThreadCrtData {
+	using CError  = shared::sys_core::CError;
+	using CLocker = shared::sys_core::CSyncObject;
+
+	class CState {
 	public:
-		 CThreadCrtData (void); CThreadCrtData (const CThreadCrtData&) = delete; CThreadCrtData (CThreadCrtData&&) = delete;
-		~CThreadCrtData (void); // no virtuality of the destructor due to it is assumed no base class will be created through heap memory allocation;
+		 enum e_state : uint32_t { eStopped = 0x0, eCompleted, eError, eWorking };
+		 CState (void); CState (const CState&) = delete; CState (CState&&) = delete;
+		~CState (void) = default;
 
-	public:
-		TError&   Error (void) const;
-		const
-		CEvent&   Event (void) const;
-		CEvent&   Event (void);
-
-		bool      IsStopped (void) const;
-		void      IsStopped (const bool);
-
-	protected:
-		volatile 
-		bool    m_bStopped;
-		CEvent  m_event;
-		CError  m_error;
-
-	private:
-		CThreadCrtData& operator = (const CThreadCrtData&) = delete; CThreadCrtData& operator = (CThreadCrtData&&) = delete;
-	};
-
-	class CThreadState {
-	public:
-		enum e_state : uint32_t {
-			eStopped   =  0x0,
-			eError     =  0x1,
-			eWorking   =  0x2,
-		};
-	};
-
-	using shared::sys_core::CError;
-	using shared::sys_core::CSyncObject;
-
-	class CThreadBase {
-	private:
-		virtual void ThreadFunction(void) = 0 ; // derived class must provide thread function implementation;
-
-	protected:
-		 CThreadBase (void);
-		~CThreadBase (void);
-
-	public:
 		TError&  Error (void) const;
-		bool     IsComplete (void) const;
-		err_code MarkToStop (void);
-		err_code Start (void);
-		err_code Stop  (void);
+		const
+		CEvent&  Event (void) const;
+		CEvent&  Event (void);
 
+		e_state  Get (void) const;      // returns currently set state value;
+		bool     Set (const e_state);   // returns 'true' in case of state value change; this is direct set of the value;
+
+		bool Is_completed (void) const; // calls the event object and changing the current state value appropriately;
+		bool Is_error     (void) const; // returns result in accordance with current state of the error object;
+		bool Is_running   (void) const;
+		bool Is_stopped   (void) const;
+
+		bool Is_valid (void) const;     // checks internal event object and own error state;
+
+		CLocker& Locker (void);
+
+		operator uint32_t (void) const;
+		const
+		CEvent&  operator ()(void) const;
+		CEvent&  operator ()(void) ;
+
+		CEvent&  operator <<(const e_state);
+		CEvent&  operator <<(const TError&); // sets current state value to e_state::eError, the error object is updated too;
+		CEvent&  operator >>(e_state& _out); // assigns current state value to input variable reference;
+
+	private:
+		CState& operator = (const CState&) = delete; CState& operator = (CState&&) = delete;
+		// https://stackoverflow.com/questions/2484980/why-is-volatile-not-considered-useful-in-multithreaded-c-or-c-programming ;
+		mutable CEvent  m_event;
+		mutable CError  m_error;
+		mutable e_state m_state;
+		mutable CLocker m_lock ;
+	};
+
+	class CBase {
 	public:
-		const bool   IsRunning (void) const;
-		const bool   IsValid   (void) const;
-		const dword  State     (void) const;
+		 CBase (void); const CBase (const CBase&) = delete; CBase (CBase&&) = delete;
+		~CBase (void);
+
+		TError&   Error (void) const;
+
+		bool   Is_valid (void) const; // checks error objects: its own and state object;
+		
+		err_code  Start (void);
+		err_code  Stop  (void);
+		const
+		CState&   State (void) const;
+		CState&   State (void);
+
+		const
+		CState& operator ()(void) const;
+		CState& operator ()(void) ;
 
 	protected:
-		volatile dword  m_state;
-		CThreadCrtData  m_crt ;
-		CSyncObject     m_lock;
-		mutable CError  m_error;
+		mutable
+		CError  m_error;
+		CState  m_state;
+		
+	private:
+		CBase& operator =  (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
+		virtual void ThreadFunction (void) = 0 ; // derived class must provide thread function implementation;
 	};
-}}
+}}}
 
-typedef shared::runnable::CThreadCrtData  TThreadCrtData;
-typedef shared::runnable::CThreadBase     TThreadBase;
+typedef shared::runnable::threads::CBase   TThreadBase;
+typedef shared::runnable::threads::CState  TThreadState;
 
 #endif/*_RUNNER_TPL_H_INCLUDED*/
