@@ -10,8 +10,11 @@ using namespace ebo::boo::test::thread;
 
 void c_await::Wait (void) {
 
+	const uint32_t u_time_frame = 1000;
+	const uint32_t u_time_slice = 100;
+
 	CTstAwait await;
-	await.Wait();
+	await.Wait(u_time_frame, u_time_slice);
 
 	_out()();
 }
@@ -19,14 +22,44 @@ void c_await::Wait (void) {
 #pragma endregion
 #pragma region cls::c_crt_runner{}
 
+void c_crt_runner::Run (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	const uint32_t u_time_frame = 1000;
+	const uint32_t u_time_slice = 100;
+
+	// (1) crt runner object is already created in constructor of this class;
+	CTstRunner& crt_runner = (*this)();
+	// (2) creating the await object in order to make main thread of test case waiting the completness of worker thread procedure;
+	CTstAwait await_obj;
+	await_obj().Delay().Reset(u_time_slice, u_time_frame); // no check for the error, it is done in wait() operation;
+
+	// (3) starting the work thread, the awaiting object delays its execution till the work thread gets its job done;
+	if (__failed(crt_runner.Start())) { _out()(); return; } // the thread starting is failed, the tast case is not passed;
+
+	// (4) connecting the event object of the crt runner with the event of the await object by duplicating;
+	if (__failed(await_obj.Wait(crt_runner().Event(), false))) {
+		crt_runner().Event() << true; // the worker thread must be stopped anyway;
+	} else {
+	// (5) at the end of the thread proc, the runner is notified about the job done and sets the event to signal state;
+	}
+	// (6) the awaiting object completes its work;
+	_out() += _T("[impt] result: worker thread is completed its job;");
+	_out()();
+}
+
 void c_crt_runner::Start (void) {
 
+	const uint32_t u_time_frame = 1000;
+	const uint32_t u_time_slice = 100;
+
 	(*this)().Start();
+	CTstAwait().Wait(u_time_frame, u_time_slice);
 	(*this)().Stop(true); _out()();
 }
 
 void c_crt_runner::Stop (void) {
-	(*this)().Stop(true); _out()();
+	(*this)().Stop(true); _out()(); // expected error: nothing is started - nothing is stopped;
 }
 
 const
@@ -80,7 +113,7 @@ void c_marshaller::Notify (void) {
 	CTstEvent event;
 	CTstNotifier notifier;
 
-	const bool b_async = false; // the test case exits immediately with no waiting the receiving the notification asynchronously; 
+	const bool b_async = false; // the test case exits immediately with no waiting of receiving the notification asynchronously; 
 #if (0)
 	notifier.Notify(b_async);   // receiving the error is expected;
 #endif
@@ -89,7 +122,7 @@ void c_marshaller::Notify (void) {
 	notifier.Create();
 	notifier.Notify(b_async);
 
-	event().Wait(100); // the waiting occurs in the one thread of this test case, thus nothing can be delivered to receiver/listener;
+	event().Wait(100); // the waiting occurs in the same thread of this test case, thus nothing can be delivered to receiver/listener;
 
 	notifier.Destroy();
 

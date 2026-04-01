@@ -8,6 +8,7 @@
 */
 #include "runner.crt.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace shared::runnable;
 
@@ -60,6 +61,10 @@ CCrtRunner::CCrtRunner (TRunnableFunc func, IEventNotify& sink_ref, const _varia
 CCrtRunner::~CCrtRunner(void) { if (this->IsRunning()) this->Stop(true); this->m_event.Destroy(); }
 
 TError& CCrtRunner::Error (void) const { return this->m_error; }
+const
+CEvent& CCrtRunner::Event (void) const { return this->m_event; }
+CEvent& CCrtRunner::Event (void)       { return this->m_event; }
+
 CMarshaller&
      CCrtRunner::Notifier (void)        { return m_notifier; }
 bool CCrtRunner::IsRunning (void) const { return m_hThread && false == m_bStopped; }
@@ -91,11 +96,27 @@ err_code CCrtRunner::Start (const TRunPriority ePriority) {
 
 	this->m_bStopped = false;
 	this->m_event << false;    // sets the event to nonsignal state, i.e. worker thread wiil be able to start its job;
-#if (0)
+#if (1)
+	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthread ;
+	HANDLE hThread = ::OpenThread(THREAD_SET_INFORMATION, false, ::GetThreadId(this->m_hThread));
+	if (nullptr == hThread)
+		this->m_error.Last();
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority ;
-	// https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities ;
-	if (0 == ::SetThreadPriority(m_hThread, _impl::Runner_RunPriorityToDword(ePriority)))
-		return this->m_error.Last();
+	else if (0 == ::SetThreadPriority(hThread, _impl::Runner_RunPriorityToDword(ePriority))) {
+		this->m_error.Last();
+		this->m_error = TString().Format(_T("Set priority failed: %s"), this->m_error.Desc());
+		__trace_err_ex_3(this->Error());
+		this->m_error << __s_ok; // the error is sent to debug trace, its state should be restored to 'no error', because the thread is created;
+	}
+	if (nullptr != hThread) {
+		::CloseHandle(hThread); hThread = nullptr;
+	}
+	
+	/* https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadinformation ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadinformation ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-memory_priority_information ; 
+	   https://stackoverflow.com/questions/70798334/getthreadinformation-fails ;
+	*/
 #endif
 	// prepares marshaller object for sending notification(s);
 	if (__failed(this->m_notifier.Create()))

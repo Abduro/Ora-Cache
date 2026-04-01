@@ -14,11 +14,12 @@
 
 namespace shared { namespace runnable {
 
-	interface IEventNotify // ToDo: the name of the interface looks like not so appropriate as should be;
-	{
+	interface IEventNotify {
+		// returned error code means: __s_ok - handled, __s_false - ignored, otherwise an error occurs;
 		virtual err_code  GenEvt_OnNotify (const _variant_t v_evt_id) { v_evt_id; return __e_not_impl; }
 		virtual err_code  GenEvt_OnNotify (const _long n_evt_id) { n_evt_id; return __e_not_impl; }
 		virtual err_code  GenEvt_OnNotify (const _long n_evt_id, const _variant_t v_data) { n_evt_id; v_data; return __e_not_impl; }
+		virtual err_code  GetEvt_OnNotify (const _long n_evt_id, const CString  _cs_data) { n_evt_id, _cs_data; return __e_not_impl; }
 	};
 	/* this class is for managing a thread procedure: to start or to stop it;
 	*/

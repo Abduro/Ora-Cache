@@ -38,7 +38,8 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		 CTstAwait (void) = default; CTstAwait (const CTstAwait&) = delete; CTstAwait (CTstAwait&&) = delete;
 		~CTstAwait (void); // the destructor is necessary for output that the encapsulated object(s) is destroyed too;
 
-		err_code Wait (void);
+		err_code Wait (const uint32_t _u_frame, const uint32_t _u_slice);  // works with internal event object and uses input params to set delay object;
+		err_code Wait (const CEvent& _evt_extern, const bool _cls_output = false); // is intended for working with c-runtime thead event object; 
 
 		const
 		CAwait& operator ()(void) const;

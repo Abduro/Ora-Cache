@@ -11,7 +11,7 @@ using namespace ebo::boo::test::thread;
 
 CTstRunner:: CTstRunner (void) : m_runner(CTstRunner::Thread_Func, m_listener, _variant_t(1L)) {}
 CTstRunner::~CTstRunner (void) {
-	if ((*this)().IsRunning()) { // c-runtime worker thread does it automatically in its destructor, but for test case it is better to check it;
+	if ((*this)().IsRunning()) { // c-runtime worker thread does it automatically in its destructor, but for test case it is better to check it here;
 		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		this->Stop(/*_b_forced*/true, /*_cls_output*/false);
 		_out()();
@@ -46,6 +46,7 @@ CCrtRunner& CTstRunner::operator ()(void)       { return this->m_runner; }
 unsigned int __stdcall CTstRunner::Thread_Func (void* pObject) {
 	pObject;
 	unsigned int u_result = 1; // sets to 'error' result;
+	_out() += TString().Format(_T("[impt] cls::[%s].%s(): entered;"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	if (nullptr == pObject) {
 		return u_result;
@@ -61,21 +62,32 @@ unsigned int __stdcall CTstRunner::Thread_Func (void* pObject) {
 	}
 	catch(::std::bad_cast&) { return u_result; }
 
-	const dword u_slice = 10;    // this is the counter/slice of time to increment the elapsed time;
-	const dword u_frame = 100;   // this is time frame to wait for; (msec);
+	const dword u_slice = 100;    // this is the counter/slice of time to increment the elapsed time;
+	const dword u_frame = 1000;   // this is time frame to wait for; (msec);
+
+	uint32_t cnt_ = 0; // this is the counter of the iterations for log messages;
 
 	CDelay delay_evt(u_slice, u_frame);
-
-	while (false == p_runner->IsStopped()) {
+	/* to check p_runner->IsStopped() does not have any reason, due to setting this flag can be only made outside of this thread procedure;
+	   taking into account the fact that this procedure must get its job done,
+	   there is a synchronization required between external delay object timeout and a period of time that is necessary for completing this procedure;
+	   a one of the possible soliutions is to use event object:
+	   the main thread waits the event to be signaled and then continue execution,
+	   and this worker thread will set event to signaled state at the end of this procedure;
+	   the setting 'is stopped' flag to 'true' is still possible for owner of this thread, but not for passing this test case;
+	*/
+	while (false == p_runner->IsStopped() && false == p_runner->Event().Is_signaled()) {
 		
 		delay_evt.Wait();        // waits for a particular time slice; (u_slice)
+		_out() += TString().Format(_T("cls::[%s].%s(): iter_ = #%u;"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, ++cnt_);
+
 		if (delay_evt.Elapsed()) // the time frame being waited for is reached; (u_frame)
 			delay_evt.Reset();
 
-		p_runner->Notifier().Fire(false); // sends a notification to the listener;
+		p_runner->Notifier().Fire(false); // sends a notification to the listener; in case of async == true, no notificatiom is delivered;
 	}
-
-	p_runner->MarkCompleted();
+	_out() += TString().Format(_T("cls::[%s].%s(): completed;"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	p_runner->MarkCompleted(); // all notifications and test case logger messages must appear before this command;
 
 	return (u_result = 0);
 }

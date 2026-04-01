@@ -19,7 +19,7 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		~CTstRunner (void); // if c-runtime worker thread is still running it should be automatically stopped in its destructor;
 
 		err_code Start (void);
-		err_code Stop  (const bool _b_forced = false, bool _cls_output = true);
+		err_code Stop (const bool _b_forced = false, bool _cls_output = true);
 
 		const
 		CCrtRunner& operator ()(void) const;

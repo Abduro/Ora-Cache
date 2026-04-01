@@ -42,9 +42,9 @@ namespace shared { namespace runnable
 		CEvent& Event (void) ;      // gets the reference to the event object that is used for waiting in worker thread; (rw)
 		
 		virtual bool         IsRunning (void) const; // checks: (1) worker thread handle is created and (2) the thread is running;
-		virtual bool         IsStopped (void) const; // manages the working thread: in case of set to 'true' the thread stops its work;
-		virtual void         MarkCompleted (void);   // is set from working thread for reporting its job is done;
-		virtual CMarshaller& Notifier (void);
+		virtual bool         IsStopped (void) const; // manages the worker thread: in case of set to 'true' the thread stops its work;
+		virtual void         MarkCompleted (void);   // is set from worker thread for reporting its job is done;
+		virtual CMarshaller& Notifier  (void);
 
 		virtual err_code     Start (const CRunPriority::e_level = CRunPriority::eLow); // calls _beginthreadex();
 		virtual err_code     Stop  (const bool bForced); // calls _endthreadex();

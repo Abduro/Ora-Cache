@@ -23,9 +23,20 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 	public:
 		 c_crt_runner (void) = default; c_crt_runner (const c_crt_runner&) = delete; c_crt_runner (c_crt_runner&&) = delete;
 		~c_crt_runner (void) = default;
-
+		/* the following steps compose this test case:
+		   (1) creating crt runner object that will manage the worker thread;
+		   (2) creating the await object in order to make main thread of test case waiting the completness of worker thread procedure;
+		   (3) starting the work thread, the awaiting object will delay its execution till the work thread gets its job done;
+		   (4) connecting the event object of the crt runner with the event of the await object by duplicating;
+		   (5) at the end of the thread proc, the runner is notified about the job done and sets the event to signal state;
+		   (6) the awaiting object completes its work;
+		   the result: and the test case is successfully completed;
+		*/
+		__method (Run);
+		// starts the crt thread by connecting delay object with fake event, after delay finishes,
+		// the worker thread is forced to stop, regardless the thread procedure completeness;
 		__method (Start);
-		__method (Stop);
+		__method (Stop);   // this test case tries to stop crt thread that is not started yet; the expected error is handled;
 
 		const
 		CTstRunner& operator ()(void) const;

@@ -19,16 +19,25 @@ CTstAwait::~CTstAwait (void) {
 	}
 }
 
-err_code CTstAwait::Wait (void) {
+err_code CTstAwait::Wait (const uint32_t _u_frame, const uint32_t _u_slice) {
+	_u_frame; _u_slice;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() +=_T("Creating external event object:");
 
 	if (__failed(this->m_event.Create())) return this->m_event().Error(); // the error is added to output by test case itself;
-	if (__failed((*this)().Event().Dup(this->m_event()))) { _out() += (*this)().Event().Error(); return (*this)().Event().Error(); } // this is direct call;
-	else _out() += TString().Format(_T("The external event '%s' is duplicated by '%s';"), this->m_event().Name(), (*this)().Event().Name());
-
-	if (__failed((*this)().Delay().Reset(100, 1000))) { _out() += (*this)().Delay().Error(); return (*this)().Delay().Error(); } // this is direct call;
+	if (__failed((*this)().Delay().Reset(_u_slice, _u_frame))) { _out() += (*this)().Delay().Error(); return (*this)().Delay().Error(); } // this is direct call;
 	else _out() += TString().Format(_T("%s;"), (_pc_sz) (*this)().Delay().To_str());
+
+	return this->Wait(this->m_event(), false);
+}
+
+err_code CTstAwait::Wait (const CEvent& _evt_extern, const bool _cls_output/* = false*/) {
+	_evt_extern; _cls_output;
+	if (_cls_output)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed((*this)().Event().Dup(_evt_extern))) { _out() += (*this)().Event().Error(); return (*this)().Event().Error(); } // this is direct call;
+	else _out() += TString().Format(_T("The external event '%s' is duplicated by '%s';"), _evt_extern.Name(), (*this)().Event().Name());
 
 	if (false == (*this)().Is_valid()) { _out() += (*this)().Error(); return (*this)().Error(); } // this is direct call;
 	else _out() += TString().Format(_T("[impt] The await object is ready;"));
@@ -106,7 +115,7 @@ CEvent& CTstEvent::operator ()(void)       { return this->m_event; }
 
 err_code CTstListener::GenEvt_OnNotify (const _long n_evt_id) {
 	n_evt_id;
-	_out() += TString().Format(_T("[warn] cls::[%s].%s():#n_evt_id = %u"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, n_evt_id);
+	_out() += TString().Format(_T("[impt] cls::[%s].%s():#n_evt_id = %u"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, n_evt_id);
 
 	return __s_ok;
 }
