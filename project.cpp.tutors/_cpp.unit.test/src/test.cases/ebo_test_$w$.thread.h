@@ -33,6 +33,7 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		   the result: and the test case is successfully completed;
 		*/
 		__method (Run);
+		__method (Run_on_signal); // uses other function that connect two events together for waiting on change the state of one of them;
 		// starts the crt thread by connecting delay object with fake event, after delay finishes,
 		// the worker thread is forced to stop, regardless the thread procedure completeness;
 		__method (Start);
@@ -54,7 +55,7 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 
 		__method (Create);
 		__method (Destroy);
-		__method (Signaled);
+		__method (Signal);
 
 	private:
 		c_event& operator = (const c_event&) = delete; c_event& operator = (c_event&&) = delete;

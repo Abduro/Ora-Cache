@@ -14,6 +14,8 @@
     <ClCompile Include="$(_1)run.base.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)run.event.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)run.event.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)runner.bas.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)runner.bas.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)runner.crt.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)runner.crt.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)runner.tpl.h"><Filter>interface</Filter></ClInclude>

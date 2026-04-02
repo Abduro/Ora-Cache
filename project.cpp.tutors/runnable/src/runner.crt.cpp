@@ -11,6 +11,7 @@
 #include "shared.dbg.h"
 
 using namespace shared::runnable;
+using e_state = TThreadState::e_state;
 
 namespace shared { namespace runnable { namespace _impl
 {
@@ -49,41 +50,35 @@ using namespace shared::runnable::_impl;
 
 #pragma region cls::CCrtRunner{}
 
-CCrtRunner::CCrtRunner (TRunnableFunc func, IEventNotify& sink_ref, const _variant_t& v_evt_id):
-	m_notifier(sink_ref, v_evt_id), m_hThread(0), m_bStopped(true), m_function(func) {
+CCrtRunner::CCrtRunner (TRunnableFunc func, IEventNotify& sink_ref, const _variant_t& v_evt_id) : TBase(),
+	m_notifier(sink_ref, v_evt_id), m_hThread(0), m_function(func) {
 
 	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: c-runtime thread is not created");
-
-	if (__succeeded(this->m_event.Create()))
-		this->m_event.Signaled(true); // means the work thread is not started yet;
+	if ((*this)().Event().Error())
+		this->m_error = (*this)().Event().Error();
+#if (0)
+	else // it is wrong assumption the event must be set to signal state exactly before starting the thread;
+		(*this)().Event() << true; // means the work thread is not started yet due to is create as suspended, thus the event object must be in signal state;
+#endif
 }
 
-CCrtRunner::~CCrtRunner(void) { if (this->IsRunning()) this->Stop(true); this->m_event.Destroy(); }
+CCrtRunner::~CCrtRunner(void) { if ((*this)().Is_running()) this->Stop(true);}
 
-TError& CCrtRunner::Error (void) const { return this->m_error; }
-const
-CEvent& CCrtRunner::Event (void) const { return this->m_event; }
-CEvent& CCrtRunner::Event (void)       { return this->m_event; }
-
-CMarshaller&
-     CCrtRunner::Notifier (void)        { return m_notifier; }
-bool CCrtRunner::IsRunning (void) const { return m_hThread && false == m_bStopped; }
-bool CCrtRunner::IsStopped (void) const { return m_bStopped;  }
-void CCrtRunner::MarkCompleted (void)   { this->m_event.Signaled(true); }
+CMarshaller& CCrtRunner::Notifier (void) { return m_notifier; }
 
 err_code CCrtRunner::Start (const TRunPriority ePriority) {
 	ePriority;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (false == this->m_event.Is_valid())
-		return this->m_error = this->m_event.Error();
+	if (false == (*this)().Event().Is_valid())    // current state of the thread may be in error state, only validity the event object is important;
+		return this->m_error = (*this)().Event().Error();
 
-	if (false == IsStopped())
+	if ((*this)().Is_running())
 		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is already started");
 
 	// if the worker thread was previously started, but somehow the thread handle is not cleared; to-do: it must be checked;
 	if (this->m_hThread) {
-		if (false == !!::CloseHandle(this->m_hThread))
+		if (false == !!::CloseHandle(this->m_hThread)) 
 			return this->m_error.Last();
 		else
 			this->m_hThread = nullptr;
@@ -91,39 +86,45 @@ err_code CCrtRunner::Start (const TRunPriority ePriority) {
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex << contains the example of symbol output to console;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/standard-types << data type of returned value is 'uintptr_t';
 	this->m_hThread = reinterpret_cast<HANDLE>(::_beginthreadex(0, 0, m_function, this, CREATE_SUSPENDED, 0));
-	if (0 == m_hThread || __e_handle == m_hThread)
-		return this->m_error << __e_no_memory = _T("#__e_fail: cannot create c-runtime thread");
-
-	this->m_bStopped = false;
-	this->m_event << false;    // sets the event to nonsignal state, i.e. worker thread wiil be able to start its job;
+	if (0 == m_hThread || __e_handle == m_hThread) {
+		return (*this)() << (this->m_error << __e_no_memory = _T("#__e_fail: cannot create c-runtime thread")); // sets the current state to error;
+	}
 #if (1)
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthread ;
 	HANDLE hThread = ::OpenThread(THREAD_SET_INFORMATION, false, ::GetThreadId(this->m_hThread));
-	if (nullptr == hThread)
+	if (nullptr == hThread) {
 		this->m_error.Last();
+		this->m_error = TString().Format(_T("Open thread to set info is failed: %s"), this->m_error.Desc());
+		__trace_err_ex_3(this->Error());
+	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority ;
 	else if (0 == ::SetThreadPriority(hThread, _impl::Runner_RunPriorityToDword(ePriority))) {
 		this->m_error.Last();
 		this->m_error = TString().Format(_T("Set priority failed: %s"), this->m_error.Desc());
 		__trace_err_ex_3(this->Error());
-		this->m_error << __s_ok; // the error is sent to debug trace, its state should be restored to 'no error', because the thread is created;
 	}
 	if (nullptr != hThread) {
 		::CloseHandle(hThread); hThread = nullptr;
 	}
-	
 	/* https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadinformation ;
 	   https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadinformation ;
 	   https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-memory_priority_information ; 
 	   https://stackoverflow.com/questions/70798334/getthreadinformation-fails ;
 	*/
+	this->m_error << __s_ok; // the error is sent to debug trace, its state should be restored to 'no error', because the thread is created;
 #endif
 	// prepares marshaller object for sending notification(s);
 	if (__failed(this->m_notifier.Create()))
-		return this->m_error = this->m_notifier.Error();
+		return this->m_error = this->m_notifier.Error(); // this error doesn't affect the state object because the notifier is not part of this class;
+	else
+		(*this)().Event() << false; // the event is set to unsignal state for allowing the thread runs its worker procedure;
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread ;
-	if ((dword)-1 == ::ResumeThread(this->m_hThread))
-		this->m_error.Last();
+	if ((dword)-1 == ::ResumeThread(this->m_hThread)) {
+		  this->m_error.Last();
+		(*this)() << this->Error();     // sets the current state to error;
+	} else
+		(*this)() << e_state::eWorking; // it looks good;
 
 	return this->Error();
 }
@@ -132,28 +133,29 @@ err_code CCrtRunner::Stop (const bool bForced) {
 	bForced;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (true == this->IsStopped())
+	if (true == (*this)().Is_stopped())
 		return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: thread is not running");
 
-	this->m_bStopped = true;
+	(*this)().Event() << true; // sets the event object to the signal state;
 
 	if (__failed(this->m_notifier.Destroy()))
 		return this->m_error = this->m_notifier.Error();
 	// if the input flag 'bForced' is set to 'true' that means the event object is not set to signaled state by the worker thread yet;
 	// otherwise, it is expected the thread has already made its job and has set the event to signal state;
 	if (bForced) {
-		if (__failed(_impl::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error)))
+		if (__failed(_impl::Runner_ForceToTerminate((*this)().Event(), m_hThread, this->m_error)))
 			return this->Error();
 	}
 	else {
 		uint32_t cnt_ = 0;
-		while (false == this->m_event.Wait(200)) { // the hardcoded value of the wait timeout possibly must be reviewed;
+		while (false == (*this)().Event().Wait(200)) { // the hardcoded value of the wait timeout possibly must be reviewed;
 			cnt_ ++;
 			if (cnt_ > 10) { // anti-blocker, actually should never happen;
-				return _impl::Runner_ForceToTerminate(this->m_event, m_hThread, this->m_error);
+				return _impl::Runner_ForceToTerminate((*this)().Event(), m_hThread, this->m_error);
 			}
 		}
 	}
+	(*this)() << e_state::eStopped;
 	/* https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex
 	   the excerpt from the above article:
 	   therefore, when you use _beginthreadex and _endthreadex, you must close the thread handle by calling the Win32 CloseHandle...;

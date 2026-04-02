@@ -212,6 +212,8 @@
     <ClCompile Include="$(_1)run.base.cpp"/>
     <ClInclude Include="$(_0)run.event.h"/>
     <ClCompile Include="$(_1)run.event.cpp"/>
+    <ClInclude Include="$(_0)runner.bas.h"/>
+    <ClCompile Include="$(_1)runner.bas.cpp"/>
     <ClInclude Include="$(_0)runner.crt.h"/>
     <ClCompile Include="$(_1)runner.crt.cpp"/>
     <ClInclude Include="$(_0)runner.tpl.h"/>

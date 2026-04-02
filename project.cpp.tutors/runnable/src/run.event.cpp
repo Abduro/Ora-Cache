@@ -93,23 +93,25 @@ bool  CEvent::Is_valid (const bool _b_set_error/* = false*/) const {
 
 _pc_sz CEvent::Name (void) const { return this->m_name.GetString(); }
 
-bool  CEvent::Is_signaled (void) const { return this->Wait(0); }
+bool  CEvent::Is_signal (void) const { return this->Wait(0); }
 
-err_code CEvent::Signaled (const bool _yes_or_no) {
+err_code CEvent::Signal (const bool _yes_or_no) {
 	_yes_or_no;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false == this->Is_valid())
 		return this->m_error <<__e_not_inited = _T("#__e_not_inited: event object is not created yet");
 
-	const bool b_signaled = this->Is_signaled();
+	const bool b_signal = this->Is_signal();
 	if (this->Error())
 		return this->Error();
 
-	if (true == b_signaled && true == _yes_or_no)
-		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: the event is already set to signaled state");
-	if (false == b_signaled && false == _yes_or_no)
-		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: the event is already set to nonsignaled state");
+	if (true == b_signal && true == _yes_or_no)
+//		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: the event is already set to signal state");
+		return this->Error();
+	if (false == b_signal && false == _yes_or_no)
+//		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: the event is already set to nonsignal state");
+		return this->Error();
 
 	if (_yes_or_no) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent ;
@@ -139,7 +141,7 @@ bool CEvent::Wait (const uint32_t _u_timeout) const {
 	return (WAIT_OBJECT_0 == n_result);
 }
 
-CEvent& CEvent::operator <<(const bool _yes_or_no) { this->Signaled(_yes_or_no); return *this; }
+CEvent& CEvent::operator <<(const bool _yes_or_no) { this->Signal(_yes_or_no); return *this; }
 CEvent& CEvent::operator <<(const HANDLE _h_event) { this->Dup(_h_event, ::GetCurrentProcess()); return *this; }
 CEvent& CEvent::operator <<(const CEvent& _event ) { (*this) << _event(); return *this; }
 const
@@ -434,7 +436,7 @@ bool    CAwait::Is_valid (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (false == this->Delay().Is_valid()) return false == (this->m_error = this->Delay().Error());
-	if (false == this->Event().Is_valid(true)) return false == (this->m_error = this->Delay().Error()); // the error is required if event object is invalid;
+	if (false == this->Event().Is_valid(true)) return false == (this->m_error = this->Event().Error()); // the error is required if event object is invalid;
 
 	return false == this->Error();
 }
@@ -443,11 +445,39 @@ err_code CAwait::Wait (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	if (false == this->Is_valid()) return this->Error();
 
-	while (this->Event().Is_signaled()) {
+	while (this->Event().Is_signal()) {
 		this->Delay().Wait();
 
 		if (this->Delay().Elapsed())
 			this->Delay().Reset();
+	}
+
+	return this->Error();
+}
+
+err_code CAwait::Wait (const CEvent& _on_signal_from, const uint32_t _u_timeout) {
+	_on_signal_from; _u_timeout;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Event().Is_valid(true)) return false == (this->m_error = this->Event().Error());
+	if (false == _on_signal_from.Is_valid(true)) return false == (this->m_error = _on_signal_from.Error());
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-signalobjectandwait ;
+	// note: the 'signal' and 'wait' are not guaranteed to be performed as an atomic operation;
+
+	static const err_code err_state = (err_code)TErrCodes::eExecute::eState;
+
+	/* https://learn.microsoft.com/en-us/windows/win32/sync/event-objects ; 
+	   manually reset events must be set to required state before calling this fuction:
+	   the event being waiting for other event must be set in signaled state first;
+	*/
+	switch (::SignalObjectAndWait(this->Event()(), _on_signal_from(), _u_timeout, false))
+	{
+	case WAIT_ABANDONED    : this->m_error << err_state = _T("#__e_abandoned: mutex object is not released"); break;
+	case WAIT_IO_COMPLETION: this->m_error << err_state = _T("#__e_state: APC is queued to the thread"); break;
+	case WAIT_TIMEOUT      : this->m_error << __s_false =  TString().Format(_T("#__e_warn: time-out interval (%d) is elapsed"), _u_timeout); break;
+	case WAIT_FAILED       : this->m_error.Last(); break;
+	case WAIT_OBJECT_0     : default:; // looks like good;
 	}
 
 	return this->Error();

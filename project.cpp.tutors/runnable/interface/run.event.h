@@ -21,6 +21,16 @@ namespace shared { namespace runnable {
 		virtual err_code  GenEvt_OnNotify (const _long n_evt_id, const _variant_t v_data) { n_evt_id; v_data; return __e_not_impl; }
 		virtual err_code  GetEvt_OnNotify (const _long n_evt_id, const CString  _cs_data) { n_evt_id, _cs_data; return __e_not_impl; }
 	};
+
+	class CEventNotify : public IEventNotify {
+	public:
+		 CEventNotify (void) = default; CEventNotify (const CEventNotify&) = default; CEventNotify (CEventNotify&&) = default;
+		~CEventNotify (void) = default;
+	public:
+		 CEventNotify& operator = (const CEventNotify&) = default;
+		 CEventNotify& operator = (CEventNotify&&) = default;
+	};
+
 	/* this class is for managing a thread procedure: to start or to stop it;
 	*/
 	class CEvent {
@@ -38,12 +48,12 @@ namespace shared { namespace runnable {
 		bool  Is_valid (const bool _b_set_error = false) const; // sets error object if not valid for test cases if necessary;
 
 		_pc_sz   Name (void) const;
-		bool  Is_signaled (void) const;
-		err_code Signaled (const bool _yes_or_no);   // sets this event state to signaled or to non-signaled;
+		bool  Is_signal (void) const;
+		err_code Signal (const bool _yes_or_no);     // sets this event state to signal or to nonsignal;
 
 		bool Wait (const uint32_t _u_timeout) const; // returns 'true' if the waiting operation succeeds (WAIT_OBJECT_0) after specified timeout (msec);
 
-		CEvent& operator <<(const bool _yes_or_no);  // sets this event state to signaled or to non-signaled;
+		CEvent& operator <<(const bool _yes_or_no);  // sets this event state to signal or to nonsignal;
 		CEvent& operator <<(const CEvent&);          // duplicates the event handle of input event object for *this* process;
 		CEvent& operator <<(const HANDLE _h_event);  // duplicates the given event handle for *this* process;
 		const
@@ -148,6 +158,7 @@ namespace shared { namespace runnable {
 		bool  Is_valid (void) const;
 
 		err_code Wait  (void) ;
+		err_code Wait  (const CEvent& _on_signal_from, const uint32_t _u_timeout); // waits on input event until it is signaled; 
 
 		CAwait&  operator <<(const CDelay&);
 		CAwait&  operator <<(const CEvent&);

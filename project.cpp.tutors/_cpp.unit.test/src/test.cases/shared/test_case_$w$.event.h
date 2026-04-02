@@ -22,7 +22,7 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 
 		err_code Create (void);
 		err_code Destroy (void);
-		err_code Signaled (const bool _b_on_off);
+		err_code Signal (const bool _b_on_off);
 
 		const
 		CEvent& operator ()(void) const;
@@ -39,7 +39,12 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		~CTstAwait (void); // the destructor is necessary for output that the encapsulated object(s) is destroyed too;
 
 		err_code Wait (const uint32_t _u_frame, const uint32_t _u_slice);  // works with internal event object and uses input params to set delay object;
-		err_code Wait (const CEvent& _evt_extern, const bool _cls_output = false); // is intended for working with c-runtime thead event object; 
+		err_code Wait (const CEvent& _evt_extern, const bool _cls_output = false); // is intended for working with c-runtime thead event object;
+		/*
+		this test case *cannot* be used because it block the main thread for waiting the thread execution completeness,
+		but thread function tries to send notifications to listener:  *deadlock*;
+		*/
+		err_code Wait_on_signal (const CEvent& _signal_from, const uint32_t _e_timeout, const bool _cls_output);
 
 		const
 		CAwait& operator ()(void) const;

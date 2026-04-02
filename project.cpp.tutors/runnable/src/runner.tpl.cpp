@@ -3,45 +3,94 @@
 	This is Shared Lite library system thread pool related class(s) implementation file.
 */
 #include "runner.tpl.h"
-#include "shared.preproc.h"
-#include "shared.dbg.h"
 
-using namespace shared::runnable::threads;
-using e_state = CState::e_state;
+using namespace shared::runnable::threads::pool;
+using e_state = TThreadState::e_state;
 
-#pragma region cls::CBase{}
+#pragma region cls::CThreadPool{}
 
-CBase:: CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-CBase::~CBase (void) { if ((*this)().Is_running()) this->Stop(); }
+template <typename T>
+int CThreadPool::QueueUserWorkItem (void (T::*pfn)(void),  T* pObject, ULONG flags/* = CThreadType::eLongOper*/) {
+	pObject; flags;
+	typedef std::pair<void (T::*)(), T*> CallbackType;
+	::std::unique_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
+	if (::QueueUserWorkItem(ThreadProc<T>, ptr_.get(), flags)) {
+		ptr_.release(); // the ownership of the encapsulated pointer is assigned to system procedure;
+		return true;
+	} else
+		return false;
+}
 
-err_code CBase::Start (void) {
-	this->m_error <<__METHOD__<<__s_ok;
+template <typename T>
+int CThreadPool::QueueUserWorkItemEx (void (T::*pfn)(T*), T* pObject, ULONG flags/* = CThreadType::eLongOper*/) {
+	pObject; flags;
+	typedef std::pair<void (T::*)(T*), T*> CallbackType;
+	::std::unique_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
+
+	if (::QueueUserWorkItem(ThreadProcEx<T>, ptr_.get(), flags)) {
+		ptr_.release(); // the ownership of the encapsulated pointer is assigned to system procedure;
+		return true;
+	}
+	else
+		return false;
+}
+
+template <typename T>
+dword CThreadPool::ThreadProc(void* _p_context) {
+	_p_context;
+	typedef std::pair<void (T::*)(), T*> CallbackType;
+
+	::std::unique_ptr<CallbackType> ptr_(static_cast<CallbackType*>(_p_context));
+
+	(ptr_->second->*ptr_->first)();
+	return 0;
+}
+
+template <typename T>
+dword CThreadPool::ThreadProcEx(void* _p_context) {
+	_p_context;
+	typedef std::pair<void (T::*)(T*), T*> CallbackType;
+
+	::std::unique_ptr<CallbackType> ptr_(static_cast<CallbackType*>(_p_context));
+
+	(ptr_->second->*ptr_->first)(ptr_->second);
+	return 0;
+}
+
+#pragma endregion
+#pragma region cls::CThread{}
+
+CThread:: CThread (void) : TBase() { TBase::m_error >> TString().Format(_T("%s::%s"), TBase::Cls_name(), (_pc_sz)__CLASS__); }
+CThread::~CThread (void) { if ((*this)().Is_running()) this->Stop(); }
+
+err_code CThread::Start (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (true == (*this)().Is_running()) {
-		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: worker thread is already running");
+		return TBase::m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: worker thread is already running");
 	}
 
 	(*this)().Event() << false; // sets the event to nonsignal state before running a worker thread;
 
-	if (false == !!CThreadPool::QueueUserWorkItem(&CBase::ThreadFunction, this)) {
-		this->m_error.Last(); (*this)() << this->Error(); // updates the current state value;
+	if (false == !!CThreadPool::QueueUserWorkItem(&CThread::ThreadFunction, this)) {
+		TBase::m_error.Last(); (*this)() << TBase::Error(); // updates the current state value;
 	}
 	else {
 		(*this)() << e_state::eWorking;
 	}
-	return this->Error();
+	return TBase::Error();
 }
 
-err_code CBase::Stop (void) {
-	this->m_error <<__METHOD__<<__s_ok;
+err_code CThread::Stop (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (false == (*this)().Is_running()) { // Is_stopped() is not used here because it queries event object, thus evaluating current state is enough;
-		return this->m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: worker thread is not running");
+		return TBase::m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: worker thread is not running");
 	}
 
 	const bool b_result = (*this)().Is_stopped();
 	if ((*this)().Error())
-		this->m_error = (*this)().Error();
+		TBase::m_error = (*this)().Error();
 	
 	else if (b_result) { /*does nothing*/ }
 	else { // what is about the case when b_result == false and no error? it needs more clarification, in such case there is nether eError nor eStopped;
@@ -49,65 +98,7 @@ err_code CBase::Stop (void) {
 		__trace_err_3(unk_err); // just trace, no error assigning to this method;
 	}
 
-	return this->Error();
+	return TBase::Error();
 }
-
-bool CBase::Is_valid (void) const {
-
-	if ((*this)().Is_valid() == false)
-		return true != (this->m_error = (*this)().Error()); // the error is set to error state that means it returns 'true' != 'true' >> false;
-	else
-		return false == this->Error(); // if this error is *not* set to error state, it returns 'false' == 'false' >> result 'true';
-}
-
-const
-CState&  CBase::State (void) const { return this->m_state; }
-CState&  CBase::State (void)       { return this->m_state; }
-
-#pragma endregion
-#pragma region cls::CState{}
-
-CState::CState (void) : m_state(e_state::eStopped) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-TError& CState::Error (void) const { return this->m_error; }
-
-e_state CState::Get (void) const {
-
-	Safe_Lock (this->m_lock);
-	const
-	e_state e_loc = this->m_state; // makes a local copy;
-	return  e_loc;
-}
-bool CState::Set (const e_state _e_current) {
-	Safe_Lock(this->m_lock);
-	const bool b_changed = _e_current != this->Get(); if (b_changed) this->m_state = _e_current; return b_changed;
-}
-
-bool CState::Is_completed (void) const { Safe_Lock(this->m_lock);
-	const bool b_result = (*this)().Wait(0);
-
-	if ((*this)().Error())
-		this->m_error = (*this)().Error();
-	else if (b_result)
-		this->m_state = e_state::eCompleted;
-
-	return b_result;
-}
-
-bool CState::Is_error (void) const { return this->Error().Is() ? (this->m_state = e_state::eError) : this->Get(); }
-
-bool CState::Is_running   (void) const { return this->Get() == e_state::eWorking; }
-bool CState::Is_stopped   (void) const { Safe_Lock(this->m_lock);
-	const bool b_result = (*this)().Wait(INFINITE); // waiting for infinity looks not so good, perhaps a timeout must be defined or be set;
-
-	if ((*this)().Error())
-		this->m_error = (*this)().Error();
-	else if (b_result)
-		this->m_state = e_state::eStopped;
-
-	return b_result;
-}
-
-CState::operator uint32_t (void) const { return this->Get(); }
 
 #pragma endregion

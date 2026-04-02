@@ -10,10 +10,14 @@
 #include <memory>     // for using smart-pointers, such as unique_ptr;
 #include <typeinfo>   // ::std::bad_alloc;
 #include "sys.sync_obj.h"
+#include "shared.preproc.h"
+#include "shared.dbg.h"
 
 namespace shared { namespace runnable {
 
 	using namespace shared::defs;
+	using CLocker = shared::sys_core::CSyncObject;
+
 	using d_word = dword ;  // ToDo: typedefs and usings must be made coincident with shared::types;
 
 	struct c_unknown {
