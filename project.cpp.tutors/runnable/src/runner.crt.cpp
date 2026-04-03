@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 1-May-2012 at 11:31:40am, GMT+3, Rostov-on-Don, Tuesday;
-	This is Pulsepay Server Application Runnable Object class implementation file.
+	This is Pulsepay server c-runtime thread runnable object interface implementation file.
 	-----------------------------------------------------------------------------
 	Adopted to Platinum Clocking project on 19-Mar-2014 at 11:25:35am, GMT+3, Taganrog, Wednesday;
 	Adopted to E-Opinion project on 8-May-2014 at 7:31:17am, GMT+3, Saint-Petersburg, Thursday;

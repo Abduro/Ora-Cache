@@ -9,7 +9,8 @@
 namespace shared { namespace runnable { namespace threads { using namespace shared::runnable;
 
 	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms686736(v=vs.85) << definition of thread callback (legacy but still valid);
-	typedef unsigned long (__stdcall *pfn_Runnable)(void*);
+	typedef unsigned long (__stdcall *pfn_Run_with_data)(void*);   // functiom with ptr to input data;
+	typedef unsigned long (__stdcall *pfn_Runnable_void)(void );   // function with no parameter;
 
 	/*important: the error of thread state can be set only the following cases:
 	(1) the system function that starts a thread throws an error; e.g. _beginthreadex();
@@ -18,7 +19,13 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 	*/
 	class CState {
 	public:
-		 enum e_state : uint32_t { eStopped = 0x0, eCompleted, eError, eWorking };
+		 enum e_state : uint32_t {
+		 /* element of enum    | functions responsible for status change 
+		 ----------------------+---------------------------------------*/
+			 eStopped   = 0x0, // *runner::Stop();
+			 eError     = 0x2, // *runner::Stop()/Start();
+			 eWorking   = 0x4, // *runner::Start();
+		 };
 		 CState (void); CState (const CState&) = delete; CState (CState&&) = delete;
 		~CState (void);
 
@@ -30,12 +37,11 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 		e_state  Get (void) const;      // returns currently set state value;
 		bool     Set (const e_state);   // returns 'true' in case of state value change; this is direct set of the value;
 
-		bool Is_completed (void) ;      // queries the event object for its signal state and changing the current state value appropriately;
 		bool Is_error     (void) ;      // returns result in accordance with current state of the error object;
 		bool Is_running   (void) const;
 #if (0) // *important*: getting a query must "not" change the value of the current state;
 		bool Is_stopped   (void) ;      // queries the event object for its signal state and changing the current state value appropriately;
-#else
+#else   // changing value of the status to 'stopped' is the care of thread function 'stop';
 		bool Is_stopped   (void) const; // checks only the current state, there is no query to event object;
 		bool Is_stopped   (const bool); // sets current state to stopped; there is no query to event object; returns 'true' if state is changed;
 #endif

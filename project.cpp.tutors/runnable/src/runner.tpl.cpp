@@ -58,12 +58,12 @@ dword CThreadPool::ThreadProcEx(void* _p_context) {
 }
 
 #pragma endregion
-#pragma region cls::CThread{}
+#pragma region cls::CTplRunner{}
 
-CThread:: CThread (void) : TBase() { TBase::m_error >> TString().Format(_T("%s::%s"), TBase::Cls_name(), (_pc_sz)__CLASS__); }
-CThread::~CThread (void) { if ((*this)().Is_running()) this->Stop(); }
+CTplRunner:: CTplRunner (void) : TBase() { TBase::m_error >> TString().Format(_T("%s::%s"), TBase::Cls_name(), (_pc_sz)__CLASS__); }
+CTplRunner::~CTplRunner (void) { if ((*this)().Is_running()) this->Stop(); }
 
-err_code CThread::Start (void) {
+err_code CTplRunner::Start (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (true == (*this)().Is_running()) {
@@ -72,7 +72,7 @@ err_code CThread::Start (void) {
 
 	(*this)().Event() << false; // sets the event to nonsignal state before running a worker thread;
 
-	if (false == !!CThreadPool::QueueUserWorkItem(&CThread::ThreadFunction, this)) {
+	if (false == !!CThreadPool::QueueUserWorkItem(&CTplRunner::Run_Func, this)) {
 		TBase::m_error.Last(); (*this)() << TBase::Error(); // updates the current state value;
 	}
 	else {
@@ -81,24 +81,28 @@ err_code CThread::Start (void) {
 	return TBase::Error();
 }
 
-err_code CThread::Stop (void) {
+err_code CTplRunner::Stop (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (false == (*this)().Is_running()) { // Is_stopped() is not used here because it queries event object, thus evaluating current state is enough;
 		return TBase::m_error <<(err_code) TErrCodes::eExecute::eState = _T("#__e_inv_state: worker thread is not running");
 	}
-
-	const bool b_result = (*this)().Is_stopped();
-	if ((*this)().Error())
-		TBase::m_error = (*this)().Error();
-	
-	else if (b_result) { /*does nothing*/ }
-	else { // what is about the case when b_result == false and no error? it needs more clarification, in such case there is nether eError nor eStopped;
-		CError unk_err; unk_err >>__CLASS__<<__METHOD__<<__e_not_expect  = _T("#__e_unexpect: thread stop error is unknown");
-		__trace_err_3(unk_err); // just trace, no error assigning to this method;
-	}
+	(*this)().Is_stopped(true);        // lets to 'know' to thread procedure to complete its work;
+	(*this)().Event().Wait(dword(-1)); // waits the event state to be signaled by thread procedure;
 
 	return TBase::Error();
+}
+
+void CTplRunner::Run_Func (void) {
+
+	CDelay delay(10, 100);
+
+	while (false == (*this)().Is_stopped()) {
+		delay.Wait();
+		if (delay.Elapsed())
+			break;
+	}
+	(*this)().Event() << true; // sets the event to signal state, i.e. the job is done;
 }
 
 #pragma endregion

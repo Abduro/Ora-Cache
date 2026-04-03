@@ -43,19 +43,24 @@ namespace shared { namespace runnable { namespace threads { namespace pool { usi
 		template <typename T>
 		static dword __stdcall ThreadProcEx(void* _p_context);
 	};
-
+	/* https://learn.microsoft.com/en-us/windows/win32/procthread/thread-pooling ;
+	   the excerpt from above article: ...There is no way to cancel a work item after it has been queued...;
+	*/
 	using CState = TThreadState;
-	class CThread : public TThreadBase { typedef TThreadBase TBase;
+	class CTplRunner : public TThreadBase { typedef TThreadBase TBase;
 	public:
-		 CThread (void); const CThread (const CThread&) = delete; CThread (CThread&&) = delete;
-		~CThread (void);
+		 CTplRunner (void); const CTplRunner (const CTplRunner&) = delete; CTplRunner (CTplRunner&&) = delete;
+		~CTplRunner (void);
 		
 		err_code  Start (void);
-		err_code  Stop  (void);
+		err_code  Stop  (void); // in order to stop the work item thread procedure execution there is only way: to use event and interrupt flag;
+
+	protected:
+		virtual void Run_Func (void); // this is default implementation of the thread function;
 
 	private:
-		CThread& operator =  (const CThread&) = delete; CThread& operator = (CThread&&) = delete;
-		virtual void ThreadFunction (void) = 0 ; // derived class must provide thread function implementation;
+		CTplRunner& operator =  (const CTplRunner&) = delete; CTplRunner& operator = (CTplRunner&&) = delete;
+		
 	};
 }}}}
 

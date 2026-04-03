@@ -4,7 +4,7 @@
 */
 #include "ebo_test_$w$.thread.h"
 
-using namespace ebo::boo::test::thread;
+using namespace ebo::boo::test::threads;
 
 #pragma region cls::c_await{}
 
@@ -29,8 +29,8 @@ void c_crt_runner::Run (void) {
 	const uint32_t u_time_slice = 100;
 
 	// (1) crt runner object is already created in constructor of this class;
-	CTstRunner& crt_runner = (*this)();
-	// (2) creating the await object in order to make main thread of test case waiting the completness of worker thread procedure;
+	CTstCrtRunner& crt_runner = (*this)();
+	// (2) creating the await object in order to make main thread of test case waiting for the completness of worker thread procedure;
 	CTstAwait await_obj;
 	await_obj().Delay().Reset(u_time_slice, u_time_frame); // no check for the error, it is done in wait() operation;
 
@@ -53,7 +53,7 @@ void c_crt_runner::Run_on_signal (void) {
 
 	const uint32_t u_timeout = 1000;
 	// (1) crt runner object is already created in constructor of this class;
-	CTstRunner& crt_runner = (*this)();
+	CTstCrtRunner& crt_runner = (*this)();
 	// (2) creating the await object in order to make main thread of test case waiting the completness of worker thread proc;
 	CTstAwait await_obj;
 	// (3) starting the work thread, the awaiting object delays its execution till the work thread gets its job done;
@@ -85,8 +85,8 @@ void c_crt_runner::Stop (void) {
 }
 
 const
-CTstRunner& c_crt_runner::operator ()(void) const { return this->m_crt_run; }
-CTstRunner& c_crt_runner::operator ()(void)       { return this->m_crt_run; }
+CTstCrtRunner& c_crt_runner::operator ()(void) const { return this->m_crt_run; }
+CTstCrtRunner& c_crt_runner::operator ()(void)       { return this->m_crt_run; }
 
 #pragma endregion
 #pragma region cls::c_event{}
@@ -150,5 +150,46 @@ void c_marshaller::Notify (void) {
 
 	_out()();
 }
+
+#pragma endregion
+#pragma region cls::c_tpl_runner
+
+void c_tpl_runner::Run (void) {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	const uint32_t u_time_frame = 1000;
+	const uint32_t u_time_slice = 100;
+
+	// (1) tpl runner local object;
+	CTstTplRunner& tpl_runner = (*this)();
+	// (2) creating the await object in order to make main thread of test case waiting for the completness of worker thread procedure;
+	CTstAwait await_obj;
+	await_obj().Delay().Reset(u_time_slice, u_time_frame); // no check for the error, it is done in wait() operation;
+
+	// (3) starting the work thread, the awaiting object delays its execution till the work thread gets its job done;
+	if (__failed(tpl_runner.Start())) { _out()(); return; } // the thread starting is failed, the tast case is not passed;
+
+	// (4) connecting the event object of the crt runner with the event of the await object by duplicating;
+	if (__failed(await_obj.Wait(tpl_runner()().Event(), false))) {
+		tpl_runner()().Event() << true; // the worker thread must be stopped anyway;
+	} else {
+	// (5) at the end of the thread proc, the runner is notified about the job done and sets the event to signal state;
+	}
+	// (6) the awaiting object completes its work;
+	_out() += _T("[impt] result: worker thread is completed its job;");
+	_out()();
+}
+
+void c_tpl_runner::Start (void) {
+	(*this)().Start(); _out()();
+}
+
+void c_tpl_runner::Stop (void) {
+	(*this)().Stop();_out()();
+}
+
+const
+CTstTplRunner& c_tpl_runner::operator ()(void) const { return this->m_tpl_run; }
+CTstTplRunner& c_tpl_runner::operator ()(void)       { return this->m_tpl_run; }
 
 #pragma endregion

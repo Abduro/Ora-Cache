@@ -2,7 +2,7 @@
 #define _RUNNER_CRT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 1-May-2012 at 11:18:24am, GMT+3, Rostov-on-Don, Tuesday;
-	This is Pulsepay Server Application Runnable Object class delaration file.
+	This is Pulsepay server c-runtime thread runnable object interface declaration file.
 	-----------------------------------------------------------------------------
 	Adopted to Platinum Clocking project on 19-Mar-2014 at 11:21:09am, GMT+3, Taganrog, Wednesday;
 	Adopted to E-Opinion project on 8-May-2014 at 7:28:02am, GMT+3, Saint-Petersburg, Thursday;

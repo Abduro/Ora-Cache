@@ -14,6 +14,23 @@
 using namespace shared::runnable;
 using namespace shared::sys_core;
 
+namespace shared { namespace runnable { namespace _impl {
+
+	TError&  __wait_to_err (const dword _wait_result, const uint32_t _u_timeout, CError& _err) {
+		_wait_result; _err;
+		switch (_wait_result)
+		{
+		case WAIT_ABANDONED    :(_err = _wait_result) = _T("#__e_abandoned: mutex object is not released"); break;
+		case WAIT_IO_COMPLETION:(_err = _wait_result) = _T("#__e_state: APC is queued to the thread"); break;
+		case WAIT_TIMEOUT      : _err << __s_false =  TString().Format(_T("#__e_warn: time-out interval (%d) is elapsed"), _u_timeout); break;
+		case WAIT_FAILED       : _err.Last(); break;
+		case WAIT_OBJECT_0     : default:; // it looks like good;
+		}
+		return _err;
+	}
+
+}}}
+
 #pragma region cls::CEvent{}
 
 static uint32_t u_evt_count = 0;
@@ -128,16 +145,12 @@ err_code CEvent::Signal (const bool _yes_or_no) {
 
 bool CEvent::Wait (const uint32_t _u_timeout) const {
 	_u_timeout;
+	this->m_error <<__METHOD__<<__s_ok;
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject ;
 	const dword n_result = ::WaitForSingleObject(this->m_event, _u_timeout);
 
-	switch (n_result) {
-	case WAIT_FAILED   : this->m_error.Last(); break;
-	case WAIT_ABANDONED:
-	case WAIT_TIMEOUT  :
-	case WAIT_OBJECT_0 :
-	default:; // error object is not set, because everything goes by expected way;
-	}
+	::_impl::__wait_to_err(n_result, _u_timeout, this->m_error);
+
 	return (WAIT_OBJECT_0 == n_result);
 }
 
@@ -471,16 +484,8 @@ err_code CAwait::Wait (const CEvent& _on_signal_from, const uint32_t _u_timeout)
 	   manually reset events must be set to required state before calling this fuction:
 	   the event being waiting for other event must be set in signaled state first;
 	*/
-	switch (::SignalObjectAndWait(this->Event()(), _on_signal_from(), _u_timeout, false))
-	{
-	case WAIT_ABANDONED    : this->m_error << err_state = _T("#__e_abandoned: mutex object is not released"); break;
-	case WAIT_IO_COMPLETION: this->m_error << err_state = _T("#__e_state: APC is queued to the thread"); break;
-	case WAIT_TIMEOUT      : this->m_error << __s_false =  TString().Format(_T("#__e_warn: time-out interval (%d) is elapsed"), _u_timeout); break;
-	case WAIT_FAILED       : this->m_error.Last(); break;
-	case WAIT_OBJECT_0     : default:; // looks like good;
-	}
-
-	return this->Error();
+	const dword u_result = ::SignalObjectAndWait(this->Event()(), _on_signal_from(), _u_timeout, false);
+	return ::_impl::__wait_to_err(u_result, _u_timeout, this->m_error);;
 }
 
 CAwait& CAwait::operator <<(const CDelay& _delay) { this->Delay() = _delay; return *this; }

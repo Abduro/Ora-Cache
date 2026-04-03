@@ -5,8 +5,9 @@
 	This is Ebo Pack OpenGL tutorials' thread pool unit test adapter interface declaration file; 
 */
 #include "test_case_$w$.run.crt.h"
+#include "test_case_$w$.run.tpl.h"
 
-namespace ebo { namespace boo { namespace test { namespace thread {
+namespace ebo { namespace boo { namespace test { namespace threads {
 
 	__class (c_await) {
 	public:
@@ -40,12 +41,12 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		__method (Stop);   // this test case tries to stop crt thread that is not started yet; the expected error is handled;
 
 		const
-		CTstRunner& operator ()(void) const;
-		CTstRunner& operator ()(void) ;
+		CTstCrtRunner& operator ()(void) const;
+		CTstCrtRunner& operator ()(void) ;
 
 	private:
 		c_crt_runner& operator = (const c_crt_runner&) = delete; c_crt_runner& operator = (c_crt_runner&&) = delete;
-		CTstRunner m_crt_run;
+		CTstCrtRunner m_crt_run;
 	};
 
 	__class (c_event) {
@@ -74,6 +75,23 @@ namespace ebo { namespace boo { namespace test { namespace thread {
 		c_marshaller& operator = (const c_marshaller&) = delete; c_marshaller& operator = (c_marshaller&&) = delete;
 	};
 
+	__class (c_tpl_runner) {
+	public:
+		 c_tpl_runner (void) = default; c_tpl_runner (const c_tpl_runner&) = delete; c_tpl_runner (c_tpl_runner&&) = delete;
+		~c_tpl_runner (void) = default;
+
+		__method (Run);
+		__method (Start);
+		__method (Stop);
+
+		const
+		CTstTplRunner& operator ()(void) const;
+		CTstTplRunner& operator ()(void) ;
+
+	private:
+		c_tpl_runner& operator = (const c_tpl_runner&) = delete; c_tpl_runner& operator = (c_tpl_runner&&) = delete;
+		CTstTplRunner m_tpl_run;
+	};
 }}}}
 
 #endif/*_EBO_TEST_$W$_THREAD_INCLUDED*/

@@ -245,6 +245,8 @@
     <ClCompile Include="$(_2-0)test_case_$w$.event.cpp" />
     <ClInclude Include="$(_2-0)test_case_$w$.run.crt.h" />
     <ClCompile Include="$(_2-0)test_case_$w$.run.crt.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$w$.run.tpl.h" />
+    <ClCompile Include="$(_2-0)test_case_$w$.run.tpl.cpp" />
     <ClInclude Include="$(_2)ebo_test_$w$.thread.h" />
     <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp" />
   </ItemGroup>

@@ -30,17 +30,6 @@ bool CState::Set (const e_state _e_current) {
 	const bool b_changed = _e_current != this->Get(); if (b_changed) this->m_state = _e_current; return b_changed;
 }
 
-bool CState::Is_completed (void) { Safe_Lock(this->m_lock);
-	const bool b_result = (*this)().Wait(0);
-
-	if ((*this)().Error())
-		this->m_error = (*this)().Error();
-	else if (b_result)
-		this->m_state = e_state::eCompleted;
-
-	return b_result;
-}
-
 bool CState::Is_error (void) { return this->Error().Is() ? (this->m_state = e_state::eError) : this->Get(); }
 
 bool CState::Is_running (void) const { return this->Get() == e_state::eWorking; }

@@ -7,7 +7,7 @@
 #include "ebo_test_$w$.defs.h"
 #include "run.event.h"
 
-namespace ebo { namespace boo { namespace test { namespace thread {
+namespace ebo { namespace boo { namespace test { namespace threads {
 
 	using CAwait = shared::runnable::CAwait;
 	using CDelay = shared::runnable::CDelay;

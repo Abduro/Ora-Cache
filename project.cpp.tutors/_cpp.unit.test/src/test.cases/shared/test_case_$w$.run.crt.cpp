@@ -1,16 +1,15 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Mar-2026 at 12:34:01.536, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' thread pool event wrapper interface implementation file for using in test cases adapters;
+	This is Ebo Pack OpenGL tutorials' c-runtime (CRT) thread runner wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$w$.run.crt.h"
-#include "shared.preproc.h"
 
-using namespace ebo::boo::test::thread;
+using namespace ebo::boo::test::threads;
 
-#pragma region cls::CTstRunner{}
+#pragma region cls::CTstCrtRunner{}
 
-CTstRunner:: CTstRunner (void) : m_runner(CTstRunner::Thread_Func, m_listener, _variant_t(1L)) {}
-CTstRunner::~CTstRunner (void) {
+CTstCrtRunner:: CTstCrtRunner (void) : m_runner(CTstCrtRunner::Thread_Func, m_listener, _variant_t(1L)) {}
+CTstCrtRunner::~CTstCrtRunner (void) {
 	if ((*this)()().Is_running()) { // c-runtime worker thread does it automatically in its destructor, but for test case it is better to check it here;
 		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 		this->Stop(/*_b_forced*/true, /*_cls_output*/false);
@@ -18,7 +17,7 @@ CTstRunner::~CTstRunner (void) {
 	}
 }
 
-err_code CTstRunner::Start (void) {
+err_code CTstCrtRunner::Start (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	if (__failed((*this)().Start())) { _out() += (*this)().Error(); return (*this)().Error(); }
@@ -27,7 +26,7 @@ err_code CTstRunner::Start (void) {
 	return (*this)().Error();
 }
 
-err_code CTstRunner::Stop (const bool _b_forced/* = false*/, bool _cls_output/* = true*/) {
+err_code CTstCrtRunner::Stop (const bool _b_forced/* = false*/, bool _cls_output/* = true*/) {
 	_b_forced; _cls_output;
 	if (_cls_output)
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -40,10 +39,10 @@ err_code CTstRunner::Stop (const bool _b_forced/* = false*/, bool _cls_output/* 
 }
 
 const
-CCrtRunner& CTstRunner::operator ()(void) const { return this->m_runner; }
-CCrtRunner& CTstRunner::operator ()(void)       { return this->m_runner; }
+CCrtRunner& CTstCrtRunner::operator ()(void) const { return this->m_runner; }
+CCrtRunner& CTstCrtRunner::operator ()(void)       { return this->m_runner; }
 
-unsigned int __stdcall CTstRunner::Thread_Func (void* pObject) {
+unsigned int __stdcall CTstCrtRunner::Thread_Func (void* pObject) {
 	pObject;
 	unsigned int u_result = 1; // sets to 'error' result;
 	_out() += TString().Format(_T("[impt] cls::[%s].%s(): entered;"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);

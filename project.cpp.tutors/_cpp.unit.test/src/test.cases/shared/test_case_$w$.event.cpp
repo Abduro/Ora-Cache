@@ -4,7 +4,7 @@
 */
 #include "test_case_$w$.event.h"
 
-using namespace ebo::boo::test::thread;
+using namespace ebo::boo::test::threads;
 
 #pragma region cls::CTstAwait{}
 
