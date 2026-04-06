@@ -24,7 +24,7 @@ namespace shared { namespace common {
 		~CTimer_Base (void);
 
 	public:
-		virtual bool  IsValid(void) const = 0; // ToDo: the pure virtuality is not necessary; the kid classes may simply override it;
+		virtual bool  Is_valid(void) const = 0; // ToDo: the pure virtuality is not necessary; the kid classes may simply override it;
 		TError& Error (void) const;
 
 	protected:
@@ -35,7 +35,7 @@ namespace shared { namespace common {
 		CError  m_error;
 	};
 	// https://learn.microsoft.com/en-us/windows/win32/sync/using-waitable-timer-objects ;
-	// waitable timer creates a delay in the same thread as a caller runs in;
+	// waitable timer creates a *delay* in the same thread as a caller runs in;
 	// windows messages are kept for processing, i.e. message loop is created;
 	//
 	class CWaitableTimer : public CTimer_Base {
@@ -46,19 +46,43 @@ namespace shared { namespace common {
 		~CWaitableTimer (void);
 
 	public:
-		virtual bool  IsValid(void) const override; // valid for cases when timer handle is not null;
+		virtual bool  Is_valid(void) const override; // valid for cases when timer handle is not null;
 
 	public:
-		err_code Delay  (const uint32_t _u_ms);     // sets timer delay in miliseconds;
-		err_code Destroy(void);                     // closes a timer handle;
+		err_code Delay (const uint32_t _u_ms);       // creates and sets timer delay in miliseconds;
+		err_code Destroy (void);                     // closes a timer handle;
+
 	protected:
 		HANDLE m_timer;
+
 	private:
 		CWaitableTimer& operator = (const CWaitableTimer&) = delete; CWaitableTimer& operator = (CWaitableTimer&&) = delete;
 	};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueuetimer ;
+	class CQueTimer : public CTimer_Base { typedef CTimer_Base TBase;
+	public:
+	    CQueTimer (IWaitable_Events&); CQueTimer (void) = delete; CQueTimer (const CQueTimer&) = delete; CQueTimer (CQueTimer&&) = delete;
+	   ~CQueTimer (void);
+
+	   err_code Create (const uint32_t _u_timeout); // creates a timer and sets a period of timer timeout in milliseconds;
+	   err_code Destroy (void);
+
+	   bool Is_valid (void) const;
+
+	private:
+		CQueTimer& operator = (const CQueTimer&) = delete; CQueTimer& operator = (CQueTimer&&) = delete;
+		// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms687066(v=vs.85) ;
+		static void __stdcall Que_callback (void* this_ptr, uint8_t);
+
+		HANDLE m_queue;
+		HANDLE m_timer;
+	};
+
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-timers ;
 	// standard timer is a timer that uses static timer procedure instead of handling WM_TIMER message by a window;
 	// the procedure keeps timer identifier and callback pairs for multiple use of this class object;
+	// but, in any case message loop is still required; thus using this timer in console app does not work;
 	//
 	class CStdTimer : public CTimer_Base { typedef CTimer_Base TBase;
 	public:
@@ -66,11 +90,11 @@ namespace shared { namespace common {
 	   ~CStdTimer (void);
 
 	public:
-		virtual bool IsValid(void) const override;
+		virtual bool Is_valid (void) const override;
 
 	public:
 		err_code   Create (const uint32_t _u_ms); // time-out in milliseconds;
-		err_code   Destroy(void);
+		err_code   Destroy (void);
 
 	protected:
 		UINT_PTR   m_tm_id; // timer identifier;

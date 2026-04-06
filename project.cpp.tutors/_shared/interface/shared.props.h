@@ -22,14 +22,14 @@ namespace shared { namespace common {
 		CProperty (const uint32_t _n_value = 0, _pc_sz _p_name = _T("#prop"), IProperty_Events* = nullptr);
 		CProperty (const CProperty& );
 		CProperty (CProperty&&) = delete; // not required yet;
-		virtual ~CProperty (void);
+		virtual ~CProperty (void);        // virtuality is not required here;
 
 	public:
 		bool     Has   (const uint32_t) const;
 		bool     Modify(const uint32_t, const bool _bApply); // returns true in case when the value is changed;
 
 		_pc_sz   Name  (void) const;
-		bool     Name  (_pc_sz) ;     // returns 'true' in case of changig the name value; case sensitive; no check for null or whitespaces;
+		bool     Name  (_pc_sz) ;     // returns 'true' in case of changing the name value; case sensitive; no check for null or whitespaces;
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif

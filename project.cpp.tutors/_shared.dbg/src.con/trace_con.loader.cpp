@@ -78,13 +78,9 @@ err_code CPers::Load (void) {
 
 	using namespace ex_ui::popup::layout;
 
-	TRegKeyEx the_key;
-	t_rect rc_ = { // this is not working on multi-monitor system, because it doesn't allow negative values;
-		(long)the_key.Value().GetDword(_T("left")),
-		(long)the_key.Value().GetDword(_T("top")),
-		(long)the_key.Value().GetDword(_T("right")),
-		(long)the_key.Value().GetDword(_T("bottom")),
-	};
+	CString cs_key_path = ::Get_reg_router().Trace().Root();
+
+	t_rect rc_ = TRegKeyEx().Value().GetRect((_pc_sz)cs_key_path);
 
 	if (::IsRectEmpty(&rc_)) { // the position of the console window is not saved yet;
 		t_size_u size = CPrimary().Default();
@@ -93,7 +89,9 @@ err_code CPers::Load (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos ;
 	::SetWindowPos(CAccessor()(), 0, rc_.left, rc_.top, rc_.right - rc_.left, rc_.bottom - rc_.top, 0);
 
-	m_timer.Create(30);
+	static const uint32_t n_interval = 6666; // the interval is just for test purposes;
+
+	m_timer.Create(n_interval); // the interval is just for test purposes;
 
 	return this->Error();
 }
@@ -107,11 +105,10 @@ err_code CPers::Save (void) {
 	if (false == !!::GetWindowRect(CAccessor()(), &rc_))
 		return this->m_error.Last();
 
+	CString cs_key_path = ::Get_reg_router().Trace().Root();
 	TRegKeyEx the_key;
-	the_key.Value().Set(::Get_reg_router().Trace().Root(), _T("left"), ::abs(rc_.left));
-	the_key.Value().Set(::Get_reg_router().Trace().Root(), _T("top"), ::abs(rc_.top));
-	the_key.Value().Set(::Get_reg_router().Trace().Root(), _T("right"), ::abs(rc_.right));
-	the_key.Value().Set(::Get_reg_router().Trace().Root(), _T("bottom"), ::abs(rc_.bottom));
+	if (__failed(the_key.Value().Set((_pc_sz)cs_key_path, rc_)))
+		this->m_error = the_key.Error();
 
 	return this->Error();
 }
@@ -132,6 +129,9 @@ err_code CLoader::Do_it (void) {
 	(2) or AllocConsole() is called;
 	in any way this process must be "associated" with console process;
 	*/
+	CString cs_cap; cs_cap.LoadString(IDS_TRACE_CON_CAP);
+
+	::SetWindowText(CAccessor()(), (_pc_sz) cs_cap);
 #if (1)
 	using  CIcons = shared::gui::CFrame::CIcons;
 	return CIcons::Set(IDR_TRACE_CON_0_ICO, CAccessor()(), this->m_error);

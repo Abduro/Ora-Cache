@@ -6,11 +6,12 @@
 */
 #include "shared.defs.h"
 #include "shared.dbg.h"
+#include "shared.props.h"
 
 namespace ex_ui { namespace popup {
 
 	using namespace shared::defs;
-
+	
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexa ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassa ;
 	/*
@@ -57,6 +58,7 @@ namespace ex_ui { namespace popup {
 		CWndCls& operator = (CWndCls&&) = delete;
 		const
 		CWndCls& operator >>(CString& _cls_name) const;
+		CWndCls& operator <<(WNDPROC);   // sets pointer to window procedure;
 
 		operator ATOM (void) const;
 		const
@@ -78,7 +80,8 @@ namespace ex_ui { namespace popup {
 	public:
 		CCon_cls (void); ~CCon_cls (void);
 
-		err_code Get (void);   // tries to get properties of the system class 'ConsoleWindowClass';
+		err_code Get (void);      // tries to get properties of the system class 'ConsoleWindowClass';
+		err_code Register (void); // registers console window class by replacing system class for current process;
 	};
 
 }}

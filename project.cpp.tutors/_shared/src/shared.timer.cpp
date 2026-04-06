@@ -12,6 +12,8 @@ using namespace shared::common;
 using namespace shared::sys_core;
 
 namespace shared { namespace common { namespace details {
+	// https://learn.microsoft.com/en-us/windows/win32/sync/using-timer-queues ;
+	#define __que_timer_clbk WAITORTIMERCALLBACK
 
 	typedef ::std::map<UINT_PTR, IWaitable_Events*>  TStdTimers;
 
@@ -45,7 +47,7 @@ namespace shared { namespace common { namespace details {
 			::DispatchMessage (&msg_);
 		}
 	public:
-		static
+		static // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-timerproc ;
 		void __stdcall _timer_proc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime) {
 			hWnd; uMsg; idEvent; dwTime;
 			TStdTimers& tms_ = CWaitable_StdRef();
@@ -69,16 +71,75 @@ CTimer_Base::~CTimer_Base(void) {}
 TError&  CTimer_Base::Error (void) const { return this->m_error; }
 
 #pragma endregion
+#pragma region cls::CQueTimer{}
+
+CQueTimer:: CQueTimer (IWaitable_Events& _snk) : TBase(_snk), m_timer(0), m_queue(0) { TBase::m_error >>__CLASS__<<__e_not_inited;
+	// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue ;
+	this->m_queue = ::CreateTimerQueue();
+	if (nullptr == this->m_queue)
+		TBase::m_error.Last();
+}
+CQueTimer::~CQueTimer (void) {
+	// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex ;
+	if (this->Is_valid()) { this->Destroy(); this->m_timer = 0; }
+	if (this->m_queue)
+		if (0 == ::DeleteTimerQueueEx(this->m_queue, 0))
+			TBase::m_error.Last();
+}
+
+err_code CQueTimer::Create (const uint32_t _u_timeout) {
+	_u_timeout;
+	// checks for timer queue handle first;
+	if (nullptr == this->m_queue)
+		return TBase::Error();  // the error is set in the ctor when this class object is created;
+
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid())
+		return TBase::m_error <<(err_code)TErrCodes::eObject::eExists = _T("#__e_obj: timer is already created");
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueuetimer ;
+	if (false == !!::CreateTimerQueueTimer(&this->m_timer, this->m_queue, (__que_timer_clbk)CQueTimer::Que_callback, this, _u_timeout, _u_timeout, 0))
+		return TBase::m_error.Last();
+
+	return TBase::Error();
+}
+
+err_code CQueTimer::Destroy (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (this->Is_valid())
+		return TBase::m_error <<(err_code)TErrCodes::eExecute::eState = _T("#__e_state: timer is not created");
+	// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueuetimer ;
+	if (0 == ::DeleteTimerQueueTimer(this->m_queue, this->m_timer, nullptr)) // no complition event in this version of implementation;
+		TBase::m_error.Last();
+	else
+		this->m_timer = nullptr;
+
+	return TBase::Error();
+}
+
+bool CQueTimer::Is_valid (void) const { return nullptr != this->m_timer && __e_handle != this->m_timer; }
+
+void CQueTimer::Que_callback (void* this_ptr, uint8_t) {
+	if (nullptr == this_ptr)
+		return;
+	CQueTimer* p_this = reinterpret_cast<CQueTimer*>(this_ptr);
+	if (nullptr == p_this)
+		return;
+	p_this->m_sink.IWaitable_OnComplete();
+}
+
+#pragma endregion
 #pragma region cls::CWaitableTimer{}
 
 CWaitableTimer:: CWaitableTimer(IWaitable_Events& _snk) : TBase(_snk), m_timer(nullptr) { TBase::m_error >>__CLASS__<<__e_not_inited; }
 CWaitableTimer::~CWaitableTimer(void) {
-	if (nullptr != m_timer) {
+	if (this->Is_valid()) {
 		::CloseHandle(m_timer); m_timer = nullptr;
 	}
 }
 
-bool  CWaitableTimer::IsValid(void) const { return (nullptr != m_timer); }
+bool  CWaitableTimer::Is_valid (void) const { return (nullptr != m_timer); }
 
 err_code CWaitableTimer::Delay (const uint32_t _u_ms) {
 	_u_ms;
@@ -93,7 +154,7 @@ err_code CWaitableTimer::Delay (const uint32_t _u_ms) {
 	if (_u_ms < 1)
 		return (TBase::m_error <<__e_inv_arg);
 
-	if (this->IsValid() == true)
+	if (this->Is_valid() == true)
 		return TBase::m_error << (err_code) TErrCodes::eObject::eInited;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw ;
@@ -130,7 +191,7 @@ err_code CWaitableTimer::Delay (const uint32_t _u_ms) {
 err_code CWaitableTimer::Destroy(void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	if (this->IsValid() == false)
+	if (this->Is_valid() == false)
 		return (TBase::m_error << __e_not_inited);
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle ;
 	if (false == !!::CloseHandle(m_timer))
@@ -146,11 +207,11 @@ err_code CWaitableTimer::Destroy(void) {
 
 CStdTimer:: CStdTimer (IWaitable_Events& _snk) : TBase(_snk),  m_tm_id(0) { this->m_error >>__CLASS__<<__e_not_inited; }
 CStdTimer::~CStdTimer (void) {
-	if (this->IsValid())
+	if (this->Is_valid())
 		this->Destroy();
 }
 
-bool CStdTimer::IsValid (void) const { return (0 != m_tm_id); }
+bool CStdTimer::Is_valid (void) const { return (0 != m_tm_id); }
 
 err_code CStdTimer::Create (const uint32_t _u_ms) {
 	_u_ms;
@@ -159,7 +220,7 @@ err_code CStdTimer::Create (const uint32_t _u_ms) {
 	if (0 == _u_ms)
 		return (TBase::m_error <<__e_inv_arg);
 
-	if (this->IsValid() == true)
+	if (this->Is_valid() == true)
 		return (TBase::m_error <<(err_code) TErrCodes::eObject::eExists);
 
 	// learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-settimer ;
@@ -181,7 +242,7 @@ err_code CStdTimer::Create (const uint32_t _u_ms) {
 err_code CStdTimer::Destroy(void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	if (this->IsValid() == false)
+	if (this->Is_valid() == false)
 		return (TBase::m_error <<__e_not_inited);
 
 	if (false == !!::KillTimer(nullptr, m_tm_id))

@@ -142,7 +142,7 @@ CValue::operator long (void) const { return this->Get(); }
 
 CLayout:: CLayout (void) : m_wait(*this), m_rect{0} { this->Bottom().Side().Value(CSide::e_btm); this->Top().Side().Value(CSide::e_top); }
 CLayout::~CLayout (void) {
-	if (false == this->m_wait.IsValid())
+	if (false == this->m_wait.Is_valid())
 		this->m_wait.Destroy();
 }
 
@@ -160,7 +160,7 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 		const HWND h_after = b_activated ?  HWND_TOPMOST : HWND_NOTOPMOST;
 
 		if (false == b_activated) {
-			if (false == this->m_wait.IsValid())
+			if (false == this->m_wait.Is_valid())
 				this->m_wait.Create(555);
 		}
 		else

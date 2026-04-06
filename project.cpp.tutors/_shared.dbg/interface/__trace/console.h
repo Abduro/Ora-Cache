@@ -61,7 +61,7 @@ namespace shared { namespace console {
 	// https://learn.microsoft.com/en-us/windows/console/allocconsole ;
 	// the excerpt from the above article: this function is primarily used by a graphical user interface (GUI) application to create a console window...;
 
-	class CConsole {	
+	class CConsole {
 	public:
 		 CConsole (void); CConsole (const CConsole&) = delete; CConsole (CConsole&&) = delete;
 		~CConsole (void);

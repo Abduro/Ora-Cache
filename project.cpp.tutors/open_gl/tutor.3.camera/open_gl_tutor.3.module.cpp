@@ -44,7 +44,6 @@ err_code CCameraModule::PreMessageLoop (int nShowCmd) {
 */
 INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpstrCmdLine, INT nCmdShow) {
 	hInstance; hPrevInstance; lpstrCmdLine; nCmdShow;
-
 	/*
 		Tech_dog commented on 09-Feb-2010 at 12:47:50pm, UTC+3, Rostov-on-Don, Monday:
 		-----------------------------------------------------------------------------

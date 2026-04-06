@@ -22,7 +22,7 @@ namespace shared { namespace console { using namespace shared::defs; using names
 	private:
 		CPers& operator = (const CPers&) = delete; CPers& operator = (CPers&&) = delete;
 		CError    m_error;
-		CStdTimer m_timer;
+		CQueTimer m_timer; // standard timer, even without window, but with callback procedure, does not work without message loop;
 	};
 
 	class CLoader {

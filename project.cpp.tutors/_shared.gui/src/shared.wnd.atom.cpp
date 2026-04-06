@@ -46,6 +46,8 @@ namespace ex_ui { namespace popup { namespace _impl {
 }}}
 using namespace ex_ui::popup::_impl;
 
+#pragma region cls::CWndCls{}
+
 CWndCls:: CWndCls (void) : m_atom(0), m_wnd_cls{0} {
 	this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; m_wnd_cls.cbSize = sizeof(WNDCLASSEX); this->Cfg(e_type::e_cfg_over);
 }
@@ -192,9 +194,9 @@ bool      CWndCls::Style (const uint32_t _u_flags) {
 	return b_changed;
 }
 
-/////////////////////////////////////////////////////////////////////////////
 const
 CWndCls& CWndCls::operator >>(CString& _cls_name) const { _cls_name = this->Name(); return *this; }
+CWndCls& CWndCls::operator <<(WNDPROC _p_wnd_proc) { (*this)().lpfnWndProc = _p_wnd_proc; return *this; }
 
 CWndCls::operator ATOM (void) const { return this->m_atom; }
 
@@ -202,21 +204,48 @@ const
 WNDCLASSEX&  CWndCls::operator ()(void) const { return this->Ref(); }
 WNDCLASSEX&  CWndCls::operator ()(void)       { return this->Ref(); }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CCon_cls{}
+
+static _pc_sz p_con_sys_name = _T("ConsoleWindowClass");
 
 CCon_cls:: CCon_cls (void) : TBase() { TBase::m_error >>__CLASS__; }
-CCon_cls::~CCon_cls (void) {}
+CCon_cls::~CCon_cls (void) {
+	TBase::Style(CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW); // https://learn.microsoft.com/en-us/windows/win32/winmsg/window-class-styles ;
+	TBase::Name(p_con_sys_name); // looks like not necessary, TBase::Register() does it itself;
+}
 
 err_code   CCon_cls::Get (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	TBase::Name(_T("ConsoleWindowClass"));
-
+	TBase::Name(p_con_sys_name);
+#if (0)
 	HINSTANCE h_instance = reinterpret_cast<HINSTANCE>(::GetModuleHandle(nullptr)); h_instance;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexa ;
 	if (0 == ::GetClassInfoEx(0, this->Name(), &this->m_wnd_cls))
 		TBase::m_error.Last();
+#else
+	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfindatomw ;
+	const ATOM a_found = ::GlobalFindAtom(p_con_sys_name);
+	if (0 == a_found)
+		return TBase::m_error.Last();
 
-	return this->Error();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalgetatomnamew ;
+	static const uint32_t buf_size_req = 256;
+
+	CString cs_atom;
+
+	if (0 == ::GlobalGetAtomName(a_found, cs_atom.GetBuffer(buf_size_req), buf_size_req))
+		if (0 == a_found)
+		return TBase::m_error.Last();
+#endif
+	return TBase::Error();
 }
+
+err_code CCon_cls::Register (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	return TBase::Register(p_con_sys_name);
+}
+
+#pragma endregion
