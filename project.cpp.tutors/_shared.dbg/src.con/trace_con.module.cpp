@@ -144,15 +144,23 @@ uint32_t _tmain (int argc, _TCHAR* argv[]) {
 
 using namespace shared::console::events;
 
-class COutput : public input::IEvtHandler {
+class COutput : public input::IEvtHandler, public ctrl::IEvtHandler {
 public:
 	COutput (void) = default; ~COutput (void) = default;
 
+	err_code On_close(const ctrl::CEvent::evt_source _dw_reason) override final {
+		__trace_warn_2(_T("%s\n"), (_pc_sz) ctrl::CEvent().To_str(_dw_reason)); return __s_ok;
+	}
+
 	err_code On_menu (const input::evt_menu_data_t& _data) override final {
-		__trace_info(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
+		__trace_impt_2(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
 	}
 
 	err_code On_mouse (const input::evt_mouse_data_t& _data) override final {
+		__trace_info(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
+	}
+
+	err_code On_kbrd (const input::evt_kbrd_data_t& _data) override final {
 		__trace_info(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
 	}
 
@@ -196,6 +204,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	bool b_error = true;
 
 	COutput out_;
+	CPers pers;
+	CLoader loader;
 
 	do {
 		CCon_cls con_cls;
@@ -217,15 +227,20 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #endif
 		if (false == !!::AllocConsole()) break;
 
-		TInputRouter& in_route = ::Get_input();
-		if (__failed( in_route.Turn(true))) {
-			__trace_err_ex_2(in_route.Error()); break;
+		TCtrlRouter& ctrl_router = ::Get_ctrl();
+		if (__failed( ctrl_router.Turn(true))) {
+			__trace_err_ex_2(ctrl_router.Error()); break;
+		}
+		TInputRouter& in_router = ::Get_input();
+		if (__failed( in_router.Turn(true))) {
+			__trace_err_ex_2(in_router.Error()); break;
 		}
 
-		in_route.Subscribe(&out_);
+		ctrl_router.Subscribe(&out_);
+		in_router.Subscribe(&out_);
 
-		CPers pers; if (__failed(pers.Load())) __trace_err_ex_2(pers.Error());
-		CLoader().Do_it();
+		if (__failed(pers.Load())) __trace_err_ex_2(pers.Error());
+		if (__failed(loader.Do_it())) __trace_err_ex_2(loader.Error());
 
 		b_error = false;
 

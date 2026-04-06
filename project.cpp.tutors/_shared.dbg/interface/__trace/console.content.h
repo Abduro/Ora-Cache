@@ -13,7 +13,7 @@ namespace shared { namespace console { namespace content { using namespace share
 	   depending on where the user interacts.
 	*/
 	// https://learn.microsoft.com/en-us/windows/win32/uxguide/cmd-menus ;
-	class CCtxMenu { // this is context menu of the console window, or context menu in other words;
+	class CCtxMenu { // this is shortcut menu of the console window, or context menu in other words;
 	public:
 		 CCtxMenu (void); CCtxMenu (const CCtxMenu&) = delete; CCtxMenu (CCtxMenu&&) = delete;
 		~CCtxMenu (void) = default;

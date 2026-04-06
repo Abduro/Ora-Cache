@@ -4,28 +4,159 @@
 */
 #include "console.event.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace shared::console;
 using namespace shared::console::events;
 
 using CSyncObject = shared::sys_core::CSyncObject;
-CSyncObject& EvtGuardRef(void) { static CSyncObject crt_sect; return crt_sect; }
 
-#define Input_Safe_Lock() Safe_Lock(EvtGuardRef());
+CSyncObject& InputEvtGuardRef(void) { static CSyncObject crt_sect; return crt_sect; }
+CSyncObject& OutputEvtGuardRef(void) { static CSyncObject crt_sect; return crt_sect; }
 
+#define Input_Safe_Lock() Safe_Lock(InputEvtGuardRef());
+#define Output_Safe_Lock() Safe_Lock(OutputEvtGuardRef());
+
+typedef ::std::set<const ctrl::IEvtHandler*> TCtrlHandlers;
 typedef ::std::set<const input::IEvtHandler*> TInputHandlers;
 
+TCtrlHandlers& Get_ctrl_handlers (void) { static TCtrlHandlers handlers; return handlers; }
 TInputHandlers& Get_input_handlers (void) { static TInputHandlers handlers; return handlers; }
 
 static _pc_sz p_err_evt_handler_ptr = _T("$__e_ptr: input pointer to event handler is invalid");
-static _pc_sz pc_sz_pat_subscribed = _T("The handler = %s is already subscribed");
-static _pc_sz pc_sz_pat_not_found = _T("The handler = %s is not found");
+static _pc_sz p_err_subscribed = _T("The handler = %s is already subscribed");
+static _pc_sz p_err_not_found = _T("The handler = %s is not found");
+static _pc_sz p_err_router_off = _T("Router is already turned off");
+static _pc_sz p_err_router_on = _T("Router is already turned on");
 
+#pragma region cls::CRouterBase{}
+
+CRouterBase::CRouterBase (void) : m_turned(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError&  CRouterBase::Error (void) const { return this->m_error; }
+bool     CRouterBase::Is_on (void) const { return this->m_turned; }
+
+#pragma endregion
+#pragma region cls::ctrl::CEvent{}
+
+using evt_source = ctrl::CEvent::evt_source;
+
+evt_source ctrl::CEvent::DwordToEnum (const dword _u_value) {
+	_u_value;
+	evt_source e_evt_src = evt_source::e__undef;
+	switch (_u_value) {
+	case evt_source::e_abort:
+	case evt_source::e_break:
+	case evt_source::e_close: case evt_source::e_logoff: case evt_source::e_shutdown : e_evt_src = (evt_source)_u_value; break;
+	}
+	return e_evt_src;
+}
+
+CString ctrl::CEvent::To_str (const evt_source _e_src) {
+	_e_src;
+	CString cs_out;
+	switch (_e_src) {
+	case evt_source::e_abort   : cs_out = _T("[ctrl] + [c]"); break;
+	case evt_source::e_break   : cs_out = _T("[ctrl] + [break]"); break;
+	case evt_source::e_close   : cs_out = _T("[x] or cmd:end task"); break;
+	case evt_source::e_logoff  : cs_out = _T("user logoff"); break;
+	case evt_source::e_shutdown: cs_out = _T("shut down"); break;
+	default: cs_out = _T("#undef");
+	}
+	return cs_out;
+}
+
+#pragma endregion
 #pragma region cls::ctrl::CRouter{}
 
-ctrl::CRouter::CRouter (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+ctrl::CRouter:: CRouter (void) : TBase() { TBase::m_error >>__CLASS__; }
+ctrl::CRouter::~CRouter (void) { if (TBase::Is_on()) this->Turn(false); }
 
-TError& ctrl::CRouter::Error (void) const { return this->m_error; }
+err_code ctrl::CRouter::Subscribe (const ctrl::IEvtHandler* _p_handler) {
+	_p_handler;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_handler)
+		return TBase::m_error <<__e_pointer = p_err_evt_handler_ptr;
+
+	TCtrlHandlers& handlers = ::Get_ctrl_handlers();
+	TCtrlHandlers::const_iterator it_ = handlers.find(_p_handler);
+
+	if (it_ != handlers.end())
+		return TBase::m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(p_err_subscribed, TString()._addr_of(_p_handler, _T("0x%08x")));
+
+	try {
+		handlers.insert(_p_handler);
+	}
+	catch (const ::std::bad_alloc&) { TBase::m_error << __e_no_memory; }
+
+	return TBase::Error();
+}
+
+err_code ctrl::CRouter::Unsubscribe (const ctrl::IEvtHandler* _p_handler) {
+	_p_handler;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_handler)
+		return TBase::m_error <<__e_pointer = p_err_evt_handler_ptr;
+
+	TCtrlHandlers& handlers = ::Get_ctrl_handlers();
+	TCtrlHandlers::const_iterator it_ = handlers.find(_p_handler);
+
+	if (it_ != handlers.end())
+		return TBase::m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(p_err_not_found, TString()._addr_of(_p_handler, _T("0x%08x")));
+
+	handlers.erase(it_);
+
+	return this->Error();
+}
+
+err_code ctrl::CRouter::Turn (const bool _b_on_off) {
+	_b_on_off;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	// https://learn.microsoft.com/en-us/windows/console/setconsolectrlhandler ;
+	if (_b_on_off) {
+		if (this->Is_on())
+			return TBase::m_error << (err_code) TErrCodes::eExecute::eState = p_err_router_on;
+		if (false == !!::SetConsoleCtrlHandler(ctrl::CRouter::Receive_evt, true))
+		     TBase::m_error.Last();
+		else TBase::m_turned = true;
+	}
+	else {
+		if (this->Is_on() == false)
+			return TBase::m_error << (err_code) TErrCodes::eExecute::eState = p_err_router_off;
+
+		if (false == !!::SetConsoleCtrlHandler(ctrl::CRouter::Receive_evt, false))
+		     TBase::m_error.Last();
+		else TBase::m_turned = false;
+	}
+
+	return TBase::Error();
+}
+
+err_code ctrl::CRouter::operator <<(const ctrl::IEvtHandler* _p_handler) { return this->Subscribe(_p_handler); }
+err_code ctrl::CRouter::operator >>(const ctrl::IEvtHandler* _p_handler) { return this->Unsubscribe(_p_handler); }
+
+int ctrl::CRouter::Receive_evt (const dword dwCtrlType) {
+	dwCtrlType;
+	TCtrlHandlers& handlers = ::Get_ctrl_handlers();
+	TCtrlHandlers::iterator it_;
+
+	bool b_result = false; // not handled;
+
+	__trace_warn_2(_T("close control event source: '%s';\n"), (_pc_sz) ctrl::CEvent::To_str(ctrl::CEvent::DwordToEnum(dwCtrlType)));
+
+	for (it_ = handlers.begin(); it_ != handlers.end(); ++it_) {
+		if (nullptr == *it_)
+			continue;
+
+		ctrl::IEvtHandler* p_handler = const_cast<ctrl::IEvtHandler*>(*it_);
+
+		// https://learn.microsoft.com/en-us/windows/console/handlerroutine ;
+		b_result = __s_ok == p_handler->On_close(ctrl::CEvent::DwordToEnum(dwCtrlType));
+		if (b_result)
+			break;
+	}
+	return b_result;
+}
 
 #pragma endregion
 
@@ -63,8 +194,9 @@ CString  input::CEvent::To_str (const evt_mouse_data_t& _data) {
 	CString cs_pos; cs_pos.Format(_T("cell = {x:%u|y:%u}"), _data.dwMousePosition.X, _data.dwMousePosition.Y);
 
 	static _pc_sz p_sz_action = _T("action: %s");
-	static _pc_sz p_sz_ctrl_keys  = _T("ctrl keys: %s");
-	static _pc_sz p_sz_button = _T("button pressed: %s");
+	static _pc_sz p_sz_ctrl_keys = _T("ctrl keys: %s");
+	static _pc_sz p_sz_btn_press = _T("button pressed: [%s]");
+	static _pc_sz p_sz_btn_released = _T("button released: [%s]");
 
 	CString cs_action;
 	if (DOUBLE_CLICK   == _data.dwEventFlags) cs_action.Format(p_sz_action, _T("double click"));
@@ -72,12 +204,18 @@ CString  input::CEvent::To_str (const evt_mouse_data_t& _data) {
 	if (MOUSE_MOVED    == _data.dwEventFlags) cs_action.Format(p_sz_action, _T("moving"));
 	if (MOUSE_WHEELED  == _data.dwEventFlags) cs_action.Format(p_sz_action, _T("vert wheel"));
 
+	static CString cs_last;
+
 	CString cs_button;
-	if (FROM_LEFT_1ST_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_button, _T("left"));
-	if (FROM_LEFT_2ND_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_button, _T("left + 1"));
-	if (FROM_LEFT_3RD_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_button, _T("left + 2"));
-	if (FROM_LEFT_4TH_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_button, _T("left + 3"));
-	if (RIGHTMOST_BUTTON_PRESSED     == _data.dwButtonState) cs_button.Format(p_sz_button, _T("right"));
+	if (FROM_LEFT_1ST_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_btn_press, (_pc_sz)(cs_last = _T("left")));
+	if (FROM_LEFT_2ND_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_btn_press, (_pc_sz)(cs_last = _T("left + 1")));
+	if (FROM_LEFT_3RD_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_btn_press, (_pc_sz)(cs_last = _T("left + 2")));
+	if (FROM_LEFT_4TH_BUTTON_PRESSED == _data.dwButtonState) cs_button.Format(p_sz_btn_press, (_pc_sz)(cs_last = _T("left + 3")));
+	if (RIGHTMOST_BUTTON_PRESSED     == _data.dwButtonState) cs_button.Format(p_sz_btn_press, (_pc_sz)(cs_last = _T("right")));
+
+	if (cs_button.IsEmpty()) {
+		cs_button.Format(p_sz_btn_released, (_pc_sz) cs_last);
+	}
 
 	CString cs_out;
 	/* https://learn.microsoft.com/en-us/windows/console/mouse-event-record-str ;
@@ -114,64 +252,62 @@ CString  input::CEvent::To_str (const evt_buffer_size_t& _data) {
 #pragma endregion
 #pragma region cls::input::CRouter{}
 
-input::CRouter:: CRouter (void) : m_turned(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-input::CRouter::~CRouter (void) { if (this->Is_on()) this->Turn(false); }
+input::CRouter:: CRouter (void) : TBase() { TBase::m_error >>__CLASS__; }
+input::CRouter::~CRouter (void) { if (TBase::Is_on()) this->Turn(false); }
 
-TError&  input::CRouter::Error (void) const { return this->m_error; }
-bool     input::CRouter::Is_on (void) const { return this->m_turned; }
-err_code input::CRouter::Turn  (const bool _b_on_off) {
+err_code input::CRouter::Turn (const bool _b_on_off) {
 	_b_on_off;
-	this->m_error <<__METHOD__<<__s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (_b_on_off) {
 		if (this->Is_on())
-			return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Router is already turned on");
+			return TBase::m_error << (err_code) TErrCodes::eExecute::eState = p_err_router_on;
 
 		this->m_thread = ::std::thread(&input::CRouter::Receive_evt, this);
-		this->m_turned = true;
+		TBase::m_turned = true;
 	}
 	else {
 		if (this->Is_on() == false)
-			return this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Router is already turned off");
+			return TBase::m_error << (err_code) TErrCodes::eExecute::eState = p_err_router_off;
 
-		this->m_turned = false;
+		TBase::m_turned = false;
 		this->m_thread.join();
 	}
 
-	return this->Error();
+	return TBase::Error();
 }
 
 err_code input::CRouter::Subscribe (const input::IEvtHandler* _p_handler) {
 	_p_handler;
-	this->m_error <<__METHOD__<<__s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 	if (nullptr == _p_handler)
-		return this->m_error <<__e_pointer = p_err_evt_handler_ptr;
+		return TBase::m_error <<__e_pointer = p_err_evt_handler_ptr;
 
 	TInputHandlers& handlers = ::Get_input_handlers();
 	TInputHandlers::const_iterator it_ = handlers.find(_p_handler);
 
 	if (it_ != handlers.end())
-		return this->m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(pc_sz_pat_subscribed, TString()._addr_of(_p_handler, _T("0x%08x")));
+		return TBase::m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(p_err_subscribed, TString()._addr_of(_p_handler, _T("0x%08x")));
 
 	try {
 		handlers.insert(_p_handler);
 	}
-	catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory; }
+	catch (const ::std::bad_alloc&) { TBase::m_error << __e_no_memory; }
 
-	return this->Error();
+	return TBase::Error();
 }
 
 err_code input::CRouter::Unsubscribe (const input::IEvtHandler* _p_handler) {
 	_p_handler;
-	this->m_error <<__METHOD__<<__s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 	if (nullptr == _p_handler)
-		return this->m_error <<__e_pointer = p_err_evt_handler_ptr;
+		return TBase::m_error <<__e_pointer = p_err_evt_handler_ptr;
 
 	TInputHandlers& handlers = ::Get_input_handlers();
 	TInputHandlers::const_iterator it_ = handlers.find(_p_handler);
 
 	if (it_ != handlers.end())
-		return this->m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(pc_sz_pat_subscribed, TString()._addr_of(_p_handler, _T("0x%08x")));
+		return TBase::m_error << (err_code) TErrCodes::eObject::eExists = TString().Format(p_err_not_found, TString()._addr_of(_p_handler, _T("0x%08x")));
 
 	handlers.erase(it_);
 
@@ -184,15 +320,15 @@ err_code input::CRouter::operator >>(const input::IEvtHandler* _p_handler) { ret
 #define SIZE_EVENT WINDOW_BUFFER_SIZE_EVENT
 
 void input::CRouter::Receive_evt (void) {
-	this->m_error <<__METHOD__<<__s_ok; // error object can work in multi threaded environment;
+	TBase::m_error <<__METHOD__<<__s_ok; // error object can work in multi threaded environment;
 	
 	// disables quick edit mode because it interfers with receiving mouse inputs;
 	static const ulong u_req_flags = (ENABLE_WINDOW_INPUT|ENABLE_MOUSE_INPUT|ENABLE_EXTENDED_FLAGS) & ~ENABLE_QUICK_EDIT_MODE;
 	static const ulong u_rec_size  =  128;
 
 	modes::CInput input;
-	if (__failed( input.Get() )) { this->m_error = input.Error(); this->m_turned = false; return; }
-	if (__failed( input << (input.Flags() | u_req_flags))) { this->m_error = input.Error(); this->m_turned = false; return; }
+	if (__failed( input.Get() )) { TBase::m_error = input.Error(); TBase::m_turned = false; return; }
+	if (__failed( input << (input.Flags() | u_req_flags))) { TBase::m_error = input.Error(); TBase::m_turned = false; return; }
 
 	ulong u_recs = 0;
 	ulong u_read = 0;
@@ -204,7 +340,7 @@ void input::CRouter::Receive_evt (void) {
 
 		// https://learn.microsoft.com/en-us/windows/console/getnumberofconsoleinputevents ;
 		if (false == !!::GetNumberOfConsoleInputEvents(__in_handle, &u_recs)) {
-			this->m_error.Last(); break;
+			TBase::m_error.Last(); break;
 		}
 		if (0 == u_recs)
 			continue;
@@ -212,10 +348,10 @@ void input::CRouter::Receive_evt (void) {
 		::std::vector<INPUT_RECORD> v_recs(u_recs, {0});
 
 		if (false == ::ReadConsoleInput(__in_handle, v_recs.data(), u_recs, &u_read)) {
-			this->m_error.Last(); break;
+			TBase::m_error.Last(); break;
 		}
 
-		TInputHandlers& handlers = Get_input_handlers();
+		TInputHandlers& handlers = ::Get_input_handlers();
 		TInputHandlers::iterator it_;
 
 		for (it_ = handlers.begin(); it_ != handlers.end(); ++it_) {
@@ -233,12 +369,17 @@ void input::CRouter::Receive_evt (void) {
 			}
 		}
 	}
-	this->m_turned = false;
+	TBase::m_turned = false;
 
 	return;
 }
 
 #pragma endregion
+
+TCtrlRouter&  ::Get_ctrl (void) {
+	static TCtrlRouter ctrl_router;
+	return ctrl_router;
+}
 
 TInputRouter& ::Get_input (void) {
 	static TInputRouter input_router;
