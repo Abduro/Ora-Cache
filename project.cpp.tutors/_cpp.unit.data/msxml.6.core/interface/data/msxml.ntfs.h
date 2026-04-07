@@ -12,7 +12,7 @@ namespace shared { namespace xml { namespace ms { namespace ntfs {
 	public:
 		enum e_finder : uint32_t {
 		     e_dll = 0x0, // the finding of module path is made from the dynamic library; this is for MSTest environment especially;
-		     e_exe = 0x1, // the finding of module path is made from the executable file; that is from the desktop app;
+		     e_exe = 0x1, // the finding of module path is made from the executable file; that is the desktop app;
 		};
 	public:
 		 CLocator (void); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete;
