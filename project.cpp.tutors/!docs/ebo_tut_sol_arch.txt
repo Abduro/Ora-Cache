@@ -6,6 +6,9 @@ the tree of solution nodes:
    +---[core]  : {00000C13-EEEE-BBBB-6667-100000000010} << the sub-root node of the root/core project;
 	shared.trim_v15 : {00000C13-EEEE-BBBB-6667-0000000B0001} << this is the shared project of excerpts from Ebo Pack solution;
 
+   +---[data] : {00000C13-EEEE-BBBB-6667-100000000040} << the sub-root node of shared projects related to data providers;
+	ms.xml.6_v15    : {00000C13-EEEE-BBBB-6667-000000000009} << MS XML core service wrapper project;
+
    +---[debug] : {00000C13-EEEE-BBBB-6667-100000000020} << the sub-root node of shared projects related to debugging;
 	shared.dbg_v15  : {00000C13-EEEE-BBBB-6667-0000000A0001} << this is the shared project of the debug ouptup console wrapper for app main window;
 	trace.con_v15   : {00000C13-EEEE-BBBB-6667-0000000E0001} << this is console app project for test cases;

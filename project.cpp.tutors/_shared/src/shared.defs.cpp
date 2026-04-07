@@ -131,6 +131,42 @@ _pc_sz  CString_Ex::Format (_pc_sz _p_pattern, ...) {
 	return TBase::GetString();
 }
 
+_guid   CString_Ex::Guid  (void) const {
+
+	static const _guid empty_ = __guid_null;
+
+	_guid result_ = empty_;
+
+	if (TBase::IsEmpty())
+		return result_;
+	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring ;
+	HRESULT hr_ = ::CLSIDFromString(TBase::GetString(), &result_);
+	if (FAILED(hr_))
+		return empty_; // looks like the result is already set to this value;
+
+	return result_;
+}
+
+_pc_sz  CString_Ex::Guid  (const _guid& _guid) {
+	_guid;
+	if (TBase::IsEmpty() == false)
+		TBase::Empty();
+
+	static const _pc_sz lp_sz_pat = _T("{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}");
+	static const size_t n_req_size = ::_tcslen(lp_sz_pat) + 1; // adds one char for ending by zero;
+
+	::std::vector<TCHAR> v_buffer(n_req_size, _T('\0'));
+	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromclsid ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromguid2 ;
+	const int n_copied = ::StringFromGUID2(_guid, &v_buffer[0], static_cast<int>(n_req_size));
+
+	const bool b_result = 0 != n_copied;
+	if (b_result)
+		(TBase&)(*this) = v_buffer.data();
+
+	return TBase::GetString();
+}
+
 _pc_sz  CString_Ex::Long  (long _l_value) {
 	_l_value;
 	TBase::Format(_T("%d"), _l_value);
@@ -141,3 +177,27 @@ bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold)
 	return (::std::fabs(_f_lhv-_f_rhv) < _f_threshold);
 }
 #endif
+TParts  CString_Ex::Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep) const {
+	TParts  vec_;
+	if (NULL == _lp_sz_sep || 0 == ::lstrlen(_lp_sz_sep))
+		return vec_;
+	INT n_pos = 0;
+	CString cs_item = TBase::Tokenize(_lp_sz_sep, n_pos); if (cs_item.IsEmpty() == false) cs_item.Trim();
+
+	while (cs_item.IsEmpty() == false) {
+		try {
+			if (_b_preserve_sep) {
+				CString cs_preserved = cs_item; cs_preserved += _lp_sz_sep;
+				vec_.push_back(cs_preserved);
+			}
+			else
+			vec_.push_back(cs_item);
+		}
+		catch (::std::bad_alloc&) {
+			return vec_;
+		}
+		cs_item = TBase::Tokenize(_lp_sz_sep, n_pos); if (cs_item.IsEmpty() == false) cs_item.Trim();
+	}
+
+	return vec_;
+}

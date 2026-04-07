@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 24-Jun-2025 at 23:32:49.046, UTC+4, Batumi, Tuesday;
+	This is MS XML v6. library wrapper project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+    <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared> <!--This is the reference to the shared project of excerptions from Ebo Pack;-->
+    <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg>
+    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Root>$(ThisLib)</Root>
+  </PropertyGroup>
+  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+    <_0>interface\</_0>
+    <_1>src\</_1>
+    <_2>interface\data\</_2>
+    <_3>src\data\</_3>
+    <_4>$(Shared)interface\</_4>
+    <_5>$(Shared_Dbg)interface\</_5>
+    <_9></_9>
+    <_a></_a>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>                           	
+  <ItemDefinitionGroup />
+  <ItemGroup />
+</Project>

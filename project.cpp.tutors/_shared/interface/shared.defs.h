@@ -4,6 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Aug-2025 at 12:15:35.482, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack tutorial shared definitions' declaration file;
 */
+#pragma region __includes
 #include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/csimplestringt ;
 #include <atlwin.h>
 #include <atlstr.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class ;
@@ -17,8 +18,12 @@
 #include <ctime>          // for using in time & date wrappers, random iface is also uses it;
 #include <typeinfo>       // typeinfo >> exception >> vcruntime_exception >> ::std::bad_alloc;
 #include <vector>         // preprocessor wrapper uses this header;
-
+#pragma endregion
 #include "sys.err.trim.h" // includes error codes;
+
+#ifndef __guid_null
+#define __guid_null {0x00000000L, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
+#endif
 
 namespace shared { namespace defs {
 
@@ -50,12 +55,17 @@ namespace shared { namespace defs {
 		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
 		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/, const bool _b_low_case = true) ;
 #endif
-		_pc_sz Bool (const bool) ; // sets this string value to text: 'false' or 'true';
-		_pc_sz Dword (dword) ;     // sets this string to unsigned long value;
+		_pc_sz Bool  (const bool);   // sets this string value to text: 'false' or 'true';
+		_pc_sz Dword (dword);        // sets this string to unsigned long value;
 		_pc_sz Float (float, _pc_sz _p_format /*_T("%.8f")*/);
 		_pc_sz Float (float, t_fmt_spec = t_fmt_spec::e_decimal, _pc_sz _p_format = nullptr/*_T("%.2f")*/); // https://en.cppreference.com/w/cpp/io/c/fprintf ;
 		_pc_sz Format (_pc_sz _p_pattern, ...);
-		_pc_sz Long (long) ;       // sets this string to long value;
+
+		_guid  Guid (void) const ;  // converts string to guid; if error occurs, GUID_NULL is returned;
+		_pc_sz Guid (const _guid&); // converts guid to string;
+
+		_pc_sz Long (long) ;         // sets this string to long value;
+		TParts Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep = false) const;   // splits string by separator specified;
 	};
 #if (0)
 	// https://en.wikipedia.org/wiki/Fixed-point_arithmetic ;
