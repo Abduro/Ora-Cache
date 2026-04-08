@@ -115,12 +115,12 @@ namespace shared { namespace sys_core {
 	public:
 		_pc_sz  Get (void) const;        // gets error state details;
 		void    Set (const bool _reset); // if _reset is true, error state is OLE_E_BLANK; otherwise, the state is set to false (i.e. S_OK);
-		void    Set (const dword   _err_code);
-		void    Set (const dword   _err_code, _pc_sz _lp_sz_desc, ...); // sets the object state manually;
-		void    Set (const dword   _err_code, const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
+		void    Set (const dword    _err_code);
+		void    Set (const dword    _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
+		void    Set (const dword    _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
 		void    Set (const err_code _err_code); // sets error code and updates error description;
-		void    Set (const err_code _err_code, _pc_sz _lp_sz_desc, ...); // sets the object state manually;
-		void    Set (const err_code _err_code, const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
+		void    Set (const err_code _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
+		void    Set (const err_code _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
 		void    Set (_pc_sz  _sz_desc)     ; // sets a state description;
 		void    Set (_pc_sz  _sz_desc, ...); // sets a state description from pattern and multiple arguments;
 
@@ -217,6 +217,7 @@ namespace shared { namespace sys_core {
 		};
 
 		CError&  operator () (const e_cmds _n_cmd); // executes command specified through input arg;
+
 	
 	protected:
 		mutable

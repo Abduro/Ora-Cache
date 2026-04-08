@@ -225,6 +225,8 @@
     </ClCompile>
     <ClInclude Include="$(_2-1)test_case_$dat$.defs.h" />
     <ClCompile Include="$(_2-1)test_case_$dat$.defs.cpp" />
+    <ClInclude Include="$(_2-1)test_adap_$dat$.lib.module.h" />
+    <ClCompile Include="$(_2-1)test_adap_$dat$.lib.module.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2-1)test_adap_$dat$.msxml.h" />

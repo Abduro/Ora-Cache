@@ -7,6 +7,7 @@
 #include "_log.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
+#include "sys.com.svc.h"     // com-init() is required for working with MSXML;
 #include "sys.registry.h"
 
 namespace ebo { namespace boo { namespace test { namespace data {

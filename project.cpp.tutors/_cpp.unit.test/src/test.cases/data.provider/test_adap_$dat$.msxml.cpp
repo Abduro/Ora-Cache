@@ -6,6 +6,14 @@
 
 using namespace ebo::boo::test::data;
 
+#pragma region cls::c_xml_doc
+
+void c_xml_doc::Load (void) {
+
+	CTstXmlDoc().Load((_pc_sz) CTstLocator().Get_path(CTstLocator::e_prov_list)); _out()();
+}
+
+#pragma endregion
 #pragma region cls::c_xml_locator
 
 void c_xml_locator::Get_providers (void) {
@@ -15,7 +23,7 @@ void c_xml_locator::Get_providers (void) {
 
 void c_xml_locator::Get_spec (void) {
 
-	CTstLocator().Get_path(CTstLocator::e_spec); _out()();
+	CTstLocator().Get_path(CTstLocator::e_curr_spec); _out()();
 }
 
 #pragma endregion

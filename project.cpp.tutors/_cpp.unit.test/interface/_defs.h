@@ -34,7 +34,7 @@ namespace ebo { namespace boo { namespace test {
 #define __dtor(name)   TEST_METHOD(name)     // just for making a distinguishing between a method and a destructor of a class; not required;
 
 #define __method(name)   TEST_METHOD(name)   // a test method must be declared in the scope of the test class; *required*;
-#define __property(name) TEST_METHOD(name)   // just for a distinguishing between a method and a pproperty of a class; not required;
+#define __property(name) TEST_METHOD(name)   // just for a distinguishing between a method and a property of a class; not required;
 
 #define __befare_run(name) TEST_METHOD_INITIALIZE(name) // a method to be run *before each* test method is called; some sort of constructor of test case;
 #define __after_run(name)  TEST_METHOD_CLEANUP(name)    // a method to be run *after each* test method; some sort of destructor of thest case;

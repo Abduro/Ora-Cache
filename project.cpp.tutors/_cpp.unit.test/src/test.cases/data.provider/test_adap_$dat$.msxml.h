@@ -8,6 +8,17 @@
 
 namespace ebo { namespace boo { namespace test { namespace data {
 
+	__class (c_xml_doc) {
+	public:
+		 c_xml_doc (void) = default; c_xml_doc (const c_xml_doc&) = delete; c_xml_doc (c_xml_doc&&) = delete;
+		~c_xml_doc (void) = default;
+
+		__method (Load);
+
+	private:
+		c_xml_doc& operator = (const c_xml_doc&) = delete; c_xml_doc& operator = (c_xml_doc&&) = delete;
+	};
+
 	__class (c_xml_locator) {
 	public:
 		 c_xml_locator (void) = default; c_xml_locator (const c_xml_locator&) = delete; c_xml_locator (c_xml_locator&&) = delete;
