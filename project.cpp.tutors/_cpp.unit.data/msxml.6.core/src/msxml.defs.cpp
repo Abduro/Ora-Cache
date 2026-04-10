@@ -54,9 +54,9 @@ CServiceId& CServiceId::operator <<(const GUID& _cls_id) { this->ClsId() = _cls_
 CServiceId& CServiceId::operator <<(_pc_sz _p_prog_id) { this->ProgId(_p_prog_id); return *this; }
 
 #pragma endregion
-#pragma region cls::CSvc_Ids{}
+#pragma region cls::CDoc_Ids{}
 
-CSvc_Ids:: CSvc_Ids (void) {
+CDoc_Ids:: CDoc_Ids (void) {
 #if defined(_DEBUG)
 	bool b_break = false;
 
@@ -85,12 +85,12 @@ CSvc_Ids:: CSvc_Ids (void) {
 	} catch (const ::std::bad_alloc&) {}
 
 }
-CSvc_Ids::~CSvc_Ids (void) {}
+CDoc_Ids::~CDoc_Ids (void) {}
 
-const TRawSvcIds& CSvc_Ids::Raw (void) const { return this->m_ids; }
+const TRawSvcIds& CDoc_Ids::Raw (void) const { return this->m_ids; }
 
 #if defined(_DEBUG)
-CString  CSvc_Ids::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
+CString  CDoc_Ids::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) const {
 	_e_opt; _p_pfx; _p_sfx;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s] >> {%s}");
 	static _pc_sz pc_sz_pat_n = _T("cls::[%s] >> {%s}");
@@ -122,5 +122,21 @@ CString  CSvc_Ids::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) co
 	return  cs_out;
 }
 #endif
+
+#pragma endregion
+#pragma region cls::CSchema_Ids{}
+
+CSchema_Ids::CSchema_Ids (void) {
+	try {
+		this->m_ids.push_back(CServiceId(CLSID_XMLSchemaCache60, _T("CLSID_XMLSchemaCache.6.0")));
+		this->m_ids.push_back(CServiceId(CLSID_XMLSchemaCache30, _T("CLSID_XMLSchemaCache.3.0")));
+		this->m_ids.push_back(CServiceId(CLSID_XMLSchemaCache26, _T("CLSID_XMLSchemaCache.2.6")));
+		this->m_ids.push_back(CServiceId(CLSID_XMLSchemaCache26, _T("CLSID_XMLSchemaCache.2.6")));
+		this->m_ids.push_back(CServiceId(CLSID_XMLSchemaCache  , _T("CLSID_XMLSchemaCache")));
+	} catch (const ::std::bad_alloc&) {}
+}
+CSchema_Ids::~CSchema_Ids (void) {}
+
+const TRawSvcIds& CSchema_Ids::Raw (void) const { return this->m_ids; }
 
 #pragma endregion

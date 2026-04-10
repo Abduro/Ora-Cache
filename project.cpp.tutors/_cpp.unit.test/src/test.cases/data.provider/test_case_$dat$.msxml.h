@@ -6,19 +6,26 @@
 */
 #include "test_case_$dat$.defs.h"
 #include "msxml.doc.h"
+#include "msxml.schema.h"
 
 namespace ebo { namespace boo { namespace test { namespace data {
 	// gets XML file path from the registry;
 	class CTstLocator {
 	public:
-		enum e_docs : uint32_t { // predefined xml document types;
+		enum class e_docs : uint32_t { // predefined xml document types;
 		     e_prov_list, // contains the path to the file of data providers' list;
 		     e_curr_spec, // contains the path to the file of currency specification;
+		};
+		enum class e_schemas : uint32_t {
+		     e_prov_list = (uint32_t)e_docs::e_curr_spec + 1,
+		     e_curr_spec
 		};
 		 CTstLocator (void) = default; CTstLocator (const CTstLocator&) = delete; CTstLocator (CTstLocator&&) = delete;
 		~CTstLocator (void) = default;
 
 		CString  Get_path (const e_docs, const bool _b_cls_out = true); // gets the path of given document type; if empty path is returned the error occurs;
+		CString  Get_path (const e_schemas, const bool _b_cls_out = true); // gets the path to XSD schema file by given value of enumeration;
+
 		const
 		TRegKeyEx& operator ()(void) const;
 		TRegKeyEx& operator ()(void) ;
@@ -35,7 +42,7 @@ namespace ebo { namespace boo { namespace test { namespace data {
 		 CTstXmlDoc (void) = default; CTstXmlDoc (const CTstXmlDoc&) = delete; CTstXmlDoc (CTstXmlDoc&&) = delete;
 		~CTstXmlDoc (void) = default;
 
-		err_code  Load (_pc_sz _p_path); // loads xml file and builds xml document (DOM);
+		err_code  Load (_pc_sz _p_xml_path); // loads xml file and builds xml document (DOM);
 
 		const
 		CDocument& operator ()(void) const;
@@ -44,6 +51,24 @@ namespace ebo { namespace boo { namespace test { namespace data {
 	private:
 		CTstXmlDoc&  operator = (const CTstXmlDoc&) = delete; CTstXmlDoc& operator = (CTstXmlDoc&&) = delete;
 		CDocument m_doc;
+	};
+
+	using CSchema = shared::xml::ms::CSchema;
+
+	class CTstSchema {
+	public:
+		 CTstSchema (void) = default; CTstSchema (const CTstSchema&) = delete; CTstSchema (CTstSchema&&) = delete;
+		~CTstSchema (void) = default;
+
+		err_code  Load (_pc_sz _p_xsd_path); // loads xsd file and creates schema cache;
+
+		const
+		CSchema& operator ()(void) const;
+		CSchema& operator ()(void) ;
+
+	private:
+		CTstSchema&  operator = (const CTstSchema&) = delete; CTstSchema& operator = (CTstSchema&&) = delete;
+		CSchema m_schema;
 	};
 
 }}}}

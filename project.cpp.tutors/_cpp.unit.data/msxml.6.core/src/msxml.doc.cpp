@@ -19,7 +19,7 @@ err_code    CDocument::Create(const bool _b_norm) {
 	if (this->m_pDoc)
 		return this->m_error() << (err_code) TErrCodes::eObject::eExists = _T("Document object is already created;");
 
-	const CSvc_Ids svc_ids;
+	const CDoc_Ids svc_ids;
 
 	for (uint32_t i_ = 0; i_ < svc_ids.Raw().size(); i_++) {
 
@@ -44,7 +44,6 @@ err_code    CDocument::Create(const bool _b_norm) {
 }
 
 err_code    CDocument::Close (void) {
-
 	this->m_error() << __METHOD__ << __s_ok;
 
 	if (nullptr == (*this)())
@@ -64,13 +63,15 @@ err_code    CDocument::Load(_pc_sz _xml_file_path) {
 	this->m_error() << __METHOD__ <<__s_ok;
 
 	if (nullptr == _xml_file_path || 0 == ::_tcslen(_xml_file_path))
-		return this->m_error() << __e_inv_arg;
+		return this->m_error() << __e_inv_arg = _T("XML file path is invalid");
 
 	if (false == this->Is())
-		return this->m_error() << __e_not_inited;
+		return this->m_error() << __e_not_inited = _T("Interface object is not created");
 
 	_variant_t v_result_3((short)0, VT_I2);
 	
+	// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms753794(v=vs.85) << the example of loading XML document from file;
+
 	this->m_error() << this->Ptr()->load(_variant_t(_xml_file_path), &v_result_3.iVal); // *load*, *NOT* loadXML!
 	if (this->m_error())
 		return this->Error();       // no error parsing yet, just return the error of loading;
@@ -150,6 +151,25 @@ CNode&      CDocument::Root  (void)       { return this->m_root; }
 const
 CSvc_Id&    CDocument::Svc_Id (void) const { return this->m_svc_id; }
 CSvc_Id&    CDocument::Svc_Id (void)       { return this->m_svc_id; }
+
+err_code    CDocument::Validate (const CSchema& _schema) {
+	_schema;
+	this->m_error() << __METHOD__ << __s_ok;
+
+	if (false == this->Is())
+		return this->m_error() << __e_not_inited = _T("#__e_state: document interface object is not created");
+
+	if (false == _schema.Is())
+		return this->m_error() << __e_inv_arg = _T("#__e_inv_arg: input schema cache is invalid");
+
+	this->m_error() << this->Ptr()->putref_schemas(_variant_t(_schema.Ptr()));
+	if (this->Error())
+		return this->Error();
+
+	this->m_error() << this->Ptr()->validate(&this->m_error.Ptr());
+
+	return this->Error();
+}
 
 CDocument&  CDocument::operator = (const CDocument& _doc) { *this << _doc.Ptr() << _doc.Svc_Id(); return *this; }
 CDocument&  CDocument::operator <<(const TDocPtr& _p_doc) {  this->Ptr() = _p_doc; return *this; }

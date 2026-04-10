@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+	elementFormDefault ="qualified"
+	xmlns:xs ="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://tempuri.org/"
+	targetNamespace="http://tempuri.org/">
+<xs:element name="currencies">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name = "currency">
+				<xs:complexType>
+					<xs:attribute name="id" type="xs:string"/>
+					<xs:attribute name="name" type="xs:string"/>
+					<xs:attribute name="isFlat" type="xs:string"/>
+					<xs:attribute name="description" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+</xs:schema>

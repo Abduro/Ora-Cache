@@ -14,6 +14,7 @@ namespace ebo { namespace boo { namespace test { namespace data {
 		~c_xml_doc (void) = default;
 
 		__method (Load);
+		__method (Validate);
 
 	private:
 		c_xml_doc& operator = (const c_xml_doc&) = delete; c_xml_doc& operator = (c_xml_doc&&) = delete;
@@ -29,6 +30,29 @@ namespace ebo { namespace boo { namespace test { namespace data {
 
 	private:
 		c_xml_locator& operator = (const c_xml_locator&) = delete; c_xml_locator& operator = (c_xml_locator&&) = delete;
+	};
+
+	__class (c_xsd_locator) {
+	public:
+		 c_xsd_locator (void) = default; c_xsd_locator (const c_xsd_locator&) = delete; c_xsd_locator (c_xsd_locator&&) = delete;
+		~c_xsd_locator (void) = default;
+
+		__method (Get_providers);
+		__method (Get_spec);
+
+	private:
+		c_xsd_locator& operator = (const c_xsd_locator&) = delete; c_xsd_locator& operator = (c_xsd_locator&&) = delete;
+	};
+
+	__class (c_xsd_schema) {
+	public:
+		 c_xsd_schema (void) = default; c_xsd_schema (const c_xsd_schema&) = delete; c_xsd_schema (c_xsd_schema&&) = delete;
+		~c_xsd_schema (void) = default;
+
+		__method (Load);
+
+	private:
+		c_xsd_schema& operator = (const c_xsd_schema&) = delete; c_xsd_schema& operator = (c_xsd_schema&&) = delete;
 	};
 
 }}}}

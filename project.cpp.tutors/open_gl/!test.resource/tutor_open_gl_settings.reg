@@ -14,6 +14,16 @@ REGEDIT4
 "Right"=dword:00000523
 "Bottom"=dword:0000038f
 
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data\Xml]
+"Providers"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\ebo.bot.data.providers.xml"
+"Spec"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\collection-test.xml"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data\Xsd]
+"Providers"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\ebo.bot.data.providers.xsd"
+"Spec"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\collection-test.xsd"
+
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Context]
@@ -56,4 +66,10 @@ REGEDIT4
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Viewport\Grid\Cell]
 "height"=dword:00000064
 "width"=dword:00000015
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Trace]
+"left"="168"
+"top"="361"
+"right"="1169"
+"bottom"="551"
 

@@ -10,6 +10,7 @@
 #include "msxml.error.h"
 #include "msxml.gen.iface.h"
 #include "msxml.root.h"
+#include "msxml.schema.h"
 
 namespace shared { namespace xml { namespace ms {
 
@@ -46,6 +47,8 @@ namespace shared { namespace xml { namespace ms {
 		CSvc_Id&   Svc_Id (void) const;
 		CSvc_Id&   Svc_Id (void) ;
 
+		err_code   Validate (const CSchema&);
+
 	public:
 		CDocument& operator = (const CDocument&);
 		CDocument& operator = (CDocument&&) = delete;
@@ -63,7 +66,6 @@ namespace shared { namespace xml { namespace ms {
 		CSvc_Id    m_svc_id;
 		CNode      m_root ;
 	};
-
 }}}
 
 #endif/*_MSXMLDOCUMENT_H_INCLUDED*/

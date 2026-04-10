@@ -23,6 +23,8 @@
     <ClCompile Include="$(_1)msxml.gen.iface.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)msxml.root.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)msxml.root.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)msxml.schema.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)msxml.schema.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2)msxml.base.h"><Filter>interface\data</Filter></ClInclude>

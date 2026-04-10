@@ -1,28 +1,28 @@
-
-{
-"USD" : {"id":  8, "name":"USD"  ,"isFiat":true , "description" : "US dollar"   },
-"EUR" : {"id": 12, "name":"EUR"  ,"isFiat":true , "description" : "Euro"        },
-"RUB" : {"id":  6, "name":"RUB"  ,"isFiat":true , "description" : "Ruble"       },
-"PLN" : {"id": 32, "name":"PLN"  ,"isFiat":true , "description" : "Polish zloty"},
-"UAH" : {"id": 23, "name":"UAH"  ,"isFiat":true , "description" : "Hryvnia"     },
-"BTC" : {"id":  7, "name":"BTC"  ,"isFiat":false, "description" : "Bitcoin"     },
-"LTC" : {"id":  9, "name":"LTC"  ,"isFiat":false, "description" : "Litecoin"    },
-"DOGE": {"id": 13, "name":"DOGE" ,"isFiat":false, "description" : "Dogecoin"    },
-"DASH": {"id": 21, "name":"DASH" ,"isFiat":false, "description" : "Dash"        },
-"ETH" : {"id": 22, "name":"ETH"  ,"isFiat":false, "description" : "Ethereum"    },
-"WAVES":{"id": 24, "name":"WAVES","isFiat":false, "description" : "Waves"       },
-"ZEC" : {"id": 25, "name":"ZEC"  ,"isFiat":false, "description" : "Zcash"       },
-"USDT": {"id": 26, "name":"USDT" ,"isFiat":false, "description" : "Tether"      },
-"XMR" : {"id": 27, "name":"XMR"  ,"isFiat":false, "description" : "Monero"      },
-"XRP" : {"id": 28, "name":"XRP"  ,"isFiat":false, "description" : "Ripple"      },
-"KICK": {"id": 29, "name":"KICK" ,"isFiat":false, "description" : "KickCoin"    },
-"ETC" : {"id": 30, "name":"ETC"  ,"isFiat":false, "description" : "Ethereum Classic"},
-"BCH" : {"id": 31, "name":"BCH"  ,"isFiat":false, "description" : "Bitcoin Cash"},
-"BTG" : {"id": 33, "name":"BTG"  ,"isFiat":false, "description" : "Bitcoin Gold"},
-"EOS" : {"id": 34, "name":"EOS"  ,"isFiat":false, "description" : "EOS"         },
-"HBZ" : {"id": 35, "name":"HBZ"  ,"isFiat":false, "description" : "Helbiz"      },
-"BTCZ": {"id": 36, "name":"BTCZ" ,"isFiat":false, "description" : "BitcoinZ"    },
-"DXT" : {"id": 37, "name":"DXT"  ,"isFiat":false, "description" : "Datawallet"  },
-"STQ" : {"id": 38, "name":"STQ"  ,"isFiat":false, "description" : "Storiqa"     },
-"XLM" : {"id": 39, "name":"XLM"  ,"isFiat":false, "description" : "Stellar"     }
-}; 
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<currencies xmlns="x-schema:currencies">
+	<currency id=" 8" name= "USD"   isFlat="true " description= "US dollar"    />
+	<currency id="12" name= "EUR"   isFlat="true " description= "Euro"         />
+	<currency id=" 6" name= "RUB"   isFlat="true " description= "Ruble"        />
+	<currency id="32" name= "PLN"   isFlat="true " description= "Polish zloty" />
+	<currency id="23" name= "UAH"   isFlat="true " description= "Hryvnia"      />
+	<currency id=" 7" name= "BTC"   isFlat="false" description= "Bitcoin"      />
+	<currency id=" 9" name= "LTC"   isFlat="false" description= "Litecoin"     />
+	<currency id="13" name= "DOGE"  isFlat="false" description= "Dogecoin"     />
+	<currency id="21" name= "DASH"  isFlat="false" description= "Dash"         />
+	<currency id="22" name= "ETH"   isFlat="false" description= "Ethereum"     />
+	<currency id="24" name= "WAVES" isFlat="false" description= "Waves"        />
+	<currency id="25" name= "ZEC"   isFlat="false" description= "Zcash"        />
+	<currency id="26" name= "USDT"  isFlat="false" description= "Tether"       />
+	<currency id="27" name= "XMR"   isFlat="false" description= "Monero"       />
+	<currency id="28" name= "XRP"   isFlat="false" description= "Ripple"       />
+	<currency id="29" name= "KICK"  isFlat="false" description= "KickCoin"     />
+	<currency id="30" name= "ETC"   isFlat="false" description= "Ethereum Classic=" />
+	<currency id="31" name= "BCH"   isFlat="false" description= "Bitcoin Cash" />
+	<currency id="33" name= "BTG"   isFlat="false" description= "Bitcoin Gold" />
+	<currency id="34" name= "EOS"   isFlat="false" description= "EOS"          />
+	<currency id="35" name= "HBZ"   isFlat="false" description= "Helbiz"       />
+	<currency id="36" name= "BTCZ"  isFlat="false" description= "BitcoinZ"     />
+	<currency id="37" name= "DXT"   isFlat="false" description= "Datawallet"   />
+	<currency id="38" name= "STQ"   isFlat="false" description= "Storiqa"      />
+	<currency id="39" name= "XLM"   isFlat="false" description= "Stellar"      />	
+</currencies>

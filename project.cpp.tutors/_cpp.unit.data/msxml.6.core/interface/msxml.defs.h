@@ -77,10 +77,11 @@ namespace shared { namespace xml { namespace ms {
 
 	typedef ::std::vector<CServiceId> TRawSvcIds;
 
-	class CSvc_Ids {
+	// XML DOM document interface identifiers;
+	class CDoc_Ids {
 	public:
-		 CSvc_Ids (void); CSvc_Ids (const CSvc_Ids&) = delete; CSvc_Ids (CSvc_Ids&&) = delete;
-		~CSvc_Ids (void);
+		 CDoc_Ids (void); CDoc_Ids (const CDoc_Ids&) = delete; CDoc_Ids (CDoc_Ids&&) = delete;
+		~CDoc_Ids (void);
 
 	public:
 		const TRawSvcIds& Raw (void) const;
@@ -89,10 +90,26 @@ namespace shared { namespace xml { namespace ms {
 #endif
 
 	private:
-		CSvc_Ids& operator = (const CSvc_Ids&) = delete;
-		CSvc_Ids& operator = (CSvc_Ids&&) = delete;
+		CDoc_Ids& operator = (const CDoc_Ids&) = delete;
+		CDoc_Ids& operator = (CDoc_Ids&&) = delete;
 
 	private:
+		TRawSvcIds m_ids;
+	};
+
+	typedef ::ATL::CComPtr<IXMLDOMSchemaCollection> TXmlSchemaCachePtr; typedef TXmlSchemaCachePtr  TSchemaPtr;
+
+	class CSchema_Ids {
+	public:
+		 CSchema_Ids (void); CSchema_Ids (const CSchema_Ids&) = delete; CSchema_Ids (CSchema_Ids&&) = delete;
+		~CSchema_Ids (void);
+
+	public:
+		const TRawSvcIds& Raw (void) const;
+
+	private:
+		CSchema_Ids& operator = (const CSchema_Ids&) = delete;
+		CSchema_Ids& operator = (CSchema_Ids&&) = delete;
 		TRawSvcIds m_ids;
 	};
 
