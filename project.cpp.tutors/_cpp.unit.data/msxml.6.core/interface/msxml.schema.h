@@ -8,8 +8,8 @@
 
 namespace shared { namespace xml { namespace ms {
 
-	using CSvc_Id  = CServiceId;
-
+	using CSvc_Id = CServiceId;
+	// https://learn.microsoft.com/en-us/previous-versions/office/infopath-external/dn929912(v=office.15) ;
 	class CSchema {
 	public:
 		 CSchema (void); CSchema (const CSchema&) = delete; CSchema (CSchema&&) = delete;

@@ -16,7 +16,7 @@
 	<currency id="27" name= "XMR"   isFlat="false" description= "Monero"       />
 	<currency id="28" name= "XRP"   isFlat="false" description= "Ripple"       />
 	<currency id="29" name= "KICK"  isFlat="false" description= "KickCoin"     />
-	<currency id="30" name= "ETC"   isFlat="false" description= "Ethereum Classic=" />
+	<currency id="30" name= "ETC"   isFlat="false" description= "Ethereum Classic" />
 	<currency id="31" name= "BCH"   isFlat="false" description= "Bitcoin Cash" />
 	<currency id="33" name= "BTG"   isFlat="false" description= "Bitcoin Gold" />
 	<currency id="34" name= "EOS"   isFlat="false" description= "EOS"          />

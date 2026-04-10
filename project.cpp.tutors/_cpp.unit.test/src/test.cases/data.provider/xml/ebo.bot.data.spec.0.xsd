@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema
-	elementFormDefault ="qualified"
-	xmlns:xs ="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://tempuri.org/"
-	targetNamespace="http://tempuri.org/">
+<xs:schema xmlns:xs ="http://www.w3.org/2001/XMLSchema"><!--only this attribute is required!-->
 <xs:element name="currencies">
 	<xs:complexType>
-		<xs:sequence maxOccurs="unbounded" minOccurs="0">
+		<xs:sequence>
 			<xs:element name = "currency" type = "currency_t" maxOccurs="unbounded" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>

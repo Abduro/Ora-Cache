@@ -25,6 +25,7 @@ namespace ebo { namespace boo { namespace test { namespace data {
 		 c_xml_locator (void) = default; c_xml_locator (const c_xml_locator&) = delete; c_xml_locator (c_xml_locator&&) = delete;
 		~c_xml_locator (void) = default;
 
+		__method (Get_logo);
 		__method (Get_providers);
 		__method (Get_spec);
 
@@ -37,6 +38,7 @@ namespace ebo { namespace boo { namespace test { namespace data {
 		 c_xsd_locator (void) = default; c_xsd_locator (const c_xsd_locator&) = delete; c_xsd_locator (c_xsd_locator&&) = delete;
 		~c_xsd_locator (void) = default;
 
+		__method (Get_logo);
 		__method (Get_providers);
 		__method (Get_spec);
 

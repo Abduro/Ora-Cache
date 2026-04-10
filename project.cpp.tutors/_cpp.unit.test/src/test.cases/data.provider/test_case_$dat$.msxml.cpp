@@ -15,6 +15,7 @@ CString __e_doc_to_str (const e_docs _e_doc) {
 	CString cs_out;
 	switch (_e_doc) {
 	case e_docs::e_prov_list: cs_out = _T("e_prov_list"); break;
+	case e_docs::e_prov_logo: cs_out = _T("e_prov_logo"); break;
 	case e_docs::e_curr_spec: cs_out = _T("e_curr_spec"); break;
 	default: cs_out = _T("#__e_undef");
 	}
@@ -26,6 +27,7 @@ CString __e_schemas_to_str (const e_schemas _e_schema) {
 	CString cs_out;
 	switch (_e_schema) {
 	case e_schemas::e_prov_list: cs_out = _T("e_prov_list"); break;
+	case e_schemas::e_prov_logo: cs_out = _T("e_prov_logo"); break;
 	case e_schemas::e_curr_spec: cs_out = _T("e_curr_spec"); break;
 	default: cs_out = _T("#__e_undef");
 	}
@@ -42,8 +44,12 @@ CString __e_schemas_to_str (const e_schemas _e_schema) {
 			CString cs_pat;
 			
 			if (false) {}
-			else if ((uint32_t)e_docs::e_prov_list == _e_key || (uint32_t)e_docs::e_curr_spec == _e_key) cs_pat = _T("%s\\Data\\Xml");
-			else if ((uint32_t)e_schemas::e_prov_list == _e_key || (uint32_t)e_schemas::e_curr_spec == _e_key) cs_pat = _T("%s\\Data\\Xsd");
+			else if ((uint32_t)e_docs::e_prov_list == _e_key
+			      || (uint32_t)e_docs::e_prov_logo == _e_key
+			      || (uint32_t)e_docs::e_curr_spec == _e_key) cs_pat = _T("%s\\Data\\Xml");
+			else if ((uint32_t)e_schemas::e_prov_list == _e_key
+			      || (uint32_t)e_schemas::e_prov_logo == _e_key
+			      || (uint32_t)e_schemas::e_curr_spec == _e_key) cs_pat = _T("%s\\Data\\Xsd");
 
 			CString cs_out;cs_out.Format((_pc_sz) cs_pat, ::Get_reg_router().Root().Path());
 			return  cs_out;
@@ -53,8 +59,9 @@ CString __e_schemas_to_str (const e_schemas _e_schema) {
 			_e_key;
 			CString cs_out;
 			if (false) {}
-			else if ((uint32_t)e_docs::e_prov_list == _e_key || (uint32_t)e_docs::e_curr_spec == _e_key) cs_out = _T("Providers");
-			else if ((uint32_t)e_schemas::e_prov_list == _e_key || (uint32_t)e_schemas::e_curr_spec == _e_key) cs_out = _T("Spec");
+			else if ((uint32_t)e_docs::e_prov_list == _e_key || (uint32_t)e_schemas::e_prov_list == _e_key) cs_out = _T("Providers");
+			else if ((uint32_t)e_docs::e_prov_logo == _e_key || (uint32_t)e_schemas::e_prov_logo == _e_key) cs_out = _T("Logo");
+			else if ((uint32_t)e_docs::e_curr_spec == _e_key || (uint32_t)e_schemas::e_curr_spec == _e_key) cs_out = _T("Spec");
 
 			return  cs_out;
 		}

@@ -14,11 +14,13 @@ namespace ebo { namespace boo { namespace test { namespace data {
 	public:
 		enum class e_docs : uint32_t { // predefined xml document types;
 		     e_prov_list, // contains the path to the file of data providers' list;
+			 e_prov_logo, // data provider logo image encoded by base64bin;
 		     e_curr_spec, // contains the path to the file of currency specification;
 		};
 		enum class e_schemas : uint32_t {
-		     e_prov_list = (uint32_t)e_docs::e_curr_spec + 1,
-		     e_curr_spec
+		     e_prov_list = (uint32_t) e_docs::e_curr_spec + 1,
+			 e_prov_logo,
+		     e_curr_spec,
 		};
 		 CTstLocator (void) = default; CTstLocator (const CTstLocator&) = delete; CTstLocator (CTstLocator&&) = delete;
 		~CTstLocator (void) = default;
