@@ -70,19 +70,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$w$.inc.props" />
+    <Import Project="ebo_test_$win$.api.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$w$.inc.props" />
+    <Import Project="ebo_test_$win$.api.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$w$.inc.props" />
+    <Import Project="ebo_test_$win$.api.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$w$.inc.props" />
+    <Import Project="ebo_test_$win$.api.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -251,8 +251,17 @@
     <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$w$.menu.h" />
+    <ClCompile Include="$(_2-0)test_case_$w$.menu.cpp" />
+    <ClInclude Include="$(_2)ebo_test_$w$.menu.h" />
+    <ClCompile Include="$(_2)ebo_test_$w$.menu.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>

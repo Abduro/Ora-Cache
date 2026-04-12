@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0008}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000009}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -36,6 +36,8 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -43,12 +45,16 @@
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -56,6 +62,8 @@
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -64,19 +72,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="ms.xml.6.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="ms.xml.6.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="ms.xml.6.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="ms.xml.6.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -84,28 +92,32 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
+    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntPath_64>
+    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntPath_86>
+    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
+    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot_86>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -114,15 +126,16 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_DEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN64;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -130,15 +143,16 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,15 +162,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NODEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -170,15 +183,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NODEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>NDEBUG;WIN64;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -193,50 +208,26 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="$(_0)msxml.defs.h"/>
+    <ClCompile Include="$(_1)msxml.defs.cpp"/>
+    <ClInclude Include="$(_0)msxml.doc.h"/>
+    <ClCompile Include="$(_1)msxml.doc.cpp"/>
+    <ClInclude Include="$(_0)msxml.error.h"/>
+    <ClCompile Include="$(_1)msxml.error.cpp"/>
+    <ClInclude Include="$(_0)msxml.gen.iface.h"/>
+    <ClCompile Include="$(_1)msxml.gen.iface.cpp"/>
+    <ClInclude Include="$(_0)msxml.root.h"/>
+    <ClCompile Include="$(_1)msxml.root.cpp"/>
+    <ClInclude Include="$(_0)msxml.schema.h"/>
+    <ClCompile Include="$(_1)msxml.schema.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0-0)gl_procs_buf.mem.h" />
-    <ClCompile Include="$(_1-0)gl_procs_buf.mem.cpp" />
-    <ClInclude Include="$(_0-0)gl_procs_buf.prop.h" />
-    <ClCompile Include="$(_1-0)gl_procs_buf.prop.cpp" />
-    <ClInclude Include="$(_0-0)gl_procs_buffer.h" />
-    <ClCompile Include="$(_1-0)gl_procs_buffer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0-1)gl_procs_mtx.mode.h" />
-    <ClCompile Include="$(_1-1)gl_procs_mtx.mode.cpp" />
-    <ClInclude Include="$(_0-1)gl_procs_mtx.oper.h" />
-    <ClCompile Include="$(_1-1)gl_procs_mtx.oper.cpp" />
-    <ClInclude Include="$(_0-1)gl_procs_mtx.stack.h" />
-    <ClCompile Include="$(_1-1)gl_procs_mtx.stack.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0)gl_error.h" />
-    <ClCompile Include="$(_1)gl_error.cpp" />
-    <ClInclude Include="$(_0)gl_procs.h" />
-    <ClCompile Include="$(_1)gl_procs.cpp" />
-    <ClInclude Include="$(_0)gl_procs_base.h" />
-    <ClCompile Include="$(_1)gl_procs_base.cpp" />
-    <ClInclude Include="$(_0)gl_procs_ctx.h" />
-    <ClCompile Include="$(_1)gl_procs_ctx.cpp" />
-    <ClInclude Include="$(_0)gl_procs_ext.h" />
-    <ClCompile Include="$(_1)gl_procs_ext.cpp" />
-    <ClInclude Include="$(_0)gl_procs_math.h" />
-    <ClCompile Include="$(_1)gl_procs_math.cpp" />
-    <ClInclude Include="$(_0)gl_procs_prog.h" />
-    <ClCompile Include="$(_1)gl_procs_prog.cpp" />
-    <ClInclude Include="$(_0)gl_procs_shader.h" />
-    <ClCompile Include="$(_1)gl_procs_shader.cpp" />
-    <ClInclude Include="$(_0)gl_procs_surface.h" />
-    <ClCompile Include="$(_1)gl_procs_surface.cpp" />
-    <ClInclude Include="$(_0)gl_procs_uniform.h" />
-    <ClCompile Include="$(_1)gl_procs_uniform.cpp" />
-    <ClInclude Include="$(_0)gl_procs_vertex.h" />
-    <ClCompile Include="$(_1)gl_procs_vertex.cpp" />
-    <ClInclude Include="$(_0)gl_procs_view.h" />
-    <ClCompile Include="$(_1)gl_procs_view.cpp" />
-    <ClInclude Include="$(_0)gl_types.h" />
-    <ClCompile Include="$(_1)gl_types.cpp" />
+    <ClInclude Include="$(_2)msxml.base.h" />
+    <ClCompile Include="$(_3)msxml.base.cpp" />
+    <ClInclude Include="$(_2)msxml.http.h" />
+    <ClCompile Include="$(_3)msxml.http.cpp" />
+    <ClInclude Include="$(_2)msxml.ntfs.h" />
+    <ClCompile Include="$(_3)msxml.ntfs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
@@ -244,9 +235,6 @@
     </ProjectReference>
     <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

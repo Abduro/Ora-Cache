@@ -39,6 +39,8 @@
     <ClCompile Include="$(_1)gl_procs_base.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_ctx.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_ctx.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_procs_ext.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_ext.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_math.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_math.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_prog.h"><Filter>interface</Filter></ClInclude>

@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Feb-2026 at 10:03:39.078, UTC+4, Batumi, Saturday;
 	This is Ebo Pack window shortcut menu wrapper unit test adapter interface implementation file.
 */
-#include "ebo_test_$d$.menu.h"
+#include "ebo_test_$w$.menu.h"
 
 using namespace ebo::boo::test::win_api::menu;
 
@@ -27,7 +27,9 @@ void c_ctx_menu::Find (void) {
 	const uint32_t u_cmd_id = 1;
 
 	if (__failed(menu.Create())) { _out()(); return; }
-	if (__failed(menu_enum.Find(menu()(), u_cmd_id, h_menu))) { _out()(); return; }
+	if (__failed(menu_enum.Find(menu()(), u_cmd_id, h_menu))) {}
+
+	_out()();
 }
 
 void c_ctx_menu::Enabled (void) {

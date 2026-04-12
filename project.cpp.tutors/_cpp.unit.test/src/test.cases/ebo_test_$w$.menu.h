@@ -1,10 +1,10 @@
-#ifndef _EBO_TEST_$D$_MENU_H_INCLUDED
-#define _EBO_TEST_$D$_MENU_H_INCLUDED
+#ifndef _EBO_TEST_$W$_MENU_H_INCLUDED
+#define _EBO_TEST_$W$_MENU_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Feb-2026 at 10:03:39.078, UTC+4, Batumi, Saturday;
 	This is Ebo Pack window shortcut menu wrapper unit test adapter interface declaration file.
 */
-#include "test_case_$d$.menu.h"
+#include "test_case_$w$.menu.h"
 
 namespace ebo { namespace boo { namespace test { namespace win_api { namespace menu {
 	using namespace ebo::boo::test;
@@ -23,4 +23,4 @@ namespace ebo { namespace boo { namespace test { namespace win_api { namespace m
 
 }}}}}
 
-#endif/*_EBO_TEST_$D$_MENU_H_INCLUDED*/
+#endif/*_EBO_TEST_$W$_MENU_H_INCLUDED*/

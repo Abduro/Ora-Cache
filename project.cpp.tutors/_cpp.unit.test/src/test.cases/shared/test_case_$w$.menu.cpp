@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Feb-2026 at 09:44:29.979, UTC+4, Batumi, Saturday;
 	This is Ebo Pack window shortcut menu wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_case_$d$.menu.h"
+#include "test_case_$w$.menu.h"
 
 using namespace ebo::boo::test::win_api::menu;
 

@@ -230,8 +230,6 @@
     <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp" />
-    <ClInclude Include="$(_2-0)test_case_$d$.menu.h" />
-    <ClCompile Include="$(_2-0)test_case_$d$.menu.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.render.h" />
@@ -256,8 +254,6 @@
     <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.menu.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.menu.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.prog.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.render.h" />

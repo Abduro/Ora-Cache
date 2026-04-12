@@ -1,10 +1,10 @@
-#ifndef _TEST_CASE_$D$_MENU_H_INCLUDED
-#define _TEST_CASE_$D$_MENU_H_INCLUDED
+#ifndef _TEST_CASE_$W$_MENU_H_INCLUDED
+#define _TEST_CASE_$W$_MENU_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Feb-2026 at 09:38:55.937, UTC+4, Batumi, Saturday;
 	This is Ebo Pack window shortcut menu wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$d$.defs.h"
+#include "ebo_test_$w$.defs.h"
 #include "shared.ctx.menu.h"
 
 namespace ebo { namespace boo { namespace test { namespace win_api { namespace menu {
@@ -56,4 +56,4 @@ namespace ebo { namespace boo { namespace test { namespace win_api { namespace m
 
 }}}}}
 
-#endif/*_TEST_CASE_$D$_MENU_H_INCLUDED*/
+#endif/*_TEST_CASE_$W$_MENU_H_INCLUDED*/

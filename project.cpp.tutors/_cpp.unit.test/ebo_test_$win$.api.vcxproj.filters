@@ -16,6 +16,9 @@
     <Filter Include="thread"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060038}</UniqueIdentifier></Filter>
     <Filter Include="thread\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060039}</UniqueIdentifier></Filter>
 
+    <Filter Include="gui"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006003A}</UniqueIdentifier></Filter>
+    <Filter Include="gui\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006003B}</UniqueIdentifier></Filter>
+
   </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -50,5 +53,11 @@
     <ClCompile Include="$(_2-0)test_case_$w$.run.tpl.cpp"><Filter>thread\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$w$.thread.h"><Filter>thread</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp"><Filter>thread</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$w$.menu.h"><Filter>gui\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.menu.cpp"><Filter>gui\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)ebo_test_$w$.menu.h"><Filter>gui</Filter></ClInclude>
+    <ClCompile Include="$(_2)ebo_test_$w$.menu.cpp"><Filter>gui</Filter></ClCompile>
   </ItemGroup>
 </Project>
