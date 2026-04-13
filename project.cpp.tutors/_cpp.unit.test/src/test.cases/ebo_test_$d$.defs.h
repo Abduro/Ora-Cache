@@ -9,7 +9,8 @@
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
+
 	using namespace ebo::boo::test;
 
 	/**important*: the main rules of error trace:
@@ -17,7 +18,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
 	*/
 
-}}}}}
+}}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "gl.procs_v15.lib")     // open_gl procs loader lib;

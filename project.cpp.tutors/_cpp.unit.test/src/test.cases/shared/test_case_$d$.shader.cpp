@@ -10,12 +10,12 @@
 
 #include "sys.registry.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 using CCompiler = ex_ui::draw::open_gl::shader::CCompiler;
 using CStatus = ex_ui::draw::open_gl::shader::CStatus;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
+namespace test { namespace draw { namespace open_gl { namespace _impl {
 
 	class CReg_helper {
 	        CReg_helper (const CReg_helper&) = delete; CReg_helper (CReg_helper&&) = delete;
@@ -52,7 +52,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _
 		CError m_error;
 	};
 
-}}}}}
+}}}}
 
 #pragma region cls::C$Base{}
 

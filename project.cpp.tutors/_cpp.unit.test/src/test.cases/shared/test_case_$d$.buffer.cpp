@@ -6,7 +6,7 @@
 #include "test_case_$d$.shape.2d.h"
 #include "test_case_$d$.vert.arr.dat.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 #pragma region cls::CVertBufData{}
 

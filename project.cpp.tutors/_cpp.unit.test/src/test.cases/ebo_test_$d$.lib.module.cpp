@@ -5,14 +5,14 @@
 #include "ebo_test_$d$.lib.module.h"
 #include <locale>
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 #if (1)
 /* without specifying the namespace of procedures' location the linker cannot find their definitions and throws the exception:
    ...error LNK2001: unresolved external symbol "void __cdecl ebo::boo::test::open_gl::draw::OnLoad(void),,,;
    otherwise these methods must be declared in global namespace, because 'using namespace' does not work for linker, but for compiler only;
 */
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 void OnLoad (void) {
 
 	const char* p_result = ::setlocale(LC_ALL, "en-US");
@@ -46,5 +46,5 @@ void OnUnload (void) {
 
 	_out()();
 }
-}}}}}
+}}}
 #endif

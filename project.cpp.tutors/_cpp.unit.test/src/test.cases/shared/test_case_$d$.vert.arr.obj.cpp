@@ -4,16 +4,16 @@
 */
 #include "test_case_$d$.vert.arr.obj.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	CArrObject& __vao_accessor (const e_object _target) {
 		TRenderer& renderer = ::Get_renderer();
 		return renderer.Scene().ArrObjects().Get(_target);
 	}
 
-}}}}}
+}}}
 
 #pragma region cls::CVertArrObj{}
 

@@ -5,10 +5,10 @@
 #include "ebo_test_$d$.ctx.h"
 #include <crtdbg.h>
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw { namespace _impl {
-}}}}}}
+namespace test {  namespace draw { namespace open_gl { namespace _impl {
+}}}}
 
 
 #pragma region cls::c_ctx{}
@@ -74,6 +74,14 @@ void c_ctx::OnClean (void) {
 
 void c_ctx::OnInit (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out()();
+}
+
+#pragma endregion
+#pragma region cls::c_px_format{}
+
+void c_px_format::Find_ndx (void) {
+	CTstFormat().Find({32, 24, 8});
 	_out()();
 }
 

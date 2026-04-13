@@ -8,7 +8,7 @@
 #include "ebo_test_$d$.shader.h"
 #include "gl_program.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	using namespace ex_ui::draw::open_gl;
 
@@ -84,6 +84,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError m_error;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$D$_PROG_H_INCLUDED*/

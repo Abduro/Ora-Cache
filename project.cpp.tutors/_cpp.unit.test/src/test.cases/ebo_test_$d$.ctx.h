@@ -6,7 +6,7 @@
 */
 #include "test_case_$d$.ctx.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 	using namespace ebo::boo::test;
 
 	__class (c_ctx) {
@@ -26,6 +26,17 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		bool m_b_verb;
 	};
 
-}}}}}
+	__class (c_px_format) {
+	public:
+		 c_px_format (void) = default; c_px_format (const c_px_format&) = delete; c_px_format (c_px_format&&) = delete;
+		~c_px_format (void) = default;
+
+		__method (Find_ndx); // finds the pixel format descriptor that matches input arguments;
+
+	private:
+		c_px_format& operator = (const c_px_format&) = delete; c_px_format& operator = (c_px_format&&) = delete;
+	};
+
+}}}
 
 #endif/*_EBO_TEST_$D$_CTX_H_INCLUDED*/

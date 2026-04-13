@@ -4,7 +4,7 @@
 */
 #include "ebo_test_$d$.prog.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 #pragma region cls::c_prog{}
 

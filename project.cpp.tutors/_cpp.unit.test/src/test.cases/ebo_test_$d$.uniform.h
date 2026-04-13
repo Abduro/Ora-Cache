@@ -8,8 +8,7 @@
 #include "test_case_$d$.prog.h"
 #include "test_case_$d$.uniform.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
-	using namespace ebo::boo::test;
+namespace test { namespace draw { namespace open_gl {
 
 	/* creating device context and graphics must be made before creating a program object;
 	*important*: test class constructor having input arguments is useful in case when 'class initializer' is used for dynamic creation of this test class,
@@ -37,6 +36,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	private:
 		TPipe m_pipe;   // for draw target type;
 	};
-}}}}}
+}}}
 
 #endif/*_EBO_TEST_$D$_UNIFORM_H_INCLUDED*/

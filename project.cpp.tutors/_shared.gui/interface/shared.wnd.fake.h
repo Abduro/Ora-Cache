@@ -40,4 +40,6 @@ namespace ex_ui { namespace popup { using namespace shared::defs;
 
 }}
 
+typedef ex_ui::popup::CMsgWnd TFakeWnd;
+
 #endif/*_SHARED_WND_FAKE_H_INCLUDED*/

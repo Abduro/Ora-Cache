@@ -7,7 +7,7 @@
 #include "test_case_$d$.prog.h"
 #include "test_case_$d$.shape.2d.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	using namespace ex_ui::draw::open_gl;
 
@@ -37,6 +37,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError    m_error;
 		CCtx_auto m_ctx_auto; // this context object must be kept for calling On_draw_begin() and then On_draw_end(), otherwise context handles are different;
 	};
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$D$_RENDER_H_INCLUDED*/

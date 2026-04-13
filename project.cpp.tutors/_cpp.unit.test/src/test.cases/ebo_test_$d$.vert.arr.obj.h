@@ -6,8 +6,7 @@
 */
 #include "test_case_$d$.vert.arr.obj.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
-	using namespace ebo::boo::test;
+namespace test { namespace draw { namespace open_gl {
 
 	__class (c_vert_arr_obj) {
 	public:
@@ -26,6 +25,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		TPipe m_pipe; // for draw target type;
 	};
 
-}}}}}
+}}}
 
 #endif/*_EBO_TEST_$D$_VERT_ARR_OBJ_H_INCLUDED*/

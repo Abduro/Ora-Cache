@@ -5,7 +5,7 @@
 #include "test_case_$d$.render.h"
 #include "gl_drawable.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 #pragma region cls::CFake_renderer{}
 

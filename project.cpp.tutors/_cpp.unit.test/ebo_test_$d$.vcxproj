@@ -270,6 +270,14 @@
     <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.obj.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_2)test_adap_$d$.defs.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.defs.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.procs.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.procs.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.procs.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.procs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>

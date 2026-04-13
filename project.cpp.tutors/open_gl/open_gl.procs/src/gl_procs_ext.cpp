@@ -14,7 +14,16 @@ CExtension::CExtension (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_i
 
 TError& CExtension::Error (void) const { return this->m_error; }
 
-err_code CExtension::Init (void) {
+err_code CExtension::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	TFakeWnd fk_wnd;
+	if (fk_wnd.Error()) return this->m_error = fk_wnd.Error();
+
+	return this->Error();
+}
+
+err_code CExtension::Unload (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	return this->Error();

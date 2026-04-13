@@ -4,7 +4,7 @@
 */
 #include "ebo_test_$d$.shader.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 using COpts = c_shaders::COpts;
 

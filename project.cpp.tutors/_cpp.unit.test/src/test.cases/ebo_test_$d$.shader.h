@@ -7,8 +7,7 @@
 #include "test_case_$d$.ctx.h"
 #include "test_case_$d$.shader.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
-	using namespace ebo::boo::test;
+namespace test { namespace draw { namespace open_gl {
 
 	__class (c_persist) {
 	public:
@@ -62,6 +61,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 	private:
 		c_test_cases& operator = (const c_test_cases&) = delete; c_test_cases& operator = (c_test_cases&&) = delete;
 	};
-}}}}}
+}}}
 
 #endif/*_EBO_TEST_$D$_SHADER_H_INCLUDED*/

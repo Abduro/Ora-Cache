@@ -7,8 +7,7 @@
 #include "test_case_$d$.ctx.h"
 #include "test_case_$d$.prog.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
-	using namespace ebo::boo::test;
+namespace test { namespace draw { namespace open_gl {
 
 	/* creating device context and graphics must be made before creating a program object;
 	*/
@@ -28,6 +27,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		bool  m_b_verb;
 		TPipe m_pipe;
 	};
-}}}}}
+}}}
 
 #endif/*_EBO_TEST_$D$_PROG_H_INCLUDED*/

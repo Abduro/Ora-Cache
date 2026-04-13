@@ -8,7 +8,7 @@
 #include "gl_context.h"
 #include "shared.wnd.fake.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	using namespace ex_ui::draw::open_gl;
 
@@ -63,8 +63,7 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError m_error;
 	};
 
-	/*
-		this class creates the device and graphics contexts in its constructor and auto-deletes them in its destructor;
+	/* this class creates the device and graphics contexts in its constructor and auto-deletes them in its destructor;
 	*/
 	class CCtx_auto {
 	public:
@@ -91,9 +90,28 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CGraphCtx  m_graphs;
 	};
 
-}}}}}
+	using CPxFormat = CDevice::CFormat;
+	using SPxBits   = CPxFormat::s_bits;
 
-typedef ebo::boo::test::open_gl::draw::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (const bool _b_silent = false);
-typedef ebo::boo::test::open_gl::draw::CCtx_auto TGraph; TGraph& __get_graph (void); // CCtx_auto is used as a creator the graphics context;
+	class CTstFormat {
+	public:
+		 CTstFormat (void) = default; CTstFormat (const CTstFormat&) = delete; CTstFormat (CTstFormat&&) = delete;
+		~CTstFormat (void) = default;
+
+		err_code  Find (const SPxBits&);
+
+		const
+		CPxFormat&  operator ()(void) const;
+		CPxFormat&  operator ()(void) ;
+
+	private:
+		CTstFormat& operator = (const CTstFormat&) = delete; CTstFormat& operator = (CTstFormat&&) = delete;
+		CPxFormat m_px_fmt;
+		CFakeWnd  m_fk_wnd;
+	};
+}}}
+
+typedef test::draw::open_gl::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (const bool _b_silent = false);
+typedef test::draw::open_gl::CCtx_auto TGraph; TGraph& __get_graph (void); // CCtx_auto is used as a creator the graphics context;
 
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/

@@ -4,7 +4,7 @@
 */
 #include "test_case_$d$.prog.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 using COpts = CProg::COpts;
 

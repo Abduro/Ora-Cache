@@ -19,6 +19,9 @@
 
     <Filter Include="win_api"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002C}</UniqueIdentifier></Filter>
     <Filter Include="win_api\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002D}</UniqueIdentifier></Filter>
+
+    <Filter Include="procs"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002E}</UniqueIdentifier></Filter>
+    <Filter Include="procs\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002F}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup><!--precompiled headers and module;-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -27,6 +30,8 @@
     <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp"><Filter>_root</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--renderer and shapes;-->
     <ClInclude Include="$(_2-0)test_case_$d$.render.h"><Filter>render\shared</Filter></ClInclude>
@@ -73,5 +78,11 @@
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>win_api\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.ctx.h"><Filter>win_api</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp"><Filter>win_api</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--OpenGL procs loader-->
+    <ClInclude Include="$(_2)test_adap_$d$.procs.h"><Filter>procs</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.procs.cpp"><Filter>procs</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.procs.h"><Filter>procs\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.procs.cpp"><Filter>procs\shared</Filter></ClCompile>
   </ItemGroup>
 </Project>

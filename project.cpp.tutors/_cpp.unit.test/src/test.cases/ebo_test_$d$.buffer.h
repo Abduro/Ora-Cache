@@ -6,7 +6,7 @@
 */
 #include "test_case_$d$.buffer.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 	using namespace ebo::boo::test;
 
 	__class (c_vert_buf) {
@@ -17,6 +17,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		__method (Size); // gets vertex buffer size in bytes; if no buffer is bound the error is returned;
 	};
 
-}}}}}
+}}}
 
 #endif/*_EBO_TEST_$D$_BUFFER_H_INCLUDED*/

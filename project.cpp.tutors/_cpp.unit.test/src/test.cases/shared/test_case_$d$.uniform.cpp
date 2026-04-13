@@ -4,7 +4,7 @@
 */
 #include "test_case_$d$.uniform.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 #pragma region cls::CTU_enum{}
 

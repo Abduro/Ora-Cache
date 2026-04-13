@@ -7,7 +7,7 @@
 #include "ebo_test_$d$.ctx.h"
 #include "shapes\gl_shape.2d.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	using namespace ex_ui::draw::open_gl;
 #if (1) // the triangle from shape cache is used as the shape for drawing by renderer;
@@ -37,6 +37,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CCtx_auto m_ctx; // this object is required for shareing the contexts between 'Create', 'Draw' and 'Delete' methods, otherwise each of them creats its own context objects;
 	};
 #endif
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$D$_SHAPE_2D_H_INCLUDED*/

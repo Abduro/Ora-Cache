@@ -6,6 +6,8 @@
 */
 #include "gl_defs.h"
 
+#define px_fmt_desc PIXELFORMATDESCRIPTOR
+
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace context {
 
@@ -69,6 +71,37 @@ namespace context {
 	// this is the class declartion of the context compatible with regular GDI context (HDC);
 	class CDevice : public CBase {
 	public:
+		class CFormat {
+		public:
+			struct s_bits {
+				uint16_t m_u_clr, m_u_depth, m_u_stencil;
+				s_bits (const uint16_t _u_clr = 0, const uint16_t _u_depth = 0, const uint16_t _u_stencil = 0)
+				: m_u_clr(_u_clr), m_u_depth(_u_depth), m_u_stencil(_u_stencil) {}
+				bool Is_valid (void) const {
+					return (8 == m_u_clr || 16 == m_u_clr || 24 == m_u_clr || 32 == m_u_clr);
+				}
+				CString To_str (void) const;
+			};
+		public:
+			 CFormat (void); CFormat (const CFormat&) = delete; CFormat (CFormat&&) = delete;
+			~CFormat (void) = default;
+
+			const
+			px_fmt_desc& Get (void) const;
+
+			TError&  Error (void) const;
+			err_code Find (const s_bits& _bits, uint32_t& _found_ndx);
+			static
+			CString  To_str (const px_fmt_desc&);
+
+			CFormat& operator <<(const HDC&); // sets device context for getting/setting its pixel format;
+
+		private:
+			CFormat& operator = (const CFormat&) = delete; CFormat& operator = (CFormat&&) = delete;
+			CError   m_error;
+			HDC      m_hdc;    // target device context is for manipulating its pixel format;
+			px_fmt_desc m_desc;
+		};
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;
 		class CMode {
@@ -114,15 +147,20 @@ namespace context {
 
 		err_code Create (const HWND _h_target); // creates the rendering context that is compatible with input window device context;
 		const
+		CFormat& Format (void) const; // gets the reference to the pixel format object; (ro)
+		CFormat& Format (void) ;      // gets the reference to the pixel format object; (rw)
+		const
 		CMode&   Mode (void) const;
-		CMode&   Mode (void);
+		CMode&   Mode (void) ;
 
 		CDevice& operator <<(const HWND _h_target); // invokes this::Create(...); if the renderer context is already created, it will be destroyed first;
 
 		static bool Is_DC (const HDC);     // returns true if an input handle has proper data type such as: OBJ_DC|OBJ_MEMDC;
 		static bool Is_DC_mem (const HDC); // returns true if an input handle has proper data type is OBJ_MEMDC;
 
-	private: CMode m_mode;
+	private:
+		CFormat m_format;
+		CMode   m_mode;
 	};
 }
 	/* The main idea is composed by several steps:

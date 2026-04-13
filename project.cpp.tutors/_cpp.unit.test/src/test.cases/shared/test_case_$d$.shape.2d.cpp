@@ -6,13 +6,13 @@
 #include "test_case_$d$.prog.h"
 #include "test_case_$d$.vert.arr.obj.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	CTriangle&  __tria_accessor (void) { return ::Get_Tria_2d(); }
 
-}}}}}
+}}}
 
 #if (1)
 #pragma region cls::CTria{}

@@ -7,8 +7,7 @@
 #include "test_case_$d$.ctx.h"
 #include "gl_vertex_arr.dat.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
-	using namespace ebo::boo::test;
+namespace test { namespace draw { namespace open_gl {
 	using namespace ex_ui::draw::open_gl;
 
 	using CVertArray = ex_ui::draw::open_gl::CVertArray;
@@ -37,6 +36,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError m_error;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$D$_VERT_ARR_DAT_H_INCLUDED*/

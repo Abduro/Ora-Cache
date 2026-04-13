@@ -4,7 +4,7 @@
 */
 #include "test_case_$d$.ctx.h"
 
-using namespace ebo::boo::test::open_gl::draw;
+using namespace test::draw::open_gl;
 
 #pragma region cls::CDevCtx{}
 
@@ -186,6 +186,31 @@ TError&  CCtx_auto::Error (void) const { return this->m_error; }
 bool CCtx_auto::Is_created (void) const {
 	return this->Device().Is_valid() || this->Graph().Is_valid();
 }
+
+#pragma endregion
+#pragma region cls::CTstFormat{}
+
+err_code   CTstFormat::Find (const SPxBits& _bits) {
+	_bits;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("Input bits: %s;"), (_pc_sz) _bits.To_str());
+
+	uint32_t u_index = 0; u_index;
+
+	if (this->m_fk_wnd.Error()) { return this->m_fk_wnd.Error(); }
+	else _out() += this->m_fk_wnd.To_str();
+
+	(*this)() << this->m_fk_wnd.Get_ctx();
+
+	if (__failed((*this)().Find(_bits, u_index))) { return (*this)().Error(); }
+	_out() += TString().Format(_T("[impt] *result*: found pixel format index is (%d) >> {%s}(%u);"), u_index, (_pc_sz) CPxFormat::To_str((*this)().Get()), (*this)().Get().dwFlags);
+
+	return (*this)().Error();
+}
+
+const
+CPxFormat& CTstFormat::operator ()(void) const { return this->m_px_fmt; }
+CPxFormat& CTstFormat::operator ()(void)       { return this->m_px_fmt; }
 
 #pragma endregion
 

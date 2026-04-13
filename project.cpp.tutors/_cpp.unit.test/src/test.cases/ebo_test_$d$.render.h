@@ -6,8 +6,7 @@
 */
 #include "test_case_$d$.render.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
-	using namespace ebo::boo::test;
+namespace test { namespace draw { namespace open_gl {
 
 	__class (c_renderer) {
 	public:
@@ -24,6 +23,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		TPipe  m_pipe;
 	};
 
-}}}}}
+}}}
 
 #endif/*_EBO_TEST_$D$_UNIFORM_H_INCLUDED*/

@@ -7,7 +7,7 @@
 #include "test_case_$d$.ctx.h"
 #include "gl_buffer.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	using namespace ex_ui::draw::open_gl;
 	using CAttrs  = ex_ui::draw::open_gl::vertex::CAttrArray;
@@ -58,6 +58,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CError  m_error;
 		CBuffer m_buffer;
 	};
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$D$_BUFFER_H_INCLUDED*/

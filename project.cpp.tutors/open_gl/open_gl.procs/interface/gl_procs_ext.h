@@ -13,8 +13,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		CExtension (void); CExtension (const CExtension&) = delete; CExtension (CExtension&&) = delete; ~CExtension (void) = default;
 		TError& Error (void) const;
 
-		err_code Init (void);
-		err_code Term (void);
+		err_code Load (void);
+		err_code Unload (void);
 
 	private:
 		CExtension& operator = (const CExtension&) = delete; CExtension& operator = (CExtension&&) = delete;

@@ -4,8 +4,10 @@
 */
 #include "gl_context.h"
 #include "gl_procs_ctx.h"
+
 #include "shared.preproc.h"
 #include "shared.dbg.h"
+
 #include "sys.registry.h"
 
 using namespace ex_ui::draw::open_gl;
@@ -16,6 +18,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
 
 using namespace ex_ui::draw::open_gl::_impl;
+using CFormat = ex_ui::draw::open_gl::context::CDevice::CFormat;
 
 #pragma region cls::context::CBase{}
 
@@ -371,12 +374,134 @@ bool context::CDevice::Is_DC_mem (const HDC _hdc) {
 const
 context::CDevice::CMode& context::CDevice::Mode (void) const { return this->m_mode; }
 context::CDevice::CMode& context::CDevice::Mode (void)       { return this->m_mode; }
+const
+context::CDevice::CFormat& context::CDevice::Format (void) const { return this->m_format; }
+context::CDevice::CFormat& context::CDevice::Format (void)       { return this->m_format; }
 
 CDevice& context::CDevice::operator <<(const HWND _h_target) {
 	_h_target;
 	this->Create(_h_target);
 	return *this; // for getting the result of creation the error state should be checked;
 }
+
+#pragma endregion
+#pragma region cls::CFormat{}
+
+namespace ex_ui { namespace draw { namespace _impl {
+
+#define pfd_draw_to_bmp  PFD_DRAW_TO_BITMAP
+#define pfd_draw_to_wnd  PFD_DRAW_TO_WINDOW
+#define pfd_double_buffs PFD_DOUBLEBUFFER
+#define pfd_gen_accel    PFD_GENERIC_ACCELERATED
+#define pfd_gen_format   PFD_GENERIC_FORMAT
+#define pfd_need_pallete PFD_NEED_PALETTE
+#define pfd_need_sys_pal PFD_NEED_SYSTEM_PALETTE
+#define pfd_stereo       PFD_STEREO
+#define pfd_supp_gdi     PFD_SUPPORT_GDI
+#define pfd_supp_open_gl PFD_SUPPORT_OPENGL
+#define pfd_swap_buffers PFD_SWAP_LAYER_BUFFERS
+
+	class CFmt_Helper {
+	public:
+		 CFmt_Helper (void) = default; CFmt_Helper (const CFmt_Helper&) = delete; CFmt_Helper (CFmt_Helper&&) = delete;
+		~CFmt_Helper (void) = default;
+
+		CString Flags_to_str (const dword dw_flags) {
+			dw_flags;
+			// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
+			CString cs_out;
+			if (pfd_draw_to_bmp  & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_draw_to_bmp"); }
+			if (pfd_draw_to_wnd  & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_draw_to_wnd"); }
+			if (pfd_double_buffs & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_double_buffs"); }
+			if (pfd_gen_accel    & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_gen_accel"); }
+			if (pfd_gen_format   & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_gen_format"); }
+			if (pfd_need_pallete & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_need_pallete"); }
+			if (pfd_need_sys_pal & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_need_sys_pal"); }
+			if (pfd_stereo       & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_stereo"); }
+			if (pfd_supp_gdi     & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_supp_gdi"); }
+			if (pfd_supp_open_gl & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_supp_open_gl"); }
+			if (pfd_swap_buffers & dw_flags) { if (false == cs_out.IsEmpty()) cs_out += _T("|"); cs_out += _T("pfd_swap_buffers"); }
+
+			if (cs_out.IsEmpty())
+				cs_out = _T("#undef");
+
+			return  cs_out;
+		}
+
+	private:
+		CFmt_Helper& operator = (const CFmt_Helper&) = delete; CFmt_Helper& operator = (CFmt_Helper&&) = delete;
+	};
+
+}}} using namespace ex_ui::draw::_impl;
+
+CString CDevice::CFormat::s_bits::To_str (void) const {
+	CString cs_out;	cs_out.Format(_T("[%s] >> {clr=%u; depth=%u; stencil=%u}"), (_pc_sz)__CLASS__, m_u_clr, m_u_depth, m_u_stencil);
+	return  cs_out;
+}
+
+CFormat::CFormat (void) : m_hdc(0), m_desc{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: pixel format is not inited"); }
+const
+px_fmt_desc& CFormat::Get (void) const { return this->m_desc; }
+
+TError&  CFormat::Error (void) const { return this->m_error; }
+err_code CFormat::Find (const s_bits& _bits, uint32_t& _found_ndx) {
+	_bits; _found_ndx = 0;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == CDevice::Is_DC(this->m_hdc))
+		return this->m_error <<__e_not_inited = _T("#__e_state: target device context is invalid");
+
+	if (false == _bits.Is_valid()) {
+		return this->m_error <<__e_inv_arg = TString().Format(_T("#e__inv_arg: input bits %s is invalid"), (_pc_sz) _bits.To_str());
+	}
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
+	PIXELFORMATDESCRIPTOR pfd = {0};
+	int32_t n_mode_ndx = 1;
+
+	struct {
+		uint32_t u_current;
+		uint32_t u_the_best;
+	} s_scores = {0};
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-describepixelformat ;
+	for (n_mode_ndx; 0 < ::DescribePixelFormat(this->m_hdc, n_mode_ndx, sizeof(pfd), &pfd); n_mode_ndx++) {
+		if (false) {}
+		else if (0 == (PFD_SUPPORT_OPENGL & pfd.dwFlags)) continue;
+		else if (0 == (PFD_DRAW_TO_WINDOW & pfd.dwFlags)) continue;
+		else if (0 != (PFD_NEED_PALETTE   & pfd.dwFlags) || PFD_TYPE_RGBA != pfd.iPixelType) continue;
+		else if (0 == (PFD_DOUBLEBUFFER   & pfd.dwFlags)) continue;
+
+		s_scores.u_current = 0;
+
+		if (_bits.m_u_clr <= pfd.cColorBits) s_scores.u_current++;
+        if (_bits.m_u_clr == pfd.cColorBits) s_scores.u_current++;
+
+		if (_bits.m_u_depth <= pfd.cDepthBits) s_scores.u_current++;
+        if (_bits.m_u_depth == pfd.cDepthBits) s_scores.u_current++;
+
+		if (_bits.m_u_stencil <= pfd.cStencilBits) s_scores.u_current++;
+        if (_bits.m_u_stencil == pfd.cStencilBits) s_scores.u_current++;
+
+		if (0 < pfd.cAlphaBits) s_scores.u_current++;
+
+		if (s_scores.u_the_best < s_scores.u_current) {
+			s_scores.u_the_best = s_scores.u_current;
+			_found_ndx = n_mode_ndx;
+		}
+	}
+
+	this->m_desc = pfd;
+
+	return this->Error();
+}
+
+CString  CFormat::To_str (const px_fmt_desc& _px_desc) {
+	_px_desc;
+	CString cs_out; cs_out.Format(_T("flags: %s"), (_pc_sz) CFmt_Helper().Flags_to_str(_px_desc.dwFlags));
+	return  cs_out;
+}
+
+CFormat& CFormat::operator <<(const HDC& _hdc) { this->m_hdc = _hdc; return *this; }
 
 #pragma endregion
 #pragma region cls::CGraphics{}

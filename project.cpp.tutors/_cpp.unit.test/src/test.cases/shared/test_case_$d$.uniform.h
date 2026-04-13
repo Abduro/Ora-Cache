@@ -7,7 +7,7 @@
 #include "test_case_$d$.render.h"
 #include "gl_uniform.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace draw {
+namespace test { namespace draw { namespace open_gl {
 
 	using namespace ex_ui::draw::open_gl;
 
@@ -98,6 +98,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace d
 		CU_val_v4 m_val_v4;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$D$_UNIFORM_H_INCLUDED*/
