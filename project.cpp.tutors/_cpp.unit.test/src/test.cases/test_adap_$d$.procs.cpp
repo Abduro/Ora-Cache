@@ -8,12 +8,12 @@ using namespace test::draw::open_gl;
 
 #pragma region cls::c_proc_ext{}
 
-void c_proc_ext::Load (void) {
-	CTstProcExt().Load(); _out()();
+void c_proc_ext::Is_remote (void) {
+	CTstProcExt().Is_remote(); _out()();
 }
 
-void c_proc_ext::Unload (void) {
-	CTstProcExt().Unload(); _out()();
+void c_proc_ext::Load (void) {
+	CTstProcExt().Load(); _out()();
 }
 
 #pragma endregion;

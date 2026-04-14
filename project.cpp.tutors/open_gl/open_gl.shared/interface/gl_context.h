@@ -5,8 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' context base interface declaration file;
 */
 #include "gl_defs.h"
-
-#define px_fmt_desc PIXELFORMATDESCRIPTOR
+#include "gl_format.h"
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace context {
@@ -43,8 +42,8 @@ namespace context {
 		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
 		~CBase (void);
 
-		 TError&  Error  (void) const;   // this is the OpenGL error wrapper;
 		 err_code Destroy(void) ;
+		 TError&  Error  (void) const;
 
 		 bool   Is_valid (void) const;   // returns 'true' in case if device renderer context is not nullptr; no target object check;
 		 HGLRC  Renderer (void) const;
@@ -70,38 +69,6 @@ namespace context {
 	// excerpt: ...creates a new OpenGL rendering context, which is suitable for drawing on the device referenced by hdc... ;
 	// this is the class declartion of the context compatible with regular GDI context (HDC);
 	class CDevice : public CBase {
-	public:
-		class CFormat {
-		public:
-			struct s_bits {
-				uint16_t m_u_clr, m_u_depth, m_u_stencil;
-				s_bits (const uint16_t _u_clr = 0, const uint16_t _u_depth = 0, const uint16_t _u_stencil = 0)
-				: m_u_clr(_u_clr), m_u_depth(_u_depth), m_u_stencil(_u_stencil) {}
-				bool Is_valid (void) const {
-					return (8 == m_u_clr || 16 == m_u_clr || 24 == m_u_clr || 32 == m_u_clr);
-				}
-				CString To_str (void) const;
-			};
-		public:
-			 CFormat (void); CFormat (const CFormat&) = delete; CFormat (CFormat&&) = delete;
-			~CFormat (void) = default;
-
-			const
-			px_fmt_desc& Get (void) const;
-
-			TError&  Error (void) const;
-			err_code Find (const s_bits& _bits, uint32_t& _found_ndx);
-			static
-			CString  To_str (const px_fmt_desc&);
-
-			CFormat& operator <<(const HDC&); // sets device context for getting/setting its pixel format;
-
-		private:
-			CFormat& operator = (const CFormat&) = delete; CFormat& operator = (CFormat&&) = delete;
-			CError   m_error;
-			HDC      m_hdc;    // target device context is for manipulating its pixel format;
-			px_fmt_desc m_desc;
-		};
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;
 		class CMode {
@@ -161,6 +128,24 @@ namespace context {
 	private:
 		CFormat m_format;
 		CMode   m_mode;
+	};
+
+	class CSelector {
+	public:
+		 CSelector (void); CSelector (const CSelector&) = delete; CSelector (CSelector&&) = delete;
+		 CSelector (const HDC& _to_set);
+		~CSelector (void);
+
+		TError&  Error (void) const;
+		bool  Is_used  (void) const;  // returns 'true' in case this selector is already used: draw renderer context is created and is selected;
+
+		err_code Set (const HDC _h_dc); // creates the draw renderer context from the input device one and makes it current;
+		err_code Unset (void);          // sets the current context to nothing;
+
+	private:
+		CSelector& operator = (const CSelector&) = delete; CSelector& operator = (CSelector&&) = delete;
+		CError m_error;
+		HGLRC  m_renderer; 
 	};
 }
 	/* The main idea is composed by several steps:

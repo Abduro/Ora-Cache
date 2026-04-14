@@ -1,0 +1,3 @@
+[InternetShortcut]
+url=https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_extensions_string.txt
+desc=This extension provides a way for applications to determine which WGL extensions are supported by a device.

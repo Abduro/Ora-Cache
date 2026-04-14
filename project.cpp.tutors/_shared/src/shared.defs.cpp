@@ -88,6 +88,9 @@ _pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_form
 
 using namespace shared::defs;
 
+CString_Ex::CString_Ex (void) : TBase() {}
+CString_Ex::CString_Ex (const CString& _src) : TBase(_src) {}
+
 _pc_sz  CString_Ex::Bool  (const bool _b_value) {
 	_b_value;
 	(TBase&)*this = (_b_value ? _T("true") : _T("false"));
@@ -201,3 +204,7 @@ TParts  CString_Ex::Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep) const 
 
 	return vec_;
 }
+
+const
+CString& CString_Ex::operator ()(void) const { return (TBase&)*this; }
+CString& CString_Ex::operator ()(void)       { return (TBase&)*this; }

@@ -47,6 +47,8 @@ namespace shared { namespace defs {
 
 	class CString_Ex : public CString { typedef CString TBase;
 	public:
+		CString_Ex (void);
+		CString_Ex (const CString&);
 		// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
 #if defined WIN64
 		_pc_sz _addr_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
@@ -66,6 +68,10 @@ namespace shared { namespace defs {
 
 		_pc_sz Long (long) ;         // sets this string to long value;
 		TParts Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep = false) const;   // splits string by separator specified;
+
+		const
+		CString& operator ()(void) const;
+		CString& operator ()(void);
 	};
 #if (0)
 	// https://en.wikipedia.org/wiki/Fixed-point_arithmetic ;

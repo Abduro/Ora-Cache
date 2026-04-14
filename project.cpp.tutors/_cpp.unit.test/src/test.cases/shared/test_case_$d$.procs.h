@@ -11,19 +11,19 @@
 
 namespace test { namespace draw { namespace open_gl {
 
-	using CProc_Ext = ex_ui::draw::open_gl::procs::CExtension;
+	using ext_items_t = ex_ui::draw::open_gl::procs::ext_items_t;
 
 	class CTstProcExt {
 	public:
 		 CTstProcExt (void) = default; CTstProcExt (const CTstProcExt&) = delete; CTstProcExt (CTstProcExt&&) = delete;
 		~CTstProcExt (void) = default;
 
-		err_code Load (void); // loads OpenGL extensions;
-		err_code Unload (void); // unloads OpenGL extension;
+		bool Is_remote (void) const;
+		err_code  Load (void); // loads OpenGL extensions;
 
 		const
-		CProc_Ext&  operator ()(void) const;
-		CProc_Ext&  operator ()(void) ;
+		TProcExtEnum&  operator ()(void) const;
+		TProcExtEnum&  operator ()(void) ;
 
 	private:
 		CTstProcExt& operator = (const CTstProcExt&) = delete; CTstProcExt& operator = (CTstProcExt&&) = delete;

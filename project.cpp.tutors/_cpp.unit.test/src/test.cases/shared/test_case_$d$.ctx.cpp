@@ -202,7 +202,7 @@ err_code   CTstFormat::Find (const SPxBits& _bits) {
 
 	(*this)() << this->m_fk_wnd.Get_ctx();
 
-	if (__failed((*this)().Find(_bits, u_index))) { return (*this)().Error(); }
+	if (__failed((*this)().Find(_bits, u_index))) { _out() += (*this)().Error(); return (*this)().Error(); }
 	_out() += TString().Format(_T("[impt] *result*: found pixel format index is (%d) >> {%s}(%u);"), u_index, (_pc_sz) CPxFormat::To_str((*this)().Get()), (*this)().Get().dwFlags);
 
 	return (*this)().Error();

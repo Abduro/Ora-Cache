@@ -90,8 +90,8 @@ namespace test { namespace draw { namespace open_gl {
 		CGraphCtx  m_graphs;
 	};
 
-	using CPxFormat = CDevice::CFormat;
-	using SPxBits   = CPxFormat::s_bits;
+	using CPxFormat = ex_ui::draw::open_gl::CFormat;
+	using SPxBits   = ex_ui::draw::open_gl::format::s_bits;
 
 	class CTstFormat {
 	public:

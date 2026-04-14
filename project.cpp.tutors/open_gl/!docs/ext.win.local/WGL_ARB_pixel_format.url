@@ -1,0 +1,4 @@
+[InternetShortcut]
+url=https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt
+desc=if this extension is installed, the OpenGL resides on local machine, not on remote desktop
+; This extension can reference "non-displayable" pixel formats (e.g., those used for pbuffers) that standard GDI functions cannot access.

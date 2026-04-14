@@ -133,7 +133,7 @@ CVer_Att& CVer_Att::operator >>(const char* _p_value) { this->m_value = _p_value
 #define GL_SHADING_LANGUAGE_VERSION 0x8b8c
 #endif
 
-CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited;
+CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: version data is not queried");
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetstring ;
 #if (0)
 	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
