@@ -69,52 +69,24 @@ namespace shared { namespace console { namespace _impl {
 }}} using namespace shared::console::_impl;
 #pragma region cls::CPers{}
 
-CPers:: CPers (void) : m_timer(*this) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CPers:: CPers (void) : TBase(), m_timer(*this) { TBase::m_error >>__CLASS__; }
 CPers::~CPers (void) { this->m_timer.Destroy(); }
 
-TError&  CPers::Error (void) const { return this->m_error; }
 err_code CPers::Load (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	using namespace ex_ui::popup::layout;
-
-	CString cs_key_path = ::Get_reg_router().Trace().Root();
-
-	t_rect rc_ = TRegKeyEx().Value().GetRect((_pc_sz)cs_key_path);
-
-	if (::IsRectEmpty(&rc_)) { // the position of the console window is not saved yet;
-		t_size_u size = CPrimary().Default();
-		rc_ = CPrimary().Centered(size);
-	}
+	TBase::Load();
+	const t_rect rc_pos = TBase::Get();
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos ;
-	::SetWindowPos(CAccessor()(), 0, rc_.left, rc_.top, rc_.right - rc_.left, rc_.bottom - rc_.top, 0);
+	::SetWindowPos(CAccessor()(), 0, rc_pos.left, rc_pos.top, rc_pos.right - rc_pos.left, rc_pos.bottom - rc_pos.top, 0);
 
 	static const uint32_t n_interval = 6666; // the interval is just for test purposes;
 
 	m_timer.Create(n_interval); // the interval is just for test purposes;
 
-	return this->Error();
-}
-
-err_code CPers::Save (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect ;
-	t_rect rc_ = {0};
-
-	if (false == !!::GetWindowRect(CAccessor()(), &rc_))
-		return this->m_error.Last();
-
-	CString cs_key_path = ::Get_reg_router().Trace().Root();
-	TRegKeyEx the_key;
-	if (__failed(the_key.Value().Set((_pc_sz)cs_key_path, rc_)))
-		this->m_error = the_key.Error();
-
-	return this->Error();
+	return TBase::Error();
 }
 
 void CPers::IWaitable_OnComplete (void) {
-	this->Save();
+	TBase::Save();
 }
 
 #pragma endregion

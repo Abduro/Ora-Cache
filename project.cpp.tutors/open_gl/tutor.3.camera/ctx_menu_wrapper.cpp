@@ -9,7 +9,10 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
-using namespace ex_ui::draw::open_gl::camera;
+using namespace ex_ui::draw::gui;
+
+namespace renderer { using CCfg = ex_ui::draw::open_gl::render::CCfg; }
+namespace views { using CGrid = ex_ui::draw::open_gl::view::CGrid; }
 
 #pragma region cls::CCaretaker{}
 
@@ -21,25 +24,25 @@ err_code CCaretaker::ApplyTo (CCtxMenu& _ctx_mnu) {
 	using CState = shared::gui::menus::CState;
 	// (1) sets the grid cell size first;
 	uint32_t u_cmd_id = 0; u_cmd_id;
-	view::CGrid& grid = ::Get_renderer().View().Grid();
+	views::CGrid& grid = ::Get_renderer().View().Grid();
 
 	const t_size_u& cell_size = grid.Cell().Get();
 
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_025, IDR_TUTOR_3_GRD_CELL_H_025 == COrganizer::CGrid::CCell::HeightToCmd(cell_size.cy), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_050, IDR_TUTOR_3_GRD_CELL_H_050 == COrganizer::CGrid::CCell::HeightToCmd(cell_size.cy), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_075, IDR_TUTOR_3_GRD_CELL_H_075 == COrganizer::CGrid::CCell::HeightToCmd(cell_size.cy), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_100, IDR_TUTOR_3_GRD_CELL_H_100 == COrganizer::CGrid::CCell::HeightToCmd(cell_size.cy), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_025, IDR_TUTOR_3_GRD_CELL_H_025 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_050, IDR_TUTOR_3_GRD_CELL_H_050 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_075, IDR_TUTOR_3_GRD_CELL_H_075 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_100, IDR_TUTOR_3_GRD_CELL_H_100 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
 
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_025, IDR_TUTOR_3_GRD_CELL_W_025 == COrganizer::CGrid::CCell::WidthToCmd(cell_size.cx), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_050, IDR_TUTOR_3_GRD_CELL_W_050 == COrganizer::CGrid::CCell::WidthToCmd(cell_size.cx), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_075, IDR_TUTOR_3_GRD_CELL_W_075 == COrganizer::CGrid::CCell::WidthToCmd(cell_size.cx), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_100, IDR_TUTOR_3_GRD_CELL_W_100 == COrganizer::CGrid::CCell::WidthToCmd(cell_size.cx), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_025, IDR_TUTOR_3_GRD_CELL_W_025 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_050, IDR_TUTOR_3_GRD_CELL_W_050 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_075, IDR_TUTOR_3_GRD_CELL_W_075 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_100, IDR_TUTOR_3_GRD_CELL_W_100 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
 
 	// (2) sets the draw object which are currently selected;
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
+	const renderer::CCfg& cfg = ::Get_renderer().Cfg();
 
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_DRW_OBJ_GRID, cfg.Is_drawable(e_object::e_grid), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_DRW_OBJ_TRIA, cfg.Is_drawable(e_object::e_tria), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_DRW_OBJ_GRID, cfg.Is_drawable(TPipe::e_grid), this->m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_DRW_OBJ_TRIA, cfg.Is_drawable(TPipe::e_tria), this->m_error);
 
 	return this->Error();
 }
@@ -48,9 +51,8 @@ TError&  CCaretaker::Error (void) const { return this->m_error; }
 
 #pragma endregion
 #pragma region cls::CCell{}
-using CCell = COrganizer::CGrid::CCell;
 
-uint32_t CCell::CmdToHeight (const uint32_t _u_cmd_id) {
+uint32_t menus::CCell::CmdToHeight (const uint32_t _u_cmd_id) {
 	_u_cmd_id;
 	uint32_t u_hight = 0;
 	switch (_u_cmd_id) {
@@ -60,7 +62,7 @@ uint32_t CCell::CmdToHeight (const uint32_t _u_cmd_id) {
 	return u_hight;
 }
 
-uint32_t CCell::CmdToWidth (const uint32_t _u_cmd_id) {
+uint32_t menus::CCell::CmdToWidth (const uint32_t _u_cmd_id) {
 	_u_cmd_id;
 	uint32_t u_width = 0;
 	switch (_u_cmd_id) {
@@ -70,7 +72,7 @@ uint32_t CCell::CmdToWidth (const uint32_t _u_cmd_id) {
 	return u_width;
 }
 
-uint32_t CCell::HeightToCmd (const uint32_t _u_height) {
+uint32_t menus::CCell::HeightToCmd (const uint32_t _u_height) {
 	_u_height;
 	uint32_t u_cmd_id = 0;
 	switch (_u_height) {
@@ -80,7 +82,7 @@ uint32_t CCell::HeightToCmd (const uint32_t _u_height) {
 	return u_cmd_id;
 }
 
-uint32_t CCell::WidthToCmd (const uint32_t _u_width) {
+uint32_t menus::CCell::WidthToCmd (const uint32_t _u_width) {
 	_u_width;
 	uint32_t u_cmd_id = 0;
 	switch (_u_width) {
@@ -93,7 +95,7 @@ uint32_t CCell::WidthToCmd (const uint32_t _u_width) {
 #pragma endregion
 #pragma region cls::CGrid{}
 
-COrganizer::CGrid::CGrid (void) {}
+menus::CGrid::CGrid (void) {}
 
 #pragma endregion
 #pragma region cls::COrganizer{}

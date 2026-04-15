@@ -6,22 +6,21 @@
 */
 #include "shared.defs.h"
 #include "shared.timer.h"
+#include "console.pers.h"
+
 namespace shared { namespace console { using namespace shared::defs; using namespace shared::common;
 
-	class CPers : public IWaitable_Events {
+	class CPers : public IWaitable_Events, public persistent::CPosition { typedef persistent::CPosition TBase;
 	public:
 		 CPers (void); CPers (const CPers&) = delete; CPers (CPers&&) = delete;
 		~CPers (void);
 
-		TError&  Error (void) const;
-		err_code Load  (void);
-		err_code Save  (void);
+		err_code Load (void);
 
 		void IWaitable_OnComplete (void) override final;
 
 	private:
 		CPers& operator = (const CPers&) = delete; CPers& operator = (CPers&&) = delete;
-		CError    m_error;
 		CQueTimer m_timer; // standard timer, even without window, but with callback procedure, does not work without message loop;
 	};
 

@@ -29,6 +29,10 @@
   <ItemGroup><!--console-->
     <ClInclude Include="$(_2-0)test_case_$w$.con.h"><Filter>console\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$w$.con.cpp"><Filter>console\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$w$.con.pers.h"><Filter>console\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.con.pers.cpp"><Filter>console\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.con.pers.h"><Filter>console</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.con.pers.cpp"><Filter>console</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$w$.con.h"><Filter>console</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$w$.con.cpp"><Filter>console</Filter></ClCompile>
   </ItemGroup>

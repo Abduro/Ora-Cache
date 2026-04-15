@@ -17,6 +17,12 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::camera;
 
+using CCaretaker = ex_ui::draw::gui::CCaretaker;
+namespace menus {
+	using Cell = ex_ui::draw::gui::menus::CCell;
+	using Grid = ex_ui::draw::gui::menus::CGrid;
+}
+
 #pragma region cls::camera::CWnd{}
 
 camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
@@ -178,8 +184,8 @@ err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
 		return this->Error();
 	}
 #else
-	const uint32_t u_height = COrganizer::CGrid::CCell::CmdToHeight(u_cmd_id);
-	const uint32_t u_width  = COrganizer::CGrid::CCell::CmdToWidth(u_cmd_id);
+	const uint32_t u_height = menus::Cell::CmdToHeight(u_cmd_id);
+	const uint32_t u_width  = menus::Cell::CmdToWidth(u_cmd_id);
 
 	bool b_cell = false;
 

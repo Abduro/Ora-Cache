@@ -2,37 +2,55 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0010}</UniqueIdentifier></Filter>
-    <Filter Include="interface\__trace"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0013}</UniqueIdentifier></Filter>
 
     <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0011}</UniqueIdentifier></Filter>
     <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0012}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\__trace"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0013}</UniqueIdentifier></Filter>
     <Filter Include="src\__trace"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0014}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\__trace\_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0015}</UniqueIdentifier></Filter>
+    <Filter Include="src\__trace\_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0016}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\__trace\buffers"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0017}</UniqueIdentifier></Filter>
+    <Filter Include="src\__trace\buffers"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0018}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\__trace\content"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A0019}</UniqueIdentifier></Filter>
+    <Filter Include="src\__trace\content"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000A001A}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
+  <ItemGroup><!--root/base output classes-->
+    <ClInclude Include="$(_0-0)console.defs.h"><Filter>interface\__trace\_root</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.defs.cpp"><Filter>src\__trace\_root</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.out.h"><Filter>interface\__trace\_root</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.out.cpp"><Filter>src\__trace\_root</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--console input and output buffers-->
+    <ClInclude Include="$(_0-0)console.buffer.h"><Filter>interface\__trace\buffers</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.buffer.cpp"><Filter>src\__trace\buffers</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.mode.h"><Filter>interface\__trace\buffers</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.mode.cpp"><Filter>src\__trace\buffers</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--console content related classes-->
+    <ClInclude Include="$(_0-0)console.content.h"><Filter>interface\__trace\content</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.content.cpp"><Filter>src\__trace\content</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.font.h"><Filter>interface\__trace\content</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.font.cpp"><Filter>src\__trace\content</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.format.h"><Filter>interface\__trace\content</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.format.cpp"><Filter>src\__trace\content</Filter></ClCompile>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0-0)console.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.content.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.content.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.buffer.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.buffer.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.defs.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.defs.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.event.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.event.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.font.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.font.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.format.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.format.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.mode.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.mode.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.layout.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.layout.cpp"><Filter>src\__trace</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)console.out.h"><Filter>interface\__trace</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)console.out.cpp"><Filter>src\__trace</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.pers.h"><Filter>interface\__trace</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.pers.cpp"><Filter>src\__trace</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)shared.dbg.h"><Filter>interface</Filter></ClInclude>
