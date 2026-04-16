@@ -6,11 +6,12 @@
 */
 #include "shared.defs.h"
 #include "shared.timer.h"
-#include "shared.wnd.layout.h"
+#include "shared.layout.h"
 namespace shared { namespace gui {
 
 	using namespace shared::defs;
 	using namespace shared::types;
+	using namespace shared::layout;
 
 	using IWaitable_Events = shared::common::IWaitable_Events;
 	using CStdTimer = shared::common::CStdTimer;
@@ -176,8 +177,8 @@ namespace docking {
 
 		CPane  m_low;
 		CPane  m_top;
-		CStdTimer m_wait;
-		t_rect m_rect; // the rectangle of the client area of the main window;
+		CStdTimer m_wait; // it works through receiving WM_TIMER message, there is no way to use it without message pump;
+		t_rect m_rect;    // the rectangle of the client area of the main window;
 	};
 }}
 

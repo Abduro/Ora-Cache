@@ -10,24 +10,37 @@ namespace ex_ui { namespace draw { namespace gui {
 	using namespace shared::defs;
 	using CCtxMenu = shared::gui::CCtxMenu;
 namespace menus {
-	class CCell {
+	class CBase {
+	protected:
+		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 	public:
-		CCell (void) = default; CCell (const CCell&) = delete; CCell (CCell&&) = delete; ~CCell (void) = default;
+		TError& Error (void) const;
+	protected:
+		CError m_error;
+	private:
+		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
+	};
+
+	class CCell : public CBase { typedef CBase TBase;
+	public:
+		CCell (void);
+
+		err_code ApplyTo (CCtxMenu&);
 
 		static uint32_t CmdToHeight (const uint32_t _u_cmd_id);
 		static uint32_t CmdToWidth  (const uint32_t _u_cmd_id);
 
 		static uint32_t HeightToCmd (const uint32_t _u_height);
 		static uint32_t WidthToCmd  (const uint32_t _u_width );
-
-	private:
-		CCell& operator = (const CCell&) = delete; CCell& operator = (CCell&&) = delete;
 	};
 
-	class CConsole {
+	class CConsole : public CBase { typedef CBase TBase;
 	public:
 		 CConsole (void); CConsole (const CConsole&) = delete; CConsole (CConsole&&) = delete;
 		~CConsole (void) = default;
+
+		err_code ApplyTo (CCtxMenu&);
+
 	private:
 		CConsole& operator = (const CConsole&) = delete; CConsole& operator = (CConsole&&) = delete;
 	};

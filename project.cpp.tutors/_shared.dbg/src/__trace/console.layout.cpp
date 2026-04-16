@@ -67,18 +67,25 @@ err_code CHScroll::Set (const bool _b_set) {
 }
 
 #pragma endregion
+#pragma region struct::s_create_data{}
+
+s_create_data::s_create_data (const HWND _h_parent, const RECT& _rect, const bool _b_visible) :
+	m_parent(_h_parent), m_rect(_rect), m_visible(_b_visible) {
+}
+
+#pragma endregion
 #pragma region cls::CLayout{}
 
 CLayout::CLayout (void) {  this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 
-err_code CLayout::As_child (const HWND _h_parent, const t_rect& _rect_wnd_pos, const bool _b_visible) {
-	_h_parent; _rect_wnd_pos; _b_visible;
+err_code CLayout::As_child (const s_create_data& _data) {
+	_data;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _h_parent || false == !!::IsWindow(_h_parent))
+	if (nullptr == _data.m_parent || false == !!::IsWindow(_data.m_parent))
 		return this->m_error <<__e_inv_arg = _T("Handle of the parent window is not valid");
 
-	if (::IsRectEmpty(&_rect_wnd_pos))
+	if (::IsRectEmpty(&_data.m_rect))
 		return this->m_error << __e_rect = _T("The input rectangle is empty");
 
 	const HWND h_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
@@ -109,8 +116,9 @@ err_code CLayout::As_child (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 
 	// (1.b) applies new style to the console window; the flag 'SWP_FRAMECHANGED' is the most important;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos ;
+	const t_rect& rect = _data.m_rect;
 	::SetWindowPos(
-		h_con_wnd, 0, _rect_wnd_pos.left, _rect_wnd_pos.top, __W(_rect_wnd_pos), __H(_rect_wnd_pos), SWP_FRAMECHANGED|SWP_NOACTIVATE|SWP_NOZORDER
+		h_con_wnd, 0, rect.left, rect.top, __W(rect), __H(rect), SWP_FRAMECHANGED|SWP_NOACTIVATE|SWP_NOZORDER
 	);
 
 	// (2) shows the console window at final step of the creating procedure;
@@ -120,5 +128,22 @@ err_code CLayout::As_child (const HWND _h_parent, const t_rect& _rect_wnd_pos, c
 }
 
 TError&  CLayout::Error (void) const { return this->m_error; }
+
+err_code CLayout::OnCreate (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	
+	return this->Error();
+}
+
+err_code CLayout::OnCreate (const s_create_data& _data) {
+	_data;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (::Get_ConPers().Pin().Is_pinned()) {
+		this->As_child(_data);
+	}
+	else { }
+
+	return this->Error();
+}
 
 #pragma endregion

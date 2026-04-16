@@ -10,6 +10,7 @@
 #include "shared.wnd.msg.h"
 
 #include "sys.registry.h"
+#include "console.pers.h"
 
 using namespace shared::gui;
 using namespace shared::gui::docking;
@@ -156,6 +157,8 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 	err_code n_result = messages::IMsg_Handler::_n_not_handled;
 	switch (_u_code) {
 	case WM_ACTIVATE:{
+		if (::Get_ConPers().Pin().Is_pinned() == false)
+			return n_result = __s_false; // this message is not handled;
 		const bool b_activated = (WA_INACTIVE != _w_param); // https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate ;
 		const HWND h_after = b_activated ?  HWND_TOPMOST : HWND_NOTOPMOST;
 
@@ -195,16 +198,17 @@ err_code CLayout::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param
 					p_wnd_pos->cx = __W(frame.Position().Get());
 					p_wnd_pos->cy = __H(frame.Position().Get());
 				}
+				if (::Get_ConPers().Pin().Is_pinned()) {
 				// https://stackoverflow.com/questions/812686/can-a-window-be-always-on-top-of-just-one-other-window ;
 				// this answer: https://stackoverflow.com/a/821061/4325555 really works; thanks Matthew Xavier ;
-				const HWND h_target = ::Get_app_wnd()();
+					const HWND h_target = ::Get_app_wnd()();
 
-				::DefWindowProc(h_target, _u_code, _w_param, _l_param);
+					::DefWindowProc(h_target, _u_code, _w_param, _l_param);
 
-				p_wnd_pos->hwnd = this->Bottom().Target();
-				p_wnd_pos->hwndInsertAfter = h_target;
-				p_wnd_pos->flags &= ~SWP_NOZORDER;
-
+					p_wnd_pos->hwnd = this->Bottom().Target();
+					p_wnd_pos->hwndInsertAfter = h_target;
+					p_wnd_pos->flags &= ~SWP_NOZORDER;
+				}
 				n_result = __s_ok; // this message is handled;
 			}
 			// https://stackoverflow.com/questions/1825868/how-to-prevent-window-resizing-temporarily ; Tech_dog's answer is there;
@@ -265,23 +269,23 @@ err_code CLayout::Recalc (void) {
 	}
 	frame.Position() << rc_pos; // sets main window position on the screen by already converted rectangle;
 
-	// (1.a) calculates the rectangles of the child windows;
+	// (2) calculates and sets the rectangles to the child windows;
+	long n_part = 0;
+	long u_gap  = 0;
 
-	const long n_part  = __H(rc_client) / 3;
-
-	// (2) sets the rectangles to the child windows;
 	// (2.a) to the window that is at the bottom area, i.e. to the debug output console window;
+	if (::Get_ConPers().Pin().Is_pinned()) {
+		n_part =__H(rc_client) / 3;
+		u_gap  = 7; // ToDo: requires the automatical calculation, not the hard coded one;
 
-	// the console window requires the rectangle in screen coordinates not in the client area one;
-	this->Bottom().Rect() = { rc_pos.left, rc_pos.bottom - n_part, rc_pos.right, rc_pos.bottom };
+		// the console window requires the rectangle in screen coordinates not in the client area one;
+		this->Bottom().Rect() = { rc_pos.left, rc_pos.bottom - n_part, rc_pos.right, rc_pos.bottom };
 
-	// ToDo: setting the child windows' sizes requires the review, it very looks like such approach must be removed or at least be changed;
-	this->Bottom().Size().Height().Set(__H(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
-	this->Bottom().Size().Width().Set(__W(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
-
+		// ToDo: setting the child windows' sizes requires the review, it very looks like such approach must be removed or at least be changed;
+		this->Bottom().Size().Height().Set(__H(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
+		this->Bottom().Size().Width().Set(__W(this->Bottom().Rect()), docking::CValue::e_ctrl::e_fixed);
+	}
 	// (2.b) to the window that is at the top area, i.e. to the draw context window;
-	const long u_gap = 7; // ToDo: requires the automatical calculation, not the hard coded one;
-
 	this->Top().Rect() = { 0, 0, __W(rc_client), __H(rc_client) - n_part + u_gap };
 
 	this->Top().Size().Height().Set(__H(this->Top().Rect()), docking::CValue::e_ctrl::e_fixed);
@@ -306,6 +310,9 @@ err_code CLayout::Update (t_rect* const _p_rect) {
 	}
 	else
 		::CopyRect(&rc_wnd_pos, _p_rect);
+
+	if (false == ::Get_ConPers().Pin().Is_pinned())
+		return n_result = __s_false;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics ;
 	// removing WS_THICKFRAME style from the console window is useful, but it has the side effect: the console window size increases;

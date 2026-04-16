@@ -6,6 +6,7 @@
 */
 #include "console.defs.h"
 #include "console.buffer.h"
+#include "console.pers.h"
 
 namespace shared { namespace console { namespace layout { using namespace shared::console;
 
@@ -26,14 +27,25 @@ namespace shared { namespace console { namespace layout { using namespace shared
 		CError m_error;
 	};
 }
+	struct s_create_data {
+		HWND m_parent;
+		RECT m_rect;
+		bool m_visible;
+
+		s_create_data (const HWND = nullptr, const RECT& = {0}, const bool _b_visible = true);
+		CString To_str (void) const;
+	};
+
 	class CLayout {
 	public:
 		 CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
 		~CLayout (void) = default;
 
-		err_code As_child (const HWND _h_parent, const t_rect&, const bool _b_visible); // sets console window as a child window of the main window of the app;
+		err_code As_child (const s_create_data&); // sets console window as a child window;
 
 		TError&  Error (void) const;
+		err_code OnCreate (void);                 // sets console window position stored in the registry;
+		err_code OnCreate (const s_create_data&); // sets console window position in accordance with its pin state on console window create event;
 
 	private:
 		CLayout& operator = (const CLayout&) = delete; CLayout& operator = (CLayout&&) = delete;

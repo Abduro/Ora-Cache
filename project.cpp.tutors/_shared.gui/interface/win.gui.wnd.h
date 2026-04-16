@@ -6,8 +6,6 @@
 */
 #include "shared.wnd.base.h"
 #include "shared.wnd.res.h"
-#include "shared.wnd.layout.h"
-
 #include "win.gui.wnd.layout.h"
 
 namespace shared { namespace gui {

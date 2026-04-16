@@ -73,7 +73,6 @@ namespace persistent {
 		bool m_visible; // by default is 'true';
 	};
 }
-
 	class CPersistent : public persistent::CBase { typedef persistent::CBase TBase;
 	public:
 		using CPin = persistent::CPin;

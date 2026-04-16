@@ -1,11 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Aug-2025 at 05:00:03.537, UTC+4, Batumi, Wednesday;
-	This is Ebo Pack OpenGL tutorial main window layout interface implementation file;
+	This is Ebo Pack shared layout interface implementation file;
 */
-#include "shared.wnd.layout.h"
+#include "shared.layout.h"
 #include "shared.dbg.h"
 
-using namespace ex_ui::popup::layout;
+using namespace shared::layout;
 
 #ifndef __H
 #define __H(rc) (rc.bottom - rc.top)

@@ -66,8 +66,9 @@ namespace shared { namespace console {
 		 CConsole (void); CConsole (const CConsole&) = delete; CConsole (CConsole&&) = delete;
 		~CConsole (void);
 
-		 err_code Close (void); // closes all IO handles; ::FreeConsole() is not used because there is no call to ::AttachConsole() was made before;
-		 err_code Open  (const HWND _h_parent, const t_rect&, const bool _b_visible); // creates *new* console, inserts it as a child window to the parent one;
+		 err_code Create (void); // allocates new console, restores its previous position, pinned state;
+		 err_code Create (const s_create_data&); // allocates console, inserts it as a child window to the parent one;
+		 err_code Close  (void); // closes all IO handles; ::FreeConsole() is not used because there is no call to ::AttachConsole() was made before;
 
 		 TError&  Error  (void) const;	
 		 HWND     Handle (void) const; // returns console window handle;
@@ -82,8 +83,8 @@ namespace shared { namespace console {
 	private:
 		 CConsole& operator = (const CConsole&) = delete; CConsole& operator = (CConsole&&) = delete;
 		 mutable
-		 CError    m_error;
-		 HWND      m_con_wnd;
+		 CError  m_error;
+		 HWND    m_con_wnd;
 	};
 }}
 

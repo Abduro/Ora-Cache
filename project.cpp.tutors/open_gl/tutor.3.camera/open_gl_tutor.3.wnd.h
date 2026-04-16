@@ -9,8 +9,6 @@
 #include "gl_context.h"
 #include "shared.wnd.fake.h"
 #include "shared.wnd.base.h" 
-#include "shared.ctx.menu.h"
-
 #include "ctx_menu_wrapper.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace camera {

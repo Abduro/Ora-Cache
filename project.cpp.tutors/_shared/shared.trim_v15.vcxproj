@@ -201,6 +201,8 @@
   <ItemGroup>
     <ClInclude Include="$(_0)shared.defs.h" />
     <ClCompile Include="$(_1)shared.defs.cpp" />
+    <ClInclude Include="$(_0)shared.layout.h" />
+    <ClCompile Include="$(_1)shared.layout.cpp" />
     <ClInclude Include="$(_0)shared.preproc.h" />
     <ClCompile Include="$(_1)shared.preproc.cpp" />
     <ClInclude Include="$(_0)shared.props.h" />

@@ -1,12 +1,12 @@
-#ifndef _SHARED_WND_LAYOUT_H_INCLUDED
-#define _SHARED_WND_LAYOUT_H_INCLUDED
+#ifndef _SHARED_LAYOUT_H_INCLUDED
+#define _SHARED_LAYOUT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Aug-2025 at 04:57:55.510, UTC+4, Batumi, Wednesday;
-	This is Ebo Pack OpenGL tutorial main window layout interface declaration file;
+	This is Ebo Pack shared layout interface declaration file;
 */
 #include "shared.defs.h"
 
-namespace ex_ui { namespace popup { namespace layout {
+namespace shared { namespace layout {
 
 	using namespace shared::defs;
 
@@ -117,6 +117,6 @@ namespace ex_ui { namespace popup { namespace layout {
 		TRatios  m_ratios;
 	};
 
-}}}
+}}
 
-#endif/*_SHARED_WND_LAYOUT_H_INCLUDED*/
+#endif/*_SHARED_LAYOUT_H_INCLUDED*/

@@ -134,7 +134,21 @@ bool CWrap::Is_attached (void) const { return 0 != ::GetConsoleWindow(); }
 CConsole:: CConsole (void) : m_con_wnd(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 CConsole::~CConsole (void) {}
 
-err_code   CConsole::Close (void) {
+err_code CConsole::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
+		this->m_error.Last();
+	else
+		this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
+
+	CLayout layout;
+	if (__failed(layout.OnCreate()))
+		this->m_error = layout.Error();
+
+	return this->Error();
+}
+
+err_code CConsole::Close (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -151,28 +165,27 @@ err_code   CConsole::Close (void) {
 	return this->Error();
 }
 
-err_code CConsole::Open  (const HWND _h_parent, const t_rect& _rect_wnd_pos, const bool _b_visible) {
-	_h_parent; _rect_wnd_pos; _b_visible;
+err_code CConsole::Create (const s_create_data& _data) {
+	_data;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (this->Is_valid())
 		return this->m_error << (err_code) TErrCodes::eObject::eExists;
-
-	if (0 == _h_parent || false == !!::IsWindow(_h_parent))
-		return this->m_error << __e_hwnd = _T("Parent window handle is invalid");
-
-	if (::IsRectEmpty(&_rect_wnd_pos))
+#if (0) // the creating a console window is not dependent on main/app window handle;
+	if (0 == _data.m_parent || false == !!::IsWindow(_data.m_parent)) {
+		this->m_error << __e_hwnd = _T("Parent window handle is invalid");
+		__trace_err_ex_2(this->Error()); return this->Error();
+	}
+	if (::IsRectEmpty(&_data.m_rect))
 		return this->m_error << __e_rect = _T("The input rectangle is empty");
-
+#endif
 	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
 		return this->m_error.Last();
 	else
 		this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
 
-	CLayout().As_child(this->m_con_wnd, _rect_wnd_pos, _b_visible);
-#if (0)
-	
-#endif
+	CLayout().As_child(_data);
+
 	// https://learn.microsoft.com/en-us/windows/console/console-functions ;
 	// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
 #if (0)

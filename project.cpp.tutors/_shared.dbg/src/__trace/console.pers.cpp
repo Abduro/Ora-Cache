@@ -141,7 +141,7 @@ err_code CPosition::Set (const t_rect& _rect) {
 err_code CPosition::Load (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	using namespace ex_ui::popup::layout;
+	using namespace shared::layout;
 
 	TRegKeyEx the_key;
 	this->m_rc_pos = the_key.Value().GetRect((_pc_sz) cs_pos_key);

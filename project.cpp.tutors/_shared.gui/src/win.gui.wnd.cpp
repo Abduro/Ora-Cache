@@ -196,8 +196,8 @@ CFrame::CIcons& CFrame::Icons (void) const { return this->m_icons; }
 CFrame::CIcons& CFrame::Icons (void)       { return this->m_icons; }
 
 const
-CPosition& CFrame::Position (void) const { return this->m_pos; }
-CPosition& CFrame::Position (void)       { return this->m_pos; }
+CFrame::CPosition& CFrame::Position (void) const { return this->m_pos; }
+CFrame::CPosition& CFrame::Position (void)       { return this->m_pos; }
 const
 CFrame::CSize& CFrame::Size (void) const { return this->m_size; }
 CFrame::CSize& CFrame::Size (void)       { return this->m_size; }
@@ -205,20 +205,20 @@ CFrame::CSize& CFrame::Size (void)       { return this->m_size; }
 #pragma endregion
 #pragma region cls::CPosition{}
 
-CPosition:: CPosition (void) : m_rect{0} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CPosition::~CPosition (void) {}
+CFrame::CPosition:: CPosition (void) : m_rect{0} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CFrame::CPosition::~CPosition (void) {}
 
-TError&  CPosition::Error (void) const { return this->m_error; }
+TError&  CFrame::CPosition::Error (void) const { return this->m_error; }
 
 const
-t_rect&  CPosition::Get (void) const { return this->m_rect; }
-bool     CPosition::Set (const t_rect& _rect) {
+t_rect&  CFrame::CPosition::Get (void) const { return this->m_rect; }
+bool     CFrame::CPosition::Set (const t_rect& _rect) {
 	_rect;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-equalrect ;
 	const bool b_changed = !::EqualRect(&_rect, &this->Get()); if (b_changed) this->m_rect = _rect; return b_changed;
 }
 
-err_code CPosition::Load (void) {
+err_code CFrame::CPosition::Load (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	using CRegWnd = route::CApp::CWindow;
@@ -237,7 +237,7 @@ err_code CPosition::Load (void) {
 	return this->Error();
 }
 
-err_code CPosition::Save (void) {
+err_code CFrame::CPosition::Save (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	using CRegWnd = route::CApp::CWindow;
@@ -261,10 +261,10 @@ err_code CPosition::Save (void) {
 }
 
 const
-t_rect&  CPosition::operator ()(void) const { return this->m_rect; }
-t_rect&  CPosition::operator ()(void)       { return this->m_rect; }
+t_rect&  CFrame::CPosition::operator ()(void) const { return this->m_rect; }
+t_rect&  CFrame::CPosition::operator ()(void)       { return this->m_rect; }
 
-CPosition& CPosition::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
+CFrame::CPosition& CFrame::CPosition::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
 
 #pragma endregion
 #pragma region cls::CSize{}

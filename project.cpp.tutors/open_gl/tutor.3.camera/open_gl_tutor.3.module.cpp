@@ -44,12 +44,7 @@ err_code CCameraModule::PreMessageLoop (int nShowCmd) {
 */
 INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpstrCmdLine, INT nCmdShow) {
 	hInstance; hPrevInstance; lpstrCmdLine; nCmdShow;
-	/*
-		Tech_dog commented on 09-Feb-2010 at 12:47:50pm, UTC+3, Rostov-on-Don, Monday:
-		-----------------------------------------------------------------------------
-		For linking ATL DLL statically an assignment LIBID manually is required,
-		otherwise annoying fkn message "Did you forget to pass the LIBID to CComModule::Init?" is thrown;
-	*/
+
 	_Module.m_libid  = LIBID_ATLLib;
 	int32_t n_result = __s_ok;
 
@@ -59,13 +54,19 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	MSG msg = {0};
 
 	static _pc_sz pc_sz_cls_name = _T("__open_gl_tutor_3_camera");
-
 	bool b_error = true;
 
 	// should be placed here for testing otherwise creating console after main window will cause the error;
+#if (0)
 	shared::console::CWrap con_wrap;
 	con_wrap.Create(_T(""), true);
+#else
+	if (__failed(_con.Create())) {
+		__trace_err_ex_2(_con.Error());
+	}
+	else if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
 
+#endif
 	CAppWnd& app_wnd = ::Get_app_wnd();
 	camera::CWnd cam_wnd; // the draw context window;
 
@@ -75,31 +76,21 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	TRenderer& renderer = ::Get_renderer();
 
 	do {
+		/*const */
+		shared::gui::CLayout& layout = app_wnd.Layout();
 		__trace::Use_con(true); // the console window is not created yet; VS debug output is used anyway;
-#pragma region __step_0
-		// (0) creating the main window/application at the beginning of this 'journey';
-		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#3_camera"), true))) {
-			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req)); break;
-		}
-
-		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
-
-		/*const */shared::gui::CLayout& layout = app_wnd.Layout();
-#pragma endregion
 #pragma region __step_1
+#if (0)
 		// (1) creates the console output window;
-		if (__failed(_con.Open(app_wnd, layout.Bottom().Rect(), false))) { // the last arg of visibility mode is not used yet;
+		if (__failed(_con.Create({app_wnd, layout.Bottom().Rect(), false}))) { // the last arg of visibility mode is not used yet;
 			__trace_err_3(_T("%s\n"), (_pc_sz) _con.Error().Print(TError::e_req));
-			_con.Error().Show();
 			break;
 		} else shared::console::content::CCtxMenu().Enable(true);
-		__trace::Use_con(true);
+#endif
 		layout.Bottom().Target(_con.Handle());
 		layout.Update();
-		b_error = false;
 
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
-
 		shared::console::CBkgnd con_bkg;
 		con_bkg.Color(::Get_theme().Bkgnd_rgb());
 		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
@@ -107,6 +98,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		shared::console::layout::CHScroll().Set(true);
 
 		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
+#pragma endregion
+#pragma region __step_0
+		// (0) creating the main window/application at the beginning of this 'journey';
+		if (__failed(app_wnd.Create(pc_sz_cls_name, _T("OpenGL__tut_#3_camera"), true))) {
+			__trace_err_3(_T("%s\n"), (_pc_sz) app_wnd.Error().Print(TError::e_req));
+		}
+
+		app_wnd.Frame().Icons().Set(IDR_TUTOR_0_ICO);
 #pragma endregion
 #pragma region __step_2
 		// (2) creates the context target window; the required GDI and draw contexts are also created;
@@ -119,12 +118,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		//  *important*: no scene preparation is called before setting the shape;
 		if (__failed(cam_wnd.PostCreate())) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) cam_wnd.Error().Print(TError::e_req));
-			break;
 		}
 #pragma endregion
 #pragma region __step_3
 		// (3) updates draw scene;
-		if (__failed(renderer.Scene().Prepare())) break;
+		if (__failed(renderer.Scene().Prepare())) {}
 #pragma endregion
 #pragma region __step_4
 		// (4) sets vertex position and color attributes of the triangle shape;
@@ -139,7 +137,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		triangle.C().Attrs().Pos().Set(+0.5f, -0.5f);
 
 		if (__failed(triangle.Update())) { // if an error occurs, the method prints it itself;
-			break;
 		}
 #pragma endregion
 #pragma region __step_5
@@ -148,6 +145,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		renderer.Cfg().Primitive(triangle.Primitive());
 		renderer.Cfg().StartAt(0);
 #pragma endregion
+		b_error = false;
+
 	} while (true == false);
 
 	if (b_error != false) // goes to message loop and waits the app window will be closed;
@@ -166,7 +165,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::Sleep(100);
 		}
 	}
-
 	::Get_app_wnd().Destroy();
 	__trace::OnTime();
 	return n_result;

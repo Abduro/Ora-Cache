@@ -9,11 +9,23 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
+#include "console.pers.h"
+
 using namespace ex_ui::draw::gui;
 
 namespace renderer { using CCfg = ex_ui::draw::open_gl::render::CCfg; }
 namespace views { using CGrid = ex_ui::draw::open_gl::view::CGrid; }
 
+using CState = shared::gui::menus::CState;
+
+#pragma region cls::CBase{}
+
+using CBase = menus::CBase;
+
+CBase::CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+TError& CBase::Error (void) const { return this->m_error; }
+
+#pragma endregion
 #pragma region cls::CCaretaker{}
 
 CCaretaker::CCaretaker (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
@@ -22,27 +34,26 @@ err_code CCaretaker::ApplyTo (CCtxMenu& _ctx_mnu) {
 	_ctx_mnu;
 	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	using CState = shared::gui::menus::CState;
+
 	// (1) sets the grid cell size first;
-	uint32_t u_cmd_id = 0; u_cmd_id;
-	views::CGrid& grid = ::Get_renderer().View().Grid();
-
-	const t_size_u& cell_size = grid.Cell().Get();
-
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_025, IDR_TUTOR_3_GRD_CELL_H_025 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_050, IDR_TUTOR_3_GRD_CELL_H_050 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_075, IDR_TUTOR_3_GRD_CELL_H_075 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_100, IDR_TUTOR_3_GRD_CELL_H_100 == menus::CCell::HeightToCmd(cell_size.cy), this->m_error);
-
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_025, IDR_TUTOR_3_GRD_CELL_W_025 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_050, IDR_TUTOR_3_GRD_CELL_W_050 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_075, IDR_TUTOR_3_GRD_CELL_W_075 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_100, IDR_TUTOR_3_GRD_CELL_W_100 == menus::CCell::WidthToCmd(cell_size.cx), this->m_error);
+	menus::CCell cell;
+	if (__failed(cell.ApplyTo(_ctx_mnu))) {
+		this->m_error = cell.Error();
+		__trace_err_2(this->Error());
+	}
 
 	// (2) sets the draw object which are currently selected;
 	const renderer::CCfg& cfg = ::Get_renderer().Cfg();
 
 	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_DRW_OBJ_GRID, cfg.Is_drawable(TPipe::e_grid), this->m_error);
 	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_DRW_OBJ_TRIA, cfg.Is_drawable(TPipe::e_tria), this->m_error);
+
+	// (3) sets the console menu items related to check state;
+	menus::CConsole con;
+	if (__failed(con.ApplyTo(_ctx_mnu))) {
+		this->m_error = con.Error();
+		__trace_err_2(this->Error());
+	}
 
 	return this->Error();
 }
@@ -51,6 +62,28 @@ TError&  CCaretaker::Error (void) const { return this->m_error; }
 
 #pragma endregion
 #pragma region cls::CCell{}
+
+menus::CCell::CCell (void) : TBase() { TBase::m_error >> __CLASS__; }
+
+err_code menus::CCell::ApplyTo (CCtxMenu& _ctx_mnu) {
+	_ctx_mnu;
+	TBase::m_error >>__CLASS__<<__METHOD__<<__s_ok;
+
+	views::CGrid& grid = ::Get_renderer().View().Grid();
+	const t_size_u& cell_size = grid.Cell().Get();
+
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_025, IDR_TUTOR_3_GRD_CELL_H_025 == menus::CCell::HeightToCmd(cell_size.cy), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_050, IDR_TUTOR_3_GRD_CELL_H_050 == menus::CCell::HeightToCmd(cell_size.cy), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_075, IDR_TUTOR_3_GRD_CELL_H_075 == menus::CCell::HeightToCmd(cell_size.cy), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_H_100, IDR_TUTOR_3_GRD_CELL_H_100 == menus::CCell::HeightToCmd(cell_size.cy), TBase::m_error);
+
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_025, IDR_TUTOR_3_GRD_CELL_W_025 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_050, IDR_TUTOR_3_GRD_CELL_W_050 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_075, IDR_TUTOR_3_GRD_CELL_W_075 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_100, IDR_TUTOR_3_GRD_CELL_W_100 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
+
+	return TBase::Error();
+}
 
 uint32_t menus::CCell::CmdToHeight (const uint32_t _u_cmd_id) {
 	_u_cmd_id;
@@ -90,6 +123,22 @@ uint32_t menus::CCell::WidthToCmd (const uint32_t _u_width) {
 	case 075 : u_cmd_id = IDR_TUTOR_3_GRD_CELL_W_075; break; case 100 : u_cmd_id = IDR_TUTOR_3_GRD_CELL_W_100; break;
 	}
 	return u_cmd_id;
+}
+
+#pragma endregion
+#pragma region cls::CConsole{}
+
+using CConsole = menus::CConsole;
+
+CConsole::CConsole (void) : TBase() { TBase::m_error >>__CLASS__; }
+
+err_code CConsole::ApplyTo (CCtxMenu& _ctx_mnu) {
+	_ctx_mnu;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_CON_PINNED, ::Get_ConPers().Pin().Is_pinned(), TBase::m_error);
+	
+	return TBase::Error();
 }
 
 #pragma endregion
