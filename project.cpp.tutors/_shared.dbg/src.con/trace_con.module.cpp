@@ -144,29 +144,9 @@ uint32_t _tmain (int argc, _TCHAR* argv[]) {
 
 using namespace shared::console::events;
 
-class COutput : public input::IEvtHandler, public ctrl::IEvtHandler {
+class COutput : public CHandler_Dflt {
 public:
 	COutput (void) = default; ~COutput (void) = default;
-
-	err_code On_close(const ctrl::CEvent::evt_source _dw_reason) override final {
-		__trace_warn_2(_T("%s\n"), (_pc_sz) ctrl::CEvent().To_str(_dw_reason)); return __s_ok;
-	}
-
-	err_code On_menu (const input::evt_menu_data_t& _data) override final {
-		__trace_impt_2(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
-	}
-
-	err_code On_mouse (const input::evt_mouse_data_t& _data) override final {
-		__trace_info(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
-	}
-
-	err_code On_kbrd (const input::evt_kbrd_data_t& _data) override final {
-		__trace_info(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
-	}
-
-	err_code On_size (const input::evt_buffer_size_t _data) override final {
-		__trace_info(_T("%s\n"), (_pc_sz) input::CEvent().To_str(_data)); return __s_ok;
-	}
 };
 
 CTraceConsole _Module;

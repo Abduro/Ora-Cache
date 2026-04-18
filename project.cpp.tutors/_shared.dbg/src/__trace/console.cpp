@@ -20,6 +20,8 @@ using namespace shared::dbg;
 
 namespace shared { namespace console  { namespace _impl {/*not used yeat*/}}} using namespace shared::console::_impl;
 
+#pragma region cls::CCommand{}
+#pragma endregion
 #pragma region cls::CLocator{}
 
 CLocator::CLocator (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("the locator is not used yet"); }
@@ -144,13 +146,21 @@ err_code CConsole::Create (void) {
 	CLayout layout;
 	if (__failed(layout.OnCreate()))
 		this->m_error = layout.Error();
-
+	else {
+		TInputRouter& in_router = ::Get_input();
+		if (__succeeded(in_router.Turn(true)))
+			in_router.Subscribe(&this->m_handler);
+	}
 	return this->Error();
 }
 
 err_code CConsole::Close (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
+
+	TInputRouter& in_router = ::Get_input();
+	in_router.Unsubscribe(&this->m_handler);
+	in_router.Turn(false);
 
 	if (this->Is_valid() == false) // it is supposed the all opened file descriptors is already closed;
 		return this->m_error << __e_not_inited;

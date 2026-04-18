@@ -11,6 +11,7 @@
 */
 #include "console.defs.h"
 #include "console.content.h"
+#include "console.event.h"
 #include "console.layout.h"
 
 namespace shared { namespace console {
@@ -61,8 +62,32 @@ namespace shared { namespace console {
 	// https://learn.microsoft.com/en-us/windows/console/allocconsole ;
 	// the excerpt from the above article: this function is primarily used by a graphical user interface (GUI) application to create a console window...;
 
+	class CCommand {
+	public:
+		CCommand (void); CCommand (const CCommand&); CCommand (CCommand&&); ~CCommand (void) = default;
+
+		TError& Error (void) const;
+
+		CCommand& operator = (const CCommand&); CCommand& operator = (CCommand&&);
+	private:
+		CError m_error;
+	};
+
+	class CCmd_Handler {
+	public:
+		CCmd_Handler (void) = default; CCmd_Handler (const CCmd_Handler&) = delete; CCmd_Handler (CCmd_Handler&&) = delete; ~CCmd_Handler (void) = default;
+
+		TError& Error (void) const;
+		err_code On_command (const uint32_t _cmd_id);
+
+	private:
+		CCmd_Handler& operator = (const CCmd_Handler&) = delete; CCmd_Handler& operator = (CCmd_Handler&&) = delete;
+		CError m_error;
+	};
+
 	class CConsole {
 	public:
+		using CHandler = shared::console::events::CHandler_Dflt;
 		 CConsole (void); CConsole (const CConsole&) = delete; CConsole (CConsole&&) = delete;
 		~CConsole (void);
 
@@ -83,8 +108,9 @@ namespace shared { namespace console {
 	private:
 		 CConsole& operator = (const CConsole&) = delete; CConsole& operator = (CConsole&&) = delete;
 		 mutable
-		 CError  m_error;
-		 HWND    m_con_wnd;
+		 CError   m_error;
+		 HWND     m_con_wnd; // it is not necessary actually;
+		 CHandler m_handler;
 	};
 }}
 

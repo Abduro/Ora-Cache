@@ -127,12 +127,16 @@ err_code CPosition::Set (const t_rect& _rect) {
 	if (::IsRectEmpty(&_rect))
 		TBase::m_error <<__e_rect = _T("#__e_inv_arg: input rect is empty");
 
+	static t_rect rc_prev = {0};
+	if (rc_prev == _rect)
+		return TBase::Error();
+
 	TRegKeyEx the_key;
 	if (__failed(the_key.Value().Set((_pc_sz) cs_pos_key, _rect))) {
 		TBase::m_error = the_key.Error();
 		__trace_err_2(TBase::Error());
 	} else {
-		this->m_rc_pos = _rect;
+		this->m_rc_pos = rc_prev = _rect;
 		__trace_impt_2(_T("Position is saved at rect >> %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
 	}
 	return TBase::Error();
@@ -255,3 +259,12 @@ TConPers&  ::Get_ConPers (void) {
 	static TConPers con_pers;
 	return con_pers;
 }
+
+namespace shared { namespace console {
+bool operator != (const t_rect& _left, const t_rect& _right) {
+	return _left.left != _right.left || _left.top != _right.top || _left.right != _right.right || _left.bottom != _right.bottom;
+}
+bool operator == (const t_rect& _left, const t_rect& _right) {
+	return false == (_left != _right);
+}
+}}

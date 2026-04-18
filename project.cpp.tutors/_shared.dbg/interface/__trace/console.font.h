@@ -9,50 +9,48 @@ namespace shared { namespace console {
 
 	// https://stackoverflow.com/questions/35382432/how-to-change-the-console-font-size/35383318 ;
 
-	// https://learn.microsoft.com/en-us/windows/console/coord-str ;
-	// https://learn.microsoft.com/en-us/windows/console/console-font-infoex ;
-	typedef CONSOLE_FONT_INFO   ConFntInfo;
-	typedef CONSOLE_FONT_INFOEX ConFntInfoEx;
+	typedef CONSOLE_FONT_INFO   ConFntInfo;    // https://learn.microsoft.com/en-us/windows/console/coord-str ;
+	typedef CONSOLE_FONT_INFOEX ConFntInfoEx;  // https://learn.microsoft.com/en-us/windows/console/console-font-infoex ;
 
-	// https://stackoverflow.com/questions/64785427/c-windows-api-how-to-retrieve-font-scaling-percentage << good question but it has not good answer:
-	// Windows UWP is never been native API, so it is other level/intermediate layer of abstraction by involving so named WinRT;
-	// the good answer of the question made in above article is https://stackoverflow.com/a/78226131/4325555 ; thanks Ian Boyd for thinking in right direction;
-
+	/* https://stackoverflow.com/questions/64785427/c-windows-api-how-to-retrieve-font-scaling-percentage << good question but it has not good answer:
+	   Windows UWP is never been native API, so it is other level/intermediate layer of abstraction by involving so named WinRT;
+	   the good answer of the question made in above article is https://stackoverflow.com/a/78226131/4325555 ; thanks Ian Boyd for thinking in right direction;
+	*/
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetrica ;
 	class CFont {
 	public:
-		 CFont (void);
-		 CFont (const CFont&);          // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetrica ;
-		 CFont (CFont&&) = delete;
-		~CFont (void);
+		 CFont (void); CFont (const CFont&); CFont (CFont&&) = delete;
+		~CFont (void) = default;
 
-	public:
 		const
-		ConFntInfoEx& Get (void) const; // re-call the system function to retrieve the font info in case when font structure is unset;
+		ConFntInfoEx& Get (void); // re-call the system function to retrieve the font info in case when font structure is unset;
 		err_code      Set (_pc_sz _p_face_name, const int16_t _cy); // TODO: it is assumed that font family is TMPF_TRUETYPE, when new font is set;
 
-	public:
 		// because a user has a chance of not selecting the desired font size from the dropdown list, but to type directly the size that is not in the list;
-		TErrorRef Error (void) const;
-		bool      Is    (void) const;   // checks the condole font structure for validity of data; 
-		UINT      Size  (void) const;   // gets font size that is set in console output;
-
-	public:
+		TError&  Error (void) const;
+		bool     Is    (void) const;   // checks the condole font structure for validity of data; 
+		const
+		t_size&  Size  (void) const;   // gets font size of console output in *pixels*;
 		const
 		ConFntInfoEx& Raw (void) const;
 		ConFntInfoEx& Raw (void)      ;
 
-	public:
 		CFont&  operator = (const CFont&);
 		CFont&  operator = (CFont&&) = delete;
 
-	public:
 		operator bool (void) const;     // calls CFont::Is();
-		operator const ConFntInfoEx& (void) const;
-		operator       ConFntInfoEx& (void)      ;
+		const
+		ConFntInfoEx& operator ()(void) const;
+		ConFntInfoEx& operator ()(void) ;
+
+		bool operator != (const CFont&);
+
+		static t_size To_pixels (const COORD&);  // converts logical units of the font size to pixels;
 
 	private:
-		mutable CError m_error;
-		mutable ConFntInfoEx m_info;
+		CError m_error;
+		ConFntInfoEx m_info;
+		t_size m_size; // font size is measured in logical units in appropriate with currently set DPI, this class field contains font size in pixels;
 	};
 #if (0)
 	// this is the class for going geometrical metrics of the font size in logical units

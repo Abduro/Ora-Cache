@@ -97,6 +97,8 @@ namespace persistent {
 		CPos  m_pos;
 	};
 
+	bool operator != (const t_rect& _left, const t_rect& _right);
+	bool operator == (const t_rect& _left, const t_rect& _right);
 }}
 
 // taking into account the fact the only one console can be associated with one process, using a singleton is acceptable approach;

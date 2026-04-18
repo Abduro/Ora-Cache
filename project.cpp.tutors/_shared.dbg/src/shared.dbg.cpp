@@ -89,7 +89,7 @@ void CTrace::OnTime (_pc_sz _p_text) {
 static bool b_use_con = true;
 
 void CTrace::Use_con (const bool _b_use) {
-	b_use_con = _b_use;
+	_b_use; b_use_con = _b_use;
 }
 
 bool CTrace::Use_con  (void) {

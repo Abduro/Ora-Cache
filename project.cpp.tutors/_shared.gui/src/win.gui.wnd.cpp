@@ -25,7 +25,7 @@ err_code CAppWnd::Create (_pc_sz _p_cls_name, _pc_sz _p_title, const bool _b_vis
 	_p_cls_name; _p_title; _b_visible;
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	__trace::Use_con(false); // outputs to VS debug window; 
+//	__trace::Use_con(false); // outputs to VS debug window; 
 
 	// the main window class must be registered first if it is not yet;
 	CWndCls wnd_cls;
