@@ -20,7 +20,106 @@ using namespace shared::dbg;
 
 namespace shared { namespace console  { namespace _impl {/*not used yeat*/}}} using namespace shared::console::_impl;
 
+#pragma region cls::CCmd_Base{}
+
+CCmd_Base::CCmd_Base (const uint32_t _cmd_id/* = 0*/, _pc_sz _p_name/* = nullptr*/) : m_id(_cmd_id), m_name(_p_name) {
+	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: command object is not inited yet"); }
+CCmd_Base::CCmd_Base (const CCmd_Base& _src) : CCmd_Base() { *this = _src; }
+CCmd_Base::CCmd_Base (CCmd_Base&& _victim) : CCmd_Base() { *this = _victim; }
+
+TError&  CCmd_Base::Error (void) const { return this->m_error; }
+
+uint32_t CCmd_Base::Get_id (void) const { return this->m_id; }
+err_code CCmd_Base::Set_id (const uint32_t _u_id) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (CCmd_Handler().Has_cmd(_u_id))
+		return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: cmd ID = (%u) is already assigned"), _u_id);
+
+	this->m_id = _u_id;
+
+	return this->Error();
+}
+
+bool  CCmd_Base::Is_valid (void) const { return !!this->Get_id() && !!this->Name(); }
+
+_pc_sz   CCmd_Base::Name (void) const { return (_pc_sz) this->m_name; }
+err_code CCmd_Base::Name (_pc_sz _p_name) {
+	_p_name;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_name || 0 == ::_tcslen(_p_name))
+		return this->m_error <<__e_inv_arg = _T("#__e_inv_arg: input cmd name is invalid");
+
+	const bool b_changed = 0 == this->m_name.CompareNoCase(_p_name); if (b_changed) this->m_name = _p_name; return this->Error();
+}
+
+CString CCmd_Base::To_str (void) const {
+	static _pc_sz pc_sz_pat = _T("id = %u; name = '%s'");
+	CString cs_out; cs_out.Format(pc_sz_pat, this->Get_id(), this->Name());
+	return  cs_out;
+}
+
+CCmd_Base& CCmd_Base::operator = (const CCmd_Base& _src) { *this << _src.Get_id() << _src.Name(); return *this; }
+CCmd_Base& CCmd_Base::operator = (CCmd_Base&& _victim) { *this = (const CCmd_Base&)_victim; return *this; }
+CCmd_Base& CCmd_Base::operator <<(const uint32_t _u_id) { this->Set_id(_u_id); return *this; }
+CCmd_Base& CCmd_Base::operator <<(const CString& _cs_name) { *this << (_pc_sz) _cs_name; return *this; }
+CCmd_Base& CCmd_Base::operator <<(_pc_sz _p_sz_name) { this->Name(_p_sz_name); return *this; }
+
+#pragma endregion
 #pragma region cls::CCommand{}
+
+CCommand::CCommand (const uint32_t _cmd_id, _pc_sz _p_name) : TBase(_cmd_id, _p_name) {}
+
+err_code CCommand::Exec (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	CScreenBuffer buffer;
+	if (__failed( buffer.Clear()))
+		TBase::m_error = buffer.Error();
+
+	return TBase::Error();
+}
+
+#pragma endregion
+#pragma region cls::CCmd_Handler{}
+
+typedef ::std::map<uint32_t, CCommand> cmd_map_t;
+static cmd_map_t g_cmd_map;
+
+CCmd_Handler::CCmd_Handler (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+#if (0)
+	if (g_cmd_map.empty() == false)
+		g_cmd_map.clear();
+	try {
+		g_cmd_map.insert(::std::make_pair(e_cmd_ids::e_clear, CCommand(e_cmd_ids::e_clear, _T("Clear"))));
+	} catch (const ::std::bad_alloc&) { this->m_error << __e_no_memory = _T("#__e_no_mem: creating command cache failed"); }
+#endif
+}
+
+TError&  CCmd_Handler::Error (void) const { return this->m_error; }
+
+bool CCmd_Handler::Has_cmd (const uint32_t _u_cmd_id) const {
+	_u_cmd_id;
+	return g_cmd_map.end() != g_cmd_map.find(_u_cmd_id);
+}
+
+err_code CCmd_Handler::On_command (const uint32_t _cmd_id) {
+	_cmd_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	switch (_cmd_id) {
+	case e_cmd_ids::e_clear: {
+		CScreenBuffer buffer;
+		if (__failed( buffer.Clear()))
+			this->m_error = buffer.Error();
+	} break;
+	default:
+		this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: command ID 0x%04x (%u)"), _cmd_id, _cmd_id);
+	}
+
+	return this->Error();
+}
+
 #pragma endregion
 #pragma region cls::CLocator{}
 
@@ -219,3 +318,8 @@ TError& CConsole::Error (void) const { return this->m_error; }
 CConsole::operator const HWND (void) const { return this->Handle(); }
 
 #pragma endregion
+
+TCmdHandler&  ::Get_ConHandler (void) {
+	static TCmdHandler handler;
+	return handler;
+}

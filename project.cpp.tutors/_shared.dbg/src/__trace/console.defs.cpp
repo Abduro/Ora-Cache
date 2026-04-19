@@ -5,11 +5,40 @@
 	The code is based on Pulsepay WWS Server Light Console class declared on 22-Dec-2013 at 12:49:13pm, GMT+4, Saint-Petersburg, Sunday;
 */
 #include "console.defs.h"
+#include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace shared::console;
 
 namespace shared { namespace console { namespace _impl { void __warning_lnk_4221 (void) {}}}}
 
+#pragma region cls::CAccessor{}
+
+static _pc_sz p_err_desc = _T("There is *no* association with console process");
+
+HWND CAccessor::operator ()(void) const {
+
+	const HWND h_wnd = ::GetConsoleWindow();
+	if (0 == h_wnd) {
+		CError error(__CLASS__, __METHOD__, (err_code)TErrCodes::eExecute::eState);
+		error = p_err_desc;
+		__trace_err_ex_3(error);
+	}
+	return h_wnd;
+}
+
+HWND CAccessor::operator ()(CError& _err) const {
+
+	const HWND h_wnd = ::GetConsoleWindow();
+	if (0 == h_wnd) {
+		_err << (err_code) TErrCodes::eExecute::eState = p_err_desc;
+		__trace_err_ex_3(_err);
+	}
+	else _err << __s_ok;
+	return h_wnd;
+}
+
+#pragma endregion
 #pragma region cls::CHandles{}
 
 using e_index = CHandles::e_index;

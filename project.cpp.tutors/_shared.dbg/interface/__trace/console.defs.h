@@ -22,6 +22,15 @@ namespace shared { namespace console {
 
 	using namespace shared::defs;
 
+	class CAccessor {
+	public:
+		 CAccessor (void) = default;  CAccessor (const CAccessor&) = delete; CAccessor (CAccessor&&) = delete;
+		~CAccessor (void) = default;
+
+		HWND operator ()(void) const;
+		HWND operator ()(CError&) const;
+	};
+
 	class CHandles {
 	public:
 		enum e_index : uint32_t { e_input = 0, e_output, e_error };
@@ -51,5 +60,7 @@ namespace shared { namespace console {
 #define __out_handle CHandles::Out()
 
 }}
+
+typedef shared::console::CAccessor TConAccess; // it may be useful for direct access to the console window handle;
 
 #endif/*_CONSOLE_DEFS_H_INCLUDED*/

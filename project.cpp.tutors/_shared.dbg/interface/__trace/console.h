@@ -58,32 +58,67 @@ namespace shared { namespace console {
 		void*  m_hwnd ;  // console window handle; winnt.h: typedef void* HANDLE;
 	};
 
-	// https://learn.microsoft.com/en-us/windows/console/creation-of-a-console ;
-	// https://learn.microsoft.com/en-us/windows/console/allocconsole ;
-	// the excerpt from the above article: this function is primarily used by a graphical user interface (GUI) application to create a console window...;
-
-	class CCommand {
+	class CCmd_Base {
 	public:
-		CCommand (void); CCommand (const CCommand&); CCommand (CCommand&&); ~CCommand (void) = default;
+		CCmd_Base (const uint32_t _cmd_id = 0, _pc_sz _p_name = nullptr);
+		CCmd_Base (const CCmd_Base&); CCmd_Base (CCmd_Base&&); ~CCmd_Base (void) = default;
 
 		TError& Error (void) const;
 
-		CCommand& operator = (const CCommand&); CCommand& operator = (CCommand&&);
-	private:
-		CError m_error;
+		uint32_t Get_id (void) const;
+		err_code Set_id (const uint32_t);
+
+		bool  Is_valid (void) const;
+
+		_pc_sz   Name (void) const;
+		err_code Name (_pc_sz);
+
+		CString  To_str (void) const;
+
+		CCmd_Base& operator = (const CCmd_Base&); CCmd_Base& operator = (CCmd_Base&&);
+		CCmd_Base& operator <<(const uint32_t _u_id);
+		CCmd_Base& operator <<(const CString& _cs_name);
+		CCmd_Base& operator <<(_pc_sz _p_sz_name);
+
+	protected:
+		CError   m_error;
+		uint32_t m_id;
+		CString  m_name;
+	};
+	// useless class declaration: Exec() must be specific, thus without virtual method there is no way;
+	class CCommand : public CCmd_Base { typedef CCmd_Base TBase;
+	public:
+		CCommand (void) = default;
+		CCommand (const uint32_t _cmd_id, _pc_sz _p_name);
+
+		const
+		CCmd_Base& operator ()(void) const;
+		CCmd_Base& operator ()(void) ;
+
+		err_code Exec (void);
+	};
+
+	enum e_cmd_ids : uint32_t {
+		e_clear = 6666, // clears console buffer, i.e. no text in the console window;
 	};
 
 	class CCmd_Handler {
 	public:
-		CCmd_Handler (void) = default; CCmd_Handler (const CCmd_Handler&) = delete; CCmd_Handler (CCmd_Handler&&) = delete; ~CCmd_Handler (void) = default;
+		CCmd_Handler (void); CCmd_Handler (const CCmd_Handler&) = delete; CCmd_Handler (CCmd_Handler&&) = delete; ~CCmd_Handler (void) = default;
 
 		TError& Error (void) const;
+		bool Has_cmd (const uint32_t _u_cmd_id) const;
+
 		err_code On_command (const uint32_t _cmd_id);
 
 	private:
 		CCmd_Handler& operator = (const CCmd_Handler&) = delete; CCmd_Handler& operator = (CCmd_Handler&&) = delete;
 		CError m_error;
 	};
+
+	// https://learn.microsoft.com/en-us/windows/console/creation-of-a-console ;
+	// https://learn.microsoft.com/en-us/windows/console/allocconsole ;
+	// the excerpt from the above article: this function is primarily used by a graphical user interface (GUI) application to create a console window...;
 
 	class CConsole {
 	public:
@@ -114,6 +149,7 @@ namespace shared { namespace console {
 	};
 }}
 
-typedef shared::console::CConsole out_; static out_ _con;
+typedef shared::console::CConsole con_t; static con_t _con;
+typedef shared::console::CCmd_Handler TCmdHandler;  TCmdHandler&  Get_ConHandler (void);  
 
 #endif/*_CONSOLE_H_INCLUDED*/
