@@ -45,7 +45,9 @@ namespace shared { namespace console { namespace _impl {
 			if (nullptr == p_out || __e_handle == p_out)
 				return;
 			::SetConsoleTextAttribute(p_out, clrs);
-			::WriteConsole(p_out, cs_out.GetBuffer(), cs_out.GetLength(), &n_written, 0);
+			if (false == !!::WriteConsole(p_out, cs_out.GetBuffer(), cs_out.GetLength(), &n_written, 0)) {
+				__trace_err_ex_2(CError(__CLASS__,__METHOD__, __LastErrToHresult())); // to VS debug output console;
+			}
 		}
 
 	private:

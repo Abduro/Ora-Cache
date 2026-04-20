@@ -14,6 +14,7 @@
 #include "gl_version.h"
 
 #include "__trace\console.h"
+#include "__trace\console.event.h"
 #include "__trace\console.font.h"
 #include "__trace\console.format.h"
 
@@ -38,6 +39,58 @@ err_code CCameraModule::PreMessageLoop (int nShowCmd) {
 	else
 		return n_result = __s_ok; // forces to continue working with pumping windows' messages;
 }
+
+using CHandler_Dflt = shared::console::events::CHandler_Dflt;
+class CHandler : public CHandler_Dflt {
+public:
+	CHandler (void) {}
+
+	using evt_mouse_data_t = shared::console::events::input::evt_mouse_data_t;
+	using CBtn_enum = shared::console::events::input::CBtn_enum;
+	using CConMenu = ex_ui::draw::gui::menus::CConsole;
+	using COrganizer = ex_ui::draw::gui::COrganizer;
+
+	err_code On_button(const evt_mouse_data_t& _data) override {
+		_data;
+		this->m_btns.Set(_data.dwButtonState);
+
+		if (this->m_btns.Get(VK_RBUTTON).Is_released())
+		{
+			if ((::Get_Shortcut() << IDR_TUTOR_3_CTX_MENU_1).Error()) {__trace_err_ex_2(::Get_Shortcut().Error());}
+			else {
+				CConMenu().ApplyTo(::Get_Shortcut());
+				// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup ;
+				CWindow(::Get_app_wnd()).SendMessage(WM_RBUTTONUP); // sending this message to main app window allows to show context menu;
+
+				::SetForegroundWindow(TConAccess()); // just brings console window on top;
+				const uint32_t u_cmd_id = ::Get_Shortcut().Track(::Get_app_wnd()/*TConAccess()*/); // doesn't work for direct call to console window;
+				COrganizer().On_command(u_cmd_id);
+			}
+		}
+		return __s_ok;
+	}
+
+	err_code On_move  (const evt_mouse_data_t& _data) override {
+		_data; return __s_ok;
+	}
+private:
+	CBtn_enum m_btns;
+};
+class CHandler_auto {
+public:
+	CHandler_auto (void) {
+		TInputRouter& in_router = ::Get_input();
+		if (in_router.Turn(true) == __s_ok)
+			in_router.Subscribe(&this->m_handler);
+	}
+	~CHandler_auto (void) {
+		TInputRouter& in_router = ::Get_input();
+		in_router.Unsubscribe(&this->m_handler);
+		in_router.Turn(false);
+	}
+private:
+	CHandler m_handler;
+};
 
 /*
 	api-ms-win-core-synch-l1-2-0 cannot be loaded >> access violation error may occur in case when this solution must be re-built;
@@ -65,6 +118,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		__trace_err_ex_2(_con.Error());
 	}
 	else if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
+
+	CHandler_auto handler_auto;
 
 #endif
 	CAppWnd& app_wnd = ::Get_app_wnd();
@@ -165,6 +220,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::Sleep(100);
 		}
 	}
+	_con.Close();
 	::Get_app_wnd().Destroy();
 	__trace::OnTime();
 	return n_result;

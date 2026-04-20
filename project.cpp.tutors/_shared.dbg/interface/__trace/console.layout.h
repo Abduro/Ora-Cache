@@ -8,7 +8,8 @@
 #include "console.buffer.h"
 #include "console.pers.h"
 
-namespace shared { namespace console { namespace layout { using namespace shared::console;
+namespace shared { namespace console {
+namespace layout { using namespace shared::console;
 
 	class CHScroll {
 	public:

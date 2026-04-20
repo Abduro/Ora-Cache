@@ -93,6 +93,13 @@ IDR_TUTOR_3_CTX_MENU_0 MENU { POPUP "" {
 	}
 }}
 
+IDR_TUTOR_3_CTX_MENU_1 MENU { POPUP "" {
+	MENUITEM "Clear" , IDR_TUTOR_3_CON_CLEAR
+	MENUITEM "Show"  , IDR_TUTOR_3_CON_VISIBLE
+	MENUITEM SEPARATOR
+	MENUITEM "Pinned", IDR_TUTOR_3_CON_PINNED CHECKED
+}}
+
 // https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
 // https://learn.microsoft.com/en-us/windows/win32/menurc/dialog-resource ;
 // https://learn.microsoft.com/en-us/windows/win32/menurc/dialogex-resource ;

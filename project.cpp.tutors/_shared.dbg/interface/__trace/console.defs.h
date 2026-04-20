@@ -27,8 +27,15 @@ namespace shared { namespace console {
 		 CAccessor (void) = default;  CAccessor (const CAccessor&) = delete; CAccessor (CAccessor&&) = delete;
 		~CAccessor (void) = default;
 
+		bool Visible (void) const;  // gets console window visibility;
+		void Visible (const bool);  // sets console window visibility;
+
 		HWND operator ()(void) const;
 		HWND operator ()(CError&) const;
+
+		operator HWND (void) const;
+
+		CAccessor& operator <<(const bool _b_show_or_hide);
 	};
 
 	class CHandles {

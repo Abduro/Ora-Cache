@@ -35,15 +35,20 @@ namespace shared { namespace gui { namespace menus { using namespace shared::def
 	public:
 		CCtxMenu (void); CCtxMenu (const CCtxMenu&) = delete; CCtxMenu (CCtxMenu&&) = delete; ~CCtxMenu (void);
 
+		uint32_t Track (const HWND _h_owner); // tracks popup menu at current position of the cursor;
 		uint32_t Track (const HWND _h_owner, const t_point _pt_screen); // tracks popup menu; returns selected menu item command or 0;
 		const
 		menus::CMenu& operator ()(void) const;
 		menus::CMenu& operator ()(void) ;
+
+		CCtxMenu& operator <<(uint16_t _u_res_id); // loads menu from executable resource by given identifier;
 
 	private:
 		CCtxMenu& operator = (const CCtxMenu&) = delete; CCtxMenu& operator = (CCtxMenu&&) = delete;
 	};
 
 }}
+
+typedef shared::gui::CCtxMenu TCtxMenu; TCtxMenu& Get_Shortcut (void);
 
 #endif/*__SHARED_CTX_MENU_H_INCLUDED*/

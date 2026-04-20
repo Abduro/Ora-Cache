@@ -193,28 +193,44 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="$(_0)shared.dbg.h" />
-    <ClCompile Include="$(_1)shared.dbg.cpp" />
-    <ClInclude Include="$(_0-0)console.h" />
-    <ClCompile Include="$(_1-0)console.cpp" />
+  </ItemGroup>
+  <ItemGroup><!--buffers-->
     <ClInclude Include="$(_0-0)console.buffer.h" />
     <ClCompile Include="$(_1-0)console.buffer.cpp" />
+    <ClInclude Include="$(_0-0)console.mode.h" />
+    <ClCompile Include="$(_1-0)console.mode.cpp" />
+  </ItemGroup>
+  <ItemGroup><!--content-->
     <ClInclude Include="$(_0-0)console.content.h" />
     <ClCompile Include="$(_1-0)console.content.cpp" />
-    <ClInclude Include="$(_0-0)console.defs.h" />
-    <ClCompile Include="$(_1-0)console.defs.cpp" />
-    <ClInclude Include="$(_0-0)console.event.h" />
-    <ClCompile Include="$(_1-0)console.event.cpp" />
     <ClInclude Include="$(_0-0)console.font.h" />
     <ClCompile Include="$(_1-0)console.font.cpp" />
     <ClInclude Include="$(_0-0)console.format.h" />
     <ClCompile Include="$(_1-0)console.format.cpp" />
-    <ClInclude Include="$(_0-0)console.layout.h" />
-    <ClCompile Include="$(_1-0)console.layout.cpp" />
-    <ClInclude Include="$(_0-0)console.mode.h" />
-    <ClCompile Include="$(_1-0)console.mode.cpp" />
+  </ItemGroup>
+  <ItemGroup><!--__root-->
+    <ClInclude Include="$(_0-0)console.defs.h" />
+    <ClCompile Include="$(_1-0)console.defs.cpp" />
     <ClInclude Include="$(_0-0)console.out.h" />
     <ClCompile Include="$(_1-0)console.out.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-0)console.event.h" />
+    <ClCompile Include="$(_1-0)console.event.cpp" />
+    <ClInclude Include="$(_0-0)console.evt.btn.h" />
+    <ClCompile Include="$(_1-0)console.evt.btn.cpp" />
+    <ClInclude Include="$(_0-0)console.evt.key.h" />
+    <ClCompile Include="$(_1-0)console.evt.key.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)shared.dbg.h" />
+    <ClCompile Include="$(_1)shared.dbg.cpp" />
+    <ClInclude Include="$(_0-0)console.h" />
+    <ClCompile Include="$(_1-0)console.cpp" />
+    <ClInclude Include="$(_1-0)console.cmd.h" />
+    <ClCompile Include="$(_1-0)console.cmd.cpp" />
+    <ClInclude Include="$(_0-0)console.layout.h" />
+    <ClCompile Include="$(_1-0)console.layout.cpp" />
     <ClInclude Include="$(_0-0)console.pers.h" />
     <ClCompile Include="$(_1-0)console.pers.cpp" />
   </ItemGroup>

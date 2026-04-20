@@ -36,6 +36,16 @@ err_code CCtxCfg::Get (void) {
 CCtxMenu:: CCtxMenu (void) : TMenu() { TMenu::m_error >>__CLASS__; }
 CCtxMenu::~CCtxMenu (void) { TMenu::Destroy(); }
 
+uint32_t CCtxMenu::Track (const HWND _h_owner) {
+	TMenu::m_error <<__METHOD__<<__s_ok;
+	t_point curs_pos = {0};
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos ;
+	if (0 == ::GetCursorPos(&curs_pos))
+		return TMenu::m_error.Last();
+	else
+		return this->Track(_h_owner, curs_pos);
+}
+
 uint32_t CCtxMenu::Track (const HWND _h_owner, const t_point _pt_screen) {
 	_h_owner; _pt_screen;
 	TMenu::m_error <<__METHOD__<<__s_ok;
@@ -61,4 +71,14 @@ const
 menus::CMenu& CCtxMenu::operator ()(void) const { return (TMenu&)*this; }
 menus::CMenu& CCtxMenu::operator ()(void)       { return (TMenu&)*this; }
 
+CCtxMenu& CCtxMenu::operator <<(uint16_t _u_res_id) {
+	if (__failed((*this)().Load(_u_res_id))) __trace_err_ex_2((*this)().Error());
+	return *this;
+}
+
 #pragma endregion
+
+TCtxMenu& ::Get_Shortcut (void) {
+	static TCtxMenu ctx_menu;
+	return ctx_menu;
+}

@@ -18,21 +18,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
-    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+    <ClInclude Include="$(Shared)shared.std.afx.h">
+      <Filter>src\_prec</Filter>
+    </ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp">
+      <Filter>src\_prec</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.3.module.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="open_gl_tutor.3.module.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="open_gl_tutor.3.module.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClCompile Include="open_gl_tutor.3.module.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="gl.tutor.3.camera.manifest"><Filter>interface</Filter></Manifest>
+    <Manifest Include="gl.tutor.3.camera.manifest">
+      <Filter>interface</Filter>
+    </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="open_gl_tutor.3.res.h"><Filter>src\resources</Filter></ClInclude>
-    <ResourceCompile Include="open_gl_tutor.3.res.rc"><Filter>src\resources</Filter></ResourceCompile>
+    <ClInclude Include="open_gl_tutor.3.res.h">
+      <Filter>src\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="open_gl_tutor.0.ico"><Filter>src\resources\icons</Filter></Image>
+    <Image Include="$(_0)open_gl_tutor.0.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="open_gl_tutor.3.res.rc">
+      <Filter>src</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

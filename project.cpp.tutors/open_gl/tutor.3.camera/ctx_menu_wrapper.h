@@ -40,35 +40,39 @@ namespace menus {
 		~CConsole (void) = default;
 
 		err_code ApplyTo (CCtxMenu&);
+		bool On_command (const uint32_t _u_cmd_id); // returns 'true' if command is handled; error object state is set if necessary;
 
 	private:
 		CConsole& operator = (const CConsole&) = delete; CConsole& operator = (CConsole&&) = delete;
 	};
 
-	class CGrid {
+	class CGrid : public CBase { typedef CBase TBase;
 	public:
 		 CGrid (void); CGrid (const CGrid&) = delete; CGrid (CGrid&&) = delete;
 		~CGrid (void) = default;
+
+		bool On_command (const uint32_t _u_cmd_id); // returns 'true' if command is handled; error object state is set if necessary;
+
 	private:
 		CGrid& operator = (const CGrid&) = delete; CGrid& operator = (CGrid&&) = delete;
 	};
 }
 	// https://en.wikipedia.org/wiki/Memento_pattern ;
-	class CCaretaker {
+	class CCaretaker : public menus::CBase { typedef menus::CBase TBase;
 	public:
 		CCaretaker (void); CCaretaker (const CCaretaker&) = delete; CCaretaker (CCaretaker&&) = delete; ~CCaretaker (void) = default;
 
 		err_code ApplyTo (CCtxMenu&);
-		TError&  Error (void) const;
 
 	private:
 		CCaretaker& operator = (const CCaretaker&) = delete; CCaretaker& operator = (CCaretaker&&) = delete;
-		CError m_error;
 	};
 
-	class COrganizer {
+	class COrganizer : public menus::CBase { typedef menus::CBase TBase;
 	public:
 		COrganizer (void); COrganizer (const COrganizer&) = delete; COrganizer (COrganizer&&) = delete; ~COrganizer (void) = default;
+
+		err_code On_command (const uint32_t _u_cmd_id);
 
 	private:
 		COrganizer& operator = (const COrganizer&) = delete; COrganizer& operator = (COrganizer&&) = delete;

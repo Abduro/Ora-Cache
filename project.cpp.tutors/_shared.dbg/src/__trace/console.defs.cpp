@@ -13,7 +13,25 @@ using namespace shared::console;
 namespace shared { namespace console { namespace _impl { void __warning_lnk_4221 (void) {}}}}
 
 #pragma region cls::CAccessor{}
+#if (0)
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible ;
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow ;
+bool CAccessor::Visible (void) const { return ::IsWindowVisible((*this)()); }
+void CAccessor::Visible (const bool _show_or_hide) { ::ShowWindow((*this)(), _show_or_hide ? SW_SHOW : SW_HIDE); }
+#else
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-animatewindow ;
+bool CAccessor::Visible (void) const { return ::IsWindowVisible((*this)()); }
+void CAccessor::Visible (const bool _show_or_hide) {
 
+	static const dword ani_flags = /*AW_BLEND*/AW_SLIDE | AW_VER_POSITIVE | AW_HOR_POSITIVE;
+	// doesn't work on remote desktop;
+	if (0 == ::AnimateWindow((*this)(), 1000, _show_or_hide ? SW_SHOW : AW_HIDE | ani_flags)) {
+		// AnimateWindow() does not set error code unfortunately;
+		CError error(__CLASS__,__METHOD__, 0); error <<__e_fail = _T("#__e_failed: animate window failed");
+		__trace_err_ex_2(error);
+	}
+}
+#endif
 static _pc_sz p_err_desc = _T("There is *no* association with console process");
 
 HWND CAccessor::operator ()(void) const {
@@ -37,6 +55,10 @@ HWND CAccessor::operator ()(CError& _err) const {
 	else _err << __s_ok;
 	return h_wnd;
 }
+
+CAccessor& CAccessor::operator <<(const bool _b_show_or_hide) { this->Visible(_b_show_or_hide); return *this; }
+
+CAccessor::operator HWND (void) const { return (*this)(); }
 
 #pragma endregion
 #pragma region cls::CHandles{}

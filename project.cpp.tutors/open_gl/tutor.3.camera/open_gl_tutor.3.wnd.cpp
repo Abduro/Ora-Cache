@@ -13,15 +13,13 @@
 #include "gl_scene.h"
 #include "gl_shader.h"
 #include "shader\gl_compiler.h"
+#include "win.gui.wnd.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::camera;
 
 using CCaretaker = ex_ui::draw::gui::CCaretaker;
-namespace menus {
-	using Cell = ex_ui::draw::gui::menus::CCell;
-	using Grid = ex_ui::draw::gui::menus::CGrid;
-}
+using COrganizer = ex_ui::draw::gui::COrganizer;
 
 #pragma region cls::camera::CWnd{}
 
@@ -81,13 +79,9 @@ err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 	// creates the context menu and subscribes to mouse use events;
 	if (false){}
-	else if (__failed(this->m_ctx_mnu.Load(IDR_TUTOR_3_CTX_MENU_0))) {
-		TBase::m_error = this->m_ctx_mnu.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
-	}
+	else if ((::Get_Shortcut() << IDR_TUTOR_3_CTX_MENU_0).Error()) {__trace_err_ex_2(::Get_Shortcut().Error());}
 	else if (__failed(::Get_mouse() << this)) {
-		TBase::m_error = ::Get_mouse().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) TBase::Error().Print(TError::e_req));
+		__trace_err_ex_2(TBase::m_error = ::Get_mouse().Error());
 	}
 
 	return TBase::Error();
@@ -95,8 +89,8 @@ err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, 
 
 err_code camera::CWnd::Destroy (void) {
 	// unsubscribes from mouse use events and destroys shortcut/context menu;
-	if (__failed(::Get_mouse() >> this)) { TBase::m_error = ::Get_mouse().Error(); __trace_err_ex_0(TBase::Error()); }
-	if (__failed(this->m_ctx_mnu.Destroy())) { TBase::m_error = this->m_ctx_mnu.Error(); __trace_err_ex_0(TBase::Error()); }
+	if (__failed(::Get_mouse() >> this)) { __trace_err_ex_0(TBase::m_error = ::Get_mouse().Error()); }
+	if (__failed(::Get_Shortcut().Destroy())) { __trace_err_ex_0(TBase::m_error = ::Get_Shortcut().Error()); }
 
 	TRenderer& renderer = ::Get_renderer();
 
@@ -165,48 +159,18 @@ err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
 	if (_evt.Action() != e_action::e_released) return TBase::Error();
 	if (_evt.Button() != e_button::e_right) return TBase::Error();
 
-	CCaretaker().ApplyTo(this->m_ctx_mnu);
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow ;
+	if (::GetForegroundWindow() == ::Get_app_wnd().Handle() )
+	if ((::Get_Shortcut() << IDR_TUTOR_3_CTX_MENU_0).Error()) {__trace_err_ex_2(TBase::m_error = ::Get_Shortcut().Error()); return TBase::Error(); }
 
-	const uint32_t u_cmd_id = this->m_ctx_mnu.Track(*this, _evt.Coords().Get());
+	CCaretaker().ApplyTo(::Get_Shortcut());
+
+	const uint32_t u_cmd_id = ::Get_Shortcut().Track(*this, _evt.Coords().Get());
 	__trace_info(_T("selected cmd_id: %u;\n"), u_cmd_id);
 
-	// (1) makes deal with the background grid cell dimensions;
-	TRenderer& renderer = ::Get_renderer();
-	CViewPort& viewport = renderer.View();
-	view::CGrid& grid = viewport.Grid();
-#if (0)
-	switch (u_cmd_id) {
-	case IDR_TUTOR_3_GRD_CELL_H_025 : grid.Cell().H(025); break; case IDR_TUTOR_3_GRD_CELL_H_050 : grid.Cell().H(050); break;
-	case IDR_TUTOR_3_GRD_CELL_H_075 : grid.Cell().H(075); break; case IDR_TUTOR_3_GRD_CELL_H_100 : grid.Cell().H(100); break;
-	case IDR_TUTOR_3_GRD_CELL_W_025 : grid.Cell().W(025); break; case IDR_TUTOR_3_GRD_CELL_W_050 : grid.Cell().W(050); break;
-	case IDR_TUTOR_3_GRD_CELL_W_075 : grid.Cell().W(075); break; case IDR_TUTOR_3_GRD_CELL_W_100 : grid.Cell().W(100); break;
-	default:
-		return this->Error();
-	}
-#else
-	const uint32_t u_height = menus::Cell::CmdToHeight(u_cmd_id);
-	const uint32_t u_width  = menus::Cell::CmdToWidth(u_cmd_id);
-
-	bool b_cell = false;
-
-	if (0 != u_height) { grid.Cell().H(u_height); b_cell = true; }
-	if (0 != u_width ) { grid.Cell().W(u_width);  b_cell = true; }
-#endif
-	if (b_cell)
-	if (__failed(grid.Update(viewport.Get()))) { // re-calculates the grid lines' layout;
-		return TBase::m_error = grid.Error();
-	}
-	// (2) what is fkn drawble objects about;
-	if (IDR_TUTOR_3_DRW_OBJ_GRID == u_cmd_id) renderer.Cfg().Toggle(e_object::e_grid);
-	if (IDR_TUTOR_3_DRW_OBJ_TRIA == u_cmd_id) renderer.Cfg().Toggle(e_object::e_tria);
-	
-	renderer.Is_allowed(true);
-
-	if (__failed(renderer.Draw()))
-		TBase::m_error = renderer.Error();
-
-	renderer.Is_allowed(false);
-
+	COrganizer organizer;
+	if (__failed(organizer.On_command(u_cmd_id)))
+		TBase::m_error = organizer.Error();
 	return TBase::Error();
 }
 

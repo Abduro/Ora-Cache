@@ -36,7 +36,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
 	protected:
 		CFakeWnd  m_fak_wnd; // message-only window (aka fake) is created in its constructor;
-		CCtxMenu  m_ctx_mnu;
 	};
 
 }}}}

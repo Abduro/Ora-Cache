@@ -52,6 +52,7 @@ namespace shared { namespace gui { namespace menus { using namespace shared::def
 		HMENU    m_h_menu ;
 		CString  m_caption;
 		CItem_Coll m_items;
+		uint16_t m_res_id ;  // this is resource identifier by which this menu is loaded;
 	};
 
 }}}

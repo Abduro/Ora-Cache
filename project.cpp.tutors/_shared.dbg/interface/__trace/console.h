@@ -58,48 +58,9 @@ namespace shared { namespace console {
 		void*  m_hwnd ;  // console window handle; winnt.h: typedef void* HANDLE;
 	};
 
-	class CCmd_Base {
-	public:
-		CCmd_Base (const uint32_t _cmd_id = 0, _pc_sz _p_name = nullptr);
-		CCmd_Base (const CCmd_Base&); CCmd_Base (CCmd_Base&&); ~CCmd_Base (void) = default;
-
-		TError& Error (void) const;
-
-		uint32_t Get_id (void) const;
-		err_code Set_id (const uint32_t);
-
-		bool  Is_valid (void) const;
-
-		_pc_sz   Name (void) const;
-		err_code Name (_pc_sz);
-
-		CString  To_str (void) const;
-
-		CCmd_Base& operator = (const CCmd_Base&); CCmd_Base& operator = (CCmd_Base&&);
-		CCmd_Base& operator <<(const uint32_t _u_id);
-		CCmd_Base& operator <<(const CString& _cs_name);
-		CCmd_Base& operator <<(_pc_sz _p_sz_name);
-
-	protected:
-		CError   m_error;
-		uint32_t m_id;
-		CString  m_name;
-	};
-	// useless class declaration: Exec() must be specific, thus without virtual method there is no way;
-	class CCommand : public CCmd_Base { typedef CCmd_Base TBase;
-	public:
-		CCommand (void) = default;
-		CCommand (const uint32_t _cmd_id, _pc_sz _p_name);
-
-		const
-		CCmd_Base& operator ()(void) const;
-		CCmd_Base& operator ()(void) ;
-
-		err_code Exec (void);
-	};
-
 	enum e_cmd_ids : uint32_t {
-		e_clear = 6666, // clears console buffer, i.e. no text in the console window;
+		e__undef = 0,
+		e_clear  = 6666, // clears console buffer, i.e. no text in the console window;
 	};
 
 	class CCmd_Handler {
@@ -122,7 +83,6 @@ namespace shared { namespace console {
 
 	class CConsole {
 	public:
-		using CHandler = shared::console::events::CHandler_Dflt;
 		 CConsole (void); CConsole (const CConsole&) = delete; CConsole (CConsole&&) = delete;
 		~CConsole (void);
 
@@ -145,7 +105,6 @@ namespace shared { namespace console {
 		 mutable
 		 CError   m_error;
 		 HWND     m_con_wnd; // it is not necessary actually;
-		 CHandler m_handler;
 	};
 }}
 

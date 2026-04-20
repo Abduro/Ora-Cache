@@ -10,7 +10,9 @@ using namespace shared::gui::menus;
 
 #pragma region cls::CMenu{}
 
-CMenu:: CMenu (const HMENU _h_menu, _pc_sz _p_caption) : m_h_menu(_h_menu), m_caption(_p_caption) { TBase::m_error >>__CLASS__<<__e_not_inited; }
+CMenu:: CMenu (const HMENU _h_menu, _pc_sz _p_caption) : m_h_menu(_h_menu), m_caption(_p_caption), m_res_id(0) {
+	TBase::m_error >>__CLASS__<<__e_not_inited = _T("#__e_not_inited: menu is not created");
+}
 CMenu:: CMenu (CMenu&& _victim) : CMenu() { *this = _victim(); }
 CMenu::~CMenu (void) { this->Destroy(); }
 
@@ -63,6 +65,7 @@ err_code CMenu::Destroy (void) {
 	else {
 		__trace_impt_2(_T("popup menu (handle = %s) is destroyed;\n"), TString()._addr_of(this->Handle()));
 		this->Handle() = nullptr;
+		this->m_res_id = 0; // clear cached resource identifier;
 	}
 	return this->Error();
 }
@@ -80,10 +83,16 @@ err_code CMenu::Load (const uint16_t _res_id) {
 	_res_id;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (this->Is_valid())
-		return this->m_error <<(err_code)TErrCodes::eObject::eExists;
+	if (this->Is_valid() && _res_id == this->m_res_id)
+		return this->Error(); // there is no need to load the same menu twice;
+	//	return this->m_error <<(err_code)TErrCodes::eObject::eExists;
+	else if (this->Is_valid())
+		if (__failed(this->Destroy()))
+			return this->Error();
 
 	_pc_sz p_res = reinterpret_cast<t_char*>(static_cast<__int3264>(_res_id));
+
+	__trace_info_2(_T("shortcut menu res_id = %u;\n"), _res_id);
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlbasemodule-class ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua ;
@@ -92,6 +101,8 @@ err_code CMenu::Load (const uint16_t _res_id) {
 
 	if (this->Is_valid() == false)
 		this->m_error.Last();
+	else
+		this->m_res_id = _res_id; // caches resource identifier;
 
 	return this->Error();
 }
