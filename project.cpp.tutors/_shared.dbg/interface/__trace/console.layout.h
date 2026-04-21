@@ -45,6 +45,7 @@ namespace layout { using namespace shared::console;
 		err_code As_child (const s_create_data&); // sets console window as a child window;
 
 		TError&  Error (void) const;
+		err_code OnClose  (void);                 // saves the position of the console window;
 		err_code OnCreate (void);                 // sets console window position stored in the registry;
 		err_code OnCreate (const s_create_data&); // sets console window position in accordance with its pin state on console window create event;
 

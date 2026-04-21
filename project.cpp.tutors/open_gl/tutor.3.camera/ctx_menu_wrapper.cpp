@@ -135,7 +135,7 @@ err_code CConsole::ApplyTo (CCtxMenu& _ctx_mnu) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_CON_PINNED, ::Get_ConPers().Pin().Is_pinned(), TBase::m_error);
-	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_CON_VISIBLE, TConAccess().Visible(), TBase::m_error);
+	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_CON_VISIBLE, TConAccess().Is_visible(), TBase::m_error);
 	
 	return TBase::Error();
 }
@@ -159,7 +159,7 @@ bool CConsole::On_command (const uint32_t _u_cmd_id) {
 	case IDR_TUTOR_3_CON_VISIBLE: {
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible ;
 		// ::ShowWindow(TConAccess()(), ::IsWindowVisible(TConAccess()()) ? SW_HIDE : SW_SHOW);
-		TConAccess() << !TConAccess().Visible();
+		TConAccess() << !TConAccess().Is_visible();
 		{ __trace_info_2(_T("command 'Show/Hide console' (%04u) is completed;\n"), _u_cmd_id); }
 	} break;
 	default:

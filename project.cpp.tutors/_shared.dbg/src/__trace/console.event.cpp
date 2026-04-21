@@ -156,11 +156,14 @@ int ctrl::CRouter::Receive_evt (const dword dwCtrlType) {
 		ctrl::IEvtHandler* p_handler = const_cast<ctrl::IEvtHandler*>(*it_);
 
 		// https://learn.microsoft.com/en-us/windows/console/handlerroutine ;
-		b_result = __s_ok == p_handler->On_close(ctrl::CEvent::DwordToEnum(dwCtrlType));
+		b_result = __s_false == p_handler->On_close(ctrl::CEvent::DwordToEnum(dwCtrlType));
 		if (b_result)
 			break;
 	}
-	return b_result;
+	// actually, returning 'TRUE' does not keep the process for running, but just terminates it after short period of time:
+	// ExitProcess() still works its job and ends,\; csrss.exe external call TerminateProcess with 'STATUS_CONTROL_C_EXIT';
+	// https://stackoverflow.com/questions/53462590/prevent-application-from-closing-when-closing-console ;
+	return b_result ? 1 : 0;  
 }
 
 #pragma endregion

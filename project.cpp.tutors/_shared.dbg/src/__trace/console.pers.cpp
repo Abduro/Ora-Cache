@@ -14,7 +14,7 @@ using namespace shared::console;
 using namespace shared::console::persistent;
 
 namespace shared { namespace console { namespace _impl {
-
+#if (0)
 	class CAccessor {
 	public:
 		 CAccessor (void) = default;  CAccessor (const CAccessor&) = delete; CAccessor (CAccessor&&) = delete;
@@ -34,7 +34,7 @@ namespace shared { namespace console { namespace _impl {
 	private:
 		CAccessor& operator = (const CAccessor&) = delete; CAccessor& operator = (CAccessor&&) = delete;
 	};
-
+#endif
 }}} using namespace shared::console::_impl;
 
 #pragma region cls::CBase{}

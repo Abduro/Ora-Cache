@@ -27,8 +27,18 @@ namespace shared { namespace console {
 		 CAccessor (void) = default;  CAccessor (const CAccessor&) = delete; CAccessor (CAccessor&&) = delete;
 		~CAccessor (void) = default;
 
-		bool Visible (void) const;  // gets console window visibility;
-		void Visible (const bool);  // sets console window visibility;
+		/* https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow ;
+		   https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow ;
+		   this is for other processes or diffrenet threads:
+		   https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguithreadinfo ;
+		   https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-guithreadinfo ;
+		*/
+
+		bool Is_active (void) const;  // returns 'true' in case GetActiveWindow() or GetForgroundWindow() returns handle of this console window;
+		void Is_active (void) ;       // sets this console window as the foreground one;
+
+		bool Is_visible (void) const; // gets console window visibility;
+		void Is_visible (const bool); // sets console window visibility;
 
 		HWND operator ()(void) const;
 		HWND operator ()(CError&) const;

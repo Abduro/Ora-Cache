@@ -77,6 +77,34 @@ namespace shared { namespace console {
 		CError m_error;
 	};
 
+	class CFrame {
+	public:
+		class CIcon {
+		public:
+			CIcon (void) = default; CIcon (const CIcon&) = delete; CIcon (CIcon&&) = delete; ~CIcon (void) = default;
+			CIcon& operator <<(const uint16_t _res_id); // sets the frame icon; (16x16 and 32x32px);
+		private:
+			CIcon& operator = (const CIcon&) = delete; CIcon& operator = (CIcon&&) = delete;
+		};
+
+		CFrame (void); CFrame (const CFrame&) = delete; CFrame (CFrame&&) = delete; ~CFrame (void) = default;
+
+		void     Caption (_pc_sz);
+		CString  Caption_Dflt (const e_print = e_print::e_all) const;
+
+		TError&  Error (void) const;
+		const
+		CIcon&   Icon (void) const;
+		CIcon&   Icon (void) ;
+
+		err_code OnCreate (void);
+
+	private:
+		CFrame& operator = (const CFrame&) = delete; CFrame& operator = (CFrame&&) = delete;
+		CError  m_error;
+		CIcon   m_icon ;
+	};
+
 	// https://learn.microsoft.com/en-us/windows/console/creation-of-a-console ;
 	// https://learn.microsoft.com/en-us/windows/console/allocconsole ;
 	// the excerpt from the above article: this function is primarily used by a graphical user interface (GUI) application to create a console window...;
@@ -89,6 +117,10 @@ namespace shared { namespace console {
 		 err_code Create (void); // allocates new console, restores its previous position, pinned state;
 		 err_code Create (const s_create_data&); // allocates console, inserts it as a child window to the parent one;
 		 err_code Close  (void); // closes all IO handles; ::FreeConsole() is not used because there is no call to ::AttachConsole() was made before;
+
+		 const
+		 CFrame&  Frame  (void) const;
+		 CFrame&  Frame  (void) ;
 
 		 TError&  Error  (void) const;	
 		 HWND     Handle (void) const; // returns console window handle;
@@ -105,6 +137,7 @@ namespace shared { namespace console {
 		 mutable
 		 CError   m_error;
 		 HWND     m_con_wnd; // it is not necessary actually;
+		 CFrame   m_frame;
 	};
 }}
 

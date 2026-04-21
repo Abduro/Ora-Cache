@@ -46,9 +46,13 @@ public:
 	CHandler (void) {}
 
 	using evt_mouse_data_t = shared::console::events::input::evt_mouse_data_t;
-	using CBtn_enum = shared::console::events::input::CBtn_enum;
-	using CConMenu = ex_ui::draw::gui::menus::CConsole;
+	using evt_buff_size_t  = shared::console::events::input::evt_buff_size_t;
+
+	using CBtn_enum  = shared::console::events::input::CBtn_enum;
+	using CConMenu   = ex_ui::draw::gui::menus::CConsole;
 	using COrganizer = ex_ui::draw::gui::COrganizer;
+
+	using evt_source = shared::console::events::ctrl::CEvent::evt_source;
 
 	err_code On_button(const evt_mouse_data_t& _data) override {
 		_data;
@@ -70,23 +74,26 @@ public:
 		return __s_ok;
 	}
 
-	err_code On_move  (const evt_mouse_data_t& _data) override {
-		_data; return __s_ok;
+	err_code On_close (const evt_source _dw_reason) override {
+		_dw_reason;
+		ATL::CWindow(::Get_app_wnd().Handle()).SendMessage(WM_CLOSE); // gives the opportunity to gracefully exit from the app;
+		return __s_false;
 	}
+
+	err_code On_move  (const evt_mouse_data_t& _data) override { _data; return __s_ok; }
+	err_code On_size  (const evt_buff_size_t _data) override { _data; return __s_ok; }
 private:
 	CBtn_enum m_btns;
 };
 class CHandler_auto {
 public:
 	CHandler_auto (void) {
-		TInputRouter& in_router = ::Get_input();
-		if (in_router.Turn(true) == __s_ok)
-			in_router.Subscribe(&this->m_handler);
+		TInputRouter& in_router = ::Get_input(); if (in_router.Turn(true) == __s_ok) in_router.Subscribe(&this->m_handler);
+		TCtrlRouter& ctrl_router = ::Get_ctrl(); if (ctrl_router.Turn(true) == __s_ok) ctrl_router.Subscribe(&this->m_handler);
 	}
 	~CHandler_auto (void) {
-		TInputRouter& in_router = ::Get_input();
-		in_router.Unsubscribe(&this->m_handler);
-		in_router.Turn(false);
+		TInputRouter& in_router = ::Get_input(); in_router.Unsubscribe(&this->m_handler); in_router.Turn(false);
+		TCtrlRouter& ctrl_router = ::Get_ctrl(); ctrl_router.Unsubscribe(&this->m_handler); ctrl_router.Turn(false);
 	}
 private:
 	CHandler m_handler;
@@ -114,13 +121,14 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	shared::console::CWrap con_wrap;
 	con_wrap.Create(_T(""), true);
 #else
-	if (__failed(_con.Create())) {
-		__trace_err_ex_2(_con.Error());
+	if (__failed(_con.Create())) { __trace_err_ex_2(_con.Error()); }
+	else {
+	if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
+
+		_con.Frame().Icon() << IDR_TUTOR_0_ICO;
+		_con.Frame().Caption((_pc_sz)_con.Frame().Caption_Dflt());
 	}
-	else if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
-
 	CHandler_auto handler_auto;
-
 #endif
 	CAppWnd& app_wnd = ::Get_app_wnd();
 	camera::CWnd cam_wnd; // the draw context window;

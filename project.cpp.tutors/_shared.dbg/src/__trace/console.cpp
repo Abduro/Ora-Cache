@@ -18,7 +18,40 @@
 using namespace shared::console;
 using namespace shared::dbg;
 
-namespace shared { namespace console  { namespace _impl {/*not used yeat*/}}} using namespace shared::console::_impl;
+namespace shared { namespace console  { namespace _impl {
+
+	class CLoader {
+	public:
+		  CLoader (void) = default; CLoader (const CLoader&) = delete; CLoader (CLoader&&) = delete;
+		 ~CLoader (void) = default;
+	public:
+		HICON Load (const uint16_t _u_res_id, const bool _b_large) {
+			_u_res_id; _b_large;
+			// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew ;
+			HICON h_icon = (HICON)::LoadImage(
+					static_cast<HINSTANCE>(::GetModuleHandle(nullptr)), MAKEINTRESOURCE(_u_res_id), IMAGE_ICON, this->Size(_b_large).cx, this->Size(_b_large).cy, LR_DEFAULTCOLOR
+				);
+			if (0 == h_icon) {
+				__trace_err_ex_2(CError(__CLASS__,__METHOD__,__LastErrToHresult()));
+			}
+			return h_icon;
+		}
+
+		const t_size& Size (const bool bTreatAsLargeIcon) const
+		{
+			static const t_size ico_size = {
+				::GetSystemMetrics(bTreatAsLargeIcon ? SM_CXICON : SM_CXSMICON), 
+				::GetSystemMetrics(bTreatAsLargeIcon ? SM_CYICON : SM_CYSMICON)
+			};
+			return ico_size;
+		}
+
+	private:
+		CLoader& operator = (const CLoader&) = delete;
+		CLoader& operator = (CLoader&&) = delete;
+	};
+
+}}} using namespace shared::console::_impl;
 
 #pragma region cls::CCmd_Handler{}
 
@@ -52,6 +85,157 @@ err_code CCmd_Handler::On_command (const uint32_t _cmd_id) {
 	default:
 		this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: command ID 0x%04x (%u)"), _cmd_id, _cmd_id);
 	}
+
+	return this->Error();
+}
+
+#pragma endregion
+#pragma region cls::CIcon{}
+
+using CIcon = CFrame::CIcon;
+
+CIcon& CIcon::operator <<(const uint16_t _res_id) {
+	_res_id;
+	::SendMessage(TConAccess(), WM_SETICON, 0, (l_param) CLoader().Load(_res_id, 0));
+	::SendMessage(TConAccess(), WM_SETICON, 1, (l_param) CLoader().Load(_res_id, 1));
+	return *this;
+}
+
+#pragma endregion
+#pragma region cls::CCondole{}
+
+CConsole:: CConsole (void) : m_con_wnd(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
+CConsole::~CConsole (void) {}
+
+err_code CConsole::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
+		 return this->m_error.Last();
+	
+	this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
+	this->Frame().OnCreate();
+
+	CLayout layout;
+	if (__failed(layout.OnCreate()))
+		this->m_error = layout.Error();
+	
+	return this->Error();
+}
+
+err_code CConsole::Close (void) {
+
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid() == false) // it is supposed the all opened file descriptors is already closed;
+		return this->m_error << __e_not_inited;
+
+	CLayout layout; layout.OnClose();
+
+#if (0)
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ; throws the system error 'Access denied';
+	if (0 == ::DestroyWindow(this->m_con_wnd))
+		return this->m_error.Last();
+#endif
+	this->m_con_wnd = 0;
+
+	return this->Error();
+}
+
+err_code CConsole::Create (const s_create_data& _data) {
+	_data;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid())
+		return this->m_error << (err_code) TErrCodes::eObject::eExists;
+#if (0) // the creating a console window is not dependent on main/app window handle;
+	if (0 == _data.m_parent || false == !!::IsWindow(_data.m_parent)) {
+		this->m_error << __e_hwnd = _T("Parent window handle is invalid");
+		__trace_err_ex_2(this->Error()); return this->Error();
+	}
+	if (::IsRectEmpty(&_data.m_rect))
+		return this->m_error << __e_rect = _T("The input rectangle is empty");
+#endif
+	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
+		return this->m_error.Last();
+	else
+		this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
+
+	CLayout().As_child(_data);
+
+	// https://learn.microsoft.com/en-us/windows/console/console-functions ;
+	// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
+#if (0)
+	COut::Error(_T("this is the error;\n"));
+	COut::Info (_T("this is the info;\n"));
+	COut::Warn (_T("this is the warn;\n"));
+#else
+	// https://cplusplus.com/forum/windows/58206/ ; how to make things better: redirect ::std::ios to this console;
+#endif
+	return this->Error();
+}
+const
+CFrame&  CConsole::Frame (void) const { return this->m_frame; }
+CFrame&  CConsole::Frame (void)       { return this->m_frame; }
+
+HWND CConsole::Handle (void) const { return this->m_con_wnd; }
+
+bool CConsole::Is_valid (void) const {
+	return (0 != this->m_con_wnd && ::IsWindow(this->m_con_wnd));
+}
+
+TError& CConsole::Error (void) const { return this->m_error; }
+
+CConsole::operator const HWND (void) const { return this->Handle(); }
+
+#pragma endregion
+#pragma region cls::CFrame{}
+
+CFrame::CFrame (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+void CFrame::Caption (_pc_sz _p_cap) {
+	_p_cap;
+	this->m_error <<__METHOD__<<__s_ok;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw ;
+	if (0 == ::SetWindowText(CAccessor(), _p_cap)) { this->m_error.Last(); __trace_err_ex_2(this->Error());}
+}
+
+CString  CFrame::Caption_Dflt (const e_print _e_opt/* = e_print::e_all*/) const {
+	_e_opt;
+#if defined(WIN64)
+	static _pc_sz p_pat_a = _T("cls::[%s::%s] %s Trace (64-bits)");
+#else
+	static _pc_sz p_pat_a = _T("cls::[%s::%s] %s Trace (86-bits)");
+#endif
+
+	CString cs_out; cs_out.Format(p_pat_a, (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, _T("\u00a4")); // \u002d ;
+	return  cs_out;
+}
+
+TError& CFrame::Error (void) const { return this->m_error; }
+const
+CFrame::CIcon&  CFrame::Icon (void) const { return this->m_icon; }
+CFrame::CIcon&  CFrame::Icon (void)       { return this->m_icon; }
+
+err_code CFrame::OnCreate (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	// https://devblogs.microsoft.com/oldnewthing/20100604-00/?p=13803 << Raymond Chen ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmenu ;
+	HMENU sys_mnu = ::GetSystemMenu(CAccessor(), false); sys_mnu;
+#if (1)
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablemenuitem ;
+	if (-1 == ::EnableMenuItem (sys_mnu, SC_CLOSE, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED))
+		__trace_err_ex_2(this->m_error <<__e_inv_arg = _T("#__e_inv_arg: 'SC_CLOSE' menu item not found"));
+#elif (false == true) // doesn't work;
+	if (0 == ::RemoveMenu (sys_mnu, MF_BYCOMMAND, SC_CLOSE))
+		__trace_err_ex_2(this->m_error(TError::e_get_last));
+#else
+#endif
+	::SetWindowLong(CAccessor(), GWL_STYLE, ::GetWindowLong(CAccessor(), GWL_STYLE) & ~WS_MAXIMIZEBOX);
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawmenubar ;
+	if (0 == ::DrawMenuBar(CAccessor()))
+		__trace_err_ex_2(this->m_error(TError::e_get_last));
 
 	return this->Error();
 }
@@ -166,87 +350,6 @@ TError&  CWrap::Error (void) const { return this->m_error; }
 bool CWrap::Is_attached (void) const { return 0 != ::GetConsoleWindow(); }
 
 #pragma endregion;
-#pragma region cls::CCondole{}
-
-CConsole:: CConsole (void) : m_con_wnd(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
-CConsole::~CConsole (void) {}
-
-err_code CConsole::Create (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
-		this->m_error.Last();
-	else
-		this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
-
-	CLayout layout;
-	if (__failed(layout.OnCreate()))
-		this->m_error = layout.Error();
-	else {
-	}
-	return this->Error();
-}
-
-err_code CConsole::Close (void) {
-
-	this->m_error <<__METHOD__<<__s_ok;
-
-	if (this->Is_valid() == false) // it is supposed the all opened file descriptors is already closed;
-		return this->m_error << __e_not_inited;
-
-#if (0)
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ; throws the system error 'Access denied';
-	if (0 == ::DestroyWindow(this->m_con_wnd))
-		return this->m_error.Last();
-#endif
-	this->m_con_wnd = 0;
-
-	return this->Error();
-}
-
-err_code CConsole::Create (const s_create_data& _data) {
-	_data;
-	this->m_error <<__METHOD__<<__s_ok;
-
-	if (this->Is_valid())
-		return this->m_error << (err_code) TErrCodes::eObject::eExists;
-#if (0) // the creating a console window is not dependent on main/app window handle;
-	if (0 == _data.m_parent || false == !!::IsWindow(_data.m_parent)) {
-		this->m_error << __e_hwnd = _T("Parent window handle is invalid");
-		__trace_err_ex_2(this->Error()); return this->Error();
-	}
-	if (::IsRectEmpty(&_data.m_rect))
-		return this->m_error << __e_rect = _T("The input rectangle is empty");
-#endif
-	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
-		return this->m_error.Last();
-	else
-		this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
-
-	CLayout().As_child(_data);
-
-	// https://learn.microsoft.com/en-us/windows/console/console-functions ;
-	// https://learn.microsoft.com/en-us/windows/console/writeconsole ;
-#if (0)
-	COut::Error(_T("this is the error;\n"));
-	COut::Info (_T("this is the info;\n"));
-	COut::Warn (_T("this is the warn;\n"));
-#else
-	// https://cplusplus.com/forum/windows/58206/ ; how to make things better: redirect ::std::ios to this console;
-#endif
-	return this->Error();
-}
-
-HWND CConsole::Handle (void) const { return this->m_con_wnd; }
-
-bool CConsole::Is_valid (void) const {
-	return (0 != this->m_con_wnd && ::IsWindow(this->m_con_wnd));
-}
-
-TError& CConsole::Error (void) const { return this->m_error; }
-
-CConsole::operator const HWND (void) const { return this->Handle(); }
-
-#pragma endregion
 
 TCmdHandler&  ::Get_ConHandler (void) {
 	static TCmdHandler handler;

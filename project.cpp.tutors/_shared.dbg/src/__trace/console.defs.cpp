@@ -13,15 +13,29 @@ using namespace shared::console;
 namespace shared { namespace console { namespace _impl { void __warning_lnk_4221 (void) {}}}}
 
 #pragma region cls::CAccessor{}
-#if (0)
+
+bool CAccessor::Is_active (void) const {
+	return this->Is_visible() && (::GetActiveWindow() == *this || ::GetForegroundWindow() == *this);
+}
+
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow ;
+
+void CAccessor::Is_active (void) {
+	if (this->Is_visible())
+		::SetForegroundWindow(*this); // may fail (0 is returned) under certain circumstances that are described in the article above;
+}
+
+#if (1)
+
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible ;
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow ;
-bool CAccessor::Visible (void) const { return ::IsWindowVisible((*this)()); }
-void CAccessor::Visible (const bool _show_or_hide) { ::ShowWindow((*this)(), _show_or_hide ? SW_SHOW : SW_HIDE); }
+
+bool CAccessor::Is_visible (void) const { return ::IsWindowVisible((*this)()); }
+void CAccessor::Is_visible (const bool _show_or_hide) { ::ShowWindow((*this)(), _show_or_hide ? SW_SHOW : SW_HIDE); }
 #else
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-animatewindow ;
-bool CAccessor::Visible (void) const { return ::IsWindowVisible((*this)()); }
-void CAccessor::Visible (const bool _show_or_hide) {
+bool CAccessor::Is_visible (void) const { return ::IsWindowVisible((*this)()); }
+void CAccessor::Is_visible (const bool _show_or_hide) {
 
 	static const dword ani_flags = /*AW_BLEND*/AW_SLIDE | AW_VER_POSITIVE | AW_HOR_POSITIVE;
 	// doesn't work on remote desktop;
@@ -56,7 +70,7 @@ HWND CAccessor::operator ()(CError& _err) const {
 	return h_wnd;
 }
 
-CAccessor& CAccessor::operator <<(const bool _b_show_or_hide) { this->Visible(_b_show_or_hide); return *this; }
+CAccessor& CAccessor::operator <<(const bool _b_show_or_hide) { this->Is_visible(_b_show_or_hide); return *this; }
 
 CAccessor::operator HWND (void) const { return (*this)(); }
 

@@ -32,7 +32,6 @@ namespace shared { namespace resource { namespace _impl {
 		CIcon_Att& operator = (CIcon_Att&&) = delete;
 	};
 
-
 }}}
 using namespace shared::resource::_impl;
 /////////////////////////////////////////////////////////////////////////////

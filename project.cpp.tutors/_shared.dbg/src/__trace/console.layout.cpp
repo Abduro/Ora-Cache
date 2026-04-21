@@ -129,8 +129,21 @@ err_code CLayout::As_child (const s_create_data& _data) {
 
 TError&  CLayout::Error (void) const { return this->m_error; }
 
+err_code CLayout::OnClose (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	if (__failed( ::Get_ConPers().Pos().Save()))
+		__trace_err_ex_2(this->m_error = ::Get_ConPers().Pos().Error()); // to VS debug output;
+	return this->Error();
+}
+
 err_code CLayout::OnCreate (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(::Get_ConPers().Pos().Load()))
+		return this->m_error = ::Get_ConPers().Pos().Error();
+
+	ATL::CWindow con_wnd((HWND)TConAccess());
+	con_wnd.MoveWindow(&::Get_ConPers().Pos().Get(), false);
 	
 	return this->Error();
 }
@@ -141,7 +154,8 @@ err_code CLayout::OnCreate (const s_create_data& _data) {
 	if (::Get_ConPers().Pin().Is_pinned()) {
 		this->As_child(_data);
 	}
-	else { }
+	else { this->OnCreate();
+	}
 
 	return this->Error();
 }
