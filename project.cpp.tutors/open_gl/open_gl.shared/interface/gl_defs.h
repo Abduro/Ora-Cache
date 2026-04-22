@@ -7,7 +7,8 @@
 #include "shared.defs.h"
 // https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-on-windows-nt--windows-2000--and-windows-95-98 ; << old but still valid;
 // https://github.com/KhronosGroup/OpenGL-Registry ;
-#include <gl/gl.h> // the headers' include order is important: windows.h must go first;
+#include <gl/gl.h>       // the headers' include order is important: windows.h must go first (shared.defs.h);
+#include "gl_version.h"  // the OpenGL driver version installed, it is *very* important in cases of using MS remote desktop;
 
 #pragma comment(lib, "opengl32.lib")
 

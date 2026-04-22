@@ -6,6 +6,7 @@
 */
 #include "gl_defs.h"
 #include "gl_format.h"
+#include "shared.wnd.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
 
 namespace ex_ui { namespace draw { namespace open_gl {
 namespace context {
@@ -148,6 +149,24 @@ namespace context {
 		HGLRC  m_renderer; 
 	};
 }
+	class CFake_Ctx { using CDevice = ex_ui::draw::open_gl::context::CDevice;
+	public:
+		 CFake_Ctx (const CFake_Ctx&) = delete; CFake_Ctx (CFake_Ctx&&) = delete;
+		 CFake_Ctx (void); // creates fake device;
+		~CFake_Ctx (void); // destroys fake device;
+
+		err_code Create (void);
+		err_code Destroy (void);
+
+		TError&  Error (void) const;
+
+	private:
+		CFake_Ctx& operator = (const CFake_Ctx&) = delete; CFake_Ctx& operator = (CFake_Ctx&&) = delete;
+		CError   m_error ;
+		TFakeWnd m_fk_wnd;  // it is created automatically in its constructor;
+		CDevice  m_device;  // a fake window GDI object;
+	};
+
 	/* The main idea is composed by several steps:
 		(1) creates fake window;
 		(2) gets renderer context that is based on regular device context handle; *important* the rendering context must be set as current one;
@@ -159,6 +178,7 @@ namespace context {
 
 	class CGraphics : public context::CBase { typedef context::CBase TBase;
 	public:
+		// to-do: this class must be reviewed: from one hand OpenGL version, from the other one, the version which is used by graphics context;
 		class CVersion { // for setting the version attributes that may be different by value in comparison with OpenGL installed on the OS;
 		public:
 			CVersion (void) ; CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete; ~CVersion (void) = default;

@@ -12,6 +12,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_2 { void 
 
 procs::CBase:: CBase (void) { this->m_error >>__CLASS__<<__METHOD__<< __e_not_inited; }
 
+_pc_sz   procs::CBase::Class (void) {
+	static CString cs_name; if (cs_name.IsEmpty()) cs_name.Format(_T("procs::%s"), (_pc_sz)__CLASS__); return (_pc_sz) cs_name;
+}
+
 err_code procs::CBase::Erase (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
@@ -92,3 +96,5 @@ CString  procs::CBase::Print (void) const {
 
 	return cs_out;
 }
+
+procs::CBase::operator _pc_sz (void) const { return CBase::Class(); }

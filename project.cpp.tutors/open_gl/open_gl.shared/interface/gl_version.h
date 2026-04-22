@@ -4,11 +4,10 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 02-Sep-2025 at 02:10:53.758, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL version wrapper interface declaration file;
 */
-#include "gl_defs.h"
-#include "gl_error.h"
+#include "shared.defs.h"
 #include "shared.dbg.h"
 
-namespace ex_ui { namespace draw { namespace open_gl {
+namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::defs; // for CString include;
 
 	// https://stackoverflow.com/questions/7909358/how-do-i-know-which-version-of-opengl-i-am-using ;
 
@@ -54,6 +53,31 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		(3) finally, getting the version of OpenGL loads dynamic link library of the video card vendor and full information is *received*;
 	*/
 
+	// the third part of the version is vendor specific release number or a minor version update of the driver, not important;
+	struct s_version {
+		uint32_t m_major, m_minor;
+		s_version (const uint32_t _u_major = 0, const uint32_t _u_minor = 0) : m_major(_u_major), m_minor(_u_minor) {}
+
+		void clear (void) { this->m_major = this->m_minor = 0; }
+		bool empty (void) const { return 0 == this->m_major && 0 == this->m_minor; }
+
+		bool operator ==(const s_version& _ver) const {
+			return _ver.m_major == this->m_major && _ver.m_minor == this->m_minor;
+		}
+		bool operator < (const s_version& _ver) const {
+			if (_ver.m_major >  this->m_major) return true;
+			if (_ver.m_major == this->m_major && _ver.m_minor > this->m_minor) return true;
+			return false;
+		}
+		bool operator > (const s_version& _ver) const {
+			if (_ver.m_major <  this->m_major) return true;
+			if (_ver.m_major == this->m_major && _ver.m_minor < this->m_minor) return true;
+			return false;
+		}
+
+		CString To_str (void) { CString cs_out; cs_out.Format(_T("%u.%u"), this->m_major, this->m_minor); return cs_out; }
+	};
+
 	class CVersion {
 	public:
 		enum e_atts : uint32_t {
@@ -69,13 +93,18 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		 CVersion (void); CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete;
 		~CVersion (void);
 
-		 TError& Error (void) const;
-		 CString   Get (void) const; // gets version info by using glGetIntegerv();
+		 const
+		 s_version& Data (void) const;
+
+		 TError&   Error (void) const;
+		 CString   Get (void) const;  // gets version info by using glGetIntegerv(); it is available since ver 3.0; to-do: must be deprecated;
 
 		 err_code  Get_ex (void);     // creates device context based on a fake window and after that receives all attribute values;
 
 		 const
 		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
+
+		 bool   Is_base (void) const; // returns 'true' in case open_gl version is '1.1';
 
 		 int32_t   Major (void) const;
 		 int32_t   Minor (void) const;
@@ -89,8 +118,12 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	private:
 		 CError    m_error;
 		 CVer_Att  m_atts[CVersion::n_atts_count];
+		 s_version m_data ;
 	};
 
 }}}
+
+typedef ex_ui::draw::open_gl::s_version version_t;
+typedef ex_ui::draw::open_gl::CVersion  TVersion; TVersion& Get_version (void);
 
 #endif/*_GL_VERSION_H_INCLUDED*/

@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL tutorials' procedures loader wrapper interface implementation file; 
 */
 #include "gl_procs.h"
+#include "gl_version.h"
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
@@ -18,9 +19,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_1 { void 
 
 static _pc_sz cmpl_fun_names[] = { _T("glCompileShader"), _T("glReleaseShaderCompiler") };
 
-CCompiler:: CCompiler (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
+CCompiler:: CCompiler (void) : CBase() { CBase::m_error >> TString().Format(_T("%s::%s"), CBase::Class(), (_pc_sz)__CLASS__); }
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCompileShader.xhtml ;
 err_code  CCompiler::Compile (uint32_t _shader_id) {
@@ -52,7 +51,7 @@ bool CCompiler::Is_supported (void) const {
 	CBase::m_error <<__METHOD__<<__s_ok;
 
 	bool b_result = false;
-
+#if (0)
 	CParam param;
 	b_result = param.GetBool(GL_SHADER_COMPILER);
 
@@ -62,6 +61,23 @@ bool CCompiler::Is_supported (void) const {
 		else
 			CBase::m_error = param.Error();
 	}
+#else
+
+	if (::Get_version().Data() < version_t(2, 0)) {
+		CBase::m_error <<(err_code) TErrCodes::eData::eUnsupport = _T("#__e_inv_vers: compiler support is since ver.2");
+		return b_result;
+	}
+
+	b_result = ::__get_param_procs().GetBool(GL_SHADER_COMPILER);
+	const
+	uint32_t u_err_code = CErr_ex().Get_code();
+	switch ( u_err_code ) {
+	case GL_INVALID_ENUM: CBase::m_error << __e_inv_arg = TString().Format(_T("The param id (0x%04x) is undefined"), GL_SHADER_COMPILER); break;
+	default:
+		if (!!u_err_code)
+			this->m_error <<__e_fail = TString().Format(_T("#__e_undef: error code 0x%04x (%04d)"), u_err_code, u_err_code);
+	}
+#endif
 	return b_result;
 }
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glReleaseShaderCompiler.xhtml ;
@@ -112,9 +128,7 @@ enum class  e_lnk_fun_ndx : uint32_t {
 	e_link = 0x0,
 };
 
-CLinker:: CLinker (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
+CLinker:: CLinker (void) : CBase() { CBase::m_error >> TString().Format(_T("%s::%s"), CBase::Class(), (_pc_sz)__CLASS__); }
 
 // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glLinkProgram.xhtml ;
 err_code CLinker::Link (const uint32_t _prog_id){
@@ -185,9 +199,7 @@ enum class e_param_fun_ndx : uint32_t {
 	e_bool = 0x0, e_float = 0x1, e_int = 0x2,
 };
 
-CParam:: CParam (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
+CParam:: CParam (void) : CBase() { CBase::m_error >> TString().Format(_T("%s::%s"), CBase::Class(), (_pc_sz)__CLASS__); }
 
 err_code CParam::Get_all (void) {
 	CBase::m_error << __METHOD__ << __s_ok;

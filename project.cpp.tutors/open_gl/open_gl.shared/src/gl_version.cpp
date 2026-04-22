@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL version wrapper interface implementation file;
 */
 #include "gl_version.h"
+#include "gl_defs.h"
 #include "gl_context.h"
 
 #include "shared.dbg.h"      // using Print() function is perhaps useful, but it looks like need to be reviewed;
@@ -14,7 +15,44 @@ using CFakeWnd = ex_ui::popup::CMsgWnd;
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 	using namespace shared::defs;
+#if (0)
+	// to-do: it looks very like this class must be shared for use by other classes, for example, camera draw surface window; done!
+	class CFake_Ctx { using CDevice = ex_ui::draw::open_gl::context::CDevice;
+	public:
+		 CFake_Ctx (const CFake_Ctx&) = delete; CFake_Ctx (CFake_Ctx&&) = delete;
+		 CFake_Ctx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: fake device context is not created"); this->Create(); }
+		~CFake_Ctx (void) { this->Destroy(); }
 
+		err_code Create (void) {
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (this->m_fk_wnd.Is_valid() == false) {
+				::__trace_err_ex_2(this->m_error = this->m_fk_wnd.Error()); return this->Error();
+			}
+			if (__failed(this->m_device.Create(m_fk_wnd.m_hWnd))) {
+				__trace_err_ex_2(this->m_error = this->m_device.Error());
+			}
+			return this->Error();
+		}
+		err_code Destroy (void) {
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (this->m_device.Is_valid())
+				if (__failed(this->m_device.Destroy()))
+					__trace_err_ex_2(this->m_error = this->m_device.Error());
+
+			return this->Error();
+		}
+
+		TError&  Error (void) const { return this->m_error; }
+
+	private:
+		CFake_Ctx&  operator = (const CFake_Ctx&) = delete; CFake_Ctx& operator = (CFake_Ctx&&) = delete;
+		CError    m_error ;
+		TFakeWnd  m_fk_wnd;  // it is created automatically in its constructor;
+		CDevice   m_device;
+	};
+#endif
 	class CVer_Att_Fmt {
 	public:
 		CVer_Att_Fmt (const CVer_Att& _att) : m_att_ref(_att) {}
@@ -50,13 +88,13 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 }}}}
 using namespace ex_ui::draw::open_gl::_impl;
 
-/////////////////////////////////////////////////////////////////////////////
 /*
 	https://registry.khronos.org/OpenGL/api/GL/glext.h ;
 
 	GL_SHADING_LANGUAGE_VERSION is defined in glext.h, like this:
 	#define GL_SHADING_LANGUAGE_VERSION 0x8b8c ;
 */
+#pragma region cls::CVer_Att{}
 
 CVer_Att:: CVer_Att (const uint32_t _n_id/* = 0*/, _pc_sz _p_name/* = _T("#undef")*/, _pc_sz _p_value/* = _T("#unset")*/) {
 	*this << _n_id << _p_name >> _p_value;
@@ -133,7 +171,17 @@ CVer_Att& CVer_Att::operator >>(const char* _p_value) { this->m_value = _p_value
 #define GL_SHADING_LANGUAGE_VERSION 0x8b8c
 #endif
 
-CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: version data is not queried");
+#pragma endregion
+#pragma region cls::CVersion{}
+
+void __str_2_vers_data (const _pc_sz _p_vers, s_version& _data) {
+
+	TParts parts = TString(_p_vers).Split(_T("."), false);
+	if (parts.size() > 0) _data.m_major = ::_tstoi(parts.at(0));
+	if (parts.size() > 1) _data.m_minor = ::_tstoi(parts.at(1));
+}
+
+CVersion:: CVersion (void) : m_data{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: version data is not queried");
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetstring ;
 #if (0)
 	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
@@ -145,16 +193,34 @@ CVersion:: CVersion (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_init
 	if (ctx_dev.Error()) {
 		this->m_error = ctx_dev.Error(); return;
 	}
+#else // anyway, without creating fake device context and fake draw renderer only 'base' version '1.1' is available;
+	CFake_Ctx fk_ctx;
 #endif
 
 	this->m_atts[e_atts::e_render ] << e_atts::e_render  >> reinterpret_cast<const char*>(::glGetString(GL_RENDERER));
 	this->m_atts[e_atts::e_shader ] << e_atts::e_shader  >> reinterpret_cast<const char*>(::glGetString(GL_SHADING_LANGUAGE_VERSION));
 	this->m_atts[e_atts::e_vendor ] << e_atts::e_vendor  >> reinterpret_cast<const char*>(::glGetString(GL_VENDOR));
 	this->m_atts[e_atts::e_version] << e_atts::e_version >> reinterpret_cast<const char*>(::glGetString(GL_VERSION));
+
+	CString cs_shader(this->m_atts[e_atts::e_shader].Value()); cs_shader;
+
+	if (/*this->m_atts[e_atts::e_shader].Value() == nullptr*/cs_shader.IsEmpty())
+		this->m_atts[e_atts::e_shader].Value(_T("#not supported"));
+#if (0)
+	this->m_data = {
+		static_cast<uint32_t>(abs(this->Major())), static_cast<uint32_t>(abs(this->Minor()))
+	};
+#else
+//	this->m_atts[e_atts::e_version] >> "1.2.3";
+	::__str_2_vers_data(this->m_atts[e_atts::e_version].Value(), this->m_data);
+#endif
 	this->m_error << __s_ok;
 }
 
 CVersion::~CVersion (void) {}
+
+const
+s_version& CVersion::Data (void) const { return this->m_data; }
 
 TError&    CVersion::Error (void) const { return this->m_error; }
 
@@ -162,7 +228,7 @@ TError&    CVersion::Error (void) const { return this->m_error; }
 #define GL_MINOR_VERSION 0x821C
 
 CString    CVersion::Get (void) const {
-
+	// https://stackoverflow.com/questions/39500664/why-is-opengl-version-0-0 ;
 	CString cs_out;
 
 	int32_t n_minor = 0;
@@ -175,7 +241,6 @@ CString    CVersion::Get (void) const {
 
 	return  cs_out;
 }
-
 const
 CVer_Att&  CVersion::GetAtt (const e_atts _e_att) const {
 	_e_att;
@@ -187,8 +252,12 @@ CVer_Att&  CVersion::GetAtt (const e_atts _e_att) const {
 	}
 }
 
-int32_t  CVersion::Major (void) const { int32_t n_major = 0; ::glGetIntegerv(GL_MAJOR_VERSION, &n_major); return n_major; }
-int32_t  CVersion::Minor (void) const { int32_t n_minor = 0; ::glGetIntegerv(GL_MINOR_VERSION, &n_minor); return n_minor; }
+bool   CVersion::Is_base (void) const {
+	return this->Data() == s_version(1, 1);
+}
+
+int32_t  CVersion::Major (void) const { int32_t n_major = 0; ::glGetIntegerv(GL_MAJOR_VERSION, &n_major); return n_major; } // doesn't work;
+int32_t  CVersion::Minor (void) const { int32_t n_minor = 0; ::glGetIntegerv(GL_MINOR_VERSION, &n_minor); return n_minor; } // doesn't work;
 
 CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("")*/, _pc_sz _p_sfx/* = _T(";")*/, const bool _b_trace/* = false*/) const {
 	_e_opt; _p_pfx; _p_sfx; _b_trace;
@@ -245,4 +314,13 @@ CString  CVersion::Print_2 (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p
 	}
 
 	return cs_out;
+}
+
+#pragma endregion
+
+TVersion& ::Get_version (void) {
+	static TVersion vers;
+	if (vers.Data().empty()) {
+	}
+	return vers;
 }

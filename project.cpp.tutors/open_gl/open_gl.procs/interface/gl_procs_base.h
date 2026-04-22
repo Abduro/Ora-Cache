@@ -32,7 +32,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 	class CBase { // not thread safe yet;
 	public:
 		CBase (void) ; CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
-
+		static
+		_pc_sz   Class (void);       // returns this class name for using in child classes;
 		err_code Erase (void);       // clears the cached function pointers; it may be required on current context change; ToDo: must be thread-safe;
 
 		TError&  Error (void) const;
@@ -40,6 +41,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		err_code Get_all (void);     // get all functions pointers; in this base class it does nothing, must be implemented in a child class if necessary;
 
 		CString  Print (void) const; // enumerates all loaded function(s); the output string is formatted for message box (i.e. multilined);
+
+		operator _pc_sz (void) const;
 
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;

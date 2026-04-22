@@ -317,7 +317,7 @@ err_code context::CDevice::Create (const HWND _h_target) {
 	this->Mode() << CBase::Target().Get();
 	if (__failed(this->Mode().Set(CMode::e_mode::e_advanced)))
 		return this->m_error  = this->Mode().Error();
-
+#if (0) // this approach provides limited description of the pixel format descriptor, in other words, the found descriptor is not the best one;
 	px_fmt_desc_t px_fmt_desc = {0}; // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor ;
 	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) << there is the example of how to do that;
 	px_fmt_desc.nSize      = sizeof(px_fmt_desc_t);
@@ -340,7 +340,17 @@ err_code context::CDevice::Create (const HWND _h_target) {
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error();
 	}
+#else
+	CFormat the_best_fmt; the_best_fmt << CBase::Target().Get(); uint32_t u_found_ndx = 0;
+	if (__failed(the_best_fmt.Find({32, 24, 8}, u_found_ndx))) {
+		__trace_err_ex_2(CBase::m_error = the_best_fmt.Error()); return CBase::Error();
+	}
 
+	if (false == !!::SetPixelFormat(CBase::Target().Get(), u_found_ndx, &the_best_fmt.Get())) {
+		CBase::m_error.Last();
+		__trace_err_ex_2(CBase::Error()); return CBase::Error();
+	}
+#endif
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
 	this->m_drw_ctx = ::wglCreateContext(CBase::Target().Get());
 	if ( 0 == this->m_drw_ctx) {
@@ -384,6 +394,36 @@ CDevice& context::CDevice::operator <<(const HWND _h_target) {
 }
 
 #pragma endregion
+#pragma region cls::CFake_Ctx{}
+
+CFake_Ctx:: CFake_Ctx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: fake device context is not created"); this->Create(); }
+CFake_Ctx::~CFake_Ctx (void) { this->Destroy(); }
+
+err_code CFake_Ctx::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_fk_wnd.Is_valid() == false) {
+		::__trace_err_ex_2(this->m_error = this->m_fk_wnd.Error()); return this->Error();
+	}
+	if (__failed(this->m_device.Create(m_fk_wnd.m_hWnd))) {
+		__trace_err_ex_2(this->m_error = this->m_device.Error());
+	}
+	return this->Error();
+}
+
+err_code CFake_Ctx::Destroy (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_device.Is_valid())
+		if (__failed(this->m_device.Destroy()))
+			__trace_err_ex_2(this->m_error = this->m_device.Error());
+
+	return this->Error();
+}
+
+TError&  CFake_Ctx::Error (void) const { return this->m_error; }
+
+#pragma endregion
 #pragma region cls::CGraphics{}
 
 #include "shared.wnd.fake.h"
@@ -394,16 +434,25 @@ using namespace ex_ui::draw::open_gl::format;
 CGraphics:: CGraphics (void) : TBase() { TBase::m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CGraphics::~CGraphics (void) {}
 
-err_code   CGraphics::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver) {
+err_code CGraphics::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_gl_minor_ver) {
 	_u_gl_major_ver; _u_gl_minor_ver;
 	TBase::m_error <<__METHOD__<< __s_ok;
 
 	if (false == TBase::Target().Is_valid()) {
-		TBase::m_error << (err_code)TErrCodes::eExecute::eState = _T("Target window handle is not set");
-		__trace_err_2(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_print::e_req));
+		__trace_err_ex_2(TBase::m_error << (err_code)TErrCodes::eExecute::eState = _T("Target window handle is not set"));
 		return TBase::Error();
 	}
 
+	if (::Get_version().Is_base()) { // OpenGL version 1.1 is available only;
+		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
+		this->m_drw_ctx = ::wglCreateContext(TBase::Target().Get()); // it is assumed the required pixcel format descriptor is already set to device context;
+		if (0 == this->m_drw_ctx) {
+			TBase::m_error.Last();
+			__trace_err_ex_2(TBase::Error());
+		}
+		return TBase::Error();
+	}
+	else {}
 	// (4.b) chooses the pixel format;
 	CAtt_set_pixels pxl_atts; // no error check for this time yet;
 
@@ -421,13 +470,13 @@ err_code   CGraphics::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_
 
 	if (0 == n_result) { // the failure has occurred: the format cannot be chosen for creating the context;
 		if (__get_ctx_procs().Error()) { // checks for failure of loading the function pointer;
-			__get_ctx_procs().Error().Show();
-			TBase::m_error  = __get_ctx_procs().Error();
+		//	__get_ctx_procs().Error().Show();
 		}
 		else { // otherwise checks the OpenGL error that has been thrown; to-do: expect to do not work, it requires a re-view of this code block;
 			TBase::m_error.Last();
-			TBase::m_error.Show();
+		//	TBase::m_error.Show();
 		}
+		__trace_err_ex_2(TBase::Error());
 	}
 	else if (nullptr != &p_formats && true == !!n_count) { b_can_go_ahead = true; }
 	else { b_can_go_ahead = true; }
@@ -451,7 +500,8 @@ err_code   CGraphics::Create (const uint32_t _u_gl_major_ver, const uint32_t _u_
 	}
 
 	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
-		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error (CError::e_cmds::e_get_last)).Print(TError::e_req));
+		TBase::m_error.Last();
+		__trace_err_ex_2(CBase::Error());
 	}
 
 	if (false == CBase::Error()) {
@@ -465,7 +515,7 @@ using CRegVer  = shared::sys_core::storage::route::CCtx::CVersion;
 using CVersion = CGraphics::CVersion;
 
 const
-CVersion& CGraphics::Version (void) const { return this->m_ver; }
+CGraphics::CVersion& CGraphics::Version (void) const { return this->m_ver; }
 
 #pragma endregion
 #pragma region cls::CSelector{}
@@ -524,16 +574,16 @@ err_code CSelector::Unset (void) {
 #pragma endregion
 #pragma region cls::CVersion
 
-CVersion::CVersion (void) : m_major(0), m_minor (0), m_use_core(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; this->Load(); }
+CGraphics::CVersion::CVersion (void) : m_major(0), m_minor (0), m_use_core(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; this->Load(); }
 
-TError&   CVersion::Error (void) const { return this->m_error; }
+TError&   CGraphics::CVersion::Error (void) const { return this->m_error; }
 
-uint32_t  CVersion::Major (void) const { return this->m_major; }
-uint32_t  CVersion::Minor (void) const { return this->m_minor; }
+uint32_t  CGraphics::CVersion::Major (void) const { return this->m_major; }
+uint32_t  CGraphics::CVersion::Minor (void) const { return this->m_minor; }
 
-bool   CVersion::Use_core (void) const { return this->m_use_core; }
+bool      CGraphics::CVersion::Use_core (void) const { return this->m_use_core; }
 
-err_code  CVersion::Load  (void) {
+err_code  CGraphics::CVersion::Load  (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	const CRegVer& ver = ::Get_reg_router().Ctx().Version();
 

@@ -26,17 +26,14 @@ using COrganizer = ex_ui::draw::gui::COrganizer;
 camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
 
 	if (this->m_fak_wnd.Is_valid() == false) {
-		TBase::m_error = m_fak_wnd.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
-		__trace::Out_2(__trace::e_err, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
+		::__trace_err_ex_2(TBase::m_error = m_fak_wnd.Error()); return;
 	}
 
 	context::CDevice& dev_ref = ::Get_renderer().Scene().Ctx().Device();
 	dev_ref.Target().Source((_pc_sz)cs_cls);
 
 	if (__failed(dev_ref.Create(m_fak_wnd.m_hWnd))) {
-		TBase::m_error = dev_ref.Error();
-		__trace_err_3(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
+		__trace_err_ex_2(TBase::m_error = dev_ref.Error());
 	}
 #if (0)
 	if (__failed(__get_$_procs().Get_all())) {
@@ -179,11 +176,9 @@ err_code camera::CWnd::PostCreate (void) {
 
 	shader::CCompiler cmpl;
 	if (false == cmpl.Is_supported()) {
-		 __trace_err_2(_T("%s\n"), (_pc_sz) cmpl.Error().Print(TError::e_print::e_req));
-		return this->m_error = cmpl.Error();
+		__trace_err_ex_2(cmpl.Error());  // it looks like the basic version if OpenGL, remote desktop;
 	}
-	else
-		__trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;"));
+	else { __trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;")); return TBase::Error(); }
 
 	// at the first step the opengl draw renderer must be created;
 	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
@@ -227,7 +222,7 @@ err_code camera::CWnd::PostCreate (void) {
 	if (__failed(renderer.View().Grid().Create()))
 	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
 
-	renderer.Is_allowed(true);     // allows the draw opereation of the renderer;
+	renderer.Is_allowed(true);     // allows the draw operation of the renderer;
 
 #define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)

@@ -11,9 +11,7 @@ using namespace ex_ui::draw::open_gl::procs;
 
 static _pc_sz ctx_fun_names[] = { _T("wglChoosePixelFormatARB"), _T("wglCreateContextAttribsARB"), _T("wglSwapIntervalEXT") };
 
-CContext:: CContext (void) : CBase() { CString cs_cls = TString().Format(_T("%s::%s"), CBase::m_error.Class(), (_pc_sz)__CLASS__);
-	CBase::m_error.Class(cs_cls, false);
-}
+CContext:: CContext (void) : CBase() { CBase::m_error >> TString().Format(_T("%s::%s"), CBase::Class(), (_pc_sz)__CLASS__); }
 
 // https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) ;
 int32_t  CContext::ChoosePxFormatArb (HDC _h_dc, const int* _p_atts_i, const float* _p_atts_f, uint32_t _u_max_fmts, int* _p_fmts, uint32_t* _p_fmt_count) {
