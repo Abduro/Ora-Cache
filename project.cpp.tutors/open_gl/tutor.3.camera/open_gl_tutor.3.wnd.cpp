@@ -176,7 +176,7 @@ err_code camera::CWnd::PostCreate (void) {
 
 	shader::CCompiler cmpl;
 	if (false == cmpl.Is_supported()) {
-		__trace_err_ex_2(cmpl.Error());  // it looks like the basic version if OpenGL, remote desktop;
+		__trace_err_ex_2(cmpl.Error());  // it looks like the basic version of OpenGL installed, possibly remote desktop;
 	}
 	else { __trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;")); return TBase::Error(); }
 
@@ -185,37 +185,20 @@ err_code camera::CWnd::PostCreate (void) {
 
 	TRenderer& renderer = Get_renderer();
 
-	CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); // stupid approach and must be reviewed;
-	renderer.Scene().Ctx().Graphics().Target() << *this;
-	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
-
-	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
-	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
-
-	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
-		this->m_error = renderer.Scene().Ctx().Graphics().Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
+	CDevice& device = renderer.Scene().Ctx().Device();
+	if (__failed(device.Create(*this))) { // tries to find a required pixel format and set it to the device context;
+		__trace_err_ex_2(TBase::m_error = device.Error()); return TBase::Error(); // further steps are useless;
 	}
-#if (0)
-	// the fake window and its device handle can not be destroyed at this time; because not all opengl functions are loaded yet;
-	context::CDevice& dev_ref = renderer.Scene().Ctx().Device();
-	if (__failed(dev_ref.Destroy())) {
-		this->m_error = dev_ref.Error();
-		__trace_err_2(_T("%s\n"), (_pc_sz) this->m_error.Print(TError::e_print::e_req));
+
+	CGraphics& graphics = renderer.Scene().Ctx().Graphics();
+	graphics.Target() << *this;
+	graphics.Target().Source(TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__));
+
+	if (__failed(graphics.Create(device))) {
+		__trace_err_ex_2(TBase::m_error = graphics.Error()); return TBase::Error(); // further steps are useless;
 	}
-#endif
-#if (0)
-	// for better debugging and in order do not re-compile the executable, this section is disabled;
-	// sets resource identifiers for loading shaders' source code;
-	if (__failed(renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_FRAG_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Fragment().Src().Cfg().Error().Print(TError::e_print::e_req));
-	if (__failed(renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().ResId(IDS_TUTOR_2_SHADER_VERT_0, e_res_types::e_string)))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.Scene().Prog().Shaders().Vertex().Src().Cfg().Error().Print(TError::e_print::e_req));
-#else
-	// loading external files of shaders' sources is moved to program_enum::load();
-#endif
-	
-#if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined, the shape must be set first;
+#if (0)	
+#if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined yet, the shape must be set first;
 	if (__failed(renderer.Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
 #endif
@@ -227,6 +210,7 @@ err_code camera::CWnd::PostCreate (void) {
 #define _test_case_lvl -1
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
 	renderer.Scene().Destroy();
+#endif
 #endif
 	return TBase::Error();
 }

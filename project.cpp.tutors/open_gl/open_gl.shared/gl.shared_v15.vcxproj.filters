@@ -1,45 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="interface">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0000}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0001}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\buffer">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0002}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\buffer">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0003}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\program">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0004}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\program">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0005}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\shader">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0006}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\shader">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0007}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\shapes">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0008}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\shapes">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0009}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\vertex">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\vertex">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_prec">
-      <UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000C}</UniqueIdentifier>
-    </Filter>
+    <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0000}</UniqueIdentifier></Filter>
+    <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0001}</UniqueIdentifier></Filter>
+    <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B002}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\buffer"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0003}</UniqueIdentifier></Filter>
+    <Filter Include="src\buffer"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0004}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\context"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0005}</UniqueIdentifier></Filter>
+    <Filter Include="src\context"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0006}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\program"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0007}</UniqueIdentifier></Filter>
+    <Filter Include="src\program"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0008}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\shader"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0009}</UniqueIdentifier></Filter>
+    <Filter Include="src\shader"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000A}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\shapes"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000B}</UniqueIdentifier></Filter>
+    <Filter Include="src\shapes"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000C}</UniqueIdentifier></Filter>
+
+    <Filter Include="interface\vertex"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000D}</UniqueIdentifier></Filter>
+    <Filter Include="src\vertex"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000E}</UniqueIdentifier></Filter>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -54,14 +37,16 @@
     <ClCompile Include="$(_1-4)gl_buf.data.cpp"><Filter>src\buffer</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)gl_vertex_arr.dat.h"><Filter>interface\vertex</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp"><Filter>src\vertex</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_vertex_arr.obj.h"><Filter>interface\vertex</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0-5)gl_ctx_base.h"><Filter>interface\context</Filter></ClInclude>
+    <ClCompile Include="$(_1-5)gl_ctx_base.cpp"><Filter>src\context</Filter></ClCompile>
+    <ClInclude Include="$(_0-5)gl_ctx_device.h"><Filter>interface\context</Filter></ClInclude>
+    <ClCompile Include="$(_1-5)gl_ctx_device.cpp"><Filter>src\context</Filter></ClCompile>
+    <ClInclude Include="$(_0-5)gl_ctx_render.h"><Filter>interface\context</Filter></ClInclude>
+    <ClCompile Include="$(_1-5)gl_ctx_render.cpp"><Filter>src\context</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_context.h"><Filter>interface\context</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_context.cpp"><Filter>src\context</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)gl_context.h"><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_context.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_defs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_drawable.h"><Filter>interface</Filter></ClInclude>
@@ -124,5 +109,9 @@
     <ClCompile Include="$(_1-3)gl_vertex_attr.cpp"><Filter>src\vertex</Filter></ClCompile>
     <ClInclude Include="$(_0-3)gl_vertex_data.h"><Filter>interface\vertex</Filter></ClInclude>
     <ClCompile Include="$(_1-3)gl_vertex_data.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex_arr.dat.h"><Filter>interface\vertex</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp"><Filter>src\vertex</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_vertex_arr.obj.h"><Filter>interface\vertex</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp"><Filter>src\vertex</Filter></ClCompile>
   </ItemGroup>
 </Project>

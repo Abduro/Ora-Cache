@@ -13,7 +13,7 @@ using namespace shared::sys_core::storage::route;
 using CAppWnd = CApp::CWindow;
 using CCell = CGrid::CCell;
 using CTestCase  = CShaders::CTestCase;
-using CVersion   = CCtx::CVersion;
+//using CVersion   = CCtx::CVersion;
 using e_renderer = CRoot::e_renderer;
 
 #define TutorialRootKey HKEY_CURRENT_USER
@@ -63,7 +63,7 @@ _pc_sz  CCell::Root (void) const {
 
 #pragma endregion
 #pragma region cls::CContext{}
-
+#if (0)
 CCtx::CCtx (void) {}
 
 _pc_sz CCtx::Root (void) const {
@@ -77,7 +77,7 @@ _pc_sz CCtx::Root (void) const {
 }
 const
 CVersion& CCtx::Version (void) const { return this->m_version; }
-
+#endif
 #pragma endregion
 #pragma region cls::CDraw{}
 
@@ -256,7 +256,7 @@ _pc_sz CViewport::Root (void) const {
 
 #pragma endregion
 #pragma region cls::CVersion{}
-
+#if (0)
 CVersion::CVersion (void) {}
 
 CString CVersion::Name (const e_values _e_value) const {
@@ -276,7 +276,7 @@ _pc_sz  CVersion::Root (void) const {
 	}
 	return (_pc_sz) cs_root;
 }
-
+#endif
 #pragma endregion
 #pragma region cls::CWindow{}
 
@@ -322,7 +322,7 @@ const
 CApp& CReg_router::App (void) const { return this->m_app; }
 CApp& CReg_router::App (void)       { return this->m_app; }
 
-const   CCtx&  CReg_router::Ctx (void) const { return this->m_ctx; }
+//const   CCtx&  CReg_router::Ctx (void) const { return this->m_ctx; }
 const   CDraw& CReg_router::Draw (void) const { return this->m_draw; }
 
 const

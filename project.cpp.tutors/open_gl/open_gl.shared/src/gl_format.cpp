@@ -4,6 +4,7 @@
 */
 #include "gl_format.h"
 #include "gl_context.h"
+#include "gl_procs_ctx.h"
 
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::format;
@@ -501,6 +502,41 @@ err_code CFormat::Find (const s_bits_ex& _bits) {
 		return this->m_error.Last();
 	}
 
+	// (4.b) chooses the pixel format;
+	CAtt_set_pixels pxl_atts; // no error check for this time yet;
+
+	uint32_t n_count = 0;
+	int32_t p_formats = 0;
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ; this file contains the function description;
+	// https://www.khronos.org/opengl/wiki/Creating_an_OpenGL_Context_(WGL) ; << there is the example of how to use the function;
+
+	const int32_t n_result = ::__get_ctx_procs().ChoosePxFormatArb(
+		this->m_hdc, pxl_atts.IAtt_Get_Int_Ptr(), nullptr, 1, &p_formats, &n_count
+	);
+
+	bool b_can_go_ahead = false;
+
+	if (0 == n_result) { // the failure has occurred: the format cannot be chosen for creating the context;
+		if (__get_ctx_procs().Error()) { // checks for failure of loading the function pointer;
+		//	__get_ctx_procs().Error().Show();
+		}
+		else { // otherwise checks the OpenGL error that has been thrown; to-do: expect to do not work, it requires a re-view of this code block;
+			this->m_error.Last();
+		//	this->m_error.Show();
+		}
+		__trace_err_ex_2(this->Error());
+	}
+	else if (nullptr != &p_formats && true == !!n_count) { b_can_go_ahead = true; }
+	else { b_can_go_ahead = true; }
+
+	if (false == b_can_go_ahead)
+		return this->Error();
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-describepixelformat ;
+	if (0 == ::DescribePixelFormat(this->m_hdc, p_formats, sizeof(px_fmt_desc_t), &px_fmt_desc)) { // it is required, otherwise the descriptor data is not updated;
+		return this->m_error .Last();
+	}
 	return this->Error();
 }
 

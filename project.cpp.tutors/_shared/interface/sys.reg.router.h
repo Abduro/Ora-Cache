@@ -36,7 +36,7 @@ namespace route { using namespace shared::defs;
 		CApp& operator = (const CApp&) = delete; CApp& operator = (CApp&&) = delete;
 		CWindow m_wnd;
 	};
-
+#if (0)
 	class CCtx {
 	public:
 		class CVersion {
@@ -64,7 +64,7 @@ namespace route { using namespace shared::defs;
 		CCtx& operator = (const CCtx&) = delete; CCtx& operator = (CCtx&&) = delete;
 		CVersion m_version;
 	};
-
+#endif
 	class CDraw {
 	public:
 		enum e_targets : uint32_t {
@@ -213,7 +213,7 @@ namespace route { using namespace shared::defs;
 		const
 		CApp&  App (void) const;
 		CApp&  App (void) ;
-		const  CCtx&  Ctx  (void) const;  // there is no need to returns the reference to non-constant object;
+	//	const  CCtx&  Ctx  (void) const;  // there is no need to returns the reference to non-constant object;
 		const  CDraw& Draw (void) const;  // gets info of what shape/view to draw;
 		const
 		CRoot& Root (void) const;
@@ -236,7 +236,6 @@ namespace route { using namespace shared::defs;
 		CReg_router& operator = (CReg_router&&) = delete;
 
 		CApp   m_app ;
-		CCtx   m_ctx ;
 		CDraw  m_draw;
 		CRoot  m_root;
 		CShaders  m_shaders;

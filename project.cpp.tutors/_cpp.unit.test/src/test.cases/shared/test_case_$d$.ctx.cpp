@@ -94,11 +94,11 @@ err_code CGraphCtx::Create (const HWND _h_target, const bool _b_verbose/* = true
 	TRenderer& renderer = Get_renderer();
 	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
 	renderer.Scene().Ctx().Graphics().Target() << _h_target;
-	
+#if (0)
 	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
 	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
-
-	if (__failed(renderer.Scene().Ctx().Graphics().Create(u_major, u_minor))) {
+#endif
+	if (__failed(renderer.Scene().Ctx().Graphics().Create())) {
 		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out()(this->Error());
 	}
 
