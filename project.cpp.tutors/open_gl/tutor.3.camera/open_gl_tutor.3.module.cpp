@@ -123,7 +123,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #else
 	if (__failed(_con.Create())) { __trace_err_ex_2(_con.Error()); }
 	else {
-	if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
+//	if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
 
 		_con.Frame().Icon() << IDR_TUTOR_0_ICO;
 		_con.Frame().Caption((_pc_sz)_con.Frame().Caption_Dflt());

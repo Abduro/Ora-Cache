@@ -3,6 +3,7 @@
 	This is system console registry persistency interface implementation file;
 */
 #include "console.pers.h"
+#include "console.font.h"
 
 #include "shared.dbg.h"
 #include "shared.preproc.h"
@@ -123,18 +124,19 @@ t_rect&  CPosition::Get (void) const { return this->m_rc_pos; }
 err_code CPosition::Set (const t_rect& _rect) {
 	_rect;
 	TBase::m_error <<__METHOD__<<__s_ok;
-
+	
 	if (::IsRectEmpty(&_rect))
 		TBase::m_error <<__e_rect = _T("#__e_inv_arg: input rect is empty");
 
-	static t_rect rc_prev = {0};
-	if (rc_prev == _rect)
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-equalrect ;
+	static t_rect rc_prev = {0}; // to-do: it is not actual or should be shared between Load() and Save() procs;
+	if (rc_prev == _rect || this->m_rc_pos == _rect)
 		return TBase::Error();
 
 	TRegKeyEx the_key;
 	if (__failed(the_key.Value().Set((_pc_sz) cs_pos_key, _rect))) {
 		TBase::m_error = the_key.Error();
-		__trace_err_2(TBase::Error());
+		__trace_err_ex_2(TBase::Error());
 	} else {
 		this->m_rc_pos = rc_prev = _rect;
 		__trace_impt_2(_T("Position is saved at rect >> %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
@@ -157,6 +159,11 @@ err_code CPosition::Load (void) {
 
 	     __trace_warn_2(_T("Using default rect at << %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos)); }
 	else __trace_impt_2(_T("Position is restored at rect << %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
+
+	CFont font; font.Get();
+	if (false == font.Error()) {
+		this->m_rc_pos.bottom += font.Size().cy;
+	}
 
 	return this->Error();
 }
@@ -195,6 +202,7 @@ CString  CPosition::To_str (const e_print _e_opt/* = e_print::e_all*/) {
 
 using CPin = persistent::CPin;
 using CPos = persistent::CPosition;
+using CShow = persistent::CShow;
 
 CPersistent:: CPersistent (void) { TBase::m_error >>__CLASS__; }
 CPersistent::~CPersistent (void) {}
@@ -202,12 +210,9 @@ CPersistent::~CPersistent (void) {}
 err_code CPersistent::Load (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Pin().Load())) {
-		TBase::m_error = this->Pin().Error();
-	}
-	if (__failed(this->Pos().Load())) {
-		TBase::m_error = this->Pos().Error();
-	}
+	if (__failed(this->Pin().Load())) { TBase::m_error = this->Pin().Error(); }
+	if (__failed(this->Pos().Load())) { TBase::m_error = this->Pos().Error(); }
+	if (__failed(this->Show().Load())){ TBase::m_error = this->Show().Error();}
 
 	return TBase::Error();
 }
@@ -215,12 +220,9 @@ err_code CPersistent::Load (void) {
 err_code CPersistent::Save (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Pin().Save())) {
-		TBase::m_error = this->Pin().Error();
-	}
-	if (__failed(this->Pos().Save())) {
-		TBase::m_error = this->Pos().Error();
-	}
+	if (__failed(this->Pin().Save())) { TBase::m_error = this->Pin().Error(); }
+	if (__failed(this->Pos().Save())) { TBase::m_error = this->Pos().Error(); }
+	if (__failed(this->Show().Save())){ TBase::m_error = this->Show().Error();}
 
 	return TBase::Error();
 }
@@ -231,27 +233,49 @@ CPin&   CPersistent::Pin (void)       { return this->m_pin; }
 const
 CPos&   CPersistent::Pos (void) const { return this->m_pos; }
 CPos&   CPersistent::Pos (void)       { return this->m_pos; }
+const
+CShow& CPersistent::Show (void) const { return this->m_show; }
+CShow& CPersistent::Show (void)       { return this->m_show; }
 
 #pragma endregion
 #pragma region cls::CShow{}
 
+static CString cs_show_key = TString().Format(_T("%s"), (_pc_sz) ::Get_reg_router().Trace().Root()); // the same as trace root registry key path;
+static _pc_sz p_vis_val_name = _T("Visible");
+
 CShow::CShow (void) : TBase(), m_visible(true) { TBase::m_error >>__CLASS__; }
+
+bool CShow::Is_visible (void) const { return this->m_visible; }
+void CShow::Is_visible (const bool _yes_or_no) { this->m_visible = _yes_or_no; }
 
 err_code CShow::Load (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	TRegKeyEx the_key;
+	this->m_visible = !!the_key.Value().GetDword((_pc_sz) cs_show_key, p_vis_val_name);
+	if (the_key.Error()) { // the registry key value may not exist; no check for the reason of the error yet;
+	//  the default value 'true' that is set in constructor of this class would look like good;
+	}
 
 	return TBase::Error();
 }
 
 err_code CShow::Save (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
+	/* query: console window height is always smaller if set in pixels winapi ;
+	(1) Character-Cell Rounding: Console windows do not support arbitrary pixel heights. They are constrained to display a whole number of character rows.
+	(2) Invisible "Ghost" Borders: On Windows 10 and 11, windows have invisible resizing borders that are roughly 7–8 pixels thick.
+	(3) Screen Buffer Limits: A console window cannot be larger than its current screen buffer.
+	    If the pixel height you set translates to more rows than the buffer allows, the window will be capped to the buffer's height;
+	*/
 
+	TRegKeyEx the_key;
+	if (__failed(the_key.Value().Set((_pc_sz) cs_show_key, p_vis_val_name, (dword)this->Is_visible()))) {
+		__trace_err_ex_2(TBase::m_error = the_key.Error());
+	}
 
 	return TBase::Error();
 }
-
-bool CShow::Is_visible (void) const { return this->m_visible; }
 
 #pragma endregion
 

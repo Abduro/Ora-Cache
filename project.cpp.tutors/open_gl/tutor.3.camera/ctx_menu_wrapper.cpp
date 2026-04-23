@@ -157,9 +157,12 @@ bool CConsole::On_command (const uint32_t _u_cmd_id) {
 	} break;
 	case IDR_TUTOR_3_CON_PINNED : {} break;
 	case IDR_TUTOR_3_CON_VISIBLE: {
+#if (0)
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible ;
-		// ::ShowWindow(TConAccess()(), ::IsWindowVisible(TConAccess()()) ? SW_HIDE : SW_SHOW);
 		TConAccess() << !TConAccess().Is_visible();
+#else
+		handler.On_command(e_cmd_ids::e_visible);
+#endif
 		{ __trace_info_2(_T("command 'Show/Hide console' (%04u) is completed;\n"), _u_cmd_id); }
 	} break;
 	default:

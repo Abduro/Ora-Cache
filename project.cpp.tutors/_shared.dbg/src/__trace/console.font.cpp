@@ -31,8 +31,8 @@ ConFntInfoEx& CFont::Get(void) {
 	const COORD& coord = this->m_info.dwFontSize;
 
 	this->m_size = {
-		-MulDiv(coord.X, GetDeviceCaps(::GetDC(0), LOGPIXELSX), 72), // gets the font width in pixels;
-		-MulDiv(coord.Y, GetDeviceCaps(::GetDC(0), LOGPIXELSY), 72)  // gets the font height in pixels;
+		abs(-MulDiv(coord.X, GetDeviceCaps(::GetDC(0), LOGPIXELSX), 72)), // gets the font width in pixels;
+		abs(-MulDiv(coord.Y, GetDeviceCaps(::GetDC(0), LOGPIXELSY), 72))  // gets the font height in pixels;
 	};
 
 	return this->m_info;
@@ -110,8 +110,8 @@ t_size& CFont::Size (void) const {
 	}
 	COORD coord = ::GetConsoleFontSize(h_out, fnt_inf.nFont);
 	this->m_size = {
-		-MulDiv(coord.X, GetDeviceCaps(::GetDC(0), LOGPIXELSX), 72), // gets the font width in pixels;
-		-MulDiv(coord.Y, GetDeviceCaps(::GetDC(0), LOGPIXELSY), 72)  // gets the font height in pixels;
+		abs(-MulDiv(coord.X, GetDeviceCaps(::GetDC(0), LOGPIXELSX), 72)), // gets the font width in pixels;
+		abs(-MulDiv(coord.Y, GetDeviceCaps(::GetDC(0), LOGPIXELSY), 72))  // gets the font height in pixels;
 	};
 #endif
 	return this->m_size; // is calculated by calling CFont::Get(void);

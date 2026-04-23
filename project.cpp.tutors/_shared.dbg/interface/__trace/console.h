@@ -59,8 +59,9 @@ namespace shared { namespace console {
 	};
 
 	enum e_cmd_ids : uint32_t {
-		e__undef = 0,
-		e_clear  = 6666, // clears console buffer, i.e. no text in the console window;
+		e__undef  = 0,
+		e_clear   = 6666, // clears console buffer, i.e. no text in the console window;
+		e_visible,        // shows/hides the console window;
 	};
 
 	class CCmd_Handler {

@@ -82,6 +82,10 @@ err_code CCmd_Handler::On_command (const uint32_t _cmd_id) {
 		if (__failed(cmd.Exec()))
 			this->m_error = cmd.Error();
 	} break;
+	case e_cmd_ids::e_visible: {
+		TConAccess() << !TConAccess().Is_visible();
+		::Get_ConPers().Show().Is_visible(TConAccess().Is_visible());
+	} break;
 	default:
 		this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: command ID 0x%04x (%u)"), _cmd_id, _cmd_id);
 	}
@@ -112,6 +116,8 @@ err_code CConsole::Create (void) {
 
 	if (false == !!::AllocConsole()) // on closing the app process the console is destroyed by OS;
 		 return this->m_error.Last();
+
+	::Get_ConPers().Load();
 	
 	this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
 	this->Frame().OnCreate();
@@ -126,6 +132,8 @@ err_code CConsole::Create (void) {
 err_code CConsole::Close (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
+
+	::Get_ConPers().Save(); // if console window is not valid on this time this case is ignored: every available option is saved;
 
 	if (this->Is_valid() == false) // it is supposed the all opened file descriptors is already closed;
 		return this->m_error << __e_not_inited;

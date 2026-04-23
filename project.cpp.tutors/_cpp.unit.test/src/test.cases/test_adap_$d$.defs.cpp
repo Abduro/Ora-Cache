@@ -3,7 +3,16 @@
 	This is OpenGL tutorials' draw functionality common definitions implementation file.
 */
 #include "test_adap_$d$.defs.h"
+#include "ebo_test_$d$.defs.h"
 
 using namespace test::draw::open_gl;
 
 namespace test { namespace draw { namespace open_gl { namespace _impl_0 { void __warning_lnk_4006 (void) {}}}}}
+
+#pragma region cls::c_version{}
+
+void c_version::Load (void) {
+	CTstVersion().Load(); _out()();
+}
+
+#pragma endregion

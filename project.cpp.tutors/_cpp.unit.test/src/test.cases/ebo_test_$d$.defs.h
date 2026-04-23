@@ -5,7 +5,8 @@
 	Ebo Pack OpenGL draw context lib common definitions' uint test interface declaration file;
 */
 #include "_log.h"
-#include "gl_renderer.h"
+#include "gl_renderer.h" // to-do: this include must be made in places where test cases are related to renderer, but not here;
+#include "gl_version.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
@@ -17,6 +18,23 @@ namespace test { namespace draw { namespace open_gl {
 	(1) if a test case object throws the error, it should trace it itself;
 	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
 	*/
+	using CVersion = ex_ui::draw::open_gl::CVersion;
+
+	class CTstVersion {
+	public:
+		 CTstVersion (void) = default; CTstVersion (const CTstVersion&) = delete; CTstVersion (CTstVersion&&) = delete;
+		~CTstVersion (void) = default;
+		// version info class loads data automatically in its constructor, but this function is just for print out of the version or an error that may occur;
+		err_code Load (const bool _cls_out = true);
+
+		const
+		CVersion& operator ()(void) const;
+		CVersion& operator ()(void) ;
+
+	private:
+		CTstVersion& operator = (const CTstVersion&) = delete; CTstVersion& operator = (CTstVersion&&) = delete;
+		CVersion m_ver;
+	};
 
 }}}
 

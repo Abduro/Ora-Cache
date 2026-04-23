@@ -138,12 +138,13 @@ err_code CLayout::OnClose (void) {
 
 err_code CLayout::OnCreate (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
+#if (0) // it is supposed the position is already read by calling persistency load() from console.Create();
 	if (__failed(::Get_ConPers().Pos().Load()))
 		return this->m_error = ::Get_ConPers().Pos().Error();
-
+#endif
 	ATL::CWindow con_wnd((HWND)TConAccess());
 	con_wnd.MoveWindow(&::Get_ConPers().Pos().Get(), false);
+	CAccessor() << ::Get_ConPers().Show().Is_visible();
 	
 	return this->Error();
 }

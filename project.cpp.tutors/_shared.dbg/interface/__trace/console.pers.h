@@ -64,10 +64,11 @@ namespace persistent {
 		 CShow (void);
 		~CShow (void) = default;
 
-		err_code Load (void);
-		err_code Save (void);
+		bool Is_visible (void) const;            // gets the current state of the console window;
+		void Is_visible (const bool _yes_or_no); // sets the current state of the console window;
 
-		bool Is_visible (void) const;
+		err_code Load (void);   // loads console window visibility state;
+		err_code Save (void);   // saves console window visibility state;
 
 	private:
 		bool m_visible; // by default is 'true';
@@ -75,8 +76,9 @@ namespace persistent {
 }
 	class CPersistent : public persistent::CBase { typedef persistent::CBase TBase;
 	public:
-		using CPin = persistent::CPin;
-		using CPos = persistent::CPosition;
+		using CPin  = persistent::CPin;
+		using CPos  = persistent::CPosition;
+		using CShow = persistent::CShow;
 
 		 CPersistent (void); CPersistent (const CPersistent&) = delete; CPersistent (CPersistent&&) = delete;
 		~CPersistent (void);
@@ -90,11 +92,15 @@ namespace persistent {
 		const
 		CPos& Pos (void) const;
 		CPos& Pos (void) ;
+		const
+		CShow& Show (void) const;
+		CShow& Show (void) ;
 
 	protected:
 		CPersistent& operator = (const CPersistent&) = delete; CPersistent& operator = (CPersistent&&) = delete;
 		CPin  m_pin;
 		CPos  m_pos;
+		CShow m_show;
 	};
 
 	bool operator != (const t_rect& _left, const t_rect& _right);
