@@ -113,6 +113,9 @@ err_code CDevice::Create (const HWND _h_target) {
 	_h_target;
 	CBase::m_error <<__METHOD__<<__s_ok;
 
+	if (CBase::Target().Is_valid())
+		return CBase::m_error = CBase::Target().Error();
+
 	if (nullptr == CBase::Target().Source()) // the source class name can be set outside of this procedure;
 		CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
 
@@ -151,6 +154,8 @@ err_code CDevice::Create (const HWND _h_target) {
 	if (__failed(the_best_fmt.Find({32, 24, 8}, u_found_ndx))) {
 		__trace_err_ex_2(CBase::m_error = the_best_fmt.Error()); return CBase::Error();
 	}
+	else
+		this->Format() = the_best_fmt; // takes a copy of the found descriptor;
 
 	if (false == !!::SetPixelFormat(CBase::Target().Get(), u_found_ndx, &the_best_fmt.Get())) {
 		CBase::m_error.Last();
@@ -232,6 +237,9 @@ err_code CFake_Ctx::Destroy (void) {
 }
 
 TError&  CFake_Ctx::Error (void) const { return this->m_error; }
+
+const
+CDevice& CFake_Ctx::operator ()(void) const { return this->m_device; }
 
 #pragma endregion
 #pragma region cls::CSelector{}

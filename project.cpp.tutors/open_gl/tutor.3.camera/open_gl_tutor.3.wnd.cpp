@@ -24,7 +24,8 @@ using COrganizer = ex_ui::draw::gui::COrganizer;
 #pragma region cls::camera::CWnd{}
 
 camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__); TBase::m_error >> cs_cls;
-
+	// https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;
+#if (0)
 	if (this->m_fak_wnd.Is_valid() == false) {
 		::__trace_err_ex_2(TBase::m_error = m_fak_wnd.Error()); return;
 	}
@@ -35,7 +36,7 @@ camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("cam
 	if (__failed(dev_ref.Create(m_fak_wnd.m_hWnd))) {
 		__trace_err_ex_2(TBase::m_error = dev_ref.Error());
 	}
-#if (0)
+#elif (false == true)
 	if (__failed(__get_$_procs().Get_all())) {
 		TBase::m_error = __get_$_procs().Error();
 		__trace_err_2(_T("%s\n"), (_pc_sz)TBase::m_error.Print(TError::e_req));
@@ -173,30 +174,41 @@ err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
 
 err_code camera::CWnd::PostCreate (void) {
 	TBase::m_error << __METHOD__ << __s_ok;
-
-	shader::CCompiler cmpl;
-	if (false == cmpl.Is_supported()) {
-		__trace_err_ex_2(cmpl.Error());  // it looks like the basic version of OpenGL installed, possibly remote desktop;
+#if (0)
+	// (1) creates fake device context for getting the OpenGL version installed on the OS;
+	CFake_Ctx fk_ctx;
+	if (fk_ctx.Error()) {
+		::__trace_err_ex_2(TBase::m_error = fk_ctx.Error()); return TBase::Error();
 	}
-	else { __trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;")); return TBase::Error(); }
-
-	// at the first step the opengl draw renderer must be created;
-	// it is supposed the regular device context for getting opengl function loading is already created for fake window in the constructor of this class;
-
+#endif
 	TRenderer& renderer = Get_renderer();
-
 	CDevice& device = renderer.Scene().Ctx().Device();
+
+#if (1) // it is not reqiured because fake device format is already found;
 	if (__failed(device.Create(*this))) { // tries to find a required pixel format and set it to the device context;
 		__trace_err_ex_2(TBase::m_error = device.Error()); return TBase::Error(); // further steps are useless;
 	}
-
+#else
+	// (2) sets renderer device context format which is received from fake window;
+	device.Target() << *this;
+	device.Format() << fk_ctx().Format().Get();
+#endif
+	// (3) creates OpenGL draw rendering context;
 	CGraphics& graphics = renderer.Scene().Ctx().Graphics();
+
 	graphics.Target() << *this;
 	graphics.Target().Source(TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__));
 
 	if (__failed(graphics.Create(device))) {
 		__trace_err_ex_2(TBase::m_error = graphics.Error()); return TBase::Error(); // further steps are useless;
 	}
+	// (4) checks for sharer source compiler support;
+	shader::CCompiler cmpl;
+	if (false == cmpl.Is_supported()) {
+		__trace_err_ex_2(cmpl.Error());  // it looks like the basic version of OpenGL installed, possibly remote desktop;
+	}
+	else { __trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;")); return TBase::Error(); }
+
 #if (0)	
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined yet, the shape must be set first;
 	if (__failed(renderer.Scene().Prepare()))

@@ -115,6 +115,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 
 		TError&  Error (void) const;
 
+		const
+		CDevice& operator ()(void) const;
+
 	private:
 		CFake_Ctx& operator = (const CFake_Ctx&) = delete; CFake_Ctx& operator = (CFake_Ctx&&) = delete;
 		CError   m_error ;

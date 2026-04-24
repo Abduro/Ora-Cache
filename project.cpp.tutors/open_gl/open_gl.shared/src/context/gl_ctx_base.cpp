@@ -8,7 +8,9 @@ using namespace ex_ui::draw::open_gl::context;
 
 #pragma region cls::CTarget{}
 
-CTarget:: CTarget (void) :  m_dc_src(0), m_target(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
+static _pc_sz p_err_not_inited = _T("#__e_state: target not inited");
+
+CTarget:: CTarget (void) :  m_dc_src(0), m_target(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = p_err_not_inited; }
 CTarget:: CTarget (const HWND _h_wnd) : CTarget() { *this << _h_wnd; }
 CTarget::~CTarget (void) {
 	this->Free ();
@@ -27,8 +29,7 @@ err_code CTarget::Free (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc ;
 	const int n_result = ::ReleaseDC(this->m_target, this->m_dc_src);
 	if (1 != n_result) {
-		this->m_error << (err_code) TErrCodes::eExecute::eState = _T("Releasing source device context failed");
-		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req));
+		__trace_err_ex_2(this->m_error << (err_code) TErrCodes::eExecute::eState = _T("#__e_state: releasing source device context failed"));
 	}
 	else
 		this->m_dc_src = nullptr;
@@ -43,15 +44,15 @@ bool CTarget::Is_valid (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (nullptr == this->m_dc_src) {
-		this->m_error << __e_not_inited;  // the error object set to error state (i.e. error == true);
+		this->m_error << __e_not_inited = p_err_not_inited;  // the error object set to error state (i.e. error == true);
 		return false;
 	}
-
+	// to-do: CDevice has Is_DC() static method;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjecttype ;
 	const uint32_t u_dc_type = ::GetObjectType(this->m_dc_src);
 
 	if (OBJ_DC != u_dc_type && OBJ_MEMDC != u_dc_type) // not sure that the source device context may be an in-memory one, but anyway it is okay;
-		return false != (this->m_error << __e_inv_arg = _T("Source device context is not valid")).Is();
+		return false != (this->m_error << __e_inv_arg = _T("#__e_inv_arg: source device context handle is not valid")).Is();
 
 	return false == this->Error().Is(); // returns 'true' due to the error state is not set to err_code, i.e. everything is '__s_ok';
 }
@@ -61,7 +62,7 @@ err_code  CTarget::Set (const HWND _h_wnd) {
 	_h_wnd;
 
 	if (this->Is_valid()) {
-		this->m_error << (err_code) TErrCodes::eObject::eInited = _T("Source device context is already set");
+		this->m_error << (err_code) TErrCodes::eObject::eInited = _T("#__e_state: source device context is already set");
 		__trace_err_3(_T("%s\n"), (_pc_sz) this->Error().Print(TError::e_req)); return this->Error();
 	}
 #if (0)

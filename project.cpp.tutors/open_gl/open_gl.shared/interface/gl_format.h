@@ -260,35 +260,40 @@ namespace arb {
 	typedef PIXELFORMATDESCRIPTOR px_fmt_desc_t;
 
 	class CFormat {
-		public:
-			 CFormat (void); CFormat (const CFormat&) = delete; CFormat (CFormat&&) = delete;
-			~CFormat (void) = default;
+	public:
+		CFormat (void);
+		CFormat (const CFormat&); CFormat (CFormat&&) = delete; ~CFormat (void) = default;
 
-			const
-			px_fmt_desc_t& Get (void) const;
-			err_code Set (void); // sets the found pixel format descriptor to the target device context;
+		const
+		px_fmt_desc_t& Get (void) const;
+		err_code Set (void); // sets the found pixel format descriptor to the target device context;
 
-			TError&  Error (void) const;
-			err_code Find (const format::s_bits& _bits, uint32_t& _found_ndx); // finds by input params the required pixel format descriptor supported by device context;
-			err_code Find (const format::s_bits_ex& _bits); // finds by input params the required format descriptor supported by OpenGL ARB extension;
+		TError&  Error (void) const;
+		err_code Find  (const format::s_bits& _bits, uint32_t& _found_ndx); // finds by input params the required pixel format descriptor supported by device context;
+		err_code Find  (const format::s_bits_ex& _bits); // finds by input params the required format descriptor supported by OpenGL ARB extension;
 
-			uint32_t Index (void) const; // returns the index of found pixel format descriptor structure;
+		uint32_t Index (void) const; // returns the index of found pixel format descriptor structure;
 
-			bool  Is_found (void) const; // checks the internal pixel format descriptor field for emptiness;
-			bool  Is_valid (void) const; // checks the target context device handle;
+		bool  Is_found (void) const; // checks the internal pixel format descriptor field for emptiness;
+		bool  Is_valid (void) const; // checks the target context device handle;
 
-			static
-			CString  To_str (const px_fmt_desc_t&);
+		static
+		CString  To_str (const px_fmt_desc_t&);
 
-			CFormat& operator <<(const HDC&); // sets device context for getting/setting its pixel format;
+		CFormat& operator = (const CFormat&);
+		CFormat& operator = (CFormat&&) = delete; // not required yet;
 
-		private:
-			CFormat& operator = (const CFormat&) = delete; CFormat& operator = (CFormat&&) = delete;
-			mutable
-			CError   m_error;
-			HDC      m_hdc;    // target device context is for manipulating its pixel format;
-			uint32_t m_found;  // this is the found index of the pixel format descriptor, one-based, 0 - means it's not found yet;
-			px_fmt_desc_t m_desc;
-		};
+		CFormat& operator <<(const HDC&); // sets device context for getting/setting its pixel format;
+	protected:
+		CFormat& operator <<(const px_fmt_desc_t&);
+		CFormat& operator <<(const uint32_t _u_index); // sets the found index;
+
+	private:
+		mutable
+		CError   m_error;
+		HDC      m_hdc;    // target device context is for manipulating its pixel format;
+		uint32_t m_found;  // this is the found index of the pixel format descriptor, one-based, 0 - means it's not found yet;
+		px_fmt_desc_t m_desc;
+	};
 }}}
 #endif/*_GL_FORMAT_H_INCLUDED*/

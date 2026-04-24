@@ -422,11 +422,12 @@ namespace ex_ui { namespace draw { namespace _impl {
 }}} using namespace ex_ui::draw::_impl;
 
 CFormat::CFormat (void) : m_hdc(0), m_desc{0}, m_found(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: pixel format is not found yet"); }
+CFormat::CFormat (const CFormat& _src) : CFormat() { *this = _src; }
 const
 px_fmt_desc_t& CFormat::Get (void) const { return this->m_desc; }
 
 TError&  CFormat::Error (void) const { return this->m_error; }
-err_code CFormat::Find (const s_bits& _bits, uint32_t& _found_ndx) {
+err_code CFormat::Find  (const s_bits& _bits, uint32_t& _found_ndx) {
 	_bits; _found_ndx = 0;
 	this->m_error <<__METHOD__<<__s_ok;
 	this->m_found = 0; // resets to 'not found' state;
@@ -482,7 +483,7 @@ err_code CFormat::Find (const s_bits& _bits, uint32_t& _found_ndx) {
 	return this->Error();
 }
 
-err_code CFormat::Find (const s_bits_ex& _bits) {
+err_code CFormat::Find  (const s_bits_ex& _bits) {
 	_bits;
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -577,6 +578,10 @@ CString  CFormat::To_str (const px_fmt_desc_t& _px_desc) {
 	return  cs_out;
 }
 
+CFormat& CFormat::operator = (const CFormat& _src) { *this << _src.m_hdc << _src.Get() << _src.Index(); this->m_error = _src.Error(); return *this; }
 CFormat& CFormat::operator <<(const HDC& _hdc) { this->m_hdc = _hdc; return *this; }
+
+CFormat& CFormat::operator <<(const px_fmt_desc_t& _px_desc) { this->m_desc = _px_desc; return *this; }
+CFormat& CFormat::operator <<(const uint32_t _u_index) { this->m_found = _u_index; return *this; }
 
 #pragma endregion
