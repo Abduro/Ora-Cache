@@ -1,11 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Mar-2026 at 09:31:22.974, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' trace console event unit test adapter interface implementation file; 
+	This is Ebo Pack trace console event unit test adapter interface implementation file; 
 */
-#include "ebo_test_$w$.con.evt.h"
+#include "test_adap_$w$.con.evt.h"
 
-using namespace ebo::boo::test::con;
-using namespace ebo::boo::test::con::events;
+using namespace test::win_api::console;
+using namespace test::win_api::console::events;
 
 #pragma region cls::c_ctrl_router{}
 

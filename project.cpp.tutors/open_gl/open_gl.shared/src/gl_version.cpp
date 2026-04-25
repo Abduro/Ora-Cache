@@ -319,8 +319,9 @@ CString  CVersion::Print_2 (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p
 #pragma endregion
 
 TVersion& ::Get_version (void) {
+	/* https://pabloariasal.github.io/2020/01/02/static-variable-initialization/ ;
+	   https://stackoverflow.com/questions/26547454/static-variable-is-initialized-twice ;
+	*/
 	static TVersion vers;
-	if (vers.Data().empty()) {
-	}
 	return vers;
 }

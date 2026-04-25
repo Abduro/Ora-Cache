@@ -23,8 +23,8 @@
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.defs.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$w$.defs.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--console-->
     <ClInclude Include="$(_2-0)test_case_$w$.con.h"><Filter>console\shared</Filter></ClInclude>
@@ -33,20 +33,20 @@
     <ClCompile Include="$(_2-0)test_case_$w$.con.pers.cpp"><Filter>console\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)test_adap_$w$.con.pers.h"><Filter>console</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$w$.con.pers.cpp"><Filter>console</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.con.h"><Filter>console</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$w$.con.cpp"><Filter>console</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.con.h"><Filter>console</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.con.cpp"><Filter>console</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--console events-->
     <ClInclude Include="$(_2-0)test_case_$w$.con.evt.h"><Filter>console\event\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$w$.con.evt.cpp"><Filter>console\event\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.con.evt.h"><Filter>console\event</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$w$.con.evt.cpp"><Filter>console\event</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.con.evt.h"><Filter>console\event</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.con.evt.cpp"><Filter>console\event</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--console modes-->
     <ClInclude Include="$(_2-0)test_case_$w$.con.mode.h"><Filter>console\mode\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$w$.con.mode.cpp"><Filter>console\mode\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.con.mode.h"><Filter>console\mode</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$w$.con.mode.cpp"><Filter>console\mode</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.con.mode.h"><Filter>console\mode</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.con.mode.cpp"><Filter>console\mode</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--thread pool-->
     <ClInclude Include="$(_2-0)test_case_$w$.event.h"><Filter>thread\shared</Filter></ClInclude>
@@ -55,13 +55,13 @@
     <ClCompile Include="$(_2-0)test_case_$w$.run.crt.cpp"><Filter>thread\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$w$.run.tpl.h"><Filter>thread\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$w$.run.tpl.cpp"><Filter>thread\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.thread.h"><Filter>thread</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp"><Filter>thread</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.thread.h"><Filter>thread</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.thread.cpp"><Filter>thread</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$w$.menu.h"><Filter>gui\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$w$.menu.cpp"><Filter>gui\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.menu.h"><Filter>gui</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$w$.menu.cpp"><Filter>gui</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.menu.h"><Filter>gui</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.menu.cpp"><Filter>gui</Filter></ClCompile>
   </ItemGroup>
 </Project>

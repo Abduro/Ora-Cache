@@ -44,9 +44,9 @@ namespace shared { namespace runnable
 
 	private:
 		CCrtRunner& operator = (const CCrtRunner&) = delete; CCrtRunner& operator = (CCrtRunner&&) = delete;
-		CMarshaller        m_notifier ;  // for sending notifications from worker thread to main one;
-		HANDLE             m_hThread  ;  // thread handle that runs a procedure;
-		TRunnableFunc      m_function ;  // worker thread procedure pointer that is applied to _beginthreadex();
+		CMarshaller   m_notifier ;  // for sending notifications from worker thread to main one;
+		HANDLE        m_hThread  ;  // thread handle that runs a procedure;
+		TRunnableFunc m_function ;  // worker thread procedure pointer that is applied to _beginthreadex();
 	};
 }}
 

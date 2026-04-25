@@ -1,12 +1,12 @@
-#ifndef _EBO_TEST_$W$_CON_EVT_H_INCLUDED
-#define _EBO_TEST_$W$_CON_EVT_H_INCLUDED
+#ifndef _TEST_ADAP_$W$_CON_EVT_H_INCLUDED
+#define _TEST_ADAP_$W$_CON_EVT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Mar-2026 at 09:31:04.061, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' trace console event unit test adapter interface declaration file; 
+	This is Ebo Pack trace console event unit test adapter interface declaration file; 
 */
 #include "test_case_$w$.con.evt.h"
 
-namespace ebo { namespace boo { namespace test { namespace con {
+namespace test { namespace win_api { namespace console {
 namespace events {
 	__class (c_ctrl_router) {
 	public:
@@ -32,6 +32,6 @@ namespace events {
 		c_input_router& operator = (const c_input_router&) = delete; c_input_router& operator = (c_input_router&&) = delete;
 	};
 }
-}}}}
+}}}
 
-#endif/*_EBO_TEST_$W$_CON_EVT_H_INCLUDED*/
+#endif/*_TEST_ADAP_$W$_CON_EVT_H_INCLUDED*/

@@ -1,13 +1,13 @@
-#ifndef _EBO_TEST_$W$_THREAD_INCLUDED
-#define _EBO_TEST_$W$_THREAD_INCLUDED
+#ifndef _TEST_ADAP_$W$_THREAD_INCLUDED
+#define _TEST_ADAP_$W$_THREAD_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Mar-2026 at 00:55:27.998, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' thread pool unit test adapter interface declaration file; 
+	This is Ebo Pack c-runtime and system thread pool unit test adapter interface declaration file; 
 */
 #include "test_case_$w$.run.crt.h"
 #include "test_case_$w$.run.tpl.h"
 
-namespace ebo { namespace boo { namespace test { namespace threads {
+namespace test { namespace win_api { namespace threads {
 
 	__class (c_await) {
 	public:
@@ -92,6 +92,6 @@ namespace ebo { namespace boo { namespace test { namespace threads {
 		c_tpl_runner& operator = (const c_tpl_runner&) = delete; c_tpl_runner& operator = (c_tpl_runner&&) = delete;
 		CTstTplRunner m_tpl_run;
 	};
-}}}}
+}}}
 
-#endif/*_EBO_TEST_$W$_THREAD_INCLUDED*/
+#endif/*_TEST_ADAP_$W$_THREAD_INCLUDED*/

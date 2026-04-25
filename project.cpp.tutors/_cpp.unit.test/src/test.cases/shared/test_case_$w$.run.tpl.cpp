@@ -1,10 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 03-Apr-2026 at 10:37:32.520, UTC+4, Batumi, Friday;
-	This is Ebo Pack OpenGL tutorials' thread pool event wrapper interface implementation file for using in test cases adapters;
+	This is Ebo Pack system thread pool wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$w$.run.tpl.h"
 
-using namespace ebo::boo::test::threads;
+using namespace test::win_api;
+using namespace test::win_api::threads;
 
 #pragma region cls::CTstTplExt{}
 

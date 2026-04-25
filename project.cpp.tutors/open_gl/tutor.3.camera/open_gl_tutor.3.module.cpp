@@ -160,7 +160,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		layout.Update();
 		shared::console::layout::CHScroll().Set(true);
 
-		__trace_warn_3(_T("%s\n"), (_pc_sz) CVersion().Print_2());
+		__trace_warn_3(_T("%s\n"), (_pc_sz) ::Get_version().Print_2());
 #pragma endregion
 #pragma region __step_0
 		// (0) creating the main window/application at the beginning of this 'journey';
@@ -185,6 +185,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #pragma endregion
 #pragma region __step_3
 		// (3) updates draw scene;
+		if (::Get_version().Is_base() == false)
 		if (__failed(renderer.Scene().Prepare())) {}
 #pragma endregion
 #pragma region __step_4

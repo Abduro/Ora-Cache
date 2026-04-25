@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Mar-2026 at 12:34:01.536, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' c-runtime (CRT) thread runner wrapper interface implementation file for using in test cases adapters;
+	This is Ebo Pack c-runtime (CRT) thread runner wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$w$.run.crt.h"
 
-using namespace ebo::boo::test::threads;
+using namespace test::win_api::threads;
 
 #pragma region cls::CTstCrtRunner{}
 

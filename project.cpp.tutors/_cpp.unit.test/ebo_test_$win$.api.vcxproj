@@ -223,12 +223,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$w$.defs.h" />
-    <ClCompile Include="$(_2)ebo_test_$w$.defs.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.defs.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.defs.cpp" />
   </ItemGroup>
   <ItemGroup><!--console-->
     <ClInclude Include="$(_2)test_adap_$w$.con.pers.h" />
     <ClCompile Include="$(_2)test_adap_$w$.con.pers.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.con.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.con.cpp" />
     <ClInclude Include="$(_2-0)test_case_$w$.con.h" />
     <ClCompile Include="$(_2-0)test_case_$w$.con.cpp" />
     <ClInclude Include="$(_2-0)test_case_$w$.con.evt.h" />
@@ -237,12 +239,10 @@
     <ClCompile Include="$(_2-0)test_case_$w$.con.mode.cpp" />
     <ClInclude Include="$(_2-0)test_case_$w$.con.pers.h" />
     <ClCompile Include="$(_2-0)test_case_$w$.con.pers.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$w$.con.h" />
-    <ClCompile Include="$(_2)ebo_test_$w$.con.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$w$.con.evt.h" />
-    <ClCompile Include="$(_2)ebo_test_$w$.con.evt.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$w$.con.mode.h" />
-    <ClCompile Include="$(_2)ebo_test_$w$.con.mode.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.con.evt.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.con.evt.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.con.mode.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.con.mode.cpp" />
   </ItemGroup>
   <ItemGroup><!--thread pool-->
     <ClInclude Include="$(_2-0)test_case_$w$.event.h" />
@@ -251,14 +251,14 @@
     <ClCompile Include="$(_2-0)test_case_$w$.run.crt.cpp" />
     <ClInclude Include="$(_2-0)test_case_$w$.run.tpl.h" />
     <ClCompile Include="$(_2-0)test_case_$w$.run.tpl.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$w$.thread.h" />
-    <ClCompile Include="$(_2)ebo_test_$w$.thread.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.thread.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.thread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$w$.menu.h" />
     <ClCompile Include="$(_2-0)test_case_$w$.menu.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$w$.menu.h" />
-    <ClCompile Include="$(_2)ebo_test_$w$.menu.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.menu.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

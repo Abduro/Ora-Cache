@@ -1,10 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Mar-2026 at 21:01:03.022, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL tutorials' trace console interface implementation file for using in test cases adapters;
+	This is Ebo Pack trace console interface implementation file for using in test cases adapters;
 */
 #include "test_case_$w$.con.h"
 
-using namespace ebo::boo::test::con;
+using namespace test::win_api;
+using namespace test::win_api::console;
 
 #pragma region cls::c_con_loc{}
 

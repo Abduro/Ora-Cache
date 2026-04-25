@@ -2,12 +2,12 @@
 #define _TEST_CASE_$W$_EVENT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Mar-2026 at 00:45:13.516, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' thread event wrapper interface declaration file for using in test cases adapters;
+	This is Ebo Pack thread event wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$w$.defs.h"
+#include "test_adap_$w$.defs.h"
 #include "run.event.h"
 
-namespace ebo { namespace boo { namespace test { namespace threads {
+namespace test { namespace win_api { namespace threads {
 
 	using CAwait = shared::runnable::CAwait;
 	using CDelay = shared::runnable::CDelay;
@@ -88,6 +88,6 @@ namespace ebo { namespace boo { namespace test { namespace threads {
 		CTstListener  m_listener;
 	};
 
-}}}}
+}}}
 
 #endif/*_TEST_CASE_$W$_EVENT_H_INCLUDED*/

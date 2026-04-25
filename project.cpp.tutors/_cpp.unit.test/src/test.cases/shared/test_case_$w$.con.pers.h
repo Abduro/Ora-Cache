@@ -4,11 +4,10 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 15-Apr-2026 at 20:14:27.673, UTC+4, Batumi, Wednesday;
 	This is Ebo Pack console persistent test case interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$w$.defs.h"
+#include "test_adap_$w$.defs.h"
 #include "console.pers.h"
 
 namespace test { namespace win_api { namespace console {
-	using namespace ebo::boo::test::win_api;
 
 	using CPin = shared::console::persistent::CPin;
 	using CPos = shared::console::persistent::CPosition;

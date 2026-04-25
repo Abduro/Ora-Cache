@@ -1,14 +1,15 @@
-#ifndef _EBO_TEST_$W$_DEFS_H_INCLUDED
-#define _EBO_TEST_$W$_DEFS_H_INCLUDED
+#ifndef _TEST_ADAP_$W$_DEFS_H_INCLUDED
+#define _TEST_ADAP_$W$_DEFS_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Mar-2026 at 20:29:37.726, UTC+4, Batumi, Sunday;
-	Ebo Pack OpenGL tutorials' WinApi related projects' uint test interface declaration file;
+	This is Ebo Pack WinAPI related projects' uint test interface declaration file;
 */
 #include "_log.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 
-namespace ebo { namespace boo { namespace test { namespace win_api {
+namespace test { namespace win_api {
+	using namespace shared::defs;
 	using namespace ebo::boo::test;
 
 	/**important*: the main rules of error trace:
@@ -16,7 +17,7 @@ namespace ebo { namespace boo { namespace test { namespace win_api {
 	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
 	*/
 
-}}}}
+}}
 
 #pragma comment(lib, "ebo_test_$$$.lib")    // shared unit test library for common definition(s);
 #pragma comment(lib, "runnable_v15.lib")    // using the system thread pool library;
@@ -24,4 +25,4 @@ namespace ebo { namespace boo { namespace test { namespace win_api {
 #pragma comment(lib, "shared.gui_v15.lib")  // for context menu test cases;
 #pragma comment(lib, "shared.trim_v15.lib") // it is required for usage of the error base API;
 
-#endif/*_EBO_TEST_$W$_DEFS_H_INCLUDED*/
+#endif/*_TEST_ADAP_$W$_DEFS_H_INCLUDED*/

@@ -59,7 +59,7 @@ namespace shared { namespace runnable { namespace threads { namespace pool { usi
 		virtual void Run_Func (void); // this is default implementation of the thread function;
 
 	private:
-		CTplRunner& operator =  (const CTplRunner&) = delete; CTplRunner& operator = (CTplRunner&&) = delete;
+		CTplRunner& operator = (const CTplRunner&) = delete; CTplRunner& operator = (CTplRunner&&) = delete;
 		
 	};
 }}}}

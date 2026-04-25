@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Mar-2026 at 00:49:46.026, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' thread event wrapper interface implementation file for using in test cases adapters;
+	This is Ebo Pack thread event wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$w$.event.h"
 
-using namespace ebo::boo::test::threads;
+using namespace test::win_api::threads;
 
 #pragma region cls::CTstAwait{}
 

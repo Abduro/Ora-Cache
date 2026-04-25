@@ -2,13 +2,13 @@
 #define _TEST_CASE_$W$_CON_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Mar-2026 at 20:59:27.699, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL tutorials' trace console interface declaration file for using in test cases adapters;
+	This is Ebo Pack trace console interface declaration file for using in test cases adapters;
 */
 #include "test_case_$w$.con.evt.h"
 #include "test_case_$w$.con.mode.h"
 #include "console.h"
 
-namespace ebo { namespace boo { namespace test { namespace con { using namespace ebo::boo::test;
+namespace test { namespace win_api { namespace console {
 
 	/* query: can console window be created from test case of MSTest Framework (to Google AI);
 	   In the MSTest Framework, a standard console window is *not* automatically created or displayed when a test case is executed.
@@ -56,6 +56,6 @@ namespace ebo { namespace boo { namespace test { namespace con { using namespace
 		t_wrap m_wrap; // it is required for keeping console attached between calling this class methods;
 	};
 
-}}}}
+}}}
 
 #endif/*_TEST_CASE_$W$_CON_H_INCLUDED*/

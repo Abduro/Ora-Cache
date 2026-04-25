@@ -1,13 +1,13 @@
-#ifndef _TEST_CASE_$W$_TPL_CRT_H_INCLUDED
-#define _TEST_CASE_$W$_TPL_CRT_H_INCLUDED
+#ifndef _TEST_CASE_$W$_TPL_H_INCLUDED
+#define _TEST_CASE_$W$_TPL_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 03-Apr-2026 at 10:23:26.387, UTC+4, Batumi, Friday;
-	This is Ebo Pack OpenGL tutorials' thread pool event wrapper interface declaration file for using in test cases adapters;
+	This is Ebo Pack thread pool wrapper interface declaration file for using in test cases adapters;
 */
 #include "test_case_$w$.event.h"
 #include "runner.tpl.h"
 
-namespace ebo { namespace boo { namespace test { namespace threads {
+namespace test { namespace win_api { namespace threads {
 
 	using CTplRunner = shared::runnable::threads::pool::CTplRunner;
 
@@ -44,6 +44,6 @@ namespace ebo { namespace boo { namespace test { namespace threads {
 		CTstTplExt   m_run_ext;
 	};
 
-}}}}
+}}}
 
-#endif/*_TEST_CASE_$W$_TPL_CRT_H_INCLUDED*/
+#endif/*_TEST_CASE_$W$_TPL_H_INCLUDED*/

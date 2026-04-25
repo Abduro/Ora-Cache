@@ -4,6 +4,7 @@
 */
 #include "test_case_$w$.con.pers.h"
 
+using namespace test::win_api;
 using namespace test::win_api::console;
 
 #pragma region cls::CTstPers{}

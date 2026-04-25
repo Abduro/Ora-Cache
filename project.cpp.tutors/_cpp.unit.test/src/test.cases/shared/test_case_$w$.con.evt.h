@@ -2,12 +2,12 @@
 #define _TEST_CASE_$W$_CON_EVT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Mar-2026 at 08:07:22.495, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' trace console input event wrapper interface declaration file for using in test cases adapters;
+	This is Ebo Pack trace console input event wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$w$.defs.h"
+#include "test_adap_$w$.defs.h"
 #include "console.event.h"
 
-namespace ebo { namespace boo { namespace test { namespace con { namespace events {
+namespace test { namespace win_api { namespace console { namespace events {
 	/* query: abbreviation for router; (Google AI)
 	   common abbreviations for a router include: RTR (frequently used in technical documentation) or simply RT;
 	*/
@@ -44,6 +44,6 @@ namespace ebo { namespace boo { namespace test { namespace con { namespace event
 //		t_rtr_input  m_rtr_input; there is a singleton of this router because only one console can be associated with the process;
 	};
 
-}}}}}
+}}}}
 
 #endif/*_TEST_CASE_$W$_CON_EVT_H_INCLUDED*/

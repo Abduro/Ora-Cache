@@ -209,14 +209,13 @@ err_code camera::CWnd::PostCreate (void) {
 	}
 	else { __trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;")); return TBase::Error(); }
 
-#if (0)	
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined yet, the shape must be set first;
 	if (__failed(renderer.Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
 #endif
 	if (__failed(renderer.View().Grid().Create()))
-	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
-
+	    __trace_err_ex_2(renderer.View().Grid().Error());
+#if (0)
 	renderer.Is_allowed(true);     // allows the draw operation of the renderer;
 
 #define _test_case_lvl -1

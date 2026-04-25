@@ -1,11 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Mar-2026 at 09:30:40.660, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' trace console mode unit test adapter interface implementation file; 
+	This is Ebo Pack trace console mode unit test adapter interface implementation file; 
 */
-#include "ebo_test_$w$.con.mode.h"
+#include "test_adap_$w$.con.mode.h"
 
-using namespace ebo::boo::test::con;
-using namespace ebo::boo::test::con::modes;
+using namespace test::win_api::console;
+using namespace test::win_api::console::modes;
 
 #pragma region cls::c_input{}
 

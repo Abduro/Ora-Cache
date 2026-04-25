@@ -4,9 +4,10 @@
 */
 #include "test_case_$w$.menu.h"
 
-using namespace ebo::boo::test::win_api::menu;
+using namespace test::win_api;
+using namespace test::win_api::menu;
 
-namespace ebo { namespace boo { namespace test { namespace _impl {
+namespace test { namespace win_api { namespace _impl {
 uint32_t mnu_itm_id = 0;
 uint32_t mnu_popup_no = 0;
 
@@ -15,13 +16,13 @@ _pc_sz _get_popup_cap (void) {
 	return (_pc_sz)cs_out;
 }
 
-}}}} using namespace ebo::boo::test::_impl;
+}}} using namespace test::win_api::_impl;
 
-#pragma region cls::CTMenu{}
+#pragma region cls::CTstMenu{}
 
-CTMenu::CTMenu (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CTstMenu::CTstMenu (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-err_code CTMenu::Create (_pc_sz _p_caption) {
+err_code CTstMenu::Create (_pc_sz _p_caption) {
 	_p_caption;
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -41,14 +42,14 @@ err_code CTMenu::Create (_pc_sz _p_caption) {
 	return this->Error();
 }
 
-err_code CTMenu::Delete (void) {
+err_code CTstMenu::Delete (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	return this->Error();
 }
 
-err_code CTMenu::Check  (const uint32_t _u_cmd_id, const bool _b_on) {
+err_code CTstMenu::Check  (const uint32_t _u_cmd_id, const bool _b_on) {
 	_u_cmd_id; _b_on;
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -65,7 +66,7 @@ err_code CTMenu::Check  (const uint32_t _u_cmd_id, const bool _b_on) {
 
 	return this->Error();
 }
-err_code CTMenu::Enable (const uint32_t _u_cmd_id, const bool _b_on) {
+err_code CTstMenu::Enable (const uint32_t _u_cmd_id, const bool _b_on) {
 	_u_cmd_id; _b_on;
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -82,31 +83,31 @@ err_code CTMenu::Enable (const uint32_t _u_cmd_id, const bool _b_on) {
 	return this->Error();
 }
 
-TError& CTMenu::Error (void) const { return this->m_error; }
-uint32_t CTMenu::Get_last_cmd (void) const {
+TError& CTstMenu::Error (void) const { return this->m_error; }
+uint32_t CTstMenu::Get_last_cmd (void) const {
 	return mnu_itm_id;
 }
 
 const
-CMenu& CTMenu::operator ()(void) const { return this->m_menu; }
-CMenu& CTMenu::operator ()(void)       { return this->m_menu; }
+CMenu& CTstMenu::operator ()(void) const { return this->m_menu; }
+CMenu& CTstMenu::operator ()(void)       { return this->m_menu; }
 
 #pragma endregion
-#pragma region cls::CTMenus{}
+#pragma region cls::CTstMenus{}
 
-CTMenus::CTMenus (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CTstMenus::CTstMenus (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-err_code CTMenus::Find (const uint32_t _cmd_id, HMENU& _h_result) {
+err_code CTstMenus::Find (const uint32_t _cmd_id, HMENU& _h_result) {
 	_cmd_id; _h_result;
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CTMenu menu;
+	CTstMenu menu;
 	if (__failed(menu.Create(_T("Popup menu")))) { return this->m_error = menu.Error(); /*_out() += this->Error(); return this->Error();*/ }
 	else return this->Find(menu()(), _cmd_id, _h_result);
 }
 
-err_code CTMenus::Find (const HMENU _h_where, const uint32_t _cmd_id, HMENU& _h_result) {
+err_code CTstMenus::Find (const HMENU _h_where, const uint32_t _cmd_id, HMENU& _h_result) {
 	_h_where; _cmd_id; _h_result;
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -121,14 +122,14 @@ err_code CTMenus::Find (const HMENU _h_where, const uint32_t _cmd_id, HMENU& _h_
 	return this->Error();
 }
 
-TError&  CTMenus::Error (void) const { return this->m_error; }
+TError&  CTstMenus::Error (void) const { return this->m_error; }
 
-err_code CTMenus::Get_info (void) {
+err_code CTstMenus::Get_info (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out() += _T("Creating the popup menu...");
 
-	CTMenu menu, sub_menu;
+	CTstMenu menu, sub_menu;
 
 	if (__failed(menu.Create(_T("Popup menu #0")))) return this->m_error = menu.Error();
 	if (__failed(sub_menu.Create(_T("Sub-menu #0-0")))) return this->m_error = menu.Error();

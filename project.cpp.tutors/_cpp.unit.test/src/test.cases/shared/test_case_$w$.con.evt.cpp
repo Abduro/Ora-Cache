@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Mar-2026 at 08:09:11.484, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' trace console input event wrapper interface implementation file for using in test cases adapters;
+	This is Ebo Pack trace console input event wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$w$.con.evt.h"
 
-using namespace ebo::boo::test::con::events;
+using namespace test::win_api::console::events;
 
 #pragma region cls::c_rtr_ctrl{}
 

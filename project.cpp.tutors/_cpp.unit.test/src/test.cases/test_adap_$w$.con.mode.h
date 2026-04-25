@@ -1,12 +1,12 @@
-#ifndef _EBO_TEST_$W$_CON_MODE_H_INCLUDED
-#define _EBO_TEST_$W$_CON_MODE_H_INCLUDED
+#ifndef _TEST_ADAP_$W$_CON_MODE_H_INCLUDED
+#define _TEST_ADAP_$W$_CON_MODE_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Mar-2026 at 09:30:24.208, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL tutorials' trace console mode unit test adapter interface declaration file; 
+	This is Ebo Pack trace console mode unit test adapter interface declaration file; 
 */
 #include "test_case_$w$.con.mode.h"
 
-namespace ebo { namespace boo { namespace test { namespace con {
+namespace test { namespace win_api { namespace console {
 namespace modes {
 	__class (c_input) {
 	public:
@@ -32,6 +32,6 @@ namespace modes {
 		c_output& operator = (const c_output&) = delete; c_output& operator = (c_output&&) = delete;
 	};
 }
-}}}}
+}}}
 
-#endif/*_EBO_TEST_$W$_CON_MODE_H_INCLUDED*/
+#endif/*_TEST_ADAP_$W$_CON_MODE_H_INCLUDED*/
