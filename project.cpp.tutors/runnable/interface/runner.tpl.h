@@ -56,7 +56,7 @@ namespace shared { namespace runnable { namespace threads { namespace pool { usi
 		err_code  Stop  (void); // in order to stop the work item thread procedure execution there is only way: to use event and interrupt flag;
 
 	protected:
-		virtual void Run_Func (void); // this is default implementation of the thread function;
+		virtual void Run (void); // this is default implementation of the thread function;
 
 	private:
 		CTplRunner& operator = (const CTplRunner&) = delete; CTplRunner& operator = (CTplRunner&&) = delete;

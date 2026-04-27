@@ -22,7 +22,7 @@ namespace test { namespace win_api { namespace threads {
 
 	private:
 		CTstTplExt& operator = (const CTstTplExt&) = delete; CTstTplExt& operator = (CTstTplExt&&) = delete;
-		void Run_Func (void) override final;
+		void Run (void) override final;
 	};
 
 	class CTstTplRunner {

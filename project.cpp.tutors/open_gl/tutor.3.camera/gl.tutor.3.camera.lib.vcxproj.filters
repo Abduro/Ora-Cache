@@ -4,6 +4,9 @@
     <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0060}</UniqueIdentifier></Filter>
     <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0061}</UniqueIdentifier></Filter>
     <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0062}</UniqueIdentifier></Filter>
+
+    <Filter Include="model"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0063}</UniqueIdentifier></Filter>
+    <Filter Include="view"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000C0064}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -12,6 +15,10 @@
   <ItemGroup>
     <ClCompile Include="ctx_menu_wrapper.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="ctx_menu_wrapper.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="model.base.cpp"><Filter>model</Filter></ClCompile>
+    <ClInclude Include="model.base.h"><Filter>model</Filter></ClInclude>
+    <ClCompile Include="view.base.cpp"><Filter>view</Filter></ClCompile>
+    <ClInclude Include="view.base.h"><Filter>view</Filter></ClInclude>
     <ClCompile Include="open_gl_tutor.3.wnd.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="open_gl_tutor.3.wnd.h"><Filter>interface</Filter></ClInclude>
   </ItemGroup>

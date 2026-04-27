@@ -51,10 +51,6 @@ t_size_u& CViewPort::Get (void) {
 	return this->m_size;
 }
 
-const
-view::CGrid& CViewPort::Grid (void) const { return this->m_grid; }
-view::CGrid& CViewPort::Grid (void)       { return this->m_grid; }
-
 err_code CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
 	_u_width; _u_height;
 	this->m_error << __METHOD__<<__s_ok;
@@ -109,11 +105,11 @@ err_code CViewPort::ToPos (const t_size_u& _u_size, const uint32_t _in_x, const 
 
 err_code CViewPort::Update (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
+#if (0)
 	if (__failed(this->Grid().Update(this->m_size))) {
 		this->m_error = this->Grid().Error();
 	}
-
+#endif
 	return this->Error();
 }
 

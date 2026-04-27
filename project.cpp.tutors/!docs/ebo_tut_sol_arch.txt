@@ -24,6 +24,7 @@ the tree of solution nodes:
 	ebo_test_$dat$.prov : {00000C13-EEEE-BBBB-6667-C00000060009} << unit test cases' project of data providers;
 	ebo_test_$win$.api  : {00000C13-EEEE-BBBB-6667-C00000060003} << unit test cases' project for WinApi related projects;
 
+   drawable_v15: {00000C13-EEEE-BBBB-6667-00000000000A} << this is the shared project drawable project;
    runnable_v15: {00000C13-EEEE-BBBB-6667-000000000007} << this is the shared project for running a task in background mode;
 
 [tutors]  : {00000C13-EEEE-BBBB-6667-200000000000} << the sub-root of the tutorial projects;

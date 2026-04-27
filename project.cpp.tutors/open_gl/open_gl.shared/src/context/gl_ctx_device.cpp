@@ -109,6 +109,13 @@ err_code CDevice::Create (void) {
 	return CBase::Error();
 }
 #endif
+
+_pc_sz   CDevice::Class (void) {
+	static CString cs_cls;
+	if (cs_cls.IsEmpty()) cs_cls = __CLASS__;
+	return (_pc_sz) cs_cls;
+}
+
 err_code CDevice::Create (const HWND _h_target) {
 	_h_target;
 	CBase::m_error <<__METHOD__<<__s_ok;
@@ -116,7 +123,7 @@ err_code CDevice::Create (const HWND _h_target) {
 	if (CBase::Target().Is_valid())
 		return CBase::m_error = CBase::Target().Error();
 
-	if (nullptr == CBase::Target().Source()) // the source class name can be set outside of this procedure;
+	if (CBase::Target().Source().IsEmpty()) // the source class name can be set outside of this procedure;
 		CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
 
 	if (__failed(CBase::Set(_h_target))) {

@@ -44,8 +44,10 @@ camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("cam
 #endif
 }
 camera::CWnd::~CWnd (void) { // parent class object will destroy window created automatically on its (parent) destruction;
+#if (0)
 	if (::Get_renderer().Scene().Ctx().Device().Is_valid())
 	    ::Get_renderer().Scene().Ctx().Device().Destroy();
+#endif
 }
 
 err_code camera::CWnd::Create (const HWND _h_parent, const t_rect& _rc_wnd_pos, const bool _b_visible) {
@@ -90,6 +92,8 @@ err_code camera::CWnd::Destroy (void) {
 	if (__failed(::Get_mouse() >> this)) { __trace_err_ex_0(TBase::m_error = ::Get_mouse().Error()); }
 	if (__failed(::Get_Shortcut().Destroy())) { __trace_err_ex_0(TBase::m_error = ::Get_Shortcut().Error()); }
 
+	if (__failed(this->View().Destroy())) { __trace_err_ex_0(TBase::m_error = this->View().Error()); }
+#if (0)
 	TRenderer& renderer = ::Get_renderer();
 
 	renderer.Is_allowed(false);     // stops draw operation of the renderer;
@@ -97,6 +101,7 @@ err_code camera::CWnd::Destroy (void) {
 	    __trace_err_2(_T("%s\n"), (_pc_sz) renderer.View().Grid().Error().Print(TError::e_print::e_req));
 	renderer.Scene().Destroy();     // the error output to the trace is made by the method being called;
 	renderer.Scene().Ctx().Clear(); // it is required to release the GDI objects being retrieved per each window handle;
+#endif
 	return __s_ok;
 }
 
@@ -181,40 +186,26 @@ err_code camera::CWnd::PostCreate (void) {
 		::__trace_err_ex_2(TBase::m_error = fk_ctx.Error()); return TBase::Error();
 	}
 #endif
-	TRenderer& renderer = Get_renderer();
-	CDevice& device = renderer.Scene().Ctx().Device();
-
-#if (1) // it is not reqiured because fake device format is already found;
-	if (__failed(device.Create(*this))) { // tries to find a required pixel format and set it to the device context;
-		__trace_err_ex_2(TBase::m_error = device.Error()); return TBase::Error(); // further steps are useless;
-	}
-#else
-	// (2) sets renderer device context format which is received from fake window;
-	device.Target() << *this;
-	device.Format() << fk_ctx().Format().Get();
-#endif
-	// (3) creates OpenGL draw rendering context;
-	CGraphics& graphics = renderer.Scene().Ctx().Graphics();
-
-	graphics.Target() << *this;
-	graphics.Target().Source(TString().Format(_T("camera::%s"),(_pc_sz)__CLASS__));
-
-	if (__failed(graphics.Create(device))) {
-		__trace_err_ex_2(TBase::m_error = graphics.Error()); return TBase::Error(); // further steps are useless;
-	}
+	if (__failed(this->m_view.Create(*this))) {
+		__trace_err_ex_2(TBase::m_error = this->m_view.Error()); return TBase::Error();
+	} else {}
+#if (0)
 	// (4) checks for sharer source compiler support;
 	shader::CCompiler cmpl;
 	if (false == cmpl.Is_supported()) {
 		__trace_err_ex_2(cmpl.Error());  // it looks like the basic version of OpenGL installed, possibly remote desktop;
 	}
 	else { __trace_warn_2(_T("%s\n"), _T("Shader compiler is supported;")); return TBase::Error(); }
-
+#endif
 #if (0) // the scene preparation cannot be called at this point, because there is no vertex array is defined yet, the shape must be set first;
+	TRenderer& renderer = Get_renderer();
 	if (__failed(renderer.Scene().Prepare()))
 		return TBase::m_error = this->Renderer().Scene().Error();
 #endif
+#if (0)
 	if (__failed(renderer.View().Grid().Create()))
 	    __trace_err_ex_2(renderer.View().Grid().Error());
+#endif
 #if (0)
 	renderer.Is_allowed(true);     // allows the draw operation of the renderer;
 
@@ -225,5 +216,11 @@ err_code camera::CWnd::PostCreate (void) {
 #endif
 	return TBase::Error();
 }
+const
+CModel& camera::CWnd::Model (void) const { return this->m_model; }
+CModel& camera::CWnd::Model (void)       { return this->m_model; }
+const
+CView& camera::CWnd::View (void) const { return this->m_view; }
+CView& camera::CWnd::View (void)       { return this->m_view; }
 
 #pragma endregion

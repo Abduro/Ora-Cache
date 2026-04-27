@@ -21,11 +21,11 @@ namespace shared { namespace runnable {
 	using d_word = dword ;  // ToDo: typedefs and usings must be made coincident with shared::types;
 
 	struct c_unknown {
-	 c_unknown (void) = default; c_unknown (const c_unknown&) = default; c_unknown (c_unknown&&) = default;
-	~c_unknown (void) = default;
-	 c_unknown& operator = (const c_unknown&) = default;
-	 c_unknown& operator = (c_unknown&&) = default;
-	 virtual void operator ()(c_unknown* p_this) { delete p_this; p_this = 0; } 
+		   c_unknown (void) = default; c_unknown (const c_unknown&) = default; c_unknown (c_unknown&&) = default;
+		  ~c_unknown (void) = default;
+		   c_unknown& operator = (const c_unknown&) = default;
+		   c_unknown& operator = (c_unknown&&) = default;
+		   virtual void operator ()(c_unknown* p_this) { delete p_this; p_this = 0; } 
 	};
 	typedef ::std::unique_ptr<c_unknown, c_unknown> unk_ptr_t;
 }}

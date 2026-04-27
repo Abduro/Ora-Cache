@@ -23,6 +23,9 @@ namespace ex_ui { namespace draw { namespace open_gl {
 	public:
 		 CGraphics (void);  CGraphics (const CGraphics&) = delete; CGraphics (CGraphics&&) = delete;
 		~CGraphics (void);
+
+		static _pc_sz Class (void);   // return this class name for debug purposes;
+
 		/* for creating draw rendering/graphics context the device context is required that can be created by:
 		(1) message-only aka fake window  for initializing fake device context in order to receive the required/desired pixel format descriptor;
 		(2) the same as above, but the device context is gotten from window of draw surface, not fake one;

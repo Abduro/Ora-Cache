@@ -23,6 +23,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context { using
 		_pc_sz Source (void) const; // returns the window class name that is creator of the device context, i.e. the source;
 		bool   Source (_pc_sz _p_cls_name); // sets the source class name; returns 'true' in case of source class name change;
 
+		CString& Source (void);
 		CTarget& operator <<(const HWND);   // invokes this::Set(...); if the device context is already obtained, it will be released first;
 
 		operator const HWND (void) const;

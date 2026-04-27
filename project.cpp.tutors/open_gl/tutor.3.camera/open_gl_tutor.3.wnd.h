@@ -6,9 +6,11 @@
 	-----------------------------------------------------------------------------
 	Adopted to OpenGL tutorials' camera project on 27-Nov-2025 at 00:36:54.670, UTC+4, Batumi, Thursday;
 */
-#include "gl_context.h"
 #include "shared.wnd.base.h" 
 #include "ctx_menu_wrapper.h"
+
+#include "model.base.h"
+#include "view.base.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
@@ -18,9 +20,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 
 //	using CFakeWnd = ex_ui::popup::CMsgWnd;
 	using CCtxMenu = shared::gui::CCtxMenu;
+	using CModel = ex_ui::draw::open_gl::models::CBase;
+	using CView = ex_ui::draw::open_gl::views::CBase;
 
 	class CWnd : public ex_ui::popup::CWndBase, public messages::IMouse_Handler { typedef ex_ui::popup::CWndBase TBase;
-	using CDevice = context::CDevice;
 	public:
 		 CWnd (void);
 		~CWnd (void);
@@ -32,9 +35,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace camera {
 		err_code Create (const HWND _h_parent, const t_rect&, const bool _b_visible = true);
 		err_code Destroy (void);
 		err_code PostCreate (void);
+		const
+		CModel&  Model (void) const;
+		CModel&  Model (void) ;
+		const
+		CView&   View (void) const;
+		CView&   View (void) ;
 
 	protected:
 	//	CFakeWnd  m_fak_wnd; // message-only window (aka fake) is created in its constructor;
+		CModel m_model;
+		CView  m_view;
 	};
 
 }}}}

@@ -66,7 +66,7 @@ menus::CCell::CCell (void) : TBase() { TBase::m_error >> __CLASS__; }
 err_code menus::CCell::ApplyTo (CCtxMenu& _ctx_mnu) {
 	_ctx_mnu;
 	TBase::m_error >>__CLASS__<<__METHOD__<<__s_ok;
-
+#if (0)
 	views::CGrid& grid = ::Get_renderer().View().Grid();
 	const t_size_u& cell_size = grid.Cell().Get();
 
@@ -79,7 +79,7 @@ err_code menus::CCell::ApplyTo (CCtxMenu& _ctx_mnu) {
 	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_050, IDR_TUTOR_3_GRD_CELL_W_050 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
 	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_075, IDR_TUTOR_3_GRD_CELL_W_075 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
 	CState::Check(_ctx_mnu.Handle(), IDR_TUTOR_3_GRD_CELL_W_100, IDR_TUTOR_3_GRD_CELL_W_100 == menus::CCell::WidthToCmd (cell_size.cx), TBase::m_error);
-
+#endif
 	return TBase::Error();
 }
 
@@ -202,19 +202,20 @@ bool menus::CGrid::On_command (const uint32_t _u_cmd_id) {
 	default:
 		return this->Error();
 	}
-#else
+#elif (false == true)
 	TRenderer& renderer = ::Get_renderer();
 	CViewPort& viewport = renderer.View();
+
 	views::CGrid&  grid = viewport.Grid();
 
 	if (0 != u_height) { grid.Cell().H(u_height); b_handled = true; }
 	if (0 != u_width ) { grid.Cell().W(u_width);  b_handled = true; }
-#endif
+
 	if (b_handled)
 	if (__failed(grid.Update(viewport.Get()))) { // re-calculates the grid lines' layout;
 		return TBase::m_error = grid.Error();
 	}
-
+#endif
 	return b_handled;
 }
 

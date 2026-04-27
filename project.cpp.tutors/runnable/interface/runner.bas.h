@@ -26,7 +26,7 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 			 eError     = 0x2, // *runner::Stop()/Start();
 			 eWorking   = 0x4, // *runner::Start();
 		 };
-		 CState (void); CState (const CState&) = delete; CState (CState&&) = delete;
+		 CState (void); CState (const CState&); CState (CState&&) = delete;
 		~CState (void);
 
 		TError&  Error (void) const;
@@ -63,7 +63,7 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 		CState& operator = (const CState&) = delete; CState& operator = (CState&&) = delete;
 		// https://stackoverflow.com/questions/2484980/why-is-volatile-not-considered-useful-in-multithreaded-c-or-c-programming ;
 		mutable CError  m_error;
-		mutable CLocker m_lock ;
+		mutable CLocker m_lock ;  // this field is copied neither copy constructor nor copy assignment operator;
 		CEvent  m_event;
 		e_state m_state;
 		
@@ -71,11 +71,14 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 
 	class CThreadBase {
 	public:
-		 CThreadBase (void); CThreadBase (const CThreadBase&) = delete; CThreadBase (CThreadBase&&) = delete;
+		 CThreadBase (void); CThreadBase (const CThreadBase&); CThreadBase (CThreadBase&&) = delete;
 		~CThreadBase (void);
 
 		TError& Error (void) const;
 		bool Is_valid (void) const; // checks error objects: its own and state object;
+
+		uint32_t Id (void) const;
+		bool     Id (const uint32_t);
 
 		const
 		CState& State (void) const;
@@ -88,10 +91,11 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 		static _pc_sz Cls_name (void);
 
 	protected:
-		CThreadBase& operator = (const CThreadBase&) = delete; CThreadBase& operator = (CThreadBase&&) = delete;
+		CThreadBase& operator = (const CThreadBase&); CThreadBase& operator = (CThreadBase&&) = delete;
 		mutable
-		CError  m_error;
-		CState  m_state;
+		CError   m_error;
+		CState   m_state;
+		uint32_t m_id;
 	};
 }}}
 

@@ -15,7 +15,7 @@ CTstTplExt::~CTstTplExt (void) {}
 CTstTplExt::operator const CTplRunner& (void) const { return (CTplRunner&)*this; }
 CTstTplExt::operator       CTplRunner& (void)       { return (CTplRunner&)*this; }
 
-void CTstTplExt::Run_Func (void) {
+void CTstTplExt::Run (void) {
 	_out() += TString().Format(_T("[impt] cls::[%s].%s(): entered;"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	const dword u_slice = 100;     // this is the counter/slice of time to increment the elapsed time;

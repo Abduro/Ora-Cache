@@ -66,6 +66,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 		 CDevice (void); CDevice (const HWND _h_target); // the mode of the HDC will be set automatically to advanced mode if input window handle is valid;
 		~CDevice (void);
 
+		static _pc_sz Class (void);   // return this class name for debug purposes;
+
 		err_code Create (const HWND _h_target); // creates the rendering context that is compatible with input window device context;
 		const
 		CFormat& Format (void) const; // gets the reference to the pixel format object; (ro)

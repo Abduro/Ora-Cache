@@ -72,7 +72,7 @@ err_code CTplRunner::Start (void) {
 
 	(*this)().Event() << false; // sets the event to nonsignal state before running a worker thread;
 
-	if (false == !!CThreadPool::QueueUserWorkItem(&CTplRunner::Run_Func, this)) {
+	if (false == !!CThreadPool::QueueUserWorkItem(&CTplRunner::Run, this)) {
 		TBase::m_error.Last(); (*this)() << TBase::Error(); // updates the current state value;
 	}
 	else {
@@ -93,7 +93,7 @@ err_code CTplRunner::Stop (void) {
 	return TBase::Error();
 }
 
-void CTplRunner::Run_Func (void) {
+void CTplRunner::Run (void) {
 
 	CDelay delay(10, 100);
 

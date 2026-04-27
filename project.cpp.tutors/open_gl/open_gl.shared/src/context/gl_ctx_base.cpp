@@ -87,7 +87,7 @@ err_code  CTarget::Set (const HWND _h_wnd) {
 	this->m_dc_src = ::GetDC(_h_wnd);
 //	__empty_ln(); // https://www.allacronyms.com/handle/abbreviated ;
 	__trace_info_3(
-		_T("#ctx_dev : {handle=%s;src=%s}\n"), TString()._addr_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : this->Source())
+		_T("#ctx_dev : {handle=%s;src=%s}\n"), TString()._addr_of(this->m_dc_src), TString().Format(_T("%s"), this->m_cls_src.IsEmpty() ? _T("#unset") : (_pc_sz)this->Source())
 	);
 
 	return this->Error();
@@ -105,6 +105,7 @@ bool   CTarget::Source (_pc_sz _p_cls_name) {
 	return b_changed;
 }
 
+CString&  CTarget::Source (void) { return this->m_cls_src; }
 CTarget&  CTarget::operator <<(const HWND _h_wnd) {
 	_h_wnd;
 	if (this->Is_valid() && __failed(this->Free())) { // releasing the source device context handle is failed;

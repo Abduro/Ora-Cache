@@ -88,29 +88,33 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
+    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_64>
+    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_86>
+    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
+    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot_86>
     <LibName>gl.tutor.3.camera</LibName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
     <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
     <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
     <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
     <TargetName>$(LibName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -204,8 +208,12 @@
     </ClCompile>
     <ClInclude Include="ctx_menu_wrapper.h" />
     <ClCompile Include="ctx_menu_wrapper.cpp" />
+    <ClInclude Include="model.base.h" />
+    <ClCompile Include="model.base.cpp" />
     <ClInclude Include="open_gl_tutor.3.wnd.h" />
     <ClCompile Include="open_gl_tutor.3.wnd.cpp" />
+    <ClInclude Include="view.base.h" />
+    <ClCompile Include="view.base.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

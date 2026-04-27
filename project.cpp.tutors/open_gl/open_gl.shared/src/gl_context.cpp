@@ -11,12 +11,7 @@
 using namespace ex_ui::draw::open_gl;
 using namespace ex_ui::draw::open_gl::context;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
-
-
-}}}}
-
-using namespace ex_ui::draw::open_gl::_impl;
+namespace ex_ui { namespace draw { namespace open_gl { namespace _impl { }}}} using namespace ex_ui::draw::open_gl::_impl;
 
 #pragma region cls::CGraphics{}
 
@@ -24,6 +19,12 @@ using namespace ex_ui::draw::open_gl::format;
 
 CGraphics:: CGraphics (void) : TBase() { TBase::m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("__e_not_inited: graphics context is not created"); }
 CGraphics::~CGraphics (void) {}
+
+_pc_sz   CGraphics::Class (void) {
+	static CString cs_cls;
+	if (cs_cls.IsEmpty()) cs_cls = __CLASS__;
+	return (_pc_sz) cs_cls;
+}
 
 err_code CGraphics::Create (void) {
 	TBase::m_error <<__METHOD__<< __s_ok;

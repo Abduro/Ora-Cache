@@ -54,7 +54,6 @@ bool CState::Is_valid (void) const {
 		this->m_error = this->Event().Error();
 
 	return false == this->Error();
-
 }
 
 CLocker& CState::Locker (void) { return this->m_lock; }
@@ -72,7 +71,9 @@ CState&  CState::operator >>(e_state& _out) const { _out = this->Get(); return *
 #pragma endregion
 #pragma region cls::CThreadBase{}
 
-CThreadBase:: CThreadBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+static uint32_t g_thread_id = 0;
+
+CThreadBase:: CThreadBase (void) : m_id(++g_thread_id) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CThreadBase::~CThreadBase (void) {}
 
 TError& CThreadBase::Error (void) const { return this->m_error; }
@@ -82,6 +83,11 @@ bool CThreadBase::Is_valid (void) const {
 		return true != (this->m_error = (*this)().Error()); // the error is set to error state that means it returns 'true' != 'true' >> false;
 	else
 		return false == this->Error(); // if this error is *not* set to error state, it returns 'false' == 'false' >> result 'true';
+}
+
+uint32_t CThreadBase::Id (void) const { return this->m_id; }
+bool     CThreadBase::Id (const uint32_t _u_value) {
+	const bool b_changed = this->Id() != _u_value; if (b_changed) this->m_id = _u_value; return b_changed;
 }
 
 const
