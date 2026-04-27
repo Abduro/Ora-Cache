@@ -51,7 +51,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CError m_error;
 	};
 
-namespace view {
+namespace views {
 	// this grid classes uses the program, vertex array object and vertex array data which are managed by draw scene of the renderer object;
 	class CGrid : private no_copy {
 	public:
@@ -114,8 +114,8 @@ namespace view {
 		CCell  m_cell ;
 		CError m_error; CClr_flt m_color; CPersistent m_pers;
 	};
-}
+}}}}
 
-}}}
+typedef ex_ui::draw::open_gl::views::CGrid TGrid; TGrid& Get_Grid (void); // the cache for the grid object, usually it is used by menu command handler;
 
 #endif/*_GL_DRAWABLE_H_INCLUDED*/

@@ -15,7 +15,7 @@
 using namespace ex_ui::draw::gui;
 
 namespace renderer { using CCfg = ex_ui::draw::open_gl::render::CCfg; }
-namespace views { using CGrid = ex_ui::draw::open_gl::view::CGrid; }
+namespace views { using CGrid = ex_ui::draw::open_gl::views::CGrid; }
 
 using CState = shared::gui::menus::CState;
 
@@ -202,11 +202,8 @@ bool menus::CGrid::On_command (const uint32_t _u_cmd_id) {
 	default:
 		return this->Error();
 	}
-#elif (false == true)
-	TRenderer& renderer = ::Get_renderer();
-	CViewPort& viewport = renderer.View();
-
-	views::CGrid&  grid = viewport.Grid();
+#elif (false == true) // menu adapter or menu item(s) dynamic property setter should not provide command handlers, otherwise not enough information of command target(s);
+	TGrid& grid = ::Get_Grid();
 
 	if (0 != u_height) { grid.Cell().H(u_height); b_handled = true; }
 	if (0 != u_width ) { grid.Cell().W(u_width);  b_handled = true; }

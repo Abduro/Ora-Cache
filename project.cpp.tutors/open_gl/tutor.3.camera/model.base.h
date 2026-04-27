@@ -12,7 +12,7 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace models { using namespace shared::defs;
 
-	using CGrid = ex_ui::draw::open_gl::view::CGrid;
+	using CGrid = ex_ui::draw::open_gl::views::CGrid;
 	using CViewPort = ex_ui::draw::open_gl::CViewPort;
 
 	class CBase {

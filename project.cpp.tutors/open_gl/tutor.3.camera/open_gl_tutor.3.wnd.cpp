@@ -92,7 +92,7 @@ err_code camera::CWnd::Destroy (void) {
 	if (__failed(::Get_mouse() >> this)) { __trace_err_ex_0(TBase::m_error = ::Get_mouse().Error()); }
 	if (__failed(::Get_Shortcut().Destroy())) { __trace_err_ex_0(TBase::m_error = ::Get_Shortcut().Error()); }
 
-	if (__failed(this->View().Destroy())) { __trace_err_ex_0(TBase::m_error = this->View().Error()); }
+	if (__failed(this->m_drafter.OnDestroy())) { __trace_err_ex_0(TBase::m_error = this->m_drafter.Error()); }
 #if (0)
 	TRenderer& renderer = ::Get_renderer();
 
@@ -186,8 +186,8 @@ err_code camera::CWnd::PostCreate (void) {
 		::__trace_err_ex_2(TBase::m_error = fk_ctx.Error()); return TBase::Error();
 	}
 #endif
-	if (__failed(this->m_view.Create(*this))) {
-		__trace_err_ex_2(TBase::m_error = this->m_view.Error()); return TBase::Error();
+	if (__failed(this->m_drafter.OnCreate(*this))) {
+		__trace_err_ex_2(TBase::m_error = this->m_drafter.View().Error()); return TBase::Error();
 	} else {}
 #if (0)
 	// (4) checks for sharer source compiler support;
@@ -216,11 +216,5 @@ err_code camera::CWnd::PostCreate (void) {
 #endif
 	return TBase::Error();
 }
-const
-CModel& camera::CWnd::Model (void) const { return this->m_model; }
-CModel& camera::CWnd::Model (void)       { return this->m_model; }
-const
-CView& camera::CWnd::View (void) const { return this->m_view; }
-CView& camera::CWnd::View (void)       { return this->m_view; }
 
 #pragma endregion

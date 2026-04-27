@@ -65,22 +65,18 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\shared.all.inc.props" />
-    <Import Project="gl.tutor.3.camera.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -206,6 +202,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="drawable.defs.h" />
+    <ClCompile Include="drawable.defs.cpp" />
+    <ClInclude Include="drawable.drafter.h" />
+    <ClCompile Include="drawable.drafter.cpp" />
     <ClInclude Include="ctx_menu_wrapper.h" />
     <ClCompile Include="ctx_menu_wrapper.cpp" />
     <ClInclude Include="model.base.h" />
@@ -230,6 +230,9 @@
     </ProjectReference>
     <ProjectReference Include="$(Shared_GL)gl.shared_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Shared_Run)runnable_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000007}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
