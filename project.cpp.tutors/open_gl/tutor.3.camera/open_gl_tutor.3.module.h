@@ -27,6 +27,6 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace camera {
 
 #pragma comment(lib, "gl.shared_v15.lib")     // OpenGL tutorials shared lib; it is required for usage of camera API;
 #pragma comment(lib, "gl.procs_v15.lib" )     // OpenGL driver functions' loader;
-#pragma comment(lib, "gl.tutor.3.camera.lib") // this is this tutorial project static library;
+#pragma comment(lib, "gl.tutor.3.camera.lib") // this tutorial project static library;
 
 #endif/*_OPEN_GL_TUTOR_3_MODULE_H_INCLUDED*/

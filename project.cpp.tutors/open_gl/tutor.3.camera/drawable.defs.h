@@ -5,8 +5,12 @@
 	This is Ebo Pack drawable object common declaration file;
 */
 #include "shared.defs.h"
+#include "runner.tpl.h"
 
 namespace shared { namespace drawable { using namespace shared::defs;
+
+	using CDelay = shared::runnable::CDelay;
+	using CTplRunner = shared::runnable::threads::pool::CTplRunner;
 }}
 
 #endif/*__DRAWABLE_DEFS_H_INCLUDED*/

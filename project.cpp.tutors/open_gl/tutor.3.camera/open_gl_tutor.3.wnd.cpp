@@ -92,7 +92,10 @@ err_code camera::CWnd::Destroy (void) {
 	if (__failed(::Get_mouse() >> this)) { __trace_err_ex_0(TBase::m_error = ::Get_mouse().Error()); }
 	if (__failed(::Get_Shortcut().Destroy())) { __trace_err_ex_0(TBase::m_error = ::Get_Shortcut().Error()); }
 
+	if (this->m_drafter().Is_running())
+	if (__failed(this->m_drafter.Stop())) { __trace_err_ex_0(TBase::m_error = this->m_drafter.Error()); }
 	if (__failed(this->m_drafter.OnDestroy())) { __trace_err_ex_0(TBase::m_error = this->m_drafter.Error()); }
+
 #if (0)
 	TRenderer& renderer = ::Get_renderer();
 
@@ -187,8 +190,10 @@ err_code camera::CWnd::PostCreate (void) {
 	}
 #endif
 	if (__failed(this->m_drafter.OnCreate(*this))) {
-		__trace_err_ex_2(TBase::m_error = this->m_drafter.View().Error()); return TBase::Error();
-	} else {}
+		__trace_err_ex_2(TBase::m_error = this->m_drafter.View().Error()); // return TBase::Error();
+	} else if (__failed(this->m_drafter.Start())) {
+		__trace_err_ex_2(TBase::m_error = this->m_drafter.View().Error());
+	}
 #if (0)
 	// (4) checks for sharer source compiler support;
 	shader::CCompiler cmpl;

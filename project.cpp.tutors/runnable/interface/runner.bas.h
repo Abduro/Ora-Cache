@@ -76,9 +76,11 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 
 		TError& Error (void) const;
 		bool Is_valid (void) const; // checks error objects: its own and state object;
-
-		uint32_t Id (void) const;
-		bool     Id (const uint32_t);
+		/* query: QueueUserWorkItem how to get thread id winapi :
+		The most direct way to get the ID of the thread currently executing work item is to call GetCurrentThreadId() within the callback thread proc;
+		*/
+		dword Id (void) const;  // just for removing unnecessary cast from 'unsigned long' to 'unsigned int': DWORD >> uint32_t;
+		bool  Id (const dword); // it should be called within thread callback function/proc; returns 'true' on ID value change; not good idea :(
 
 		const
 		CState& State (void) const;
@@ -93,9 +95,9 @@ namespace shared { namespace runnable { namespace threads { using namespace shar
 	protected:
 		CThreadBase& operator = (const CThreadBase&); CThreadBase& operator = (CThreadBase&&) = delete;
 		mutable
-		CError   m_error;
-		CState   m_state;
-		uint32_t m_id;
+		CError  m_error;
+		CState  m_state;
+		dword   m_id;
 	};
 }}}
 

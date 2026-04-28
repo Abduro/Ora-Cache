@@ -10,8 +10,9 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace views { using namespace shared::defs;
 
-	using CDevice = ex_ui::draw::open_gl::context::CDevice;
-	using CGraphs = ex_ui::draw::open_gl::CGraphics;
+	using CDevice   = ex_ui::draw::open_gl::context::CDevice;
+	using CGraphs   = ex_ui::draw::open_gl::CGraphics;
+	using CSelector = ex_ui::draw::open_gl::context::CSelector;
 
 	// this class has both contexts: device context and draw rendering context;
 	class CBase {
@@ -19,7 +20,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace views { using n
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
 		err_code Create (const HWND);   // creates device context and rendering conttext from given window handle (draw surface);
-		err_code Destroy (void);
+		err_code Destroy (void);        // it is assumed the drafter worker thread is *not* running at time of calling this proc;
 		const
 		CDevice& Device (void) const;   // gets the reference to device context; (ro)
 		CDevice& Device (void) ;        // gets the reference to device context; (rw)
@@ -27,8 +28,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace views { using n
 		TError&  Error (void) const;
 
 		const
-		CGraphs& Renderer (void) const; // gets the reference to draw rendering context; {ro)
-		CGraphs& Renderer (void) ;      // gets the reference to draw rendering context; {rw)
+		CGraphs& Graphs (void) const; // gets the reference to draw rendering context; {ro)
+		CGraphs& Graphs (void) ;      // gets the reference to draw rendering context; {rw)
 
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;

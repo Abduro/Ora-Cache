@@ -5,14 +5,12 @@
 	This is Ebo Pack drawable object/drafter interface declaration file;
 */
 #include "drawable.defs.h"
-#include "runner.tpl.h"
 
 #include "model.base.h"
 #include "view.base.h"
 
 namespace shared { namespace drawable {
 
-	using CTplRunner = shared::runnable::threads::pool::CTplRunner;
 	using CModel = ex_ui::draw::open_gl::models::CBase;
 	using CView = ex_ui::draw::open_gl::views::CBase;
 
@@ -37,6 +35,7 @@ namespace shared { namespace drawable {
 		CDrafter& operator = (const CDrafter&) = delete; CDrafter& operator = (CDrafter&&) = delete;
 		CModel  m_model;
 		CView   m_view;
+		HWND m_surface;
 	};
 }}
 

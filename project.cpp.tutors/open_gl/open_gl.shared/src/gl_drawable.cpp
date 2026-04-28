@@ -287,14 +287,18 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 		err_code Draw_Base (const views::CGrid& _grid, CError& _error) {
 			_grid; _error << __s_ok; // no check error this time;
 
-			const float f_cells = 10.0f;
-			const float f_step  =  1.0f;
+			const float f_cells =  1.0f;
+			const float f_step  =  0.1f;
+
+			// to-do: all functions being called must be moved to procedure loader project;
 			
+			::glLineWidth(1.0f);
+
 			::glDisable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldisable ;
 			::glBegin(GL_LINES); // https://learn.microsoft.com/en-us/windows/win32/opengl/glbegin ;
 			::glColor3f(0.3f, 0.3f, 0.3f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glcolor3f ;
-
-			for (float i_ = f_step; i_ < f_cells; i_ += f_step) {
+#if (1)
+			for (float i_ = 0.0f; i_ < f_cells; i_ += f_step) {
 				// grid lines parallel to X-axis;
 				::glVertex3f(-f_cells,  i_, 0.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glvertex3f ;
 				::glVertex3f( f_cells,  i_, 0.0f);
@@ -306,7 +310,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 				::glVertex3f(-i_, -f_cells, 0.0f);
 				::glVertex3f(-i_,  f_cells, 0.0f);
 			}
-
+#else
+			::glVertex2f(-0.5f, -0.3f);   // Start point
+			::glVertex2f(0.5f, 0.3f);    // End point
+#endif
 			::glEnd(); // ::https://learn.microsoft.com/en-us/windows/win32/opengl/glend ;
 			::glEnable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/glenable ;
 

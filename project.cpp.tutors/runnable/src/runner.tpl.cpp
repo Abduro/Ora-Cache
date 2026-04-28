@@ -95,6 +95,8 @@ err_code CTplRunner::Stop (void) {
 
 void CTplRunner::Run (void) {
 
+	((TBase&)(*this)).Id((uint32_t)::GetCurrentThreadId());
+
 	CDelay delay(10, 100);
 
 	while (false == (*this)().Is_stopped()) {

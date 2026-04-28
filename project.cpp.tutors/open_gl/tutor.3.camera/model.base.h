@@ -20,6 +20,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
 		TError& Error (void) const;
+
+		err_code Init (void);  // init OpenGL for working in base mode (ver 1.1); version 3.0+ is not concidered yet;
+
 		const
 		CGrid& Grid (void) const;         // gets the reference to the background grid object; (ro)
 		CGrid& Grid (void) ;              // gets the reference to the background grid object; (rw)

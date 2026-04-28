@@ -30,13 +30,13 @@ err_code CBase::Create (const HWND _h_surface) {
 	dev_ctx.Format() << fk_ctx().Format().Get();
 #endif
 	// creates OpenGL draw rendering context;
-	CGraphics& renderer = this->Renderer();
+	CGraphics& graphs = this->Graphs();
 
-	renderer.Target().Source(TString().Format(_T("renderer::%s"), CGraphics::Class()));
-	renderer.Target() << _h_surface;
+	graphs.Target().Source(TString().Format(_T("renderer::%s"), CGraphics::Class()));
+	graphs.Target() << _h_surface;
 
-	if (__failed(renderer.Create(dev_ctx))) {
-		__trace_err_ex_2(this->m_error = renderer.Error()); // return this->Error();
+	if (__failed(graphs.Create(dev_ctx))) {
+		__trace_err_ex_2(this->m_error = graphs.Error()); // return this->Error();
 	}
 
 	return this->Error();
@@ -45,7 +45,7 @@ err_code CBase::Create (const HWND _h_surface) {
 err_code CBase::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	context::CBase* ctx_bases[] = { &this->Renderer(), &this->Device() };
+	context::CBase* ctx_bases[] = { &this->Graphs(), &this->Device() };
 
 	for (uint32_t i_ = 0; i_ < _countof(ctx_bases); i_++) {
 		if (__failed(ctx_bases[i_]->Destroy()))
@@ -62,7 +62,7 @@ CDevice& CBase::Device (void)       { return this->m_device; }
 TError&  CBase::Error (void) const { return this->m_error; }
 
 const
-CGraphs& CBase::Renderer (void) const { return this->m_graphs; }
-CGraphs& CBase::Renderer (void)       { return this->m_graphs; }    
+CGraphs& CBase::Graphs (void) const { return this->m_graphs; }
+CGraphs& CBase::Graphs (void)       { return this->m_graphs; }    
 
 #pragma endregion

@@ -75,7 +75,7 @@ namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::d
 			return false;
 		}
 
-		CString To_str (void) { CString cs_out; cs_out.Format(_T("%u.%u"), this->m_major, this->m_minor); return cs_out; }
+		CString To_str (void) const { CString cs_out; cs_out.Format(_T("%u.%u"), this->m_major, this->m_minor); return cs_out; }
 	};
 
 	class CVersion {

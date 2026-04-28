@@ -71,7 +71,7 @@ CState&  CState::operator >>(e_state& _out) const { _out = this->Get(); return *
 #pragma endregion
 #pragma region cls::CThreadBase{}
 
-static uint32_t g_thread_id = 0;
+static dword g_thread_id = 0;
 
 CThreadBase:: CThreadBase (void) : m_id(++g_thread_id) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CThreadBase::~CThreadBase (void) {}
@@ -85,9 +85,10 @@ bool CThreadBase::Is_valid (void) const {
 		return false == this->Error(); // if this error is *not* set to error state, it returns 'false' == 'false' >> result 'true';
 }
 
-uint32_t CThreadBase::Id (void) const { return this->m_id; }
-bool     CThreadBase::Id (const uint32_t _u_value) {
-	const bool b_changed = this->Id() != _u_value; if (b_changed) this->m_id = _u_value; return b_changed;
+dword CThreadBase::Id (void) const { return this->m_id; }
+bool  CThreadBase::Id (const dword _u_value) {
+	const dword u_value_ = _u_value == 0 ? (uint32_t)::GetCurrentThreadId() : _u_value;
+	const bool b_changed = this->Id() != u_value_; if (b_changed) this->m_id = u_value_; return b_changed;
 }
 
 const
