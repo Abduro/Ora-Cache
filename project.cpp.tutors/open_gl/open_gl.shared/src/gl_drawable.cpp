@@ -68,7 +68,7 @@ CClr_flt:: CClr_flt (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CClr_flt::~CClr_flt (void) {}
 
 TError&  CClr_flt::Error (void) const { return this->m_error; }
-
+#if (0)
 err_code CClr_flt::Get (const e_object _target) {
 	_target;
 	this->m_error <<__METHOD__<<__s_ok;
@@ -100,21 +100,37 @@ err_code CClr_flt::Get (const e_object _target) {
 #endif
 	return this->Error();
 }
-
-void CClr_flt::Set (const float _r, const float _g, const float _b, const float _a) {
+#endif
+err_code CClr_flt::Set (const float _r, const float _g, const float _b, const float _a) {
 	_r; _g; _b; _a;
 	(*this)()[e_rgba::r] = (0.0f > _r ? 0.0f : (1.0f < _r ? 1.0f : _r));
 	(*this)()[e_rgba::g] = (0.0f > _g ? 0.0f : (1.0f < _g ? 1.0f : _g));
 	(*this)()[e_rgba::b] = (0.0f > _b ? 0.0f : (1.0f < _b ? 1.0f : _b));
 	(*this)()[e_rgba::a] = (0.0f > _a ? 0.0f : (1.0f < _a ? 1.0f : _a));
+	return __s_ok;
 }
 
-void CClr_flt::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a) {
+err_code CClr_flt::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a) {
 	_r; _g; _b; _a;
 	(*this)()[e_rgba::r] = CConvert::ToFloat(_r);
 	(*this)()[e_rgba::g] = CConvert::ToFloat(_g);
 	(*this)()[e_rgba::b] = CConvert::ToFloat(_b);
 	(*this)()[e_rgba::a] = CConvert::ToFloat(_a);
+	return __s_ok;
+}
+
+err_code CClr_flt::Set (const CString& _cs_clr) {
+	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+	if (_cs_clr.IsEmpty())
+		return this->m_error <<__e_inv_arg = _T("#__e_inv_arg: input color string is empty");
+
+	TBase::Set((rgb_color)CHex((_pc_sz)_cs_clr)); // alpha channel is set to 0 (zero), but it is not important for because it is not taken into account yet;
+#if defined(_DEBUG)
+//	if (e_object::e_grid == _target) {
+//	__trace_info_2(_T("grid line color: {%s};\n"), (_pc_sz) TBase::Print(e_print::e_req)); 
+//	}
+#endif
+	return this->Error();
 }
 
 const
@@ -296,19 +312,29 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 			::glDisable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldisable ;
 			::glBegin(GL_LINES); // https://learn.microsoft.com/en-us/windows/win32/opengl/glbegin ;
-			::glColor3f(0.3f, 0.3f, 0.3f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glcolor3f ;
+
+			const CClr_flt& clr = _grid.Clr(); clr;
+
+			::glColor3f(clr.Get_r(), clr.Get_g(), clr.Get_b()); // https://learn.microsoft.com/en-us/windows/win32/opengl/glcolor3f ;
+//			::glColor3f(0.4f, 0.2f, 0.2f);
+			uint32_t u_iter = 0;
 #if (1)
 			for (float i_ = 0.0f; i_ < f_cells; i_ += f_step) {
 				// grid lines parallel to X-axis;
+				if (u_iter < _grid.Rows()) {
 				::glVertex3f(-f_cells,  i_, 0.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glvertex3f ;
 				::glVertex3f( f_cells,  i_, 0.0f);
 				::glVertex3f(-f_cells, -i_, 0.0f);
 				::glVertex3f( f_cells, -i_, 0.0f);
+				}
 				// grid lines parallel to Y-axis;
+				if (u_iter < _grid.Cols()) {
 				::glVertex3f( i_, -f_cells, 0.0f);
 				::glVertex3f( i_,  f_cells, 0.0f);
 				::glVertex3f(-i_, -f_cells, 0.0f);
 				::glVertex3f(-i_,  f_cells, 0.0f);
+				}
+				u_iter += 1;
 			}
 #else
 			::glVertex2f(-0.5f, -0.3f);   // Start point
@@ -331,12 +357,23 @@ using namespace ex_ui::draw::open_gl::_impl;
 
 using CGrid = views::CGrid;
 
-CGrid:: CGrid (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*this->Default();*/ this->Clr().Get(e_object::e_grid); }
+CGrid:: CGrid (void) : m_cols(1), m_rows(1) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*this->Default(); this->Clr().Get(e_object::e_grid);*/ }
 CGrid::~CGrid (void) {}
 
 const
 CCell&  CGrid::Cell (void) const { return this->m_cell; }
 CCell&  CGrid::Cell (void)       { return this->m_cell; }
+
+uint32_t CGrid::Cols (void) const { return this->m_cols; }
+err_code CGrid::Cols (const uint32_t _u_cols) {
+	_u_cols;
+	err_code n_result = __s_ok;
+	if (1 > _u_cols) {
+		__trace_warn_2(_T("grid column number is 0;\n")); n_result = __s_false;
+	}
+	this->m_cols = _u_cols;
+	return n_result;
+}
 
 const
 CClr_flt& CGrid::Clr (void) const { return this->m_color; }
@@ -344,20 +381,12 @@ CClr_flt& CGrid::Clr (void)       { return this->m_color; }
 
 err_code CGrid::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	this->m_pers.Load(this->Cell()); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
+	this->m_pers.Load(*this); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
 }
 err_code CGrid::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	this->m_pers.Save(this->Cell()); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
+	this->m_pers.Save(*this); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
 }
-
-#if (0)
-void CGrid::Default (void) {
-	this->Clr().Set(0.5f, 0.5f, 0.5f, 1.0f);
-	this->Size() = 10.0f;
-	this->Step() = 01.0f;
-}
-#endif
 
 err_code views::CGrid::Draw (void) {
 
@@ -367,7 +396,24 @@ err_code views::CGrid::Draw (void) {
 	return CDraw_Helper().Draw_Arb(this->m_error);
 }
 
-TError& CGrid::Error (void) const { return this->m_error; }
+TError&  CGrid::Error (void) const { return this->m_error; }
+
+const
+CString& CGrid::Name (void) const { return this->m_name; }
+bool     CGrid::Name (_pc_sz _p_name) {
+	const bool b_changed = 0 != this->Name().CompareNoCase(_p_name); if (b_changed) this->m_name = _p_name; return b_changed;
+}
+
+uint32_t CGrid::Rows (void) const { return this->m_rows; }
+err_code CGrid::Rows (const uint32_t _u_rows) {
+	_u_rows;
+	err_code n_result = __s_ok;
+	if (1 > _u_rows) {
+		__trace_warn_2(_T("grid row number is 0;\n")); n_result = __s_false;
+	}
+	this->m_rows = _u_rows;
+	return n_result;
+}
 
 err_code views::CGrid::Update (const t_size_u& _u_size) {
 	_u_size;
@@ -485,46 +531,80 @@ CPersistent::CPersistent (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 
 TError& CPersistent::Error (void) const { return this->m_error; }
 
-err_code CPersistent::Load (CGrid::CCell& _cell) const {
-	_cell;
+err_code CPersistent::Load (CGrid& _grid) const {
+	_grid;
 	this->m_error <<__METHOD__<<__s_ok;
-
 	using CRegCell = shared::sys_core::storage::CGrid::CCell;
-	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
+	using CRegGrid = shared::sys_core::storage::route::CGrid;
 
+	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
+	CRegGrid& reg_grid = ::Get_reg_router().Viewport().Grid();
+
+	// (1) reads grid cell size;
 	TRegKeyEx reg_key;
-	_cell.W(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_width)));
+	_grid.Cell().W(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_width)));
 	if (reg_key.Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
 	}
-	_cell.H(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_height)));
+	_grid.Cell().H(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_height)));
 	if (reg_key.Error()) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
 	}
+
+	static const uint32_t u_min = 25u;
+
+	if (u_min > _grid.Cell().H()) _grid.Cell().H(u_min);
+	if (u_min > _grid.Cell().W()) _grid.Cell().W(u_min);
+
+	/*important:
+	  the key path is going to be changed from grid cell to cell itself;
+	  the key must be closed and reopened by new key path;
+	*/
+	if (__failed(reg_key.Close())) { __trace_err_ex_2(reg_key.Error()); }
+	// (2) gets grid line color;
+	CString cs_clr = reg_key.Value().GetString(reg_grid.Root(), reg_grid.Clr_name());
+	if (reg_key.Error()) {
+		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
+	}
+	else if (__failed(_grid.Clr().Set(cs_clr))) {
+		__trace_err_ex_2(this->m_error = _grid.Clr().Error());
+	}
+
+	// (3) reads the number of columns and rows;
+	_grid.Cols(reg_key.Value().GetDword(reg_grid.Root(), reg_grid.Cols())); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
+	_grid.Rows(reg_key.Value().GetDword(reg_grid.Root(), reg_grid.Rows())); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
+
+	if (0 == _grid.Cols()) _grid.Cols(1); // sets min default value;
+	if (0 == _grid.Rows()) _grid.Rows(1); // sets min default value;
+
+
+	this->m_error << __s_ok; // important: loading the settings from registry may fail due to there is no such keys and/or values, it should not stop the loading the grid view;
 
 	return this->Error();
 }
-err_code CPersistent::Save (const CGrid::CCell& _cell) {
-	_cell;
+err_code CPersistent::Save (const CGrid& _grid) {
+	_grid;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	using CRegCell = shared::sys_core::storage::CGrid::CCell;
+	using CRegGrid = shared::sys_core::storage::route::CGrid;
 	using e_values = CRegCell::e_values;
 
 	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
+	CRegGrid& reg_grid = ::Get_reg_router().Viewport().Grid();
 
 	TRegKeyEx reg_key;
 
+	// (1) saves the grid cell dimensions: height and width;
 	reg_key.Value()() << reg_cell.Root();
-	reg_key.Value()() >> reg_cell.Name(e_values::e_height); if (__failed(reg_key.Value().Set(_cell.H()))) this->m_error = reg_key.Error();
-	reg_key.Value()() >> reg_cell.Name(e_values::e_width); if (__failed(reg_key.Value().Set(_cell.W()))) this->m_error = reg_key.Error();
+	reg_key.Value()() >> reg_cell.Name(e_values::e_height); if (__failed(reg_key.Value().Set(_grid.Cell().H()))) this->m_error = reg_key.Error();
+	reg_key.Value()() >> reg_cell.Name(e_values::e_width); if (__failed(reg_key.Value().Set(_grid.Cell().W()))) this->m_error = reg_key.Error();
+
+	// (2) saves the number of columns and rows of the grid;
+	reg_key.Value().Set(reg_grid.Root(), reg_grid.Cols(), _grid.Cols()); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
+	reg_key.Value().Set(reg_grid.Root(), reg_grid.Rows(), _grid.Rows()); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
 
 	return this->Error();
 }
 
 #pragma endregion
-
-TGrid& ::Get_Grid (void) {
-	static TGrid grid;
-	return grid;
-}

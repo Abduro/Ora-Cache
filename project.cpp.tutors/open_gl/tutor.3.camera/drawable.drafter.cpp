@@ -16,9 +16,14 @@ err_code   CDrafter::OnCreate (const HWND _h_surface) {
 	_h_surface;
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Model().Create(_h_surface))) {
+		__trace_err_ex_2(TBase::m_error = this->Model().Error());
+	} else
 	if (__failed(this->View().Create(_h_surface))) {
-		__trace_err_ex_2(TBase::m_error = this->View().Error()); return TBase::Error();
-	} else { this->m_surface = _h_surface; }
+		__trace_err_ex_2(TBase::m_error = this->View().Error());
+	}
+
+	this->m_surface = _h_surface; // important: otherwise there is no grid drawn;
 
 	return TBase::Error();
 }
@@ -26,8 +31,11 @@ err_code   CDrafter::OnCreate (const HWND _h_surface) {
 err_code   CDrafter::OnDestroy (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Model().Destroy())) {
+		__trace_err_ex_2(TBase::m_error = this->Model().Error());
+	} else 
 	if (__failed(this->View().Destroy())) {
-		__trace_err_ex_2(TBase::m_error = this->View().Error()); return TBase::Error();
+		__trace_err_ex_2(TBase::m_error = this->View().Error());
 	} else {}
 
 	this->m_surface = 0;
@@ -56,13 +64,14 @@ void CDrafter::Run (void) {
 		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
 	}
 
-	glClearColor(0.2f, 0.2f, 0.2f, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
+//	::glClearColor(0.152f, 0.152f, 0.152f, 1.0f); // must to go before glClear();
+	
 	while (false == ((TBase&)(*this))().Is_stopped()) {
 		delay.Wait();
 		if (false == delay.Elapsed())
 			continue;
+
+		::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // must be called before rendering each frame;
 
 		delay.Reset();
 		this->Model().Grid().Draw();

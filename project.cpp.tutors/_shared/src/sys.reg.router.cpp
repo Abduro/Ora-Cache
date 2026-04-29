@@ -112,7 +112,9 @@ const
 CCell& CGrid::Cell (void) const { return m_cell; }
 CCell& CGrid::Cell (void)       { return m_cell; }
 
+_pc_sz CGrid::Cols (void) const { static _pc_sz p_clr_name = _T("Cols"); return p_clr_name; }
 _pc_sz CGrid::Clr_name (void) const { static _pc_sz p_clr_name = _T("color"); return p_clr_name; }
+_pc_sz CGrid::Rows (void) const { static _pc_sz p_clr_name = _T("Rows"); return p_clr_name; }
 
 _pc_sz CGrid::Root (void) const {
 

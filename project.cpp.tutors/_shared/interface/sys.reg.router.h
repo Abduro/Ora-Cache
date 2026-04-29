@@ -11,6 +11,7 @@ namespace route { using namespace shared::defs;
 	   (1) it is absolutely not necessary to provide value names, because particular registry data access implementor must care about this;
 	   (2) the same reason is for definition of registry subkeys paths: the implementation class does still care about this too;
 	   The main reason that needs to be achieved is that only root entry points are defined;
+	   At the same time if the registry entries are defined for both graphics libraries: DirectX and OpenGL, what is the way?
 	*/
 	class CApp {
 	public:
@@ -104,7 +105,9 @@ namespace route { using namespace shared::defs;
 		CCell& Cell (void) ;
 		_pc_sz Root (void) const;
 
+		_pc_sz Cols (void) const;     // returns the value name of number of columns;
 		_pc_sz Clr_name (void) const; // returns grid lines color value name;
+		_pc_sz Rows (void) const;     // returns the value name of number of rows;
 
 	private:
 		CGrid& operator = (const CGrid&) = delete; CGrid& operator = (CGrid&&) = delete;

@@ -19,7 +19,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 	public:
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
-		TError& Error (void) const;
+		err_code Create (const HWND);
+		err_code Destroy (void);
+		TError&  Error (void) const;
 
 		err_code Init (void);  // init OpenGL for working in base mode (ver 1.1); version 3.0+ is not concidered yet;
 

@@ -127,8 +127,10 @@ namespace shared { namespace sys_core { namespace storage {
 		~CRegKey_Ex (void);
 
 	public:
-		TError& Error (void) const;
-		bool Is_exist (_pc_sz _p_key_path) const;
+		err_code Close (void);
+		TError&  Error (void) const;
+		bool  Is_exist (_pc_sz _p_key_path) const;
+		bool  Is_open (void) const;
 		err_code Open (_pc_sz _p_key_path);
 		const
 		CSubKeys& SubKeys (void) const;

@@ -384,6 +384,16 @@ CRegKey_Ex:: CRegKey_Ex (void) : m_value(*this), m_sub_keys(*this) { this->m_err
 CRegKey_Ex:: CRegKey_Ex (_pc_sz _p_key_path) : CRegKey_Ex() { this->Open(_p_key_path); }
 CRegKey_Ex::~CRegKey_Ex (void) {}
 
+err_code CRegKey_Ex::Close (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_open()) {
+		if (!!this->m_key.Close()) // https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey ;
+			this->m_error.Last();
+	}
+	return this->Error();
+}
+
 TError&  CRegKey_Ex::Error (void) const { return this->m_error; }
 
 bool CRegKey_Ex::Is_exist (_pc_sz _p_key_path) const {
@@ -397,6 +407,8 @@ bool CRegKey_Ex::Is_exist (_pc_sz _p_key_path) const {
 	b_result = 0 == CRegKey().Open(Get_reg_router().Root().Key(), _p_key_path); // cannot use m_key field due to this is the 'const' method;
 	return b_result;
 }
+
+bool  CRegKey_Ex::Is_open (void) const { return nullptr != this->m_key; }
 
 err_code CRegKey_Ex::Open (_pc_sz _p_key_path) {
 	_p_key_path;

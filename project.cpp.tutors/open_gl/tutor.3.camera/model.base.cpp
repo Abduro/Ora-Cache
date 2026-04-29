@@ -10,6 +10,23 @@ using namespace ex_ui::draw::open_gl::models;
 
 CBase::CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: base model is not created"); }
 
+err_code CBase::Create (const HWND _h_surface) {
+	_h_surface;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Grid().Create())) return this->m_error = this->Grid().Error();
+
+	return this->Error();
+}
+
+err_code CBase::Destroy (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Grid().Destroy())) return this->m_error = this->Grid().Error();
+
+	return this->Error();
+}
+
 TError& CBase::Error (void) const { return this->m_error; }
 
 err_code CBase::Init (void) {
@@ -25,15 +42,13 @@ err_code CBase::Init (void) {
 	// to-do: all functions being called must be moved to procedure loader project;
 
 	::glShadeModel (GL_SMOOTH); // https://learn.microsoft.com/en-us/windows/win32/opengl/glshademodel ; err_code:{GL_INVALID_ENUM|GL_INVALID_OPERATION}
-//	::glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // https://learn.microsoft.com/en-us/windows/win32/opengl/glpixelstorei ;
 
 	::glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); // https://learn.microsoft.com/en-us/windows/win32/opengl/glhint ; err_code:{GL_INVALID_ENUM|GL_INVALID_OPERATION}
 
 	::glEnable(GL_DEPTH_TEST); // https://learn.microsoft.com/en-us/windows/win32/opengl/glenable ; err_code:{GL_INVALID_ENUM|GL_INVALID_OPERATION}
-//	::glEnable(GL_LIGHTING);
 	::glEnable(GL_CULL_FACE);
 
-	::glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glclearcolor ; err_code:{GL_INVALID_OPERATION}
+	::glClearColor(0.152f, 0.152f, 0.152f, 1.0f); // must to go before glClear(); https://learn.microsoft.com/en-us/windows/win32/opengl/glclearcolor ; err_code:{GL_INVALID_OPERATION}
 	::glClearStencil(0); // https://learn.microsoft.com/en-us/windows/win32/opengl/glclearstencil ; err_code:{GL_INVALID_OPERATION}
 	::glClearDepth(1.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glcleardepth ; err_code:{GL_INVALID_OPERATION}
 	::glDepthFunc(GL_LEQUAL); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldepthfunc ; err_code:{GL_INVALID_OPERATION}
