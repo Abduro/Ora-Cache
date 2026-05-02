@@ -60,6 +60,7 @@ void CDrafter::Run (void) {
 		t_rect rc_client = {0};
 		::GetClientRect(this->m_surface, &rc_client);
 		this->Model().ViewPort().Set(rc_client);
+		this->Model().Grid().Layout() << rc_client;
 
 		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
 	}

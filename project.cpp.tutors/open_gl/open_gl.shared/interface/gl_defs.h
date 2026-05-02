@@ -5,12 +5,19 @@
 	This is Ebo Pack OpenGL common definitions' declaration file;
 */
 #include "shared.defs.h"
+#include "shared.dbg.h"
+#include "shared.preproc.h"
 // https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-on-windows-nt--windows-2000--and-windows-95-98 ; << old but still valid;
 // https://github.com/KhronosGroup/OpenGL-Registry ;
 #include <gl/gl.h>       // the headers' include order is important: windows.h must go first (shared.defs.h);
 #include "gl_version.h"  // the OpenGL driver version installed, it is *very* important in cases of using MS remote desktop;
 
 #pragma comment(lib, "opengl32.lib")
+ struct t_size_u {
+	 uint32_t cx, cy;
+	 t_size_u (void) : cx(0), cy(0){}
+	 t_size_u (const uint32_t _cx,  const uint32_t _cy) : cx(_cx), cy(_cy) {}
+ };
 
 namespace ex_ui { namespace draw { namespace open_gl {
 

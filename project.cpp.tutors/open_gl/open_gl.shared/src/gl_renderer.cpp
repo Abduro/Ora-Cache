@@ -140,7 +140,7 @@ err_code    CRenderer::Draw (void) {
 	if (false == this->Is_allowed())
 		return this->Error();
 	// (1) draws the background first;
-	if (__failed(CBkgnd().Draw())) {}
+	if (__failed(::open_gl::views::CBkgnd().Draw())) {}
 #if (0)
 	// (2) draws the viewport grid;
 	if (this->Cfg().Is_drawable(e_object::e_grid)) this->View().Grid().Draw();

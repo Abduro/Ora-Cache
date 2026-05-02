@@ -15,6 +15,8 @@ err_code CBase::Create (const HWND _h_surface) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (__failed(this->Grid().Create())) return this->m_error = this->Grid().Error();
+	else {
+	}
 
 	return this->Error();
 }

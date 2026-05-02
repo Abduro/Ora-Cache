@@ -45,7 +45,7 @@ err_code CFake_renderer::Draw (const e_object _target, CError& _err) {
 #if (0)
 	if (__failed(renderer.Draw())) { _err = renderer.Error()};
 #else
-	CBkgnd bkgnd;
+	::open_gl::views::CBkgnd bkgnd;
 	if (__failed(bkgnd.Draw())) { _err = bkgnd.Error(); }
 
 	CGraphCtx graph;

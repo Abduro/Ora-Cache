@@ -6,9 +6,8 @@
 #include "gl_renderer.h"
 #include "gl_viewport.h"
 #include "gl_uniform.h"
+#include "gl_grid_layout.h"
 
-#include "shared.dbg.h"
-#include "shared.preproc.h"
 #include "shared.theme.h"
 #include "sys.registry.h"
 
@@ -17,12 +16,12 @@
 
 #include "color._defs.h"
 
-using namespace ex_ui::draw::open_gl;
+using namespace open_gl::views;
 using namespace ex_ui::color::rgb;
 
 #pragma region cls::CBkgnd{}
 
-using e_clear_ops = procs::CEraser::e_clear_ops;
+using e_clear_ops = ex_ui::draw::open_gl::procs::CEraser::e_clear_ops;
 
 CBkgnd:: CBkgnd (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 CBkgnd::~CBkgnd (void) {}
@@ -134,124 +133,12 @@ err_code CClr_flt::Set (const CString& _cs_clr) {
 }
 
 const
-rgb::CFloat&  CClr_flt::operator ()(void) const { return (const TBase&)*this; }
+rgb::CFloat&  CClr_flt::operator ()(void) const { return (TBase&)*this; }
 rgb::CFloat&  CClr_flt::operator ()(void)       { return (TBase&)*this; }    
-
-#pragma endregion
-#pragma region cls::CGrid::CCell{}
-
-using CCell = views::CGrid::CCell;
-
-CCell:: CCell (void) : m_size{0u} {
-#if (0)
-	using CRegCell = shared::sys_core::storage::CGrid::CCell;
-	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
-
-	TRegKeyEx reg_key;
-	m_size.cx = reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_width));
-	if (reg_key.Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	}
-	m_size.cy = reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_height));
-	if (reg_key.Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	}
-#endif
-}
-
-CCell::~CCell (void) {}
-
-uint32_t CCell::H (void) const { return this->m_size.cy; } uint32_t CCell::Height (void) const { return this->H(); }
-bool     CCell::H (const uint32_t _u_val) { if (this->Height() != _u_val) { this->m_size.cy = _u_val; return true; } else return false; } bool CCell::Height (const uint32_t _u_val) { return this->H(_u_val); }
-
-bool     CCell::Is_valid (void) const { return this->H() && this->W(); }
-bool     CCell::Is_valid (const t_size_u& _u_size, CError& _err) {
-	_u_size; _err;
-	if (0 == _u_size.cx || 0 == _u_size.cy) {
-		_err <<__e_not_inited = TString().Format(_T("#__e_not_init: cell size {w=%u;h=%u} is invalid"), _u_size.cx, _u_size.cy);
-	}
-	return false == _err;
-}
-
-const
-t_size_u& CCell::Get (void) const { return this->m_size; }
-bool      CCell::Set (const uint32_t _u_width, const uint32_t _u_height) {
-	_u_width; _u_height;
-	bool b_changed = false;
-
-	if (this->H(_u_height)) b_changed = true;
-	if (this->W(_u_width)) b_changed = true;
-
-	return b_changed;
-}
-
-uint32_t CCell::W (void) const { return this->m_size.cx; } uint32_t CCell::Width  (void) const { return this->W(); }
-bool     CCell::W (const uint32_t _u_val) { if (this->Width()  != _u_val) { this->m_size.cx = _u_val; return true; } else return false; } bool CCell::Width (const uint32_t _u_val) { return this->W(_u_val); }
 
 #pragma endregion
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
-
-	typedef ::std::set<uint32_t> t_markers; // it is the marker data type for positioning horizontal and vertical grid dividers/lines in window client area coords;
-
-	class CMarkers {
-	private: CMarkers (const CMarkers&) = delete; CMarkers (CMarkers&&) = delete;
-	private: CMarkers& operator = (const CMarkers&) = delete; CMarkers& operator = (CMarkers&&) = delete;
-	public:
-		CMarkers (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; } ~CMarkers (void) = default;
-
-		err_code Count (const t_size_u& _view_size, const t_size_u& _cell_size) {
-			_view_size; _cell_size;
-			this->m_error <<__METHOD__<<__s_ok;
-
-			if (CViewPort::Is_valid(_view_size, this->m_error) == false) {
-				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-				return this->Error();
-			}
-
-			if (false == views::CGrid::CCell::Is_valid(_cell_size, this->m_error)) {
-				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-				return this->Error();
-			}
-
-			t_point pt_center = {
-				static_cast<long>(_view_size.cx / 2), static_cast<long>(_view_size.cy / 2)
-			};
-
-			this->m_x_mrks.insert(pt_center.x);
-			this->m_y_mrks.insert(pt_center.y);
-
-			int32_t x_iter = _view_size.cx / 2;
-
-			// (1) marks line x-coords;
-			// (1.a) from the center to the left side;
-			while (x_iter - (int32_t)_cell_size.cx > 0) { this->m_x_mrks.insert(x_iter -= (int32_t)_cell_size.cx); }
-			// (1.b) from the center to the right side;
-			x_iter = _view_size.cx / 2;
-			while (x_iter + _cell_size.cx < _view_size.cx) { this->m_x_mrks.insert(x_iter += (int32_t)_cell_size.cx); }
-
-			int32_t y_iter = _view_size.cy / 2;
-
-			// (2) marks line y-coords;
-			// (2.a) from the center to the top side;
-			while (y_iter - (int32_t)_cell_size.cy > 0) { m_y_mrks.insert(y_iter -= (int32_t)_cell_size.cy); }
-			// (2.b) from the center to the bottom side;
-			y_iter = _view_size.cy / 2;
-			while (y_iter + _cell_size.cy < _view_size.cy) { m_y_mrks.insert(y_iter += (int32_t)_cell_size.cy); }
-
-			return this->Error();
-		}
-
-		TError& Error (void) const { return this->m_error; }
-
-		const t_markers&  Get_horz (void) const { return this->m_y_mrks; }
-		const t_markers&  Get_vert (void) const { return this->m_x_mrks; }
-
-	private:
-		CError    m_error;
-		t_markers m_x_mrks; // markers of vertical lines by x-axis;
-		t_markers m_y_mrks; // markers of horizontal lines by y-axis;
-	};
 
 	class CDraw_Helper {
 	public:
@@ -300,7 +187,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 			}
 			return n_result;
 		}
-		err_code Draw_Base (const views::CGrid& _grid, CError& _error) {
+		err_code Draw_Base (CGrid& _grid, CError& _error) {
 			_grid; _error << __s_ok; // no check error this time;
 
 			const float f_cells =  1.0f;
@@ -308,27 +195,26 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
 			// to-do: all functions being called must be moved to procedure loader project;
 			
-			::glLineWidth(1.0f);
+			::glLineWidth(1.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/gllinewidth ;
 
 			::glDisable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldisable ;
 			::glBegin(GL_LINES); // https://learn.microsoft.com/en-us/windows/win32/opengl/glbegin ;
 
-			const CClr_flt& clr = _grid.Clr(); clr;
-
+			const CPers& pers = _grid.Pers();
+			const ex_ui::color::rgb::CFloat& clr = pers.Line().Clr();
 			::glColor3f(clr.Get_r(), clr.Get_g(), clr.Get_b()); // https://learn.microsoft.com/en-us/windows/win32/opengl/glcolor3f ;
-//			::glColor3f(0.4f, 0.2f, 0.2f);
+#if (0)
 			uint32_t u_iter = 0;
-#if (1)
 			for (float i_ = 0.0f; i_ < f_cells; i_ += f_step) {
 				// grid lines parallel to X-axis;
-				if (u_iter < _grid.Rows()) {
+				if (u_iter < _grid.Pers().Grid().Rows()) {
 				::glVertex3f(-f_cells,  i_, 0.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glvertex3f ;
 				::glVertex3f( f_cells,  i_, 0.0f);
 				::glVertex3f(-f_cells, -i_, 0.0f);
 				::glVertex3f( f_cells, -i_, 0.0f);
 				}
 				// grid lines parallel to Y-axis;
-				if (u_iter < _grid.Cols()) {
+				if (u_iter < _grid.Pers().Grid().Cols()) {
 				::glVertex3f( i_, -f_cells, 0.0f);
 				::glVertex3f( i_,  f_cells, 0.0f);
 				::glVertex3f(-i_, -f_cells, 0.0f);
@@ -337,8 +223,16 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 				u_iter += 1;
 			}
 #else
-			::glVertex2f(-0.5f, -0.3f);   // Start point
-			::glVertex2f(0.5f, 0.3f);    // End point
+			using namespace ::open_gl::views::grid;
+			CLayout& layout = _grid.Layout();
+			const lines_t& lines = layout.Calc(); // it is supposed the grid rectangle is set;
+
+			for (uint32_t i_ = 0; i_ < lines.size(); i_++) {
+				const s_line_2d& line = lines.at(i_);
+
+				::glVertex2f(line.Begin().m_x, line.Begin().m_y);
+				::glVertex2f(line.End().m_x, line.End().m_y);
+			}
 #endif
 			::glEnd(); // ::https://learn.microsoft.com/en-us/windows/win32/opengl/glend ;
 			::glEnable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/glenable ;
@@ -355,25 +249,8 @@ using namespace ex_ui::draw::open_gl::_impl;
 
 #pragma region cls::CGrid {}
 
-using CGrid = views::CGrid;
-
-CGrid:: CGrid (void) : m_cols(1), m_rows(1) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*this->Default(); this->Clr().Get(e_object::e_grid);*/ }
+CGrid:: CGrid (void) : m_layout(m_pers) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; /*this->Default(); this->Clr().Get(e_object::e_grid);*/ }
 CGrid::~CGrid (void) {}
-
-const
-CCell&  CGrid::Cell (void) const { return this->m_cell; }
-CCell&  CGrid::Cell (void)       { return this->m_cell; }
-
-uint32_t CGrid::Cols (void) const { return this->m_cols; }
-err_code CGrid::Cols (const uint32_t _u_cols) {
-	_u_cols;
-	err_code n_result = __s_ok;
-	if (1 > _u_cols) {
-		__trace_warn_2(_T("grid column number is 0;\n")); n_result = __s_false;
-	}
-	this->m_cols = _u_cols;
-	return n_result;
-}
 
 const
 CClr_flt& CGrid::Clr (void) const { return this->m_color; }
@@ -381,14 +258,14 @@ CClr_flt& CGrid::Clr (void)       { return this->m_color; }
 
 err_code CGrid::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	this->m_pers.Load(*this); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
+	this->m_pers.Load(); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
 }
 err_code CGrid::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	this->m_pers.Save(*this); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
+	this->m_pers.Save(); if (this->m_pers.Error()) this->m_error = this->m_pers.Error(); return this->Error();
 }
 
-err_code views::CGrid::Draw (void) {
+err_code CGrid::Draw (void) {
 
 	if (::Get_version().Is_base())
 	return CDraw_Helper().Draw_Base(*this, this->m_error);
@@ -397,214 +274,17 @@ err_code views::CGrid::Draw (void) {
 }
 
 TError&  CGrid::Error (void) const { return this->m_error; }
-
+const
+CLayout& CGrid::Layout (void) const { return this->m_layout; }
+CLayout& CGrid::Layout (void)       { return this->m_layout; }
 const
 CString& CGrid::Name (void) const { return this->m_name; }
 bool     CGrid::Name (_pc_sz _p_name) {
 	const bool b_changed = 0 != this->Name().CompareNoCase(_p_name); if (b_changed) this->m_name = _p_name; return b_changed;
 }
 
-uint32_t CGrid::Rows (void) const { return this->m_rows; }
-err_code CGrid::Rows (const uint32_t _u_rows) {
-	_u_rows;
-	err_code n_result = __s_ok;
-	if (1 > _u_rows) {
-		__trace_warn_2(_T("grid row number is 0;\n")); n_result = __s_false;
-	}
-	this->m_rows = _u_rows;
-	return n_result;
-}
-
-err_code views::CGrid::Update (const t_size_u& _u_size) {
-	_u_size;
-	this->m_error <<__METHOD__<<__s_ok;
-
-	const render::CCfg& cfg = ::Get_renderer().Cfg();
-	if (false == cfg.Is_drawable(e_object::e_grid))
-			return this->Error();
-
-	CMarkers markers;
-	// (1);(2): calculates markets' places and its count for horizontal and vertical lines of the grid;
-	if (__failed(markers.Count(_u_size, this->Cell().Get()))) {
-		return this->m_error = markers.Error();
-	}
-	using CBuffer = vertex::CBuffer;
-
-	TRenderer& renderer  = ::Get_renderer();
-	vertex::CArrObject& vao = renderer.Scene().ArrObjects().Get(e_object::e_grid);
-	CVertArray& vert_arr = vao.VertArray();
-
-	// (3) calculates the number of required vertices for drawing grid lines;
-	const uint32_t u_count = static_cast<uint32_t>((markers.Get_horz().size() + markers.Get_vert().size())) * 2;
-
-	if (__failed(vert_arr.Count(u_count ))) {
-		return this->m_error = vert_arr.Error();
-	}
-
-	CClr_flt& clr = this->Clr();
-
-	t_set_3 coord = {0.0f};
-	uint32_t u_ndx = 0;
-
-	try {
-		// (4) creates vertices for horizontal lines from the left to the right sides of the grid; 
-		for (t_markers::const_iterator it_y = markers.Get_horz().begin(); it_y != markers.Get_horz().end(); ++it_y) {
-
-		// (4.a) gets the left side point of the line;
-			CViewPort::ToPos(_u_size, 0, *it_y, coord, this->m_error);
-			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
-			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a());
-
-		//	vert_arr.Get(u_ndx).Attrs().Clr().Is_used(false);
-			u_ndx += 1;
-
-		// (4.b) gets the right side point of the line;
-			CViewPort::ToPos(_u_size, _u_size.cx, *it_y, coord, this->m_error);
-			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
-			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a());
-			u_ndx += 1;
-		}
-		// (5) creates vertices for vertical lines from the top to the bottom sides of the grid;
-		for (::std::set<uint32_t>::const_iterator it_x = markers.Get_vert().begin(); it_x != markers.Get_vert().end(); ++it_x) {
-		// (5.a) gets the top side point of the line;
-			CViewPort::ToPos(_u_size, *it_x, 0, coord, this->m_error);
-			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
-			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a());
-			u_ndx += 1;
-
-		// (5.b) gets the bottom side point of the line;
-			CViewPort::ToPos(_u_size, *it_x, _u_size.cy, coord, this->m_error);
-			vert_arr.Get(u_ndx).Attrs().Pos().Set(coord.at(0), coord.at(1), coord.at(2));
-			vert_arr.Get(u_ndx).Attrs().Clr().Set(clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a());
-			u_ndx += 1;
-		}
-	}
-	catch (const ::std::bad_alloc&) { return this->m_error << __e_no_memory; }
-	catch (const ::std::out_of_range&) { return this->m_error << __e_no_memory = TString().Format(_T("#__e_out_of_range: ndx = %u; vec.size = %u"), u_ndx, vert_arr.Count()); }
-
-	if (__failed(vert_arr.Update())) {
-		return this->m_error = vert_arr.Buffer().Error();
-	}
-
-	if (__failed(vao.SetData(vert_arr.Data_ref())))
-		this->m_error = vao.Error();
-	else {
-		CProgram& prog = renderer.Scene().Progs().Get(e_object::e_grid); // the program reference cannot be 'const' or 'read-only' due to the program needs to be activated;
-		const int32_t clr_ndx = ::__get_uni_procs().Locate(prog.Id().Get(), _T("clr_line_in"));
-		if (::__get_uni_procs().Error()) {
-			this->m_error = ::__get_uni_procs().Error();
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-			return this->Error();
-		}
-		// before setting the color value to uniform variable of the fragment shader the programm must be active, otherwise the error is generated;
-		if (false == prog.Status().Is_used())
-			if (__failed(prog.Use())) {
-				this->m_error = prog.Error();
-				__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-				return this->Error();
-			}
-#if (0) // for usniform vars test case only;
-		using CUni_enum = vars::CUniform_enum; CUni_enum u_vars;
-		const uint32_t var_count = u_vars.Count();
-		if (u_vars.Error()) {
-			return this->m_error = u_vars.Error();
-		}
-#endif
-	//	using t_uniform_4f = procs::vars::t_uniform_4f; t_uniform_4f clr_4f{clr.Get_r(), clr.Get_g(), clr.Get_b(), clr.Get_a()};
-#if (1)
-		if (__failed(::__get_uni_val_procs().Set_4fs(clr_ndx, {clr.Get_r(), clr.Get_g(), clr.Get_b(), /*clr.Get_a()*/1.0f}))) {
-			this->m_error = ::__get_uni_val_procs().Error();
-			__trace_err_2(_T("%s;\n"), (_pc_sz) this->Error().Print(TError::e_print::e_req));
-			return this->Error();
-		}
-#endif
-	}
-	return this->Error();
-}
-
-#pragma endregion
-#pragma region cls::CPersistent{}
-
-using CPersistent = CGrid::CPersistent;
-
-CPersistent::CPersistent (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-TError& CPersistent::Error (void) const { return this->m_error; }
-
-err_code CPersistent::Load (CGrid& _grid) const {
-	_grid;
-	this->m_error <<__METHOD__<<__s_ok;
-	using CRegCell = shared::sys_core::storage::CGrid::CCell;
-	using CRegGrid = shared::sys_core::storage::route::CGrid;
-
-	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
-	CRegGrid& reg_grid = ::Get_reg_router().Viewport().Grid();
-
-	// (1) reads grid cell size;
-	TRegKeyEx reg_key;
-	_grid.Cell().W(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_width)));
-	if (reg_key.Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	}
-	_grid.Cell().H(reg_key.Value().GetDword(reg_cell.Root(), (_pc_sz) reg_cell.Name(CRegCell::e_height)));
-	if (reg_key.Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	}
-
-	static const uint32_t u_min = 25u;
-
-	if (u_min > _grid.Cell().H()) _grid.Cell().H(u_min);
-	if (u_min > _grid.Cell().W()) _grid.Cell().W(u_min);
-
-	/*important:
-	  the key path is going to be changed from grid cell to cell itself;
-	  the key must be closed and reopened by new key path;
-	*/
-	if (__failed(reg_key.Close())) { __trace_err_ex_2(reg_key.Error()); }
-	// (2) gets grid line color;
-	CString cs_clr = reg_key.Value().GetString(reg_grid.Root(), reg_grid.Clr_name());
-	if (reg_key.Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	}
-	else if (__failed(_grid.Clr().Set(cs_clr))) {
-		__trace_err_ex_2(this->m_error = _grid.Clr().Error());
-	}
-
-	// (3) reads the number of columns and rows;
-	_grid.Cols(reg_key.Value().GetDword(reg_grid.Root(), reg_grid.Cols())); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
-	_grid.Rows(reg_key.Value().GetDword(reg_grid.Root(), reg_grid.Rows())); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
-
-	if (0 == _grid.Cols()) _grid.Cols(1); // sets min default value;
-	if (0 == _grid.Rows()) _grid.Rows(1); // sets min default value;
-
-
-	this->m_error << __s_ok; // important: loading the settings from registry may fail due to there is no such keys and/or values, it should not stop the loading the grid view;
-
-	return this->Error();
-}
-err_code CPersistent::Save (const CGrid& _grid) {
-	_grid;
-	this->m_error <<__METHOD__<<__s_ok;
-
-	using CRegCell = shared::sys_core::storage::CGrid::CCell;
-	using CRegGrid = shared::sys_core::storage::route::CGrid;
-	using e_values = CRegCell::e_values;
-
-	CRegCell& reg_cell = ::Get_reg_router().Viewport().Grid().Cell();
-	CRegGrid& reg_grid = ::Get_reg_router().Viewport().Grid();
-
-	TRegKeyEx reg_key;
-
-	// (1) saves the grid cell dimensions: height and width;
-	reg_key.Value()() << reg_cell.Root();
-	reg_key.Value()() >> reg_cell.Name(e_values::e_height); if (__failed(reg_key.Value().Set(_grid.Cell().H()))) this->m_error = reg_key.Error();
-	reg_key.Value()() >> reg_cell.Name(e_values::e_width); if (__failed(reg_key.Value().Set(_grid.Cell().W()))) this->m_error = reg_key.Error();
-
-	// (2) saves the number of columns and rows of the grid;
-	reg_key.Value().Set(reg_grid.Root(), reg_grid.Cols(), _grid.Cols()); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
-	reg_key.Value().Set(reg_grid.Root(), reg_grid.Rows(), _grid.Rows()); if (reg_key.Error()) __trace_err_ex_2( this->m_error = reg_key.Error());
-
-	return this->Error();
-}
+const
+CPers&   CGrid::Pers (void) const { return this->m_pers; }
+CPers&   CGrid::Pers (void)       { return this->m_pers; }
 
 #pragma endregion

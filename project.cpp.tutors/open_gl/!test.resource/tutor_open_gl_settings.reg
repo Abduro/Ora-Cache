@@ -9,20 +9,22 @@ REGEDIT4
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\App\Window]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\App\Window\Position]
-"Left"=dword:00000293
-"Top"=dword:00000188
-"Right"=dword:00000523
-"Bottom"=dword:0000038f
+"Left"=dword:0000015e
+"Top"=dword:0000008d
+"Right"=dword:000003ee
+"Bottom"=dword:00000294
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data\Xml]
 "Providers"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\ebo.bot.data.providers.xml"
-"Spec"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\collection-test.xml"
+"Spec"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\ebo.bot.data.spec.xml"
+"Logo"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\data.prov.logo.exmo.xml"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data\Xsd]
 "Providers"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\ebo.bot.data.providers.xsd"
-"Spec"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\collection-test.xsd"
+"Spec"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\ebo.bot.data.spec.0.xsd"
+"Logo"="C:\\Users.Tech_dog\\Ora-Cache.work\\project.cpp.tutors\\_cpp.unit.test\\src\\test.cases\\data.provider\\xml\\data.prov.logo.exmo.xsd"
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL]
 
@@ -61,15 +63,22 @@ REGEDIT4
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Viewport]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Viewport\Grid]
-"color"="#663300"
+"color_1"="#663300"
+"color"="#7A7700"
+"Cols"=dword:00000007
+"Rows"=dword:00000007
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Viewport\Grid\Cell]
-"height"=dword:00000064
-"width"=dword:00000015
+"height"=dword:00000032
+"width"=dword:00000032
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Trace]
-"left"="168"
-"top"="361"
-"right"="1169"
-"bottom"="551"
+"Pinned"=dword:00000000
+"Visible"=dword:00000001
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Trace\Position]
+"left"="39"
+"top"="570"
+"right"="1304"
+"bottom"="774"
 

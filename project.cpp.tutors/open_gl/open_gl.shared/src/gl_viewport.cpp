@@ -3,14 +3,12 @@
 	This is Ebo Pack OpenGL viewport wrapper interface implementation file;
 */
 #include "gl_viewport.h"
-#include "shared.preproc.h"
 
 #include "gl_procs_surface.h"
 #include "gl_procs_vertex.h"
 #include "gl_procs_view.h"
 
 #include "sys.registry.h"
-#include "color.rgb.h"
 
 #include "gl_renderer.h"
 #include "gl_uniform.h"
@@ -25,10 +23,9 @@ using namespace ex_ui::color::rgb;
 #define __W(rect) (rect.right - rect.left)
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::CViewport {}
-CViewPort:: CViewPort (const uint32_t _u_width, const uint32_t _u_height) : m_size{_u_width, _u_height} {
-	this->m_error >>__CLASS__<<__METHOD__<<(this->Is_valid() ? __s_ok : __e_not_inited);
+CViewPort:: CViewPort (const uint32_t _u_width, const uint32_t _u_height) : m_size{_u_width, _u_height} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+	if (false == this->Is_valid()){/*error state is already set by this property;*/}
 }
 CViewPort::~CViewPort (void) {}
 
@@ -47,8 +44,28 @@ bool CViewPort::Is_valid (const t_size_u& _u_size, CError& _err) {
 }
 
 t_size    CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
-t_size_u& CViewPort::Get (void) {
-	return this->m_size;
+t_size_u& CViewPort::Get (void) { return this->m_size; }
+float     CViewPort::Get_X (const int32_t _n_x) const {
+	_n_x;
+	if (0 == this->Get().cx) // the division by zero is not defined;
+		return 0.0f;
+	// https://en.wikipedia.org/wiki/Division_(mathematics) ; >> Dividend / Divisor = Quotient; (Remainder) : left amount;
+#if (1)
+	const float f_divisor = (float)this->Get().cx;
+	return 2.0f * (float)_n_x/f_divisor - 1.0f;
+#else
+	return 2.0f * ((float)_n_x + 0.5f)/(float)(this->Get().cx / 2) - 1.0f
+#endif
+}
+float     CViewPort::Get_Y (const int32_t _n_y) const {
+	_n_y;
+	if (0 == this->Get().cy) // the division by zero is not defined;
+		return 0.0f;
+#if (1)
+	return 1.0f - 2.0f * (float)_n_y/(float)this->Get().cy;
+#else
+	return 1.0f - ((float)_n_y + 0.5f)/(float)(this->Get().cy / 2);
+#endif
 }
 
 err_code CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
@@ -114,4 +131,8 @@ err_code CViewPort::Update (void) {
 }
 
 CViewPort&  CViewPort::operator << (const t_rect& _rect) { this->Set(_rect); return *this; }
+
+float CViewPort::operator << (const int32_t _n_x) const { return this->Get_X(_n_x); }
+float CViewPort::operator >> (const int32_t _n_y) const { return this->Get_Y(_n_y); }
+
 #pragma endregion

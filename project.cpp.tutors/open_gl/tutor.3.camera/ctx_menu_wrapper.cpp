@@ -15,7 +15,7 @@
 using namespace ex_ui::draw::gui;
 
 namespace renderer { using CCfg = ex_ui::draw::open_gl::render::CCfg; }
-namespace views { using CGrid = ex_ui::draw::open_gl::views::CGrid; }
+namespace views { using CGrid = ::open_gl::views::CGrid; }
 
 using CState = shared::gui::menus::CState;
 

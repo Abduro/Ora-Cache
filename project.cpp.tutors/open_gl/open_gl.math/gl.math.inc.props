@@ -12,7 +12,7 @@
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\..\_shared\</Shared><!--This is common definitions for all tutorials; -->
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg>
-    <Shared_Procs Condition="'$(Shared_Procs)'==''">..\open_gl.procs\</Shared_Procs>
+    <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl.procs\</GL_Procs>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -23,7 +23,7 @@
     <_1>src\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Dbg)interface\</_3>
-    <_4>$(Shared_Procs)interface\</_4>
+    <_4>$(GL_Procs)interface\</_4>
     <_5></_5>
     <_6></_6>
     <_7></_7>

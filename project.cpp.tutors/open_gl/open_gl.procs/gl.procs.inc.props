@@ -14,7 +14,7 @@
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg>
     <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the node of GUI rich app window composition;-->
-    <Shared_GL Condition="'$(Shared_GL)'==''">..\open_gl.shared\</Shared_GL><!--This is generic OpenGL functionality wrappers;-->
+    <GL_shared Condition="'$(GL_shared)'==''">..\open_gl.shared\</GL_shared><!--This is generic OpenGL functionality wrappers;-->
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -31,7 +31,7 @@
     <_3>$(Shared_Dbg)interface\</_3>
     <_4>$(Shared_Gui)interface\</_4>
     <_5>$(Shared_Clr)interface\</_5>
-    <_6>$(Shared_GL)interface\</_6>
+    <_6>$(GL_shared)interface\</_6>
     <_7></_7>
     <_8></_8>
     <_9></_9>
