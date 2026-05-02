@@ -194,19 +194,6 @@ CString CTestCase::Key_path (const uint32_t _u_number) {
 }
 
 #pragma endregion
-#pragma region cls::CTrace{}
-
-_pc_sz  CTrace::Root (void) const {
-
-	static CString cs_trace;
-
-	if (cs_trace.IsEmpty()) {
-		cs_trace.Format(_T("%s\\Trace"), ::Get_reg_router().Root().Path());
-	}
-	return (_pc_sz) cs_trace;
-}
-
-#pragma endregion
 #pragma region cls::CTheme{}
 
 CTheme::CTheme (void) {}
@@ -236,6 +223,32 @@ _pc_sz  CTheme::To_str (const e_element _element) {
 	if (e_element::e_border == _element) cs_out = _T("border");
 
 	return (_pc_sz) cs_out; // if it is empty, then the '(default)' value is meant;
+}
+
+#pragma endregion
+#pragma region cls::CTrace{}
+
+_pc_sz  shared::sys_core::storage::route::CTrace::Root (void) const {
+
+	static CString cs_trace;
+
+	if (cs_trace.IsEmpty()) {
+		cs_trace.Format(_T("%s\\Trace"), ::Get_reg_router().Root().Path());
+	}
+	return (_pc_sz) cs_trace;
+}
+
+#pragma endregion
+#pragma region cls::CVersion{}
+
+_pc_sz CVersion::Root (void) const {
+
+	static CString cs_version;
+
+	if (cs_version.IsEmpty()) {
+		cs_version.Format(_T("%s\\Version"), (_pc_sz) Get_reg_router().Root().Path(Get_reg_router().Root().Renderer()));
+	}
+	return (_pc_sz) cs_version;
 }
 
 #pragma endregion
@@ -314,7 +327,6 @@ _pc_sz CAppWnd::Side (const e_pos _e_side) const {
 }
 
 #pragma endregion
-
 #pragma region cls::CReg_router{}
 
 CReg_router:: CReg_router (void) {}
@@ -339,9 +351,11 @@ const
 CTheme&  CReg_router::Theme (void) const { return this->m_theme; }
 CTheme&  CReg_router::Theme (void)       { return this->m_theme; }
 const
-CTrace&  CReg_router::Trace (void) const { return this->m_trace; }
-CTrace&  CReg_router::Trace (void)       { return this->m_trace; }
-
+shared::sys_core::storage::route::CTrace&  CReg_router::Trace (void) const { return this->m_trace; }
+shared::sys_core::storage::route::CTrace&  CReg_router::Trace (void)       { return this->m_trace; }
+const
+CVersion& CReg_router::Version (void) const { return this->m_version; }
+CVersion& CReg_router::Version (void)       { return this->m_version; }
 const
 CViewport& CReg_router::Viewport (void) const { return this->m_v_port; }
 CViewport& CReg_router::Viewport (void)       { return this->m_v_port; }

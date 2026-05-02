@@ -193,6 +193,14 @@ namespace route { using namespace shared::defs;
 		CTrace& operator = (const CTrace&) = delete; CTrace& operator = (CTrace&&) = delete;
 	};
 
+	class CVersion {
+	public:
+		CVersion (void) = default; CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete; ~CVersion (void) = default;
+
+		_pc_sz   Root (void) const;  // gets root key path of the OpenGL version key;
+	private:
+		CVersion& operator = (const CVersion&) = delete; CVersion& operator = (CVersion&&) = delete;
+	};
 	class CViewport {
 	public:
 		CViewport (void); CViewport (const CViewport&) = delete; CViewport (CViewport&&) = delete; ~CViewport (void) = default;
@@ -231,6 +239,9 @@ namespace route { using namespace shared::defs;
 		CTrace& Trace (void) const;
 		CTrace& Trace (void) ;
 		const
+		CVersion&  Version (void) const;
+		CVersion&  Version (void) ;
+		const
 		CViewport& Viewport (void) const;
 		CViewport& Viewport (void) ;
 
@@ -238,12 +249,13 @@ namespace route { using namespace shared::defs;
 		CReg_router& operator = (const CReg_router&) = delete;
 		CReg_router& operator = (CReg_router&&) = delete;
 
-		CApp   m_app ;
-		CDraw  m_draw;
-		CRoot  m_root;
+		CApp      m_app ;
+		CDraw     m_draw;
+		CRoot     m_root;
 		CShaders  m_shaders;
 		CTheme    m_theme;
 		CTrace    m_trace;
+		CVersion  m_version;
 		CViewport m_v_port;
 	};
 

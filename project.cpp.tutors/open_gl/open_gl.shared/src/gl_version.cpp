@@ -8,6 +8,7 @@
 
 #include "shared.dbg.h"      // using Print() function is perhaps useful, but it looks like need to be reviewed;
 #include "shared.wnd.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
+#include "sys.registry.h"
 
 using namespace ex_ui::draw::open_gl;
 using CFakeWnd = ex_ui::popup::CMsgWnd;
@@ -181,7 +182,7 @@ void __str_2_vers_data (const _pc_sz _p_vers, s_version& _data) {
 	if (parts.size() > 1) _data.m_minor = ::_tstoi(parts.at(1));
 }
 
-CVersion:: CVersion (void) : m_data{0} { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: version data is not queried");
+CVersion:: CVersion (void) : m_data{0}, m_use_base(false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: version data is not queried");
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetstring ;
 #if (0)
 	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
@@ -211,7 +212,10 @@ CVersion:: CVersion (void) : m_data{0} { this->m_error >>__CLASS__<<__METHOD__<<
 		static_cast<uint32_t>(abs(this->Major())), static_cast<uint32_t>(abs(this->Minor()))
 	};
 #else
-//	this->m_atts[e_atts::e_version] >> "1.2.3";
+	TRegKeyEx reg_key;
+	this->m_use_base = reg_key.Value().GetDword(Get_reg_router().Version().Root(), _T("UseBase")); if (reg_key.Error()) __trace_err_ex_2(reg_key.Error());
+	if (this->m_use_base)
+		this->m_atts[e_atts::e_version] >> "1.1.0";
 	::__str_2_vers_data(this->m_atts[e_atts::e_version].Value(), this->m_data);
 #endif
 	this->m_error << __s_ok;
@@ -253,7 +257,7 @@ CVer_Att&  CVersion::GetAtt (const e_atts _e_att) const {
 }
 
 bool   CVersion::Is_base (void) const {
-	return this->Data() == s_version(1, 1);
+	return this->Data() == s_version(1, 1) || this->m_use_base;
 }
 
 int32_t  CVersion::Major (void) const { int32_t n_major = 0; ::glGetIntegerv(GL_MAJOR_VERSION, &n_major); return n_major; } // doesn't work;
@@ -297,7 +301,7 @@ CString  CVersion::Print_2 (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p
 	static _pc_sz pc_sz_pat_r = _T("{ %s%s }");
 
 	CString cs_atts;
-	cs_atts += TString().Format(_T("%sversion : %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_version].Value(), _p_sfx);
+	cs_atts += TString().Format(_T("%sversion : %s (use base << '%s')%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_version].Value(), TString().Bool(this->m_use_base), _p_sfx);
 	cs_atts += TString().Format(_T("%sshader  : %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_shader ].Value(), _p_sfx);
 	cs_atts += TString().Format(_T("%srenderer: %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_render ].Value(), _p_sfx);
 	cs_atts += TString().Format(_T("%svendor  : %s%s"), _p_pfx, (_pc_sz) this->m_atts[e_atts::e_vendor ].Value(), _p_sfx);

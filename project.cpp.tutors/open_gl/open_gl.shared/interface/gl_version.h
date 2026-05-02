@@ -104,7 +104,7 @@ namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::d
 		 const
 		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
 
-		 bool   Is_base (void) const; // returns 'true' in case open_gl version is '1.1';
+		 bool   Is_base (void) const; // returns 'true' in case open_gl version is '1.1' or the option 'UseBase' is turned on in registry;
 
 		 int32_t   Major (void) const;
 		 int32_t   Minor (void) const;
@@ -119,6 +119,7 @@ namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::d
 		 CError    m_error;
 		 CVer_Att  m_atts[CVersion::n_atts_count];
 		 s_version m_data ;
+		 bool      m_use_base; // this flag is set in the regestry;
 	};
 
 }}}

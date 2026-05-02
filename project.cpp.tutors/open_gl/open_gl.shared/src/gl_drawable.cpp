@@ -267,7 +267,7 @@ err_code CGrid::Destroy (void) {
 
 err_code CGrid::Draw (void) {
 
-	if (::Get_version().Is_base())
+	if (::Get_version().Is_base() || true)
 	return CDraw_Helper().Draw_Base(*this, this->m_error);
 	else
 	return CDraw_Helper().Draw_Arb(this->m_error);
