@@ -3,8 +3,8 @@
 	This is Ebo Pack console content wrapper interface implementation file;
 */
 #include "console.content.h"
-#include "shared.preproc.h"
 
+using namespace shared::console;
 using namespace shared::console::content;
 
 #pragma region cls::CCtxMenu{}
@@ -15,27 +15,18 @@ err_code CCtxMenu::Enable (const bool _b_state) {
 	_b_state;
 	this->m_error << __METHOD__<<__s_ok;
 
-	void* p_input = /*_con.Get_in()*/__in_handle;
-	unsigned long u_mode = 0;
+	modes::CInput input;
+	if (__failed(input.Get()))
+	{__trace_err_ex_2(this->m_error = input.Error()); return this->Error(); }
 
-	// https://learn.microsoft.com/en-us/windows/console/getconsolemode ;
-	if (false == !!::GetConsoleMode(p_input, &u_mode))
-		return this->m_error.Last();
+	CString p_before_in  = modes::CInput::To_str(input.Flags()); p_before_in;
+	CString p_before_out = modes::COutput::To_str(input.Flags()); p_before_out; // looks like useless, because input mode does not contain output mode flags;
 
-	CString p_before_in  = modes::CInput::To_str(u_mode); p_before_in;
-	CString p_before_out = modes::COutput::To_str(u_mode); p_before_out;
+	if (__failed(input.EditMode(false)))
+	{__trace_err_ex_2(this->m_error = input.Error()); return this->Error(); }
 
-	static const uint32_t u_req = (ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS);
-
-	if (_b_state) u_mode &= ~(u_req);
-	else u_mode |= u_req;
-
-	// https://learn.microsoft.com/en-us/windows/console/setconsolemode ;
-	if (false == !!::SetConsoleMode(p_input, u_mode))
-		this->m_error.Last();
-
-	CString p_after_in = modes::CInput::To_str(u_mode); p_after_in;
-	CString p_after_out = modes::COutput::To_str(u_mode); p_after_out;
+	CString p_after_in = modes::CInput::To_str(input.Flags()); p_after_in;
+	CString p_after_out = modes::COutput::To_str(input.Flags()); p_after_out;
 
 	return this->Error();
 }

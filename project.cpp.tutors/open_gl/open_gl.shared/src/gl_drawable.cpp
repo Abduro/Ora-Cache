@@ -29,13 +29,12 @@ CBkgnd::~CBkgnd (void) {}
 err_code CBkgnd::Draw (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	using shared::gui::theme::s_flt_clr;
 	// (1) gets the background color from the registry; the background is drawn in anyway, regardless of renderer drawable object settings;
-	const v_color& clr_bkgnd = ::Get_theme().Bkgnd_flt();
-	if (4 > clr_bkgnd.size()) {
-		return this->m_error << __e_inv_arg = TString().Format(_T("#__e_inv_arg: the float color vector size = %u"), clr_bkgnd.size());
-	}
+	const s_flt_clr& clr_bkgnd = ::Get_theme().Bkgnd_flt();
+	
 	// (1.a) sets the color for using by background eraser;
-	if (__failed(::__get_eraser_procs().Clr(clr_bkgnd.at(0), clr_bkgnd.at(1), clr_bkgnd.at(2), clr_bkgnd.at(3)))) {
+	if (__failed(::__get_eraser_procs().Clr(clr_bkgnd._red, clr_bkgnd._green, clr_bkgnd._blue, clr_bkgnd._alpha))) {
 		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
 		return this->m_error = ::__get_eraser_procs().Error();
 	}

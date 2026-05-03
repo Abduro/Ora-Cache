@@ -50,7 +50,11 @@ err_code CBase::Init (void) {
 	::glEnable(GL_DEPTH_TEST); // https://learn.microsoft.com/en-us/windows/win32/opengl/glenable ; err_code:{GL_INVALID_ENUM|GL_INVALID_OPERATION}
 	::glEnable(GL_CULL_FACE);
 
-	::glClearColor(0.152f, 0.152f, 0.152f, 1.0f); // must to go before glClear(); https://learn.microsoft.com/en-us/windows/win32/opengl/glclearcolor ; err_code:{GL_INVALID_OPERATION}
+	using shared::gui::theme::s_flt_clr;
+
+	const s_flt_clr& bkg_clr = ::Get_theme().Bkgnd_flt();
+	// must to go before glClear();
+	::glClearColor(bkg_clr._red, bkg_clr._green, bkg_clr._blue, bkg_clr._alpha); //  https://learn.microsoft.com/en-us/windows/win32/opengl/glclearcolor ; err_code:{GL_INVALID_OPERATION}
 	::glClearStencil(0); // https://learn.microsoft.com/en-us/windows/win32/opengl/glclearstencil ; err_code:{GL_INVALID_OPERATION}
 	::glClearDepth(1.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/glcleardepth ; err_code:{GL_INVALID_OPERATION}
 	::glDepthFunc(GL_LEQUAL); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldepthfunc ; err_code:{GL_INVALID_OPERATION}

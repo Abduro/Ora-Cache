@@ -4,6 +4,7 @@
 */
 #include "console.mode.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace shared::console::modes;
 
@@ -35,6 +36,31 @@ TError& CBase::Error (void) const { return this->m_error; }
 static ulong u_in_flag_set[10] = { in_auto_pos, in_echo, in_flags, in_insert, in_line, in_mouse, in_procs, in_qu_edit, in_window, in_virtual };
 
 CInput::CInput (void) { CBase::m_error >>__CLASS__; }
+
+bool     CInput::EditMode (void) {
+	if (__failed(this->Get()))
+		return false;
+	else return this->Has(ENABLE_QUICK_EDIT_MODE);
+}
+
+err_code CInput::EditMode (const bool _yes_or_no) {
+	_yes_or_no;
+	if (__failed(this->EditMode())) // refreshes the flags currently set for console input mode;
+		return CBase::Error();
+
+	static
+	const uint32_t u_req = (in_qu_edit | in_flags);
+
+	if (_yes_or_no) CBase::m_flags |= in_qu_edit;
+	else CBase::m_flags &= ~(in_qu_edit);
+
+	 CBase::m_flags |= in_flags; // this flag must be included in anycase;
+
+	if (__failed(this->Set(CBase::m_flags))) {}
+	else { __trace_info_2(_T("Quick edit mode is set to '%s';\n"), TString().Bool(_yes_or_no)); }
+
+	return this->Set(CBase::m_flags);
+}
 
 err_code CInput::Get (void) {
 	CBase::m_error <<__METHOD__<<__s_ok;

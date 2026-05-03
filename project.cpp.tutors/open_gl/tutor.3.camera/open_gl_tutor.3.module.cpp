@@ -8,16 +8,11 @@
 #include "open_gl_tutor.3.module.h"                                                   
 #include "open_gl_tutor.3.res.h"
 
-#include "shared.dbg.h"
 #include "shared.theme.h"
 #include "gl_renderer.h"
 #include "gl_version.h"
 
 #include "__trace\console.h"
-#include "__trace\console.event.h"
-#include "__trace\console.font.h"
-#include "__trace\console.format.h"
-
 #include "win.gui.wnd.h"
 
 #include "shapes\gl_shape.2d.h"
@@ -124,6 +119,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	if (__failed(_con.Create())) { __trace_err_ex_2(_con.Error()); }
 	else {
 //	if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
+		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
+		shared::console::CBkgnd con_bkg;
+		con_bkg.Color(::Get_theme().Bkgnd_rgb());
 
 		_con.Frame().Icon() << IDR_TUTOR_0_ICO;
 		_con.Frame().Caption((_pc_sz)_con.Frame().Caption_Dflt());
@@ -152,10 +150,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 #endif
 		layout.Bottom().Target(_con.Handle());
 		layout.Update();
-
-		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
-		shared::console::CBkgnd con_bkg;
-		con_bkg.Color(::Get_theme().Bkgnd_rgb());
 		// *important*: all sizes of the target windows is fixed, because the main window size is fixed itself;
 		layout.Update();
 		shared::console::layout::CHScroll().Set(true);

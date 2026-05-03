@@ -3,7 +3,6 @@
 	This is system console screen buffer wrapper interface implementation file;
 */
 #include "console.buffer.h"
-#include "shared.preproc.h"
 
 using namespace shared::console;
 

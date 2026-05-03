@@ -30,6 +30,9 @@ namespace shared { namespace console { namespace modes { using namespace shared:
 	public:
 		CInput (void); ~CInput (void) = default;
 
+		bool     EditMode (void);                  // checks input mode of console for enabling/disabling 'quick edit' option;
+		err_code EditMode (const bool _yes_or_no); // disables/enables quick edit mode; this mode does not allow to use context menu or to handle pressing right button of mouse;
+
 		err_code Get (void);
 		err_code Set (const ulong _u_flags);
 

@@ -113,7 +113,7 @@ static CString cs_pos_key = TString().Format(_T("%s\\Position"), (_pc_sz) ::Get_
 
 CString  _rect_to_str (const t_rect& _rect) {
 	_rect;
-	static _pc_sz p_rect_pat = _T("{l=%d;t=%d;r=%d;b=%d}");
+	static _pc_sz p_rect_pat = _T("[l=%d;t=%d;r=%d;b=%d]");
 
 	CString cs_out; cs_out.Format(p_rect_pat, _rect.left , _rect.top , _rect.right, _rect.bottom);
 	return  cs_out;
@@ -158,7 +158,7 @@ err_code CPosition::Load (void) {
 		this->m_rc_pos = CPrimary().Centered(size);
 
 	     __trace_warn_2(_T("Using default rect at << %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos)); }
-	else __trace_impt_2(_T("Position is restored at rect << %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
+	else __trace_impt_2(_T("Position is restored at rect: %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
 
 	CFont font; font.Get();
 	if (false == font.Error()) {

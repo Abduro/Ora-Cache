@@ -201,8 +201,6 @@ bool Is_equal (const float _f_lhv, const float _f_rhv, const float _f_threshold 
 #define __clr_invalid __clr_none
 #endif
 
-typedef ::std::vector<float> v_color; // assumed the vector contains 4 (four) elements: r|g|b|a;
-
 namespace ex_ui { namespace color { namespace hsl {
 }}}
 

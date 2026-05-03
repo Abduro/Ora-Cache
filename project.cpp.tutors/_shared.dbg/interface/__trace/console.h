@@ -11,8 +11,11 @@
 */
 #include "console.defs.h"
 #include "console.content.h"
+#include "console.font.h"
+#include "console.format.h"
 #include "console.event.h"
 #include "console.layout.h"
+#include "console.mode.h"
 
 namespace shared { namespace console {
 	/* the locator class is for getting path to trace console executable in the following order:

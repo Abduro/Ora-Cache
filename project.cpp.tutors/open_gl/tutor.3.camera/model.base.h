@@ -6,6 +6,7 @@
 */
 #include "shared.defs.h"
 #include "shared.preproc.h"
+#include "shared.theme.h"
 
 #include "gl_drawable.h" // for grid declaration;
 #include "gl_viewport.h"

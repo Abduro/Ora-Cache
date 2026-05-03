@@ -9,10 +9,10 @@ REGEDIT4
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\App\Window]
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\App\Window\Position]
-"Left"=dword:0000015e
-"Top"=dword:0000008d
-"Right"=dword:000003ee
-"Bottom"=dword:00000294
+"Left"=dword:00000175
+"Top"=dword:00000013
+"Right"=dword:00000405
+"Bottom"=dword:0000021a
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Data]
 
@@ -58,7 +58,10 @@ REGEDIT4
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Theme]
 "border"="#FFB900"
-"bkgnd"="#000000"
+"bkgnd"="#272727"
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Version]
+"UseBase"=dword:00000001
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Open_GL\Viewport]
 
@@ -74,11 +77,11 @@ REGEDIT4
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Trace]
 "Pinned"=dword:00000000
-"Visible"=dword:00000001
+"Visible"=dword:00000000
 
 [HKEY_CURRENT_USER\SOFTWARE\ebo::pack\tutorials\Trace\Position]
-"left"="39"
-"top"="570"
-"right"="1304"
-"bottom"="774"
+"left"="373"
+"top"="529"
+"right"="1029"
+"bottom"="703"
 

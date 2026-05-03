@@ -11,10 +11,6 @@
 #include "console.cmd.h"
 #include "console.out.h"
 
-#include "shared.dbg.h"
-#include "shared.preproc.h"
-#include "sys.registry.h"
-
 using namespace shared::console;
 using namespace shared::dbg;
 
@@ -121,6 +117,11 @@ err_code CConsole::Create (void) {
 	
 	this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
 	this->Frame().OnCreate();
+
+	modes::CInput().EditMode(false);
+
+	CFont().Set(_T("consolas"), 15);
+//	CBkgnd().Color(::Get_theme().Bkgnd_rgb());
 
 	CLayout layout;
 	if (__failed(layout.OnCreate()))

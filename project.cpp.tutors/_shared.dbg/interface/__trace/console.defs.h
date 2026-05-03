@@ -15,6 +15,8 @@
 #include <io.h>           // for _open_osfhandle ;
 #include <fcntl.h>        // for constant decl, like to _O_TEXT ;
 
+#include "shared.preproc.h"
+#include "shared.dbg.h"
 namespace shared { namespace console {
 
 	// https://learn.microsoft.com/en-us/windows/console/console-functions ;
