@@ -9,6 +9,8 @@
     <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0804}</UniqueIdentifier></Filter>
     <Filter Include="src\buffer"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0805}</UniqueIdentifier></Filter>
     <Filter Include="src\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0806}</UniqueIdentifier></Filter>
+
+    <Filter Include="ver_1_1"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0807}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -57,5 +59,13 @@
     <ClCompile Include="$(_1)gl_procs_view.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_types.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_types.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-2)gl_procs_basic.h" ><Filter>ver_1_1</Filter></ClInclude>
+    <ClCompile Include="$(_1-2)gl_procs_basic.cpp" ><Filter>ver_1_1</Filter></ClCompile>
+    <ClInclude Include="$(_0-2)gl_procs_clear.h" ><Filter>ver_1_1</Filter></ClInclude>
+    <ClCompile Include="$(_1-2)gl_procs_clear.cpp" ><Filter>ver_1_1</Filter></ClCompile>
+    <ClInclude Include="$(_0-2)gl_procs_depth.h" ><Filter>ver_1_1</Filter></ClInclude>
+    <ClCompile Include="$(_1-2)gl_procs_depth.cpp" ><Filter>ver_1_1</Filter></ClCompile>
   </ItemGroup>
 </Project>

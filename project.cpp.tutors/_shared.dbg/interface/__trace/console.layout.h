@@ -37,11 +37,28 @@ namespace layout { using namespace shared::console;
 		CString To_str (void) const;
 	};
 
+	// query: who to prevent allocated console window from resizing programmatically winapi c++ ;
+	// https://stackoverflow.com/questions/47358043/can-i-prevent-the-user-of-my-program-to-resize-the-console-window-in-c ;
+
+	/* windows events' hook:
+	   https://learn.microsoft.com/en-us/windows/win32/winauto/registering-a-hook-function ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwineventhook ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwinevent ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-wineventproc ;
+	*/
+	/* IAccessible for accessing methods and properties of the interface that cought by windows event hook; (oleacc.h)
+	   https://learn.microsoft.com/en-us/windows/win32/api/oleacc/nn-oleacc-iaccessible ;s
+	   https://learn.microsoft.com/en-us/windows/win32/api/oleacc/nf-oleacc-accessibleobjectfromevent ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/oleacc/nf-oleacc-accessibleobjectfrompoint ;
+	   https://learn.microsoft.com/en-us/windows/win32/api/oleacc/nf-oleacc-accessibleobjectfromwindow ;
+	*/
 	class CLayout {
 	public:
 		 CLayout (void); CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
 		~CLayout (void) = default;
 
+		err_code Adjust_Pos (const bool _b_activate);   // instead of being a child window, this procedure glues the console window to one of the sides of the main app window;
+		err_code Adjust_Pos (const t_rect& _rc_parent); // for gluing to the main window side, the rect is required, it was made for Windows Vista, but still be kept for history ;)
 		err_code As_child (const s_create_data&); // sets console window as a child window;
 
 		TError&  Error (void) const;

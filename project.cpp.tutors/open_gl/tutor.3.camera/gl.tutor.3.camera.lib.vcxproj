@@ -228,6 +228,9 @@
     <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
     </ProjectReference>
+    <ProjectReference Include="$(GL_Math)gl.math_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0007}</Project>
+    </ProjectReference>
     <ProjectReference Include="$(GL_shared)gl.shared_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
     </ProjectReference>

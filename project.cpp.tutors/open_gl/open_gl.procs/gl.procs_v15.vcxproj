@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="gl.procs.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="gl.procs.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="gl.procs.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props"/>
+    <Import Project="gl.procs.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -187,7 +187,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />
-    <ClCompile Include="$(Shared)shared.std.afx.cpp" >
+    <ClCompile Include="$(Shared)shared.std.afx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -237,6 +237,14 @@
     <ClCompile Include="$(_1)gl_procs_view.cpp" />
     <ClInclude Include="$(_0)gl_types.h" />
     <ClCompile Include="$(_1)gl_types.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-2)gl_procs_basic.h" />
+    <ClCompile Include="$(_1-2)gl_procs_basic.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_clear.h" />
+    <ClCompile Include="$(_1-2)gl_procs_clear.cpp" />
+    <ClInclude Include="$(_0-2)gl_procs_depth.h" />
+    <ClCompile Include="$(_1-2)gl_procs_depth.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

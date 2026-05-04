@@ -77,6 +77,17 @@ s_create_data::s_create_data (const HWND _h_parent, const RECT& _rect, const boo
 
 CLayout::CLayout (void) {  this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited"); }
 
+err_code CLayout::Adjust_Pos (const bool _b_activate) {
+	_b_activate;
+	this->m_error <<__METHOD__<<__s_ok;
+	return this->Error();
+}
+err_code CLayout::Adjust_Pos (const t_rect& _rc_parent) {
+	_rc_parent;
+	this->m_error <<__METHOD__<<__s_ok;
+	return this->Error();
+}
+
 err_code CLayout::As_child (const s_create_data& _data) {
 	_data;
 	this->m_error <<__METHOD__<<__s_ok;

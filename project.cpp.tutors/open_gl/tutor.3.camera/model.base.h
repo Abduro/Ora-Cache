@@ -11,10 +11,14 @@
 #include "gl_drawable.h" // for grid declaration;
 #include "gl_viewport.h"
 
+#include "math.matrix.h"
+
 namespace ex_ui { namespace draw { namespace open_gl { namespace models { using namespace shared::defs;
 
 	using CGrid = ::open_gl::views::CGrid;
 	using CViewPort = ex_ui::draw::open_gl::CViewPort;
+
+	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
 
 	class CBase {
 	public:
@@ -30,15 +34,19 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 		CGrid& Grid (void) const;         // gets the reference to the background grid object; (ro)
 		CGrid& Grid (void) ;              // gets the reference to the background grid object; (rw)
 		const
+		c_mat4x4&  Mat_model (void) const;
+		c_mat4x4&  Mat_model (void) ;
+		const
 		CViewPort& ViewPort (void) const; // gets the reference to view port object; (ro)
 		CViewPort& ViewPort (void) ;      // gets the reference to view port object; (rw)
 
 	private:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 		mutable
-		CError  m_error;
-		CGrid   m_grid ;      // the grid is not implemented as a model yet;
+		CError    m_error;
+		CGrid     m_grid ;      // the grid is not implemented as a model yet;
 		CViewPort m_v_port;
+		c_mat4x4  m_model;
 	};
 }}}}
 
