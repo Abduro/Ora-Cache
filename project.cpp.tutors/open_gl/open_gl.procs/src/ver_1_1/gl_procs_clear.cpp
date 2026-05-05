@@ -8,9 +8,6 @@ using namespace open_gl::procs::ver_1_1;
 
 #pragma region cls::CClear{}
 
-static _pc_sz p_err_inv_oper = _T("#__e_inv_oper: called between glBegin() and glEnd()");
-static _pc_sz p_err_unk_code = _T("#__e_undef: error code 0x%04x (%d)");
-
 CClear::CClear (void) { TBase::m_error >>__CLASS__; }
 
 err_code CClear::All (const s_clear_args& _args) {

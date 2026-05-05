@@ -8,12 +8,16 @@
 
 namespace shared { namespace gui { namespace theme { using namespace shared::defs;
 
+	// elements from 0 to 3 index: red-green-blue-alpha; this is the duplication of the typedef made in procs' loader (gl_proc_clear.h);
+	typedef ::std::array<float, 0x04u> f_clr_t; // elements from 0 to 3 index: red-green-blue-alpha; 
+
 	struct s_flt_clr {
 		float  _alpha, _blue, _green, _red;
 		s_flt_clr (const float _r = 0.0f, const float _g = 0.0f,  const float _b = 0.0f, const float _a = 0.0f);
 		s_flt_clr (const s_flt_clr&);
 
 		s_flt_clr& operator = (const s_flt_clr&);
+		operator f_clr_t (void) const;
 
 		CString To_str (void) const;
 	};

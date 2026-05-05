@@ -65,8 +65,6 @@ void CDrafter::Run (void) {
 		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
 	}
 
-//	::glClearColor(0.152f, 0.152f, 0.152f, 1.0f); // must to go before glClear();
-	
 	while (false == ((TBase&)(*this))().Is_stopped()) {
 		delay.Wait();
 		if (false == delay.Elapsed())

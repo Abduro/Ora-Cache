@@ -23,6 +23,8 @@ s_flt_clr& s_flt_clr::operator = (const s_flt_clr& _src) {
 	return *this;
 }
 
+s_flt_clr::operator f_clr_t (void) const { return {this->_red, this->_green, this->_blue, this->_alpha}; }
+
 CString s_flt_clr::To_str (void) const {
 	static _pc_sz p_clr_pat = _T("{r=%.7f;g=%.7f;b=%.7f;a=%.7f}");
 	CString cs_out; cs_out.Format(p_clr_pat, this->_red, this->_green, this->_blue, this->_alpha);
