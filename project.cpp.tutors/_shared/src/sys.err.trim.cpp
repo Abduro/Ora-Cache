@@ -322,12 +322,16 @@ err_code  CError::Result(const err_code _new)
 {
 	if (_new == (err_code)m_state)
 		return _new;
-
-	if (__succeeded(_new)) {
+#if (0)
+	if (__succeeded(_new)) { // this is the logical error: if previous code was '__s_ok' the code '__s_false' cannot be set;
 		m_state = false; return m_state;
 	}
+#else
+	if (__succeeded(_new)) {
+		this->m_state.Set(_new); /*this->m_state = false; this is the error: __s_false is overwritten by __s_ok;*/ return this->m_state;
+	} 
+#endif
 	Safe_Lock(m_state);
-
 	::ATL::CString    cs_module = m_method; // saves an original;
 	::ATL::CString    cs_source;
 

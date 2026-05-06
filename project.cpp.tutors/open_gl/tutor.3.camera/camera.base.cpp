@@ -9,11 +9,22 @@ using namespace ::open_gl::camera;
 
 #pragma region cls::CCamera{}
 
-CCamera::CCamera (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CCamera::CCamera (void) : m_mouse{0} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 const
 s_angles& CCamera::Angles (void) const { return this->m_angles; }
 s_angles& CCamera::Angles (void)       { return this->m_angles; }
+
+err_code  CCamera::Create (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	return this->Error();
+}
+err_code  CCamera::Destroy(void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	return this->Error();
+}
 TError&   CCamera::Error  (void) const { return this->m_error; }
 const
 s_pos&    CCamera::Pos (void) const { return this->m_pos; }

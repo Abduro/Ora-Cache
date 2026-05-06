@@ -5,6 +5,7 @@
 	This is Ebo Pack drawable object/drafter interface declaration file;
 */
 #include "drawable.defs.h"
+#include "shared.wnd.msg.h"
 
 #include "model.base.h"
 #include "view.base.h"
@@ -14,7 +15,10 @@ namespace shared { namespace drawable {
 	using CModel = ex_ui::draw::open_gl::models::CBase;
 	using CView = ex_ui::draw::open_gl::views::CBase;
 
-	class CDrafter : public CTplRunner { typedef CTplRunner TBase;
+	using IMouse_Handler = ex_ui::popup::messages::IMouse_Handler;
+	using CEvent = ex_ui::popup::messages::IMouse_Handler::CEvent;
+
+	class CDrafter : public CTplRunner, public IMouse_Handler { typedef CTplRunner TBase;
 	public:
 		CDrafter (void); CDrafter (const CDrafter&) = delete; CDrafter (CDrafter&&) = delete; ~CDrafter (void);
 
@@ -27,6 +31,9 @@ namespace shared { namespace drawable {
 		const
 		CView&   View (void) const;
 		CView&   View (void) ;
+
+		TError&  IMouse_Error (void) const override final;
+		err_code IMouse_OnEvent (const CEvent&) override final;
 
 	protected:
 		virtual void Run (void) override final;

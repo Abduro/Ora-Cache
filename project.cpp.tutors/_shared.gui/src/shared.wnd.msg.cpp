@@ -82,8 +82,11 @@ static _pc_sz pc_sz_pat_not_found = _T("The handler = %s is not found");
 			static _pc_sz pc_sz_pat = _T("virt keys: %s; button: %s %s at point: %s;");
 
 			CString cs_out;
+
+			const IMouse_Handler::CButton& the_last = _evt.Buttons().The_last();
+
 			cs_out.Format (pc_sz_pat,
-				(_pc_sz) this->Out(_evt.Keys()), (_pc_sz) this->Out(_evt.Button()), (_pc_sz) this->Out(_evt.Action()), (_pc_sz) this->Out(_evt.Coords())
+				(_pc_sz) this->Out(_evt.Keys()), (_pc_sz) this->Out(the_last.What()), (_pc_sz) this->Out(the_last.State()), (_pc_sz) this->Out(_evt.Coords())
 			);
 			return  cs_out;
 		}
@@ -151,6 +154,7 @@ static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param 
 	case WM_DESTROY : {
 		n_result = __s_ok == it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param) ? __s_ok : __s_false;
 	} break;
+	case WM_MOUSEMOVE: // https://learn.microsoft.com/en-us/windows/win32/learnwin32/mouse-movement ;
 	case WM_LBUTTONDBLCLK : case WM_LBUTTONDOWN : case WM_LBUTTONUP :
 	case WM_RBUTTONDBLCLK : case WM_RBUTTONDOWN : case WM_RBUTTONUP : {
 		n_result = __s_ok == ::Get_mouse().IMsg_OnMessage(_msg_id, _w_param, _l_param) ? __s_ok : __s_false; // the possible error code is not of interest here;
@@ -230,13 +234,110 @@ TMsgRouter& Get_router (void) {
 
 #pragma endregion
 
-using e_action  = IMouse_Handler::e_action;
-using e_button  = IMouse_Handler::e_button;
 using e_v_key   = IMouse_Handler::e_v_key;
 using CCoords   = IMouse_Handler::CCoords;
 using CEvent    = IMouse_Handler::CEvent;
 using CVirtKeys = IMouse_Handler::CVirtKeys;
 
+#pragma region cls::CButton{}
+
+using e_action  = IMouse_Handler::e_action;
+using e_button  = IMouse_Handler::e_button;
+using CButton   = IMouse_Handler::CButton;
+
+CButton::CButton (const e_button _e_what, const e_action _e_state) : m_state(_e_state), m_what(_e_what)  {}
+
+bool CButton::Is_pressed  (void) const { return e_action::e_pressed == this->m_state; }
+bool CButton::Is_pressed  (const bool _yes_or_no) {
+	const bool b_changed = _yes_or_no != this->Is_pressed(); if (b_changed) this->m_state = _yes_or_no ? e_action::e_pressed : e_action::e_none; return b_changed;
+}
+bool CButton::Is_released (void) const { return e_action::e_released == this->m_state; }
+bool CButton::Is_released (const bool _yes_or_no) {
+	const bool b_changed = _yes_or_no != this->Is_released(); if (b_changed) this->m_state = _yes_or_no ? e_action::e_released : e_action::e_none; return b_changed;
+}
+
+e_action CButton::State (void) const { return this->m_state; }
+bool CButton::State (const e_action _e_act) {
+	const bool b_changed = this->m_state != _e_act; if (b_changed) this->m_state = _e_act; return b_changed;
+}
+
+e_button CButton::What (void) const { return this->m_what; }
+bool     CButton::What (const e_button _e_what) {
+	const bool b_changed = _e_what != this->What(); if (b_changed) this->m_what = _e_what; return b_changed;
+}
+
+bool CButton::operator <<(const e_action _e_act) { return this->State(_e_act); }
+
+#pragma endregion
+#pragma region cls::CButtons{}
+
+using CButtons = IMouse_Handler::CButtons;
+
+CButtons::CButtons (void) : m_the_last(e_button::e_undef) {
+	this->m_buttons[0].What(e_button::e_left); this->m_buttons[1].What(e_button::e_middle); this->m_buttons[2].What(e_button::e_right);
+}
+
+static CButton e_undef_but;
+
+const
+CButton&  CButtons::Get (const e_button _e_what) const {
+	if (e_button::e_left   == _e_what) return this->m_buttons[0];
+	if (e_button::e_middle == _e_what) return this->m_buttons[1];
+	if (e_button::e_right  == _e_what) return this->m_buttons[2];
+	return e_undef_but;
+}
+CButton&  CButtons::Get (const e_button _e_what) {
+	if (e_button::e_left   == _e_what) return this->m_buttons[0];
+	if (e_button::e_middle == _e_what) return this->m_buttons[1];
+	if (e_button::e_right  == _e_what) return this->m_buttons[2];
+	return e_undef_but;
+}
+
+e_button  CButtons::Is_changed (void) const { return this->m_the_last; }
+
+bool CButtons::Set (const uint32_t _u_msg) {
+	_u_msg;
+	if (WM_MOUSEMOVE == _u_msg)
+		return false;
+
+	bool b_handled = true;
+	// (0) clears the state of the buttons;
+	for (uint32_t i_ = 0; i_ < _countof(this->m_buttons); i_++)
+		this->m_buttons[i_] << e_action::e_none;
+
+	this->m_the_last = e_button::e_undef;
+
+	// (1) changes the state of appropriate button;
+	/*
+	   https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk ;
+	   https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown   ;
+	   https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup     ;
+	   https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk ;
+	   https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown   ;
+	   https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup     ;
+	*/
+	if (false == true) {}
+	else if (WM_LBUTTONUP == _u_msg) { if (this->Get(e_button::e_left)  << e_action::e_released) this->m_the_last = e_button::e_left;  }
+	else if (WM_RBUTTONUP == _u_msg) { if (this->Get(e_button::e_right) << e_action::e_released) this->m_the_last = e_button::e_right; }
+
+	else if (WM_LBUTTONDBLCLK == _u_msg) { if (this->Get(e_button::e_left)  << e_action::e_double) this->m_the_last = e_button::e_left;  }
+	else if (WM_RBUTTONDBLCLK == _u_msg) { if (this->Get(e_button::e_right) << e_action::e_double) this->m_the_last = e_button::e_right; }
+
+	else if (WM_LBUTTONDOWN == _u_msg) { if (this->Get(e_button::e_left)  << e_action::e_pressed) this->m_the_last = e_button::e_left; }
+	else if (WM_RBUTTONDOWN == _u_msg) {
+		if (this->Get(e_button::e_right) << e_action::e_pressed) this->m_the_last = e_button::e_right;
+	}
+	else {
+		b_handled = false;
+	}
+	return b_handled;
+}
+
+const
+CButton&  CButtons::The_last (void) const { return this->Get(this->Is_changed()); }
+CButton&  CButtons::The_last (void)       { return this->Get(this->Is_changed()); }
+
+#pragma endregion
 #pragma region cls::CCoords{}
 
 CCoords::CCoords (void) : m_point{0}, m_screen(true) {}
@@ -263,19 +364,10 @@ void CCoords::Use_screen (const bool _b_use) { this->m_screen = _b_use; }
 #pragma endregion
 #pragma region cls::IMouse_Handler::CEvent{}
 
-CEvent::CEvent (void) : m_action(e_action::e_none), m_button(e_button::e_undef) {}
-
-e_action CEvent::Action (void) const { return this->m_action; }
-bool CEvent::Action (const e_action _e_action) {
-	_e_action;
-	const bool b_changed = this->Action() != _e_action; if (b_changed) this->m_action = _e_action; return b_changed;
-}
-
-e_button CEvent::Button (void) const { return this->m_button; }
-bool CEvent::Button (const e_button _e_button) {
-	_e_button;
-	const bool b_changed = this->Button() != _e_button; if (b_changed) this->m_button = _e_button; return b_changed;
-}
+CEvent::CEvent (void) {}
+const
+CButtons& CEvent::Buttons (void) const { return this->m_buttons; }
+CButtons& CEvent::Buttons (void)       { return this->m_buttons; }
 const
 CCoords& CEvent::Coords (void) const { return this->m_coords; }
 CCoords& CEvent::Coords (void)       { return this->m_coords; }
@@ -316,6 +408,8 @@ bool CVirtKeys::Has (const e_v_key e_key, const w_param _values) {
 #pragma endregion
 #pragma region cls::CMouseRouter{}
 
+static IMouse_Handler::CEvent g_event;
+
 CMouseRouter::CMouseRouter (void) : TBase() { TBase::m_error >>__CLASS__; }
 
 err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_param, const l_param _l_param) {
@@ -323,41 +417,30 @@ err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	Mouse_Safe_Lock();
 
 	TBase::m_error <<__METHOD__<<__s_false; // the message is not handled;
-	// https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk ;
-	// https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown   ;
-	// https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup     ;
-	// https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk ;
-	// https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown   ;
-	// https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup     ;
 
-	using e_action = IMouse_Handler::e_action;
-	using e_button = IMouse_Handler::e_button;
-	using e_v_key  = IMouse_Handler::e_v_key ;
+	/* https://learn.microsoft.com/en-us/windows/win32/learnwin32/mouse-movement; << good example of how to use capture of mouse events outside the window;
+	*/
+	
+	g_event.Keys().Set(_w_param); g_event.Coords().Set(_l_param);
+	
+//	const bool b_moving  = WM_MOUSEMOVE == _u_code;
+	const bool b_handled = g_event.Buttons().Set(_u_code);
 
-	IMouse_Handler::CEvent event_; event_.Keys().Set(_w_param); event_.Coords().Set(_l_param);
-
-	switch (_u_code) {
-	case WM_LBUTTONDBLCLK : { event_.Action(e_action::e_double); event_.Button(e_button::e_left) ; } break;
-	case WM_RBUTTONDBLCLK : { event_.Action(e_action::e_double); event_.Button(e_button::e_right); } break;
-	case WM_LBUTTONDOWN : { event_.Action(e_action::e_pressed); event_.Button(e_button::e_left) ; } break;
-	case WM_RBUTTONDOWN : { event_.Action(e_action::e_pressed); event_.Button(e_button::e_right); } break;
-	case WM_LBUTTONUP : { event_.Action(e_action::e_released); event_.Button(e_button::e_left) ; } break;
-	case WM_RBUTTONUP : { event_.Action(e_action::e_released); event_.Button(e_button::e_right); } break;
-	default:
-		return TBase::Error(); // still not handled;
-	}
+	if (false == b_handled/* && false == b_moving*/)
+		return TBase::Error(); // __s_false is returned, i.e. the message is not handled;
 
 	TMouseHandlers& handlers = ::Get_mouse_handlers();
 
 	for (TMouseHandlers::iterator it_ = handlers.begin(); it_ != handlers.end(); ++it_) {
 		if (nullptr == *it_)
 			continue;
-		const IMouse_Handler* p_handler = *it_;
-		err_code n_result = const_cast<IMouse_Handler*>(p_handler)->IMouse_OnEvent(event_);
-		if (__s_ok == n_result) {
-			TBase::m_error << n_result; break;
-		}
-		else if (__s_false == n_result)
+		IMouse_Handler* p_handler = const_cast<IMouse_Handler*>(*it_);
+
+		err_code n_result = __s_false;
+		if (__s_ok == (n_result = p_handler->IMouse_OnEvent(g_event))) break;
+	//	if (__s_ok == (n_result = p_handler->IMouse_OnMove(g_event))) break;
+
+		if (__s_false == n_result)
 			continue;
 		else {
 			TBase::m_error = p_handler->IMouse_Error(); break;

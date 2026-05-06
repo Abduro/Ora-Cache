@@ -59,22 +59,22 @@ err_code CBase::Create (const HWND _h_surface) {
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Camera().Create())) return this->m_error = this->Camera().Error();
 	if (__failed(this->Grid().Create())) return this->m_error = this->Grid().Error();
-	else {
-	}
-
+	
 	return this->Error();
 }
 
 err_code CBase::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Camera().Destroy())) return this->m_error = this->Camera().Error();
 	if (__failed(this->Grid().Destroy())) return this->m_error = this->Grid().Error();
 
 	return this->Error();
 }
 
-TError& CBase::Error (void) const { return this->m_error; }
+TError&  CBase::Error (void) const { return this->m_error; }
 
 err_code CBase::Init (void) {
 	this->m_error <<__METHOD__<<__s_ok;

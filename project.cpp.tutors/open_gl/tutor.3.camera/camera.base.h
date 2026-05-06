@@ -5,6 +5,7 @@
 	This is Ebo Pack OpenGL tutorials' virtual camera base interface declaration file;
 */
 #include "shared.defs.h"
+#include "shared.dbg.h"
 #include "shared.preproc.h"
 
 namespace open_gl { using namespace shared::defs;
@@ -47,6 +48,7 @@ namespace camera {
 		}
 	};
 }
+
 	class CCamera {
 	public:
 		using s_angles = ::open_gl::camera::s_angles;
@@ -55,6 +57,9 @@ namespace camera {
 		const
 		s_angles& Angles (void) const;
 		s_angles& Angles (void) ;
+
+		err_code Create  (void);
+		err_code Destroy (void);
 
 		TError&  Error (void) const;
 		const
@@ -67,6 +72,7 @@ namespace camera {
 		CError   m_error;
 		s_pos    m_pos;
 		s_angles m_angles;
+		t_point  m_mouse;  // this is the last position of the mouse cursor at the moment of mouse message handling;
 	};
 }
 

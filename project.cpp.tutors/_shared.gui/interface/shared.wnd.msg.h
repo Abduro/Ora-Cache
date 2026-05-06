@@ -42,9 +42,9 @@ namespace ex_ui { namespace popup { namespace messages {
 	};
 
 	interface IMouse_Handler {
-
+		// WM_MOUSEMOVE the message is processed, but it makes sense when one of the mouse buttons is pressed and held;
 		enum class e_action : uint32_t {
-			e_none = 0x0, e_double = 0x1, e_pressed = 0x2, e_released = 0x3,
+			e_none = 0x0, e_double = 0x1, e_pressed = 0x2, e_released = 0x3
 		};
 
 		enum class e_button : uint32_t { // mouse buttons' enumeration;
@@ -56,6 +56,50 @@ namespace ex_ui { namespace popup { namespace messages {
 			e_alt  = FALT    ,  // alt-key is not defined in mouse message virtual keys, but the definition for keyboard accelerators is fine;        
 			e_ctrl = FCONTROL,  // the 'ctrl' key is down; the same as MK_CONTROL [0x0008] ;
 			e_shft = FSHIFT  ,  // the 'shift' key is down; the same as MK_SHIF [0x0004] ;
+		};
+
+		class CButton {
+		public:
+			CButton (const e_button = e_button::e_undef, const e_action = e_action::e_none); ~CButton (void) = default;
+			CButton (const CButton&) = delete; CButton (CButton&&) = delete;
+
+			bool Is_pressed  (void) const;
+			bool Is_pressed  (const bool _yes_or_no);
+			bool Is_released (void) const;
+			bool Is_released (const bool _yes_or_no);
+
+			e_action State (void) const;     // gets the action that changes the state of this button;
+			bool     State (const e_action); // sets the state that appropriate to given action, returns 'true' in case state change;
+
+			e_button What (void) const;
+			bool     What (const e_button); // it sets which button it is; returns 'true' in case of value change; no check for 'e_none';
+
+			bool operator <<(const e_action); // changes the state of the button;
+
+		private:
+			CButton& operator = (const CButton&) = delete; CButton& operator = (CButton&&) = delete;
+			e_action m_state; // an action is what a user mades with mouse button, but for button it is its state being changed by a user action;
+			e_button m_what ;
+		};
+
+		class CButtons {
+		public:
+			CButtons (void); CButtons (const CButtons&) = delete; CButtons (CButtons&&) = delete; ~CButtons (void) = default;
+
+			const
+			CButton& Get (const e_button) const; // returns the reference by given button place, if button does not exist the reference to fake button is returned;
+			CButton& Get (const e_button) ;      // returns the reference by given button place, if button does not exist the reference to fake button is returned;
+
+			e_button Is_changed (void) const;    // returns what button is changed if there is no such, 'e_undef';
+			bool Set (const uint32_t _u_msg);    // sets mouse buttons' state from given window message; returns 'true' if message is handled regardless changing buttons' state;
+			const
+			CButton&  The_last (void) const;     // returns reference to the button the state of which is changed by the last event; (ro)
+			CButton&  The_last (void) ;          // returns reference to the button the state of which is changed by the last event; (rw)
+
+		private:
+			CButtons& operator = (const CButtons&) = delete; CButtons& operator = (CButtons&&) = delete;
+			CButton   m_buttons[3];  // 0 - left; 1 = middle; 2 - right; other buttons are not taken into account;
+			e_button  m_the_last;    // containst what button state is changed on the last mouse related message;
 		};
 
 		class CCoords {
@@ -91,11 +135,9 @@ namespace ex_ui { namespace popup { namespace messages {
 		class CEvent {
 		public:
 			CEvent (void); CEvent (const CEvent&) = delete; CEvent (CEvent&&) = delete; ~CEvent (void) = default;
-
-			e_action Action (void) const;
-			bool     Action (const e_action);
-			e_button Button (void) const;
-			bool     Button (const e_button);
+			const
+			CButtons& Buttons (void) const;
+			CButtons& Buttons (void) ;
 			const
 			CCoords& Coords (void) const;
 			CCoords& Coords (void) ;
@@ -107,17 +149,14 @@ namespace ex_ui { namespace popup { namespace messages {
 
 		private:
 			CEvent& operator = (const CEvent&) = delete; CEvent& operator = (CEvent&&) = delete;
-			e_action  m_action;
-			e_button  m_button;
+			CButtons  m_buttons;
 			CCoords   m_coords;
 			CVirtKeys m_v_keys;
 		};
-
+		// __s_ok: handled; __s_false = not handled; otherwise the error code;
 		virtual TError&  IMouse_Error (void) const = 0;
-		virtual err_code IMouse_OnEvent (const CEvent&) {
-			// __s_ok: handled; __s_false = not handled; otherwise the error code;
-			return __s_false;
-		}
+		virtual err_code IMouse_OnEvent (const CEvent&) { return __s_false; } // occurs on mouse button pressing/releasing;
+		virtual err_code IMouse_OnMove (const CEvent&) { return __s_false; } // occurs on mouse movement;
 	};
 
 	class CMouseRouter : public IMsg_Handler, public CBaseHandler { typedef CBaseHandler TBase;

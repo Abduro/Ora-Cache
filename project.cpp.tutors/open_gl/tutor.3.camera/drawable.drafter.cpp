@@ -16,6 +16,8 @@ err_code   CDrafter::OnCreate (const HWND _h_surface) {
 	_h_surface;
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(::Get_mouse() << this)) { __trace_err_ex_2(this->m_error = ::Get_mouse().Error()); }
+
 	if (__failed(this->Model().Create(_h_surface))) {
 		__trace_err_ex_2(TBase::m_error = this->Model().Error());
 	} else
@@ -30,6 +32,8 @@ err_code   CDrafter::OnCreate (const HWND _h_surface) {
 
 err_code   CDrafter::OnDestroy (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(::Get_mouse() >> this)) { __trace_err_ex_2(this->m_error = ::Get_mouse().Error()); }
 
 	if (__failed(this->Model().Destroy())) {
 		__trace_err_ex_2(TBase::m_error = this->Model().Error());
@@ -94,5 +98,17 @@ CView&  CDrafter::View (void) const { return this->m_view; }
 CView&  CDrafter::View (void)       { return this->m_view; }
 
 //CDrafter& CDrafter::operator = (const CDrafter& _src) { _src; return *this; }
+
+TError&   CDrafter::IMouse_Error (void) const { return this->Error(); }
+
+err_code  CDrafter::IMouse_OnEvent (const CEvent& _event) {
+	_event;
+	if (_event.Buttons().The_last().What() != e_button::e_left)
+		return __s_false; // not handled;
+
+//	this->m_mouse = _event.Coords().Get();
+
+	return __s_ok;
+}
 
 #pragma endregion
