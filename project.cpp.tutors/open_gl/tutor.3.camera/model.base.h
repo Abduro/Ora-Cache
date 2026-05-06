@@ -12,6 +12,7 @@
 #include "gl_viewport.h"
 
 #include "math.matrix.h"
+#include "camera.base.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace models { using namespace shared::defs;
 
@@ -19,10 +20,14 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 	using CViewPort = ex_ui::draw::open_gl::CViewPort;
 
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
+	using CCamera = ::open_gl::CCamera;
 
 	class CBase {
 	public:
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
+		const
+		CCamera& Camera (void) const;
+		CCamera& Camera (void) ;
 
 		err_code Create (const HWND);
 		err_code Destroy (void);
@@ -45,8 +50,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 		mutable
 		CError    m_error;
 		CGrid     m_grid ;      // the grid is not implemented as a model yet;
-		CViewPort m_v_port;
+		CViewPort m_vport;
 		c_mat4x4  m_model;
+		CCamera   m_camera;
 	};
 }}}}
 

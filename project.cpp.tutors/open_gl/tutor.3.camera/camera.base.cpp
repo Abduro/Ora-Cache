@@ -1,0 +1,22 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 06-May-2026 at 02:02:39.322, UTC+4, Batumi, Wednesday;
+	This is Ebo Pack OpenGL tutorials' virtual camera base interface implementation file;
+*/
+#include "camera.base.h"
+
+using namespace ::open_gl;
+using namespace ::open_gl::camera;
+
+#pragma region cls::CCamera{}
+
+CCamera::CCamera (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+const
+s_angles& CCamera::Angles (void) const { return this->m_angles; }
+s_angles& CCamera::Angles (void)       { return this->m_angles; }
+TError&   CCamera::Error  (void) const { return this->m_error; }
+const
+s_pos&    CCamera::Pos (void) const { return this->m_pos; }
+s_pos&    CCamera::Pos (void)       { return this->m_pos; }
+
+#pragma endregion

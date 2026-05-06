@@ -50,7 +50,10 @@ namespace open_gl { namespace models { namespace _impl {
 
 #pragma region cls::CBase{}
 
-CBase::CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: base model is not created"); }
+CBase::CBase (void) : m_model(true) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: base model is not created"); }
+const
+CCamera& CBase::Camera (void) const { return this->m_camera; }
+CCamera& CBase::Camera (void)       { return this->m_camera; }
 
 err_code CBase::Create (const HWND _h_surface) {
 	_h_surface;
@@ -102,7 +105,7 @@ const
 c_mat4x4&  CBase::Mat_model (void) const { return this->m_model; }
 c_mat4x4&  CBase::Mat_model (void)       { return this->m_model; }
 const
-CViewPort& CBase::ViewPort (void) const { return this->m_v_port; }
-CViewPort& CBase::ViewPort (void)       { return this->m_v_port; }     
+CViewPort& CBase::ViewPort (void) const { return this->m_vport; }
+CViewPort& CBase::ViewPort (void)       { return this->m_vport; }     
 
 #pragma endregion

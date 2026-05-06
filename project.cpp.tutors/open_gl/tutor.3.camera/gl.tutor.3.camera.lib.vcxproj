@@ -202,6 +202,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="camera.base.h" />
+    <ClCompile Include="camera.base.cpp" />
     <ClInclude Include="drawable.defs.h" />
     <ClCompile Include="drawable.defs.cpp" />
     <ClInclude Include="drawable.drafter.h" />
