@@ -8,15 +8,19 @@ using namespace shared::drawable;
 
 #pragma region cls::CDrafter{}
 
-CDrafter:: CDrafter (void) : TBase(), m_surface(0) { TBase::m_error >>__CLASS__; }
+CDrafter:: CDrafter (void) : TBase(), m_surface(0), m_mouse{0} { TBase::m_error >>__CLASS__; }
 //CDrafter:: CDrafter (const CDrafter& _src) : CDrafter() { *this = _src; }
 CDrafter::~CDrafter (void) {}
+const
+CCamera& CDrafter::Camera (void) const { return this->m_camera; }
+CCamera& CDrafter::Camera (void)       { return this->m_camera; }
 
-err_code   CDrafter::OnCreate (const HWND _h_surface) {
+err_code CDrafter::OnCreate (const HWND _h_surface) {
 	_h_surface;
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (__failed(::Get_mouse() << this)) { __trace_err_ex_2(this->m_error = ::Get_mouse().Error()); }
+	if (__failed(this->Camera().Create())) { __trace_err_ex_2(this->m_error = this->Camera().Error()); }
 
 	if (__failed(this->Model().Create(_h_surface))) {
 		__trace_err_ex_2(TBase::m_error = this->Model().Error());
@@ -26,13 +30,16 @@ err_code   CDrafter::OnCreate (const HWND _h_surface) {
 	}
 
 	this->m_surface = _h_surface; // important: otherwise there is no grid drawn;
+	if (__failed(::Get_ViewPorts().Add(this->m_surface)))
+		__trace_err_ex_2(TBase::m_error = ::Get_ViewPorts().Error());
 
 	return TBase::Error();
 }
 
-err_code   CDrafter::OnDestroy (void) {
+err_code CDrafter::OnDestroy (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Camera().Destroy())) __trace_err_ex_2(this->m_error = this->Camera().Error());
 	if (__failed(::Get_mouse() >> this)) { __trace_err_ex_2(this->m_error = ::Get_mouse().Error()); }
 
 	if (__failed(this->Model().Destroy())) {
@@ -41,6 +48,9 @@ err_code   CDrafter::OnDestroy (void) {
 	if (__failed(this->View().Destroy())) {
 		__trace_err_ex_2(TBase::m_error = this->View().Error());
 	} else {}
+
+	if (__failed(::Get_ViewPorts().Remove(this->m_surface)))
+		__trace_err_ex_2(TBase::m_error = ::Get_ViewPorts().Error());
 
 	this->m_surface = 0;
 
@@ -61,9 +71,10 @@ void CDrafter::Run (void) {
 	if (__failed(this->Model().Init())) {
 		__trace_err_ex_2(TBase::m_error = this->Model().Error());
 	} else {
-		t_rect rc_client = {0};
-		::GetClientRect(this->m_surface, &rc_client);
-		this->Model().ViewPort().Set(rc_client);
+
+		t_size sz_client = ::Get_ViewPorts().Active().Get();
+		t_rect rc_client = {0, 0, sz_client.cx, sz_client.cy};
+		
 		this->Model().Grid().Layout() << rc_client;
 
 		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
@@ -106,9 +117,20 @@ err_code  CDrafter::IMouse_OnEvent (const CEvent& _event) {
 	if (_event.Buttons().The_last().What() != e_button::e_left)
 		return __s_false; // not handled;
 
-//	this->m_mouse = _event.Coords().Get();
+	const int32_t x_delta = _event.Coords().Get().x - this->m_mouse.x;
+	const int32_t y_delta = _event.Coords().Get().y - this->m_mouse.y;
 
-	return __s_ok;
+	this->m_mouse = _event.Coords().Get();
+
+	return __s_ok; // handled;
+}
+
+err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) {
+	_event; _delta;
+	__trace_warn_2(_T("zoom delta: %d;\n"), _delta);
+
+
+	return __s_ok; // handled;
 }
 
 #pragma endregion

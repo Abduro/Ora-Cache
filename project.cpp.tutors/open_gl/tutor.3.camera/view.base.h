@@ -4,8 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Apr-2026 at 02:01:31.446, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL tutorials' view base interface declaration file;
 */
-#include "shared.defs.h"
-#include "shared.preproc.h"
+#include "drawable.defs.h"
 #include "gl_context.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace views { using namespace shared::defs;

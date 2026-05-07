@@ -156,7 +156,10 @@ namespace ex_ui { namespace popup { namespace messages {
 		// __s_ok: handled; __s_false = not handled; otherwise the error code;
 		virtual TError&  IMouse_Error (void) const = 0;
 		virtual err_code IMouse_OnEvent (const CEvent&) { return __s_false; } // occurs on mouse button pressing/releasing;
-		virtual err_code IMouse_OnMove (const CEvent&) { return __s_false; } // occurs on mouse movement;
+		virtual err_code IMouse_OnMove  (const CEvent&) { return __s_false; } // occurs on mouse movement;
+		virtual err_code IMouse_OnWheel (const CEvent&, const int32_t _delta) { _delta; return __s_false; } // occurs on spinning mouse wheel;
+		// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel ;
+		// _delta: negative value >> backward/toward to user, positive value << forward/away from user;
 	};
 
 	class CMouseRouter : public IMsg_Handler, public CBaseHandler { typedef CBaseHandler TBase;

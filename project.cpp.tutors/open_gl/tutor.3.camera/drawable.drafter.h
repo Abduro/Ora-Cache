@@ -7,11 +7,13 @@
 #include "drawable.defs.h"
 #include "shared.wnd.msg.h"
 
+#include "camera.base.h"
 #include "model.base.h"
 #include "view.base.h"
 
 namespace shared { namespace drawable {
 
+	using CCamera = ::open_gl::CCamera;
 	using CModel = ex_ui::draw::open_gl::models::CBase;
 	using CView = ex_ui::draw::open_gl::views::CBase;
 
@@ -21,28 +23,34 @@ namespace shared { namespace drawable {
 	class CDrafter : public CTplRunner, public IMouse_Handler { typedef CTplRunner TBase;
 	public:
 		CDrafter (void); CDrafter (const CDrafter&) = delete; CDrafter (CDrafter&&) = delete; ~CDrafter (void);
+		const
+		CCamera&  Camera (void) const;
+		CCamera&  Camera (void) ;
 
-		err_code OnCreate (const HWND _h_surface);
-		err_code OnDestroy (void);
+		err_code  OnCreate (const HWND _h_surface);
+		err_code  OnDestroy (void);
 
 		const
-		CModel&  Model (void) const;
-		CModel&  Model (void) ;
+		CModel&   Model (void) const;
+		CModel&   Model (void) ;
 		const
-		CView&   View (void) const;
-		CView&   View (void) ;
+		CView&    View (void) const;
+		CView&    View (void) ;
 
-		TError&  IMouse_Error (void) const override final;
-		err_code IMouse_OnEvent (const CEvent&) override final;
+		TError&   IMouse_Error (void) const override final;
+		err_code  IMouse_OnEvent (const CEvent&) override final;
+		err_code  IMouse_OnWheel (const CEvent&, const int32_t _delta) override final; // if it occurs, it will come before IMouse_OnEvent();
 
 	protected:
 		virtual void Run (void) override final;
 
 	private:
 		CDrafter& operator = (const CDrafter&) = delete; CDrafter& operator = (CDrafter&&) = delete;
-		CModel  m_model;
-		CView   m_view;
-		HWND m_surface;
+		CModel    m_model;
+		CView     m_view;
+		HWND      m_surface;
+		t_point   m_mouse;   // this is the last position of the mouse cursor at the moment of mouse message handling;
+		CCamera   m_camera;
 	};
 }}
 

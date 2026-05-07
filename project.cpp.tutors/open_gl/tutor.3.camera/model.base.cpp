@@ -51,15 +51,11 @@ namespace open_gl { namespace models { namespace _impl {
 #pragma region cls::CBase{}
 
 CBase::CBase (void) : m_model(true) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: base model is not created"); }
-const
-CCamera& CBase::Camera (void) const { return this->m_camera; }
-CCamera& CBase::Camera (void)       { return this->m_camera; }
 
 err_code CBase::Create (const HWND _h_surface) {
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Camera().Create())) return this->m_error = this->Camera().Error();
 	if (__failed(this->Grid().Create())) return this->m_error = this->Grid().Error();
 	
 	return this->Error();
@@ -68,7 +64,6 @@ err_code CBase::Create (const HWND _h_surface) {
 err_code CBase::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Camera().Destroy())) return this->m_error = this->Camera().Error();
 	if (__failed(this->Grid().Destroy())) return this->m_error = this->Grid().Error();
 
 	return this->Error();
@@ -104,8 +99,5 @@ CGrid&  CBase::Grid (void)       { return this->m_grid; }
 const
 c_mat4x4&  CBase::Mat_model (void) const { return this->m_model; }
 c_mat4x4&  CBase::Mat_model (void)       { return this->m_model; }
-const
-CViewPort& CBase::ViewPort (void) const { return this->m_vport; }
-CViewPort& CBase::ViewPort (void)       { return this->m_vport; }     
 
 #pragma endregion

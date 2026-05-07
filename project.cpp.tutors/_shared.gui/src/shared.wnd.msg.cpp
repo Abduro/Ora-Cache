@@ -154,7 +154,8 @@ static l_result __stdcall __msg_handler (HWND _h_wnd, uint32_t _msg_id, w_param 
 	case WM_DESTROY : {
 		n_result = __s_ok == it_->second->IMsg_OnMessage(_msg_id, _w_param, _l_param) ? __s_ok : __s_false;
 	} break;
-	case WM_MOUSEMOVE: // https://learn.microsoft.com/en-us/windows/win32/learnwin32/mouse-movement ;
+	case WM_MOUSEMOVE  : // https://learn.microsoft.com/en-us/windows/win32/learnwin32/mouse-movement ;
+	case WM_MOUSEWHEEL : // https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel ;
 	case WM_LBUTTONDBLCLK : case WM_LBUTTONDOWN : case WM_LBUTTONUP :
 	case WM_RBUTTONDBLCLK : case WM_RBUTTONDOWN : case WM_RBUTTONUP : {
 		n_result = __s_ok == ::Get_mouse().IMsg_OnMessage(_msg_id, _w_param, _l_param) ? __s_ok : __s_false; // the possible error code is not of interest here;
@@ -423,10 +424,11 @@ err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	
 	g_event.Keys().Set(_w_param); g_event.Coords().Set(_l_param);
 	
-//	const bool b_moving  = WM_MOUSEMOVE == _u_code;
+//	const bool b_moving  = WM_MOUSEMOVE  == _u_code;
+	const bool b_spin    = WM_MOUSEWHEEL == _u_code;
 	const bool b_handled = g_event.Buttons().Set(_u_code);
 
-	if (false == b_handled/* && false == b_moving*/)
+	if (false == b_handled && false == b_spin/* && false == b_moving*/)
 		return TBase::Error(); // __s_false is returned, i.e. the message is not handled;
 
 	TMouseHandlers& handlers = ::Get_mouse_handlers();
@@ -437,7 +439,8 @@ err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		IMouse_Handler* p_handler = const_cast<IMouse_Handler*>(*it_);
 
 		err_code n_result = __s_false;
-		if (__s_ok == (n_result = p_handler->IMouse_OnEvent(g_event))) break;
+		if (b_spin) { if (__s_ok == (n_result = p_handler->IMouse_OnWheel(g_event, GET_WHEEL_DELTA_WPARAM(_w_param)/WHEEL_DELTA))) break; }
+		else { if (__s_ok == (n_result = p_handler->IMouse_OnEvent(g_event))) break; }
 	//	if (__s_ok == (n_result = p_handler->IMouse_OnMove(g_event))) break;
 
 		if (__s_false == n_result)

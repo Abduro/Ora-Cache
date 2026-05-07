@@ -27,6 +27,7 @@ using namespace ex_ui::color::rgb;
 CViewPort:: CViewPort (const uint32_t _u_width, const uint32_t _u_height) : m_size{_u_width, _u_height} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	if (false == this->Is_valid()){/*error state is already set by this property;*/}
 }
+CViewPort:: CViewPort (const CViewPort& _src) : CViewPort() { *this= _src; }
 CViewPort::~CViewPort (void) {}
 
 TError& CViewPort::Error(void) const { return this->m_error; }
@@ -44,7 +45,7 @@ bool CViewPort::Is_valid (const t_size_u& _u_size, CError& _err) {
 }
 
 t_size    CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
-t_size_u& CViewPort::Get (void) { return this->m_size; }
+//t_size_u& CViewPort::Get (void) { return this->m_size; }
 float     CViewPort::Get_X (const int32_t _n_x) const {
 	_n_x;
 	if (0 == this->Get().cx) // the division by zero is not defined;
@@ -68,7 +69,7 @@ float     CViewPort::Get_Y (const int32_t _n_y) const {
 #endif
 }
 
-err_code CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
+err_code  CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
 	_u_width; _u_height;
 	this->m_error << __METHOD__<<__s_ok;
 
@@ -85,7 +86,7 @@ err_code CViewPort::Set (const uint32_t _u_width, const uint32_t _u_height) {
 	return this->Error();
 }
 
-err_code CViewPort::Set (const t_rect& _rect) {
+err_code  CViewPort::Set (const t_rect& _rect) {
 	_rect;
 	this->m_error << __METHOD__<<__s_ok;
 	if (::IsRectEmpty(&_rect))
@@ -103,7 +104,7 @@ err_code CViewPort::Set (const t_rect& _rect) {
 	return this->Error();
 }
 
-err_code CViewPort::ToPos (const t_size_u& _u_size, const uint32_t _in_x, const uint32_t _in_y, t_set_3& _pos_out, CError& _err) {
+err_code  CViewPort::ToPos (const t_size_u& _u_size, const uint32_t _in_x, const uint32_t _in_y, t_set_3& _pos_out, CError& _err) {
 	_u_size; _in_x; _in_y; _pos_out; _err;
 	if (CViewPort::Is_valid(_u_size, _err) == false)
 		return _err;
@@ -120,7 +121,7 @@ err_code CViewPort::ToPos (const t_size_u& _u_size, const uint32_t _in_x, const 
 	return _err;
 }
 
-err_code CViewPort::Update (void) {
+err_code  CViewPort::Update (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 #if (0)
 	if (__failed(this->Grid().Update(this->m_size))) {
@@ -130,6 +131,7 @@ err_code CViewPort::Update (void) {
 	return this->Error();
 }
 
+CViewPort&  CViewPort::operator = (const CViewPort& _src) { this->m_size = _src.m_size; this->m_error = _src.Error(); return *this; }
 CViewPort&  CViewPort::operator << (const t_rect& _rect) { this->Set(_rect); return *this; }
 
 float CViewPort::operator << (const int32_t _n_x) const { return this->Get_X(_n_x); }
