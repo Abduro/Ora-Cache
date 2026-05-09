@@ -21,6 +21,15 @@ namespace shared { namespace drawable { using namespace shared::defs;
 #include "gl_viewport.h"
 
 namespace open_gl { namespace views {
+	/* query: abbreviation for euclidean ; (Google AI) >> E or Euc ;
+	   (1) ED : Euclidean Distance; https://en.wikipedia.org/wiki/Euclidean_distance ;
+	   (2) EDM: Euclidean Distance Map or Matrix; https://en.wikipedia.org/wiki/Euclidean_distance_matrix ;
+	            a matrix holds the numerical data of inter-point distances; computing is extensive and requires parallel processing on GPUs;
+	            the app: coverting an image to grayscale; in geographics for finding paths; an obstacle detection in computer vision;
+	   (3) EDT: Euclidean Distance Transform: common in image processing;
+	            it is a function that assigns to each point in a space the distance to the nearest object by applying Pythagorean theorem to nearest pixels;
+	            the app: widely used in computer vision for skeletonization, path planning, medical imaging, and object recognition; (the image must be grayscale)
+	*/
 
 	using CViewPort = ex_ui::draw::open_gl::CViewPort;
 

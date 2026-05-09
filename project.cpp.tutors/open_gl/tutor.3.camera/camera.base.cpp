@@ -28,6 +28,10 @@ float&  c_view_matrix::Shift_Z (const int32_t _wheel_value) {
 	return ((*this)().Cell(3, 2) += float(_wheel_value));
 }
 
+const
+c_mat4x4& c_view_matrix::operator ()(void) const { return (base_t&)*this; }
+c_mat4x4& c_view_matrix::operator ()(void)       { return (base_t&)*this; }
+
 #pragma endregion
 #pragma region cls::CCamera{}
 
