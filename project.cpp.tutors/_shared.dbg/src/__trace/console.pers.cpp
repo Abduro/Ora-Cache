@@ -171,6 +171,18 @@ err_code CPosition::Load (void) {
 err_code CPosition::Save (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement ; 
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow ; << for 'show window' flags;
+	WINDOWPLACEMENT wnd_place = {0};
+	wnd_place.length = sizeof(wnd_place);
+
+	if (0 == ::GetWindowPlacement(CAccessor()(), &wnd_place)) {
+		return this->m_error.Last();
+	}
+	else if (0 == (wnd_place.showCmd & SW_NORMAL)) { // the state of the window either 'minimized' or 'maximized' is not interest;
+		return this->Error();
+	}
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect ;
 	t_rect rc_ = {0};
 

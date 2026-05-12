@@ -94,7 +94,7 @@ void CDrafter::Run (void) {
 			::glPushMatrix();
 #if (0)
 			const c_scaled scaled = this->m_scale();
-			::glMultMatrixf(&scaled);
+			::glMultMatrixf(&scaled); // https://learn.microsoft.com/en-us/windows/win32/opengl/glmultmatrixf ;
 #else
 			/* warning: when using glScalef() with lighting, enable GL_NORMALIZE to ensure lighting calculations remain correct.
 			*/
@@ -146,7 +146,11 @@ err_code  CDrafter::IMouse_OnEvent (const CEvent& _event) {
 
 err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) {
 	_event; _delta;
-	__trace_warn_2(_T("zoom delta: %d;\n"), _delta);
+	static int32_t n_delta_prev = 0;
+	if (n_delta_prev != _delta) {
+		__trace_warn_2(_T("zoom delta: %d;\n"), _delta);
+		n_delta_prev = _delta;
+	}
 
 	this->m_scale.Set(_delta);
 
@@ -164,8 +168,23 @@ void CScale::Is_changed (const bool _b_state) { TSafe_Lock(); this->m_changed = 
 float CScale::Get (void) const { TSafe_Lock(); const float f_value = this->m_factor;  return f_value; }
 void  CScale::Set (const int32_t _n_factor) {
 	_n_factor;
+	static float f_factor_prev = 0.0f; f_factor_prev;
+
+	using namespace ex_ui::draw::open_gl::math::defs;
+
 	TSafe_Lock();
-	this->m_factor = float(_n_factor);
+	if (false) {}
+	else if (_n_factor > 0) { this->m_factor += float(_n_factor) * f_delta; }
+	else if (_n_factor < 0) { this->m_factor += float(_n_factor) * f_delta; if (this->m_factor < f_epsilon) this->m_factor = 0.1f; }
+	else { return; }
+
+	if (f_epsilon > this->m_factor - f_factor_prev)
+		return;
+	else
+		f_factor_prev = this->m_factor;
+
+	__trace_warn_2(_T("scale factor: %.7f;\n"), this->m_factor);
+
 	this->m_scaled.Set(this->m_factor);
 	this->m_changed = true;
 	return;

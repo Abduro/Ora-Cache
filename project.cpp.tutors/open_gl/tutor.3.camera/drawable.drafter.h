@@ -23,8 +23,17 @@ namespace shared { namespace drawable {
 	using c_scaled = ex_ui::draw::open_gl::math::c_scaled_4x4;
 	using c_mutex = ::std::recursive_mutex;
 
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
-	// thread safe;
+	/* query: what scale factor should be set in order to change draw object a little smaller opengl (to Google AI);
+	To make an OpenGL object slightly smaller, set the scale factor to a value slightly less than 1.0
+	(e.g., 0.9 for 10%) smaller, 0.95 for 5% smaller) using the glScalef(x, y, z) function.
+	Key Details:
+	(1) Scale Factor Range: values between 0.0 and 1.0 shrink the object, while values greater than 1.0 magnify it;
+	(2) Uniform vs. non-uniform: Use the same value for x, y, z (e.g., 0.9, 0.9, 0.9) to shrink proportionally without distortion;
+	(3) Implementation: call glScalef() before issuing the draw commands for your object;
+	(4) Order Matters: to avoid unexpected positioning, translate the object to the origin (0,0,0), apply the scale, and then translate back;
+	*/
+	static const float f_delta = 0.05f;
+	// this class is thread safe;
 	class CScale {
 	public:
 		CScale (void); CScale (const CScale&) = delete; CScale (CScale&&) = delete; ~CScale (void) = default;
@@ -33,7 +42,7 @@ namespace shared { namespace drawable {
 		void Is_changed (const bool);
 
 		float Get (void) const;              // gets the factor value;
-		void  Set (const int32_t _n_factor); // sets the factor value;
+		void  Set (const int32_t _n_factor); // sets the factor value; this is uniform scale;
 
 		c_scaled operator ()(void) const;    // gets a copy of scaled matrix;
 
