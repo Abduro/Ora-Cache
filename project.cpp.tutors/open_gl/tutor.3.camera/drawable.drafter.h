@@ -20,6 +20,30 @@ namespace shared { namespace drawable {
 	using IMouse_Handler = ex_ui::popup::messages::IMouse_Handler;
 	using CEvent = ex_ui::popup::messages::IMouse_Handler::CEvent;
 
+	using c_scaled = ex_ui::draw::open_gl::math::c_scaled_4x4;
+	using c_mutex = ::std::recursive_mutex;
+
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
+	// thread safe;
+	class CScale {
+	public:
+		CScale (void); CScale (const CScale&) = delete; CScale (CScale&&) = delete; ~CScale (void) = default;
+
+		bool Is_changed (void) const;
+		void Is_changed (const bool);
+
+		float Get (void) const;              // gets the factor value;
+		void  Set (const int32_t _n_factor); // sets the factor value;
+
+		c_scaled operator ()(void) const;    // gets a copy of scaled matrix;
+
+	private:
+		CScale& operator = (const CScale&) = delete; CScale& operator = (CScale&&) = delete;
+		bool     m_changed;
+		float    m_factor;
+		c_scaled m_scaled;
+	};
+
 	class CDrafter : public CTplRunner, public IMouse_Handler { typedef CTplRunner TBase;
 	public:
 		CDrafter (void); CDrafter (const CDrafter&) = delete; CDrafter (CDrafter&&) = delete; ~CDrafter (void);
@@ -51,6 +75,7 @@ namespace shared { namespace drawable {
 		HWND      m_surface;
 		t_point   m_mouse;   // this is the last position of the mouse cursor at the moment of mouse message handling;
 		CCamera   m_camera;
+		CScale    m_scale;
 	};
 }}
 

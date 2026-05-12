@@ -157,3 +157,30 @@ TViewPortCache& ::Get_ViewPorts (void) {
 	static TViewPortCache cache;
 	return cache;
 }
+
+#pragma region cls::c_view_matrix{}
+
+c_view_matrix::c_view_matrix (void) : base_t() {}
+	/* cols:  #0   #1   #2   #3    entry/cell is of interest;
+	rows: #0 1.0  0.0  0.0  X.X << for along x-axis shift;
+	      #1 0.0  1.0  0.0  Y.Y << for along y-axis shift;
+	      #2 0.0  0.0  1.0  Z.Z << for along z-axis shift; 
+	      #3 0.0  0.0  0.0  1.0
+	*/
+float&  c_view_matrix::Shift_X (const int32_t _delta_x) {
+	return ((*this)().Cell(3, 0) += ::Get_ViewPorts().Active().Get_X(_delta_x));
+}
+
+float&  c_view_matrix::Shift_Y (const int32_t _delta_y) {
+	return ((*this)().Cell(3, 1) += ::Get_ViewPorts().Active().Get_Y(_delta_y));
+}
+
+float&  c_view_matrix::Shift_Z (const int32_t _wheel_value) {
+	return ((*this)().Cell(3, 2) += float(_wheel_value));
+}
+
+const
+c_mat4x4& c_view_matrix::operator ()(void) const { return (base_t&)*this; }
+c_mat4x4& c_view_matrix::operator ()(void)       { return (base_t&)*this; }
+
+#pragma endregion

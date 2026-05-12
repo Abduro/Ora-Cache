@@ -75,10 +75,13 @@ float Get_angle (const vec_2& _v_for, const vec_2& _v_with);
    https://stackoverflow.com/questions/243945/calculating-a-2d-vectors-cross-product << https://stackoverflow.com/a/50703927/4325555 ;
 */
 float Get_cross (const vec_2& _v_for, const vec_2& _v_with); // returns the angle value in radians; it is expected the input vectors are normalized;
+// https://registry.khronos.org/OpenGL-Refpages/gl4/html/dot.xhtml ;
 /* https://docs.godotengine.org/en/stable/tutorials/math/vector_math.html :
    if (dot product > 0.0f) the angle between vectors < 90.0f;
-   if (dot product = 0.0f) the angle between vectors = 90.0f;
+   if (dot product = 0.0f) the angle between vectors = 90.0f; (orthogonal)
    if (dot product < 0.0f) the angle between vectors > 90.0f;
+   if (dot product = 1.0f) the angle between vectors = 90.0f; (parallel, vectors point in the same direction)
+   if (dot product =-1.0f) the angle between vectors = 90.0f; (parallel, vectors point in exactly opposite directions)
 */
 float Get_dot (const vec_2& _v_for, const vec_2& _v_with);
 

@@ -142,7 +142,7 @@ float ::Get_cross (const vec_2& _v_for, const vec_2& _v_with) {
 	return _v_for.x * _v_with.y - _v_with.x * _v_for.y;
 }
 
-float Get_dot (const vec_2& _v_for, const vec_2& _v_with) {
+float ::Get_dot (const vec_2& _v_for, const vec_2& _v_with) {
 	_v_for; _v_with;
 	return _v_for.x * _v_with.x + _v_for.y * _v_with.y;
 }

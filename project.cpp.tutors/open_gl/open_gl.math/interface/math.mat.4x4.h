@@ -78,7 +78,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 		const
 		c_rows& Rows (void) const;
 		c_rows& Rows (void) ;
-		
+
 		static
 		err_code  Set (c_mat4x4&, const float*, CError&); // this method is inteanded for copying data from glm::mat4x4, especially for test-cases;
 		c_mat4x4& Set (const float*);  // it is assumed the pointer is to 16-elements' array of float data type;
@@ -122,6 +122,15 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 	// the multiplication operator cannot return reference due to the intermediate result requires buffering: neither _left nor _right is able to change;
 	c_mat4x4 operator * (const c_mat4x4&, const c_mat4x4&); // https://en.wikipedia.org/wiki/Matrix_multiplication ;
 
+	class c_scaled_4x4 : public c_mat4x4 {
+	public:
+		c_scaled_4x4 (void); // create an identity matrix;
+		c_scaled_4x4 (const float _f_factor); // applies the given scale factor to all axes;
+		c_scaled_4x4 (const float _f_x, const float _f_y, const float _f_z); // applies input factors to appropriate axis;
+
+		c_mat4x4& Set (const float _f_factor); // applies the given scale factor to all axes;
+		c_mat4x4& Set (const float _f_x, const float _f_y, const float _f_z); // applies given scale factors to appropriate axis;
+	};
 }}}}
 
 #endif/*__MATH_MAT_4x4_H_INCLUDED*/

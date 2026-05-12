@@ -87,6 +87,21 @@ void CDrafter::Run (void) {
 
 		::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // must be called before rendering each frame;
 
+		const bool b_scaled = this->m_scale.Is_changed();
+		if (b_scaled) {
+		//	shared::sys_core::the_lock.lock();
+			::glMatrixMode(GL_MODELVIEW);
+			::glPushMatrix();
+#if (0)
+			const c_scaled scaled = this->m_scale();
+			::glMultMatrixf(&scaled);
+#else
+			/* warning: when using glScalef() with lighting, enable GL_NORMALIZE to ensure lighting calculations remain correct.
+			*/
+			const float f_factor = this->m_scale.Get();
+			::glScalef(f_factor, f_factor, f_factor); // https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
+#endif
+		}
 		delay.Reset();
 		this->Model().Grid().Draw();
 
@@ -94,6 +109,10 @@ void CDrafter::Run (void) {
 		if (false == !!::SwapBuffers(this->View().Device())) {
 			TBase::m_error.Last();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_print::e_req));
+		}
+		if (b_scaled) {
+		//	shared::sys_core::the_lock.unlock();
+			::glPopMatrix();
 		}
 	}
 	::wglMakeCurrent(this->View().Device(), 0); // it must be set before marking event as signaled; ::wglMakeCurrent(0, 0) >> does not work!
@@ -129,8 +148,33 @@ err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) 
 	_event; _delta;
 	__trace_warn_2(_T("zoom delta: %d;\n"), _delta);
 
+	this->m_scale.Set(_delta);
 
 	return __s_ok; // handled;
+}
+
+#pragma endregion
+#pragma region cls::CScale{}
+
+CScale::CScale (void) : m_changed(false), m_factor(0.0f) {}
+
+bool CScale::Is_changed (void) const { TSafe_Lock(); const bool b_changed = this->m_changed; return b_changed; }
+void CScale::Is_changed (const bool _b_state) { TSafe_Lock(); this->m_changed = _b_state; }
+
+float CScale::Get (void) const { TSafe_Lock(); const float f_value = this->m_factor;  return f_value; }
+void  CScale::Set (const int32_t _n_factor) {
+	_n_factor;
+	TSafe_Lock();
+	this->m_factor = float(_n_factor);
+	this->m_scaled.Set(this->m_factor);
+	this->m_changed = true;
+	return;
+}
+
+c_scaled CScale::operator ()(void) const {
+	TSafe_Lock();
+	c_scaled scaled = this->m_scaled;
+	return scaled;
 }
 
 #pragma endregion

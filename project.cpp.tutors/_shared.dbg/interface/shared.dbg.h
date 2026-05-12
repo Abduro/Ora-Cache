@@ -132,7 +132,9 @@ void __trace_err_ex_3 (shared::defs::TError&); // direct print out of the error 
 #include <mutex>
 
 namespace shared { namespace sys_core {
-
+	// https://en.cppreference.com/cpp/thread/recursive_mutex/lock;
+	// https://en.cppreference.com/cpp/thread/recursive_mutex/try_lock ;
+	// https://en.cppreference.com/cpp/thread/recursive_mutex/unlock ;
 	typedef ::std::lock_guard<std::recursive_mutex> TGuard;
 	static  ::std::recursive_mutex the_lock;
 }}

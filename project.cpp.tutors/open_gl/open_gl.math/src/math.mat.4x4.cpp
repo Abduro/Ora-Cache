@@ -308,7 +308,26 @@ c_mat4x4& c_mat4x4::c_rows::operator ()(void) const { return this->m_mat_ref; }
 c_mat4x4& c_mat4x4::c_rows::operator ()(void)       { return this->m_mat_ref; }
 
 #pragma endregion
+#pragma region cls::c_scaled_4x4{}
 
+c_scaled_4x4::c_scaled_4x4 (void) : c_mat4x4(true) {}
+c_scaled_4x4::c_scaled_4x4 (const float _f_factor) : c_scaled_4x4() { this->Set(_f_factor); }
+
+c_mat4x4& c_scaled_4x4::Set (const float _f_factor) {
+	_f_factor;
+	return this->Set(_f_factor, _f_factor, _f_factor);
+}
+
+c_mat4x4& c_scaled_4x4::Set (const float _f_x, const float _f_y, const float _f_z) {
+	_f_x; _f_y; _f_z;
+	c_mat4x4::Cell(0, 0) = _f_x;
+	c_mat4x4::Cell(1, 1) = _f_y;
+	c_mat4x4::Cell(2, 2) = _f_z;
+
+	return (c_mat4x4&)*this;
+}
+
+#pragma endregion
 namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 c_mat4x4 operator * (const c_mat4x4& _left, const c_mat4x4& _right) {
