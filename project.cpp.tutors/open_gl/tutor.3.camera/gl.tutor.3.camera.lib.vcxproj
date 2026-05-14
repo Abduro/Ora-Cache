@@ -204,6 +204,8 @@
     </ClCompile>
     <ClInclude Include="camera.base.h" />
     <ClCompile Include="camera.base.cpp" />
+    <ClInclude Include="camera.frustum.h" />
+    <ClCompile Include="camera.frustum.cpp" />
     <ClInclude Include="drawable.defs.h" />
     <ClCompile Include="drawable.defs.cpp" />
     <ClInclude Include="drawable.drafter.h" />

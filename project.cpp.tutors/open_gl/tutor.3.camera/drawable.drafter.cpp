@@ -76,8 +76,10 @@ void CDrafter::Run (void) {
 		t_rect rc_client = {0, 0, sz_client.cx, sz_client.cy};
 		
 		this->Model().Grid().Layout() << rc_client;
-
+		// https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ;
+		// https://learn.microsoft.com/en-us/windows/win32/opengl/glscissor ;
 		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
+		::glScissor(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
 	}
 
 	while (false == ((TBase&)(*this))().Is_stopped()) {
@@ -160,7 +162,7 @@ err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) 
 #pragma endregion
 #pragma region cls::CScale{}
 
-CScale::CScale (void) : m_changed(false), m_factor(0.0f) {}
+CScale::CScale (void) : m_changed(false), m_factor(f_def_scale) {}
 
 bool CScale::Is_changed (void) const { TSafe_Lock(); const bool b_changed = this->m_changed; return b_changed; }
 void CScale::Is_changed (const bool _b_state) { TSafe_Lock(); this->m_changed = _b_state; }
@@ -168,7 +170,7 @@ void CScale::Is_changed (const bool _b_state) { TSafe_Lock(); this->m_changed = 
 float CScale::Get (void) const { TSafe_Lock(); const float f_value = this->m_factor;  return f_value; }
 void  CScale::Set (const int32_t _n_factor) {
 	_n_factor;
-	static float f_factor_prev = 0.0f; f_factor_prev;
+	static float f_factor_prev = f_def_scale;
 
 	using namespace ex_ui::draw::open_gl::math::defs;
 

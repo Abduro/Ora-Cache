@@ -25,6 +25,8 @@
   <ItemGroup>
     <ClCompile Include="camera.base.cpp"><Filter>scene\camera</Filter></ClCompile>
     <ClInclude Include="camera.base.h"><Filter>scene\camera</Filter></ClInclude>
+    <ClCompile Include="camera.frustum.cpp"><Filter>scene\camera</Filter></ClCompile>
+    <ClInclude Include="camera.frustum.h"><Filter>scene\camera</Filter></ClInclude>
     <ClCompile Include="model.base.cpp"><Filter>scene\model</Filter></ClCompile>
     <ClInclude Include="model.base.h"><Filter>scene\model</Filter></ClInclude>
     <ClCompile Include="view.base.cpp"><Filter>scene\view</Filter></ClCompile>

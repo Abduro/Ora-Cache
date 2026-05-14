@@ -32,7 +32,8 @@ namespace shared { namespace drawable {
 	(3) Implementation: call glScalef() before issuing the draw commands for your object;
 	(4) Order Matters: to avoid unexpected positioning, translate the object to the origin (0,0,0), apply the scale, and then translate back;
 	*/
-	static const float f_delta = 0.05f;
+	static const float f_delta = 0.08f;
+	static const float f_def_scale = 1.0f;
 	// this class is thread safe;
 	class CScale {
 	public:

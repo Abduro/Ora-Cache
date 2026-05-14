@@ -8,23 +8,6 @@
 
 namespace open_gl { using namespace shared::defs;
 namespace camera {
-	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
-	/* query: FOV in opengl; (Google AI);
-	In OpenGL, Field of View (FOV) defines the extent of the observable world seen through the camera at any given moment.
-	It is a critical component of the perspective projection matrix, which simulates how objects appear smaller as they get further away.
-
-	*/
-	class CFrustum {
-	public:
-		CFrustum (void); CFrustum (const CFrustum&) = delete; CFrustum (CFrustum&&) = delete; ~CFrustum (void) = default;
-
-		TError&  Error (void) const;
-
-	public:
-		CFrustum& operator = (const CFrustum&) = delete; CFrustum& operator = (CFrustum&&) = delete;
-		CError  m_error;
-	};
-
 }
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
 	class CCamera {

@@ -38,10 +38,3 @@ c_mat4x4& CCamera::View (void) const { return this->m_view; }
 c_mat4x4& CCamera::View (void)       { return this->m_view; }
 
 #pragma endregion
-#pragma region cls::CFrustum{}
-
-CFrustum::CFrustum (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not__inited: frustum is not set");}
-
-TError&   CFrustum::Error (void) const { return this->m_error; }
-
-#pragma endregion

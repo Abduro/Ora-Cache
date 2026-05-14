@@ -59,6 +59,7 @@ err_code  CWndCls::Cfg (const e_type _e_cfg) {
 
 	HINSTANCE   hInstance = reinterpret_cast<HINSTANCE>(::GetModuleHandle(nullptr));
 	this->Ref().hInstance = hInstance;
+	this->Ref().hCursor   = ::LoadCursor(nullptr, IDC_ARROW);
 
 	switch (_e_cfg) {
 	case e_type::e_cfg_over: {
@@ -82,8 +83,23 @@ err_code  CWndCls::Cfg (const e_type _e_cfg) {
 		When this member is NULL, an application must paint its own background whenever it is requested to paint in its client area...
 	*/
 	this->Ref().hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject ;
+#elsif (false == true)
+ 	this->Ref().hbrBackground = nullptr;
+#else
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush ;
+	class CBrush {
+	public:
+		 CBrush (const uint32_t _clr) : m_brush(nullptr) { this->m_brush = ::CreateSolidBrush(_clr); }
+		~CBrush (void) { if (this->m_brush){ ::DeleteObject(this->m_brush); this->m_brush = nullptr; }}
+		HBRUSH  Get (void) const { return this->m_brush; }
+	private:
+		HBRUSH m_brush;
+	};
+	static CBrush dflt_bkg(RGB(39, 39, 39));
+	this->Ref().hbrBackground = (HBRUSH) (COLOR_ACTIVECAPTION + 1);
+//	this->Ref().hbrBackground = dflt_bkg.Get();
 #endif
-	this->Ref().hbrBackground = nullptr;
 
 	return this->Error();
 }

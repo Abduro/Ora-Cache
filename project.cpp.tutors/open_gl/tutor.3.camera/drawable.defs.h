@@ -9,6 +9,7 @@
 #include "shared.preproc.h"
 #include "shared.theme.h"
 
+#include "math.defs.h"
 #include "math.matrix.h"
 #include "runner.tpl.h"
 
