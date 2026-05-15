@@ -10,6 +10,30 @@ namespace open_gl {
 namespace camera  { using namespace shared::defs;
 namespace frustum { using namespace shared::defs;
 
+	using ex_ui::draw::open_gl::math::defs::f_epsilon;
+	using ex_ui::draw::open_gl::math::defs::deg_2_rad;
+	using ex_ui::draw::open_gl::math::defs::rad_2_deg;
+
+	class c_angle {
+	public:
+		c_angle (const float _f_degrees = 0.0f); c_angle (const c_angle&); c_angle (c_angle&&) = delete; ~c_angle (void) = default;
+
+		float Degrees (void) const;   // gets angle value in degrees;
+		float Degrees (const float);  // sets angle value in degrees; returns calculated value in radians;
+
+		float Radians (void) const;   // gets angle value in radians;
+		float Radians (const float);  // sets angle value in radians; degrees value is updated automatially;
+		
+		c_angle& operator = (const c_angle&); c_angle& operator = (c_angle&&) = delete;
+
+		float operator << (const float _f_degrees);  // updates angle value in degrees, and returs the value in radians;
+		float operator >> (const float _f_radians);  // updates angle value in degrees, and returs the value in radians;
+
+	private:
+		float m_degrees;
+		float m_radians;
+	};
+
 	class CAspect {
 	public:
 		CAspect (void);
@@ -44,7 +68,10 @@ namespace frustum { using namespace shared::defs;
 	   (2) Standard FOV (45°–60°): Common for third-person cameras or "natural" viewing;
 	   (3) Wide FOV (90°–120°): Standard for first-person shooters (FPS) to increase awareness, though it can cause "fisheye" distortion at the screen edges;
 	*/
-
+	/* some rules:
+	(1) all angle value related classes uses input and output values in degrees, all functions' implementation uses radians internally;
+	(2) possibly caching radians for the same angle values in degrees (performance optimization);
+	*/
 	class CFoV {
 	public:
 		enum e_angle : uint32_t { // enumerates angle value (in degrees) of field of view;
@@ -57,7 +84,7 @@ namespace frustum { using namespace shared::defs;
 
 			TError& Error (void) const;
 			float     Get (void) const;    // gets the angle value;
-			err_code  Set (const e_angle); // sets a pre-defined angle value;
+			err_code  Set (const e_angle); // sets a pre-defined angle value (degrees);
 
 			bool Is_valid (void) const;    // checks angle value, if the value is less than e_narrow_min or is greater than e_wide_max, returns 'false';
 
@@ -65,15 +92,13 @@ namespace frustum { using namespace shared::defs;
 			CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 			mutable
 			CError m_error;
-			float  m_angle; // supposed to be in radians, because all calculations being made expects radians not degrees; (not clear yet);
-			/* all operations with angles are performed by using radian measure unit, thus it is obvious to use radian unit and when it is necessary to covert it to degree one;
-			*/
+			float  m_angle; // supposed to be in degrees for better readability regardless the fact that all calculation in trigonometry uses radians;
 		};
 		class CHorz : public CBase {
 		public:
 			CHorz (void); CHorz (const CHorz&) = delete; CHorz (CHorz&&) = delete; ~CHorz (void) = default;
 
-			err_code Set (const float _f_dist, const CAspect&); // set the angle value by camera distance and aspects' ratio;
+			err_code Set (const float _fov_y, const CAspect&); // set the angle value by camera vertical FOV and surface aspects' ratio;
 
 		private:
 			CHorz& operator = (const CHorz&) = delete; CHorz& operator = (CHorz&&) = delete;
@@ -83,7 +108,7 @@ namespace frustum { using namespace shared::defs;
 			CVert (void); CVert (const CVert&) = delete; CVert (CVert&&) = delete; ~CVert (void) = default;
 
 			err_code Set (const float _f_dist, const uint32_t _u_obj_height); // calculates vertical angle of FoV at the specific distance for looking at the object of given height;
-			err_code Set (const float _f_horz, const CAspect&); // converts horz FOV angle to vert FOV one by applying window sides' ratio;
+			err_code Set (const float _f_horz, const CAspect&); // converts horz FOV angle to vert FOV one by applying window/surface aspects' ratio;
 
 		private:
 			CVert& operator = (const CVert&) = delete; CVert& operator = (CVert&&) = delete;
@@ -99,7 +124,7 @@ namespace frustum { using namespace shared::defs;
 		CVert& Vert (void) const;
 		CVert& Vert (void);
 		static
-		bool Is_valid (const float _f_angle, CError&); // checks angle value, if the value is less than e_narrow_min or is greater than e_wide_max, returns 'false';
+		bool Is_valid (const float _f_angle, CError&); // checks angle value (degrees), if the value is less than e_narrow_min or is greater than e_wide_max, returns 'false';
 
 	private:
 		CFoV& operator = (const CFoV&) = delete; CFoV& operator = (CFoV&&) = delete;
@@ -122,9 +147,6 @@ namespace frustum { using namespace shared::defs;
 	   (5) glFrustum /Perspective: These functions take the distance to the planes.
 	       The near/far planes are defined in the projection matrix construction as *-near* and *-far* because the camera looks down the negative z-axis.
 	*/
-	using ex_ui::draw::open_gl::math::defs::f_epsilon;
-	using ex_ui::draw::open_gl::math::defs::deg_2_rad;
-	using ex_ui::draw::open_gl::math::defs::rad_2_deg;
 
 	class CPlanes {
 	public:

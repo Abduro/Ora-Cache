@@ -37,6 +37,21 @@ using CHorz = CFoV::CHorz;
 using CVert = CFoV::CVert;
 using CNear = CPlanes::CNear;
 
+#pragma region cls::c_angle{}
+
+c_angle::c_angle (const float _f_degrees) : m_degrees(0.0f), m_radians(0.0f) { *this << _f_degrees; }
+c_angle::c_angle (const c_angle& _src) : c_angle() { *this = _src; }
+
+float c_angle::Degrees (void) const  { return this->m_degrees; } 
+float c_angle::Degrees (const float _f_degrees) { this->m_degrees = _f_degrees; return this->m_radians = (this->m_degrees * deg_2_rad); }
+
+float c_angle::Radians (void) const  { return this->m_radians; } 
+float c_angle::Radians (const float _f_radians) { this->m_radians = _f_radians; return this->m_degrees = (this->m_radians * rad_2_deg); }
+
+float c_angle::operator << (const float _f_degrees) { return this->Degrees(_f_degrees); }
+float c_angle::operator >> (const float _f_radians) { return this->Radians(_f_radians); }
+
+#pragma endregion
 #pragma region cls::CAspect{}
 
 CAspect::CAspect (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_init: the size is not set"); }
@@ -145,16 +160,16 @@ CVert& CFoV::Vert (void)       { return this->m_vert; }
 
 CHorz::CHorz (void) : CBase() { CBase::m_error >> TString().Format(_T("%s::%s"), CFoV::Class(), (_pc_sz) __CLASS__); }
 
-err_code CHorz::Set (const float _f_dist, const CAspect& _aspect) {
-	_f_dist; _aspect;
+err_code CHorz::Set (const float _fov_y, const CAspect& _aspect) {
+	_fov_y; _aspect;
 	CBase::m_error <<__METHOD__<<__s_ok;
 	/* query: how to calculate horizontal field of view opengl; (to Google AI)
 	use the relationship between the vertical field of view (vFOV) and the window's aspect ratio (AR);
 	*/
-	if (false == CPlanes::Is_valid(_f_dist, CBase::m_error)) return CBase::Error();
+	if (false == CFoV::Is_valid(_fov_y, CBase::m_error)) return CBase::Error();
 	if (false == _aspect.Is_valid()) return CBase::m_error = _aspect.Error();
 
-//	CBase::m_angle = 2 * ::std::atanf(::std::tanf());
+	CBase::m_angle = 2.0f * ::std::atanf(::std::tanf( _fov_y / 2.0f ) * _aspect);
 
 	return CBase::Error();
 }
@@ -173,7 +188,7 @@ err_code CVert::Set (const float _f_dist, const uint32_t _u_obj_height) {
 	if (false == CPlanes::Is_valid(_f_dist, CBase::m_error)) return CBase::Error();
 
 	CBase::m_angle  = 2.0f * ::std::atanf(float(_u_obj_height) / 2.0f * _f_dist);
-//	CBase::m_angle *= rad_2_deg;
+	CBase::m_angle *= rad_2_deg;
 
 	return CBase::Error();
 }
