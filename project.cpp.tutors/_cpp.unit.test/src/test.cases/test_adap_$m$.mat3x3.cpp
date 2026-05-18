@@ -2,12 +2,12 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Mar-2026 at 11:57:58.721, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL math lib matrix3x3 unit test adapter interface implementation file; 
 */
-#include "ebo_test_$m$.mat3x3.h"
+#include "test_adap_$m$.mat3x3.h"
 #include "test_case_$m$.mat4x4.h" // it is required for printing glm::mat4x4 before casting to glm::mat3x3;
 
 #include "shared.preproc.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 namespace ebo { namespace boo { namespace test { namespace open_gl { namespace _impl {
 
@@ -140,9 +140,9 @@ void c_t_rotate_3x3::Prepare (void) {
 //	c_rot_3x3().Prepare(f_angle); f_angle =  90.0f;
 
 	float f_angle = 90.0f;
-	_impl::CPrep_3x3::Do_it(f_angle, axes_t::e_x_axis);
-	_impl::CPrep_3x3::Do_it(f_angle, axes_t::e_y_axis);
-	_impl::CPrep_3x3::Do_it(f_angle, axes_t::e_z_axis);
+	CPrep_3x3::Do_it(f_angle, axes_t::e_x_axis);
+	CPrep_3x3::Do_it(f_angle, axes_t::e_y_axis);
+	CPrep_3x3::Do_it(f_angle, axes_t::e_z_axis);
 
 	_out()();
 }

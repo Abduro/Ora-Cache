@@ -1,5 +1,5 @@
-#ifndef _EBO_TEST_$M$_DEFS_H_INCLUDED
-#define _EBO_TEST_$M$_DEFS_H_INCLUDED
+#ifndef _TEST_ADAP_$M$_DEFS_H_INCLUDED
+#define _TEST_ADAP_$M$_DEFS_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Dec-2025 at 09:05:40.726, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL math lib common definitions' uint test interface declaration file; 
@@ -18,7 +18,7 @@
 #include "math.vec.3.h"
 #include "math.vec.4.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
 	using namespace ex_ui::draw::open_gl::math;
 	using namespace shared::defs;
@@ -99,12 +99,13 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	static _pc_sz pc_sz_mat_equal = _T("[impt] result: matrices are equal;");
 	static _pc_sz pc_sz_mat_diff  = _T("[error] result: matrices are *not* equal;");
 
-}}}}}
+}}}
 
 #pragma comment(lib, "glm_v15.lib")      // OpenGL mathematics project;
 #pragma comment(lib, "gl.procs_v15.lib") // OpenGL procs loader project;
 #pragma comment(lib, "gl.math_v15.lib")  // this project is being tested by this unit test project;
 #pragma comment(lib, "ebo_test_$$$.lib") // shared unit test library for common definition(s);
 #pragma comment(lib, "ebo_test_$d$.shared.lib") // shared draw context test case library;
+#pragma comment(lib, "runnable_v15.lib") // drawing by OpenGL in worker thread;
 
-#endif/*_EBO_TEST_$M$_DEFS_H_INCLUDED*/
+#endif/*_TEST_ADAP_$M$_DEFS_H_INCLUDED*/

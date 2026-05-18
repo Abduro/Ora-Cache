@@ -1,13 +1,13 @@
-#ifndef _EBO_TEST_$M$_MATRIX_H_INCLUDED
-#define _EBO_TEST_$M$_MATRIX_H_INCLUDED
+#ifndef _TEST_ADAP_$M$_MATRIX_H_INCLUDED
+#define _TEST_ADAP_$M$_MATRIX_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Dec-2025 at 08:10:22.332, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL math lib matrix uint test interface declaration file; 
+	This is Ebo Pack OpenGL math lib matrix unit test adapter interface declaration file; 
 */
 #include "test_case_$d$.ctx.h"     // for using OpenGL API draw context must be created first;
 #include "test_case_$m$.mat2x2.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	__class (c_t_rotate_2x2) {
 	public:
@@ -20,6 +20,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		__method (Vector);  // rotates the given vector 2 by certain angle;
 	};
 
-}}}}}
+}}}
 
-#endif/*_EBO_TEST_$M$_MATRIX_H_INCLUDED*/
+#endif/*_TEST_ADAP_$M$_MATRIX_H_INCLUDED*/

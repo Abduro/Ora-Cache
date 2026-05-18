@@ -14,25 +14,8 @@ namespace frustum { using namespace shared::defs;
 	using ex_ui::draw::open_gl::math::defs::deg_2_rad;
 	using ex_ui::draw::open_gl::math::defs::rad_2_deg;
 
-	class c_angle {
-	public:
-		c_angle (const float _f_degrees = 0.0f); c_angle (const c_angle&); c_angle (c_angle&&) = delete; ~c_angle (void) = default;
-
-		float Degrees (void) const;   // gets angle value in degrees;
-		float Degrees (const float);  // sets angle value in degrees; returns calculated value in radians;
-
-		float Radians (void) const;   // gets angle value in radians;
-		float Radians (const float);  // sets angle value in radians; degrees value is updated automatially;
-		
-		c_angle& operator = (const c_angle&); c_angle& operator = (c_angle&&) = delete;
-
-		float operator << (const float _f_degrees);  // updates angle value in degrees, and returs the value in radians;
-		float operator >> (const float _f_radians);  // updates angle value in degrees, and returs the value in radians;
-
-	private:
-		float m_degrees;
-		float m_radians;
-	};
+	using ::open_gl::views::c_angle;
+	using ::open_gl::views::s_size;
 
 	class CAspect {
 	public:
@@ -83,7 +66,8 @@ namespace frustum { using namespace shared::defs;
 			CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 
 			TError& Error (void) const;
-			float     Get (void) const;    // gets the angle value;
+			const
+			c_angle&  Get (void) const;    // gets the angle value;
 			err_code  Set (const e_angle); // sets a pre-defined angle value (degrees);
 
 			bool Is_valid (void) const;    // checks angle value, if the value is less than e_narrow_min or is greater than e_wide_max, returns 'false';
@@ -91,8 +75,8 @@ namespace frustum { using namespace shared::defs;
 		protected:
 			CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 			mutable
-			CError m_error;
-			float  m_angle; // supposed to be in degrees for better readability regardless the fact that all calculation in trigonometry uses radians;
+			CError  m_error;
+			c_angle m_angle; // supposed to be in degrees for better readability regardless the fact that all calculation in trigonometry uses radians;
 		};
 		class CHorz : public CBase {
 		public:
@@ -109,6 +93,7 @@ namespace frustum { using namespace shared::defs;
 
 			err_code Set (const float _f_dist, const uint32_t _u_obj_height); // calculates vertical angle of FoV at the specific distance for looking at the object of given height;
 			err_code Set (const float _f_horz, const CAspect&); // converts horz FOV angle to vert FOV one by applying window/surface aspects' ratio;
+			err_code Set (const e_angle); // sets one of pre-defined angle values;
 
 		private:
 			CVert& operator = (const CVert&) = delete; CVert& operator = (CVert&&) = delete;
@@ -148,78 +133,98 @@ namespace frustum { using namespace shared::defs;
 	       The near/far planes are defined in the projection matrix construction as *-near* and *-far* because the camera looks down the negative z-axis.
 	*/
 
+	class CPlane {
+	public:
+		CPlane (void); CPlane (const CPlane&); CPlane (CPlane&&) = delete; ~CPlane (void) = default;
+
+		float    Dist (void) const;  // gets the distance to the plane;
+		err_code Dist (const float); // sets the distance to this near plane; returns __s_ok, otherwise an error code;
+
+		TError& Error (void) const;
+		bool Is_valid (void) const;  // checks the distance value and plane size;
+
+		const s_size& Half (void) const;  // returns the half of the actual size;
+		const s_size& Size (void) const;  // returns the full size of the plane;
+
+		float    Height (void) const;     // gets the height of this plane;
+		err_code Height (const float _fov_y); // calculates the near pane height for given FOV; it is assumed the distance value is already set to this plane;
+
+		float    Width  (void) const;     // gets the width of this plane;
+		err_code Width  (const CAspect&); // sets the width of this plane; it is assumed the height of this plane is already calculated, otherwise error is returned;
+
+		CPlane&  operator = (const CPlane&); CPlane& operator = (CPlane&&) = delete;
+		err_code operator <<(const float _f_dest);
+
+		operator float (void) const; // returns distance value of this plane;
+	protected:
+		mutable
+		CError m_error;
+		float  m_dist ;
+		s_size m_half ;
+		s_size m_size ;
+	};
+
 	class CPlanes {
 	public:
 		// https://stackoverflow.com/questions/2454019/why-arent-static-const-floats-allowed ;
 		static inline const float f_dist_min = 0.0001f; // perhaps these values will be changed later, after passing the test cases;
 		static inline const float f_dist_max = 1000.0f; // the above comment refers to this variable too;
 
-		// https://stackoverflow.com/questions/3410096/setting-near-plane-in-opengl ;
-		class CNear {
+		class CFar : public CPlane { // yon;
 		public:
-			CNear (const float _f_dist = 1.0f); CNear (const CNear&); CNear (CNear&&) = delete; ~CNear (void) = default;
+			CFar (void);
+			CFar (const float _f_dist); CFar (const CFar&); CFar (CFar&&) = delete; ~CFar (void) = default;
 
-			TError& Error (void) const;
+			CFar& operator = (const CFar&); CFar& operator = (CFar&&) = delete;
+		};
 
-			float    Get_dist (void) const;  // gets the distance to near plane; 1.0f by default;
-			err_code Set_dist (const float); // sets the distance to this near plane; returns __s_ok, otherwise an error code;
-
-			bool   Is_valid (void) const;    // checks the distance value and plane size;
-
-			float    Height (void) const;    // gets the height of this plane;
-			err_code Height (const float _fov_y); // calculates the near pane height for given FOV; it is assumed the distance value is already set to this plane;
-
-			float    Width  (void) const;     // gets the width of this plane;
-			err_code Width  (const CAspect&); // sets the width of this plane; it is assumed the height of this plane is already calculated, otherwise error is returned;
+		// https://stackoverflow.com/questions/3410096/setting-near-plane-in-opengl ;
+		class CNear : public CPlane { // hither;
+		public:
+			CNear (void);
+			CNear (const float _f_dist); CNear (const CNear&); CNear (CNear&&) = delete; ~CNear (void) = default;
 
 			CNear& operator = (const CNear&); CNear& operator = (CNear&&) = delete;
-			CNear& operator <<(const float _f_dist);
 
 		private:
-			float  m_dist, m_height, m_width;
 			mutable CError m_error;
 		};
 	public:
 		CPlanes (void); CPlanes (const CPlanes&) = delete; CPlanes (CPlanes&&) = delete; ~CPlanes (void) = default;
-
-		float Far (void) const;   // gets the distance to far plane; 100.0f by default;
-		void  Far (const float);  // sets the distance to far plane; there is no check for given value;
+		const
+		CFar& Far (void) const;   // gets the reference to far plane; (ro)
+		CFar& Far (void);         // gets the reference to far plane; (rw)
 
 		static bool Is_valid (const float _f_dist, CError&); // checks given distance for minimum and maximum value, i.e. in this range [0.0001...1000.0];
 		static bool Is_valid (const t_size_u&, CError&);     // checks given size for 0 value;
 		const
-		CNear& Near (void) const; // gets the reference to near plane;
-		CNear& Near (void);       // sets the reference to near plane;
+		CNear& Near (void) const; // gets the reference to near plane; (ro)
+		CNear& Near (void);       // gets the reference to near plane; (rw)
 
 	private:
 		CPlanes& operator = (const CPlanes&) = delete; CPlanes& operator = (CPlanes&&) = delete;
+		CFar  m_far ;
 		CNear m_near;
-		float m_far ;
 	};
 
 	class CCfg {		
 	public:
-		enum e_angle : uint32_t { // enumerates angle value (degrees) of field of view;
-		e_narrow_min = 30, e_narrow_max = 45, e_std_min = 45, e_std_max = 60, e_wide_min = 90, e_wide_max = 120
-		};
-
 		CCfg (void); CCfg (const CCfg&) = delete; CCfg (CCfg&&) = delete; ~CCfg (void) = default;
-		
-		float Get_fov_x (void) const;
-		bool  Set_fov_x (const uint32_t _u_height, const uint32_t _u_width); // returns 'true' if succeed, otherwise 'false' and error object is traced;
 
-		float Get_fov_y (void) const;    // gets a vertical field of view angle (top-left angle in degrees);
-		void  Set_fov_y (const e_angle); // sets a pre-defined angle value;
-
+		err_code Default (void); // sets default values such as: FoV vertical = 60 degree, near plane distance 1.0f, far plane distance 100.f;
+		TError&  Error (void) const;
+		const
+		CFoV& FoV (void) const;
+		CFoV& FoV (void) ;
 		const
 		CPlanes& Planes (void) const;
 		CPlanes& Planes (void) ;
 
 	private:
 		CCfg& operator = (const CCfg&) = delete; CCfg& operator = (CCfg&&) = delete;
-		float   m_fov_x;
-		float   m_fov_y;
+		CFoV    m_fov;
 		CPlanes m_planes;
+		CError  m_error;
 	};
 }
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;

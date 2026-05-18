@@ -21,7 +21,7 @@
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/debugging-and-error-reporting-macros ;
 	// https://stackoverflow.com/questions/20508086/getting-rid-of-atltracegeneral-category-shown-in-atltrace-output ; << good example ;
-#if defined(_DEBUG)
+
 	/*
 	*important*
 		regarding a variadic argument list:
@@ -91,6 +91,8 @@ typedef shared::dbg::CTrace __trace;
 void __trace_err_ex_0 (shared::defs::TError&); // direct print out of the error object;
 void __trace_err_ex_2 (shared::defs::TError&); // direct print out of the error object; class name and method name are included;
 void __trace_err_ex_3 (shared::defs::TError&); // direct print out of the error object; namespace, class name and method name are included;
+
+#if defined(_DEBUG)
 
 #define __empty_ln() __trace::Empty_ln();
 

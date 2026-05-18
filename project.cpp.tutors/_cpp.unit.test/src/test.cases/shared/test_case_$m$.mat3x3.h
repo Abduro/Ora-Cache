@@ -7,7 +7,7 @@
 
 #include "test_case_$m$.rot.args.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	class c_mtx_3x3 {
 	public:
@@ -38,6 +38,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_rot_3x3& operator = (const c_rot_3x3&) = delete; c_rot_3x3& operator = (c_rot_3x3&&) = delete;
 		t_rot3x3 m_rot3x3;
 	};
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_MAT3x3_H_INCLUDED*/

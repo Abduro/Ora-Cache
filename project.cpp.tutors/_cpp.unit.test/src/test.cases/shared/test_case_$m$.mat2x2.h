@@ -4,11 +4,11 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 09-Mar-2026 at 15:03:34.118, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL math lib matrix 2x2 uint test interface declaration file for using in test cases' adapters;
 */
-#include "ebo_test_$m$.defs.h"
+#include "test_adap_$m$.defs.h"
 #include "math.mat.2x2.h"
 #include "math.rot.2x2.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	using t_mat2x2 = ex_ui::draw::open_gl::math::c_mat2x2;
 
@@ -45,6 +45,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 	private:
 		t_rot2x2 m_rot2x2;
 	};
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_MAT2x2_H_INCLUDED*/

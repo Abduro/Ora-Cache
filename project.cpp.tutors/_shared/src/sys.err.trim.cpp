@@ -28,7 +28,7 @@ CErr_Base::CErr_Base(const err_code hError, const CLang& _lng_id) :
 	m_code(__HresultToDword(hError)), m_result(hError), m_lang(_lng_id) {
 }
 /////////////////////////////////////////////////////////////////////////////
-#if defined(_DEBUG)
+
 CString CErr_Base::Print (void) const {
 
 	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{code=%u;result=0x%x}");
@@ -36,7 +36,7 @@ CString CErr_Base::Print (void) const {
 	CString cs_out; cs_out.Format(lp_sz_pat, (_pc_sz)__CLASS__, this->m_code, this->m_result);
 	return  cs_out;
 }
-#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 CErr_Base& CErr_Base::operator = (const dword _code) {
@@ -230,7 +230,6 @@ void     CErr_State::Set (_pc_sz  _sz_desc, ...) {
 	va_end(args_);
 }
 
-#if defined(_DEBUG)
 CString CErr_State::Print (void) const {
 
 	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{base=[%s];state=%s}");
@@ -238,7 +237,6 @@ CString CErr_State::Print (void) const {
 	CString cs_out; cs_out.Format(lp_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)TBase::Print(), this->Get());
 	return  cs_out;
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

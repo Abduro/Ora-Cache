@@ -4,9 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Feb-2026 at 22:36:41.820, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL math lib vector of 3 elements uint test interface declaration file for using in test cases' adapters; 
 */
-#include "ebo_test_$m$.defs.h"
+#include "test_adap_$m$.defs.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	// (1) dot product: The lines are perpendicular (orthogonal) if and only if their dot product is zero.
 	/* (2) cross product: The result vector is orthogonal to given two vectors: their cross product yields the normal vector;
@@ -41,6 +41,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		vec_3 m_vec_3; // vector object being tested;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_VEC3_H_INCLUDED*/

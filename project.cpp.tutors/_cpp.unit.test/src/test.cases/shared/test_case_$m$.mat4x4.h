@@ -6,7 +6,7 @@
 */
 #include "test_case_$m$.rot.args.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	/* matrix structure:
 	   the first 3x3 elements (indices 0-2, 4-6, 8-10) represent rotation and scaling:
@@ -62,6 +62,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		t_rot4x4 m_rot4x4;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_MAT4x4_H_INCLUDED*/

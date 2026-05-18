@@ -26,7 +26,7 @@ shared::sys_core::CSyncObject g_lock;
 #endif
 using namespace shared::console;
 
-#if defined(_DEBUG)
+#if defined(_DEBUG) || defined(TRUE)
 namespace shared { namespace dbg {
 
 _pc_sz  CModule::Get_path (CError& _err) {

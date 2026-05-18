@@ -5,11 +5,14 @@
 	This is Ebo Pack OpenGL tutorials' virtual camera base interface declaration file;
 */
 #include "drawable.defs.h"
+#include "camera.frustum.h"
 
 namespace open_gl { using namespace shared::defs;
-namespace camera {
-}
+namespace camera {}
+
+	using CFrustum = ::open_gl::camera::CFrustum;
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
+
 	class CCamera {
 	public:
 		using s_angles = ::open_gl::views::s_angles;
@@ -27,11 +30,14 @@ namespace camera {
 
 		TError&   Error (void) const;
 		const
+		CFrustum& Frustum (void) const;
+		CFrustum& Frustum (void);
+		const
 		s_pos&    Pos (void) const;
-		s_pos&    Pos (void) ;
+		s_pos&    Pos (void);
 		const
 		c_mat4x4& View (void) const;
-		c_mat4x4& View (void) ;
+		c_mat4x4& View (void);
 
 	private:
 		CCamera& operator = (const CCamera&) = delete; CCamera& operator = (CCamera&&) = delete;
@@ -41,6 +47,7 @@ namespace camera {
 		s_angles m_angles;
 		c_mat4x4 m_view;
 		float    m_dist;    // https://www.allacronyms.com/distance/abbreviated ;
+		CFrustum m_frustum;
 	};
 }
 

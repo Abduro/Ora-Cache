@@ -1,11 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Dec-2025 at 16:53:10.131, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL math lib vector uint test interface implementation file ; 
+	This is Ebo Pack OpenGL math lib vector uint test adapter interface implementation file ; 
 */
-#include "ebo_test_$m$.vector.h"
+#include "test_adap_$m$.vector.h"
 #include "shared.preproc.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 namespace ebo { namespace boo { namespace test { namespace _impl {
 

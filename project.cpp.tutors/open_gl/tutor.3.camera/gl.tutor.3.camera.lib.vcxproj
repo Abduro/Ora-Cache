@@ -131,6 +131,9 @@
       <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
+    <!--PostBuildEvent>
+      <Command>$(DevEnvDir)devenv "$(SolutionDir)open_gl.tutors.sln" /Build "$(Configuration)|$(Platform)" /project "$(SolutionDir)tutor.3.camera\gl.tutor.3.camera.vcxproj"</Command>
+    </PostBuildEvent-->
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

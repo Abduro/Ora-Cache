@@ -4,9 +4,9 @@
 	Cretaed by Tech_dog (ebontrop@gmail.com) on 17-Mar-2026 at 09:57:30.768, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL tutorials' vector rotation criteria interface declaration file;
 */
-#include "ebo_test_$m$.defs.h"
+#include "test_adap_$m$.defs.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	struct s_rot_criteria {
 		float m_f_angle;          // rotation angle;
@@ -64,6 +64,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		s_rot_cri_v4& operator << (const vec_3& _v_pivot);
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_ROT_ARGS_H_INCLUDED*/

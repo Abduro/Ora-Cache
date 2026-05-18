@@ -7,8 +7,9 @@
 #include "test_case_$m$.mat3x3.h"
 #include "test_case_$m$.mat4x4.h"
 #include "virt_camera.h"
+#include "camera.frustum.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	using CCamPos = ex_ui::draw::open_gl::camera::opers::CPosition;
 	using CCamRot = ex_ui::draw::open_gl::camera::opers::CRotation;
@@ -57,6 +58,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		CError  m_error;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_VIRT_CAM_H_INCLUDED*/

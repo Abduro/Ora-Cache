@@ -30,10 +30,19 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace math {
 
 	namespace defs {
 		static float $na = 0.0f; // the reference to this variable may be returned in cases when an index of element is out of acceptable range;
+		/* query: what has Pi value in math (to Google AI);
+		   The value of Pi  is a mathematical constant defined as the ratio of a circle’s circumference to its diameter. It is approximately equal to 3.14159;
+		   Numerical Value:
+		   For everyday calculations, it is frequently rounded to 3.14; a more precise fraction, it is commonly estimated as 22/7: ~3.142857143;
+		   In C and C++, the float data type typically provides 6 to 9 significant decimal digits of precision.
+		   Most implementations guarantee that at least 6 digits can be stored and retrieved without information loss.
+		*/
+		// https://stackoverflow.com/questions/39834989/what-are-the-maximum-number-of-base-10-digits-in-the-fractional-part-of-a-floati ;
+
 		#define __pi 3.141593f
-		const float  deg_2_rad = __pi / 180.0f;
-		const float  rad_2_deg = 180.0f / __pi;
-		const float  f_epsilon = 0.00001f;
+		const float  deg_2_rad =  0.017460317f; //   __pi / 180.0f;
+		const float  rad_2_deg = 57.27272727f;  // 180.0f / __pi;
+		const float  f_epsilon =  0.00001f;
 	}
 
 	// https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp ;

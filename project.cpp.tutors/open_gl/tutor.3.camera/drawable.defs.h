@@ -69,6 +69,31 @@ typedef ::open_gl::views::CCache TViewPortCache; TViewPortCache& Get_ViewPorts (
 namespace open_gl { namespace views {
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
 
+	/* possible using the abbreviations would be good, such as 'Deg' and 'Rad';
+	*/
+
+	class c_angle {
+	public:
+		c_angle (const float _f_degrees = 0.0f); c_angle (const c_angle&); c_angle (c_angle&&) = delete; ~c_angle (void) = default;
+
+		float Degrees (void) const;   // gets angle value in degrees;
+		float Degrees (const float);  // sets angle value in degrees; returns calculated value in radians;
+
+		float Radians (void) const;   // gets angle value in radians;
+		float Radians (const float);  // sets angle value in radians; degrees value is updated automatially;
+		
+		c_angle& operator = (const c_angle&); c_angle& operator = (c_angle&&) = delete;
+
+		float operator << (const float _f_degrees);  // updates angle value in degrees, and returs the value in radians;
+		float operator >> (const float _f_radians);  // updates angle value in radians, and returs the value in degrees;
+
+		CString To_str (const bool _b_radians) const;
+
+	private:
+		float m_degrees;
+		float m_radians;
+	};
+
 	class c_view_matrix : public c_mat4x4 { typedef c_mat4x4 base_t;
 	public:
 		c_view_matrix (void);
@@ -118,6 +143,24 @@ namespace open_gl { namespace views {
 			CString cs_out; cs_out.Format(p_pat, this->_x, this->_y, this->_z);
 			return  cs_out;
 		}
+	};
+
+	struct s_size {
+		float _h, _w;
+
+		s_size (void) : _h(0.0f), _w(0.0f) {}
+		s_size (const float _height, const float _width) : _h(_height), _w(_width) {}
+
+		const float& height (void) const { return this->_h; } float& height (void) { return this->_h; }
+		const float& width  (void) const { return this->_w; } float& width  (void) { return this->_w; }
+
+		CString To_str (void) const {
+			static _pc_sz p_pat = _T("h=%.7f;w=%.7f");
+			CString cs_out; cs_out.Format(p_pat, this->_h, this->_w);
+			return  cs_out;
+		}
+
+		s_size& operator = (const s_size& _src) { this->_h = _src.height(); this->_w = _src.width(); return *this; }
 	};
 }}
 

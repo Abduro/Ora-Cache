@@ -1,11 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 15-Mar-2026 at 09:29:52.165, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL math lib matrix stack uint test interface implementation file; 
+	This is Ebo Pack OpenGL math lib matrix stack uint test adapter interface implementation file; 
 */
-#include "ebo_test_$m$.stack.h"
+#include "test_adap_$m$.stack.h"
 #include "shared.preproc.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 #pragma region cls::c_stk_current{}
 

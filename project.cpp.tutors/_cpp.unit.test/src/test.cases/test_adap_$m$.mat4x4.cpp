@@ -2,11 +2,11 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Mar-2026 at 12:28:21.697, UTC+4, Batumi, Monday;
 	This is Ebo Pack OpenGL math lib matrix4x4 unit test adapter interface implementation file; 
 */
-#include "ebo_test_$m$.mat4x4.h"
+#include "test_adap_$m$.mat4x4.h"
 #include "test_case_$m$.mat3x3.h" // it is required for printing glm::mat4x4 after casting to glm::mat3x3;
 #include "shared.preproc.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 namespace ebo { namespace boo { namespace test { namespace _impl {
 

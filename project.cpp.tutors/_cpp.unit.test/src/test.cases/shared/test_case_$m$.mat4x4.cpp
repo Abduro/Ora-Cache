@@ -4,7 +4,7 @@
 */
 #include "test_case_$m$.mat4x4.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 #pragma region cls::c_mtx_4x4{}
 

@@ -1,11 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Dec-2025 at 08:10:22.332, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL math lib matrix uint test interface implementation file; 
+	This is Ebo Pack OpenGL math lib matrix unit test adapter interface implementation file; 
 */
-#include "ebo_test_$m$.matrix.h"
+#include "test_adap_$m$.matrix.h"
 #include "shared.preproc.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 #pragma region cls::c_t_rotate_2x2{}
 

@@ -5,19 +5,65 @@
 #include "drawable.defs.h"
 
 using namespace shared::drawable;
-
-namespace shared { namespace drawable { namespace _impl_d { void __warning_lnk_4221 (void) {} }}}
-
 using namespace ::open_gl::views;
 using CCache =  ::open_gl::views::CCache;
 
-#pragma region cls::CCache{}
+namespace shared { namespace drawable { namespace _impl_d { void __warning_lnk_4221 (void) {}
 
 static CViewPort g_not_valid;
 
 static _pc_sz p_err_no_active = _T("#__e_state: no active viewport");
-static _pc_sz p_err_iv_surface = _T("#__e_inv_arg: surface window handle is not valid");
-static _pc_sz p_err_no_cached = _T("__e_not_found: given surface has no cache");
+static _pc_sz p_err_no_surface = _T("#__e_hwnd: surface window handle is not valid");
+static _pc_sz p_err_no_cached = _T("#__e_not_found: given surface has no cache");
+
+	class CHelper {
+	public:
+		CHelper (void) = default; CHelper (const CHelper&) = delete; CHelper (CHelper&&) = delete; ~CHelper (void) = default;
+
+		static err_code Is_valid (const HWND _h_surface, CError& _error) {
+			_h_surface; _error;
+			if (nullptr == _h_surface || false == !!::IsWindow(_h_surface))
+				_error <<__e_hwnd = p_err_no_surface;
+			return _error;
+		}
+
+	private:
+		CHelper& operator = (const CHelper&) = delete; CHelper& operator = (CHelper&&) = delete;
+	};
+
+}}} using namespace shared::drawable::_impl_d;
+
+#pragma region cls::c_angle{}
+
+using ex_ui::draw::open_gl::math::defs::deg_2_rad;
+using ex_ui::draw::open_gl::math::defs::rad_2_deg;
+
+c_angle::c_angle (const float _f_degrees) : m_degrees(0.0f), m_radians(0.0f) { *this << _f_degrees; }
+c_angle::c_angle (const c_angle& _src) : c_angle() { *this = _src; }
+
+float c_angle::Degrees (void) const  { return this->m_degrees; } 
+float c_angle::Degrees (const float _f_degrees) { this->m_degrees = _f_degrees; return this->m_radians = (this->m_degrees * deg_2_rad); }
+
+float c_angle::Radians (void) const  { return this->m_radians; } 
+float c_angle::Radians (const float _f_radians) { this->m_radians = _f_radians; return this->m_degrees = (this->m_radians * rad_2_deg); }
+
+float c_angle::operator << (const float _f_degrees) { return this->Degrees(_f_degrees); }
+float c_angle::operator >> (const float _f_radians) { return this->Radians(_f_radians); }
+
+c_angle& c_angle::operator = (const c_angle& _src) { this->m_degrees = _src.Degrees(); this->m_radians = _src.Radians(); return *this; }
+
+CString c_angle::To_str (const bool _b_radians) const {
+	_b_radians;
+	static _pc_sz p_pat_deg = _T("%.7f deg.");
+	static _pc_sz p_pat_rad = _T("%.7f rad.");
+
+	CString cs_out; cs_out.Format(_b_radians ? p_pat_rad : p_pat_deg, _b_radians ? this->Radians() : this->Degrees());
+	return  cs_out;
+}
+
+#pragma endregion
+
+#pragma region cls::CCache{}
 
 CCache::CCache (void) : m_active(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
@@ -25,8 +71,8 @@ err_code CCache::Activate (const HWND _h_surface) {
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _h_surface)
-		return this->m_error <<__e_hwnd = _T("#__e_hwnd: invalid surface handle");
+	if (__failed(CHelper::Is_valid(_h_surface, this->m_error)))
+		return this->Error();
 
 	if (this->m_cached.empty())
 		return this->m_error << (err_code)TErrCodes::eData::eEmpty = _T("__e_empty: viewport cache is empty");
@@ -72,8 +118,8 @@ err_code CCache::Add (const HWND _h_surface) {
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _h_surface || false == !!::IsWindow(_h_surface))
-		return this->m_error <<__e_hwnd = p_err_iv_surface;
+	if (__failed(CHelper::Is_valid(_h_surface, this->m_error)))
+		return this->Error();
 
 	view_cache_t::iterator it_found = this->m_cached.find(_h_surface);
 
@@ -105,8 +151,7 @@ CViewPort& CCache::Get (const HWND _h_surface) const {
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _h_surface || false == !!::IsWindow(_h_surface)) {
-		this->m_error <<__e_hwnd = p_err_iv_surface;
+	if (__failed(CHelper::Is_valid(_h_surface, this->m_error))) {
 		return g_not_valid;
 	}
 
@@ -120,8 +165,7 @@ CViewPort& CCache::Get (const HWND _h_surface){
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _h_surface || false == !!::IsWindow(_h_surface)) {
-		this->m_error <<__e_hwnd = p_err_iv_surface;
+	if (__failed(CHelper::Is_valid(_h_surface, this->m_error))) {
 		return g_not_valid;
 	}
 
@@ -136,8 +180,8 @@ err_code CCache::Remove (const HWND _h_surface) {
 	_h_surface;
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (nullptr == _h_surface || false == !!::IsWindow(_h_surface)) {
-		return this->m_error <<__e_hwnd = p_err_iv_surface;
+	if (__failed(CHelper::Is_valid(_h_surface, this->m_error))) {
+		return this->Error();
 	}
 
 	view_cache_t::iterator it_found = this->m_cached.find(_h_surface);

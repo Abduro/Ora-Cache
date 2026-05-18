@@ -224,24 +224,24 @@
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.rot.args.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.rot.args.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.mat3x3.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.mat3x3.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.mat4x4.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.mat4x4.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.matrix.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.mat3x3.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.mat3x3.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.mat4x4.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.mat4x4.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.matrix.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.matrix.cpp" />
   </ItemGroup>
   <ItemGroup><!--shape-->
     <ClInclude Include="$(_2-0)test_case_$m$.shape.2d.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.shape.2d.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.shape.2d.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.shape.2d.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.shape.2d.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.shape.2d.cpp" />
   </ItemGroup>
   <ItemGroup><!--matrix stack-->
     <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.stack.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.stack.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp" />
   </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h" />
@@ -251,8 +251,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.defs.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.defs.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.defs.cpp" />
   </ItemGroup>
   <ItemGroup><!--vectors-->
     <ClInclude Include="$(_2-0)test_case_$m$.vec2.h" />
@@ -261,18 +261,18 @@
     <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.vec4.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.vec4.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.vector.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.vector.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.vector.cpp" />
   </ItemGroup>
   <ItemGroup><!--virtual camera and space-->
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.virt.space.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.space.h" />
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.virt.cam.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.virt.cam.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.virt.space.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.virt.space.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ebo_test_$$$.vcxproj">
@@ -289,6 +289,9 @@
     </ProjectReference>
     <ProjectReference Include="$(GLM)glm_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-3000000A0000}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Runnable)runnable_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-000000000007}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

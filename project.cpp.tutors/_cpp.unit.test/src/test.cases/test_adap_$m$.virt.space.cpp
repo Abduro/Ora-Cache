@@ -2,9 +2,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Feb-2026 at 12:06:36.319, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL math lib virtual space unit test adapter interface implementation file; 
 */
-#include "ebo_test_$m$.virt.space.h"
+#include "test_adap_$m$.virt.space.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 #pragma region cls::c_axes_dyn{}
 

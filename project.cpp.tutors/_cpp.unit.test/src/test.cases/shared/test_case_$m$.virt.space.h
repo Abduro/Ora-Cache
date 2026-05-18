@@ -8,7 +8,7 @@
 #include "test_case_$m$.mat4x4.h"
 #include "virt_space.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math { using namespace ex_ui::draw::open_gl::space;
+namespace test { namespace open_gl { namespace math { using namespace ex_ui::draw::open_gl::space;
 
 	using TAxes_Fix = axes::CFixed;
 	using TAxes_Dyn = axes::CDynamic;
@@ -33,6 +33,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		CTAxes_Fix& operator = (const CTAxes_Fix&) = delete; CTAxes_Fix& operator = (CTAxes_Fix&&) = delete;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_VIRT_SPACE_H_INCLUDED*/

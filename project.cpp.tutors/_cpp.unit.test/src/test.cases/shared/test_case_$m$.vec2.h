@@ -4,9 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Mar-2026 at 17:31:52.541, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL tutorials' math lib vector of 2 elements uint test interface declaration file for using in test cases' adapters; 
 */
-#include "ebo_test_$m$.defs.h"
+#include "test_adap_$m$.defs.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	class c_tvec_2 {
 	public:
@@ -20,6 +20,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		c_tvec_2& operator = (const c_tvec_2&) = delete; c_tvec_2& operator = (c_tvec_2&&) = delete;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_VEC2_H_INCLUDED*/

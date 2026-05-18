@@ -4,7 +4,7 @@
 */
 #include "test_case_$m$.virt.space.h"
 
-using namespace ebo::boo::test::open_gl::math;
+using namespace test::open_gl::math;
 
 #pragma region cls::CTAxes_Dyn{}
 

@@ -27,7 +27,7 @@ namespace ex_ui { namespace popup { using namespace shared::defs;
 		 HDC&    Get_ctx (void) ;      // gets the reference to device context; read-write; (rw);
 
 		 operator const HDC& (void) const;
-#if defined(_DEBUG)
+#if defined(_DEBUG) || defined(TRUE)
 		 CString To_str (void) const;  // this is for test cases intended only, because debug trace outputs messages to the debug console, not to test one;
 #endif
 	private:

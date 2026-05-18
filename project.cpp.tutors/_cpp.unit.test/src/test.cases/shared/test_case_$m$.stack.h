@@ -8,7 +8,7 @@
 #include "test_case_$m$.mat4x4.h"
 #include "math.mat.stack.h"
 
-namespace ebo { namespace boo { namespace test { namespace open_gl { namespace math {
+namespace test { namespace open_gl { namespace math {
 
 	using t_mat_stack  = ex_ui::draw::open_gl::math::matrix::CStack;
 	using t_stk_target = ex_ui::draw::open_gl::math::matrix::CTarget;
@@ -47,6 +47,6 @@ namespace ebo { namespace boo { namespace test { namespace open_gl { namespace m
 		t_mat_stack m_stack;
 	};
 
-}}}}}
+}}}
 
 #endif/*_TEST_CASE_$M$_MAT_STACK_H_INCLUDED*/

@@ -43,7 +43,7 @@ const
 HDC& CMsgWnd::Get_ctx (void) const { return this->m_h_dc; }
 HDC& CMsgWnd::Get_ctx (void)       { return this->m_h_dc; }
 
-#if defined(_DEBUG)
+#if defined(_DEBUG) || defined(TRUE)
 	CString CMsgWnd::To_str (void) const {
 		CString cs_out;
 

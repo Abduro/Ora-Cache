@@ -56,10 +56,9 @@ namespace shared { namespace sys_core {
 		CErr_Base(void);
 		CErr_Base(const dword  dwError, const CLang&);
 		CErr_Base(const err_code hError, const CLang&);
-#if defined(_DEBUG)
+
 	public:
 		CString Print (void) const;
-#endif
 
 	public:
 		CErr_Base& operator= (const dword   _code)    ;    // sets error result from win 32 error code;
@@ -124,9 +123,7 @@ namespace shared { namespace sys_core {
 		void    Set (_pc_sz  _sz_desc)     ; // sets a state description;
 		void    Set (_pc_sz  _sz_desc, ...); // sets a state description from pattern and multiple arguments;
 
-#if defined(_DEBUG)
 		CString Print (void) const;      // not thread-safe;
-#endif
 
 	public:
 		operator bool    (void) const;   // returns TRUE when state indicates a ***failure*** (i.e. is not S_OK);

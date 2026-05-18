@@ -21,8 +21,8 @@
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.defs.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.defs.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--matrix/shared-->
     <ClInclude Include="$(_2-0)test_case_$m$.mat2x2.h"><Filter>matrix\shared</Filter></ClInclude>
@@ -33,24 +33,24 @@
     <ClCompile Include="$(_2-0)test_case_$m$.mat4x4.cpp"><Filter>matrix\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.rot.args.h"><Filter>matrix\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.rot.args.cpp"><Filter>matrix\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.mat3x3.h"><Filter>matrix</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.mat3x3.cpp"><Filter>matrix</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.mat4x4.h"><Filter>matrix</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.mat4x4.cpp"><Filter>matrix</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.mat3x3.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.mat3x3.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.mat4x4.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.mat4x4.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--shapes-->
     <ClInclude Include="$(_2-0)test_case_$m$.shape.2d.h"><Filter>shape\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.shape.2d.cpp"><Filter>shape\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.shape.2d.h"><Filter>shape</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.shape.2d.cpp"><Filter>shape</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.shape.2d.h"><Filter>shape</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.shape.2d.cpp"><Filter>shape</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--matrix stack-->
     <ClInclude Include="$(_2-0)test_case_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--vectors-->
     <ClInclude Include="$(_2-0)test_case_$m$.vec2.h"><Filter>vector\shared</Filter></ClInclude>
@@ -59,17 +59,17 @@
     <ClCompile Include="$(_2-0)test_case_$m$.vec3.cpp"><Filter>vector\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.vec4.h"><Filter>vector\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.vec4.cpp"><Filter>vector\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.vector.h"><Filter>vector</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.vector.h"><Filter>vector</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--virtual camera-->
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h"><Filter>virt.cam\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.cam.h"><Filter>virt.cam</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.cam.cpp"><Filter>virt.cam</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.virt.cam.h"><Filter>virt.cam</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.virt.cam.cpp"><Filter>virt.cam</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h"><Filter>virt.cam\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.virt.space.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$m$.virt.space.h"><Filter>virt.cam</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$m$.virt.space.cpp"><Filter>virt.cam</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.virt.space.h"><Filter>virt.cam</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.virt.space.cpp"><Filter>virt.cam</Filter></ClCompile>
   </ItemGroup>
 </Project>

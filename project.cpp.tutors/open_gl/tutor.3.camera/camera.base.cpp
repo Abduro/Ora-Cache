@@ -19,6 +19,9 @@ s_angles& CCamera::Angles (void)       { return this->m_angles; }
 err_code  CCamera::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Frustum().Cfg().Default()))
+		this->m_error = this->Frustum().Cfg().Error();
+
 	return this->Error();
 }
 err_code  CCamera::Destroy(void) {
@@ -26,10 +29,13 @@ err_code  CCamera::Destroy(void) {
 
 	return this->Error();
 }
-float     CCamera::Dist (void) const { return this->m_view(3,2); }  // references to z-coord of tranclate column;
+float     CCamera::Dist (void) const { return this->m_view(3,2); }  // references to z-coord of translate column;
 float&    CCamera::Dist (void)       { return this->m_view(3,2); }     
 
 TError&   CCamera::Error  (void) const { return this->m_error; }
+const
+CFrustum& CCamera::Frustum (void) const { return this->m_frustum; }
+CFrustum& CCamera::Frustum (void)       { return this->m_frustum; }
 const
 s_pos&    CCamera::Pos (void) const { return this->m_pos; }
 s_pos&    CCamera::Pos (void)       { return this->m_pos; }
