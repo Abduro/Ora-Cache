@@ -92,7 +92,7 @@ _pc_sz    c_mtx_4x4::To_str (const t_mat4x4& _mat_4x4, const bool _b_cls) {
 		_out() += TString().Format(_T("cls::[%s].%s() >> [%s%s%s]"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__,  predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
 	}
 	else {
-		_out() += TString().Format(_T("%s[%s%s%s]"), predefs::_p_pfx_hf, predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
+		cs_out = TString().Format(_T("%s[%s%s%s]"), predefs::_p_pfx_hf, predefs::_p_sfx, (_pc_sz) cs_out, predefs::_p_pfx);
 	}
 	return (_pc_sz) cs_out;
 }

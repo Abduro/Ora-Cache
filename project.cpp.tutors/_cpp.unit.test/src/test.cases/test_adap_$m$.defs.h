@@ -107,5 +107,6 @@ namespace test { namespace open_gl { namespace math {
 #pragma comment(lib, "ebo_test_$$$.lib") // shared unit test library for common definition(s);
 #pragma comment(lib, "ebo_test_$d$.shared.lib") // shared draw context test case library;
 #pragma comment(lib, "runnable_v15.lib") // drawing by OpenGL in worker thread;
+#pragma comment(lib, "gl.tutor.3.camera.lib") // virtual camera implementation;
 
 #endif/*_TEST_ADAP_$M$_DEFS_H_INCLUDED*/

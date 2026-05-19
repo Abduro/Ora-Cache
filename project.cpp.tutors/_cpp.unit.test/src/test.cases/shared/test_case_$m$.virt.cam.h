@@ -7,7 +7,6 @@
 #include "test_case_$m$.mat3x3.h"
 #include "test_case_$m$.mat4x4.h"
 #include "virt_camera.h"
-#include "camera.frustum.h"
 
 namespace test { namespace open_gl { namespace math {
 

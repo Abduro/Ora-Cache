@@ -185,9 +185,6 @@ namespace frustum { using namespace shared::defs;
 			CNear (const float _f_dist); CNear (const CNear&); CNear (CNear&&) = delete; ~CNear (void) = default;
 
 			CNear& operator = (const CNear&); CNear& operator = (CNear&&) = delete;
-
-		private:
-			mutable CError m_error;
 		};
 	public:
 		CPlanes (void); CPlanes (const CPlanes&) = delete; CPlanes (CPlanes&&) = delete; ~CPlanes (void) = default;

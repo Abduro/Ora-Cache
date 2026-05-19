@@ -63,6 +63,10 @@
     <ClCompile Include="$(_2)test_adap_$m$.vector.cpp"><Filter>vector</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--virtual camera-->
+    <ClInclude Include="$(_2-0)test_case_$m$.frustum.h"><Filter>virt.cam\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.frustum.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.frustum.h"><Filter>virt.cam</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.frustum.cpp"><Filter>virt.cam</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h"><Filter>virt.cam\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp"><Filter>virt.cam\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)test_adap_$m$.virt.cam.h"><Filter>virt.cam</Filter></ClInclude>

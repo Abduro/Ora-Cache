@@ -198,10 +198,10 @@ CCfg::CCfg (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 err_code CCfg::Default (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-
+	// for drawing a view grid 10.0f is enough for far plane;
 	CFoV& fov = this->FoV();
 	if (__failed(fov.Vert().Set(CFoV::e_angle::e_std_max))) { return this->m_error = fov.Vert().Error(); }
-	if (__failed(this->Planes().Far() << 100.0f)) { return this->m_error = this->Planes().Far().Error(); }
+	if (__failed(this->Planes().Far() << 10.0f)) { return this->m_error = this->Planes().Far().Error(); }
 	if (__failed(this->Planes().Near() << 1.0f)) { return this->m_error = this->Planes().Near().Error(); }
 
 	return this->Error();
@@ -251,6 +251,8 @@ err_code  CFrustum::Update  (void) {
 	// the step #2: calculating the near plane height by appliying specific vertical field of view;
 	if (__failed(hither.Height(fov_y.Get().Degrees())))
 		return this->m_error = hither.Error();
+	if (__failed(hither.Width(this->Aspect())))
+		return this->m_error = hither.Error();
 	// the step #3: setting the projective matrix;
 	// sets left, right, top and bottom values from the near plane size;
 	const float r_ = hither.Half().width();  const float l_ = -r_;
@@ -272,6 +274,7 @@ err_code  CFrustum::Update  (void) {
 	}};
 	this->m_proj << mat;
 #else
+	// to-do: checking for possible division by zero is required;
 	c_mat4x4& m_4 = this->m_proj;
 	m_4(0, 0) = 2.0f * n_/(r_ - l_);
 	m_4(1, 1) = 2.0f * n_/(t_ - b_);
