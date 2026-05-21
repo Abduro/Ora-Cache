@@ -271,8 +271,11 @@
     <ClCompile Include="$(_2)test_adap_$m$.vector.cpp" />
   </ItemGroup>
   <ItemGroup><!--virtual camera and space-->
+    <Text Include="$(_2-0)__read_me_$m$.txt" />
     <ClInclude Include="$(_2-0)test_case_$m$.frustum.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.frustum.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$m$.project.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.project.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />

@@ -13,6 +13,25 @@ CBasic::CBasic (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 TError&  CBasic::Error (void) const { return this->m_error; }
 
 #pragma endregion
+#pragma region cls::c_converter{}
+
+c_converter::c_converter (void) : m_data(0.0) {}
+c_converter::c_converter (const float _f_value) : c_converter() { *this << _f_value; }
+c_converter::c_converter (const double _d_value) : c_converter() { *this << _d_value; }
+c_converter::c_converter (const c_converter& _src) : c_converter() { *this = _src; }
+
+float c_converter::Float (void) const { return static_cast<float>(this->m_data); }
+double c_converter::Double (void) const { return this->m_data; }
+
+c_converter& c_converter::operator = (const c_converter& _src) { *this << _src.Double(); return *this; }
+
+double c_converter::operator <<(const float _f_value) { return (this->m_data = static_cast<double>(_f_value)); }
+float  c_converter::operator <<(const double _d_value) { return static_cast<float>(this->m_data = _d_value); }
+
+c_converter::operator float (void) const { return static_cast<float>(this->m_data); }
+c_converter::operator double (void) const { return this->m_data; }
+
+#pragma endregion
 #pragma region cls::CProperty{}
 
 static _pc_sz p_err_prop_id_inv = _T("#__e_inv_arg: input '_prop_id' (%d) is not valid");

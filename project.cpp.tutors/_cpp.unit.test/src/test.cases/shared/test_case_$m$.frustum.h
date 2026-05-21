@@ -7,7 +7,9 @@
 #include "test_adap_$m$.defs.h"
 #include "test_case_$m$.mat4x4.h"
 #include "camera.frustum.h"
-
+/*
+	These test cases are espacially intended for OpenGL vers 1.1;
+*/
 namespace test { namespace open_gl { namespace frustum { using namespace test::open_gl::math;
 
 	using CAspect  = ::open_gl::camera::frustum::CAspect;

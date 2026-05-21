@@ -15,6 +15,7 @@
     <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the node of GUI rich app window composition;-->
     <GL_shared Condition="'$(GL_shared)'==''">..\open_gl.shared\</GL_shared><!--This is generic OpenGL functionality wrappers;-->
+    <GL_math Condition="'$(GL_math)'==''">..\open_gl.math\</GL_math>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
@@ -34,13 +35,13 @@
     <_4>$(Shared_Gui)interface\</_4>
     <_5>$(Shared_Clr)interface\</_5>
     <_6>$(GL_shared)interface\</_6>
-    <_7></_7>
+    <_7>$(GL_math)interface\</_7>
     <_8></_8>
     <_9></_9>
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(Shared);$(_0);$(_0-0);$(_0-1);$(_0-2);$(_1);$(_1-0);$(_1-1);$(_1-2);$(_2);$(_3);$(_4);$(_5);$(_6);$(IncludePath)</IncludePath>
+    <IncludePath>$(Shared);$(_0);$(_0-0);$(_0-1);$(_0-2);$(_1);$(_1-0);$(_1-1);$(_1-2);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

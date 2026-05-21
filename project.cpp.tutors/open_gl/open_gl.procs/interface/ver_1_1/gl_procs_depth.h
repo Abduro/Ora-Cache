@@ -5,7 +5,9 @@
 	This is OpenGL ver.1.1 depth wrapper interface declaration file;
 */
 #include "gl_procs_basic.h"
-
+/*
+	These procedure wrappers are espacially intended for OpenGL vers 1.1 API (aka legacy);
+*/
 namespace open_gl { namespace procs { namespace ver_1_1 {
 
 	enum e_criteria : uint32_t {

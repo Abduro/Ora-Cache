@@ -27,3 +27,40 @@ void c_frustum::Set_defaults (void) {
 }
 
 #pragma endregion
+#pragma region cls::c_project{}
+
+using CTstPerspect = test::open_gl::ver_1_1::CTstPerspect;
+
+void c_project::Get (void) {
+
+	CTstPerspect(true).Get();
+	_out()();
+}
+
+void c_project::Set (void) {
+
+	using namespace test::open_gl::ver_1_1;
+
+	CTstPerspect(true).Set(g_pers_arg);
+	_out()();
+}
+
+#pragma endregion
+#pragma region cls::c_stk_mode{}
+
+using CTstMatMode = test::open_gl::ver_1_1::CTstMatMode;
+using e_stk_modes = test::open_gl::ver_1_1::e_stk_modes;
+
+void c_stk_mode::Get (void) {
+
+	CTstMatMode(true).Get();
+	_out()();
+}
+
+void c_stk_mode::Set (void) {
+
+	CTstMatMode(true).Set(e_stk_modes::e_project);
+	_out()();
+}
+
+#pragma endregion

@@ -6,14 +6,17 @@
 */
 #include "shared.defs.h"
 #include <gl/gl.h>       // the headers' include order is important: windows.h must go first;
+#include <gl/Glu.h>
 #include "gl_error.h"
-
+/**important*:
+  all functions related to legacy fixed pipeline of the OpenGL ver 1.1 does not require loading its addresses,
+  because it is expected the libraries referenced below contain those functions;
+*/
 #pragma comment(lib, "opengl32.lib")
-/*
+#pragma comment(lib, "glu32.lib")
+/*	taking into account the fact that there tutorials are implemented under MS Windows and OpenGL ver 1.1 is used
+	the most of the reference is made to Microsoft documentation related to using OpenGL:
 	https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-reference ;
-	https://learn.microsoft.com/en-us/windows/win32/opengl/state-variables ;
-	https://learn.microsoft.com/en-us/windows/win32/opengl/gl-functions ;
-	https://learn.microsoft.com/en-us/windows/win32/opengl/glu-functions ;
 */
 #include "shared.preproc.h"
 #include "shared.dbg.h"
@@ -42,6 +45,29 @@ namespace open_gl { namespace procs { namespace ver_1_1 {
 	private:
 		CBasic& operator = (const CBasic&) = delete; CBasic& operator = (CBasic&&) = delete;
 	};
+
+	// https://en.cppreference.com/cpp/utility/variant ;
+	// this class hides the casting inside of it;
+	class c_converter {
+	public:
+		 c_converter (void); c_converter (const float); c_converter (const double); c_converter (const c_converter&); c_converter (c_converter&&) = delete;
+		~c_converter (void) = default;
+
+		float Float (void) const;
+		double Double (void) const;
+
+		c_converter& operator = (const c_converter&); c_converter& operator = (c_converter&&) = delete;
+
+		double operator <<(const float);
+		float  operator <<(const double);
+
+		operator float (void) const;
+		operator double (void) const;
+
+	private:
+		double m_data;
+	};
+
 	/* query: difference between option and property in programming ; (Google AI)
 	Key Summary:
 	a 'Property' is something an object is or has (e.g., its color), while an 'Option' is a choice for how an object should act or how a tool should work;
