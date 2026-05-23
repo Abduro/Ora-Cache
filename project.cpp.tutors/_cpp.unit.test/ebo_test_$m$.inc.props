@@ -12,6 +12,7 @@
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
     <Shared_Clr Condition="'$(Shared_Clr)'==''">..\_shared.clr\</Shared_Clr><!--This is the node RGB color wrapper;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\_shared.gui\</Shared_Gui> <!--window message and handle wrapper;-->
+    <GL_Ctx Condition="'$(GL_Ctx)'==''">..\open_gl\gl.context\</GL_Ctx>
     <GL_Math Condition="'$(GL_Math)'==''">..\open_gl\open_gl.math\</GL_Math>
     <_3rd_party Condition="'$(_3rd_party)'==''">..\open_gl\3rd_party\</_3rd_party>
     <GLM Condition="'$(GLM)'==''">$(_3rd_party)glm\</GLM>
@@ -40,10 +41,11 @@
     <_b>$(GLM)</_b>
     <_c>$(T3_Camera)</_c>
     <_d>$(Runnable)interface\</_d>
+    <_e>$(GL_Ctx)interface\</_e>
   </PropertyGroup>
   <PropertyGroup>
     <_numbers>$(_0);$(_1);$(_2);$(_2-0);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</_numbers>
-    <_letters>$(_a);$(_b);$(_c);$(_d)</_letters>
+    <_letters>$(_a);$(_b);$(_c);$(_d);$(_e)</_letters>
     <IncludePath>$(_numbers);$(_letters);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />

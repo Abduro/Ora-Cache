@@ -4,21 +4,21 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Apr-2026 at 22:19:59.284, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL tutorials' graphics device interface (GDI) and device context (DC) wrappers' interface declaration file;
 */
-#include "context\gl_ctx_base.h"
-#include "gl_format.h"
+#include "gl_ctx_base.h"
+#include "gl_px_format.h"
 #include "shared.wnd.fake.h" // for getting fake message-only window interface that is used for creating device context renderer of the OpenGL;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace context {
+namespace open_gl { namespace context {
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgraphicsmode ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode ;
-
+	// this is device context mode wrapper for managing device backward compatibility that is not necessary, but still be default; 
 	class CMode {
 	public:
 		enum e_mode : uint32_t {
-		    e__undef     = 0,             // the error mode;
-		    e_advanced   = GM_ADVANCED  , // the mode for the possibility to apply world transformations;
-		    e_compatible = GM_COMPATIBLE, // the mode for the compatibility with 16-bit operating system; (default);
+		    e__undef     = 0,                // the error mode;
+		    e_advanced   = GM_ADVANCED  ,    // the mode for the possibility to apply world transformations;
+		    e_compatible = GM_COMPATIBLE,    // the mode for the compatibility with 16-bit operating system; (default);
 		};
 	public:
 		 CMode (void); CMode (const HDC&); CMode(const CMode&) = delete; CMode (CMode&&) = delete;
@@ -57,6 +57,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 	   https://learn.microsoft.com/en-us/windows/win32/gdi/about-device-contexts ;
 	   https://learn.microsoft.com/en-us/windows/win32/gdi/device-contexts;
 	*/
+	using CPxFormat = win_api::CPxFormat;
 	/* https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
 	   excerpt: ...creates a new OpenGL rendering context, which is suitable for drawing on the device referenced by hdc... ;
 	   this is the class declartion of the context compatible with regular GDI context (HDC);
@@ -70,8 +71,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 
 		err_code Create (const HWND _h_target); // creates the rendering context that is compatible with input window device context;
 		const
-		CFormat& Format (void) const; // gets the reference to the pixel format object; (ro)
-		CFormat& Format (void) ;      // gets the reference to the pixel format object; (rw)
+		CPxFormat& Format (void) const; // gets the reference to the pixel format object; (ro)
+		CPxFormat& Format (void) ;      // gets the reference to the pixel format object; (rw)
 		const
 		CMode&   Mode (void) const;
 		CMode&   Mode (void) ;
@@ -84,7 +85,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 		static bool Is_DC_mem (const HDC); // returns true if an input handle has proper data type is OBJ_MEMDC;
 
 	private:
-		CFormat m_format;
+		CPxFormat m_format;
 		CMode   m_mode;
 	};
 
@@ -106,7 +107,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 		HGLRC  m_renderer; 
 	};
 }
-	class CFake_Ctx { using CDevice = ex_ui::draw::open_gl::context::CDevice;
+	using namespace shared::defs;
+	/* this is a device context created on message-only window handle;
+	*/
+	class CFake_Ctx { using CDevice = open_gl::context::CDevice;
 	public:
 		 CFake_Ctx (const CFake_Ctx&) = delete; CFake_Ctx (CFake_Ctx&&) = delete;
 		 CFake_Ctx (void); // creates fake device;
@@ -126,6 +130,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace context {
 		TFakeWnd m_fk_wnd;  // it is created automatically in its constructor;
 		CDevice  m_device;  // a fake window GDI object;
 	};
-}}}
+}
 
 #endif/*_GL_CTX_DEVICE_H_INCLUDED*/

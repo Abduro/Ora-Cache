@@ -9,8 +9,8 @@
 #include "shared.wnd.fake.h"
 
 using namespace ex_ui::draw::open_gl::procs;
-using s_bits = ex_ui::draw::open_gl::format::s_bits;
-using CSelector = ex_ui::draw::open_gl::context::CSelector;
+using s_bits = ::win_api::format::s_bits;
+using CSelector = ::open_gl::context::CSelector;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
@@ -104,7 +104,7 @@ err_code CExt_Enum::Load (void) {
 	TFakeWnd fk_wnd;
 	if (fk_wnd.Error()) return this->m_error = fk_wnd.Error();
 	// (2) to find pixel format descriptor by required params: color, stencil, z-axis (depth) bits;
-	CFormat format; format << fk_wnd.Get_ctx();
+	win_api::CPxFormat format; format << fk_wnd.Get_ctx();
 	uint32_t u_index = 0;
 
 	s_bits bits_req; bits_req.m_u_clr = 32; bits_req.m_u_depth = 24; bits_req.m_u_stencil = 8;

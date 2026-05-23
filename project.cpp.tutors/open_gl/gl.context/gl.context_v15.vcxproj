@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0002}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0009}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="gl.context.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="gl.context.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="gl.context.inc.props"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.shared.inc.props"/>
+    <Import Project="gl.context.inc.props"/>
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -84,28 +84,32 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
+    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_64>
+    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_86>
+    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
+    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot_86>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_86)</OutDir>
+    <IntDir>$(IntPath_86)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
+    <OutDir>$(OutRoot_64)</OutDir>
+    <IntDir>$(IntPath_64)</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -195,85 +199,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)gl_buffer.h" />
-    <ClCompile Include="$(_1)gl_buffer.cpp" />
-    <ClInclude Include="$(_0-4)gl_buf.bind.h" />
-    <ClCompile Include="$(_1-4)gl_buf.bind.cpp" />
-    <ClInclude Include="$(_0-4)gl_buf.data.h" />
-    <ClCompile Include="$(_1-4)gl_buf.data.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0)gl_drawable.h" />
-    <ClCompile Include="$(_1)gl_drawable.cpp" />
-    <ClInclude Include="$(_0-5)gl_grid_layout.h" />
-    <ClCompile Include="$(_1-5)gl_grid_layout.cpp" />
-    <ClInclude Include="$(_0-5)gl_grid_pers.h" />
-    <ClCompile Include="$(_1-5)gl_grid_pers.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0)gl_defs.h" />
-    <ClCompile Include="$(_1)gl_defs.cpp" />
-    <ClInclude Include="$(_0)gl_renderer.h" />
-    <ClCompile Include="$(_1)gl_renderer.cpp" />
-    <ClInclude Include="$(_0)gl_scene.h" />
-    <ClCompile Include="$(_1)gl_scene.cpp" />
-    <ClInclude Include="$(_0)gl_uniform.h" />
-    <ClCompile Include="$(_1)gl_uniform.cpp" />
-    <ClInclude Include="$(_0)gl_version.h" />
-    <ClCompile Include="$(_1)gl_version.cpp" />
-    <ClInclude Include="$(_0)gl_viewport.h" />
-    <ClCompile Include="$(_1)gl_viewport.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0-1)gl_$_cache.h" />
-    <ClCompile Include="$(_1-1)gl_$_cache.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_id.h" />
-    <ClCompile Include="$(_1-1)gl_prog_id.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_linker.h" />
-    <ClCompile Include="$(_1-1)gl_prog_linker.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_log.h" />
-    <ClCompile Include="$(_1-1)gl_prog_log.cpp" />
-    <ClInclude Include="$(_0-1)gl_prog_status.h" />
-    <ClCompile Include="$(_1-1)gl_prog_status.cpp" />
-    <ClInclude Include="$(_0)gl_program.h" />
-    <ClCompile Include="$(_1)gl_program.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0-0)gl_$_attr.h" />
-    <ClCompile Include="$(_1-0)gl_$_attr.cpp" />
-    <ClInclude Include="$(_0-0)gl_$_log.h" />
-    <ClCompile Include="$(_1-0)gl_$_log.cpp" />
-    <ClInclude Include="$(_0-0)gl_compiler.h" />
-    <ClCompile Include="$(_1-0)gl_compiler.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_id.h" />
-    <ClCompile Include="$(_1-0)gl_shd_id.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_source.h" />
-    <ClCompile Include="$(_1-0)gl_shd_source.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_status.h" />
-    <ClCompile Include="$(_1-0)gl_shd_status.cpp" />
-    <ClInclude Include="$(_0-0)gl_shd_type.h" />
-    <ClCompile Include="$(_1-0)gl_shd_type.cpp" />
-    <ClInclude Include="$(_0-0)gl_src_parser.h" />
-    <ClCompile Include="$(_1-0)gl_src_parser.cpp" />
-    <ClInclude Include="$(_0)gl_shader.h" />
-    <ClCompile Include="$(_1)gl_shader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0-2)gl_shape.2d.h" />
-    <ClCompile Include="$(_1-2)gl_shape.2d.cpp" />
-    <ClInclude Include="$(_0-2)gl_shape.bs.h" />
-    <ClCompile Include="$(_1-2)gl_shape.bs.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0-3)gl_vertex_attr.h" />
-    <ClCompile Include="$(_1-3)gl_vertex_attr.cpp" />
-    <ClInclude Include="$(_0-3)gl_vertex_data.h" />
-    <ClCompile Include="$(_1-3)gl_vertex_data.cpp" />
-    <ClInclude Include="$(_0)gl_vertex_arr.dat.h" />
-    <ClCompile Include="$(_1)gl_vertex_arr.dat.cpp" />
-    <ClInclude Include="$(_0)gl_vertex_arr.obj.h" />
-    <ClCompile Include="$(_1)gl_vertex_arr.obj.cpp" />
-    <Text Include="__read_me_ctx.txt" />
+    <ClInclude Include="$(_0)gl_ctx_base.h" />
+    <ClCompile Include="$(_1)gl_ctx_base.cpp" />
+    <ClInclude Include="$(_0)gl_ctx_device.h" />
+    <ClCompile Include="$(_1)gl_ctx_device.cpp" />
+    <!--ClInclude Include="$(_0)gl_ctx_render.h" />
+    <ClCompile Include="$(_1)gl_ctx_render.cpp" /-->
+    <ClInclude Include="$(_0)gl_context.h" />
+    <ClCompile Include="$(_1)gl_context.cpp" />
+    <ClInclude Include="$(_0)gl_px_format.h" />
+    <ClCompile Include="$(_1)gl_px_format.cpp" />
+    <ClInclude Include="$(_0)gl_px_format_arb.h" />
+    <ClCompile Include="$(_1)gl_px_format_arb.cpp" />
+    <ClInclude Include="$(_0)gl_px_format_att.h" />
+    <ClCompile Include="$(_1)gl_px_format_att.cpp" />
+    <Text Include="__read_me_ctx.txt"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
@@ -288,9 +228,6 @@
     <!--ProjectReference Include="$(GL_Procs)open_gl.procs_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0008}</Project>
     </ProjectReference-->
-    <ProjectReference Include="$(GL_Ctx)gl.context_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0009}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

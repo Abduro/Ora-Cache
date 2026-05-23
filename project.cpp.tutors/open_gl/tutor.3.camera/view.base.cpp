@@ -18,7 +18,7 @@ err_code CBase::Create (const HWND _h_surface) {
 		return this->m_error <<(err_code)TErrCodes::eExecute::eState = _T("#__e_state: base view is already created");
 
 	CDevice& dev_ctx = this->Device();
-	dev_ctx.Target().Source(TString().Format(_T("context::%s"), CDevice::Class()));
+	dev_ctx.Surface().Source(TString().Format(_T("context::%s"), CDevice::Class()));
 
 #if (1) // it is not reqiured because fake device format is already found;
 	if (__failed(dev_ctx.Create(_h_surface))) { // tries to find a required pixel format and set it to the device context;
@@ -26,14 +26,14 @@ err_code CBase::Create (const HWND _h_surface) {
 	}
 #else
 	// sets renderer device context format which is received from fake window;
-	dev_ctx.Target() << _h_surface;
+	dev_ctx.Surface() << _h_surface;
 	dev_ctx.Format() << fk_ctx().Format().Get();
 #endif
 	// creates OpenGL draw rendering context;
-	CGraphics& graphs = this->Graphs();
+	CGraphs& graphs = this->Graphs();
 
-	graphs.Target().Source(TString().Format(_T("renderer::%s"), CGraphics::Class()));
-	graphs.Target() << _h_surface;
+	graphs.Surface().Source(TString().Format(_T("renderer::%s"), CGraphs::Class()));
+	graphs.Surface() << _h_surface;
 
 	if (__failed(graphs.Create(dev_ctx))) {
 		__trace_err_ex_2(this->m_error = graphs.Error()); // return this->Error();
@@ -45,7 +45,7 @@ err_code CBase::Create (const HWND _h_surface) {
 err_code CBase::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	context::CBase* ctx_bases[] = { &this->Graphs(), &this->Device() };
+	::open_gl::context::CBase* ctx_bases[] = { &this->Graphs(), &this->Device() };
 
 	for (uint32_t i_ = 0; i_ < _countof(ctx_bases); i_++) {
 		if (__failed(ctx_bases[i_]->Destroy()))

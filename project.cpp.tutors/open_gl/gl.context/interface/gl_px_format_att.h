@@ -1,18 +1,167 @@
-#ifndef _GL_FORMAT_H_INCLUDED
-#define _GL_FORMAT_H_INCLUDED
+#ifndef _GL_PX_FORMAT_ATT_H_INCLUDED
+#define _GL_PX_FORMAT_ATT_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 06-Sep-2025 at 12:55:04.373, UTC+4, Batumi, Saturday;
-	This is Ebo Pack OpenGL tutorials' format wrapper interface declaration file; 
+	Created by Tech_dog (ebontrop@gmail.com) on 23-May-2026 at 13:46:20.560, UTC+4, Batumi, Saturday;
+	This is OpenGL ARB extension format attributes' wrapper interface declaration file;
 */
-#include "gl_defs.h"
-#include "shared.dbg.h"
+#include "gl_px_format.h"
 
-namespace ex_ui { namespace draw { namespace open_gl {
+namespace open_gl { namespace arb { namespace format { using namespace shared::defs;
+namespace atts { 
+
+	class non_copyable {
+	protected: non_copyable (void) = default; ~non_copyable (void) = default;
+	           non_copyable (const non_copyable&) = delete; non_copyable (non_copyable&&) = delete;
+	private:   non_copyable& operator = (const non_copyable&) = delete;
+	           non_copyable& operator = (non_copyable&&) = delete;
+	};
+
+	// https://www.allacronyms.com/accel./Acceleration ;
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CAccel : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_full = 0x2027, // WGL_FULL_ACCELERATION_ARB ; the pixel format is supported by an ICD driver ;
+		e_none = 0x2025, // WGL_NO_ACCELERATION_ARB ; only the software renderer supports this pixel format;
+		e_norm = 0x2026, // WGL_GENERIC_ACCELERATION_ARB ; the pixel format is supported by an MCD driver;
+		e_supp = 0x2003, // WGL_ACCELERATION_ARB ; Indicates whether the pixel format is supported by the driver.
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CBuffer : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_double = 0x2011, // WGL_DOUBLE_BUFFER_ARB ; att name: att value is 'true' if the color buffer has back/front pairs;
+		e_stereo = 0x2012, // WGL_STEREO_ARB ; att name: att value is 'true' if the color buffer has left/right pairs;
+		};
+
+		static CString To_str (const e_tokens);
+	};
+	
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CColor : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_alpha = 0x201B, // WGL_ALPHA_BITS_ARB ; The number of alpha bitplanes in each RGBA color buffer.
+		e_color = 0x2014, // WGL_COLOR_BITS_ARB ; The number of color bitplanes in each color buffer. For RGBA pixel types, it is the size of the color buffer, excluding the alpha bitplanes.
+		e_depth = 0x2022, // WGL_DEPTH_BITS_ARB ; The depth of the depth (z-axis) buffer.
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://www.allacronyms.com/compatibility/abbreviated ;
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
+	class CContext : private non_copyable {
+	public:
+		// WGL_CONTEXT_FLAGS ;
+		enum e_tokens : uint16_t {
+		     e_flags   = 0x2094, // WGL_CONTEXT_FLAGS_ARB ; this is the att token; the acceptable tokens for getting values are listed below;
+		};
+
+		static CString To_str (const e_tokens);
+
+		class CDebug : private non_copyable {
+		public:
+			enum e_tokens : uint16_t {
+			e_debug   = 0x0001, // WGL_CONTEXT_DEBUG_BIT_ARB ; att value: a high-level description of the concept of "debug contexts";
+			e_forward = 0x0002, // WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB ; att value: a <forward-compatible> context will be created;
+			};
+
+			static CString To_str (const e_tokens);
+		};
+
+		class CProfile : private non_copyable {
+		public:
+			enum e_tokens : uint16_t {
+			// *important*: it is 4 bytes data type number, but it looks like no cast is required;
+			e_core = 0x0001, // WGL_CONTEXT_CORE_PROFILE_BIT_ARB ; att value: if 'true' a context supports the <core> profile of OpenGL;
+			e_comp = 0x0002, // WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB ; att value: a context implements the <compatibility> profile;
+			e_mask = 0x9126, // WGL_CONTEXT_PROFILE_MASK_ARB ; for requests an OpenGL context a specific <profile> of the API support;
+			};
+
+			static CString To_str (const e_tokens);
+		};
+
+		class CVersion : private non_copyable {
+		public:
+			enum e_tokens : uint16_t {
+			e_major = 0x2091, // WGL_CONTEXT_MAJOR_VERSION_ARB ; att value: the actual major number of the version supported by a context;
+			e_minor = 0x2092, // WGL_CONTEXT_MINOR_VERSION_ARB ; att value: the actual minor number of the version supported by a context;
+			};
+
+			static CString To_str (const e_tokens);
+		};
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CDraw : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_bitmap  = 0x2002, // WGL_DRAW_TO_BITMAP_ARB ; True if the pixel format can be used with a memory bitmap. The <iLayerPlane> parameter is ignored if this attribute is specified.
+		e_window  = 0x2001, // WGL_DRAW_TO_WINDOW_ARB ; True if the pixel format can be used with a window. The <iLayerPlane> parameter is ignored if this attribute is specified.
+		e_formats = 0x2000, // WGL_NUMBER_PIXEL_FORMATS_ARB ; The number of pixel formats for the device context. The <iLayerPlane> and <iPixelFormat> parameters are ignored if this attribute is specified.
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/ARB_multisample.txt ;
+	class CSample : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_multi = 0x2041, // WGL_SAMPLE_BUFFERS_ARB ; it returns the number of multisample buffers included in the pixel format: 0 - normal, 1 - one multisample buffer;
+		e_count = 0x2042, // WGL_SAMPLES_ARB ; the number of samples per pixel; if WGL_SAMPLE_BUFFERS_ARB is zero, it is also zero;
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CSupport : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_gdi    = 0x200F, // WGL_SUPPORT_GDI_ARB ; 'true' if GDI rendering is supported;
+		e_opengl = 0x2010, // WGL_SUPPORT_OPENGL_ARB ; 'true' if OpenGL is supported; *important*: it must be passed on choosing color format for context creation;
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CSwap : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		     e_copy     = 0x2029, // WGL_SWAP_COPY_ARB ; the swapping copies the back buffer contents to the front buffer;
+		     e_exchange = 0x2028, // WGL_SWAP_EXCHANGE_ARB ; the swapping exchanges the front and back buffer contents;
+			 e_layers   = 0x2006, // WGL_SWAP_LAYER_BUFFERS_ARB ; 'True' if the pixel format supports swapping layer planes independently of the main planes. If the pixel format does not support a back buffer then this is set to 'False'.
+		     e_method   = 0x2007, // WGL_SWAP_METHOD_ARB ; If the pixel format supports a back buffer, then this indicates how they are swapped.
+		     e_undef    = 0x202A, // WGL_SWAP_UNDEFINED_ARB ; the pixel format does not support a back buffer;
+		};
+
+		static CString To_str (const e_tokens);
+	};
+
+	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
+	class CType : private non_copyable {
+	public:
+		enum e_tokens : uint16_t {
+		e_pixel =  0x2013, // WGL_PIXEL_TYPE_ARB ; att name of the type of pixel data;
+		e_rgba  =  0x202B, // WGL_TYPE_RGBA_ARB ; att value;
+		e_index =  0x202C, // WGL_TYPE_COLORINDEX_ARB ; att value;
+		};
+
+		static CString To_str (const e_tokens);
+	};
+}
+
+	using s_bits_ex = win_api::format::s_bits_ex;
 
 	// https://agrawalsuneet.github.io/blogs/enum-vs-enum-class-in-c++/ ;
 	// https://learn.microsoft.com/en-us/cpp/cpp/enumerations-cpp ;
-
-namespace format {
 
 #define _gl_false uint32_t(0)
 #define _gl_true  uint32_t(1)
@@ -50,160 +199,16 @@ namespace format {
 		CString  m_name;
 	};
 
-	typedef ::std::vector<CAtt> TAtts;
-	typedef ::std::vector<int>  TRawAtts_Int; // excerpt from the article: ...piAttribIList is a list of integer attributes. Every two elements in the list is an attribute/value pair... zero (0) ends up the list;
-	typedef ::std::vector<float>  TRawAtts_Flt; // excerpt from the article: ...need to static-cast int to float or do other trickery to make C keep the bit-pattern between the integer and float form the same ;
-
-namespace arb {
-
-	// https://www.allacronyms.com/accel./Acceleration ;
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CAccel : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_full = 0x2027, // WGL_FULL_ACCELERATION_ARB ; the pixel format is supported by an ICD driver ;
-		e_none = 0x2025, // WGL_NO_ACCELERATION_ARB ; only the software renderer supports this pixel format;
-		e_norm = 0x2026, // WGL_GENERIC_ACCELERATION_ARB ; the pixel format is supported by an MCD driver;
-		e_supp = 0x2003, // WGL_ACCELERATION_ARB ; Indicates whether the pixel format is supported by the driver.
-		};
-
-		static CString To_str (const e_tokens);
-	};
-
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CBuffer : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_double = 0x2011, // WGL_DOUBLE_BUFFER_ARB ; att name: att value is 'true' if the color buffer has back/front pairs;
-		e_stereo = 0x2012, // WGL_STEREO_ARB ; att name: att value is 'true' if the color buffer has left/right pairs;
-		};
-
-		static CString To_str (const e_tokens);
-	};
-	
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CColor : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_alpha = 0x201B, // WGL_ALPHA_BITS_ARB ; The number of alpha bitplanes in each RGBA color buffer.
-		e_color = 0x2014, // WGL_COLOR_BITS_ARB ; The number of color bitplanes in each color buffer. For RGBA pixel types, it is the size of the color buffer, excluding the alpha bitplanes.
-		e_depth = 0x2022, // WGL_DEPTH_BITS_ARB ; The depth of the depth (z-axis) buffer.
-		};
-
-		static CString To_str (const e_tokens);
-	};
-
-	// https://www.allacronyms.com/compatibility/abbreviated ;
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
-	class CContext : private no_copy {
-	public:
-		// WGL_CONTEXT_FLAGS ;
-		enum e_tokens : uint16_t {
-		     e_flags   = 0x2094, // WGL_CONTEXT_FLAGS_ARB ; this is the att token; the acceptable tokens for getting values are listed below;
-		};
-
-		static CString To_str (const e_tokens);
-
-		class CDebug : private no_copy {
-		public:
-			enum e_tokens : uint16_t {
-			e_debug   = 0x0001, // WGL_CONTEXT_DEBUG_BIT_ARB ; att value: a high-level description of the concept of "debug contexts";
-			e_forward = 0x0002, // WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB ; att value: a <forward-compatible> context will be created;
-			};
-
-			static CString To_str (const e_tokens);
-		};
-
-		class CProfile : private no_copy {
-		public:
-			enum e_tokens : uint16_t {
-			// *important*: it is 4 bytes data type number, but it looks like no cast is required;
-			e_core = 0x0001, // WGL_CONTEXT_CORE_PROFILE_BIT_ARB ; att value: if 'true' a context supports the <core> profile of OpenGL;
-			e_comp = 0x0002, // WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB ; att value: a context implements the <compatibility> profile;
-			e_mask = 0x9126, // WGL_CONTEXT_PROFILE_MASK_ARB ; for requests an OpenGL context a specific <profile> of the API support;
-			};
-
-			static CString To_str (const e_tokens);
-		};
-
-		class CVersion : private no_copy {
-		public:
-			enum e_tokens : uint16_t {
-			e_major = 0x2091, // WGL_CONTEXT_MAJOR_VERSION_ARB ; att value: the actual major number of the version supported by a context;
-			e_minor = 0x2092, // WGL_CONTEXT_MINOR_VERSION_ARB ; att value: the actual minor number of the version supported by a context;
-			};
-
-			static CString To_str (const e_tokens);
-		};
-	};
-
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CDraw : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_bitmap  = 0x2002, // WGL_DRAW_TO_BITMAP_ARB ; True if the pixel format can be used with a memory bitmap. The <iLayerPlane> parameter is ignored if this attribute is specified.
-		e_window  = 0x2001, // WGL_DRAW_TO_WINDOW_ARB ; True if the pixel format can be used with a window. The <iLayerPlane> parameter is ignored if this attribute is specified.
-		e_formats = 0x2000, // WGL_NUMBER_PIXEL_FORMATS_ARB ; The number of pixel formats for the device context. The <iLayerPlane> and <iPixelFormat> parameters are ignored if this attribute is specified.
-		};
-
-		static CString To_str (const e_tokens);
-	};
-
-	// https://registry.khronos.org/OpenGL/extensions/ARB/ARB_multisample.txt ;
-	class CSample : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_multi = 0x2041, // WGL_SAMPLE_BUFFERS_ARB ; it returns the number of multisample buffers included in the pixel format: 0 - normal, 1 - one multisample buffer;
-		e_count = 0x2042, // WGL_SAMPLES_ARB ; the number of samples per pixel; if WGL_SAMPLE_BUFFERS_ARB is zero, it is also zero;
-		};
-
-		static CString To_str (const e_tokens);
-	};
-
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CSupport : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_gdi    = 0x200F, // WGL_SUPPORT_GDI_ARB ; 'true' if GDI rendering is supported;
-		e_opengl = 0x2010, // WGL_SUPPORT_OPENGL_ARB ; 'true' if OpenGL is supported; *important*: it must be passed on choosing color format for context creation;
-		};
-
-		static CString To_str (const e_tokens);
-	};
-
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CSwap : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		     e_copy     = 0x2029, // WGL_SWAP_COPY_ARB ; the swapping copies the back buffer contents to the front buffer;
-		     e_exchange = 0x2028, // WGL_SWAP_EXCHANGE_ARB ; the swapping exchanges the front and back buffer contents;
-			 e_layers   = 0x2006, // WGL_SWAP_LAYER_BUFFERS_ARB ; 'True' if the pixel format supports swapping layer planes independently of the main planes. If the pixel format does not support a back buffer then this is set to 'False'.
-		     e_method   = 0x2007, // WGL_SWAP_METHOD_ARB ; If the pixel format supports a back buffer, then this indicates how they are swapped.
-		     e_undef    = 0x202A, // WGL_SWAP_UNDEFINED_ARB ; the pixel format does not support a back buffer;
-		};
-
-		static CString To_str (const e_tokens);
-	};
-
-	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt ;
-	class CType : private no_copy {
-	public:
-		enum e_tokens : uint16_t {
-		e_pixel =  0x2013, // WGL_PIXEL_TYPE_ARB ; att name of the type of pixel data;
-		e_rgba  =  0x202B, // WGL_TYPE_RGBA_ARB ; att value;
-		e_index =  0x202C, // WGL_TYPE_COLORINDEX_ARB ; att value;
-		};
-
-		static CString To_str (const e_tokens);
-	};
-}
+	typedef ::std::vector<CAtt>  TAtts;
+	typedef ::std::vector<int>   TRawAtts_Int; // excerpt from the article: ...piAttribIList is a list of integer attributes. Every two elements in the list is an attribute/value pair... zero (0) ends up the list;
+	typedef ::std::vector<float> TRawAtts_Flt; // excerpt from the article: ...need to static-cast int to float or do other trickery to make C keep the bit-pattern between the integer and float form the same ;
 
 	interface IAtt_Set_Base {
 		virtual const float* const IAtt_Get_Flt_Ptr (void) const { return (float*)nullptr; }
 		virtual const int* const IAtt_Get_Int_Ptr (void) const { return (int*)nullptr; }
 	};
 
-	class CAtt_set_base : public IAtt_Set_Base, private no_copy {
+	class CAtt_set_base : public IAtt_Set_Base, private atts::non_copyable {
 	protected:
 		 CAtt_set_base (void);
 		~CAtt_set_base (void) = default;
@@ -236,64 +241,8 @@ namespace arb {
 	// *important*: arb::CSupport::e_opengl is required for being included, otherwise 'wglChoosePixelFormatARB' fails;
 	class CAtt_set_pixels : public CAtt_set_base { typedef CAtt_set_base TBase;
 	public:
-		CAtt_set_pixels (void) ; // creates the set;
-	};
-
-	struct s_bits {
-		uint16_t m_u_clr, m_u_depth, m_u_stencil;
-		s_bits (const uint16_t _u_clr = 0, const uint16_t _u_depth = 0, const uint16_t _u_stencil = 0);
-		bool Is_valid  (void) const;
-		CString To_str (const e_print = e_print::e_all) const;
-	};
-
-	struct s_bits_ex : public s_bits {
-		uint16_t m_u_msaa;
-		s_bits_ex (const uint16_t _u_clr = 0, const uint16_t _u_depth = 0, const uint16_t _u_stencil = 0, const uint16_t _u_msaa = 0);
-		bool Is_valid  (void) const;
-		CString To_str (const e_print = e_print::e_all) const;
-
-		const
-		s_bits& operator ()(void) const;
-		s_bits& operator ()(void) ;
-	};
-}
-	typedef PIXELFORMATDESCRIPTOR px_fmt_desc_t;
-
-	class CFormat {
-	public:
-		CFormat (void);
-		CFormat (const CFormat&); CFormat (CFormat&&) = delete; ~CFormat (void) = default;
-
-		const
-		px_fmt_desc_t& Get (void) const;
-		err_code Set (void); // sets the found pixel format descriptor to the target device context;
-
-		TError&  Error (void) const;
-		err_code Find  (const format::s_bits& _bits, uint32_t& _found_ndx); // finds by input params the required pixel format descriptor supported by device context;
-		err_code Find  (const format::s_bits_ex& _bits); // finds by input params the required format descriptor supported by OpenGL ARB extension;
-
-		uint32_t Index (void) const; // returns the index of found pixel format descriptor structure;
-
-		bool  Is_found (void) const; // checks the internal pixel format descriptor field for emptiness;
-		bool  Is_valid (void) const; // checks the target context device handle;
-
-		static
-		CString  To_str (const px_fmt_desc_t&);
-
-		CFormat& operator = (const CFormat&);
-		CFormat& operator = (CFormat&&) = delete; // not required yet;
-
-		CFormat& operator <<(const HDC&); // sets device context for getting/setting its pixel format;
-	protected:
-		CFormat& operator <<(const px_fmt_desc_t&);
-		CFormat& operator <<(const uint32_t _u_index); // sets the found index;
-
-	private:
-		mutable
-		CError   m_error;
-		HDC      m_hdc;    // target device context is for manipulating its pixel format;
-		uint32_t m_found;  // this is the found index of the pixel format descriptor, one-based, 0 - means it's not found yet;
-		px_fmt_desc_t m_desc;
+		CAtt_set_pixels (const s_bits_ex&) ; // creates the set;
 	};
 }}}
-#endif/*_GL_FORMAT_H_INCLUDED*/
+
+#endif/*_GL_PX_FORMAT_ATT_H_INCLUDED*/

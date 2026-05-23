@@ -195,7 +195,7 @@ CVersion:: CVersion (void) : m_data{0}, m_use_base(false) { this->m_error >>__CL
 		this->m_error = ctx_dev.Error(); return;
 	}
 #else // anyway, without creating fake device context and fake draw renderer only 'base' version '1.1' is available;
-	CFake_Ctx fk_ctx;
+	::open_gl::CFake_Ctx fk_ctx;
 #endif
 
 	this->m_atts[e_atts::e_render ] << e_atts::e_render  >> reinterpret_cast<const char*>(::glGetString(GL_RENDERER));

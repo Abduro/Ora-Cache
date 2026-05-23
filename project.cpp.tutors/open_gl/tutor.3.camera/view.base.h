@@ -9,9 +9,9 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace views { using namespace shared::defs;
 
-	using CDevice   = ex_ui::draw::open_gl::context::CDevice;
-	using CGraphs   = ex_ui::draw::open_gl::CGraphics;
-	using CSelector = ex_ui::draw::open_gl::context::CSelector;
+	using CDevice   = ::open_gl::context::CDevice;
+	using CGraphs   = ::open_gl::context::ver_1_1::CGraphics;
+	using CSelector = ::open_gl::context::CSelector;
 
 	// this class has both contexts: device context and draw rendering context;
 	class CBase {

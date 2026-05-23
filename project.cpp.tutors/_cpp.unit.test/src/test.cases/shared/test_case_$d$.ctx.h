@@ -13,8 +13,8 @@ namespace test { namespace draw { namespace open_gl {
 	using namespace ex_ui::draw::open_gl;
 
 	using CFakeWnd  = ex_ui::popup::CMsgWnd;
-	using CGraphics = ex_ui::draw::open_gl::CGraphics;
-	using CDevice   = ex_ui::draw::open_gl::context::CDevice;
+	using CGraphics = ::open_gl::context::arb::CGraphics;
+	using CDevice   = ::open_gl::context::CDevice;
 
 	class CDevCtx {
 	public:
@@ -90,8 +90,8 @@ namespace test { namespace draw { namespace open_gl {
 		CGraphCtx  m_graphs;
 	};
 
-	using CPxFormat = ex_ui::draw::open_gl::CFormat;
-	using SPxBits   = ex_ui::draw::open_gl::format::s_bits;
+	using CPxFormat = ::win_api::CPxFormat;
+	using SPxBits   = ::win_api::format::s_bits;
 
 	class CTstFormat {
 	public:

@@ -16,9 +16,10 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	class CScene {
 	public:
-	using CArrObjects = vertex::CArrObj_enum;
-	using CDevice = context::CDevice;
-	using CProgs  = CProg_enum;
+		using CArrObjects = vertex::CArrObj_enum;
+		using CDevice = ::open_gl::context::CDevice;
+		using CGraphics = ::open_gl::context::arb::CGraphics;
+		using CProgs  = CProg_enum;
 	public:
 		class CContext {
 		public:

@@ -30,6 +30,7 @@ the tree of solution nodes:
 [tutors]  : {00000C13-EEEE-BBBB-6667-200000000000} << the sub-root of the tutorial projects;
    +---[DirecX]  : {00000C13-EEEE-BBBB-6667-200000100000} << the sub-root for DirectX tutorials;
    +---[OpenGL]  : {00000C13-EEEE-BBBB-6667-200000200000} << the sub-root for OpenGL tutorials;
+		gl.context_v15  : {00000C13-EEEE-BBBB-6667-0000000B0009} << the OpenGL draw rendering context wrapper project;
 		gl.math_v15     : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
 		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
 		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;

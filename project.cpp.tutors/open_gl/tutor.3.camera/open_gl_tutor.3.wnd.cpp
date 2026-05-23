@@ -31,7 +31,7 @@ camera::CWnd:: CWnd (void) : TBase() { CString cs_cls = TString().Format(_T("cam
 	}
 
 	context::CDevice& dev_ref = ::Get_renderer().Scene().Ctx().Device();
-	dev_ref.Target().Source((_pc_sz)cs_cls);
+	dev_ref.Surface().Source((_pc_sz)cs_cls);
 
 	if (__failed(dev_ref.Create(m_fak_wnd.m_hWnd))) {
 		__trace_err_ex_2(TBase::m_error = dev_ref.Error());

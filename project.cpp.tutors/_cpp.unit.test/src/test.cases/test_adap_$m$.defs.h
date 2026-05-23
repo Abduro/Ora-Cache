@@ -101,12 +101,13 @@ namespace test { namespace open_gl { namespace math {
 
 }}}
 
-#pragma comment(lib, "glm_v15.lib")      // OpenGL mathematics project;
-#pragma comment(lib, "gl.procs_v15.lib") // OpenGL procs loader project;
-#pragma comment(lib, "gl.math_v15.lib")  // this project is being tested by this unit test project;
-#pragma comment(lib, "ebo_test_$$$.lib") // shared unit test library for common definition(s);
+#pragma comment(lib, "glm_v15.lib")             // open_gl mathematics project;
+#pragma comment(lib, "gl.context_v15.lib")      // open_gl context wrapper lib;
+#pragma comment(lib, "gl.procs_v15.lib")        // OpenGL procs loader project;
+#pragma comment(lib, "gl.math_v15.lib")         // this project is being tested by this unit test project;
+#pragma comment(lib, "ebo_test_$$$.lib")        // shared unit test library for common definition(s);
 #pragma comment(lib, "ebo_test_$d$.shared.lib") // shared draw context test case library;
-#pragma comment(lib, "runnable_v15.lib") // drawing by OpenGL in worker thread;
-#pragma comment(lib, "gl.tutor.3.camera.lib") // virtual camera implementation;
+#pragma comment(lib, "runnable_v15.lib")        // worker thread wrapper project lib;
+#pragma comment(lib, "gl.tutor.3.camera.lib")   // virtual camera implementation;
 
 #endif/*_TEST_ADAP_$M$_DEFS_H_INCLUDED*/

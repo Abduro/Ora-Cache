@@ -4,8 +4,8 @@
 */
 #include "gl_ctx_device.h"
 
-using namespace ex_ui::draw::open_gl::context;
-using CFormat = ex_ui::draw::open_gl::CFormat;
+using namespace open_gl::context;
+using CPxFormat = win_api::CPxFormat;
 
 #pragma region cls::CMode{}
 
@@ -101,7 +101,7 @@ err_code CDevice::Create (void) {
 	}
 
 	if (__succeeded(this->Create(h_fake))) {
-		CBase::Target().Is_managed(true);
+		CBase::Surface().Is_managed(true);
 	}
 	else
 		::DestroyWindow(h_fake);
@@ -119,18 +119,18 @@ _pc_sz   CDevice::Class (void) {
 err_code CDevice::Create (const HWND _h_target) {
 	_h_target;
 	CBase::m_error <<__METHOD__<<__s_ok;
-
-	if (CBase::Target().Is_valid())
-		return CBase::m_error = CBase::Target().Error();
-
-	if (CBase::Target().Source().IsEmpty()) // the source class name can be set outside of this procedure;
-		CBase::Target().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
+#if (0)
+	if (CBase::Surface().Is_valid())
+		return CBase::m_error = CBase::Surface().Error();
+#endif
+	if (CBase::Surface().Source().IsEmpty()) // the source class name can be set outside of this procedure;
+		CBase::Surface().Source(TString().Format(_T("%s::%s()"), (_pc_sz)__CLASS__, (_pc_sz)__METHOD__));
 
 	if (__failed(CBase::Set(_h_target))) {
 		return CBase::Error();
 	}
 	
-	this->Mode() << CBase::Target().Get();
+	this->Mode() << CBase::Surface().Get();
 	if (__failed(this->Mode().Set(CMode::e_mode::e_advanced)))
 		return this->m_error  = this->Mode().Error();
 #if (0) // this approach provides limited description of the pixel format descriptor, in other words, the found descriptor is not the best one;
@@ -145,38 +145,38 @@ err_code CDevice::Create (const HWND _h_target) {
 	px_fmt_desc.cDepthBits = 24; // the number of bits for the depthbuffer;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat ;
-	int32_t n_px_format = ::ChoosePixelFormat(CBase::Target().Get(), &px_fmt_desc);
+	int32_t n_px_format = ::ChoosePixelFormat(CBase::Surface().Get(), &px_fmt_desc);
 	if (0== n_px_format) {
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error();
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setpixelformat ;
-	if (false == !!::SetPixelFormat(CBase::Target().Get(), n_px_format, &px_fmt_desc)) {
+	if (false == !!::SetPixelFormat(CBase::Surface().Get(), n_px_format, &px_fmt_desc)) {
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error();
 	}
 #else
-	CFormat the_best_fmt; the_best_fmt << CBase::Target().Get(); uint32_t u_found_ndx = 0;
+	CPxFormat the_best_fmt; the_best_fmt << CBase::Surface().Get(); uint32_t u_found_ndx = 0;
 	if (__failed(the_best_fmt.Find({32, 24, 8}, u_found_ndx))) {
 		__trace_err_ex_2(CBase::m_error = the_best_fmt.Error()); return CBase::Error();
 	}
 	else
 		this->Format() = the_best_fmt; // takes a copy of the found descriptor;
 
-	if (false == !!::SetPixelFormat(CBase::Target().Get(), u_found_ndx, &the_best_fmt.Get())) {
+	if (false == !!::SetPixelFormat(CBase::Surface().Get(), u_found_ndx, &the_best_fmt.Get())) {
 		CBase::m_error.Last();
 		__trace_err_ex_2(CBase::Error()); return CBase::Error();
 	}
 #endif
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
-	this->m_drw_ctx = ::wglCreateContext(CBase::Target().Get());
+	this->m_drw_ctx = ::wglCreateContext(CBase::Surface().Get());
 	if ( 0 == this->m_drw_ctx) {
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		return CBase::Error();
 	}
 
-	if (0 == ::wglMakeCurrent(CBase::Target().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
+	if (0 == ::wglMakeCurrent(CBase::Surface().Get(), this->m_drw_ctx)) { // it is required, otherwise nothing will work;
 		__trace_err_3(_T("%s\n"), (_pc_sz) (CBase::m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 	}
 
@@ -188,6 +188,7 @@ err_code CDevice::Create (const HWND _h_target) {
 
 bool CDevice::Is_DC (const HDC _hdc) {
 	_hdc;
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjecttype ;
 	if (nullptr == _hdc) return false;
 	const dword d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type || OBJ_DC == d_type);
 }
@@ -202,8 +203,8 @@ const
 CMode& CDevice::Mode (void) const { return this->m_mode; }
 CMode& CDevice::Mode (void)       { return this->m_mode; }
 const
-CFormat& CDevice::Format (void) const { return this->m_format; }
-CFormat& CDevice::Format (void)       { return this->m_format; }
+CPxFormat& CDevice::Format (void) const { return this->m_format; }
+CPxFormat& CDevice::Format (void)       { return this->m_format; }
 
 CDevice& CDevice::operator <<(const HWND _h_target) {
 	_h_target;
@@ -211,12 +212,12 @@ CDevice& CDevice::operator <<(const HWND _h_target) {
 	return *this; // for getting the result of creation the error state should be checked;
 }
 
-CDevice::operator const HDC (void) const { return CBase::Target().Get(); }
+CDevice::operator const HDC (void) const { return CBase::Surface().Get(); }
 
 #pragma endregion
 #pragma region cls::CFake_Ctx{}
 
-using CFake_Ctx = ex_ui::draw::open_gl::CFake_Ctx;
+using CFake_Ctx = open_gl::CFake_Ctx;
 
 CFake_Ctx:: CFake_Ctx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: fake device context is not created"); this->Create(); }
 CFake_Ctx::~CFake_Ctx (void) { this->Destroy(); }

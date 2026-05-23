@@ -31,7 +31,7 @@ err_code CDevCtx::Create (const bool _b_verbose/* = true*/) {
 	TRenderer& renderer = ::Get_renderer();
 
 	CDevice& dev_ref = renderer.Scene().Ctx().Device();
-	dev_ref.Target().Source(TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__));
+	dev_ref.Surface().Source(TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__));
 
 	if (__failed(dev_ref.Create(this->Window()))) {
 		this->m_error = dev_ref.Error();
@@ -92,8 +92,8 @@ err_code CGraphCtx::Create (const HWND _h_target, const bool _b_verbose/* = true
 	}
 				
 	TRenderer& renderer = Get_renderer();
-	renderer.Scene().Ctx().Graphics().Target().Source((_pc_sz)cs_cls);
-	renderer.Scene().Ctx().Graphics().Target() << _h_target;
+	renderer.Scene().Ctx().Graphics().Surface().Source((_pc_sz)cs_cls);
+	renderer.Scene().Ctx().Graphics().Surface() << _h_target;
 #if (0)
 	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
 	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
@@ -136,7 +136,7 @@ err_code CGraphCtx::Swap (void) {
 
 	TRenderer& renderer = ::Get_renderer();
 
-	if (false == !!::SwapBuffers(renderer.Scene().Ctx().Graphics().Target().Get())) {
+	if (false == !!::SwapBuffers(renderer.Scene().Ctx().Graphics().Surface().Get())) {
 		this->m_error.Last();
 		_out()(this->Error());
 	}

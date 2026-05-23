@@ -13,8 +13,10 @@
 
 using namespace ex_ui::draw::open_gl;
 
-using CDevice = context::CDevice;
-using CArrObjects = CScene::CArrObjects;
+using CArrObjects = vertex::CArrObj_enum;
+using CDevice = ::open_gl::context::CDevice;
+using CGraphics = ::open_gl::context::arb::CGraphics;
+using CProgs  = CProg_enum;
 
 #pragma region CScene::CContext
 CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
@@ -22,7 +24,7 @@ CScene::CContext::CContext (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_o
 err_code CScene::CContext::Clear (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	context::CBase* ctx_bases[] = { &this->Graphics(), &this->Device() };
+	::open_gl::context::CBase* ctx_bases[] = { &this->Graphics(), &this->Device() };
 
 	for (uint32_t i_ = 0; i_ < _countof(ctx_bases); i_++) {
 		if (__failed(ctx_bases[i_]->Destroy()))
@@ -104,5 +106,5 @@ err_code CScene::Prepare (void) {
 }
 
 const
-CScene::CProgs& CScene::Progs (void) const { return this->m_progs; }
-CScene::CProgs& CScene::Progs (void)       { return this->m_progs; }
+CProgs& CScene::Progs (void) const { return this->m_progs; }
+CProgs& CScene::Progs (void)       { return this->m_progs; }
