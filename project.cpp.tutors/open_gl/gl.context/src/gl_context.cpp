@@ -4,6 +4,10 @@
 */
 #include "gl_context.h"
 #include "gl_procs_ctx.h"
+#include "gl_procs_ext.h"
+
+#include "gl_px_format_att.h"
+#include "gl_version.h"
 
 using namespace open_gl;
 
@@ -106,6 +110,12 @@ err_code CGraphics::Create (void) {
 err_code CGraphics::Create (const HDC _hdc) {
 	_hdc;
 	TBase::m_error <<__METHOD__<< __s_ok;
+
+	const bool b_arb_support = ::Get_ProcExt().Is_arb();
+	if (false == b_arb_support) {
+		return TBase::m_error <<(err_code) TErrCodes::eExecute::eFunction = _T("#__e_oper: ARB extension is not supported");
+	}
+
 	if (false == CDevice::Is_DC(_hdc)) {
 		__trace_err_ex_2(TBase::m_error <<__e_inv_arg = p_err_dc_invalid); return TBase::Error();
 	}
@@ -113,7 +123,6 @@ err_code CGraphics::Create (const HDC _hdc) {
 
 	CPxFormat the_best_fmt; the_best_fmt << _hdc;
 
-	// and the required pixcel format descriptor is already set to device context;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglcreatecontext ;
 	if (__failed(the_best_fmt.Find({32, 24, 8, 8}))) {
 		__trace_err_ex_2(TBase::m_error = the_best_fmt.Error()); return TBase::Error();
@@ -125,9 +134,8 @@ err_code CGraphics::Create (const HDC _hdc) {
 		__trace_err_ex_2(TBase::Error()); return TBase::Error();
 	}
 
-#if (0)
-	const s_version& pref_vers = ::Get_CtxPers().Prefer();
-	CAtt_set_ctx ctx_atts(pref_vers.m_major, pref_vers.m_minor);
+#if (1)
+	::open_gl::arb::format::CAtt_set_ctx ctx_atts(::Get_version().Major(), ::Get_version().Minor());
 
 	// https://registry.khronos.org/OpenGL/extensions/ARB/WGL_ARB_create_context.txt ;
 	TBase::m_drw_ctx = __get_ctx_procs().CreateCtxAttsArb(_hdc, 0, ctx_atts.IAtt_Get_Int_Ptr());

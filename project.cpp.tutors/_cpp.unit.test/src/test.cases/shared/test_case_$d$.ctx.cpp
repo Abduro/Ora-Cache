@@ -101,6 +101,9 @@ err_code CGraphCtx::Create (const HWND _h_target, const bool _b_verbose/* = true
 	if (__failed(renderer.Scene().Ctx().Graphics().Create())) {
 		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out()(this->Error());
 	}
+	else {
+		_out() += _T("[impt] result: arb-based context is created;");
+	}
 
 	_out()(!b_locked); return this->Error();
 }

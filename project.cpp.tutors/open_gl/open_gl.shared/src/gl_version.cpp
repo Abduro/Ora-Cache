@@ -260,8 +260,8 @@ bool   CVersion::Is_base (void) const {
 	return this->Data() == s_version(1, 1) || this->m_use_base;
 }
 
-int32_t  CVersion::Major (void) const { int32_t n_major = 0; ::glGetIntegerv(GL_MAJOR_VERSION, &n_major); return n_major; } // doesn't work;
-int32_t  CVersion::Minor (void) const { int32_t n_minor = 0; ::glGetIntegerv(GL_MINOR_VERSION, &n_minor); return n_minor; } // doesn't work;
+int32_t  CVersion::Major (void) const { return this->Data().major(); } //{ int32_t n_major = 0; ::glGetIntegerv(GL_MAJOR_VERSION, &n_major); return n_major; } // doesn't work;
+int32_t  CVersion::Minor (void) const { return this->Data().minor(); } //{ int32_t n_minor = 0; ::glGetIntegerv(GL_MINOR_VERSION, &n_minor); return n_minor; } // doesn't work;
 
 CString  CVersion::Print (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p_pfx/* = _T("")*/, _pc_sz _p_sfx/* = _T(";")*/, const bool _b_trace/* = false*/) const {
 	_e_opt; _p_pfx; _p_sfx; _b_trace;
@@ -319,6 +319,9 @@ CString  CVersion::Print_2 (const e_print _e_opt/* = e_print::e_all*/, _pc_sz _p
 
 	return cs_out;
 }
+
+const
+s_version& CVersion::operator ()(void) const { return this->Data(); }
 
 #pragma endregion
 

@@ -1,8 +1,8 @@
-#ifndef _EBO_TEST_$D$_CTX_H_INCLUDED
-#define _EBO_TEST_$D$_CTX_H_INCLUDED
+#ifndef _TEST_ADAP_$D$_CTX_H_INCLUDED
+#define _TEST_ADAP_$D$_CTX_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Jan-2026 at 00:55:23.370, UTC+4, Batumi, Wednesday;
-	Ebo Pack OpenGL draw context of regular device and of renderer uint test interface declaration file;
+	This is OpenGL draw context of regular device and of renderer wrapper uint test adapter interface declaration file;
 */
 #include "test_case_$d$.ctx.h"
 
@@ -15,9 +15,9 @@ namespace test { namespace draw { namespace open_gl {
 		 ~c_ctx (void);
 
 		 __clean (OnClean);   // is called after destroying this class instance;
-		 __init (OnInit);     // is called before creating this class instance;
+		 __init  (OnInit);    // is called before creating this class instance;
 
-		 __ctor (_ctor);      // just for testing the test case when this class in new and has no method yet, otherwise not required;
+		 __ctor   (_ctor);    // just for testing the test case when this class in new and has no method yet, otherwise not required;
 		 __method (Device);   // creates the regular device context compatible with open_gl rendering;
 
 		 __method (Graphics); // creates the open_gl graphics context;
@@ -39,4 +39,4 @@ namespace test { namespace draw { namespace open_gl {
 
 }}}
 
-#endif/*_EBO_TEST_$D$_CTX_H_INCLUDED*/
+#endif/*_TEST_ADAP_$D$_CTX_H_INCLUDED*/

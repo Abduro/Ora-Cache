@@ -76,8 +76,8 @@
   <ItemGroup><!--window device context and popup menu;-->
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>win_api\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>win_api\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.ctx.h"><Filter>win_api</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp"><Filter>win_api</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.ctx.h"><Filter>win_api</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.ctx.cpp"><Filter>win_api</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--OpenGL procs loader-->
     <ClInclude Include="$(_2)test_adap_$d$.procs.h"><Filter>procs</Filter></ClInclude>

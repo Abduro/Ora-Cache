@@ -13,7 +13,7 @@ namespace test { namespace draw { namespace open_gl {
 	using namespace ex_ui::draw::open_gl;
 
 	using CFakeWnd  = ex_ui::popup::CMsgWnd;
-	using CGraphics = ::open_gl::context::arb::CGraphics;
+	using CGraphics = ::open_gl::context::arb::CGraphics; // taking into account the remderer of pipeline is used, the ARB support is required;
 	using CDevice   = ::open_gl::context::CDevice;
 
 	class CDevCtx {

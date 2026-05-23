@@ -248,8 +248,8 @@
   <ItemGroup>
     <ClInclude Include="$(_2)ebo_test_$d$.buffer.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.ctx.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.ctx.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.ctx.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.ctx.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.defs.h" />
     <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp" />
     <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h" />

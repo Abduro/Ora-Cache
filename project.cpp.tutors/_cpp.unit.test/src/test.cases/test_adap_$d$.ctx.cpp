@@ -1,8 +1,8 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Jan-2026 at 01:26:39.207, UTC+4, Batumi, Wednesday;
-	Ebo Pack OpenGL drawing context of regular device and of renderer uint test interface implementation file;
+	This is OpenGL draw context of regular device and of renderer wrapper uint test adapter interface implementation file;
 */
-#include "ebo_test_$d$.ctx.h"
+#include "test_adap_$d$.ctx.h"
 #include <crtdbg.h>
 
 using namespace test::draw::open_gl;

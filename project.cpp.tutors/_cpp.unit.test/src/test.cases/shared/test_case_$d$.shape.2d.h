@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Jan-2026 at 13:36:52.511, UTC+4, Batumi, Friday;
 	This is Ebo Pack OpenGL 2D shape wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$d$.ctx.h"
+#include "test_adap_$d$.ctx.h"
 #include "shapes\gl_shape.2d.h"
 
 namespace test { namespace draw { namespace open_gl {

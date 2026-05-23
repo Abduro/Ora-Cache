@@ -75,6 +75,9 @@ namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::d
 			return false;
 		}
 
+		uint32_t major (void) const { return this->m_major; }
+		uint32_t minor (void) const { return this->m_minor; }
+
 		CString To_str (void) const { CString cs_out; cs_out.Format(_T("%u.%u"), this->m_major, this->m_minor); return cs_out; }
 	};
 
@@ -90,27 +93,29 @@ namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::d
 		static const uint32_t n_atts_count = e_atts::e_vendor + 1;
 
 	public:
-		 CVersion (void); CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete;
-		~CVersion (void);
+		CVersion (void); CVersion (const CVersion&) = delete; CVersion (CVersion&&) = delete; ~CVersion (void);
 
-		 const
-		 s_version& Data (void) const;
+		const
+		s_version& Data (void) const;
 
-		 TError&   Error (void) const;
-		 CString   Get (void) const;  // gets version info by using glGetIntegerv(); it is available since ver 3.0; to-do: must be deprecated;
+		TError&   Error (void) const;
+		CString   Get (void) const;  // gets version info by using glGetIntegerv(); it is available since ver 3.0; to-do: must be deprecated;
 
-		 err_code  Get_ex (void);     // creates device context based on a fake window and after that receives all attribute values;
+		err_code  Get_ex (void);     // creates device context based on a fake window and after that receives all attribute values;
 
-		 const
-		 CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
+		const
+		CVer_Att& GetAtt(const e_atts) const; // if input attribute value is out of enum range, the reference to fake object is returned;
 
-		 bool   Is_base (void) const; // returns 'true' in case open_gl version is '1.1' or the option 'UseBase' is turned on in registry;
+		bool   Is_base (void) const; // returns 'true' in case open_gl version is '1.1' or the option 'UseBase' is turned on in registry;
 
-		 int32_t   Major (void) const;
-		 int32_t   Minor (void) const;
+		int32_t   Major (void) const;
+		int32_t   Minor (void) const;
 
-		 CString   Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n"), const bool _b_trace = false) const;
-		 CString   Print_2(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n")) const; // uses the internal print template;
+		CString   Print  (const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n"), const bool _b_trace = false) const;
+		CString   Print_2(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t"), _pc_sz _p_sfx = _T("\n")) const; // uses the internal print template;
+
+		const
+		s_version& operator ()(void) const;
 
 	private:
 		 CVersion& operator = (const CVersion&) = delete; CVersion& operator = (CVersion&&) = delete;

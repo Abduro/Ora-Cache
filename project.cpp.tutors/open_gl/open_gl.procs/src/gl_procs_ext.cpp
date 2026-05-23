@@ -5,6 +5,7 @@
 #include "gl_procs_ext.h"
 #include "gl_context.h"
 
+#include "shared.dbg.h"
 #include "shared.preproc.h"
 #include "shared.wnd.fake.h"
 
@@ -72,6 +73,8 @@ void   CExt_Item::Name (_pc_sz _p_name) {
 	_p_name;
 	this->m_name = _p_name; if (this->m_name.IsEmpty() == false) this->m_name.Trim();
 }
+const
+CString& CExt_Item::Name_ref (void) const { return this->m_name; }
 
 CExt_Item&  CExt_Item::operator = (const CExt_Item& _src) { *this << _src.Name(); return *this; }
 CExt_Item&  CExt_Item::operator = (CExt_Item&& _victim) { *this = (const CExt_Item&)_victim; return *this; }
@@ -86,6 +89,26 @@ CExt_Enum::CExt_Enum (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_ini
 TError& CExt_Enum::Error (void) const { return this->m_error; }
 const
 ext_items_t& CExt_Enum::Get (void) const { return this->m_items; }
+
+bool CExt_Enum::Has (const _pc_sz _p_ext_name) const {
+	_p_ext_name;
+	if (0 == _p_ext_name || 0 == ::lstrlen(_p_ext_name))
+		return false;
+	for (uint32_t i_ = 0; i_ < this->m_items.size(); i_++)
+		if (0 == this->m_items.at(i_).Name_ref().CompareNoCase(_p_ext_name))
+			return true;
+	return false;
+}
+
+bool CExt_Enum::Is_arb (void) const {
+
+	static _pc_sz p_arb_ext_list[] = {ext_predef::p_arb_samples, ext_predef::p_arb_px_format};
+
+	for (uint32_t i_ = 0; i_ < _countof(p_arb_ext_list); i_++)
+		if (this->Has(p_arb_ext_list[i_]))
+			return true;
+	return false;
+}
 
 bool CExt_Enum::Is_remote (void) const {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -111,7 +134,7 @@ err_code CExt_Enum::Load (void) {
 
 	if (__failed(format.Find(bits_req, u_index)))
 		 return this->m_error = format.Error();
-	// (3) to set the context defice to the found pixel format;
+	// (3) to set the context device to the found pixel format;
 	if (__failed(format.Set()))
 		return this->m_error = format.Error();
 
@@ -129,7 +152,13 @@ err_code CExt_Enum::Load (void) {
 #pragma endregion
 
 TProcExtEnum&  ::Get_ProcExt (void) {
-	static
-	TProcExtEnum proc_ext_enum;
+
+	static TProcExtEnum proc_ext_enum;
+	static bool b_inited = false;
+
+	if (false == b_inited) {
+		if (__failed(proc_ext_enum.Load())) __trace_err_ex_2(proc_ext_enum.Error()); b_inited = true;
+	}
+
 	return proc_ext_enum;
 }

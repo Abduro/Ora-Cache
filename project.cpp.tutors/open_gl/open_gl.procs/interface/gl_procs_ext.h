@@ -8,6 +8,11 @@
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 
+	namespace ext_predef {
+		static _pc_sz p_arb_samples   = _T("WGL_ARB_multisample");
+		static _pc_sz p_arb_px_format = _T("WGL_ARB_pixel_format");
+	}
+
 	// this is an extension installed under current OS;
 	class CExt_Item {
 	public:
@@ -15,8 +20,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 
 		bool Is_valid (void) const; // checks for this element name emptiness;
 
-		_pc_sz  Name (void) const;  // gets extension item name;
-		void    Name (_pc_sz);      // sets extension item name; no check for input pointer for null value, just trimming if nessary;
+		_pc_sz   Name (void) const;  // gets extension item name;
+		void     Name (_pc_sz);      // sets extension item name; no check for input pointer for null value, just trimming if nessary;
+		const
+		CString& Name_ref (void) const; // returns regference to the string object that holds the name;
 	
 		CExt_Item& operator = (const CExt_Item&); CExt_Item& operator = (CExt_Item&&);
 		CExt_Item& operator <<(_pc_sz _p_name);
@@ -37,6 +44,10 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 		TError& Error (void) const;
 		const
 		ext_items_t&  Get (void) const;
+
+		bool Has (const _pc_sz _p_ext_name) const;
+
+		bool Is_arb (void) const;    // it is generic method to check there is at least one arb-related extension is supported or not;
 		bool Is_remote (void) const;
 		/* for loading available extensions the following steps are required:
 		   (1) to create message-only window (aka fake) and to get context device from it;

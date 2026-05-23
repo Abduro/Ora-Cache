@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL shaders' wrapper interface declaration file for using in test cases adapters;
 */
 #include "ebo_test_$d$.defs.h"
-#include "ebo_test_$d$.ctx.h"
+#include "test_adap_$d$.ctx.h"
 #include "gl_defs.h"
 #include "gl_shader.h"
 
