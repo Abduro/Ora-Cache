@@ -8,6 +8,21 @@ using namespace test::draw::open_gl;
 
 #pragma region cls::CTstProcExt{}
 
+CTstProcExt::CTstProcExt (void) { _out().Clear(); }
+
+bool  CTstProcExt::Is_arb (void) const {
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	const bool b_support = (*this)().Is_arb();
+	if ((*this)().Error()) _out() += (*this)().Error();
+
+	if (b_support)
+	     _out() += _T("[impt] *result*: OpenGL ARB extension is supported;");
+	else _out() += _T("[warn] *result*: OpenGL ARB extension is *not* supported;");
+
+	return b_support;
+}
+
 bool  CTstProcExt::Is_remote (void) const {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 

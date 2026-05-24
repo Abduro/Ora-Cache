@@ -7,6 +7,7 @@
 #include "_defs.h"
 #include "shared.dbg.h"
 #include "shared.timer.h" // for using shared::common::CChrono and CChrono_auto classes;
+#include "shared.preproc.h"
 
 namespace ebo { namespace boo { namespace test {
 
@@ -85,6 +86,8 @@ namespace ebo { namespace boo { namespace test {
 		const
 		CCache&  Cached (void) const;   // gets a reference to cached strings (ro);
 		CCache&  Cached (void)      ;   // gets a reference to cached strings (rw);
+
+		void  Clear (void);  // clears cached strings' buffer;
 
 		/*query: CppUnitTestFramework::Logger WriteMessage is thread safe (Google AI);
 		  Historically, the Microsoft::VisualStudio::CppUnitTestFramework::Logger::WriteMessage method has not been thread-safe.

@@ -139,6 +139,8 @@ const
 CCache&  CLogger::Cached  (void) const { return this->m_cache; }
 CCache&  CLogger::Cached  (void)       { return this->m_cache; }
 
+void  CLogger::Clear (void) { this->Cached().Clear(); }
+
 _pc_sz   CLogger::Pattern (void) const { return (_pc_sz)this->m_pattern; }
 bool     CLogger::Pattern (_pc_sz _lp_sz_pat) {
 	_lp_sz_pat;

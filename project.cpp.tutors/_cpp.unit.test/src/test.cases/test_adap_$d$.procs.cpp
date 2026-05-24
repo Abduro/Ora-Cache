@@ -8,6 +8,10 @@ using namespace test::draw::open_gl;
 
 #pragma region cls::c_proc_ext{}
 
+void c_proc_ext::Is_arb (void) {
+	CTstProcExt().Is_arb(); _out()();
+}
+
 void c_proc_ext::Is_remote (void) {
 	CTstProcExt().Is_remote(); _out()();
 }

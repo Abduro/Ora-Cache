@@ -4,13 +4,12 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 18-Jan-2026 at 20:51:56.282, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL vertex array object wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$d$.defs.h"
+#include "test_adap_$d$.defs.h"
 #include "gl_vertex_arr.obj.h"
 
 namespace test { namespace draw { namespace open_gl {
-	using namespace ex_ui::draw::open_gl;
 
-	using CArrObject = vertex::CArrObject;
+	using namespace ex_ui::draw::open_gl::vertex;
 
 	CArrObject& __vao_accessor (const e_object _target);
 

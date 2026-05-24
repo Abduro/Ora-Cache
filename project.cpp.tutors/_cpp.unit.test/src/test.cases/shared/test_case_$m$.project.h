@@ -6,7 +6,7 @@
 */
 #include "test_adap_$m$.defs.h"
 #include "test_case_$m$.mat4x4.h"
-#include "ver_1_1\gl_procs_proj.h"
+#include "gl_procs_proj.h"
 /*
 	These test cases are espacially intended for OpenGL vers 1.1;
 */

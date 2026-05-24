@@ -1,26 +1,24 @@
 #ifndef _TEST_ADAP_$D$_DEFS_H_INCLUDED
 #define _TEST_ADAP_$D$_DEFS_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2026 at 08:45:06.936, UTC+4, Batumi, Monday;
-	This is OpenGL tutorials' draw functionality common definitions interface file.
+	Created by Tech_dog (ebontrop@gmail.com) on 06-Jan-2026 at 23:38:48.842, UTC+4, Batumi, Tauesday;
+	This is OpenGL tutorials' common definitions' uint test interface declaration file;
 */
 #include "_log.h"
-#include "shared.dbg.h"
-#include "shared.preproc.h"
 
 namespace test { namespace draw { namespace open_gl {
-	using namespace shared::defs;
 
-	__class (c_version) {
-	public:
-		 c_version (void) = default; c_version (const c_version&) = delete; c_version (c_version&&) = delete;
-		~c_version (void) = default;
+	using namespace ebo::boo::test;
 
-		__method (Load);  // just shows what OpenGL version is available on this OS;
-
-	private:
-		c_version& operator = (const c_version&) = delete; c_version& operator = (c_version&&) = delete;
-	};
+	/**important*: the main rules of error trace:
+	(1) if a test case object throws the error, it should trace it itself;
+	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
+	*/
 }}}
+
+#pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
+#pragma comment(lib, "gl.context_v15.lib")   // open_gl context wrapper lib;
+#pragma comment(lib, "gl.procs_v15.lib")     // open_gl procs loader lib;
+#pragma comment(lib, "gl.shared_v15.lib")    // open_gl wrapper shared lib;
 
 #endif/*_TEST_ADAP_$D$_DEFS_H_INCLUDED*/

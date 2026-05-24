@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 20:49:51.756, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL tutorials' draw components unit test project module declaration file;
 */
-#include "ebo_test_$d$.defs.h"
+#include "test_adap_$d$.defs.h"
 
 namespace test { namespace draw { namespace open_gl {
 

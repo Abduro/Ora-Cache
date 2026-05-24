@@ -26,8 +26,6 @@
   <ItemGroup><!--precompiled headers and module;-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.defs.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.defs.cpp"><Filter>_root</Filter></ClCompile>
     <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
     <ClInclude Include="$(_2)test_adap_$d$.defs.h"><Filter>_root</Filter></ClInclude>
@@ -84,5 +82,11 @@
     <ClCompile Include="$(_2)test_adap_$d$.procs.cpp"><Filter>procs</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.procs.h"><Filter>procs\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.procs.cpp"><Filter>procs\shared</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2)test_adap_$d$.ver.h"><Filter>win_api</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.ver.cpp"><Filter>win_api</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.ver.h"><Filter>win_api\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.ver.cpp"><Filter>win_api\shared</Filter></ClCompile>
   </ItemGroup>
 </Project>

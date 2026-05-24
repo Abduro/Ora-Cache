@@ -11,5 +11,7 @@
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.ver.h"><Filter>shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.ver.cpp"><Filter>shared</Filter></ClCompile>
   </ItemGroup>
 </Project>

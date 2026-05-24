@@ -239,18 +239,6 @@
     <ClCompile Include="$(_1)gl_types.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0-2)gl_procs_basic.h" />
-    <ClCompile Include="$(_1-2)gl_procs_basic.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_clear.h" />
-    <ClCompile Include="$(_1-2)gl_procs_clear.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_depth.h" />
-    <ClCompile Include="$(_1-2)gl_procs_depth.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_matrix.h" />
-    <ClCompile Include="$(_1-2)gl_procs_matrix.cpp" />
-    <ClInclude Include="$(_0-2)gl_procs_proj.h" />
-    <ClCompile Include="$(_1-2)gl_procs_proj.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
     </ProjectReference>

@@ -13,6 +13,7 @@ namespace test { namespace draw { namespace open_gl {
 		 c_proc_ext (void) = default; c_proc_ext (const c_proc_ext&) = delete; c_proc_ext (c_proc_ext&&) = delete;
 		~c_proc_ext (void) = default;
 
+		__method (Is_arb);
 		__method (Is_remote);
 		__method (Load);
 

@@ -15,11 +15,12 @@ namespace test { namespace draw { namespace open_gl {
 
 	class CTstProcExt {
 	public:
-		 CTstProcExt (void) = default; CTstProcExt (const CTstProcExt&) = delete; CTstProcExt (CTstProcExt&&) = delete;
+		 CTstProcExt (void); CTstProcExt (const CTstProcExt&) = delete; CTstProcExt (CTstProcExt&&) = delete;
 		~CTstProcExt (void) = default;
 
-		bool Is_remote (void) const;
-		err_code  Load (void); // loads OpenGL extensions;
+		bool Is_arb (void) const;    // this is some sort of shortcut of using Is_remote();
+		bool Is_remote (void) const; // if OpenGL runs under MS Windows remote desktop, ARB extension is not supported definitely;
+		err_code  Load (void);       // loads OpenGL extensions;
 
 		const
 		TProcExtEnum&  operator ()(void) const;

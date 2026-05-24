@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000C0006}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B000A}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.procs.leg.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.procs.leg.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.procs.leg.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\shared.all.inc.props" />
+    <Import Project="gl.procs.leg.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -88,30 +88,29 @@
     <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_86>
     <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
     <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot_86>
-    <LibName>gl.tutor.3.camera</LibName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(OutRoot_86)</OutDir>
     <IntDir>$(IntPath_86)</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(OutRoot_86)</OutDir>
     <IntDir>$(IntPath_86)</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(OutRoot_64)</OutDir>
     <IntDir>$(IntPath_64)</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(OutRoot_64)</OutDir>
     <IntDir>$(IntPath_64)</IntDir>
-    <TargetName>$(LibName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,13 +126,8 @@
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
-    <!--PostBuildEvent>
-      <Command>$(DevEnvDir)devenv "$(SolutionDir)open_gl.tutors.sln" /Build "$(Configuration)|$(Platform)" /project "$(SolutionDir)tutor.3.camera\gl.tutor.3.camera.vcxproj"</Command>
-    </PostBuildEvent-->
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -148,8 +142,6 @@
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <SupportJustMyCode>true</SupportJustMyCode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -199,28 +191,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />
-    <ClCompile Include="$(Shared)shared.std.afx.cpp" >
+    <ClCompile Include="$(Shared)shared.std.afx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="camera.base.h" />
-    <ClCompile Include="camera.base.cpp" />
-    <ClInclude Include="camera.frustum.h" />
-    <ClCompile Include="camera.frustum.cpp" />
-    <ClInclude Include="drawable.defs.h" />
-    <ClCompile Include="drawable.defs.cpp" />
-    <ClInclude Include="drawable.drafter.h" />
-    <ClCompile Include="drawable.drafter.cpp" />
-    <ClInclude Include="ctx_menu_wrapper.h" />
-    <ClCompile Include="ctx_menu_wrapper.cpp" />
-    <ClInclude Include="model.base.h" />
-    <ClCompile Include="model.base.cpp" />
-    <ClInclude Include="open_gl_tutor.3.wnd.h" />
-    <ClCompile Include="open_gl_tutor.3.wnd.cpp" />
-    <ClInclude Include="view.base.h" />
-    <ClCompile Include="view.base.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)gl_procs_basic.h" />
+    <ClCompile Include="$(_1)gl_procs_basic.cpp" />
+    <ClInclude Include="$(_0)gl_procs_clear.h" />
+    <ClCompile Include="$(_1)gl_procs_clear.cpp" />
+    <ClInclude Include="$(_0)gl_procs_depth.h" />
+    <ClCompile Include="$(_1)gl_procs_depth.cpp" />
+    <ClInclude Include="$(_0)gl_procs_matrix.h" />
+    <ClCompile Include="$(_1)gl_procs_matrix.cpp" />
+    <ClInclude Include="$(_0)gl_procs_proj.h" />
+    <ClCompile Include="$(_1)gl_procs_proj.cpp" />
+    <Text Include="__read_me_leg.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
@@ -229,23 +218,8 @@
     <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(Shared_Clr)shared.clr_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000D0001}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(GL_Math)gl.math_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0007}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(GL_shared)gl.shared_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(Shared_Run)runnable_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000007}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(GL_Leg)gl.procs.leg_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000007}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

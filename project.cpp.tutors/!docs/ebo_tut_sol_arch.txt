@@ -33,6 +33,7 @@ the tree of solution nodes:
 		gl.context_v15  : {00000C13-EEEE-BBBB-6667-0000000B0009} << the OpenGL draw rendering context wrapper project;
 		gl.math_v15     : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
 		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
+		gl.procs.leg_v15: {00000C13-EEEE-BBBB-6667-0000000B000A} << OpenGL legacy API wrapper project;
 		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;
 
    +------[3rd_party] : {00000C13-EEEE-BBBB-6667-200000230000} << the sub-root for 3rd party projects;

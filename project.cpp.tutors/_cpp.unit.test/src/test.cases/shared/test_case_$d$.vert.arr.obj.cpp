@@ -3,6 +3,7 @@
 	This is Ebo Pack OpenGL vertex array object wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.vert.arr.obj.h"
+#include "gl_renderer.h"
 
 using namespace test::draw::open_gl;
 

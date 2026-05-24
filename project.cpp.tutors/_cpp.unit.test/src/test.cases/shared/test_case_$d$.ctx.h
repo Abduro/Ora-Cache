@@ -4,8 +4,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 15:18:41.909, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL draw context wrapper interface declaration file for using in test cases adapters;
 */
-#include "ebo_test_$d$.defs.h"
+#include "test_adap_$d$.defs.h"
 #include "gl_context.h"
+#include "gl_renderer.h"
 #include "shared.wnd.fake.h"
 
 namespace test { namespace draw { namespace open_gl {

@@ -1,14 +1,14 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 06-Jan-2026 at 23:38:48.842, UTC+4, Batumi, Tauesday;
-	Ebo Pack OpenGL draw context lib common definitions' uint test interface implementation file;
+	Creatsd by Tech_dog (ebontrop@gmail.com) on 24-May-2026 at 11:23:51.682, UTC+4, Batumi, Sunday;
+	This is OpenGL version wrapper unit test case interface implementation file for using in test cases adapters;
 */
-#include "ebo_test_$d$.defs.h"
+#include "test_case_$d$.ver.h"
 
-using namespace test::draw::open_gl;
-
-namespace test { namespace draw { namespace open_gl { namespace _impl_3 { void __warning_lnk_4006 (void) {}}}}}
+using namespace test::open_gl;
 
 #pragma region cls::CTstVersion{}
+
+CTstVersion::CTstVersion (void) { _out().Clear(); /*clears messages received from fake context creation*/ }
 
 err_code  CTstVersion::Load (const bool _cls_out/* = true*/) {
 	if (_cls_out)

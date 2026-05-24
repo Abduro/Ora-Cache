@@ -16,6 +16,7 @@
     <GL_Math Condition="'$(GL_Math)'==''">..\open_gl\open_gl.math\</GL_Math>
     <_3rd_party Condition="'$(_3rd_party)'==''">..\open_gl\3rd_party\</_3rd_party>
     <GLM Condition="'$(GLM)'==''">$(_3rd_party)glm\</GLM>
+    <GL_Leg Condition="'$(GL_Leg)'==''">..\open_gl\gl.procs.leg\</GL_Leg>
     <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl\open_gl.procs\</GL_Procs>
     <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl\open_gl.shared\</GL_Shared> <!--regular context device and draw renderer creator;-->
     <T3_Camera Condition="'$(T3_Camera)'==''">..\open_gl\tutor.3.camera\</T3_Camera>
@@ -42,10 +43,11 @@
     <_c>$(T3_Camera)</_c>
     <_d>$(Runnable)interface\</_d>
     <_e>$(GL_Ctx)interface\</_e>
+    <_f>$(GL_Leg)interface\</_f>
   </PropertyGroup>
   <PropertyGroup>
     <_numbers>$(_0);$(_1);$(_2);$(_2-0);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</_numbers>
-    <_letters>$(_a);$(_b);$(_c);$(_d);$(_e)</_letters>
+    <_letters>$(_a);$(_b);$(_c);$(_d);$(_e);$(_f)</_letters>
     <IncludePath>$(_numbers);$(_letters);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
