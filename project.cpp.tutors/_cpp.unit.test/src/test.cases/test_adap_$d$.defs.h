@@ -16,7 +16,7 @@ namespace test { namespace open_gl {
 	*/
 }}
 
-#pragma comment(lib, "test_adap_$$$.lib")     // shared unit test library for common definition(s);
+#pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "gl.context_v15.lib")   // open_gl context wrapper lib;
 #pragma comment(lib, "gl.procs_v15.lib")     // open_gl procs loader lib;
 #pragma comment(lib, "gl.shared_v15.lib")    // open_gl wrapper shared lib;

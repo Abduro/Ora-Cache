@@ -10,10 +10,13 @@ namespace test { namespace open_gl { namespace vertex {
 
 	__class (c_vert_buf) {
 	public:
-		c_vert_buf (void); ~c_vert_buf (void) = default;
+		c_vert_buf (void) = default; ~c_vert_buf (void) = default; c_vert_buf (const c_vert_buf&) = delete; c_vert_buf (c_vert_buf&&) = delete;
 
 		__method (Data); // gets vertex buffer data of triangle shape;
 		__method (Size); // gets vertex buffer size in bytes; if no buffer is bound the error is returned;
+
+	private:
+		c_vert_buf& operator = (const c_vert_buf&) = delete; c_vert_buf& operator = (c_vert_buf&&) = delete;
 	};
 
 }}}

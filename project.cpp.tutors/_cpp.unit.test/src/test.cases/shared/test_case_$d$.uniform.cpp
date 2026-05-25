@@ -4,7 +4,10 @@
 */
 #include "test_case_$d$.uniform.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::draw;
+using namespace test::open_gl::prog;
+using namespace test::open_gl::shapes;
+using namespace test::open_gl::vars;
 
 #pragma region cls::CTU_enum{}
 
@@ -21,15 +24,16 @@ CTU_enum::CTU_enum (const e_object _target) : TPipe(_target) {
 uint32_t CTU_enum::Count (void) const {
 	this->m_error <<__METHOD__<<__s_ok; return CTU_enum::Count(TPipe::Target(), this->m_error);
 }
+
 uint32_t CTU_enum::Count (const e_object _target, CError& _err) {
 	_target; _err;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s() <static>:"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 	_out()(false); // turns the logger output off;
 
-	CCtx_auto ctx_auto(true);
+	CTstGraph graph;
 
-	if (ctx_auto.Error()) {
-		_err = ctx_auto.Error(); return 0;
+	if (__failed(graph.Create())) {
+		_err = graph().Error(); return 0;
 	}
 
 	CProg prog(_target); prog << CProg::e_opts::e_use_$ << CProg::e_opts::e_link;

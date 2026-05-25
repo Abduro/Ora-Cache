@@ -15,6 +15,8 @@ namespace test { namespace open_gl { namespace math {
 	using e_mat_mode   = ex_ui::draw::open_gl::procs::matrix::e_mat_mode;
 	using e_mat_type   = ex_ui::draw::open_gl::procs::matrix::e_mat_type;
 
+	using CTstGraph = test::open_gl::context::ver_1_1::CTstGraph;
+
 	class c_stk_target : public c_mtx_base { typedef c_mtx_base TBase;
 	public:
 		c_stk_target (void); ~c_stk_target (void);
@@ -28,6 +30,7 @@ namespace test { namespace open_gl { namespace math {
 
 	private:
 		t_stk_target m_target;
+		CTstGraph    m_graph ;
 	};
 
 	class c_mtx_stack : public c_mtx_base { typedef c_mtx_base TBase;
@@ -45,6 +48,7 @@ namespace test { namespace open_gl { namespace math {
 
 	private:
 		t_mat_stack m_stack;
+		CTstGraph   m_graph;
 	};
 
 }}}

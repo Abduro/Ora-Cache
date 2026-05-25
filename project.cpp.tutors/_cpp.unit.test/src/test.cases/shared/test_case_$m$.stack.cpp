@@ -8,8 +8,8 @@ using namespace test::open_gl::math;
 
 #pragma region cls::c_stk_target{}
 
-c_stk_target:: c_stk_target (void) : TBase() { TBase::m_error >>__CLASS__; ::__get_dev_ctx().Create(false); }
-c_stk_target::~c_stk_target (void) { ::__get_dev_ctx().Delete(false); }
+c_stk_target:: c_stk_target (void) : TBase() { TBase::m_error >>__CLASS__; this->m_graph.Create(); }
+c_stk_target::~c_stk_target (void) { this->m_graph.Delete(); }
 
 err_code  c_stk_target::Get (void) const {
 	TBase::m_error <<__METHOD__<<__s_ok;
@@ -41,8 +41,8 @@ t_stk_target& c_stk_target::operator ()(void)       { return this->m_target; }
 #pragma endregion
 #pragma region cls::c_mtx_stack{}
 
-c_mtx_stack:: c_mtx_stack (void) : TBase() { TBase::m_error >>__CLASS__; ::__get_dev_ctx().Create(false); }
-c_mtx_stack::~c_mtx_stack (void) { ::__get_dev_ctx().Delete(false); }
+c_mtx_stack:: c_mtx_stack (void) : TBase() { TBase::m_error >>__CLASS__; this->m_graph.Create(); }
+c_mtx_stack::~c_mtx_stack (void) { this->m_graph.Delete(); }
 
 err_code c_mtx_stack::Get (const e_mat_type _e_type, t_mat4x4& _mat) {
 	_e_type; _mat;

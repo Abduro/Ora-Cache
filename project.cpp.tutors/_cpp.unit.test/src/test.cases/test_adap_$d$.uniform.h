@@ -1,14 +1,14 @@
-#ifndef _EBO_TEST_$D$_UNIFORM_H_INCLUDED
-#define _EBO_TEST_$D$_UNIFORM_H_INCLUDED
+#ifndef _TEST_ADAP_$D$_UNIFORM_H_INCLUDED
+#define _TEST_ADAP_$D$_UNIFORM_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 14-Jan-2026 at 17:57:21.906, UTC+4, Batumi, Wednesday;
-	This is Ebo Pack OpenGL tutorials' uniform data type wrapper unit test adapter interface declaration file.
+	This is OpenGL tutorials' uniform data type wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.ctx.h"
 #include "test_case_$d$.prog.h"
 #include "test_case_$d$.uniform.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace vars {
 
 	/* creating device context and graphics must be made before creating a program object;
 	*important*: test class constructor having input arguments is useful in case when 'class initializer' is used for dynamic creation of this test class,
@@ -38,4 +38,4 @@ namespace test { namespace draw { namespace open_gl {
 	};
 }}}
 
-#endif/*_EBO_TEST_$D$_UNIFORM_H_INCLUDED*/
+#endif/*_TEST_ADAP_$D$_UNIFORM_H_INCLUDED*/

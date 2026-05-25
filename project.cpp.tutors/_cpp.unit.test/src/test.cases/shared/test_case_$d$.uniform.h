@@ -7,7 +7,7 @@
 #include "test_case_$d$.render.h"
 #include "gl_uniform.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace vars {
 
 	using namespace ex_ui::draw::open_gl;
 
