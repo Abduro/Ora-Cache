@@ -2,20 +2,23 @@
 #define _TEST_CASE_$D$_SHADER_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 15:51:44.122, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL shaders' wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL shaders' wrapper interface declaration file for using in test cases adapters;
 */
 #include "test_adap_$d$.defs.h"
-#include "test_adap_$d$.ctx.h"
+#include "test_case_$d$.ctx.arb.h"
 #include "gl_defs.h"
 #include "gl_shader.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace shaders {
 
 	using namespace ex_ui::draw::open_gl;
 
 	using CShader   = ex_ui::draw::open_gl::CShader;
 	using $Fragment = ex_ui::draw::open_gl::shader::CFragment;
 	using $Vertex   = ex_ui::draw::open_gl::shader::CVertex;
+
+	using e_object  = TPipe::e_object;
+
 	// this class especially intended for shader source code file compilation check; no shared renderer components is used;
 	class C$Base : public TPipe {
 	public:

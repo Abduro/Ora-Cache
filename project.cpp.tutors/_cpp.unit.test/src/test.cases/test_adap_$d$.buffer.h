@@ -1,13 +1,12 @@
-#ifndef _EBO_TEST_$D$_BUFFER_H_INCLUDED
-#define _EBO_TEST_$D$_BUFFER_H_INCLUDED
+#ifndef _TEST_ADAP_$D$_BUFFER_H_INCLUDED
+#define _TEST_ADAP_$D$_BUFFER_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 24-Jan-2026 at 13:01:54.936, UTC+4, Batumi, Saturday;
-	This is Ebo Pack OpenGL vertex buffer object wrapper unit test adapter interface declaration file.
+	This is OpenGL vertex buffer object wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.buffer.h"
 
-namespace test { namespace draw { namespace open_gl {
-	using namespace ebo::boo::test;
+namespace test { namespace open_gl { namespace vertex {
 
 	__class (c_vert_buf) {
 	public:
@@ -19,4 +18,4 @@ namespace test { namespace draw { namespace open_gl {
 
 }}}
 
-#endif/*_EBO_TEST_$D$_BUFFER_H_INCLUDED*/
+#endif/*_TEST_ADAP_$D$_BUFFER_H_INCLUDED*/

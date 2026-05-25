@@ -27,13 +27,14 @@ namespace ver_1_1 {
 		static _pc_sz Class (void);   // returns this class name for debug purposes;
 
 		/* for creating draw rendering/graphics context the device context is required that can be created by:
-		(1) message-only aka fake window  for initializing fake device context in order to receive the required/desired pixel format descriptor;
+		(1) message-only aka fake window for initializing fake device context in order to receive the required/desired pixel format descriptor;
 		(2) the same as above, but the device context is gotten from window of draw surface, not fake one;
 		*/
 		err_code  Create (void);      // it is supposed the target window is set through parent class and its HDC is already gotten;
 		err_code  Create (const HDC); // the device context that is already set to required pixel format;
 
 		err_code  MakeCurrent (const bool _yes_or_no);
+		err_code  Swap (void);        // replaces graphics context by the target window device context, i.e. makes draw on the screen;
 
 	private:
 		CGraphics& operator = (const CGraphics&) = delete; CGraphics& operator = (CGraphics&&) = delete;
@@ -48,6 +49,9 @@ namespace arb {
 
 		err_code  Create (void);
 		err_code  Create (const HDC);
+
+		err_code  MakeCurrent (const bool _yes_or_no);
+		err_code  Swap (void);
 
 	private:
 		CGraphics& operator = (const CGraphics&) = delete; CGraphics& operator = (CGraphics&&) = delete;

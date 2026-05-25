@@ -1,14 +1,15 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Jan-2026 at 13:39:05.751, UTC+4, Batumi, Friday;
-	This is Ebo Pack OpenGL 2D shape wrapper interface implementation file for using in test cases adapters;
+	This is OpenGL 2D shape wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.shape.2d.h"
 #include "test_case_$d$.prog.h"
 #include "test_case_$d$.vert.arr.obj.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::shapes;
+using namespace test::open_gl::vertex;
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace shapes {
 
 	CTriangle&  __tria_accessor (void) { return ::Get_Tria_2d(); }
 
@@ -17,16 +18,15 @@ namespace test { namespace draw { namespace open_gl {
 #if (1)
 #pragma region cls::CTria{}
 
-C3angle::C3angle (void) : TPipe(e_object::e_tria), m_ctx(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
-	_out()(false);
-	if (__failed(this->m_ctx.Create()))
-		this->m_error = this->m_ctx.Error(); _out()(true); // restores verbose mode of the logger;
+C3angle::C3angle (void) : TPipe(e_object::e_tria) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+	_out().Clear();
+	if (__failed(this->m_ctx.Create(false)))
+		this->m_error = this->m_ctx().Error();
 }
 C3angle::~C3angle (void) { _out()(false); }
 
 err_code C3angle::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	// it is supposed the logger verbose is turned on;
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CTriangle& tria = __tria_accessor(); // the triangle constructor makes basic configuration and data sizes check;

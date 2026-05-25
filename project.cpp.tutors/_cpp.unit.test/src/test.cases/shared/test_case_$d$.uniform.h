@@ -2,7 +2,7 @@
 #define _TEST_CASE_$D$_UNIFORM_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 14-Jan-2026 at 14:38:45.084, UTC+4, Batumi, Wednesday;
-	This is Ebo Pack OpenGL uniform data type wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL uniform data type wrapper interface declaration file for using in test cases adapters;
 */
 #include "test_case_$d$.render.h"
 #include "gl_uniform.h"

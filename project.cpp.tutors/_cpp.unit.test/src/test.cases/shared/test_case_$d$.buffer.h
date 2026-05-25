@@ -2,17 +2,20 @@
 #define _TEST_CASE_$D$_BUFFER_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 24-Jan-2026 at 12:54:59.091, UTC+4, Batumi, Ssturday;
-	This is Ebo Pack OpenGL vertex buffer object wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL vertex buffer object wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_case_$d$.ctx.h"
+#include "test_case_$d$.ctx.arb.h"
 #include "gl_buffer.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace vertex {
 
 	using namespace ex_ui::draw::open_gl;
 	using CAttrs  = ex_ui::draw::open_gl::vertex::CAttrArray;
 	using CBuffer = ex_ui::draw::open_gl::vertex::CBuffer;
-	using CData = ex_ui::draw::open_gl::buffer::CData;
+	using CData   = ex_ui::draw::open_gl::buffer::CData;
+
+	using CTstCtx  = ::test::open_gl::context::CTstDevice;
+	using e_object = TPipe::e_object;
 
 	using e_bind_targets = ex_ui::draw::open_gl::procs::e_bind_targets;
 	/* for test case of the getting data from vertex buffer the following prerequisites are required:

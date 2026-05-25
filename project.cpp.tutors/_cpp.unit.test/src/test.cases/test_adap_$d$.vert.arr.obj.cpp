@@ -1,11 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 18-Jan-2026 at 22:24:13.050, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL vertex array object wrapper unit test adapter interface implementation file.
+	This is OpenGL vertex array object wrapper unit test adapter interface implementation file.
 */
-#include "ebo_test_$d$.vert.arr.obj.h"
-#include "test_case_$d$.ctx.h"
+#include "test_adap_$d$.vert.arr.obj.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::vertex;
 
 #pragma region cls::c_vert_arr_obj{}
 
@@ -24,10 +23,14 @@ void c_vert_arr_obj::Create (void) {
 
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto; // must be created before calling any function from open_gl;
+	CTstGraph graph;
+	if (__failed(graph.Create())) { _out()(); return; }
+
 	CVertArrObj v_a_o((*this)());
 
 	if (__succeeded(v_a_o.Create())) v_a_o.Delete();
+
+	graph.Delete();
 
 	_out()();
 }
@@ -36,7 +39,9 @@ void c_vert_arr_obj::Delete (void) {
 
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto;
+	CTstGraph graph;
+	if (__failed(graph.Create())) { _out()(); return; }
+
 	CVertArrObj v_a_o((*this)());
 
 	_out() += _T("Deleting vertex array object that is not crated yet:");
@@ -47,6 +52,9 @@ void c_vert_arr_obj::Delete (void) {
 		_out() += TString().Format(_T("Deleting vertex array oject (id = %u);"), v_a_o.GetId());
 		v_a_o.Delete();
 	}
+
+	graph.Delete();
+
 	_out()();
 }
 

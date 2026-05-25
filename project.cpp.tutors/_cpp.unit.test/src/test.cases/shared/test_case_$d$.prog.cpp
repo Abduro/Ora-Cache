@@ -1,10 +1,11 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 15:39:16.076, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL shader program wrapper interface implementation file for using in test cases adapters;
+	This is OpenGL shader program wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.prog.h"
+#include "gl_renderer.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::prog;
 
 using COpts = CProg::COpts;
 

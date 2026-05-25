@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 16:13:37.087, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL tutorials' shader wrapper unit test adapter interface implementation file.
+	This is OpenGL tutorials' shader wrapper unit test adapter interface implementation file.
 */
-#include "ebo_test_$d$.shader.h"
+#include "test_adap_$d$.shader.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::shaders;
 
 using COpts = c_shaders::COpts;
 
@@ -32,10 +32,10 @@ c_shaders::c_shaders (const e_object _target, const bool _b_verb) : m_pipe(_targ
 void c_shaders::Get_frag (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CDevCtx dev_ctx;
+	CTstDev dev_ctx;
 
 	if (__failed(dev_ctx.Create())) {
-		_out() += dev_ctx.Error().Print(TError::e_print::e_req); _out()(); return;
+		_out() += dev_ctx().Error().Print(TError::e_print::e_req); _out()(); return;
 	}
 
 	C$Frag $_frag((*this)()); // draw target type is important;
@@ -51,10 +51,10 @@ void c_shaders::Get_frag (void) {
 void c_shaders::Get_vert (void) {
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CDevCtx dev_ctx;
+	CTstDev dev_ctx;
 
 	if (__failed(dev_ctx.Create())) {
-		_out() += dev_ctx.Error().Print(TError::e_print::e_req); _out()(); return;
+		_out() += dev_ctx().Error().Print(TError::e_print::e_req); _out()(); return;
 	}
 
 	C$Vert $_vert((*this)()); // draw target type is important;

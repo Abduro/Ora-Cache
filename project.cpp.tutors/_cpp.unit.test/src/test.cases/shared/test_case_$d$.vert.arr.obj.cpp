@@ -1,13 +1,13 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 18-Jan-2026 at 20:54:55.560, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL vertex array object wrapper interface implementation file for using in test cases adapters;
+	This is OpenGL vertex array object wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.vert.arr.obj.h"
 #include "gl_renderer.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::vertex;
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace vertex {
 
 	CArrObject& __vao_accessor (const e_object _target) {
 		TRenderer& renderer = ::Get_renderer();

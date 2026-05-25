@@ -81,11 +81,22 @@ err_code CGraphics::MakeCurrent (const bool _yes_or_no) {
 	if (false == TBase::Surface().Is_valid()) return TBase::m_error = TBase::Surface().Error();
 	if (false == TBase::Is_valid()) return TBase::m_error <<(err_code)TErrCodes::eExecute::eState = _T("rendering context is not created");
 
+	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
 	if (0 == ::wglMakeCurrent(TBase::Surface().Get(), _yes_or_no ? TBase::Renderer() : 0)) {
 		TBase::m_error.Last();
 		__trace_err_ex_2(CBase::Error());
 	}
 	
+	return TBase::Error();
+}
+
+err_code CGraphics::Swap (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == !!::SwapBuffers(TBase::Surface().Get())) {
+		TBase::m_error.Last();
+		__trace_err_ex_2(CBase::Error());
+	}
 	return TBase::Error();
 }
 
@@ -150,5 +161,31 @@ err_code CGraphics::Create (const HDC _hdc) {
 
 	return TBase::Error();
 }
+
+err_code CGraphics::MakeCurrent (const bool _yes_or_no) {
+	_yes_or_no;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == TBase::Surface().Is_valid()) return TBase::m_error = TBase::Surface().Error();
+	if (false == TBase::Is_valid()) return TBase::m_error <<(err_code)TErrCodes::eExecute::eState = _T("rendering context is not created");
+
+	if (0 == ::wglMakeCurrent(TBase::Surface().Get(), _yes_or_no ? TBase::Renderer() : 0)) {
+		TBase::m_error.Last();
+		__trace_err_ex_2(CBase::Error());
+	}
+	
+	return TBase::Error();
+}
+
+err_code CGraphics::Swap (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == !!::SwapBuffers(TBase::Surface().Get())) {
+		TBase::m_error.Last();
+		__trace_err_ex_2(CBase::Error());
+	}
+	return TBase::Error();
+}
+
 
 }}}

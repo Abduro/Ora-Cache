@@ -1,12 +1,12 @@
-#ifndef _EBO_TEST_$D$_SHAPE_2D_H_INCLUDED
-#define _EBO_TEST_$D$_SHAPE_2D_H_INCLUDED
+#ifndef _TEST_ADAP_$D$_SHAPE_2D_H_INCLUDED
+#define _TEST_ADAP_$D$_SHAPE_2D_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 23:19:11.472, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL 2d shape wrapper unit test adapter interface declaration file.
+	This is OpenGL 2d shape wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.shape.2d.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace shapes {
 
 	__class (c_tria_2d) {
 	public:
@@ -25,4 +25,4 @@ namespace test { namespace draw { namespace open_gl {
 
 }}}
 
-#endif/*_EBO_TEST_$D$_SHAPE_2D_H_INCLUDED*/
+#endif/*_TEST_ADAP_$D$_SHAPE_2D_H_INCLUDED*/

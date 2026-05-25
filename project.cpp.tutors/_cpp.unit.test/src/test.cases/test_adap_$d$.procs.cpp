@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2026 at 08:25:48.325, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL API procedure loader wrapper unit test adapter implementation declaration file.
+	This is OpenGL API procedure loader wrapper unit test adapter implementation declaration file.
 */
 #include "test_adap_$d$.procs.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::procs;
 
 #pragma region cls::c_proc_ext{}
 

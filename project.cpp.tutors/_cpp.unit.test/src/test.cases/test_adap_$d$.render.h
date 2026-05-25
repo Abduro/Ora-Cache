@@ -6,7 +6,7 @@
 */
 #include "test_case_$d$.render.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace draw {
 
 	__class (c_renderer) {
 	public:

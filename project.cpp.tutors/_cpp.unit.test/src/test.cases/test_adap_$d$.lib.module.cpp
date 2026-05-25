@@ -1,18 +1,18 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 20:52:42.301, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL tutorials' draw components unit test project module implementation file;
+	This is OpenGL tutorials' draw components unit test project module implementation file;
 */
-#include "ebo_test_$d$.lib.module.h"
+#include "test_adap_$d$.lib.module.h"
 #include <locale>
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl;
 
 #if (1)
 /* without specifying the namespace of procedures' location the linker cannot find their definitions and throws the exception:
    ...error LNK2001: unresolved external symbol "void __cdecl ebo::boo::test::open_gl::draw::OnLoad(void),,,;
    otherwise these methods must be declared in global namespace, because 'using namespace' does not work for linker, but for compiler only;
 */
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl {
 void OnLoad (void) {
 
 	const char* p_result = ::setlocale(LC_ALL, "en-US");
@@ -46,5 +46,5 @@ void OnUnload (void) {
 
 	_out()();
 }
-}}}
+}}
 #endif

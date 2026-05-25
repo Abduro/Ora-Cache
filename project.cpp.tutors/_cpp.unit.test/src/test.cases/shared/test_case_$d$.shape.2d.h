@@ -2,17 +2,20 @@
 #define _TEST_CASE_$D$_SHAPE_2D_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 16-Jan-2026 at 13:36:52.511, UTC+4, Batumi, Friday;
-	This is Ebo Pack OpenGL 2D shape wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL 2D shape wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_adap_$d$.ctx.h"
+#include "test_case_$d$.prog.h"
 #include "shapes\gl_shape.2d.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace shapes {
 
-	using namespace ex_ui::draw::open_gl;
+	using namespace ex_ui::draw::open_gl::shapes;
+	using namespace test::open_gl::prog;
+
+	using CTstCtx = ::test::open_gl::context::CTstDevice;
+
 #if (1) // the triangle from shape cache is used as the shape for drawing by renderer;
 	    // this class is for creating the triangle shape directly, without using the renderer scene;
-	using CTriangle = shapes::CTriangle;
 
 	CTriangle&  __tria_accessor (void);
 
@@ -34,7 +37,7 @@ namespace test { namespace draw { namespace open_gl {
 	private:
 		C3angle& operator = (const C3angle&) = delete; C3angle& operator = (C3angle&&) = delete;
 		CError  m_error;
-		CCtx_auto m_ctx; // this object is required for shareing the contexts between 'Create', 'Draw' and 'Delete' methods, otherwise each of them creats its own context objects;
+		CTstCtx m_ctx;
 	};
 #endif
 }}}

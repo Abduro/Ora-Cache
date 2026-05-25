@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 23:24:33.762, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL 2d shape wrapper unit test adapter interface implementation file.
+	This is OpenGL 2d shape wrapper unit test adapter interface implementation file.
 */
-#include "ebo_test_$d$.shape.2d.h"
+#include "test_adap_$d$.shape.2d.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::shapes;
 
 #pragma region cls::c_tria_2d{}
 

@@ -6,7 +6,7 @@
 */
 #include "_log.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl {
 
 	using namespace ebo::boo::test;
 
@@ -14,9 +14,9 @@ namespace test { namespace draw { namespace open_gl {
 	(1) if a test case object throws the error, it should trace it itself;
 	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
 	*/
-}}}
+}}
 
-#pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
+#pragma comment(lib, "test_adap_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "gl.context_v15.lib")   // open_gl context wrapper lib;
 #pragma comment(lib, "gl.procs_v15.lib")     // open_gl procs loader lib;
 #pragma comment(lib, "gl.shared_v15.lib")    // open_gl wrapper shared lib;

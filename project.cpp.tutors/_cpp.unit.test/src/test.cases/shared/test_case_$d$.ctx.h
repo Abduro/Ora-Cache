@@ -6,91 +6,54 @@
 */
 #include "test_adap_$d$.defs.h"
 #include "gl_context.h"
-#include "gl_renderer.h"
-#include "shared.wnd.fake.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace context {
 
-	using namespace ex_ui::draw::open_gl;
-
-	using CFakeWnd  = ex_ui::popup::CMsgWnd;
-	using CGraphics = ::open_gl::context::arb::CGraphics; // taking into account the remderer of pipeline is used, the ARB support is required;
+	using namespace ebo::boo::test;
 	using CDevice   = ::open_gl::context::CDevice;
+	using CFake_Ctx = ::open_gl::CFake_Ctx;
+	using CGraphics = ::open_gl::context::ver_1_1::CGraphics;
 
-	class CDevCtx {
+	class CTstDevice {
 	public:
-		CDevCtx (void);
-		CDevCtx (const CDevCtx&) = delete; CDevCtx (CDevCtx&&) = delete; ~CDevCtx (void) = default;
+		CTstDevice (void) = default;
+		CTstDevice (const CTstDevice&) = delete; CTstDevice (CTstDevice&&) = delete; ~CTstDevice (void) = default;
 
 		err_code Create (const bool _b_verbose = true);
 		err_code Delete (const bool _b_verbose = true);
-		TError&  Error  (void) const;
-
-		bool Is_valid (void) const;
 
 		const
-		CFakeWnd& Window (void) const;
-		CFakeWnd& Window (void) ;
-
-		const
-		CDevice&  operator ()(void) const;
-		CDevice&  operator ()(void) ;
+		CFake_Ctx& operator ()(void) const;
+		CFake_Ctx& operator ()(void) ;
 		 
 	private:
-		CDevCtx& operator = (const CDevCtx&) = delete; CDevCtx& operator = (CDevCtx&&) = delete;
-		CError   m_error ;
-		CFakeWnd m_fk_wnd;
+		CTstDevice& operator = (const CTstDevice&) = delete; CTstDevice& operator = (CTstDevice&&) = delete;
+		CFake_Ctx m_fk_ctx;
 	};
 
-	class CGraphCtx {
+namespace ver_1_1 {
+
+	class CTstGraph {
 	public:
-		CGraphCtx (void) ;
-		CGraphCtx (const CGraphCtx&) = delete; CGraphCtx (CGraphCtx&&) = delete; ~CGraphCtx (void) = default;
+		CTstGraph (void) = default;
+		CTstGraph (const CTstGraph&) = delete; CTstGraph (CTstGraph&&) = delete; ~CTstGraph (void) = default;
 
-		err_code Create (const HWND _h_target, const bool _b_verbose = true); // for the test cases the fake window handle is used;
-		err_code Delete (const bool _b_verbose = true);
-		TError&  Error  (void) const;
+		err_code  Create (const bool _b_verbose = true);
+		err_code  Delete (const bool _b_verbose = true);
 
-		bool Is_valid (void) const;
-
-		err_code Swap (void); // replaces graphics context by the target window device context, i.e. makes draw on the screen;
+		err_code  MakeCurrent (const bool _yes_or_no);
+		err_code  Swap (void); // replaces graphics context by the target window device context, i.e. makes draw on the screen;
 
 		const
-		CGraphics&  operator ()(void) const;
-		CGraphics&  operator ()(void) ;
+		CGraphics& operator ()(void) const;
+		CGraphics& operator ()(void) ;
 
 	private:
-		CGraphCtx& operator = (const CGraphCtx&) = delete; CGraphCtx& operator = (CGraphCtx&&) = delete;
-		CError m_error;
+		CTstGraph& operator = (const CTstGraph&) = delete; CTstGraph& operator = (CTstGraph&&) = delete;
+		CTstDevice m_tst_dev;
+		CGraphics  m_graph;
 	};
-
-	/* this class creates the device and graphics contexts in its constructor and auto-deletes them in its destructor;
-	*/
-	class CCtx_auto {
-	public:
-		CCtx_auto (const bool _b_auto = true); ~CCtx_auto (void);
-		CCtx_auto (const CCtx_auto&) = delete; CCtx_auto (CCtx_auto&&) = delete;
-
-		err_code Create (const bool _b_verbose = true);
-		err_code Delete (const bool _b_verbose = true);
-
-		const
-		CDevCtx& Device (void) const;
-		CDevCtx& Device (void) ;
-		const
-		CGraphCtx& Graph (void) const;
-		CGraphCtx& Graph (void) ;
-
-		TError&  Error  (void) const;
-		bool Is_created (void) const; // checks the context device is created or not; useful for check it in static functions;
-
-	private:
-		CCtx_auto& operator = (const CCtx_auto&) = delete; CCtx_auto& operator = (CCtx_auto&&) = delete;
-		CError     m_error;
-		CDevCtx    m_device;
-		CGraphCtx  m_graphs;
-	};
-
+}
 	using CPxFormat = ::win_api::CPxFormat;
 	using SPxBits   = ::win_api::format::s_bits;
 
@@ -108,11 +71,7 @@ namespace test { namespace draw { namespace open_gl {
 	private:
 		CTstFormat& operator = (const CTstFormat&) = delete; CTstFormat& operator = (CTstFormat&&) = delete;
 		CPxFormat m_px_fmt;
-		CFakeWnd  m_fk_wnd;
 	};
 }}}
-
-typedef test::draw::open_gl::CDevCtx TDevCtx; TDevCtx& __get_dev_ctx (const bool _b_silent = false);
-typedef test::draw::open_gl::CCtx_auto TGraph; TGraph& __get_graph (void); // CCtx_auto is used as a creator the graphics context;
 
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/

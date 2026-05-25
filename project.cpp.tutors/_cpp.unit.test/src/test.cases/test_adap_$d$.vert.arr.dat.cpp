@@ -1,11 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 11:14:59.441, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL vertex array data wrapper unit test adapter interface implementation file.
+	This is OpenGL vertex array data wrapper unit test adapter interface implementation file.
 */
-#include "ebo_test_$d$.vert.arr.dat.h"
-#include "test_case_$d$.ctx.h"
+#include "test_adap_$d$.vert.arr.dat.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::vertex;
 
 #pragma region cls::c_vert_dat{}
 
@@ -25,10 +24,14 @@ void c_vert_dat::Create (void) {
 
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto; // must be created before calling any function from open_gl;
+	CTstGraph graph;
+	if (__failed(graph.Create())) { _out()(); return; }
+
 	CVertArrData vert_data((*this)());
 
 	if (__succeeded(vert_data.Create())) vert_data.Delete();
+
+	graph.Delete();
 
 	_out()();
 }
@@ -37,7 +40,9 @@ void c_vert_dat::Delete (void) {
 
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	CCtx_auto ctx_auto;
+	CTstGraph graph;
+	if (__failed(graph.Create())) { _out()(); return; }
+
 	CVertArrData vert_data((*this)());
 
 	_out() += _T("Deleting vertex array that is not crated yet:");
@@ -48,6 +53,9 @@ void c_vert_dat::Delete (void) {
 		_out() += TString().Format(_T("Deleting vertex array (buffer id = %u);"), vert_data.GetId());
 		vert_data.Delete();
 	}
+
+	graph.Delete();
+
 	_out()();
 }
 

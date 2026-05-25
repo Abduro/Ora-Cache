@@ -243,6 +243,8 @@ err_code CFake_Ctx::Destroy (void) {
 
 	return this->Error();
 }
+const
+CDevice& CFake_Ctx::Device (void) const { return this->m_device; }
 
 TError&  CFake_Ctx::Error (void) const { return this->m_error; }
 

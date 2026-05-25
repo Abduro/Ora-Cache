@@ -4,6 +4,6 @@
 */
 #include "test_adap_$d$.defs.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl;
 
-namespace test { namespace draw { namespace open_gl { namespace _impl_3 { void __warning_lnk_4006 (void) {}}}}}
+namespace test { namespace open_gl { namespace _impl_3 { void __warning_lnk_4006 (void) {}}}}

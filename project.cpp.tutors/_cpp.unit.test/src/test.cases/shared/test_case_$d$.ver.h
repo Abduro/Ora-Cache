@@ -9,7 +9,6 @@
 
 namespace test { namespace open_gl {
 
-	using namespace ::test::draw::open_gl;
 	using CVersion = ex_ui::draw::open_gl::CVersion;
 
 	class CTstVersion {

@@ -26,8 +26,8 @@
   <ItemGroup><!--precompiled headers and module;-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.lib.module.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
     <ClInclude Include="$(_2)test_adap_$d$.defs.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$d$.defs.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
@@ -36,46 +36,50 @@
     <ClCompile Include="$(_2-0)test_case_$d$.render.cpp"><Filter>render\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h"><Filter>render\shapes\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp"><Filter>render\shapes\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.render.h"><Filter>render</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.render.cpp"><Filter>render</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.shape.2d.h"><Filter>render\shapes</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.shape.2d.cpp"><Filter>render\shapes</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.render.h"><Filter>render</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.render.cpp"><Filter>render</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.shape.2d.h"><Filter>render\shapes</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.shape.2d.cpp"><Filter>render\shapes</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--shader related test cases;-->
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h"><Filter>shader\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp"><Filter>shader\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.prog.h"><Filter>shader</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp"><Filter>shader</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.prog.h"><Filter>shader</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.prog.cpp"><Filter>shader</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.shader.h"><Filter>shader\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp"><Filter>shader\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.shader.h"><Filter>shader</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp"><Filter>shader</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.shader.h"><Filter>shader</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.shader.cpp"><Filter>shader</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--shader variable data types;-->
     <ClInclude Include="$(_2-0)test_case_$d$.uniform.h"><Filter>shader\vars\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp"><Filter>shader\vars\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.uniform.h"><Filter>shader\vars</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.uniform.cpp"><Filter>shader\vars</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.uniform.h"><Filter>shader\vars</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.uniform.cpp"><Filter>shader\vars</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--vertex array and its buffer;-->
     <ClInclude Include="$(_2-0)test_case_$d$.buffer.h"><Filter>vertex\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp"><Filter>vertex\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.buffer.h"><Filter>vertex</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp"><Filter>vertex</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.buffer.h"><Filter>vertex</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.buffer.cpp"><Filter>vertex</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.dat.h"><Filter>vertex\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.dat.cpp"><Filter>vertex\shared</Filter></ClCompile>
     <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.obj.h"><Filter>vertex\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp"><Filter>vertex\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.dat.h"><Filter>vertex</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.dat.cpp"><Filter>vertex</Filter></ClCompile>
-    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.obj.h"><Filter>vertex</Filter></ClInclude>
-    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.obj.cpp"><Filter>vertex</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.vert.arr.dat.h"><Filter>vertex</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.vert.arr.dat.cpp"><Filter>vertex</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.vert.arr.obj.h"><Filter>vertex</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.vert.arr.obj.cpp"><Filter>vertex</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--window device context and popup menu;-->
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>win_api\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>win_api\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2-0)test_case_$d$.ctx.arb.h"><Filter>win_api\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$d$.ctx.arb.cpp"><Filter>win_api\shared</Filter></ClCompile>
     <ClInclude Include="$(_2)test_adap_$d$.ctx.h"><Filter>win_api</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$d$.ctx.cpp"><Filter>win_api</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$d$.ctx.arb.h"><Filter>win_api</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$d$.ctx.arb.cpp"><Filter>win_api</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--OpenGL procs loader-->
     <ClInclude Include="$(_2)test_adap_$d$.procs.h"><Filter>procs</Filter></ClInclude>

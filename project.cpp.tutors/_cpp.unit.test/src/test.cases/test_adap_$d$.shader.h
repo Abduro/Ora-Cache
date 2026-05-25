@@ -1,13 +1,16 @@
-#ifndef _EBO_TEST_$D$_SHADER_H_INCLUDED
-#define _EBO_TEST_$D$_SHADER_H_INCLUDED
+#ifndef _TEST_ADAP_$D$_SHADER_H_INCLUDED
+#define _TEST_ADAP_$D$_SHADER_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 16:11:29.597, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL tutorials' shader wrapper unit test adapter interface declaration file.
+	This is OpenGL tutorials' shader wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.ctx.h"
 #include "test_case_$d$.shader.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace shaders {
+	
+	using namespace ex_ui::draw::open_gl;
+	using CTstDev = test::open_gl::context::CTstDevice;
 
 	__class (c_persist) {
 	public:
@@ -19,7 +22,12 @@ namespace test { namespace draw { namespace open_gl {
 	private:
 		c_persist& operator = (const c_persist&) = delete; c_persist& operator = (c_persist&&) = delete;
 	};
-
+	/* the most test cases related to arb namespace or to the latest version of OpenGL will be not passed,
+	   due to the device context object created independently from renderer pipeline;
+	   above case is required for testing projection matrices transformation made by OpenGL API of ver 1.1;
+	   solution:
+	      the test cases below or using rendering pipeline needs a review;
+	*/
 	__class (c_shaders) { // test class cannot be inherited from any class unfortunately;
 	public:
 		class COpts : private no_copy {
@@ -63,4 +71,4 @@ namespace test { namespace draw { namespace open_gl {
 	};
 }}}
 
-#endif/*_EBO_TEST_$D$_SHADER_H_INCLUDED*/
+#endif/*_TEST_ADAP_$D$_SHADER_H_INCLUDED*/

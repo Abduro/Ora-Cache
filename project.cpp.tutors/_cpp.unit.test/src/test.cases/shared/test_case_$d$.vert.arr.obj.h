@@ -2,13 +2,14 @@
 #define _TEST_CASE_$D$_VERT_ARR_OBJ_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 18-Jan-2026 at 20:51:56.282, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL vertex array object wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL vertex array object wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_adap_$d$.defs.h"
+#include "test_case_$d$.ctx.arb.h"
 #include "gl_vertex_arr.obj.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace vertex {
 
+	using namespace test::open_gl;
 	using namespace ex_ui::draw::open_gl::vertex;
 
 	CArrObject& __vao_accessor (const e_object _target);

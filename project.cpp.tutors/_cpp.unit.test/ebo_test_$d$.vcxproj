@@ -228,50 +228,66 @@
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.ctx.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp" />
+    <ClInclude Include="$(_2-0)test_case_$d$.ctx.arb.h" />
+    <ClCompile Include="$(_2-0)test_case_$d$.ctx.arb.cpp" />
     <ClInclude Include="$(_2)test_adap_$d$.ctx.h" />
     <ClCompile Include="$(_2)test_adap_$d$.ctx.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.ctx.arb.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.ctx.arb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.buffer.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.buffer.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.buffer.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.buffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.prog.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.prog.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.prog.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.prog.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.render.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.render.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.render.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.render.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.shader.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.shader.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.shader.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.shader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.shape.2d.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.shape.2d.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.shape.2d.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.shape.2d.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.uniform.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.uniform.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.uniform.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.uniform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2)test_adap_$d$.defs.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.defs.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.lib.module.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.lib.module.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2)test_adap_$d$.vert.arr.dat.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.vert.arr.dat.cpp" />
+    <ClInclude Include="$(_2)test_adap_$d$.vert.arr.obj.h" />
+    <ClCompile Include="$(_2)test_adap_$d$.vert.arr.obj.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.dat.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.dat.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.obj.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2)ebo_test_$d$.buffer.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.buffer.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.lib.module.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.lib.module.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.prog.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.prog.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.render.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.render.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.shader.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.shader.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.shape.2d.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.shape.2d.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.uniform.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.uniform.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.dat.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.dat.cpp" />
-    <ClInclude Include="$(_2)ebo_test_$d$.vert.arr.obj.h" />
-    <ClCompile Include="$(_2)ebo_test_$d$.vert.arr.obj.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_2)test_adap_$d$.defs.h" />
-    <ClCompile Include="$(_2)test_adap_$d$.defs.cpp" />
     <ClInclude Include="$(_2)test_adap_$d$.procs.h" />
     <ClCompile Include="$(_2)test_adap_$d$.procs.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.procs.h" />

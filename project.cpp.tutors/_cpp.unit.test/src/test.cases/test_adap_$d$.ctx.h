@@ -6,24 +6,22 @@
 */
 #include "test_case_$d$.ctx.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace context { 
 	using namespace ebo::boo::test;
 
 	__class (c_ctx) {
 	public:
-		  c_ctx (const bool _b_verb = true);
+		  c_ctx (void); c_ctx (const c_ctx&) = delete; c_ctx (c_ctx&&) = delete;
 		 ~c_ctx (void);
 
 		 __clean (OnClean);   // is called after destroying this class instance;
 		 __init  (OnInit);    // is called before creating this class instance;
 
-		 __ctor   (_ctor);    // just for testing the test case when this class in new and has no method yet, otherwise not required;
 		 __method (Device);   // creates the regular device context compatible with open_gl rendering;
-
-		 __method (Graphics); // creates the open_gl graphics context;
+		 __method (Graphics); // creates the open_gl graphics context of ver_1_1;
 
 	private:
-		bool m_b_verb;
+		c_ctx& operator = (const c_ctx&) = delete; c_ctx& operator = (c_ctx&&) = delete;
 	};
 
 	__class (c_px_format) {

@@ -2,15 +2,16 @@
 #define _TEST_CASE_$D$_VERT_ARR_DAT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 11:43:15.709, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL vertex array data wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL vertex array data wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_case_$d$.ctx.h"
+#include "test_case_$d$.ctx.arb.h"
 #include "gl_vertex_arr.dat.h"
 
-namespace test { namespace draw { namespace open_gl {
-	using namespace ex_ui::draw::open_gl;
+namespace test { namespace open_gl { namespace vertex {
 
+	using namespace ex_ui::draw::open_gl;
 	using CVertArray = ex_ui::draw::open_gl::CVertArray;
+	using e_object = TPipe::e_object;
 
 	CVertArray& __vert_arr_accessor (const e_object _target);
 

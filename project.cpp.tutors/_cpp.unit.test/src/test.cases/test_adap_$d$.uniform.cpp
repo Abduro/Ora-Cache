@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 14-Jan-2026 at 18:01:14.975, UTC+4, Batumi, Wednesday;
 	This is Ebo Pack OpenGL tutorials' uniform data type wrapper unit test adapter interface implementation file.
 */
-#include "ebo_test_$d$.uniform.h"
+#include "test_adap_$d$.uniform.h"
 
 using namespace test::draw::open_gl;
 

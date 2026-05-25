@@ -118,6 +118,8 @@ namespace open_gl { namespace context {
 
 		err_code Create (void);
 		err_code Destroy (void);
+		const
+		CDevice& Device (void) const;
 
 		TError&  Error (void) const;
 

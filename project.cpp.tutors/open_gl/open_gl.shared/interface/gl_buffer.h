@@ -16,6 +16,7 @@ namespace buffer {
 
 	using e_bnd_tgts = ex_ui::draw::open_gl::procs::e_bnd_tgts;
 	using e_data_access = ex_ui::draw::open_gl::procs::buffer::e_data_access;
+	using e_object = TPipe::e_object;
 
 	class CCfg : private no_copy {
 	public:

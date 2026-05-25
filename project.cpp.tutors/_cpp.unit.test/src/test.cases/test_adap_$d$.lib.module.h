@@ -6,7 +6,7 @@
 */
 #include "test_adap_$d$.defs.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl {
 
 #if (1)
 	/*these module level function cannot be shared through header file to several test cases, otherwise the linker error:
@@ -17,6 +17,6 @@ namespace test { namespace draw { namespace open_gl {
 	__unload (OnUnload);
 #endif
 
-}}}
+}}
 
 #endif/*_EBO_TEST_$D$_LIB_MODULE_H_INCLUDED*/

@@ -1,10 +1,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2026 at 08:19:50.563, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL API  procedure loader wrapper interface implementation file for using in test cases adapters;
+	This is OpenGL API procedure loader wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.procs.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::procs;
 
 #pragma region cls::CTstProcExt{}
 

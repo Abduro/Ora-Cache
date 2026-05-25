@@ -4,191 +4,92 @@
 */
 #include "test_case_$d$.ctx.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::context;
+using namespace test::open_gl::context::ver_1_1;
 
-#pragma region cls::CDevCtx{}
+#pragma region cls::CTstDevice{}
 
-CDevCtx::CDevCtx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-
-err_code CDevCtx::Create (const bool _b_verbose/* = true*/) {
-	_b_verbose;
-	this->m_error <<__METHOD__<<__s_ok;
-	
-	const bool b_locked = _out().Cached().Locked(); // to-do: must be re-viewed, some sort triggering the lock state would be useful;
-	_out()(_b_verbose);
-
+err_code CTstDevice::Create (const bool _b_verbose/* = true*/) {
+	if (_b_verbose)
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += this->Window().To_str();
 
-	if (this->Window().Error()) {
-		_out()(!b_locked); return this->m_error = this->Window().Error();
-	}
-
-	if (this->Is_valid()) {
-		_out() += _T("the device context is already created;"); _out()(!b_locked); return this->Error();
-	}
-
-	TRenderer& renderer = ::Get_renderer();
-
-	CDevice& dev_ref = renderer.Scene().Ctx().Device();
-	dev_ref.Surface().Source(TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__));
-
-	if (__failed(dev_ref.Create(this->Window()))) {
-		this->m_error = dev_ref.Error();
-		_out()(this->Error());
-	}
-	_out()(!b_locked); return this->Error();
-}
-
-err_code CDevCtx::Delete (const bool _b_verbose/* = true*/) {
-	_b_verbose;
-	this->m_error <<__METHOD__<<__s_ok;
-
-	const bool b_locked = _out().Cached().Locked();
-	_out()(_b_verbose);
-
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	TRenderer& renderer = ::Get_renderer();
-
-	/* at the end of the test case the device context must be deleted;
-	   otherwise on process exit and calling objects' destructors a lot of errors is thrown;
-	   debug trace is connected to test output, a possible error is output using debug;
-	*/
-	if (renderer.Scene().Ctx().Device().Is_valid())
-		renderer.Scene().Ctx().Device().Destroy();
-
-	_out()(!b_locked); return this->Error();
-}
-
-TError&  CDevCtx::Error (void) const { return this->m_error; }
-bool  CDevCtx::Is_valid (void) const { return (*this)().Is_valid(); }
-
-const
-CFakeWnd& CDevCtx::Window (void) const { return this->m_fk_wnd; }
-CFakeWnd& CDevCtx::Window (void)       { return this->m_fk_wnd; }
-
-const
-CDevice&  CDevCtx::operator ()(void) const { return ::Get_renderer().Scene().Ctx().Device(); }
-CDevice&  CDevCtx::operator ()(void)       { return ::Get_renderer().Scene().Ctx().Device(); }
-
-#pragma endregion
-#pragma region cls::CGraphCtx{}
-
-CGraphCtx::CGraphCtx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
-
-err_code CGraphCtx::Create (const HWND _h_target, const bool _b_verbose/* = true*/) {
-	_h_target; _b_verbose;
-	this->m_error <<__METHOD__<<__s_ok;
-
-	const bool b_locked = _out().Cached().Locked();
-	_out()(_b_verbose);
-
-	CString cs_cls = TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__);
-	_out() += TString().Format(_T("[warn] cls::[%s].%s():"), (_pc_sz) cs_cls, (_pc_sz)__METHOD__);
-
-	if (this->Is_valid()) {
-		_out() += _T("the graphics context is already created;"); _out()(!b_locked); return this->Error();
-	}
-				
-	TRenderer& renderer = Get_renderer();
-	renderer.Scene().Ctx().Graphics().Surface().Source((_pc_sz)cs_cls);
-	renderer.Scene().Ctx().Graphics().Surface() << _h_target;
-#if (0)
-	const uint32_t u_major = renderer.Scene().Ctx().Graphics().Version().Major();
-	const uint32_t u_minor = renderer.Scene().Ctx().Graphics().Version().Minor();
-#endif
-	if (__failed(renderer.Scene().Ctx().Graphics().Create())) {
-		this->m_error = renderer.Scene().Ctx().Graphics().Error();  _out()(this->Error());
-	}
+	if (__failed((*this)().Create())) { _out() += (*this)().Error(); }
 	else {
-		_out() += _T("[impt] result: arb-based context is created;");
+		_out() += _T("[impt] result: device context is created;");
 	}
 
-	_out()(!b_locked); return this->Error();
+	return (*this)().Error();
 }
 
-err_code CGraphCtx::Delete (const bool _b_verbose/* = true*/) {
-	_b_verbose;
-	this->m_error <<__METHOD__<<__s_ok;
+err_code CTstDevice::Delete (const bool _b_verbose/* = true*/) {
+	if (_b_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	const bool b_locked = _out().Cached().Locked();
-	_out()(_b_verbose);
-
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	TRenderer& renderer = ::Get_renderer();
-				
-	/* at the end of the test case the graphics object must be destroyed;
-	   otherwise on process' exit and calling objects' destructors a lot of errors is thrown;
-	   debug trace is connected to test output, a possible error is output using debug;
-	*/
-	if (renderer.Scene().Ctx().Graphics().Is_valid())
-		renderer.Scene().Ctx().Graphics().Destroy(); // to-do: possible error of this procedure may be of interest;
-
-	_out()(!b_locked); return this->Error();
-}
-
-TError&  CGraphCtx::Error (void) const { return this->m_error; }
-
-bool  CGraphCtx::Is_valid (void) const { return (*this)().Is_valid(); }
-
-err_code CGraphCtx::Swap (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	TRenderer& renderer = ::Get_renderer();
-
-	if (false == !!::SwapBuffers(renderer.Scene().Ctx().Graphics().Surface().Get())) {
-		this->m_error.Last();
-		_out()(this->Error());
+	if (__failed((*this)().Destroy())) { _out() += (*this)().Error(); }
+	else {
+		_out() += _T("[impt] result: device context is destroyed;");
 	}
-	return this->Error();
+
+	return (*this)().Error();
 }
 
 const
-CGraphics& CGraphCtx::operator ()(void) const { return ::Get_renderer().Scene().Ctx().Graphics(); }
-CGraphics& CGraphCtx::operator ()(void)       { return ::Get_renderer().Scene().Ctx().Graphics(); }
+CFake_Ctx&  CTstDevice::operator ()(void) const { return this->m_fk_ctx; }
+CFake_Ctx&  CTstDevice::operator ()(void)       { return this->m_fk_ctx; }
 
 #pragma endregion
-#pragma region cls::CCtx_auto{}
+#pragma region cls::CTstGraph{}
 
-CCtx_auto:: CCtx_auto (const bool _b_auto) {
-	this->m_error >>__CLASS__<<__METHOD__<<__s_ok; if (_b_auto) this->Create();
+err_code CTstGraph::Create (const bool _b_verbose/* = true*/) {
+	if (_b_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed(this->m_tst_dev.Create(false)))
+		return this->m_tst_dev().Error();
+
+	if (__failed((*this)().Create(this->m_tst_dev()()))) { _out() += (*this)().Error(); }
+	else {
+		_out() += _T("[impt] result: graphics context is created;");
+	}
+
+	return (*this)().Error();
 }
-CCtx_auto::~CCtx_auto (void) { this->Delete(); }
 
-err_code CCtx_auto::Create (const bool _b_verbose/* = true*/) {
-	_b_verbose;
-	this->m_error <<__METHOD__<<__s_ok;
+err_code CTstGraph::Delete (const bool _b_verbose/* = true*/) {
+	if (_b_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
-	if (false) {}
-	else if (__failed(this->Device().Create(_b_verbose))) this->m_error = this->Device().Error();
-	else if (__failed(this->Graph().Create(this->Device().Window(), _b_verbose))) this->m_error = this->Graph().Error();
+	if (__failed((*this)().Destroy())) { _out() += (*this)().Error(); }
+	else {
+		_out() += _T("[impt] result: graphics context is destroyed;");
+	}
 
-	return this->Error();
+	return (*this)().Error();
 }
-err_code CCtx_auto::Delete (const bool _b_verbose/* = true*/) {
-	this->m_error <<__METHOD__<<__s_ok;
 
-	if (__failed(this->Graph().Delete(_b_verbose))) this->m_error = this->Graph().Error();
-	if (__failed(this->Device().Delete(_b_verbose))) this->m_error = this->Device().Error();
-	
-	return this->Error();
+err_code CTstGraph::MakeCurrent (const bool _yes_or_no) {
+	_yes_or_no;
+	if (__failed((*this)().MakeCurrent(_yes_or_no))) { _out() += (*this)().Error(); }
+	else {
+		_out() += TString().Format(_T("[impt] graphics context is made '%s';"), _yes_or_no ? _T("current") : _T("not current"));
+	}
+
+	return (*this)().Error();
+}
+
+err_code  CTstGraph::Swap (void) {
+
+	if (__failed((*this)().Swap())) { _out() += (*this)().Error(); }
+	else {
+		_out() += _T("[impt] graphics context is swapped;");
+	}
+
+	return (*this)().Error();
 }
 
 const
-CDevCtx& CCtx_auto::Device (void) const { return this->m_device; }
-CDevCtx& CCtx_auto::Device (void)       { return this->m_device; }
-const
-CGraphCtx& CCtx_auto::Graph (void) const { return this->m_graphs; }
-CGraphCtx& CCtx_auto::Graph (void)       { return this->m_graphs; }
-
-TError&  CCtx_auto::Error (void) const { return this->m_error; }
-
-bool CCtx_auto::Is_created (void) const {
-	return this->Device().Is_valid() || this->Graph().Is_valid();
-}
+CGraphics&  CTstGraph::operator ()(void) const { return this->m_graph; }
+CGraphics&  CTstGraph::operator ()(void)       { return this->m_graph; }
 
 #pragma endregion
 #pragma region cls::CTstFormat{}
@@ -200,10 +101,11 @@ err_code   CTstFormat::Find (const SPxBits& _bits) {
 
 	uint32_t u_index = 0; u_index;
 
-	if (this->m_fk_wnd.Error()) { return this->m_fk_wnd.Error(); }
-	else _out() += this->m_fk_wnd.To_str();
+	CTstDevice fk_ctx;
+	if (__failed(fk_ctx.Create(false)))
+		return fk_ctx().Error();
 
-	(*this)() << this->m_fk_wnd.Get_ctx();
+	(*this)() << fk_ctx()();
 
 	if (__failed((*this)().Find(_bits, u_index))) { _out() += (*this)().Error(); return (*this)().Error(); }
 	_out() += TString().Format(_T("[impt] *result*: found pixel format index is (%d) >> {%s}(%u);"), u_index, (_pc_sz) CPxFormat::To_str((*this)().Get()), (*this)().Get().dwFlags);
@@ -216,12 +118,3 @@ CPxFormat& CTstFormat::operator ()(void) const { return this->m_px_fmt; }
 CPxFormat& CTstFormat::operator ()(void)       { return this->m_px_fmt; }
 
 #pragma endregion
-
-TDevCtx& ::__get_dev_ctx (const bool _b_silent) {
-	_b_silent;
-	static TDevCtx dev_ctx; return dev_ctx;
-}
-
- TGraph& ::__get_graph (void) {
-	 static TGraph graph(false); return graph;
- }

@@ -1,12 +1,14 @@
-#ifndef _EBO_TEST_$D$_VERT_ARR_DAT_H_INCLUDED
-#define _EBO_TEST_$D$_VERT_ARR_DAT_H_INCLUDED
+#ifndef _TEST_ADAP_$D$_VERT_ARR_DAT_H_INCLUDED
+#define _TEST_ADAP_$D$_VERT_ARR_DAT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Jan-2026 at 11:12:22.502, UTC+4, Batumi, Monday;
-	This is Ebo Pack OpenGL vertex array data wrapper unit test adapter interface declaration file.
+	This is OpenGL vertex array data wrapper unit test adapter interface declaration file.
 */
 #include "test_case_$d$.vert.arr.dat.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace vertex {
+
+	using CTstGraph = test::open_gl::context::arb::CTstGraph;
 
 	__class (c_vert_dat) {
 	public:
@@ -27,4 +29,4 @@ namespace test { namespace draw { namespace open_gl {
 
 }}}
 
-#endif/*_EBO_TEST_$D$_VERT_ARR_DAT_H_INCLUDED*/
+#endif/*_TEST_ADAP_$D$_VERT_ARR_DAT_H_INCLUDED*/

@@ -2,17 +2,18 @@
 #define _TEST_CASE_$D$_PROG_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 15:36:34.036, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL shader program wrapper interface declaration file for using in test cases adapters;
+	This is OpenGL shader program wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_adap_$d$.defs.h"
-#include "ebo_test_$d$.shader.h"
+#include "test_case_$d$.shader.h"
 #include "gl_program.h"
 
-namespace test { namespace draw { namespace open_gl {
+namespace test { namespace open_gl { namespace prog {
 
 	using namespace ex_ui::draw::open_gl;
+	using namespace test::open_gl::shaders;
 
-	using CProgram  = ex_ui::draw::open_gl::CProgram;
+	using CProgram = ex_ui::draw::open_gl::CProgram;
+	using e_object = TPipe::e_object;
 
 	// the pipeline helps to identify the target draw object; this program class uses global renderer components, shaders for example;
 	class CProg : public TPipe {

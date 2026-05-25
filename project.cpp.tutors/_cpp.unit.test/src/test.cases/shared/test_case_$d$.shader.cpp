@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 15:51:44.122, UTC+4, Batumi, Sunday;
-	This is Ebo Pack OpenGL shaders' wrapper interface implementation file for using in test cases adapters;
+	This is OpenGL shaders' wrapper interface implementation file for using in test cases adapters;
 */
 #include "test_case_$d$.shader.h"
 
@@ -9,13 +9,14 @@
 #include "shader\gl_shd_type.h"
 
 #include "sys.registry.h"
+#include "gl_renderer.h"
 
-using namespace test::draw::open_gl;
+using namespace test::open_gl::shaders;
 
 using CCompiler = ex_ui::draw::open_gl::shader::CCompiler;
 using CStatus = ex_ui::draw::open_gl::shader::CStatus;
 
-namespace test { namespace draw { namespace open_gl { namespace _impl {
+namespace test { namespace open_gl {  namespace shaders {namespace _impl {
 
 	class CReg_helper {
 	        CReg_helper (const CReg_helper&) = delete; CReg_helper (CReg_helper&&) = delete;
