@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A00}</UniqueIdentifier></Filter>
+    <Filter Include="_root\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A01}</UniqueIdentifier></Filter>
+
+    <Filter Include="extension"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A02}</UniqueIdentifier></Filter>
+    <Filter Include="stack"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A03}</UniqueIdentifier></Filter>
+
+  </ItemGroup>
+  <ItemGroup><!--_root-->
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_case_$dat$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_case_$dat$.defs.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_adap_$dat$.lib.module.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$dat$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--OpenGL procs loader-->
+    <ClInclude Include="$(_0)test_adap_$d$.procs.h"><Filter>extension</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$d$.procs.cpp"><Filter>extension</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$d$.procs.h"><Filter>extension</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$d$.procs.cpp"><Filter>extension</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--matrix stack-->
+    <ClInclude Include="$(_2-0)test_case_$m$.stack.h"><Filter>stack</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$m$.stack.h"><Filter>stack</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
+  </ItemGroup>
+</Project>

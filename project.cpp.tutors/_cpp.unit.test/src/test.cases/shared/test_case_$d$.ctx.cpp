@@ -38,6 +38,32 @@ CFake_Ctx&  CTstDevice::operator ()(void) const { return this->m_fk_ctx; }
 CFake_Ctx&  CTstDevice::operator ()(void)       { return this->m_fk_ctx; }
 
 #pragma endregion
+#pragma region cls::CTstFormat{}
+
+err_code   CTstFormat::Find (const SPxBits& _bits) {
+	_bits;
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("Input bits: %s;"), (_pc_sz) _bits.To_str());
+
+	uint32_t u_index = 0; u_index;
+
+	CTstDevice fk_ctx;
+	if (__failed(fk_ctx.Create(false)))
+		return fk_ctx().Error();
+
+	(*this)() << fk_ctx()();
+
+	if (__failed((*this)().Find(_bits, u_index))) { _out() += (*this)().Error(); return (*this)().Error(); }
+	_out() += TString().Format(_T("[impt] *result*: found pixel format index is (%d) >> {%s}(%u);"), u_index, (_pc_sz) CPxFormat::To_str((*this)().Get()), (*this)().Get().dwFlags);
+
+	return (*this)().Error();
+}
+
+const
+CPxFormat& CTstFormat::operator ()(void) const { return this->m_px_fmt; }
+CPxFormat& CTstFormat::operator ()(void)       { return this->m_px_fmt; }
+
+#pragma endregion
 #pragma region cls::CTstGraph{}
 
 err_code CTstGraph::Create (const bool _b_verbose/* = true*/) {
@@ -92,29 +118,15 @@ CGraphics&  CTstGraph::operator ()(void) const { return this->m_graph; }
 CGraphics&  CTstGraph::operator ()(void)       { return this->m_graph; }
 
 #pragma endregion
-#pragma region cls::CTstFormat{}
-
-err_code   CTstFormat::Find (const SPxBits& _bits) {
-	_bits;
-	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-	_out() += TString().Format(_T("Input bits: %s;"), (_pc_sz) _bits.To_str());
-
-	uint32_t u_index = 0; u_index;
-
-	CTstDevice fk_ctx;
-	if (__failed(fk_ctx.Create(false)))
-		return fk_ctx().Error();
-
-	(*this)() << fk_ctx()();
-
-	if (__failed((*this)().Find(_bits, u_index))) { _out() += (*this)().Error(); return (*this)().Error(); }
-	_out() += TString().Format(_T("[impt] *result*: found pixel format index is (%d) >> {%s}(%u);"), u_index, (_pc_sz) CPxFormat::To_str((*this)().Get()), (*this)().Get().dwFlags);
-
-	return (*this)().Error();
-}
+#pragma region cls::CCtxToggle{}
+/* unfortunately, the graphics validation is made several times: during making it current and deletion, and in Is_valid() itself;
+   perhaps it requires making review, but not this time, and not for caring optimization;
+*/
+CCtxToggle:: CCtxToggle (void) {}
+CCtxToggle::~CCtxToggle (void) {}
 
 const
-CPxFormat& CTstFormat::operator ()(void) const { return this->m_px_fmt; }
-CPxFormat& CTstFormat::operator ()(void)       { return this->m_px_fmt; }
+CFake_Ctx& CCtxToggle::operator ()(void) const { return this->m_fk_ctx; }
+CFake_Ctx& CCtxToggle::operator ()(void)       { return this->m_fk_ctx; }
 
 #pragma endregion

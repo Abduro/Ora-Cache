@@ -53,13 +53,21 @@ using e_stk_modes = test::open_gl::ver_1_1::e_stk_modes;
 
 void c_stk_mode::Get (void) {
 
+	TToggle toggle;
+
 	CTstMatMode(true).Get();
 	_out()();
 }
 
 void c_stk_mode::Set (void) {
 
-	CTstMatMode(true).Set(e_stk_modes::e_project);
+	TToggle toggle;
+
+	CTstMatMode mat_mode(true);
+
+	mat_mode.Set(e_stk_modes::e_project);
+	mat_mode.Get();
+
 	_out()();
 }
 

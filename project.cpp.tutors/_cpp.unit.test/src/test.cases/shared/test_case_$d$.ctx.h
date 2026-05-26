@@ -53,6 +53,21 @@ namespace ver_1_1 {
 		CTstDevice m_tst_dev;
 		CGraphics  m_graph;
 	};
+
+	using CFake_Ctx = ::open_gl::CFake_Ctx;
+
+	class CCtxToggle : private CFake_Ctx { typedef CFake_Ctx TBase;
+	public:
+		 CCtxToggle (void); CCtxToggle (const CCtxToggle&) = delete; CCtxToggle (CCtxToggle&&) = delete;
+		~CCtxToggle (void);
+		const
+		CFake_Ctx& operator ()(void) const;
+		CFake_Ctx& operator ()(void);
+
+	private:
+		 CCtxToggle& operator = (const CCtxToggle&) = delete; CCtxToggle& operator = (CCtxToggle&&) = delete;
+		 CFake_Ctx m_fk_ctx;
+	};
 }
 	using CPxFormat = ::win_api::CPxFormat;
 	using SPxBits   = ::win_api::format::s_bits;
@@ -74,4 +89,5 @@ namespace ver_1_1 {
 	};
 }}}
 
+typedef test::open_gl::context::ver_1_1::CCtxToggle TToggle;
 #endif/*_TEST_CASE_$D$_CTX_H_INCLUDED*/

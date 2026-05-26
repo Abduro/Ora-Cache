@@ -18,6 +18,8 @@
 #include "math.vec.3.h"
 #include "math.vec.4.h"
 
+#include "test_case_$d$.ctx.h"
+
 namespace test { namespace open_gl { namespace math {
 	using namespace ebo::boo::test;
 	using namespace ex_ui::draw::open_gl::math;

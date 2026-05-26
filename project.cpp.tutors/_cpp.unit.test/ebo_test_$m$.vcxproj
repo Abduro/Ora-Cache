@@ -243,12 +243,6 @@
     <ClInclude Include="$(_2)test_adap_$m$.shape.2d.h" />
     <ClCompile Include="$(_2)test_adap_$m$.shape.2d.cpp" />
   </ItemGroup>
-  <ItemGroup><!--matrix stack-->
-    <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
-    <ClInclude Include="$(_2)test_adap_$m$.stack.h" />
-    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp" />
-  </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h" />
     <ClCompile Include="$(Shared)shared.std.afx.cpp" >
@@ -274,8 +268,6 @@
     <Text Include="$(_2-0)__read_me_$m$.txt" />
     <ClInclude Include="$(_2-0)test_case_$m$.frustum.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.frustum.cpp" />
-    <ClInclude Include="$(_2-0)test_case_$m$.project.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.project.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.virt.cam.h" />
     <ClCompile Include="$(_2-0)test_case_$m$.virt.cam.cpp" />
     <ClInclude Include="$(_2-0)test_case_$m$.virt.space.h" />

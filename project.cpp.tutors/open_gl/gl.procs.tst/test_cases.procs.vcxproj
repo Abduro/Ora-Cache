@@ -26,36 +26,42 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0008}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-C0000006000A}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
+    <ProjectSubType>NativeUnitTestProject</ProjectSubType>
+    <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(EboPlatformTools)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -64,19 +70,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props" />
+    <Import Project="test_cases.procs.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props" />
+    <Import Project="test_cases.procs.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props" />
+    <Import Project="test_cases.procs.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gl.procs.inc.props" />
+    <Import Project="test_cases.procs.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -84,156 +90,173 @@
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
     <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
     <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
+    <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_64>
+    <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_86>
+    <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
+    <OutRoot_86>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutRoot_86>
+    <OutPath_64>$(OutRoot_64)test.cases\</OutPath_64>
+    <OutPath_86>$(OutRoot_86)test.cases\</OutPath_86>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>$(IntPath_86)</IntDir>
+    <OutDir>$(OutPath_86)</OutDir>
+    <OutRoot>$(OutRoot_86)</OutRoot>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(OutPath)!bin__\x86\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>$(IntPath_86)</IntDir>
+    <OutDir>$(OutPath_86)</OutDir>
+    <OutRoot>$(OutRoot_86)</OutRoot>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>$(IntPath_64)</IntDir>
+    <OutDir>$(OutPath_64)</OutDir>
+    <OutRoot>$(OutRoot_64)</OutRoot>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutDir>
-    <IntDir>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>$(IntPath_64)</IntDir>
+    <OutDir>$(OutPath_64)</OutDir>
+    <OutRoot>$(OutRoot_64)</OutRoot>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_DEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_DEBUG;_Output=LR"|($(TargetDir))|";_ProjId=LR"|($(ProjectGuid))|";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_Output=LR"|($(TargetDir))|";_ProjId=LR"|($(ProjectGuid))|";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NODEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_Output=LR"|($(TargetDir))|";_ProjId=LR"|($(ProjectGuid))|";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NODEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_Output=LR"|($(TargetDir))|";_ProjId=LR"|($(ProjectGuid))|";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>shared.std.afx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>shared.std.afx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
+  <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h" />
-    <ClCompile Include="$(Shared)shared.std.afx.cpp">
+    <ClCompile Include="$(Shared)shared.std.afx.cpp" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="$(_0)test_case_$dat$.defs.h" />
+    <ClCompile Include="$(_0)test_case_$dat$.defs.cpp" />
+    <ClInclude Include="$(_0)test_adap_$dat$.lib.module.h" />
+    <ClCompile Include="$(_0)test_adap_$dat$.lib.module.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0-0)gl_procs_buf.mem.h" />
-    <ClCompile Include="$(_1-0)gl_procs_buf.mem.cpp" />
-    <ClInclude Include="$(_0-0)gl_procs_buf.prop.h" />
-    <ClCompile Include="$(_1-0)gl_procs_buf.prop.cpp" />
-    <ClInclude Include="$(_0-0)gl_procs_buffer.h" />
-    <ClCompile Include="$(_1-0)gl_procs_buffer.cpp" />
+    <ClInclude Include="$(_0)test_adap_$d$.procs.h" />
+    <ClCompile Include="$(_0)test_adap_$d$.procs.cpp" />
+    <ClInclude Include="$(_1)test_case_$d$.procs.h" />
+    <ClCompile Include="$(_1)test_case_$d$.procs.cpp" />
+    <ClInclude Include="$(_1)test_case_$m$.project.h" />
+    <ClCompile Include="$(_1)test_case_$m$.project.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0)gl_error.h" />
-    <ClCompile Include="$(_1)gl_error.cpp" />
-    <ClInclude Include="$(_0)gl_procs.h" />
-    <ClCompile Include="$(_1)gl_procs.cpp" />
-    <ClInclude Include="$(_0)gl_procs_base.h" />
-    <ClCompile Include="$(_1)gl_procs_base.cpp" />
-    <ClInclude Include="$(_0)gl_procs_ctx.h" />
-    <ClCompile Include="$(_1)gl_procs_ctx.cpp" />
-    <ClInclude Include="$(_0)gl_procs_ext.h" />
-    <ClCompile Include="$(_1)gl_procs_ext.cpp" />
-    <ClInclude Include="$(_0)gl_procs_prog.h" />
-    <ClCompile Include="$(_1)gl_procs_prog.cpp" />
-    <ClInclude Include="$(_0)gl_procs_shader.h" />
-    <ClCompile Include="$(_1)gl_procs_shader.cpp" />
-    <ClInclude Include="$(_0)gl_procs_surface.h" />
-    <ClCompile Include="$(_1)gl_procs_surface.cpp" />
-    <ClInclude Include="$(_0)gl_procs_uniform.h" />
-    <ClCompile Include="$(_1)gl_procs_uniform.cpp" />
-    <ClInclude Include="$(_0)gl_procs_vertex.h" />
-    <ClCompile Include="$(_1)gl_procs_vertex.cpp" />
-    <ClInclude Include="$(_0)gl_procs_view.h" />
-    <ClCompile Include="$(_1)gl_procs_view.cpp" />
-    <ClInclude Include="$(_0)gl_types.h" />
-    <ClCompile Include="$(_1)gl_types.cpp" />
+  <ItemGroup><!--matrix stack-->
+    <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
+    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
+    <ClInclude Include="$(_2)test_adap_$m$.stack.h" />
+    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
+    <ProjectReference Include="$(Shared_dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Unit_Root)ebo_test_$$$.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>

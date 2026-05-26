@@ -46,12 +46,6 @@
     <ClInclude Include="$(_2)test_adap_$m$.shape.2d.h"><Filter>shape</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$m$.shape.2d.cpp"><Filter>shape</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup><!--matrix stack-->
-    <ClInclude Include="$(_2-0)test_case_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
-    <ClInclude Include="$(_2)test_adap_$m$.stack.h"><Filter>matrix\stack</Filter></ClInclude>
-    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp"><Filter>matrix\stack</Filter></ClCompile>
-  </ItemGroup>
   <ItemGroup><!--vectors-->
     <ClInclude Include="$(_2-0)test_case_$m$.vec2.h"><Filter>vector\shared</Filter></ClInclude>
     <ClCompile Include="$(_2-0)test_case_$m$.vec2.cpp"><Filter>vector\shared</Filter></ClCompile>

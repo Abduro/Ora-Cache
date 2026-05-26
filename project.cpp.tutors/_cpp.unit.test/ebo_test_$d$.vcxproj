@@ -287,12 +287,12 @@
     <ClInclude Include="$(_2-0)test_case_$d$.vert.arr.obj.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.vert.arr.obj.cpp" />
   </ItemGroup>
-  <ItemGroup>
+  <!--ItemGroup>
     <ClInclude Include="$(_2)test_adap_$d$.procs.h" />
     <ClCompile Include="$(_2)test_adap_$d$.procs.cpp" />
     <ClInclude Include="$(_2-0)test_case_$d$.procs.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.procs.cpp" />
-  </ItemGroup>
+  </ItemGroup-->
   <ItemGroup>
     <ClInclude Include="$(_2-0)test_case_$d$.ver.h" />
     <ClCompile Include="$(_2-0)test_case_$d$.ver.cpp" />
