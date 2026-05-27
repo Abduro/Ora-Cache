@@ -11,21 +11,23 @@
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
-    <ClInclude Include="$(_0)test_case_$dat$.defs.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_0)test_case_$dat$.defs.cpp"><Filter>_root</Filter></ClCompile>
-    <ClInclude Include="$(_0)test_adap_$dat$.lib.module.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_0)test_adap_$dat$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)test_adap_$p$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$p$.defs.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_adap_$p$.module.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$p$.module.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--OpenGL procs loader-->
-    <ClInclude Include="$(_0)test_adap_$d$.procs.h"><Filter>extension</Filter></ClInclude>
-    <ClCompile Include="$(_0)test_adap_$d$.procs.cpp"><Filter>extension</Filter></ClCompile>
-    <ClInclude Include="$(_1)test_case_$d$.procs.h"><Filter>extension</Filter></ClInclude>
-    <ClCompile Include="$(_1)test_case_$d$.procs.cpp"><Filter>extension</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_adap_$p$.exts.h"><Filter>extension</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$p$.exts.cpp"><Filter>extension</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$p$.exts.h"><Filter>extension</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$p$.exts.cpp"><Filter>extension</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--matrix stack-->
-    <ClInclude Include="$(_2-0)test_case_$m$.stack.h"><Filter>stack</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
-    <ClInclude Include="$(_2)test_adap_$m$.stack.h"><Filter>stack</Filter></ClInclude>
-    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$m$.stack.h"><Filter>stack</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_adap_$m$.stack.h"><Filter>stack</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
   </ItemGroup>
 </Project>

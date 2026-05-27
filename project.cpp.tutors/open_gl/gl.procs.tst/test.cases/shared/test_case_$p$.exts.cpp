@@ -1,8 +1,8 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2026 at 08:19:50.563, UTC+4, Batumi, Monday;
-	This is OpenGL API procedure loader wrapper interface implementation file for using in test cases adapters;
+	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 23:38:48.666, UTC+4, Batumi, Tuesday;
+	This is OpenGL version 1.1 extensions' loading procedures wrapper interface implementation file for using in test cases adapters;
 */
-#include "test_case_$d$.procs.h"
+#include "test_case_$p$.exts.h"
 
 using namespace test::open_gl::procs;
 

@@ -4,18 +4,18 @@ the tree of solution nodes:
 [!docs]   : {00000C13-EEEE-BBBB-6667-D00000000000} << the root node of documents for settings c/c++ projects;
 [_shared] : {00000C13-EEEE-BBBB-6667-100000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
    +---[core]  : {00000C13-EEEE-BBBB-6667-100000000010} << the sub-root node of the root/core project;
-	shared.trim_v15 : {00000C13-EEEE-BBBB-6667-0000000B0001} << this is the shared project of excerpts from Ebo Pack solution;
+	shared.trim_v15 : {00000C13-EEEE-BBBB-6667-000000000001} << this is the shared project of excerpts from Ebo Pack solution;
 
    +---[data] : {00000C13-EEEE-BBBB-6667-100000000040} << the sub-root node of shared projects related to data providers;
 	ms.xml.6_v15    : {00000C13-EEEE-BBBB-6667-000000000009} << MS XML core service wrapper project;
 
    +---[debug] : {00000C13-EEEE-BBBB-6667-100000000020} << the sub-root node of shared projects related to debugging;
-	shared.dbg_v15  : {00000C13-EEEE-BBBB-6667-0000000A0001} << this is the shared project of the debug ouptup console wrapper for app main window;
-	trace.con_v15   : {00000C13-EEEE-BBBB-6667-0000000E0001} << this is console app project for test cases;
+	shared.dbg_v15  : {00000C13-EEEE-BBBB-6667-000000000003} << this is the shared project of the debug ouptup console wrapper for app main window;
+	trace.con_v15   : {00000C13-EEEE-BBBB-6667-000000000020} << this is console app project for test cases;
 
    +---[gui]   : {00000C13-EEEE-BBBB-6667-100000000030} << the sub-root node of the GUI related projects;
-	shared.clr_v15  : {00000C13-EEEE-BBBB-6667-0000000D0001} << this is the shared project of excerpts from Ebo Pack draw color project;
-	shared.gui_v15  : {00000C13-EEEE-BBBB-6667-0000000C0001} << this is the shared project of the composite GUI for app main window;
+	shared.clr_v15  : {00000C13-EEEE-BBBB-6667-000000000019} << this is the shared project of excerpts from Ebo Pack draw color project;
+	shared.gui_v15  : {00000C13-EEEE-BBBB-6667-00000000000C} << this is the shared project of the composite GUI for app main window;
 
    +---[!test.cases]: {00000C13-EEEE-BBBB-6667-100000000050} << the sub-root node of shared  projects' test cases;
    +---------[core] : {00000C13-EEEE-BBBB-6667-100000000051} << the sub-root node for core project(s) of the test cases;
@@ -24,26 +24,28 @@ the tree of solution nodes:
 	ebo_test_$dat$.prov : {00000C13-EEEE-BBBB-6667-C00000060009} << unit test cases' project of data providers;
 	ebo_test_$win$.api  : {00000C13-EEEE-BBBB-6667-C00000060003} << unit test cases' project for WinApi related projects;
 
-   drawable_v15: {00000C13-EEEE-BBBB-6667-00000000000A} << this is the shared project drawable project;
+   drawable_v15: {00000C13-EEEE-BBBB-6667-00000000000A} << this is the shared drawable project;
    runnable_v15: {00000C13-EEEE-BBBB-6667-000000000007} << this is the shared project for running a task in background mode;
 
 [tutors]  : {00000C13-EEEE-BBBB-6667-200000000000} << the sub-root of the tutorial projects;
    +---[DirecX]  : {00000C13-EEEE-BBBB-6667-200000100000} << the sub-root for DirectX tutorials;
    +---[OpenGL]  : {00000C13-EEEE-BBBB-6667-200000200000} << the sub-root for OpenGL tutorials;
-		gl.context_v15  : {00000C13-EEEE-BBBB-6667-0000000B0009} << the OpenGL draw rendering context wrapper project;
 		gl.math_v15     : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
 		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;
 
    +------[3rd_party] : {00000C13-EEEE-BBBB-6667-200000230000} << the sub-root for 3rd party projects;
 		glm   : {00000C13-EEEE-BBBB-6667-3000000A0000} << GLM project;
 
-   +------[procs]     : {00000C13-EEEE-BBBB-6667-200000250000} << the sub-root for OpenGL API procedures wrapper projects and its test cases project;
+   +------[context]   : {00000C13-EEEE-BBBB-6667-200000260000} << the sub-root for OpenGL draw context project and its test cases one;
+		gl.context_v15    : {00000C13-EEEE-BBBB-6667-0000000B0009} << the OpenGL draw rendering context wrapper project;
+		test_cases.ctx.lib: {00000C13-EEEE-BBBB-6667-C000000C0000} << the project for sharing draw context for matrix unit test project;
+
+   +------[procs]     : {00000C13-EEEE-BBBB-6667-200000250000} << the sub-root for OpenGL API procedures wrapper projects and its test cases one;
 		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
 		gl.procs.leg_v15: {00000C13-EEEE-BBBB-6667-0000000B000A} << OpenGL legacy API wrapper project;
-		test_cases.procs: {00000C13-EEEE-BBBB-6667-C0000006000A} << test cases project for OpenGL API procedure loader and wrapper projects;
+		test_cases.procs: {00000C13-EEEE-BBBB-6667-C0000006000A} << test cases project for OpenGL API procedure loader and wrapper project;
 
    +------[!test.cases]   : {00000C13-EEEE-BBBB-6667-200000210000} << the sub-root node for test cases project(s);
-		ebo_test_$d$.lib: {00000C13-EEEE-BBBB-6667-C000000C0000} << the project for sharing draw context for matrix unit test project;
 		ebo_test_$d$    : {00000C13-EEEE-BBBB-6667-C00000060002} << the unit test project for testing functionality of draw context;
 		ebo_test_$m$    : {00000C13-EEEE-BBBB-6667-C00000060001} << the unit test project for shared project of OpenGL basic math lib;
  

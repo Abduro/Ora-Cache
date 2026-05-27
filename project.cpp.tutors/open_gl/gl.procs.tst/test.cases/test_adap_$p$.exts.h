@@ -1,10 +1,10 @@
-#ifndef _TEST_ADAP_$D$_PROCS_H_INCLUDED
-#define _TEST_ADAP_$D$_PROCS_H_INCLUDED
+#ifndef _TEST_ADAP_$P$_EXTS_H_INCLUDED
+#define _TEST_ADAP_$P$_EXTS_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2026 at 08:23:47.671, UTC+4, Batumi, Monday;
-	This is OpenGL API procedure loader wrapper unit test adapter interface declaration file.
+	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 23:38:48.777, UTC+4, Batumi, Tuesday;
+	This is OpenGL version 1.1 extensions' loading procedures wrapper unit test adapter interface declaration file.
 */
-#include "test_case_$d$.procs.h"
+#include "test_case_$p$.exts.h"
 
 namespace test { namespace open_gl { namespace procs {
 
@@ -23,4 +23,4 @@ namespace test { namespace open_gl { namespace procs {
 
 }}}
 
-#endif/*_TEST_ADAP_$D$_PROCS_H_INCLUDED*/
+#endif/*_TEST_ADAP_$P$_EXTS_H_INCLUDED*/

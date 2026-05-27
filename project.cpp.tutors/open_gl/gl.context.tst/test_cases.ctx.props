@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 14:39:06.802, UTC+4, Batumi, Tuesday;
-	Adopted to OpenGL API procedures' wrappers' test project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 06-Jan-2026 at 23:44:22.187, UTC+4, Batumi, Tuesday;
+	Adopted to Ebo Pack OpenGL tutorials' draw context functionality unit test project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">

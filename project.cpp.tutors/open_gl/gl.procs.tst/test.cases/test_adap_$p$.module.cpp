@@ -1,8 +1,8 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 20:52:42.301, UTC+4, Batumi, Sunday;
+	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 19:19:18.767, UTC+4, Batumi, Sunday;
 	This is OpenGL tutorials' draw components unit test project module implementation file;
 */
-#include "test_adap_$d$.lib.module.h"
+#include "test_adap_$p$.module.h"
 #include <locale>
 
 using namespace test::open_gl;
@@ -13,6 +13,7 @@ using namespace test::open_gl;
    otherwise these methods must be declared in global namespace, because 'using namespace' does not work for linker, but for compiler only;
 */
 namespace test { namespace open_gl {
+
 void OnLoad (void) {
 
 	const char* p_result = ::setlocale(LC_ALL, "en-US");
@@ -47,4 +48,5 @@ void OnUnload (void) {
 	_out()();
 }
 }}
+
 #endif

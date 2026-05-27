@@ -10,8 +10,8 @@
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
-    <ClInclude Include="$(_2-1)test_case_$dat$.defs.h"><Filter>_root</Filter></ClInclude>
-    <ClCompile Include="$(_2-1)test_case_$dat$.defs.cpp"><Filter>_root</Filter></ClCompile>
+    <ClInclude Include="$(_2-1)test_adap_$dat$.defs.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_2-1)test_adap_$dat$.defs.cpp"><Filter>_root</Filter></ClCompile>
     <ClInclude Include="$(_2-1)test_adap_$dat$.lib.module.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_2-1)test_adap_$dat$.lib.module.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>

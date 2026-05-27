@@ -1,10 +1,10 @@
-#ifndef _EBO_TEST_$D$_LIB_MODULE_H_INCLUDED
-#define _EBO_TEST_$D$_LIB_MODULE_H_INCLUDED
+#ifndef _TEST_ADAP_$P$_MODULE_H_INCLUDED
+#define _TEST_ADAP_$P$_MODULE_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 11-Jan-2026 at 20:49:51.756, UTC+4, Batumi, Sunday;
+	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 19:19:18.780, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL tutorials' draw components unit test project module declaration file;
 */
-#include "test_adap_$d$.defs.h"
+#include "test_adap_$p$.defs.h"
 
 namespace test { namespace open_gl {
 
@@ -19,4 +19,4 @@ namespace test { namespace open_gl {
 
 }}
 
-#endif/*_EBO_TEST_$D$_LIB_MODULE_H_INCLUDED*/
+#endif/*_TEST_ADAP_$P$_MODULE_H_INCLUDED*/

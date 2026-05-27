@@ -1,7 +1,7 @@
 #ifndef _TEST_ADAP_$D$_DEFS_H_INCLUDED
 #define _TEST_ADAP_$D$_DEFS_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 06-Jan-2026 at 23:38:48.842, UTC+4, Batumi, Tauesday;
+	Created by Tech_dog (ebontrop@gmail.com) on 06-Jan-2026 at 23:38:48.842, UTC+4, Batumi, Tuesday;
 	This is OpenGL tutorials' common definitions' uint test interface declaration file;
 */
 #include "_log.h"

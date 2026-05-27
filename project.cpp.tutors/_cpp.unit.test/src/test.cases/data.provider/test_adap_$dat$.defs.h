@@ -1,5 +1,5 @@
-#ifndef _EBO_TEST_$DAT$_DEFS_H_INCLUDED
-#define _EBO_TEST_$DAT$_DEFS_H_INCLUDED
+#ifndef _TEST_ADAP_$DAT$_DEFS_H_INCLUDED
+#define _TEST_ADAP_$DAT$_DEFS_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Apr-2026 at 16:17:17.544, UTC+4, Batumi, Tuesday;
 	Ebo Pack OpenGL tutorials' data providers' common declaration file;
@@ -25,4 +25,4 @@ namespace ebo { namespace boo { namespace test { namespace data {
 #pragma comment(lib, "shared.dbg_v15.lib")  // it is required for usage of the debug output;
 #pragma comment(lib, "shared.trim_v15.lib") // it is required for usage of the error base API;
 
-#endif/*_EBO_TEST_$DAT$_DEFS_H_INCLUDED*/
+#endif/*_TEST_ADAP_$DAT$_DEFS_H_INCLUDED*/

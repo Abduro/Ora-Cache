@@ -1,8 +1,8 @@
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 13-Apr-2026 at 08:25:48.325, UTC+4, Batumi, Monday;
-	This is OpenGL API procedure loader wrapper unit test adapter implementation declaration file.
+	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 23:38:48.888, UTC+4, Batumi, Tuesday;
+	This is OpenGL version 1.1 extensions' loading procedures wrapper unit test adapter interface implementation declaration file.
 */
-#include "test_adap_$d$.procs.h"
+#include "test_adap_$p$.exts.h"
 
 using namespace test::open_gl::procs;
 

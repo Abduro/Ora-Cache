@@ -229,37 +229,37 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="$(_0)test_case_$dat$.defs.h" />
-    <ClCompile Include="$(_0)test_case_$dat$.defs.cpp" />
-    <ClInclude Include="$(_0)test_adap_$dat$.lib.module.h" />
-    <ClCompile Include="$(_0)test_adap_$dat$.lib.module.cpp" />
+    <ClInclude Include="$(_0)test_adap_$p$.defs.h" />
+    <ClCompile Include="$(_0)test_adap_$p$.defs.cpp" />
+    <ClInclude Include="$(_0)test_adap_$p$.module.h" />
+    <ClCompile Include="$(_0)test_adap_$p$.module.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)test_adap_$d$.procs.h" />
-    <ClCompile Include="$(_0)test_adap_$d$.procs.cpp" />
-    <ClInclude Include="$(_1)test_case_$d$.procs.h" />
-    <ClCompile Include="$(_1)test_case_$d$.procs.cpp" />
-    <ClInclude Include="$(_1)test_case_$m$.project.h" />
-    <ClCompile Include="$(_1)test_case_$m$.project.cpp" />
+    <ClInclude Include="$(_0)test_adap_$p$.exts.h" />
+    <ClCompile Include="$(_0)test_adap_$p$.exts.cpp" />
+    <ClInclude Include="$(_1)test_case_$p$.exts.h" />
+    <ClCompile Include="$(_1)test_case_$p$.exts.cpp" />
+    <ClInclude Include="$(_1)test_case_$m$.proj.h" />
+    <ClCompile Include="$(_1)test_case_$m$.proj.cpp" />
   </ItemGroup>
   <ItemGroup><!--matrix stack-->
-    <ClInclude Include="$(_2-0)test_case_$m$.stack.h" />
-    <ClCompile Include="$(_2-0)test_case_$m$.stack.cpp" />
-    <ClInclude Include="$(_2)test_adap_$m$.stack.h" />
-    <ClCompile Include="$(_2)test_adap_$m$.stack.cpp" />
+    <ClInclude Include="$(_1)test_case_$m$.stack.h" />
+    <ClCompile Include="$(_1)test_case_$m$.stack.cpp" />
+    <ClInclude Include="$(_0)test_adap_$m$.stack.h" />
+    <ClCompile Include="$(_0)test_adap_$m$.stack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-000000000001}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_dbg)shared.dbg_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000A}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Unit_Root)ebo_test_$$$.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

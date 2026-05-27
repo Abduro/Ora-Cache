@@ -230,13 +230,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0001}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-000000000001}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000A0001}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000A}</Project>
     </ProjectReference>
     <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0001}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

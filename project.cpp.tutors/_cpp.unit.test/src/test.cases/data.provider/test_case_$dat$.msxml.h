@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Apr-2026 at 13:53:31.133, UTC+4, Batumi, Tuesday;
 	This is Ebo Pack OpenGL tutorials' MSXML wrapper interface declaration file for using in test cases adapters;
 */
-#include "test_case_$dat$.defs.h"
+#include "test_adap_$dat$.defs.h"
 #include "msxml.doc.h"
 #include "msxml.schema.h"
 

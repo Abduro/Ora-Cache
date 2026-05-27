@@ -1,8 +1,8 @@
-#ifndef _TEST_ADAP_$D$_DEFS_H_INCLUDED
-#define _TEST_ADAP_$D$_DEFS_H_INCLUDED
+#ifndef _TEST_ADAP_$P$_DEFS_H_INCLUDED
+#define _TEST_ADAP_$P$_DEFS_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 06-Jan-2026 at 23:38:48.842, UTC+4, Batumi, Tuesday;
-	This is OpenGL tutorials' common definitions' uint test interface declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 26-May-2026 at 23:38:48.842, UTC+4, Batumi, Tuesday;
+	This is OpenGL version 1.1 procedures' wrappers uint test case common declaration file;
 */
 #include "_log.h"
 
@@ -21,4 +21,4 @@ namespace test { namespace open_gl {
 #pragma comment(lib, "gl.procs_v15.lib")     // open_gl procs loader lib;
 #pragma comment(lib, "gl.shared_v15.lib")    // open_gl wrapper shared lib;
 
-#endif/*_TEST_ADAP_$D$_DEFS_H_INCLUDED*/
+#endif/*_TEST_ADAP_$P$_DEFS_H_INCLUDED*/

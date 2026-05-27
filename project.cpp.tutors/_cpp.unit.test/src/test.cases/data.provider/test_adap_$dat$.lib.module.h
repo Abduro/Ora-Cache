@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 08-Apr-2026 at 14:43:55.391, UTC+4, Batumi, Wednesday;
 	This is Ebo Pack OpenGL tutorials' data providers' unit test project module declaration file;
 */
-#include "test_case_$dat$.defs.h"
+#include "test_adap_$dat$.defs.h"
 
 namespace ebo { namespace boo { namespace test { namespace data {
 

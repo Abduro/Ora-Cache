@@ -26,7 +26,7 @@
     <_2-1>src\test.cases\data.provider\</_2-1>
     <_3>$(Shared)interface\</_3>
     <_4>$(Shared_Dbg)interface\</_4>
-    <_4-0>$(Shared_Dbg)interface\__trace</_4-0>
+    <_4-0>$(Shared_Dbg)interface\__trace\</_4-0>
     <_5>$(Shared_Clr)interface\</_5>
     <_6>$(Shared_Gui)interface\</_6>
     <_7>$(MsXml)interface\</_7>
