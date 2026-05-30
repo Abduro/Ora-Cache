@@ -4,13 +4,13 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-May-2026 at 19:09:32.348, UTC+4, Batumi, Tuesday;
 	This is OpenGL virtual camera frustum wrapper interface declaration file for using in test cases' adapters;
 */
-#include "test_adap_$m$.defs.h"
-#include "test_case_$m$.mat4x4.h"
+#include "test_adap_$p$.defs.h"
+#if (0)
 #include "camera.frustum.h"
 /*
 	These test cases are espacially intended for OpenGL vers 1.1;
 */
-namespace test { namespace open_gl { namespace frustum { using namespace test::open_gl::math;
+namespace test { namespace open_gl { namespace frustum { namespace ver_1_1 {
 
 	using CAspect  = ::open_gl::camera::frustum::CAspect;
 	using CCfg     = ::open_gl::camera::frustum::CCfg;
@@ -79,7 +79,7 @@ namespace test { namespace open_gl { namespace frustum { using namespace test::o
 		CFrustum m_frust;
 		bool   m_verbose;
 	};
-}}}
-
+}}}}
+#endif
 
 #endif/*_TEST_CASE_$M$_FRUSTUM_H_INCLUDED*/

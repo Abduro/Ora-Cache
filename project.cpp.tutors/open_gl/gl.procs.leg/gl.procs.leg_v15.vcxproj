@@ -198,14 +198,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <!--ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0-0)gl_procs_mtx.mode.h" />
     <ClCompile Include="$(_1-0)gl_procs_mtx.mode.cpp" />
     <ClInclude Include="$(_0-0)gl_procs_mtx.oper.h" />
     <ClCompile Include="$(_1-0)gl_procs_mtx.oper.cpp" />
     <ClInclude Include="$(_0-0)gl_procs_mtx.stack.h" />
     <ClCompile Include="$(_1-0)gl_procs_mtx.stack.cpp" />
-  </ItemGroup-->
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_basic.h" />
     <ClCompile Include="$(_1)gl_procs_basic.cpp" />
@@ -215,8 +215,10 @@
     <ClCompile Include="$(_1)gl_procs_depth.cpp" />
     <ClInclude Include="$(_0)gl_procs_matrix.h" />
     <ClCompile Include="$(_1)gl_procs_matrix.cpp" />
-    <ClInclude Include="$(_0)gl_procs_proj.h" />
-    <ClCompile Include="$(_1)gl_procs_proj.cpp" />
+    <ClInclude Include="$(_0)gl_procs_project.h" />
+    <ClCompile Include="$(_1)gl_procs_project.cpp" />
+    <ClInclude Include="$(_0)gl_procs_viewport.h" />
+    <ClCompile Include="$(_1)gl_procs_viewport.cpp" />
     <Text Include="__read_me_arb.txt" />
     <Text Include="__read_me_leg.txt" />
   </ItemGroup>

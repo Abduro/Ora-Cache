@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000060009}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-C00000060009}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
     <ProjectSubType>NativeUnitTestProject</ProjectSubType>
@@ -70,26 +70,26 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$dat$.prov.props" />
+    <Import Project="test_cases.ctx.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$dat$.prov.props" />
+    <Import Project="test_cases.ctx.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$dat$.prov.props" />
+    <Import Project="test_cases.ctx.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="ebo_test_$dat$.prov.props" />
+    <Import Project="test_cases.ctx.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <!--It is assumed the environment variables contain paths that end up with backslash;-->
     <!--The user path depends on the location where the project file resides, it is advisable to have output folders outside the project;-->
-    <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\</OutPath>
-    <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\</IntPath>
+    <OutPath Condition="'$(OutPath)'==''">$(ProjectDir)..\..\..\</OutPath>
+    <IntPath Condition="'$(IntPath)'==''">$(ProjectDir)..\..\..\</IntPath>
     <IntPath_64>$(IntPath)!can_be_safely_removed__\x64\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_64>
     <IntPath_86>$(IntPath)!can_be_safely_removed__\x86\$(Configuration)\tutorials\test.cases\$(ProjectName)\</IntPath_86>
     <OutRoot_64>$(OutPath)!bin__\x64\$(Configuration)\tutorials\</OutRoot_64>
@@ -124,6 +124,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -139,7 +140,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -147,6 +148,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -162,7 +164,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -170,6 +172,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -189,7 +192,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -197,6 +200,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -216,12 +220,12 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(OutRoot);$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup><!--_root-->
+  <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />
     <ClCompile Include="$(Shared)shared.std.afx.cpp" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -229,29 +233,37 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="$(_2-1)test_adap_$dat$.defs.h" />
-    <ClCompile Include="$(_2-1)test_adap_$dat$.defs.cpp" />
-    <ClInclude Include="$(_2-1)test_adap_$dat$.lib.module.h" />
-    <ClCompile Include="$(_2-1)test_adap_$dat$.lib.module.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_2-1)test_adap_$dat$.msxml.h" />
-    <ClCompile Include="$(_2-1)test_adap_$dat$.msxml.cpp" />
-    <ClInclude Include="$(_2-1)test_case_$dat$.msxml.h" />
-    <ClCompile Include="$(_2-1)test_case_$dat$.msxml.cpp" />
+    <ClInclude Include="$(_1)test_case_$d$.ctx.h" />
+    <ClCompile Include="$(_1)test_case_$d$.ctx.cpp" />
+    <ClInclude Include="$(_1)test_case_$d$.ctx.arb.h" />
+    <ClCompile Include="$(_1)test_case_$d$.ctx.arb.cpp" />
+    <ClInclude Include="$(_0)test_adap_$d$.ctx.h" />
+    <ClCompile Include="$(_0)test_adap_$d$.ctx.cpp" />
+    <ClInclude Include="$(_0)test_adap_$d$.ctx.arb.h" />
+    <ClCompile Include="$(_0)test_adap_$d$.ctx.arb.cpp" />
+    <ClInclude Include="$(_0)test_adap_$d$.defs.h" />
+    <ClCompile Include="$(_0)test_adap_$d$.defs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-000000000001}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(Shared_dbg)shared.dbg_v15.vcxproj">
+    <ProjectReference Include="$(Shared_Dbg)shared.dbg_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-00000000000A}</Project>
     </ProjectReference>
-    <ProjectReference Include="ebo_test_$$$.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
+    <ProjectReference Include="$(Shared_Gui)shared.gui_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-00000000000C}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(MSXML)ms.xml.6_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-000000000009}</Project>
+    <ProjectReference Include="$(GL_Procs)gl.procs_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0008}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(GL_Shared)gl.shared_v15.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Unit_Root)ebo_test_$$$.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-C00000060000}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

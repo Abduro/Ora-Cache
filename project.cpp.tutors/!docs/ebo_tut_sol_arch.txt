@@ -21,7 +21,7 @@ the tree of solution nodes:
    +---------[core] : {00000C13-EEEE-BBBB-6667-100000000051} << the sub-root node for core project(s) of the test cases;
 		ebo_test_$$$    : {00000C13-EEEE-BBBB-6667-C00000060000} << the shared core project of test cases;
 
-	ebo_test_$dat$.prov : {00000C13-EEEE-BBBB-6667-C00000060009} << unit test cases' project of data providers;
+	ebo_test_$dat$.prov : {00000C13-EEEE-BBBB-6667-000000060009} << unit test cases' project of data providers;
 	ebo_test_$win$.api  : {00000C13-EEEE-BBBB-6667-C00000060003} << unit test cases' project for WinApi related projects;
 
    drawable_v15: {00000C13-EEEE-BBBB-6667-00000000000A} << this is the shared drawable project;
@@ -38,7 +38,8 @@ the tree of solution nodes:
 
    +------[context]   : {00000C13-EEEE-BBBB-6667-200000260000} << the sub-root for OpenGL draw context project and its test cases one;
 		gl.context_v15    : {00000C13-EEEE-BBBB-6667-0000000B0009} << the OpenGL draw rendering context wrapper project;
-		test_cases.ctx.lib: {00000C13-EEEE-BBBB-6667-C000000C0000} << the project for sharing draw context for matrix unit test project;
+		test_cases.ctx.lib: {00000C13-EEEE-BBBB-6667-C000000C0000} << the project for sharing draw context test cases;
+		test_cases.ctx    : {00000C13-EEEE-BBBB-6667-C00000060009} << draw context unit test project;
 
    +------[procs]     : {00000C13-EEEE-BBBB-6667-200000250000} << the sub-root for OpenGL API procedures wrapper projects and its test cases one;
 		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;

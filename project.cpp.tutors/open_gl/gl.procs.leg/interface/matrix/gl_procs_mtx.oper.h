@@ -4,6 +4,16 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 26-Feb-2026 at 18:26:20.598, (UTC+4), Batumi, Thursday;
 	This is Ebo Pack OpenGL math matrix mode functions' loader interface declaration file;
 */
+#include "gl_procs_basic.h"
+
+namespace open_gl { namespace procs { namespace matrix {
+namespace ver_1_1 {
+
+}
+namespace arb {}
+
+}}}
+#if (0)
 #include "gl_procs_base.h"
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
@@ -26,5 +36,5 @@ namespace matrix {
 		};
 
 }}}}}
-
+#endif
 #endif/*_GL_PROCS_MTX_OPER_H_INCLUDED*/

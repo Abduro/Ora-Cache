@@ -45,7 +45,8 @@ bool CViewPort::Is_valid (const t_size_u& _u_size, CError& _err) {
 }
 
 t_size    CViewPort::Get (void) const { return t_size{ (long)this->m_size.cx, (long)this->m_size.cy}; }
-//t_size_u& CViewPort::Get (void) { return this->m_size; }
+//const
+//t_size_u& CViewPort::Get (void) const { return this->m_size; }
 float     CViewPort::Get_X (const int32_t _n_x) const {
 	_n_x;
 	if (0 == this->Get().cx) // the division by zero is not defined;

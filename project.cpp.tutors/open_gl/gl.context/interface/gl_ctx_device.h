@@ -132,6 +132,21 @@ namespace open_gl { namespace context {
 		TFakeWnd m_fk_wnd;  // it is created automatically in its constructor;
 		CDevice  m_device;  // a fake window GDI object;
 	};
+	// the same class is already declared in test_case_$d$.ctx.h, but code duplication is not so important;
+	class CCtxToggle : private CFake_Ctx { typedef CFake_Ctx TBase;
+	public:
+		 CCtxToggle (void); CCtxToggle (const CCtxToggle&) = delete; CCtxToggle (CCtxToggle&&) = delete;
+		~CCtxToggle (void);
+		const
+		CFake_Ctx& operator ()(void) const;
+		CFake_Ctx& operator ()(void);
+
+	private:
+		 CCtxToggle& operator = (const CCtxToggle&) = delete; CCtxToggle& operator = (CCtxToggle&&) = delete;
+		 CFake_Ctx m_fk_ctx;
+	};
 }
+
+typedef ::open_gl::CCtxToggle TCtxToggle;
 
 #endif/*_GL_CTX_DEVICE_H_INCLUDED*/

@@ -221,7 +221,7 @@
       </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup><!--_root-->
+  <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />
     <ClCompile Include="$(Shared)shared.std.afx.cpp" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -233,16 +233,23 @@
     <ClCompile Include="$(_0)test_adap_$p$.defs.cpp" />
     <ClInclude Include="$(_0)test_adap_$p$.module.h" />
     <ClCompile Include="$(_0)test_adap_$p$.module.cpp" />
+    <Text Include="$(_0)__read_me_$m$.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0)test_adap_$p$.exts.h" />
-    <ClCompile Include="$(_0)test_adap_$p$.exts.cpp" />
     <ClInclude Include="$(_1)test_case_$p$.exts.h" />
     <ClCompile Include="$(_1)test_case_$p$.exts.cpp" />
-    <ClInclude Include="$(_1)test_case_$m$.proj.h" />
-    <ClCompile Include="$(_1)test_case_$m$.proj.cpp" />
+    <ClInclude Include="$(_0)test_adap_$p$.exts.h" />
+    <ClCompile Include="$(_0)test_adap_$p$.exts.cpp" />
   </ItemGroup>
-  <ItemGroup><!--matrix stack-->
+  <ItemGroup>
+    <ClInclude Include="$(_1)test_case_$m$.frustum.h" />
+    <ClCompile Include="$(_1)test_case_$m$.frustum.cpp" />
+    <ClInclude Include="$(_1)test_case_$m$.project.h" />
+    <ClCompile Include="$(_1)test_case_$m$.project.cpp" />
+    <ClInclude Include="$(_0)test_adap_$m$.frustum.h" />
+    <ClCompile Include="$(_0)test_adap_$m$.frustum.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.stack.h" />
     <ClCompile Include="$(_1)test_case_$m$.stack.cpp" />
     <ClInclude Include="$(_0)test_adap_$m$.stack.h" />

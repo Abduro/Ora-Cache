@@ -20,8 +20,6 @@
     <Filter Include="win_api"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002C}</UniqueIdentifier></Filter>
     <Filter Include="win_api\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002D}</UniqueIdentifier></Filter>
 
-    <Filter Include="procs"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002E}</UniqueIdentifier></Filter>
-    <Filter Include="procs\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006002F}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup><!--precompiled headers and module;-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -71,22 +69,6 @@
     <ClInclude Include="$(_2)test_adap_$d$.vert.arr.obj.h"><Filter>vertex</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$d$.vert.arr.obj.cpp"><Filter>vertex</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup><!--window device context and popup menu;-->
-    <ClInclude Include="$(_2-0)test_case_$d$.ctx.h"><Filter>win_api\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.ctx.cpp"><Filter>win_api\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.ctx.arb.h"><Filter>win_api\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.ctx.arb.cpp"><Filter>win_api\shared</Filter></ClCompile>
-    <ClInclude Include="$(_2)test_adap_$d$.ctx.h"><Filter>win_api</Filter></ClInclude>
-    <ClCompile Include="$(_2)test_adap_$d$.ctx.cpp"><Filter>win_api</Filter></ClCompile>
-    <ClInclude Include="$(_2)test_adap_$d$.ctx.arb.h"><Filter>win_api</Filter></ClInclude>
-    <ClCompile Include="$(_2)test_adap_$d$.ctx.arb.cpp"><Filter>win_api</Filter></ClCompile>
-  </ItemGroup>
-  <!--ItemGroup>
-    <ClInclude Include="$(_2)test_adap_$d$.procs.h"><Filter>procs</Filter></ClInclude>
-    <ClCompile Include="$(_2)test_adap_$d$.procs.cpp"><Filter>procs</Filter></ClCompile>
-    <ClInclude Include="$(_2-0)test_case_$d$.procs.h"><Filter>procs\shared</Filter></ClInclude>
-    <ClCompile Include="$(_2-0)test_case_$d$.procs.cpp"><Filter>procs\shared</Filter></ClCompile>
-  </ItemGroup-->
   <ItemGroup>
     <ClInclude Include="$(_2)test_adap_$d$.ver.h"><Filter>win_api</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$d$.ver.cpp"><Filter>win_api</Filter></ClCompile>

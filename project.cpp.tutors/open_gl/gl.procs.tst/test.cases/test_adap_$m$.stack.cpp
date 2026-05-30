@@ -3,8 +3,7 @@
 	This is Ebo Pack OpenGL math lib matrix stack uint test adapter interface implementation file; 
 */
 #include "test_adap_$m$.stack.h"
-#include "shared.preproc.h"
-
+#if (0)
 using namespace test::open_gl::math;
 
 #pragma region cls::c_stk_current{}
@@ -47,3 +46,4 @@ void c_mat_stack::Push (void) {
 }
 
 #pragma endregion
+#endif

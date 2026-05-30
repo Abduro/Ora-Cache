@@ -6,6 +6,7 @@
 
     <Filter Include="extension"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A02}</UniqueIdentifier></Filter>
     <Filter Include="stack"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A03}</UniqueIdentifier></Filter>
+    <Filter Include="projection"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A04}</UniqueIdentifier></Filter>
 
   </ItemGroup>
   <ItemGroup><!--_root-->
@@ -18,13 +19,21 @@
     <ClInclude Include="$(_0)test_adap_$p$.module.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_0)test_adap_$p$.module.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup><!--OpenGL procs loader-->
+  <ItemGroup>
     <ClInclude Include="$(_0)test_adap_$p$.exts.h"><Filter>extension</Filter></ClInclude>
     <ClCompile Include="$(_0)test_adap_$p$.exts.cpp"><Filter>extension</Filter></ClCompile>
     <ClInclude Include="$(_1)test_case_$p$.exts.h"><Filter>extension</Filter></ClInclude>
     <ClCompile Include="$(_1)test_case_$p$.exts.cpp"><Filter>extension</Filter></ClCompile>
   </ItemGroup>
-  <ItemGroup><!--matrix stack-->
+  <ItemGroup>
+    <ClInclude Include="$(_1)test_case_$m$.frustum.h"><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$m$.frustum.cpp"><Filter>projection</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$m$.project.h"><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$m$.project.cpp"><Filter>projection</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_adap_$m$.frustum.h"><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$m$.frustum.cpp"><Filter>projection</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.stack.h"><Filter>stack</Filter></ClInclude>
     <ClCompile Include="$(_1)test_case_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
     <ClInclude Include="$(_0)test_adap_$m$.stack.h"><Filter>stack</Filter></ClInclude>

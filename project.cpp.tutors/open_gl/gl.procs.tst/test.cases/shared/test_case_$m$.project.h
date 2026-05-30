@@ -4,17 +4,18 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-May-2026 at 12:11:24.861, UTC+4, Batumi, Thursday;
 	This is OpenGL projection matrix wrapper interface declaration file for using in test cases' adapters;
 */
-#include "test_adap_$m$.defs.h"
-#include "test_case_$m$.mat4x4.h"
-#include "gl_procs_proj.h"
+#include "test_adap_$p$.defs.h"
+#include "gl_procs_matrix.h"
+#include "gl_procs_project.h"
 /*
 	These test cases are espacially intended for OpenGL vers 1.1;
 */
-namespace test { namespace open_gl { namespace ver_1_1 { using namespace test::open_gl::math;
+namespace test { namespace open_gl { namespace ver_1_1 {
 
-	using CPerspect = ::open_gl::procs::ver_1_1::projection::CPerspect;
-	using s_pers_args = ::open_gl::procs::ver_1_1::projection::s_pers_args;
-	using e_stk_modes = ::open_gl::procs::ver_1_1::matrix::e_modes;
+	using namespace ::open_gl::procs::projection::ver_1_1;
+	using TMatMode    = ::open_gl::procs::matrix::ver_1_1::CMode;
+	using e_stk_modes = ::open_gl::procs::matrix::ver_1_1::e_modes;
+	using f_seq_4x4   = ::open_gl::procs::f_seq_4x4;
 
 	static s_pers_args g_pers_arg(60.0f, 1.0f, 1.0f, 10.0f);
 

@@ -8,15 +8,16 @@ using namespace test::open_gl::ver_1_1;
 
 #pragma region cls::CTstMatMode{}
 
-CTstMatMode::CTstMatMode (const bool _b_verbose) : m_verbose(_b_verbose) {}
+CTstMatMode::CTstMatMode (const bool _b_verbose) : m_verbose(_b_verbose) { _out().Clear(); }
 
 err_code CTstMatMode::Get (void) {
 	if (this->m_verbose)
 	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	if (__failed((*this)().Get())) { _out() += (*this)().Error(); }
-	else {
-		_out() += TString().Format(_T("[impt] current matrix stack mode: '%s';"), TMatMode::To_str((e_stk_modes)(*this)().Get()));
+	else  {
+		const e_stk_modes n_current = this->m_mode.Current();
+		_out() += TString().Format(_T("[impt] current matrix stack mode: '%s';"), TMatMode::To_str(n_current));
 	}
 
 	return (*this)().Error();
@@ -42,7 +43,7 @@ TMatMode& CTstMatMode::operator ()(void)       { return this->m_mode; }
 #pragma endregion
 #pragma region cls::CTstPerspect{}
 
-CTstPerspect::CTstPerspect (const bool _b_verbose) : m_verbose(_b_verbose) {}
+CTstPerspect::CTstPerspect (const bool _b_verbose) : m_verbose(_b_verbose) { _out().Clear(); }
 
 err_code CTstPerspect::Get (void) {
 
@@ -51,9 +52,9 @@ err_code CTstPerspect::Get (void) {
 
 	if (__failed((*this)().Get())) { _out() += (*this)().Error(); }
 	else {
-		const c_mat4x4& mat_proj = (*this)().Get();
+		const f_seq_4x4& mat_proj = (*this)().Ref();
 		_out() += _T("[impt] perspective matrix:");
-		_out() += c_mtx_4x4::To_str(mat_proj, false);
+		_out() += CMatrix::To_str(mat_proj);
 	}
 
 	return (*this)().Error();
@@ -66,9 +67,9 @@ err_code CTstPerspect::Set (const s_pers_args& _args) {
 
 	if (__failed((*this)().Set(_args))) { _out() += (*this)().Error(); }
 	else {
-		const c_mat4x4& mat_proj = (*this)().Get();
+		const f_seq_4x4& mat_proj = (*this)().Ref();
 		_out() += _T("[impt] perspective matrix:");
-		_out() += c_mtx_4x4::To_str(mat_proj, false);
+		_out() += CMatrix::To_str(mat_proj);
 	}
 
 	return (*this)().Error();

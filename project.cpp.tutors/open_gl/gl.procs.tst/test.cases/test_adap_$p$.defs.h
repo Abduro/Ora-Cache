@@ -5,6 +5,7 @@
 	This is OpenGL version 1.1 procedures' wrappers uint test case common declaration file;
 */
 #include "_log.h"
+#include "gl_context.h"
 
 namespace test { namespace open_gl {
 
@@ -19,6 +20,7 @@ namespace test { namespace open_gl {
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
 #pragma comment(lib, "gl.context_v15.lib")   // open_gl context wrapper lib;
 #pragma comment(lib, "gl.procs_v15.lib")     // open_gl procs loader lib;
+#pragma comment(lib, "gl.procs.leg_v15.lib") // open_gl legacy procs wrapper lib;
 #pragma comment(lib, "gl.shared_v15.lib")    // open_gl wrapper shared lib;
 
 #endif/*_TEST_ADAP_$P$_DEFS_H_INCLUDED*/

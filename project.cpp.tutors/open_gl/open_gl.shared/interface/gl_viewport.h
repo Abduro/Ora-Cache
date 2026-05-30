@@ -26,8 +26,8 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		CViewPort (const CViewPort&); CViewPort (CViewPort&&) = delete; ~CViewPort (void);
 
 		TError&   Error (void) const;
-
-//		t_size_u& Get (void)/* const*/; // returns the reference to 'unsigned' size structure, 'const' cannot be applied due to the compiler's error;
+//		const
+//		t_size_u& Get (void)/* const*/; // returns the reference to 'unsigned' size structure; (ro);
 		t_size    Get (void) const;     // returns the current size of the viewport area; the standard/winapi size structure has fields of signed data type and that looks like not so good;
 		err_code  Set (const uint32_t _u_width, const uint32_t _u_height); // sets the size of the viewport, left|top is assumed to be at '0|0';
 		err_code  Set (const t_rect&);  // it is expected the input rectangle is in the target window client area coordinate system;

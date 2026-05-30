@@ -5,7 +5,7 @@
 #include "test_adap_$m$.frustum.h"
 
 using namespace test::open_gl::frustum;
-
+#if (0)
 #pragma region cls::c_frustum{}
 
 void c_frustum::Get_perspect (void) {
@@ -27,17 +27,22 @@ void c_frustum::Set_defaults (void) {
 }
 
 #pragma endregion
+#endif
 #pragma region cls::c_project{}
 
 using CTstPerspect = test::open_gl::ver_1_1::CTstPerspect;
 
 void c_project::Get (void) {
 
+	TCtxToggle toggle;
+
 	CTstPerspect(true).Get();
 	_out()();
 }
 
 void c_project::Set (void) {
+
+	TCtxToggle toggle;
 
 	using namespace test::open_gl::ver_1_1;
 
@@ -53,7 +58,7 @@ using e_stk_modes = test::open_gl::ver_1_1::e_stk_modes;
 
 void c_stk_mode::Get (void) {
 
-	TToggle toggle;
+	TCtxToggle toggle;
 
 	CTstMatMode(true).Get();
 	_out()();
@@ -61,7 +66,7 @@ void c_stk_mode::Get (void) {
 
 void c_stk_mode::Set (void) {
 
-	TToggle toggle;
+	TCtxToggle toggle;
 
 	CTstMatMode mat_mode(true);
 

@@ -12,8 +12,10 @@
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg> <!--debug message trace output;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--window message and handle wrapper;-->
     <GL_Ctx Condition="'$(GL_Ctx)'==''">..\gl.context\</GL_Ctx>
+    <GL_Leg Condition="'$(GL_Leg)'==''">..\gl.procs.leg\</GL_Leg>
     <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl.procs\</GL_Procs> <!--regular context device and draw renderer creator;-->
     <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared> <!--regular context device and draw renderer creator;-->
+    <T3_Camera Condition="'$(T3_Camera)'==''">..\tutor.3.camera\</T3_Camera>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib> <!--this project of test cases;-->
   </PropertyGroup>
   <PropertyGroup>
@@ -22,18 +24,20 @@
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
     <_0>test.cases\</_0>
-    <_1>test.cases\shared\</_1><!--combining two or more paths separated by a semicolon is unacceptable, as the path to a specific source file will be incorrect!-->
+    <_1>test.cases\shared\</_1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Dbg)interface\</_3>
     <_3-0>$(Shared_Dbg)interface\__trace\</_3-0>
     <_4>$(Shared_Gui)interface\</_4>
     <_5>$(GL_Ctx)interface\</_5>
     <_6>$(GL_Procs)interface\</_6>
-    <_7>$(GL_Shared)interface\</_7>
+    <_7>$(GL_Leg)interface\</_7>
+    <_8>$(GL_Shared)interface\</_8>
+    <_9>$(T3_Camera)</_9>
     <_U>$(Unit_Root)interface\</_U>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_U);$(_0);$(_1);$(_2);$(_3);$(_3-0);$(_4);$(_5);$(_6);$(_7);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_U);$(_0);$(_1);$(_2);$(_3);$(_3-0);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

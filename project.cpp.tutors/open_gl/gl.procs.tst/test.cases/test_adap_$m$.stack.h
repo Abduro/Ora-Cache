@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 15-Mar-2026 at 09:28:16.577, UTC+4, Batumi, Sunday;
 	This is Ebo Pack OpenGL math lib matrix stack uint test adapter interface declaration file; 
 */
-#include "test_case_$d$.ctx.h"     // for using OpenGL API draw context must be created first;
+#include "test_adap_$p$.defs.h"     // for using OpenGL API draw context must be created first;
 #include "test_case_$m$.stack.h"
 
 namespace test { namespace open_gl { namespace math {
@@ -14,6 +14,7 @@ namespace test { namespace open_gl { namespace math {
 	   Thus, testing functionality of classes below is useless:
 	   cls::[CError]>>{code=0x0502;result=0x80070502;desc='#__e_state: Invalid state for getting the pointer';context=CBase::CParam::Get_ptr()}
 	*/
+#if (0)
 	__class (c_stk_current) {
 	public:
 		 c_stk_current (void);
@@ -32,7 +33,7 @@ namespace test { namespace open_gl { namespace math {
 		__method (Pop);
 		__method (Push);
 	};
-
+#endif
 }}}
 
 #endif/*_TEST_ADAP_$M$_STACK_H_INCLUDED*/

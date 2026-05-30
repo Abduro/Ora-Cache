@@ -9,6 +9,7 @@
  shared.gui_v15        : {00000C13-EEEE-BBBB-6667-00000000000C} << ebo_pack::ctl.base_v15 << ebo_pack::_uix.form;
  shared.clr_v15        : {00000C13-EEEE-BBBB-6667-000000000019} << ebo_pack::_uix.color;
  trace.con_v15         : {00000C13-EEEE-BBBB-6667-000000000020} << ebo_pack::console.ext_v15 << ebo_pack::_console;
+ ebo_test_$dat$.prov   : {00000C13-EEEE-BBBB-6667-000000060009}
 
  gl.shared_v15         : {00000C13-EEEE-BBBB-6667-0000000B0002}
 #pragma region [deprecated]
@@ -32,7 +33,7 @@
  [debug]               : {00000C13-EEEE-BBBB-6667-100000000020}
  [gui]                 : {00000C13-EEEE-BBBB-6667-100000000030}
  [data]                : {00000C13-EEEE-BBBB-6667-100000000040}
- [!test.cases]         : {00000C13-EEEE-BBBB-6667-100000000050}
+ [!test.cases]         : {00000C13-EEEE-BBBB-6667-100000000050} :: shared projects' test cases node;
  [core]                : {00000C13-EEEE-BBBB-6667-100000000051}
  [tutors]              : {00000C13-EEEE-BBBB-6667-200000000000}
  [DirecX]              : {00000C13-EEEE-BBBB-6667-200000100000}
@@ -54,5 +55,4 @@
  ebo_test_$d$          : {00000C13-EEEE-BBBB-6667-C00000060002}
 
  ebo_test_$win$.api    : {00000C13-EEEE-BBBB-6667-C00000060003}
- ebo_test_$dat$.prov   : {00000C13-EEEE-BBBB-6667-C00000060009}
  [!docs]               : {00000C13-EEEE-BBBB-6667-D00000000000}

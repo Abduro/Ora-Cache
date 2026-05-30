@@ -3,8 +3,8 @@
 	This is OpenGL virtual camera frustum wrapper interface implementation file for using in test cases' adapters;
 */
 #include "test_case_$m$.frustum.h"
-
-using namespace test::open_gl::frustum;
+#if (0)
+using namespace test::open_gl::frustum::ver_1_1;
 
 #pragma region cls::CTstAspect{}
 
@@ -98,3 +98,4 @@ CFrustum& CTstFrustum::operator ()(void) const { return this->m_frust; }
 CFrustum& CTstFrustum::operator ()(void)       { return this->m_frust; }
 
 #pragma endregion
+#endif

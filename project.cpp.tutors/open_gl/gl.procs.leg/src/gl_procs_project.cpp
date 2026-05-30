@@ -2,9 +2,9 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 20-May-2026 at 09:24:11.246, UTC+4, Batumi, Wednesday;
 	This is OpenGL v.1.1 projection related function set wrapper interface implementation file;
 */
-#include "gl_procs_proj.h"
+#include "gl_procs_project.h"
 
-using namespace ::open_gl::procs::ver_1_1::projection;
+using namespace ::open_gl::procs::projection::ver_1_1;
 
 #pragma region str::s_pers_args{}
 
@@ -28,7 +28,7 @@ CPerspect::CPerspect (void) : TBase() { TBase::m_error >>__CLASS__; }
 static _pc_sz p_err_inv_enum_el = _T("#__e_inv_arg: enum element (%04u) is not accepted");
 static _pc_sz p_err_proj_mode = _T("#__e_state: matrix stack is not in projection mode");
 const
-c_mat4x4& CPerspect::Get (void) const { return this->m_pers; }
+f_seq_4x4& CPerspect::Ref (void) const { return this->m_pers; }
 
 err_code  CPerspect::Get (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
@@ -72,17 +72,17 @@ err_code  CPerspect::Set (const s_pers_args& _args) {
 	return this->Set(_args._fov_y, _args._aspect, _args._near, _args._far);
 }
 const
-c_mat4x4& CPerspect::operator <<(const s_pers_args& _args) {
+f_seq_4x4& CPerspect::operator <<(const s_pers_args& _args) {
 	_args;
 	if (__succeeded(this->Set(_args)))
 		this->Get();
 
-	return this->m_pers;
+	return this->Ref();
 }
 
 const
-TMatMode& CPerspect::Mode (void) const { return this->m_mode; }
-TMatMode& CPerspect::Mode (void)       { return this->m_mode; }
+CMode& CPerspect::Mode (void) const { return this->m_mode; }
+CMode& CPerspect::Mode (void)       { return this->m_mode; }
 
 #pragma endregion
 #pragma region cls::CProject{}

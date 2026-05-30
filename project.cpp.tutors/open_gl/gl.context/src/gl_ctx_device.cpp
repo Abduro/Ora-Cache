@@ -306,3 +306,19 @@ err_code CSelector::Unset (void) {
 }
 
 #pragma endregion
+#pragma region cls::CCtxToggle{}
+/* unfortunately, the graphics validation is made several times: during making it current and deletion, and in Is_valid() itself;
+   perhaps it requires making review, but not this time, and not for caring optimization;
+*/
+namespace open_gl {
+
+CCtxToggle:: CCtxToggle (void) {}
+CCtxToggle::~CCtxToggle (void) {}
+
+const
+CFake_Ctx& CCtxToggle::operator ()(void) const { return this->m_fk_ctx; }
+CFake_Ctx& CCtxToggle::operator ()(void)       { return this->m_fk_ctx; }
+
+}
+
+#pragma endregion

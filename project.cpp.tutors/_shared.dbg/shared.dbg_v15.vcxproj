@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-00000000000A}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-000000000003}</ProjectGuid>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -64,19 +64,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.dbg.inc.props"/>
+    <Import Project="shared.dbg.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.dbg.inc.props"/>
+    <Import Project="shared.dbg.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.dbg.inc.props"/>
+    <Import Project="shared.dbg.inc.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="shared.dbg.inc.props"/>
+    <Import Project="shared.dbg.inc.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -187,20 +187,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h" />
-    <ClCompile Include="$(Shared)shared.std.afx.cpp" >
+    <ClCompile Include="$(Shared)shared.std.afx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup><!--buffers-->
+  <ItemGroup>
+    <!--buffers-->
     <ClInclude Include="$(_0-0)console.buffer.h" />
     <ClCompile Include="$(_1-0)console.buffer.cpp" />
     <ClInclude Include="$(_0-0)console.mode.h" />
     <ClCompile Include="$(_1-0)console.mode.cpp" />
   </ItemGroup>
-  <ItemGroup><!--content-->
+  <ItemGroup>
+    <!--content-->
     <ClInclude Include="$(_0-0)console.content.h" />
     <ClCompile Include="$(_1-0)console.content.cpp" />
     <ClInclude Include="$(_0-0)console.font.h" />
@@ -208,7 +210,8 @@
     <ClInclude Include="$(_0-0)console.format.h" />
     <ClCompile Include="$(_1-0)console.format.cpp" />
   </ItemGroup>
-  <ItemGroup><!--__root-->
+  <ItemGroup>
+    <!--__root-->
     <ClInclude Include="$(_0-0)console.defs.h" />
     <ClCompile Include="$(_1-0)console.defs.cpp" />
     <ClInclude Include="$(_0-0)console.out.h" />

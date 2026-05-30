@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C000000C0000}</UniqueIdentifier></Filter>
-    <Filter Include="_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C000000C0001}</UniqueIdentifier></Filter>
+    <Filter Include="shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060000}</UniqueIdentifier></Filter>
+    <Filter Include="_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060001}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_prec</Filter></ClInclude>
@@ -11,5 +11,7 @@
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$d$.ctx.h"><Filter>shared</Filter></ClInclude>
     <ClCompile Include="$(_1)test_case_$d$.ctx.cpp"><Filter>shared</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$d$.ctx.arb.h"><Filter>shared</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$d$.ctx.arb.cpp"><Filter>shared</Filter></ClCompile>
   </ItemGroup>
 </Project>

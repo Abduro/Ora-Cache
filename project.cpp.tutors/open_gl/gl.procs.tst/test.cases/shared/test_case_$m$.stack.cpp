@@ -3,7 +3,7 @@
 	This is Ebo Pack OpenGL math lib matrix stack wrapper uint test interface implementation file for using in test cases' adapters;
 */
 #include "test_case_$m$.stack.h"
-
+#if (0)
 using namespace test::open_gl::math;
 
 #pragma region cls::c_stk_target{}
@@ -96,3 +96,4 @@ t_mat_stack& c_mtx_stack::operator ()(void) const { return this->m_stack; }
 t_mat_stack& c_mtx_stack::operator ()(void)       { return this->m_stack; }
 
 #pragma endregion
+#endif

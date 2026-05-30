@@ -3,6 +3,14 @@
 	This is Ebo Pack OpenGL math matrix mode functions' loader interface implementation file;
 */
 #include "gl_procs_mtx.oper.h"
+
+namespace open_gl { namespace procs { namespace matrix {
+
+namespace ver_1_1 {}
+namespace arb {}
+
+}}}
+#if (0)
 #include "gl_procs.h"
 
 #include "shared.preproc.h"
@@ -88,3 +96,4 @@ err_code COpers::Translate (const float _x, const float _y, const float _z) {
 }
 
 #pragma endregion
+#endif

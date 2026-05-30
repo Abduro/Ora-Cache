@@ -10,7 +10,7 @@
 	These test cases are espacially intended for OpenGL vers 1.1;
 */
 namespace test { namespace open_gl { namespace frustum {
-
+#if (0)
 	__class (c_frustum) {
 	public:
 		c_frustum (void) = default; c_frustum (const c_frustum&) = delete; c_frustum (c_frustum&&) = delete; ~c_frustum (void) = default;
@@ -22,7 +22,7 @@ namespace test { namespace open_gl { namespace frustum {
 	private:
 		c_frustum& operator = (const c_frustum&) = delete; c_frustum& operator = (c_frustum&&) = delete;
 	};
-
+#endif
 	__class (c_project) {
 	public:
 		c_project (void) = default; c_project (const c_project&) = delete; c_project (c_project&&) = delete; ~c_project (void) = default;
