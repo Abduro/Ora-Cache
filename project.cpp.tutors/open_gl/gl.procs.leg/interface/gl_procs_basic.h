@@ -25,7 +25,7 @@ namespace open_gl { namespace procs {
 
 	typedef ::std::array<float  , 0x10u> f_seq_4x4; // for matrix 4x4 data sequence;
 	typedef ::std::array<float  , 0x03u> f_set_3;   // x|y|z;
-	typedef ::std::array<int32_t, 0x04u> i_set_4;   // for example to query viewport params: x, y of offset from top-left corner, followed by its width and height;
+	typedef ::std::array<int32_t, 0x04u> i_set_4;   // for example to query viewport params: x, y of Offset from top-left corner, followed by its width and height;
 
 	 struct t_size_u {
 		uint32_t cx, cy;
@@ -98,7 +98,7 @@ namespace ver_1_1 {
 		int32_t GetInt   (const uint32_t _u_param_id); // returns parameter value as integer ;
 
 		/* the query to the Google AI: if values array contains less elements as required by glGetFloatv how handle the error opengl?
-		   OpenGL will not catch or report this error. Because glGetFloatv accepts a raw C-style pointer (GLfloat *params), the OpenGL driver does not know the size of your allocated array.
+		   OpenGL will not catch or report this error. Because glGetFloatv accepts a raw C-style pointer (GLfloat *params), the OpenGL driver does not know the Size of your allocated array.
 		   It will blindly write the full number of required elements to your pointer, causing a buffer overflow (memory corruption) or an immediate segmentation fault / crash.
 		   (1) Ensure Proper Array Sizing (The Fix):
 		    (a) 1 element : Most simple state variables (e.g., GL_MAX_TEXTURE_SIZE); >> just plain float data value or ::std::array<float, 1u>;

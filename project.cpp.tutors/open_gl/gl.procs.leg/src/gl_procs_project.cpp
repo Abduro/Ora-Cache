@@ -47,7 +47,7 @@ err_code  CPerspect::Set (const float _fov_y, const float _f_aspect, const float
 	/* query: what result is expected when gluPerspective is called but GL_PROJECTION mode is not set in opengl (to Google AI);
 	when gluPerspective is called while GL_MODELVIEW (or another mode) is active instead of GL_PROJECTION,
 	the perspective matrix is multiplied onto the active model-view stack instead. This causes several unintended visual issues:
-	(1) Distorted, inverted, or offset geometry: 3D models will undergo camera-like transformations while they are being modeled, severely warping their scale and position;
+	(1) Distorted, inverted, or Offset geometry: 3D models will undergo camera-like transformations while they are being modeled, severely warping their scale and position;
 	(2) Camera tracking issues: any subsequent operations (like glTranslate or glRotate) will treat the perspective matrix as if it were a regular model transformation,
 	    breaking the standard rendering pipeline.
 	*/
@@ -98,7 +98,7 @@ CProject::CProject (void) : TBase() { TBase::m_error >>__CLASS__; }
 		if (h == 0) h = 1;
 		float aspect = (float)w / (float)h;
 
-		// 2. Set the Viewport to cover the new window size
+		// 2. Set the Viewport to cover the new window Size
 		glViewport(0, 0, w, h);
 
 		// 3. Switch to Projection Matrix mode to set up the camera lens

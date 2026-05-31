@@ -3,7 +3,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 19-Aug-2025 at 12:22:20.101, UTC+4, Batumi, Tuesday;
 	This is Ebo pack tutors projects shared include property page declaration file;
 	*important*
-	all relative paths to the referenced projects is made for consuming projects located under 'open_gl' folder, i.e. current one;
+	all relative paths to the referenced projects is made for consuming by projects located under 'open_gl' folder, i.e. current one;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">

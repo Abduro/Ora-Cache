@@ -7,6 +7,7 @@
     <Filter Include="extension"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A02}</UniqueIdentifier></Filter>
     <Filter Include="stack"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A03}</UniqueIdentifier></Filter>
     <Filter Include="projection"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A04}</UniqueIdentifier></Filter>
+    <Filter Include="viewport"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A05}</UniqueIdentifier></Filter>
 
   </ItemGroup>
   <ItemGroup><!--_root-->
@@ -38,5 +39,11 @@
     <ClCompile Include="$(_1)test_case_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
     <ClInclude Include="$(_0)test_adap_$m$.stack.h"><Filter>stack</Filter></ClInclude>
     <ClCompile Include="$(_0)test_adap_$m$.stack.cpp"><Filter>stack</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_1)test_case_$p$.viewport.h"><Filter>viewport</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$p$.viewport.cpp"><Filter>viewport</Filter></ClCompile>
+    <ClInclude Include="$(_0)test_adap_$p$.viewport.h"><Filter>viewport</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$p$.viewport.cpp"><Filter>viewport</Filter></ClCompile>
   </ItemGroup>
 </Project>
