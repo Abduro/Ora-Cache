@@ -22,13 +22,17 @@ CString s_pers_args::To_str (void) const {
 #pragma endregion
 #pragma region cls::CPerspect{}
 
-CPerspect::CPerspect (void) : TBase() { TBase::m_error >>__CLASS__; }
+CPerspect::CPerspect (void) : TBase(), m_pers{0.0f} {
+	TBase::m_error >>__CLASS__;
+}
 
 #define gl_project_mat GL_PROJECTION_MATRIX
 static _pc_sz p_err_inv_enum_el = _T("#__e_inv_arg: enum element (%04u) is not accepted");
 static _pc_sz p_err_proj_mode = _T("#__e_state: matrix stack is not in projection mode");
 const
-f_seq_4x4& CPerspect::Ref (void) const { return this->m_pers; }
+f_seq_4x4& CPerspect::Ref (void) const {
+	return this->m_pers;
+}
 
 err_code  CPerspect::Get (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
@@ -88,46 +92,5 @@ CMode& CPerspect::Mode (void)       { return this->m_mode; }
 #pragma region cls::CProject{}
 
 CProject::CProject (void) : TBase() { TBase::m_error >>__CLASS__; }
-
-/* query: gluperspective function in opengl how to use example c++ (to Google AI);
-	The gluPerspective function is used in OpenGL to create a perspective projection matrix,
-	which simulates how we see the world: objects farther away appear smaller than objects closer to the camera.
-	Usage example:
-	void handleResize(int w, int h) {
-		// 1. Prevent division by zero
-		if (h == 0) h = 1;
-		float aspect = (float)w / (float)h;
-
-		// 2. Set the Viewport to cover the new window Size
-		glViewport(0, 0, w, h);
-
-		// 3. Switch to Projection Matrix mode to set up the camera lens
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity(); // Reset any previous projections
-
-		// 4. Set up perspective (45 or 60 degree FOV, aspect ratio, near clip 0.1, far clip 100.0)
-		gluPerspective(45.0, aspect, 0.1, 100.0);
-
-		// 5. Switch back to Modelview Matrix for drawing objects
-		glMatrixMode(GL_MODELVIEW);
-	}
-	void display() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glLoadIdentity();
-
-		// Move the camera back 5 units so we can see the object
-		// (By default, the camera is at 0,0,0 looking down -Z)
-		glTranslatef(0.0f, 0.0f, -5.0f);
-
-		// Draw a simple triangle
-		glBegin(GL_TRIANGLES);
-			glVertex3f( 0.0f,  1.0f, 0.0f);
-			glVertex3f(-1.0f, -1.0f, 0.0f);
-			glVertex3f( 1.0f, -1.0f, 0.0f);
-		glEnd();
-
-		glutSwapBuffers();
-	}
-*/
 
 #pragma endregion

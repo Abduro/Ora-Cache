@@ -21,9 +21,11 @@ err_code CMode::Get (void) {
 	GL_INVALID_ENUM      : input argument has not acceptable value;
 	GL_INVALID_OPERATION : the call is made between a call to glBegin() and the corresponding call to glEnd();
 	*/
-	TBase::m_error <<__s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
 	this->m_current = e_modes::e_modelview; // sets default value; perhaps it is not required, but for making test case clear it looks necessary;
 	int32_t n_current = this->m_current;
+
 	::glGetIntegerv(GL_MATRIX_MODE, &n_current);
 	const
 	uint32_t u_err_code = CErr_ex().Get_code();
@@ -46,7 +48,7 @@ err_code CMode::Set (const e_modes _e_mode) {
 	GL_INVALID_ENUM      : '_e_mode' is not an accepted value;
 	GL_INVALID_OPERATION : glMatrixMode() is executed between the execution of glBegin() and the corresponding execution of glEnd();
 	*/
-	TBase::m_error <<__s_ok;
+	TBase::m_error <<__METHOD__<<__s_ok;
 
 	::glMatrixMode((uint32_t)_e_mode);
 	const

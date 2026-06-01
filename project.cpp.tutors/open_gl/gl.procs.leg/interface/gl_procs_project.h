@@ -39,7 +39,10 @@ namespace open_gl { namespace procs { namespace projection { namespace ver_1_1 {
 	private:
 		CPers_Cfg& operator = (const CPers_Cfg&) = delete; CPers_Cfg& operator = (CPers_Cfg&&) = delete;
 	};
-
+	/* https://community.khronos.org/t/how-to-choose-between-glortho-perspective-frustum/53659/4 << good snipped code of using frustum;
+	   gluPerspective is just an utility function that calls glFrustum;
+	   Under the hood, gluPerspective calculates the raw mathematical coordinates and passes them directly down to the core glFrustum function.
+	*/
 	class CPerspect : public CBasic { typedef CBasic TBase;
 	public:
 		CPerspect (void); CPerspect (const CPerspect&) = delete; CPerspect (CPerspect&&) = delete; ~CPerspect (void) = default;

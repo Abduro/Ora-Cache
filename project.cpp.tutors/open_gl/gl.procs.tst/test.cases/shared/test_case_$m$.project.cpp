@@ -17,7 +17,7 @@ err_code CTstMatMode::Get (void) {
 	if (__failed((*this)().Get())) { _out() += (*this)().Error(); }
 	else  {
 		const e_stk_modes n_current = this->m_mode.Current();
-		_out() += TString().Format(_T("[impt] current matrix stack mode: '%s';"), TMatMode::To_str(n_current));
+		_out() += TString().Format(_T("[impt] current matrix stack mode: '%s';"), CMatMode::To_str(n_current));
 	}
 
 	return (*this)().Error();
@@ -30,15 +30,38 @@ err_code CTstMatMode::Set (const e_stk_modes _e_mode) {
 
 	if (__failed((*this)().Set(_e_mode))) { _out() += (*this)().Error(); }
 	else {
-		_out() += TString().Format(_T("[impt] result matrix stack mode: '%s' is set;"), TMatMode::To_str(_e_mode));
+		_out() += TString().Format(_T("[impt] result matrix stack mode: '%s' is set;"), CMatMode::To_str(_e_mode));
 	}
 
 	return (*this)().Error();
 }
 
 const
-TMatMode& CTstMatMode::operator ()(void) const { return this->m_mode; }
-TMatMode& CTstMatMode::operator ()(void)       { return this->m_mode; }
+CMatMode& CTstMatMode::operator ()(void) const { return this->m_mode; }
+CMatMode& CTstMatMode::operator ()(void)       { return this->m_mode; }
+
+#pragma endregion
+#pragma region cls::CTstMatrix{}
+
+CTstMatrix::CTstMatrix (const bool _b_verbose) : m_verbose(_b_verbose) { _out().Clear(); }
+
+err_code CTstMatrix::Get (const e_mat_types _type) {
+	_type;
+	if (this->m_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("Querying matrix of type '%s':"), CMatrix::To_str(_type));
+
+	if (__failed((*this)().Get(_type))) { _out() += (*this)().Error(); }
+	else {
+		_out() += TString().Format(_T("[impt] result matrix is:\n%s"), (_pc_sz) CMatrix::To_str((*this)().Cached()));
+	}
+
+	return (*this)().Error();
+}
+
+const
+CMatrix& CTstMatrix::operator ()(void) const { return this->m_matrix; }
+CMatrix& CTstMatrix::operator ()(void)       { return this->m_matrix; }
 
 #pragma endregion
 #pragma region cls::CTstPerspect{}

@@ -8,7 +8,6 @@
 #include "gl_procs_viewport.h"
 
 namespace test { namespace open_gl { namespace procs {
-namespace ver_1_1 {
 
 	using CViewport = ::open_gl::procs::CViewport;
 	using i_set_4   = ::open_gl::procs::i_set_4;
@@ -23,6 +22,10 @@ namespace ver_1_1 {
 		err_code   Get_Params (void);
 		err_code   Is_valid   (void);
 		err_code   Set_Params (const i_set_4&);
+
+		bool Verbose (void) const;
+		void Verbose (const bool);
+
 		const
 		CViewport& operator ()(void) const;
 		CViewport& operator ()(void);
@@ -33,6 +36,6 @@ namespace ver_1_1 {
 		bool      m_verbose;
 	};
 }
-}}}
+}}
 
 #endif/*_TEST_CASE_$P$_VIEWPORT_H_INCLUDED*/

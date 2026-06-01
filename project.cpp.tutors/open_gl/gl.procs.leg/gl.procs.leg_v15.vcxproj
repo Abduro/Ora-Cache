@@ -213,14 +213,20 @@
     <ClCompile Include="$(_1)gl_procs_clear.cpp" />
     <ClInclude Include="$(_0)gl_procs_depth.h" />
     <ClCompile Include="$(_1)gl_procs_depth.cpp" />
+    <ClInclude Include="$(_0)gl_procs_frustum.h" />
+    <ClCompile Include="$(_1)gl_procs_frustum.cpp" />
     <ClInclude Include="$(_0)gl_procs_matrix.h" />
     <ClCompile Include="$(_1)gl_procs_matrix.cpp" />
     <ClInclude Include="$(_0)gl_procs_project.h" />
     <ClCompile Include="$(_1)gl_procs_project.cpp" />
     <ClInclude Include="$(_0)gl_procs_viewport.h" />
     <ClCompile Include="$(_1)gl_procs_viewport.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <Text Include="__read_me_arb.txt" />
+    <Text Include="__read_me_blinn-phong.txt" />
     <Text Include="__read_me_leg.txt" />
+    <Text Include="__read_me_ver_1_1.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

@@ -7,6 +7,8 @@
 
 using namespace test::open_gl;
 
+#define __use_it 0
+
 #if (1)
 /* without specifying the namespace of procedures' location the linker cannot find their definitions and throws the exception:
    ...error LNK2001: unresolved external symbol "void __cdecl ebo::boo::test::open_gl::draw::OnLoad(void),,,;
@@ -19,7 +21,7 @@ void OnLoad (void) {
 	const char* p_result = ::setlocale(LC_ALL, "en-US");
 	if (nullptr == p_result) { /*the error*/ }
 	else {/*is set*/}
-
+#if defined(__use_it) && (__use_it != 0)
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	CError error((_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
@@ -31,9 +33,12 @@ void OnLoad (void) {
 		_out() += cs_path;
 
 	_out()();
+#endif
 }
 
 void OnUnload (void) {
+
+#if defined(__use_it) && (__use_it != 0)
 	_out()(true); // it can be turned off by one of the test cases;
 	_out() += TString().Format(_T("cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
@@ -46,7 +51,9 @@ void OnUnload (void) {
 		_out() += cs_path;
 
 	_out()();
+#endif
 }
+
 }}
 
 #endif

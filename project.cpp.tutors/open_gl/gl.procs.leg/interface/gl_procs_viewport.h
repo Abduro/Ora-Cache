@@ -9,6 +9,7 @@
 /*taking into account that glViewport() function is supported in OpenGL from ver 1.1 to 4.6, there is no need to use it in ::ver_1_1 namespace only;
   https://registry.khronos.org/OpenGL-Refpages/gl4/html/glViewport.xhtml >> supported versions of OpenGL;
   https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport << sets view port Size and position; (that is used in these tutorials)
+  https://learn.microsoft.com/en-us/windows/win32/opengl/gldepthrange << mapping of z values from normalized device coordinates to window coordinates;
 */
 namespace open_gl { namespace procs {
 namespace viewport {

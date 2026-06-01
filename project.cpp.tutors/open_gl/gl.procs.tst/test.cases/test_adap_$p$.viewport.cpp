@@ -37,8 +37,11 @@ void c_viewport::Is_valid (void) {
 void c_viewport::Set_Params (void) {
 
 	TCtxToggle toggle;
+	CTstViewport viewport(true);
 
-	CTstViewport(true).Set_Params({0, 0, 640, 480});
+	viewport.Set_Params({0, 0, 640, 480}); viewport.Verbose(false);
+	_out() += _T("Query to viewport to confirm the result:"); viewport.Get_Params();
+
 	_out()();
 }
 

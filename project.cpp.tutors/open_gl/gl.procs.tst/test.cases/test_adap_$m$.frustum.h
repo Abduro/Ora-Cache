@@ -6,6 +6,7 @@
 */
 #include "test_case_$m$.frustum.h"
 #include "test_case_$m$.project.h"
+#include "test_case_$p$.viewport.h"
 /*
 	These test cases are espacially intended for OpenGL vers 1.1;
 */
@@ -28,7 +29,7 @@ namespace test { namespace open_gl { namespace frustum {
 		c_project (void) = default; c_project (const c_project&) = delete; c_project (c_project&&) = delete; ~c_project (void) = default;
 
 		__method (Get);  // gets the projection perspective matrix;
-		__method (Set);  // sets the projection perspective matrix;
+		__method (Set);  // sets the projection perspective matrix; important: matrix stack mode object is in CPerspect class, it must be used;
 
 	private:
 		c_project& operator = (const c_project&) = delete; c_project& operator = (c_project&&) = delete;

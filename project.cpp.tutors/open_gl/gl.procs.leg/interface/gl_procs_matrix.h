@@ -37,14 +37,20 @@ namespace ver_1_1 {
 	public:
 		CMatrix (void); CMatrix (const CMatrix&) = delete; CMatrix (CMatrix&&) = delete; ~CMatrix (void) = default;
 
+		const
+		f_seq_4x4& Cached (void) const;  // gets the reference to matrix data that is cached by getting matrix from the stack;
+
+		err_code Get (const e_mat_type); // gets current matrix from the matrix stack to internal matrix data cache;
 		err_code Get (const e_mat_type, f_seq_4x4&); // gets current matrix from the matrix stack;
 		err_code To_self (void);  // loads matrix identity to stack;
 
 		static f_seq_4x4& To_self (f_seq_4x4&); // sets input matrix to identity form, no calls to OpenGL API;
 		static CString To_str (const f_seq_4x4&, const bool _b_col_major = true);
+		static _pc_sz  To_str (const e_mat_type);
 
 	private:
 		CMatrix& operator = (const CMatrix&) = delete; CMatrix& operator = (CMatrix&&) = delete;
+		f_seq_4x4 m_cached;
 	};
 
 }}}

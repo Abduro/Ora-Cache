@@ -148,5 +148,6 @@ namespace open_gl { namespace context {
 }
 
 typedef ::open_gl::CCtxToggle TCtxToggle;
+#define TCtx_Toggle() TCtxToggle  toggle;
 
 #endif/*_GL_CTX_DEVICE_H_INCLUDED*/

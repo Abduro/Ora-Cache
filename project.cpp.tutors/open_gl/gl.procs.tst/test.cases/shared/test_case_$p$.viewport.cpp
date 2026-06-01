@@ -4,7 +4,7 @@
 */
 #include "test_case_$p$.viewport.h"
 
-using namespace ::test::open_gl::procs::ver_1_1;
+using namespace ::test::open_gl::procs;
 
 #pragma region cls::CTstViewport{}
 
@@ -53,6 +53,9 @@ err_code   CTstViewport::Set_Params (const i_set_4& _values) {
 
 	return (*this)().Error();
 }
+
+bool CTstViewport::Verbose (void) const { return this->m_verbose; }
+void CTstViewport::Verbose (const bool _yes_or_no) { this->m_verbose = _yes_or_no; }
 
 const
 CViewport& CTstViewport::operator ()(void) const { return this->m_viewport; }

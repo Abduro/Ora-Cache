@@ -12,7 +12,14 @@ namespace open_gl { namespace procs {
 
 #pragma region cls::CMatrix{}
 
-CMatrix::CMatrix (void) : TBase() { TBase::m_error >>__CLASS__; }
+CMatrix::CMatrix (void) : TBase(), m_cached{0.0f} { TBase::m_error >>__CLASS__; }
+
+const
+f_seq_4x4& CMatrix::Cached (void) const { return this->m_cached; }
+
+err_code CMatrix::Get (const e_mat_type _type) {
+	return this->Get(_type, this->m_cached);
+}
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glgetfloatv ;
 err_code CMatrix::Get (const e_mat_type _e_type, f_seq_4x4& _result) {
@@ -99,6 +106,20 @@ CString CMatrix::To_str (const f_seq_4x4& _mat_4x4, const bool _b_col_major) {
 	cs_out = TString().Format(_T("%s[%s%s%s]"), ::_prn_params._pfx_hf(), ::_prn_params._sfx(), (_pc_sz) cs_out, ::_prn_params._pfx());
 
 	return cs_out;
+}
+
+_pc_sz  CMatrix::To_str (const e_mat_type _type) {
+	_type;
+	static CString cs_out;
+	switch (_type) {
+	case e_mat_type::e_modelview: cs_out = _T("e_modelview"); break;
+	case e_mat_type::e_project  : cs_out = _T("e_project"); break;
+	case e_mat_type::e_texture  : cs_out = _T("e_texture"); break;
+	default:
+		cs_out = _T("#undef");
+	}
+
+	return (_pc_sz) cs_out;
 }
 
 #pragma endregion
