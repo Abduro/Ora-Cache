@@ -6,4 +6,15 @@
 
 using namespace test::open_gl;
 
-namespace test { namespace open_gl { namespace _impl_3 { void __warning_lnk_4006 (void) {}}}}
+namespace test { namespace open_gl {
+
+_pc_sz To_str (const t_rect& _rect) {
+	_rect;
+	static _pc_sz p_rect_pat = _T("[left=%04d;top=%04d;right=%04d;bottom=%04d]");
+	static  CString cs_out; cs_out.Format(p_rect_pat, _rect.left, _rect.top, _rect.right, _rect.bottom);
+	return (_pc_sz) cs_out;
+}
+
+namespace _impl_3 { void __warning_lnk_4006 (void) {}}
+
+}}

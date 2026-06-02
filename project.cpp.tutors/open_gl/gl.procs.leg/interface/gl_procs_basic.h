@@ -21,19 +21,45 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 
+namespace open_gl { namespace math { namespace defs {
+	/* query: what has Pi value in math (to Google AI);
+	   The value of Pi  is a mathematical constant defined as the ratio of a circle’s circumference to its diameter. It is approximately equal to 3.14159;
+	   Numerical Value:
+	   For everyday calculations, it is frequently rounded to 3.14; a more precise fraction, it is commonly estimated as 22/7: ~3.142857143;
+	   In C and C++, the float data type typically provides 6 to 9 significant decimal digits of precision.
+	   Most implementations guarantee that at least 6 digits can be stored and retrieved without information loss.
+	*/
+	// https://stackoverflow.com/questions/39834989/what-are-the-maximum-number-of-base-10-digits-in-the-fractional-part-of-a-floati ;
+
+	static const float  f_pi      =  3.142857143f;
+	static const float  deg_2_rad =  0.017460317f;  //   f_pi / 180.0f;
+	static const float  rad_2_deg = 57.27272727f;   // 180.0f / f_pi;
+	static const float  f_epsilon =  0.00001f;
+}
+	static bool  Is_negative (const float _value) { // this function does not care of -0 and +0;
+		_value;
+#if (1)
+		static char buffer[2] = {0};
+		::snprintf(buffer, sizeof(buffer), "%f", _value);
+#else
+		return false == (static_cast<int>(_value + 1) > 0);
+#endif
+		return buffer[0] == '-';
+	}
+}}
 namespace open_gl { namespace procs {
 
 	typedef ::std::array<float  , 0x10u> f_seq_4x4; // for matrix 4x4 data sequence;
 	typedef ::std::array<float  , 0x03u> f_set_3;   // x|y|z;
 	typedef ::std::array<int32_t, 0x04u> i_set_4;   // for example to query viewport params: x, y of Offset from top-left corner, followed by its width and height;
 
-	 struct t_size_u {
+	struct t_size_u {
 		uint32_t cx, cy;
 		t_size_u (void) : cx(0), cy(0){}
 		t_size_u (const uint32_t _cx,  const uint32_t _cy) : cx(_cx), cy(_cy) {}
 		t_size_u (const t_size_u& _src) : t_size_u() { *this = _src; }
 		t_size_u& operator = (const t_size_u& _src) { this->cx = _src.cx; this->cy = _src.cy; return *this; }
-	 };
+	};
 namespace ver_1_1 {
 
 	using namespace shared::defs;

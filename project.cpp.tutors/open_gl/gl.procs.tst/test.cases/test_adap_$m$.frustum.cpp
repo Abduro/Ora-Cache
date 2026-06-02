@@ -5,9 +5,10 @@
 #include "test_adap_$m$.frustum.h"
 
 using namespace test::open_gl::frustum;
-#if (0)
+
 #pragma region cls::c_frustum{}
 
+#if (0)
 void c_frustum::Get_perspect (void) {
 
 	CTstFrustum().Update();
@@ -25,9 +26,21 @@ void c_frustum::Set_defaults (void) {
 	CTstCfg(true).Set_defaults();
 	_out()();
 }
+#endif
+
+void c_frustum::Set (void) {
+
+	const t_rect rc_clip = {0, 0, 683, 683};
+	const f_planes planes(1.0f, 10.0f);
+
+	CTstFrustum frustum(true);
+	frustum.Set(rc_clip, planes);
+
+	_out()();
+}
 
 #pragma endregion
-#endif
+
 #pragma region cls::c_project{}
 
 using CTstPerspect = test::open_gl::ver_1_1::CTstPerspect;

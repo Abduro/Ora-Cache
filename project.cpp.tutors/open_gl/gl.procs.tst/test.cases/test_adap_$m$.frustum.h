@@ -8,22 +8,25 @@
 #include "test_case_$m$.project.h"
 #include "test_case_$p$.viewport.h"
 /*
-	These test cases are espacially intended for OpenGL vers 1.1;
+	These test cases are espacially intended for OpenGL vers 1.1, i.e. for testing matrix mode and matrix stack;
+	Frustum function is available in all versions of the OpenGL;
 */
 namespace test { namespace open_gl { namespace frustum {
-#if (0)
+
 	__class (c_frustum) {
 	public:
 		c_frustum (void) = default; c_frustum (const c_frustum&) = delete; c_frustum (c_frustum&&) = delete; ~c_frustum (void) = default;
 
+#if (0) // the below methods is not ready for testing yet;
 		__method (Get_perspect); // calculates perspective projection matrix; (this is manual calculation);
 		__method (Set_aspect);   // sets pre-defined surface window size;
 		__method (Set_defaults); // gets default configuration values;
-
+#endif
+		__method (Set);  // sets frustum matrix for specific clip area and planes;
 	private:
 		c_frustum& operator = (const c_frustum&) = delete; c_frustum& operator = (c_frustum&&) = delete;
 	};
-#endif
+
 	__class (c_project) {
 	public:
 		c_project (void) = default; c_project (const c_project&) = delete; c_project (c_project&&) = delete; ~c_project (void) = default;

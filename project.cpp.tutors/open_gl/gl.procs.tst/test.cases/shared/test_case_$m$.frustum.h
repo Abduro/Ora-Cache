@@ -5,6 +5,33 @@
 	This is OpenGL virtual camera frustum wrapper interface declaration file for using in test cases' adapters;
 */
 #include "test_adap_$p$.defs.h"
+#include "gl_procs_frustum.h"
+
+namespace test { namespace open_gl { namespace frustum {
+
+	using namespace shared::defs;
+	using CFrustum = ::open_gl::procs::projection::CFrustum;
+	using f_planes = ::open_gl::procs::projection::f_planes;
+
+	class CTstFrustum {
+	public:
+		 CTstFrustum (const bool _b_verbose = true); CTstFrustum (const CTstFrustum&) = delete; CTstFrustum (CTstFrustum&&) = delete;
+		~CTstFrustum (void) = default;
+
+		err_code  Set (const t_rect& _clip, const f_planes&);
+
+		const
+		CFrustum& operator ()(void) const;
+		CFrustum& operator ()(void) ;
+
+	private:
+		CTstFrustum& operator = (const CTstFrustum&) = delete; CTstFrustum& operator = (CTstFrustum&&) = delete;
+		CFrustum m_frustum;
+		bool     m_verbose;
+	};
+
+}}}
+
 #if (0)
 #include "camera.frustum.h"
 /*

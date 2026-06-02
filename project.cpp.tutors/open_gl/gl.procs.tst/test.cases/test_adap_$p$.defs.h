@@ -10,11 +10,16 @@
 namespace test { namespace open_gl {
 
 	using namespace ebo::boo::test;
+	using namespace shared::defs;
 
 	/**important*: the main rules of error trace:
 	(1) if a test case object throws the error, it should trace it itself;
 	(2) if an error occurs outside the object, it must be tracked by that object, otherwise the error trace may be duplicated;
 	*/
+	/* 'static' is not allowed, otherwise:
+	    error C2129: static function 'shared::types::_pc_sz test::open_gl::To_str(const shared::types::t_rect &)' declared but not defined
+	*/
+	/*static*/ _pc_sz To_str (const t_rect&);
 }}
 
 #pragma comment(lib, "ebo_test_$$$.lib")     // shared unit test library for common definition(s);
