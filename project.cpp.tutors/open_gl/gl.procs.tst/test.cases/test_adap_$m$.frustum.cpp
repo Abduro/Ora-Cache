@@ -30,12 +30,31 @@ void c_frustum::Set_defaults (void) {
 
 void c_frustum::Set (void) {
 
-	const t_rect rc_clip = {0, 0, 683, 683};
+	TCtx_Toggle();
+
+	using namespace ::open_gl::procs::projection;
+
+//	const t_rect rc_clip = {0, 42, 683, 683};
 	const f_planes planes(1.0f, 10.0f);
+	const f_rect f_clip(-0.577350378f, 0.577350378f, 0.577350378f, -0.577350378f);
 
+	// step#1: sets the matrix mode to 'projection';
+	CTstMatMode stk_mode(true);
+	if (__failed(stk_mode.Set(e_stk_modes::e_project))) { _out()(); return; }
+
+	// step #2 resets the matrix to identity;
+	CTstMatrix matrix(true);
+	if (__failed(matrix.To_self())) { _out()(); return; }
+
+	// step #3 defines the frustum volume;
 	CTstFrustum frustum(true);
-	frustum.Set(rc_clip, planes);
-
+	if (__failed(frustum.Set(f_clip, planes))) {/*keeps going*/}
+	else {
+	// step #4: if setting frustum succeeded queries the changed matrix back;
+		matrix.Get(e_mat_type::e_project);
+	}
+	// step #5: restores 'modelview' mode to draw objects;
+	stk_mode.Set(e_stk_modes::e_modelview);
 	_out()();
 }
 

@@ -47,12 +47,7 @@ _pc_sz f_rect::To_str (const f_rect& _rect) {
 }
 
 f_rect& f_rect::operator = (const f_rect& _src) { this->Set(_src);  return *this; }
-bool    f_rect::operator <<(const t_rect& _src) {
-	if (::IsRectEmpty(&_src))
-		return false;
-	this->Set(_src);
-	return true;
-}
+bool    f_rect::operator <<(const t_rect& _src) { if (::IsRectEmpty(&_src)) return false; this->Set(_src); return true; }
 
 #pragma endregion
 #pragma region str::d_rect{}
@@ -155,12 +150,37 @@ d_planes& d_planes::operator >>(f_planes& _target) const {
 CFrustum:: CFrustum (void) : TBase() { TBase::m_error >>__CLASS__; }
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glfrustum ;
-err_code CFrustum::Set (const t_rect& _clip, const f_planes& _planes) {
+err_code CFrustum::Set (const f_rect& _clip, const f_planes& _planes) {
 	_clip; _planes;
 	/* possible error codes:
 	GL_INVALID_ENUM      : zNear or zFar was not postitive;
 	GL_INVALID_OPERATION : 
 	*/
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (_clip.Is_empty())
+		return TBase::m_error << __e_rect = _T("#__e_inv_arg: clipping rectangle is empty");
+	if (__failed(f_planes::Is_valid(_planes, TBase::m_error))) // ignores 'nothing to draw' case, it's necessary to review such case;
+		return TBase::Error();
+
+//	const f_rect f_clip(_clip);
+	const d_rect d_clip(_clip);
+
+	::glFrustum(d_clip.d_left, d_clip.d_right, d_clip.d_bottom, d_clip.d_top, _planes.f_near, _planes.f_far);
+	const
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code) {
+	case GL_INVALID_ENUM : (TBase::m_error = u_err_code) = p_err_neg_value; break;
+	case GL_INVALID_OPERATION : { (TBase::m_error = u_err_code) = p_err_inv_oper; } break;
+	default:
+		if (!!u_err_code)
+			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
+	}
+	return TBase::Error();
+}
+
+err_code CFrustum::Set (const t_rect& _clip, const f_planes& _planes) {
+	_clip; _planes;
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	if (::IsRectEmpty(&_clip))
@@ -169,19 +189,8 @@ err_code CFrustum::Set (const t_rect& _clip, const f_planes& _planes) {
 		return TBase::Error();
 
 	const f_rect f_clip(_clip);
-	const d_rect d_clip(f_clip);
 
-	::glFrustum(d_clip.d_left, d_clip.d_right, d_clip.d_bottom, d_clip.d_top, _planes.f_near, _planes.f_far);
-	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ) {
-	case GL_INVALID_ENUM : TBase::m_error <<__e_inv_arg = p_err_neg_value; break;
-	case GL_INVALID_OPERATION : { TBase::m_error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
-	default:
-		if (!!u_err_code)
-			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
-	}
-	return TBase::Error();
+	return this->Set(f_clip, _planes);
 }
 
 #pragma endregion

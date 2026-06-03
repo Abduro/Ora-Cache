@@ -43,6 +43,8 @@ namespace test { namespace open_gl { namespace ver_1_1 {
 		CTstMatrix (const bool _b_verbose); CTstMatrix (const CTstMatrix&) = delete; CTstMatrix (CTstMatrix&&) = delete; ~CTstMatrix (void) = default;
 
 		err_code Get (const e_mat_types);  // gets a matrix that is currently set in selected matrix stack;
+		err_code To_self (void);           // sets identity mode to the top matrix of current matrix stack;
+
 		const
 		CMatrix& operator ()(void) const;
 		CMatrix& operator ()(void) ;

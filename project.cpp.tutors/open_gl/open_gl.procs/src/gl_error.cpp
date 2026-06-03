@@ -22,7 +22,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl_1 { void 
 			CBase::m_error.Class(cs_cls, false);
 		}
 		/* excerpt from https://wikis.khronos.org/opengl/OpenGL_Error :
-			call to glGetError without having a context made current may crash or return any value, including indefinitely returning a valid OpenGL error code...
+		   call to glGetError without having a context made current may crash or return any value, including indefinitely returning a valid OpenGL error code...
 		*/
 		uint32_t Get_code (void) {
 			CBase::m_error <<__METHOD__<<__s_ok;
@@ -80,10 +80,10 @@ CError_ex::~CError_ex (void) {}
 #define err_dev_reset  DXGI_ERROR_DEVICE_RESET
 #define err_acc_denied DXGI_ERROR_ACCESS_DENIED
 
-uint32_t  CError_ex::Get_code (void) const {
+dword  CError_ex::Get_code (void) const {
 	CError& base_ref = const_cast<CError&>((*this)()); base_ref <<__METHOD__<<__s_ok;
 	
-	this->m_err_code = ::glGetError();
+	this->m_err_code = static_cast<dword>(::glGetError());
 	if (this->m_err_code)
 		base_ref << __e_fail = TString().Format(_T("#error code=%u"), this->m_err_code);
 //		this->Get_last(true); // ToDo: not good approach because there is no any relation between system error codes and opengl errors;

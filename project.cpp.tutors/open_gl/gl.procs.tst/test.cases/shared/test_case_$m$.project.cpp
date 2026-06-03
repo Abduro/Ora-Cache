@@ -59,6 +59,18 @@ err_code CTstMatrix::Get (const e_mat_types _type) {
 	return (*this)().Error();
 }
 
+err_code CTstMatrix::To_self (void) {
+	if (this->m_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed((*this)().To_self())) { _out() += (*this)().Error(); }
+	else {
+		_out() += _T("[impt] an identity matrix is set;");
+	}
+
+	return (*this)().Error();
+}
+
 const
 CMatrix& CTstMatrix::operator ()(void) const { return this->m_matrix; }
 CMatrix& CTstMatrix::operator ()(void)       { return this->m_matrix; }

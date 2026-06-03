@@ -38,7 +38,13 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		 CError_ex (void);
 		~CError_ex (void);
 
-		uint32_t Get_code (void) const; // *important*: this must be used for getting the last error code that is returned by OpenGL;
+		/* the query to Google AI: sizeof unsigned long and sizeof unsigned int windows x64 ;
+		   https://www.reddit.com/r/cpp_questions/comments/1l7arw1/sizeofint_on_64bit_build/ <<  good answer by EpochVanquisher ;
+		   https://en.wikipedia.org/wiki/64-bit_computing ;
+		   thus, the data type of the returned error code must be the same as Windows API uses: DWORD, not uint32_t or GLenum;
+		*/
+
+		dword Get_code (void) const; // *important*: this must be used for getting the last error code that is returned by OpenGL;
 
 		// in the most cases the DirectX error code is used for compliance with operating system error codes: winerror.h ln.55898;
 		// input arg is for keeping original error description i.e. that is defined by OpenGL, but the error may have WinAPI system error desc too;
@@ -55,7 +61,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 
 	private:
 		mutable
-		uint32_t m_err_code; // this is native error code that is provided by OpenGL; two-byte number (i.e. unsigned short) is enough, but for some special cases 4-bytes can be better;
+		dword m_err_code; // this is native error code that is provided by OpenGL; two-byte number (i.e. unsigned short) is enough, but for some special cases 4-bytes can be better;
 	};
 }}}
 

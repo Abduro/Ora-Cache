@@ -103,7 +103,7 @@ CString CMatrix::To_str (const f_seq_4x4& _mat_4x4, const bool _b_col_major) {
 		}
 		cs_out += TString().Format(_T("%s%s%s"), ::_prn_params._pfx(), (_pc_sz) cs_row, ::_prn_params._sfx());
 	}
-	cs_out = TString().Format(_T("%s[%s%s%s]"), ::_prn_params._pfx_hf(), ::_prn_params._sfx(), (_pc_sz) cs_out, ::_prn_params._pfx());
+	cs_out = TString().Format(_T("%s[%s%s%s]"), ::_prn_params._pfx_hf(), ::_prn_params._sfx(), (_pc_sz) cs_out, ::_prn_params._pfx_hf());
 
 	return cs_out;
 }

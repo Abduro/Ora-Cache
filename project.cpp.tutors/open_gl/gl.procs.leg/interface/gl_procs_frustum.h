@@ -10,6 +10,12 @@ namespace open_gl { namespace procs { namespace projection {
 	using namespace open_gl::procs::ver_1_1;
 	using namespace shared::defs;
 
+	using namespace ::open_gl::math::defs;
+	/* the excerpt from
+	   The (left, bottom, zNear) and (right, top, zNear) parameters specify the points on the near clipping plane that are mapped to the lower-left and upper-right corners of the window,
+	   respectively, assuming that the eye is located at (0,0,0).
+	   that latter means the eye/camera resides at the centre of viewport space (f_rect);
+	*/
 	struct f_rect {
 		float  f_left, f_top, f_right, f_bottom;
 
@@ -22,7 +28,7 @@ namespace open_gl { namespace procs { namespace projection {
 		void   Set (const t_rect&);  // the given input rectangle is checked for emptimess, and warning is traced if necessary;
 		void   Set (const float _left, const float _top, const float _right, const float _bottom);
 
-		bool   Is_empty (const float _threshold = ::open_gl::math::defs::f_epsilon) const;
+		bool   Is_empty (const float _threshold = f_epsilon) const;
 
 		static
 		_pc_sz To_str (const f_rect&);
@@ -100,7 +106,8 @@ namespace open_gl { namespace procs { namespace projection {
 	public:
 		CFrustum (void); CFrustum (const CFrustum&) = delete; CFrustum (CFrustum&&) = delete; ~CFrustum (void) = default;
 
-		err_code Set (const t_rect& _clip, const f_planes&);
+		err_code Set (const f_rect& _clip, const f_planes&); // the sides values of d_rect must be in acceptable range [-1.0 ... 1.0];
+		err_code Set (const t_rect& _clip, const f_planes&); // clip rectangle requires a conversion to normalized device space [-1.0 ... 1.0];
 
 	private:
 		CFrustum& operator = (const CFrustum&) = delete; CFrustum& operator = (CFrustum&&) = delete;

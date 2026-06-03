@@ -12,13 +12,15 @@ namespace test { namespace open_gl { namespace frustum {
 	using namespace shared::defs;
 	using CFrustum = ::open_gl::procs::projection::CFrustum;
 	using f_planes = ::open_gl::procs::projection::f_planes;
+	using f_rect   = ::open_gl::procs::projection::f_rect;
 
 	class CTstFrustum {
 	public:
 		 CTstFrustum (const bool _b_verbose = true); CTstFrustum (const CTstFrustum&) = delete; CTstFrustum (CTstFrustum&&) = delete;
 		~CTstFrustum (void) = default;
 
-		err_code  Set (const t_rect& _clip, const f_planes&);
+		err_code  Set (const f_rect& _clip, const f_planes&); // f_rect contains boundary values that are normalized to the range [-1.0 ... 1.0]; 
+		err_code  Set (const t_rect& _clip, const f_planes&); // t_rect must be converted to f_rect with taking into account aspects and fov_y; (not implemented yet)
 
 		const
 		CFrustum& operator ()(void) const;

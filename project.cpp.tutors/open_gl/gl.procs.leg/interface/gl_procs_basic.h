@@ -36,6 +36,8 @@ namespace open_gl { namespace math { namespace defs {
 	static const float  rad_2_deg = 57.27272727f;   // 180.0f / f_pi;
 	static const float  f_epsilon =  0.00001f;
 }
+	// https://stackoverflow.com/questions/46189910/weird-method-to-check-if-a-float-number-is-negative ;
+
 	static bool  Is_negative (const float _value) { // this function does not care of -0 and +0;
 		_value;
 #if (1)
@@ -69,7 +71,8 @@ namespace ver_1_1 {
 	using CErr_ex = CError_ex;
 	using TErr_ex = const CErr_ex;
 
-	static _pc_sz p_err_inv_oper = _T("#__e_inv_oper: called between glBegin() and glEnd()");
+//	static _pc_sz p_err_inv_oper = _T("#__e_inv_oper: called between glBegin() and glEnd()"); // this is the silly error message that appears in case when no current context is set;
+	static _pc_sz p_err_inv_oper = _T("#__e_inv_oper: current rendering context is not set"); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
 	static _pc_sz p_err_unk_code = _T("#__e_undef: error code 0x%04x (%d)");
 	static _pc_sz p_err_inv_enum = _T("#__e_inv_enum: '_prop_id' 0x%04x (%d) is not accepted");
 
