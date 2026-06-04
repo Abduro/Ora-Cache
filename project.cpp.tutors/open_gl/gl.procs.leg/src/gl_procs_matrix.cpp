@@ -6,10 +6,41 @@
 
 using namespace ::open_gl::procs;
 using namespace ::open_gl::procs::ver_1_1;
+using namespace ::open_gl::procs::matrix::ver_1_1;
 
 namespace open_gl { namespace procs {
 }}
 
+#pragma region cls::CType{}
+
+e_mat_type CType::Uint_to_enum (const uint32_t _value, CError& _error) {
+	_value; _error;
+	e_mat_type e_type = e_mat_type::e_modelview; // this is the default value as stated in documentation;
+	_error <<__s_ok;
+
+	switch (_value) {
+	case e_mat_type::e_modelview: case e_mat_type::e_project: case e_mat_type::e_texture: e_type = static_cast<e_mat_type>(_value); break;
+	default:
+		_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_value' 0x%x ('%s') is not valid type"), _value, CType::To_str(_value));
+	}
+	return e_type;
+}
+
+_pc_sz  CType::To_str (const uint32_t _type) {
+	_type;
+	static CString cs_out;
+	switch (_type) {
+	case e_mat_type::e_modelview: cs_out = _T("e_modelview"); break;
+	case e_mat_type::e_project  : cs_out = _T("e_project"); break;
+	case e_mat_type::e_texture  : cs_out = _T("e_texture"); break;
+	default:
+		cs_out = _T("#undef");
+	}
+
+	return (_pc_sz) cs_out;
+}
+
+#pragma endregion
 #pragma region cls::CMatrix{}
 
 CMatrix::CMatrix (void) : TBase(), m_cached{0.0f} { TBase::m_error >>__CLASS__; }
@@ -106,20 +137,6 @@ CString CMatrix::To_str (const f_seq_4x4& _mat_4x4, const bool _b_col_major) {
 	cs_out = TString().Format(_T("%s[%s%s%s]"), ::_prn_params._pfx_hf(), ::_prn_params._sfx(), (_pc_sz) cs_out, ::_prn_params._pfx_hf());
 
 	return cs_out;
-}
-
-_pc_sz  CMatrix::To_str (const e_mat_type _type) {
-	_type;
-	static CString cs_out;
-	switch (_type) {
-	case e_mat_type::e_modelview: cs_out = _T("e_modelview"); break;
-	case e_mat_type::e_project  : cs_out = _T("e_project"); break;
-	case e_mat_type::e_texture  : cs_out = _T("e_texture"); break;
-	default:
-		cs_out = _T("#undef");
-	}
-
-	return (_pc_sz) cs_out;
 }
 
 #pragma endregion

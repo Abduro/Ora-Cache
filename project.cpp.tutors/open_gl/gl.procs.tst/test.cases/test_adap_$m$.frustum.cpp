@@ -140,7 +140,7 @@ void c_project::Set (void) {
 	s_pers_args args(60.0f, float(v_p_w)/float(v_p_h), 1.0f,  10.0f); // the input arg values are taken the same as in example made by Song Ho Ahn (song.ahn@gmail.com)
 
 	if (__failed(perspect.Set(args))) {}
-	else if (__failed(matrix.Get(e_mat_types::e_project))) {}
+	else if (__failed(matrix.Get(e_mat_type::e_project))) {}
 	// step#4: returns back the modelview mode;
 	if (__failed(perspect().Mode().Set(e_stk_modes::e_modelview))){}
 	_out()();

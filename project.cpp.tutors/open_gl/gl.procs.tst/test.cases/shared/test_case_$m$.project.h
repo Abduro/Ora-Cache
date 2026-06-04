@@ -13,11 +13,11 @@
 namespace test { namespace open_gl { namespace ver_1_1 {
 
 	using namespace ::open_gl::procs::projection::ver_1_1;
-	using CMatMode    = ::open_gl::procs::matrix::ver_1_1::CMode;
-	using CMatrix     = ::open_gl::procs::matrix::ver_1_1::CMatrix;
-	using e_mat_types = ::open_gl::procs::matrix::ver_1_1::e_mat_type;
+	using namespace ::open_gl::procs::matrix::ver_1_1;
+
 	using e_stk_modes = ::open_gl::procs::matrix::ver_1_1::e_modes;
 	using f_seq_4x4   = ::open_gl::procs::f_seq_4x4;
+	using e_mat_type  = ::open_gl::procs::matrix::ver_1_1::CType::e_mat_type;
 
 	static s_pers_args g_pers_arg(60.0f, 1.0f, 1.0f, 10.0f);
 
@@ -29,21 +29,21 @@ namespace test { namespace open_gl { namespace ver_1_1 {
 		err_code Set (const e_stk_modes); // sets the input matrix stack mode;
 
 		const
-		CMatMode& operator ()(void) const;
-		CMatMode& operator ()(void) ;
+		CMode& operator ()(void) const;
+		CMode& operator ()(void) ;
 
 	private:
 		CTstMatMode& operator = (const CTstMatMode&) = delete; CTstMatMode& operator = (CTstMatMode&&) = delete;
-		CMatMode m_mode;
-		bool     m_verbose;
+		CMode  m_mode;
+		bool   m_verbose;
 	};
 
 	class CTstMatrix {
 	public:
 		CTstMatrix (const bool _b_verbose); CTstMatrix (const CTstMatrix&) = delete; CTstMatrix (CTstMatrix&&) = delete; ~CTstMatrix (void) = default;
 
-		err_code Get (const e_mat_types);  // gets a matrix that is currently set in selected matrix stack;
-		err_code To_self (void);           // sets identity mode to the top matrix of current matrix stack;
+		err_code Get (const e_mat_type);  // gets a matrix that is currently set in selected matrix stack;
+		err_code To_self (void);          // sets identity mode to the top matrix of current matrix stack;
 
 		const
 		CMatrix& operator ()(void) const;

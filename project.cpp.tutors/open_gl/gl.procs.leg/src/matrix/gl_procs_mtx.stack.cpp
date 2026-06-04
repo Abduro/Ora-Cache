@@ -15,9 +15,9 @@ err_code CStack::Get (const e_mat_type _type, f_seq_4x4& _mat_4x4) {
 	_type; _mat_4x4;
 	TBase::m_error << __METHOD__ << __s_ok;
 
-	if (e_mat_type::e_undef == _type)
-		return TBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_type' '%s' is not valid"), CStack::To_str(_type));
-
+	if (__failed(CType::Uint_to_enum(_type, TBase::m_error)))
+		return TBase::Error();
+	
 	CParam param;
 	if (__failed(param.Get_ptr(_type, _mat_4x4.data())))
 		TBase::m_error = param.Error();

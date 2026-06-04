@@ -5,18 +5,10 @@
 	This is Ebo Pack OpenGL math matrix mode functions' loader interface declaration file;
 */
 #include "gl_procs_basic.h"
+#include "gl_procs_matrix.h"
 
 namespace open_gl { namespace procs { namespace matrix {
 namespace ver_1_1 { using namespace ::open_gl::procs::ver_1_1;
-
-	enum e_mat_type : uint32_t {
-	/* alias    | value    | OpenGL symbolic defs(gl.h)| brief description ;
-	------------+----------+---------------------------+-------------------*/
-	e_undef     = 0x0,
-	e_modelview = 0x0BA6,  // GL_MODELVIEW_MATRIX      | the modelview matrix on the top of the modelview matrix stack; initially is set to identity;
-	e_project   = 0x0BA7,  // GL_PROJECTION_MATRIX     | the projection matrix on the top of the projection matrix stack; initially is set to identity;
-	e_texture   = 0x0BA8,  // GL_TEXTURE_MATRIX        | the texture matrix on the top of the texture matrix stack; initially is set to identity;
-	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glpopmatrix ;
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glpushmatrix ;
