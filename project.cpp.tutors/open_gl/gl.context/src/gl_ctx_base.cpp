@@ -150,6 +150,9 @@ CBase::~CBase (void) { this->Destroy(); }
 err_code CBase::Destroy (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
+	CString cs_dev(_T("#null_ptr"));
+	CString cs_rnd(_T("#null_ptr"));
+
 	// (1) destroys the renderer handle first;
 	if (nullptr != this->m_drw_ctx) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
@@ -157,18 +160,21 @@ err_code CBase::Destroy (void) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		}
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wgldeletecontext ;
+		cs_rnd = TString()._addr_of(this->m_drw_ctx);
 		if (0 == ::wglDeleteContext(this->m_drw_ctx)) {
 			__trace_err_3(_T("%s\n"), (_pc_sz) (this->m_error(CError::e_cmds::e_get_last)).Print(TError::e_req));
 		}
-		else
+		else {
+			cs_dev = TString()._addr_of(this->Surface().Get());
 			this->m_drw_ctx = nullptr;
+		}
 	}
 	// (2) destroys device context handle; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc ;
 	if (__failed(this->Surface().Free()))
 		this->m_error  = this->Surface().Error();
 
 	if (false == this->Error()) {
-		__trace_info_2(_T("Unbinding renderer ctx and releasing GDI ctx succeeded;\n"));
+		__trace_warn_2(_T("Unbinding renderer ctx (%s) and releasing GDI ctx (%s) succeeded;\n"), (_pc_sz) cs_rnd, (_pc_sz) cs_dev);
 	}
 
 	return this->Error();

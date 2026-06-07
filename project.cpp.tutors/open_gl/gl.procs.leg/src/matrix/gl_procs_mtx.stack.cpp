@@ -6,24 +6,17 @@
 
 namespace open_gl { namespace procs { namespace matrix {
 namespace ver_1_1 {
-
+#pragma region cls::CStack{}
 CStack::CStack (void) : TBase() {
 	TBase::m_error.Class(TString().Format(_T("%s::%s"), TBase::m_error.Class(), (_pc_sz)__CLASS__), false);
 }
 
-err_code CStack::Get (const e_mat_type _type, f_seq_4x4& _mat_4x4) {
-	_type; _mat_4x4;
-	TBase::m_error << __METHOD__ << __s_ok;
-
-	if (__failed(CType::Uint_to_enum(_type, TBase::m_error)))
-		return TBase::Error();
-	
-	CParam param;
-	if (__failed(param.Get_ptr(_type, _mat_4x4.data())))
-		TBase::m_error = param.Error();
-
-	return TBase::Error();
-}
+const
+CMatrix& CStack::Matrix (void) const { return this->m_matrix; }
+CMatrix& CStack::Matrix (void)       { return this->m_matrix; }
+const
+CMode&   CStack::Mode (void) const { return this->m_mode; }
+CMode&   CStack::Mode (void)       { return this->m_mode; }
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glpopmatrix ;
 err_code CStack::Pop (void) {
@@ -35,17 +28,23 @@ err_code CStack::Pop (void) {
 
 	::glPopMatrix();
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_OPERATION : (TBase::m_error = (dword)u_err_code) = p_err_inv_oper; break;
-	case GL_STACK_UNDERFLOW : (TBase::m_error = (dword)u_err_code) = _T("#__e_underflow: the matrix stack is empty"); break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code){
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
+	case GL_STACK_UNDERFLOW   : (TBase::m_error = u_err_code) = _T("#__e_underflow: the matrix stack is empty"); break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
 	}
+	// gets the matrix being popped up;
+	if (false == TBase::Error()) {
+		if (__failed(this->Matrix().Get(CEnum(this->Mode()))))
+			TBase::m_error = this->Matrix().Error();
+	}
 
 	return TBase::Error();
 }
+
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glpushmatrix ;
 err_code CStack::Push (void) {
 	/* Possible error codes:
@@ -56,16 +55,27 @@ err_code CStack::Push (void) {
 
 	::glPushMatrix();
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_OPERATION : TBase::m_error << __e_not_expect = p_err_inv_oper; break;
-	case GL_STACK_OVERFLOW : TBase::m_error << __e_not_expect = _T("#__e_overflow: the matrix stack is full"); break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code){
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
+	case GL_STACK_OVERFLOW    : (TBase::m_error = u_err_code) = _T("#__e_overflow: the matrix stack is full"); break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
 	}
+	if (false == TBase::Error()) {
+		if (__failed(this->Matrix().Set())) {
+			TBase::m_error = this->Matrix().Error();
+		}
+	}
 
 	return TBase::Error();
+}
+
+err_code CStack::Push (const f_mat_4x4& _matrix) {
+	_matrix;
+	if (__failed(this->Matrix() << _matrix)) return TBase::m_error = this->Matrix().Error(); // failure to set the matrix that will be pushed;
+	return this->Push ();
 }
 
 }
@@ -73,6 +83,7 @@ namespace arb {}
 
 }}}
 
+#pragma endregion
 #if (0)
 #include "gl_procs.h"
 

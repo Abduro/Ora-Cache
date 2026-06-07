@@ -3,47 +3,34 @@
 	This is Ebo Pack OpenGL math lib matrix stack uint test adapter interface implementation file; 
 */
 #include "test_adap_$m$.stack.h"
-#if (0)
-using namespace test::open_gl::math;
 
-#pragma region cls::c_stk_current{}
+using namespace test::open_gl::ver_1_1;
 
-c_stk_current::c_stk_current (void) {}
+#pragma region cls::c_stk_mode{}
 
-void c_stk_current::Get (void) { c_stk_target().Get(); _out()();  }
-void c_stk_current::Set (void) { c_stk_target().Set(e_mat_type::e_undef); _out()(); }
+void c_stk_mode::Get (void) {
+	CTstMode().Get(); _out()(); 
+}
+void c_stk_mode::Set (void) {
+
+	CTstMode mode(true);
+	mode.Set(e_stk_mode::e_project);
+	_out()();
+}
 
 #pragma endregion
 #pragma region cls::c_mat_stack{}
 
-c_mat_stack::c_mat_stack (void) {}
-
 void c_mat_stack::Get (void) {
-	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
-
-	c_mtx_4x4 mat_4; mat_4().Cell(0,1) = 0.1f;
-	c_mtx_stack stack;
-
-	_out() += TString().Format(_T("The metrix *before* pushing to stack:\n%s"), (_pc_sz)c_mtx_4x4::To_str(mat_4(), false));
-
-	if (__failed(stack.Push(mat_4(), c_stk_target()().Get()))) { _out()(); return; }
-	if (__failed(stack.Get(e_mat_type::e_modelview, mat_4()))) { _out()(); return; }
-
-	_out() += TString().Format(_T("The metrix *after* pushing to stack:\n%s"), (_pc_sz)c_mtx_4x4::To_str(mat_4(), false));
-
 	_out()();
 }
 
 void c_mat_stack::Pop (void) {
-	c_mtx_stack().Pop(); _out()();
+	_out()();
 }
 
 void c_mat_stack::Push (void) {
-
-	c_mtx_stack stack;
-
-	if (__failed(stack.Push(t_mat4x4(), /*e_mat_type::e_undef*/ c_stk_target()().Get()))) {} else stack.Pop(); _out()();
+	_out()();
 }
 
 #pragma endregion
-#endif

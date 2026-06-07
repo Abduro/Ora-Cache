@@ -50,8 +50,11 @@ namespace open_gl { namespace math { namespace defs {
 	}
 }}
 namespace open_gl { namespace procs {
-
-	typedef ::std::array<float  , 0x10u> f_seq_4x4; // for matrix 4x4 data sequence;
+	/* the query to Goodle AI: can std::array::data() return nullptr?
+	Yes, std::array::data() can return nullptr, but only if the array is empty (i.e., its size is 0).
+	For any array with a size greater than 0, it is guaranteed to return a valid, non-null pointer to the underlying contiguous memory storage.
+	*/
+	typedef ::std::array<float  , 0x10u> f_mat_4x4; // for matrix 4x4 entries' array;
 	typedef ::std::array<float  , 0x03u> f_set_3;   // x|y|z;
 	typedef ::std::array<int32_t, 0x04u> i_set_4;   // for example to query viewport params: x, y of Offset from top-left corner, followed by its width and height;
 
@@ -71,10 +74,11 @@ namespace ver_1_1 {
 	using CErr_ex = CError_ex;
 	using TErr_ex = const CErr_ex;
 
-//	static _pc_sz p_err_inv_oper = _T("#__e_inv_oper: called between glBegin() and glEnd()"); // this is the silly error message that appears in case when no current context is set;
-	static _pc_sz p_err_inv_oper = _T("#__e_inv_oper: current rendering context is not set"); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
-	static _pc_sz p_err_unk_code = _T("#__e_undef: error code 0x%04x (%d)");
-	static _pc_sz p_err_inv_enum = _T("#__e_inv_enum: '_prop_id' 0x%04x (%d) is not accepted");
+//	static _pc_sz p_err_inv_oper  = _T("#__e_inv_oper: called between glBegin() and glEnd()"); // this is the silly error message that appears in case when no current context is set;
+	static _pc_sz p_err_inv_oper  = _T("#__e_inv_oper: current rendering context is not set"); // https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
+	static _pc_sz p_err_unk_code  = _T("#__e_undef: error code 0x%04x (%d)");
+	static _pc_sz p_err_inv_enum  = _T("#__e_inv_enum: '_prop_id' 0x%04x (%d) is not accepted");
+	static _pc_sz p_err_unk_param = _T("#__e_inv_enum: '_param_id' 0x%04x (%d) is unknown");
 
 	class CBasic {
 	public:

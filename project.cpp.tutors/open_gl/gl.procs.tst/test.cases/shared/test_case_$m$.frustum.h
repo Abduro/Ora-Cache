@@ -9,10 +9,8 @@
 
 namespace test { namespace open_gl { namespace frustum {
 
-	using namespace shared::defs;
-	using CFrustum = ::open_gl::procs::projection::CFrustum;
-	using f_planes = ::open_gl::procs::projection::f_planes;
-	using f_rect   = ::open_gl::procs::projection::f_rect;
+	using namespace ::shared::defs;
+	using namespace ::open_gl::procs::projection;
 
 	class CTstFrustum {
 	public:

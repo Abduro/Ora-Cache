@@ -3,6 +3,66 @@
 	This is Ebo Pack OpenGL math lib matrix stack wrapper uint test interface implementation file for using in test cases' adapters;
 */
 #include "test_case_$m$.stack.h"
+
+using namespace test::open_gl::ver_1_1;
+
+#pragma region cls::CTstStack{}
+
+CTstMode::CTstMode (const bool _b_verbose) : m_verbose(_b_verbose) { _out().Clear(); }
+
+err_code CTstMode::Get (void) {
+	if (this->m_verbose)
+		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed((*this)().Get())) { _out() += (*this)().Error(); return (*this)().Error(); }
+	else {
+		_out() += TString().Format(_T("[impt] result: current matrix stack mode is '%s';"), CEnum::To_str((*this)()));
+	}
+	return (*this)().Error();
+}
+
+err_code CTstMode::Set  (const e_stk_mode _mode) {
+	_mode;
+	if (this->m_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+	_out() += TString().Format(_T("Input mode: '%s';"), CEnum::To_str(_mode));
+
+	if (__failed((*this)().Set(_mode))) { _out() += (*this)().Error(); }
+	else if (this->m_verbose) _out() += TString().Format(_T("[imp] he mode is set to '%s';"), CEnum::To_str(_mode));
+	
+	return (*this)().Error();
+}
+
+const
+CStack& CTstStack::operator ()(void) const { return this->m_stack; }
+CStack& CTstStack::operator ()(void)       { return this->m_stack; }
+
+#pragma endregion
+#pragma region cls::CTstStack{}
+
+CTstStack::CTstStack (const bool _b_verbose) : m_verbose(_b_verbose) { _out().Clear(); }
+
+err_code CTstStack::Push (const CMatrix& _matrix, const e_mat_type _type) {
+	_matrix; _type;
+	if (this->m_verbose)
+		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+
+	return (*this)().Error();
+}
+
+err_code CTstStack::Pop  (void) {
+	if (this->m_verbose)
+		_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	return (*this)().Error();
+}
+
+const
+CMode& CTstMode::operator ()(void) const { return this->m_mode; }
+CMode& CTstMode::operator ()(void)       { return this->m_mode; }
+
+#pragma endregion
 #if (0)
 using namespace test::open_gl::math;
 

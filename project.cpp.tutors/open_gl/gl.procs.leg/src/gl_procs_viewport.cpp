@@ -74,11 +74,10 @@ err_code  CParams::Set (const i_values& _values, CError& _error) {
 	*/
 	::glViewport(_values.at(0), _values.at(1), _values.at(2), _values.at(3));
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ) {
-	case GL_INVALID_OPERATION : { _error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
-	case GL_INVALID_VALUE :
-		_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: either width (%d) or height (%d) was negative"),  _values.at(2), _values.at(3)); break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code ) {
+	case GL_INVALID_OPERATION : { (_error = u_err_code) = p_err_inv_oper; } break;
+	case GL_INVALID_VALUE : (_error = u_err_code) = TString().Format(_T("#__e_inv_arg: either width (%d) or height (%d) was negative"),  _values.at(2), _values.at(3)); break;
 	default:
 		if (!!u_err_code)
 			_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);

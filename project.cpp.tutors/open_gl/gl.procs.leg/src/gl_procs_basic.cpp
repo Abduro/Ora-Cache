@@ -34,8 +34,6 @@ c_converter::operator double (void) const { return this->m_data; }
 #pragma endregion
 #pragma region cls::CParam{}
 
-static _pc_sz p_err_inv_param = _T("#__e_inv_enum: '_u_param_id' %04x (%u) is unknown");
-
 CParam::CParam (const uint32_t _param_id) : m_param_id (_param_id) { TBase::m_error >>__CLASS__; }
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glgetbooleanv ;
@@ -53,7 +51,7 @@ bool    CParam::GetBool (const uint32_t _u_param_id) {
 	const
 	uint32_t u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ){
-	case GL_INVALID_ENUM : TBase::m_error <<__e_inv_arg = TString().Format(p_err_inv_param, _u_param_id, _u_param_id); break;
+	case GL_INVALID_ENUM : TBase::m_error <<__e_inv_arg = TString().Format(p_err_unk_param, _u_param_id, _u_param_id); break;
 	case GL_INVALID_OPERATION : { TBase::m_error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
 	default:
 		if (!!u_err_code)
@@ -104,10 +102,10 @@ err_code CParam::Get_ptr (const uint32_t _u_param_id, double* _p_ptr) {
 		return TBase::m_error <<__e_pointer = _T("#__e_ptr: input pointer is invalid");
 	::glGetDoublev(_u_param_id, _p_ptr);
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_ENUM: TBase::m_error <<__e_inv_arg = TString().Format(p_err_inv_param, _u_param_id, _u_param_id); break;
-	case GL_INVALID_OPERATION : { TBase::m_error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code){
+	case GL_INVALID_ENUM: (TBase::m_error = u_err_code) = TString().Format(p_err_unk_param, _u_param_id, _u_param_id); break;
+	case GL_INVALID_OPERATION : { (TBase::m_error = u_err_code) = p_err_inv_oper; } break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
@@ -129,10 +127,10 @@ err_code CParam::Get_ptr (const uint32_t _u_param_id, float* _p_ptr) {
 		return TBase::m_error <<__e_pointer = _T("#__e_ptr: input pointer is invalid");
 	::glGetFloatv(_u_param_id, _p_ptr);
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_ENUM: TBase::m_error <<__e_inv_arg = TString().Format(p_err_inv_param, _u_param_id, _u_param_id); break;
-	case GL_INVALID_OPERATION : { TBase::m_error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code){
+	case GL_INVALID_ENUM: (TBase::m_error = u_err_code) = TString().Format(p_err_unk_param, _u_param_id, _u_param_id); break;
+	case GL_INVALID_OPERATION : { (TBase::m_error = u_err_code) = p_err_inv_oper; } break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
@@ -154,10 +152,10 @@ err_code CParam::Get_ptr (const uint32_t _u_param_id, int32_t* _p_ptr) {
 		return TBase::m_error <<__e_pointer = _T("#__e_ptr: input pointer is invalid");
 	::glGetIntegerv(_u_param_id, _p_ptr);
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_ENUM: TBase::m_error <<__e_inv_arg = TString().Format(p_err_inv_param, _u_param_id, _u_param_id); break;
-	case GL_INVALID_OPERATION : { TBase::m_error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code){
+	case GL_INVALID_ENUM: (TBase::m_error = u_err_code) = TString().Format(p_err_unk_param, _u_param_id, _u_param_id); break;
+	case GL_INVALID_OPERATION : { (TBase::m_error = u_err_code) = p_err_inv_oper; } break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
@@ -189,10 +187,10 @@ bool     CProperty::Is_enabled (const uint32_t _prop_id, CError& _error) {
 		return b_enabled;
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glisenabled ; error codes: {GL_INVALID_ENUM|GL_INVALID_OPERATION};
 	b_enabled = !!::glIsEnabled (_prop_id);
-	uint32_t u_err_code = CErr_ex().Get_code(); GL_TRUE;
-	switch ( u_err_code ) {
-	case GL_INVALID_ENUM : { _error << __e_inv_arg = TString().Format(p_err_inv_enum, _prop_id, _prop_id); }  break;
-	case GL_INVALID_OPERATION : { _error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
+	dword  u_err_code = CErr_ex().Get_code(); GL_TRUE;
+	switch(u_err_code){
+	case GL_INVALID_ENUM : { (_error = u_err_code) = TString().Format(p_err_inv_enum, _prop_id, _prop_id); }  break;
+	case GL_INVALID_OPERATION : { (_error = u_err_code) = p_err_inv_oper; } break;
 	default:
 		if (!!u_err_code)
 			_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
@@ -216,10 +214,10 @@ err_code CProperty::Is_enabled (const uint32_t _prop_id, const bool _yes_or_no, 
 	} else {
 		::glDisable(_prop_id); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldisable ;
 	}
-	uint32_t u_err_code = CErr_ex().Get_code(); GL_TRUE;
-	switch ( u_err_code ) {
-	case GL_INVALID_ENUM : { _error << __e_inv_arg = TString().Format(p_err_inv_enum, _prop_id, _prop_id); }  break;
-	case GL_INVALID_OPERATION : { _error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
+	dword  u_err_code = CErr_ex().Get_code(); GL_TRUE;
+	switch(u_err_code){
+	case GL_INVALID_ENUM : { (_error = u_err_code) = TString().Format(p_err_inv_enum, _prop_id, _prop_id); }  break;
+	case GL_INVALID_OPERATION : { (_error = u_err_code) = p_err_inv_oper; } break;
 	default:
 		if (!!u_err_code)
 			_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);

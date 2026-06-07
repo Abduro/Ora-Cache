@@ -7,13 +7,13 @@
 namespace open_gl { namespace procs { namespace matrix { namespace arb { }}}}
 namespace open_gl { namespace procs { namespace matrix { namespace ver_1_1 { using namespace ::open_gl::procs::ver_1_1;
 
-using e_modes = ::open_gl::procs::matrix::ver_1_1::e_modes;
+using e_mode = ::open_gl::procs::matrix::ver_1_1::e_mode;
 
 #pragma region cls::CMode{}
 
-CMode::CMode (void) : TBase(), m_current(e_modes::e_modelview) { TBase::m_error >>__CLASS__; }
+CMode::CMode (void) : TBase(), m_current(e_mode::e_modelview) { TBase::m_error >>__CLASS__; }
 
-e_modes  CMode::Current (void) const { return this->m_current; }
+e_mode  CMode::Current (void) const { return this->m_current; }
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glgetintegerv ;
 err_code CMode::Get (void) {
@@ -23,26 +23,26 @@ err_code CMode::Get (void) {
 	*/
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	this->m_current = e_modes::e_modelview; // sets default value; perhaps it is not required, but for making test case clear it looks necessary;
-	int32_t n_current = this->m_current;
+	this->m_current = e_mode::e_modelview; // sets default value; perhaps it is not required, but for making test case clear it looks necessary;
+	int32_t n_current = (int32_t) this->m_current;
 
 	::glGetIntegerv(GL_MATRIX_MODE, &n_current);
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ){
-	case GL_INVALID_VALUE : (TBase::m_error = (dword)u_err_code) = TString().Format(p_err_inv_enum, GL_MATRIX_MODE, GL_MATRIX_MODE); break;
-	case GL_INVALID_OPERATION : (TBase::m_error = (dword)u_err_code) = p_err_inv_oper; break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch( u_err_code ){
+	case GL_INVALID_VALUE : (TBase::m_error = u_err_code) = TString().Format(p_err_inv_enum, GL_MATRIX_MODE, GL_MATRIX_MODE); break;
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
 	}
 	if (false == TBase::Error())
-		this->m_current = (e_modes)n_current; // updates the current mode value;
+		this->m_current = (e_mode)n_current; // updates the current mode value;
 	return TBase::Error();
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/opengl/glmatrixmode ;
-err_code CMode::Set (const e_modes _e_mode) {
+err_code CMode::Set (const e_mode _e_mode) {
 	_e_mode;
 	/* Possible error codes:
 	GL_INVALID_ENUM      : '_e_mode' is not an accepted value;
@@ -52,7 +52,7 @@ err_code CMode::Set (const e_modes _e_mode) {
 
 	::glMatrixMode((uint32_t)_e_mode);
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
+	dword u_err_code = CErr_ex().Get_code();
 	switch ( u_err_code ){
 	case GL_INVALID_VALUE : (TBase::m_error = (dword)u_err_code) = TString().Format(p_err_inv_enum, _e_mode, _e_mode); break;
 	case GL_INVALID_OPERATION : (TBase::m_error = (dword)u_err_code) = p_err_inv_oper; break;
@@ -67,23 +67,27 @@ err_code CMode::Set (const e_modes _e_mode) {
 }
 
 const
-CMode& CMode::operator >>(e_modes& _e_mode) const { _e_mode = this->Current(); return *this; }
-CMode& CMode::operator <<(const e_modes _e_mode) { this->Set(_e_mode); return *this; }
+CMode& CMode::operator >>(e_mode& _e_mode) const { _e_mode = this->Current(); return *this; }
+CMode& CMode::operator <<(const e_mode _e_mode) { this->Set(_e_mode); return *this; }
 
-bool   CMode::Is_model   (void) const { return e_modes::e_modelview == this->Current(); }
-bool   CMode::Is_project (void) const { return e_modes::e_project   == this->Current(); }
-bool   CMode::Is_textrue (void) const { return e_modes::e_texture   == this->Current(); }
+bool   CMode::Is_model   (void) const { return e_mode::e_modelview == this->Current(); }
+bool   CMode::Is_project (void) const { return e_mode::e_project   == this->Current(); }
+bool   CMode::Is_textrue (void) const { return e_mode::e_texture   == this->Current(); }
 
-_pc_sz CMode::To_str (const e_modes _e_mode) {
+_pc_sz CMode::To_str (const e_mode _e_mode) {
 	_e_mode;
 	static CString cs_out;
 	switch (_e_mode) {
-	case e_modes::e_project  : cs_out = _T("e_projection"); break;
-	case e_modes::e_texture  : cs_out = _T("e_texture"); break;
+	case e_mode::e_project : cs_out = _T("e_projection"); break;
+	case e_mode::e_texture : cs_out = _T("e_texture"); break;
 	default: cs_out = _T("e_modelview");
 	}
 	return (_pc_sz) cs_out;
 }
+
+const
+e_mode  CMode::operator ()(void) const { return this->Current(); }
+CMode::operator e_mode (void) const { return this->Current(); }
 
 #pragma endregion
 

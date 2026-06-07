@@ -219,7 +219,7 @@ CDevice::operator const HDC (void) const { return CBase::Surface().Get(); }
 
 using CFake_Ctx = open_gl::CFake_Ctx;
 
-CFake_Ctx:: CFake_Ctx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: fake device context is not created"); this->Create(); }
+CFake_Ctx:: CFake_Ctx (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_state: fake device context is not created"); /*this->Create();*/ }
 CFake_Ctx::~CFake_Ctx (void) { this->Destroy(); }
 
 err_code CFake_Ctx::Create (void) {
@@ -247,6 +247,12 @@ const
 CDevice& CFake_Ctx::Device (void) const { return this->m_device; }
 
 TError&  CFake_Ctx::Error (void) const { return this->m_error; }
+
+CString  CFake_Ctx::To_str(void) const {
+	static _pc_sz p_ctx_pat = _T("");
+	CString cs_out; cs_out  = this->m_fk_wnd.To_str();
+	return  cs_out;
+}
 
 const
 CDevice& CFake_Ctx::operator ()(void) const { return this->m_device; }
@@ -312,8 +318,8 @@ err_code CSelector::Unset (void) {
 */
 namespace open_gl {
 
-CCtxToggle:: CCtxToggle (void) {}
-CCtxToggle::~CCtxToggle (void) {}
+CCtxToggle:: CCtxToggle (void) { CFake_Ctx::Create(); }
+CCtxToggle::~CCtxToggle (void) { CFake_Ctx::Destroy(); }
 
 const
 CFake_Ctx& CCtxToggle::operator ()(void) const { return this->m_fk_ctx; }

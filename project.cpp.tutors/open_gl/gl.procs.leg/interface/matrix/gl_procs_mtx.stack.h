@@ -4,28 +4,37 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 26-Feb-2026 at 19:21:28.597, (UTC+4), Batumi, Thursday;
 	This is Ebo Pack OpenGL math matrix mode functions' loader interface declaration file;
 */
-#include "gl_procs_basic.h"
+#include "gl_procs_mtx.defs.h"
 #include "gl_procs_matrix.h"
+#include "gl_procs_mtx.mode.h"
 
 namespace open_gl { namespace procs { namespace matrix {
 namespace ver_1_1 { using namespace ::open_gl::procs::ver_1_1;
 
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glpopmatrix ;
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glpushmatrix ;
-
+	/* note:
+	   Pop() and Push methods use internal matrix for making simplier test cases of the stack operations;
+	   The internal mode object is used to make the required stack current.
+	*/
 	class CStack : public CBasic { typedef CBasic TBase;
 	public:
 		CStack (void); CStack (const CStack&) = delete; CStack (CStack&&) = delete; ~CStack (void) = default;
 
-		err_code Get  (const e_mat_type, f_seq_4x4&); // fills the input array by matrix data (array of 16 floats); in case of error input array data is not changed;
-		err_code Pop  (void); // pops the current matrix stack, replacing the current matrix with the one below it on the stack;
-		err_code Push (void); // pushes the current matrix stack down by one, duplicating the current matrix;
-
-		static
-		_pc_sz   To_str (const e_mat_type);
+		err_code Pop  (void);             // pops the current matrix stack, replacing the current matrix with the one below it on the stack;
+		err_code Push (void);             // pushes the current matrix stack down by placing new matrix on the top;
+		err_code Push (const f_mat_4x4&); // pushes the given matrix to the top of the stack, beforehand pushing the top matrix is duplicated;
+		const
+		CMatrix& Matrix (void) const;     // returns the reference to internal matrix object that is applied to Push() and Pop() operations; (ro);
+		CMatrix& Matrix (void);           // returns the reference to internal matrix object that is applied to Push() and Pop() operations; (rw);
+		const
+		CMode&   Mode (void) const;       // returns the reference to matrix mode object that can be used for selecting required matrix stack; (ro);
+		CMode&   Mode (void);             // returns the reference to matrix mode object that can be used for selecting required matrix stack; (rw);
 
 	private:
 		CStack& operator = (const CStack&) = delete; CStack& operator = (CStack&&) = delete;
+		CMode   m_mode;    // for selecting currently active stack;
+		CMatrix m_matrix;  // for applying to the stack by Push() method and retrieving the matrix the is popped back by Pop() method;
 	};
 }
 namespace arb {}
@@ -37,7 +46,7 @@ namespace arb {}
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace procs {
 namespace matrix {
-	// the matrix defines its data as f_seq_4x4 that is the same with t_arr_4x4,
+	// the matrix defines its data as f_mat_4x4 that is the same with t_arr_4x4,
 	// but for creating a weak dependency between projects, typedefs are defined separately;
 	typedef ::std::array<float, 0x10u> t_arr_4x4;
 #pragma region _refs_0xa

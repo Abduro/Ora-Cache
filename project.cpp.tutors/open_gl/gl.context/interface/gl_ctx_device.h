@@ -113,8 +113,8 @@ namespace open_gl { namespace context {
 	class CFake_Ctx { using CDevice = open_gl::context::CDevice;
 	public:
 		 CFake_Ctx (const CFake_Ctx&) = delete; CFake_Ctx (CFake_Ctx&&) = delete;
-		 CFake_Ctx (void); // creates fake device;
-		~CFake_Ctx (void); // destroys fake device;
+		 CFake_Ctx (void);
+		~CFake_Ctx (void);
 
 		err_code Create (void);
 		err_code Destroy (void);
@@ -122,6 +122,7 @@ namespace open_gl { namespace context {
 		CDevice& Device (void) const;
 
 		TError&  Error (void) const;
+		CString  To_str(void) const;
 
 		const
 		CDevice& operator ()(void) const;
@@ -142,8 +143,8 @@ namespace open_gl { namespace context {
 		CFake_Ctx& operator ()(void);
 
 	private:
-		 CCtxToggle& operator = (const CCtxToggle&) = delete; CCtxToggle& operator = (CCtxToggle&&) = delete;
-		 CFake_Ctx m_fk_ctx;
+		CCtxToggle& operator = (const CCtxToggle&) = delete; CCtxToggle& operator = (CCtxToggle&&) = delete;
+		CFake_Ctx m_fk_ctx;
 	};
 }
 

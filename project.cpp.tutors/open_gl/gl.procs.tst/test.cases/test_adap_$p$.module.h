@@ -13,8 +13,8 @@ namespace test { namespace open_gl {
 	LNK2005: struct Microsoft::VisualStudio::CppUnitTestFramework::GlobalMethodInfo const*
 	          YOU_CAN_ONLY_DESIGNATE_ONE_FUNCTION_TO_BE_A_MODULE_CLEANUP_FUNCTION(void) ...
 	*/
-	__load (OnLoad);
-	__unload (OnUnload);
+	__load (OnLoad);     // creates rendering and device contexts; it is very useful for getting rid off calling TCtx_Toggle() in every test case method;
+	__unload (OnUnload); // destroyes the contexts;
 #endif
 
 }}

@@ -250,6 +250,12 @@
     <ClCompile Include="$(_0)test_adap_$m$.frustum.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_1)test_case_$m$.matrix.h" />
+    <ClCompile Include="$(_1)test_case_$m$.matrix.cpp" />
+    <ClInclude Include="$(_0)test_adap_$m$.matrix.h" />
+    <ClCompile Include="$(_0)test_adap_$m$.matrix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.stack.h" />
     <ClCompile Include="$(_1)test_case_$m$.stack.cpp" />
     <ClInclude Include="$(_0)test_adap_$m$.stack.h" />
@@ -260,6 +266,12 @@
     <ClCompile Include="$(_1)test_case_$p$.viewport.cpp" />
     <ClInclude Include="$(_0)test_adap_$p$.viewport.h" />
     <ClCompile Include="$(_0)test_adap_$p$.viewport.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_1)test_case_$u$.perspect.h" />
+    <ClCompile Include="$(_1)test_case_$u$.perspect.cpp" />
+    <ClInclude Include="$(_0)test_adap_$u$.utils.h" />
+    <ClCompile Include="$(_0)test_adap_$u$.utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

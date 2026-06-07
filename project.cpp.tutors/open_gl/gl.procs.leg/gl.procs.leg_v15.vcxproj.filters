@@ -9,6 +9,9 @@
     <Filter Include="src\matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0A04}</UniqueIdentifier></Filter>
 
     <Filter Include="!notes"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0A05}</UniqueIdentifier></Filter>
+    <Filter Include="matrix"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0A06}</UniqueIdentifier></Filter>
+    <Filter Include="projection"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0A07}</UniqueIdentifier></Filter>
+    <Filter Include="utils"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0A08}</UniqueIdentifier></Filter>
 
   </ItemGroup>
   <ItemGroup>
@@ -22,12 +25,28 @@
     <Text Include="__read_me_ver_1_1.txt"><Filter>!notes</Filter></Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0-0)gl_procs_mtx.mode.h"><Filter>interface\matrix</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)gl_procs_mtx.mode.cpp"><Filter>src\matrix</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)gl_procs_mtx.oper.h"><Filter>interface\matrix</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)gl_procs_mtx.oper.cpp"><Filter>src\matrix</Filter></ClCompile>
-    <ClInclude Include="$(_0-0)gl_procs_mtx.stack.h"><Filter>interface\matrix</Filter></ClInclude>
-    <ClCompile Include="$(_1-0)gl_procs_mtx.stack.cpp"><Filter>src\matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_procs_matrix.h" ><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_matrix.cpp" ><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_procs_mtx.defs.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_procs_mtx.defs.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_procs_mtx.mode.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_procs_mtx.mode.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_procs_mtx.oper.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_procs_mtx.oper.cpp"><Filter>matrix</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)gl_procs_mtx.stack.h"><Filter>matrix</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)gl_procs_mtx.stack.cpp"><Filter>matrix</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)gl_procs_frustum.h" ><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_frustum.cpp" ><Filter>projection</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_procs_project.h" ><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_project.cpp" ><Filter>projection</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_procs_perspect.h" ><Filter>utils</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)gl_procs_perspect.cpp" ><Filter>utils</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_basic.h" ><Filter>interface</Filter></ClInclude>
@@ -36,12 +55,6 @@
     <ClCompile Include="$(_1)gl_procs_clear.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_depth.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_depth.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_procs_frustum.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_procs_frustum.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_procs_matrix.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_procs_matrix.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_procs_project.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_procs_project.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_viewport.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_viewport.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>

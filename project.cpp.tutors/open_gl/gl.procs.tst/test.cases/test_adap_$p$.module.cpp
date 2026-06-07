@@ -4,6 +4,7 @@
 */
 #include "test_adap_$p$.module.h"
 #include <locale>
+#include <memory> // https://en.cppreference.com/cpp/memory/unique_ptr ;
 
 using namespace test::open_gl;
 
@@ -15,6 +16,8 @@ using namespace test::open_gl;
    otherwise these methods must be declared in global namespace, because 'using namespace' does not work for linker, but for compiler only;
 */
 namespace test { namespace open_gl {
+
+static ::std::unique_ptr<::open_gl::CFake_Ctx> p_fk_ctx;
 
 void OnLoad (void) {
 
@@ -31,9 +34,14 @@ void OnLoad (void) {
 		_out() += error.Print(TError::e_print::e_req);
 	else
 		_out() += cs_path;
-
-	_out()();
+#else
+	p_fk_ctx = ::std::make_unique<::open_gl::CFake_Ctx>();
+	if (p_fk_ctx.get())
+		if (__failed((*p_fk_ctx).Create())) _out() += (*p_fk_ctx).Error();
+		else
+			_out() += TString().Format(_T("[impt] %s"), (_pc_sz)(*p_fk_ctx).To_str());
 #endif
+	_out()();
 }
 
 void OnUnload (void) {
@@ -49,9 +57,13 @@ void OnUnload (void) {
 		_out() += error.Print(TError::e_print::e_req);
 	else
 		_out() += cs_path;
-
-	_out()();
+#else
+	if (p_fk_ctx.get()) {
+		if (__failed((*p_fk_ctx).Destroy())) _out() += (*p_fk_ctx).Error();
+		p_fk_ctx = nullptr;
+	}
 #endif
+	_out()();
 }
 
 }}

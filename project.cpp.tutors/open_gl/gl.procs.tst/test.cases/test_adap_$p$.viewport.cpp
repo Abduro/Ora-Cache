@@ -10,7 +10,7 @@ using namespace ::test::open_gl::procs::ver_1_1;
 
 void c_viewport::Get_Params (void) {
 
-	TCtxToggle toggle;
+	/*TCtxToggle toggle;*/
 
 	CTstViewport(true).Get_Params();
 	_out()();
@@ -18,7 +18,7 @@ void c_viewport::Get_Params (void) {
 
 void c_viewport::Is_valid (void) {
 
-	TCtxToggle toggle;
+	/*TCtxToggle toggle;*/
 	CTstViewport viewport(false); CViewport& v_port = viewport(); CParams& params = v_port.Params();
 
 	static
@@ -36,7 +36,7 @@ void c_viewport::Is_valid (void) {
 
 void c_viewport::Set_Params (void) {
 
-	TCtxToggle toggle;
+	/*TCtxToggle toggle;*/
 	CTstViewport viewport(true);
 
 	viewport.Set_Params({0, 0, 640, 480}); viewport.Verbose(false);

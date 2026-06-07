@@ -11,65 +11,56 @@ using namespace ::open_gl::procs::matrix::ver_1_1;
 namespace open_gl { namespace procs {
 }}
 
-#pragma region cls::CType{}
-
-e_mat_type CType::Uint_to_enum (const uint32_t _value, CError& _error) {
-	_value; _error;
-	e_mat_type e_type = e_mat_type::e_modelview; // this is the default value as stated in documentation;
-	_error <<__s_ok;
-
-	switch (_value) {
-	case e_mat_type::e_modelview: case e_mat_type::e_project: case e_mat_type::e_texture: e_type = static_cast<e_mat_type>(_value); break;
-	default:
-		_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: '_value' 0x%x ('%s') is not valid type"), _value, CType::To_str(_value));
-	}
-	return e_type;
-}
-
-_pc_sz  CType::To_str (const uint32_t _type) {
-	_type;
-	static CString cs_out;
-	switch (_type) {
-	case e_mat_type::e_modelview: cs_out = _T("e_modelview"); break;
-	case e_mat_type::e_project  : cs_out = _T("e_project"); break;
-	case e_mat_type::e_texture  : cs_out = _T("e_texture"); break;
-	default:
-		cs_out = _T("#undef");
-	}
-
-	return (_pc_sz) cs_out;
-}
-
-#pragma endregion
 #pragma region cls::CMatrix{}
 
-CMatrix::CMatrix (void) : TBase(), m_cached{0.0f} { TBase::m_error >>__CLASS__; }
+CMatrix::CMatrix (void) : TBase(), m_data{0.0f} { TBase::m_error >>__CLASS__; }
 
 const
-f_seq_4x4& CMatrix::Cached (void) const { return this->m_cached; }
+f_mat_4x4& CMatrix::Data (void) const { return this->m_data; }
+f_mat_4x4& CMatrix::Data (void)       { return this->m_data; }
 
 err_code CMatrix::Get (const e_mat_type _type) {
-	return this->Get(_type, this->m_cached);
+    return  this->Get (_type, this->m_data);
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glgetfloatv ;
-err_code CMatrix::Get (const e_mat_type _e_type, f_seq_4x4& _result) {
-	_e_type; _result;
+err_code CMatrix::Get (const e_mat_type _type, f_mat_4x4& _result) {
+	_type; _result;
+	TBase::m_error << __METHOD__ << __s_ok;
 
-	TBase::m_error <<__METHOD__<<__s_ok;
-	CMatrix::To_self(_result);
+	CParam param;
+	if (__failed(param.Get_ptr((uint32_t)_type, _result.data())))
+		TBase::m_error = param.Error();
 
-	::glGetFloatv(_e_type, _result.data());
+	return TBase::Error();
+}
+
+err_code CMatrix::Set (void) {
+     return this->Set (this->Data());
+}
+
+err_code CMatrix::Set (const f_mat_4x4& _matrix) {
+	_matrix;
+	return CMatrix::Set(_matrix, TBase::m_error);
+}
+
+err_code CMatrix::Set (const f_mat_4x4& _matrix, CError& _error) {
+	_matrix; _error;
+	/* Possible error codes:
+	GL_INVALID_OPERATION : glLoadMatrixf() is executed between the execution of glBegin() and the corresponding execution of glEnd();
+	*/
+	_error << __METHOD__ << __s_ok;
+
+	::glLoadMatrixf(_matrix.data());
 	const
-	uint32_t u_err_code = CErr_ex().Get_code();
-	switch ( u_err_code ) {
-	case GL_INVALID_ENUM : TBase::m_error <<__e_inv_arg = TString().Format(p_err_inv_enum, _e_type); break;
-	case GL_INVALID_OPERATION : { TBase::m_error << (err_code) TErrCodes::eExecute::eOperate = p_err_inv_oper; } break;
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code){
+	case GL_INVALID_OPERATION : (_error = u_err_code) = p_err_inv_oper; break;
 	default:
 		if (!!u_err_code)
-			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
+			_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
 	}
-	return TBase::Error();
+	return _error;
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/opengl/glloadidentity ;
@@ -88,7 +79,7 @@ err_code CMatrix::To_self (void) {
 	return TBase::Error();
 }
 
-f_seq_4x4& CMatrix::To_self (f_seq_4x4& _data) {
+f_mat_4x4& CMatrix::To_self (f_mat_4x4& _data) {
 	_data;
 	/*cols:  #0  #1  #2  #3
 	rows: #0 1.0 0.0 0.0 0.0
@@ -106,7 +97,7 @@ f_seq_4x4& CMatrix::To_self (f_seq_4x4& _data) {
 	return _data;
 }
 
-CString CMatrix::To_str (const f_seq_4x4& _mat_4x4, const bool _b_col_major) {
+CString CMatrix::To_str (const f_mat_4x4& _mat_4x4, const bool _b_col_major) {
 	_b_col_major;
 	static const uint32_t u_cols = 4, u_rows = 4;
 	static _pc_sz pc_sz_fmt_0 = _T("%9.7f");
@@ -138,5 +129,11 @@ CString CMatrix::To_str (const f_seq_4x4& _mat_4x4, const bool _b_col_major) {
 
 	return cs_out;
 }
+
+const
+f_mat_4x4& CMatrix::operator ()(void) const { return this->Data(); }
+f_mat_4x4& CMatrix::operator ()(void)       { return this->Data(); }
+
+err_code   CMatrix::operator <<(const f_mat_4x4& _data) { return this->Set(_data); }
 
 #pragma endregion

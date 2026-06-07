@@ -4,6 +4,50 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Feb-2026 at 18:37:22.791, UTC+4, Batumi, Friday;
 	This is Ebo Pack OpenGL math lib matrix stack wrapper uint test interface declaration file for using in test cases' adapters;
 */
+#include "test_adap_$p$.defs.h"
+#include "matrix\gl_procs_mtx.stack.h"
+
+namespace test { namespace open_gl { namespace ver_1_1 {
+
+	using namespace ::open_gl::procs::ver_1_1;
+	using namespace ::open_gl::procs::matrix::ver_1_1;
+
+	class CTstMode {
+	public:
+		CTstMode (const bool _b_verbose = true); CTstMode (const CTstMode&) = delete; CTstMode (CTstMode&&) = delete; ~CTstMode(void) = default;
+
+		err_code Get (void);
+		err_code Set (const e_stk_mode);
+
+		const
+		CMode& operator ()(void) const;
+		CMode& operator ()(void);
+
+	private:
+		CTstMode& operator = (const CTstMode&) = delete; CTstMode& operator = (CTstMode&&) = delete;
+		CMode m_mode;
+		bool  m_verbose;
+	};
+
+	class CTstStack {
+	public:
+		CTstStack (const bool _b_verbose = true); CTstStack (const CTstStack&) = delete; CTstStack (CTstStack&&) = delete; ~CTstStack(void) = default;
+
+		err_code Push (const CMatrix&, const e_mat_type);
+		err_code Pop  (void);
+
+		const
+		CStack& operator ()(void) const;
+		CStack& operator ()(void);
+
+	private:
+		CTstStack& operator = (const CTstStack&) = delete; CTstStack& operator = (CTstStack&&) = delete;
+		CStack  m_stack;
+		bool    m_verbose;
+	};
+
+}}}
+
 #if (0)
 #include "test_case_$d$.ctx.h"     // for using OpenGL API draw context must be created first;
 
