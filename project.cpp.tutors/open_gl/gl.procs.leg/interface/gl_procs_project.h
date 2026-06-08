@@ -79,8 +79,8 @@ namespace open_gl { namespace procs { namespace projection {
 		f_planes (const f_planes&);
 		f_planes (const float _near, const float _far); ~f_planes (void) = default;
 
-		static
-		err_code Is_valid (const f_planes&, CError&);
+		static bool  Is_singular (const f_planes&, CError&); // checks for error: zNear and zFar have the same value (almost);
+		static err_code Is_valid (const f_planes&, CError&); // checks for error: zNear or zFar is negative, but counterpart is positive;
 
 		void Set (const f_planes&);
 		void Set (const float _near, const float _far);

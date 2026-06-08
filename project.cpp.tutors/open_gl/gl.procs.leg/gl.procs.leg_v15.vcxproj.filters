@@ -19,10 +19,11 @@
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="__read_me_arb.txt"><Filter>!notes</Filter></Text>
-    <Text Include="__read_me_blinn-phong.txt"><Filter>!notes</Filter></Text>
-    <Text Include="__read_me_leg.txt"><Filter>!notes</Filter></Text>
-    <Text Include="__read_me_ver_1_1.txt"><Filter>!notes</Filter></Text>
+    <Text Include="$(_n)__read_me_arb.txt"><Filter>!notes</Filter></Text>
+    <Text Include="$(_n)__read_me_blinn-phong.txt"><Filter>!notes</Filter></Text>
+    <Text Include="$(_n)__read_me_leg.txt"><Filter>!notes</Filter></Text>
+    <Text Include="$(_n)__read_me_ortho.txt"><Filter>!notes</Filter></Text>
+    <Text Include="$(_n)__read_me_ver_1_1.txt"><Filter>!notes</Filter></Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_matrix.h" ><Filter>matrix</Filter></ClInclude>
@@ -39,6 +40,8 @@
   <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_frustum.h" ><Filter>projection</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_frustum.cpp" ><Filter>projection</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_procs_ortho.h" ><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_ortho.cpp" ><Filter>projection</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_project.h" ><Filter>projection</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_project.cpp" ><Filter>projection</Filter></ClCompile>
   </ItemGroup>

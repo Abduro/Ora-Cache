@@ -28,7 +28,7 @@ err_code CTstMode::Set  (const e_stk_mode _mode) {
 	_out() += TString().Format(_T("Input mode: '%s';"), CEnum::To_str(_mode));
 
 	if (__failed((*this)().Set(_mode))) { _out() += (*this)().Error(); }
-	else if (this->m_verbose) _out() += TString().Format(_T("[imp] he mode is set to '%s';"), CEnum::To_str(_mode));
+	else if (this->m_verbose) _out() += TString().Format(_T("[impt] he mode is set to '%s';"), CEnum::To_str(_mode));
 	
 	return (*this)().Error();
 }

@@ -84,10 +84,21 @@ f_planes::f_planes (void) : f_near(0.0f), f_far(0.0f) {}
 f_planes::f_planes (const f_planes& _src) : f_planes() { *this = _src; }
 f_planes::f_planes (const float _near,  const float _far) : f_planes() { this->Set(_near, _far); }
 
+bool f_planes::Is_singular (const f_planes& _src, CError& _error) {
+	_src; _error;
+
+	using namespace ::open_gl::math::defs;
+
+	if (f_epsilon > abs(_src.f_far - _src.f_near) ||
+		f_epsilon > abs(_src.f_near - _src.f_far)) {_error <<__e_inv_arg = _T("The z_near and z_far planes have the same value"); return true; }
+
+	return false;
+}
+
 err_code f_planes::Is_valid (const f_planes& _src, CError& _error) {
 	_src; _error;
 
-	using namespace open_gl::math;
+	using namespace ::open_gl::math;
 
 	if (true  == Is_negative(_src.f_near) && false == Is_negative(_src.f_far)) return _error <<__e_inv_arg = p_err_neg_value;
 	if (false == Is_negative(_src.f_near) && true  == Is_negative(_src.f_far)) return _error <<__e_inv_arg = p_err_neg_value;

@@ -244,8 +244,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.frustum.h" />
     <ClCompile Include="$(_1)test_case_$m$.frustum.cpp" />
-    <ClInclude Include="$(_1)test_case_$m$.project.h" />
-    <ClCompile Include="$(_1)test_case_$m$.project.cpp" />
+    <ClInclude Include="$(_1)test_case_$m$.proj.defs.h" />
+    <ClCompile Include="$(_1)test_case_$m$.proj.defs.cpp" />
     <ClInclude Include="$(_0)test_adap_$m$.frustum.h" />
     <ClCompile Include="$(_0)test_adap_$m$.frustum.cpp" />
   </ItemGroup>
@@ -254,6 +254,12 @@
     <ClCompile Include="$(_1)test_case_$m$.matrix.cpp" />
     <ClInclude Include="$(_0)test_adap_$m$.matrix.h" />
     <ClCompile Include="$(_0)test_adap_$m$.matrix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_1)test_case_$m$.ortho.h" />
+    <ClCompile Include="$(_1)test_case_$m$.ortho.cpp" />
+    <ClInclude Include="$(_0)test_adap_$m$.ortho.h" />
+    <ClCompile Include="$(_0)test_adap_$m$.ortho.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.stack.h" />

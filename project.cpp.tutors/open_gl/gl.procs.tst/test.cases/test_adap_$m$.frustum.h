@@ -13,7 +13,7 @@
 */
 namespace test { namespace open_gl { namespace frustum {
 
-	using namespace test::open_gl::ver_1_1;
+	using namespace ::test::open_gl::ver_1_1;
 	
 	__class (c_frustum) {
 	public:
@@ -29,7 +29,7 @@ namespace test { namespace open_gl { namespace frustum {
 		   Thus calling those procedures is required if transformation of the stack top matrix is used;
 
 		   The following steps are required:
-		   step #0: sets current rendering context; !required!
+		   step #0: sets current rendering context; !required! it is made automatically when this test module is being loaded;
 		   step #1: sets the matrix mode to 'projection';
 		   step #2: resets the matrix to identity;
 		   step #3: defines the frustum volume; << this is the step being tested!

@@ -15,7 +15,7 @@ err_code CFrustum::Set (const f_rect& _clip, const f_planes& _planes) {
 	_clip; _planes;
 	/* possible error codes:
 	GL_INVALID_ENUM      : zNear or zFar was not postitive;
-	GL_INVALID_OPERATION : 
+	GL_INVALID_OPERATION : The function was called between a call to glBegin and the corresponding call to glEnd.
 	*/
 	TBase::m_error <<__METHOD__<<__s_ok;
 
@@ -32,7 +32,7 @@ err_code CFrustum::Set (const f_rect& _clip, const f_planes& _planes) {
 	dword  u_err_code = CErr_ex().Get_code();
 	switch(u_err_code) {
 	case GL_INVALID_ENUM : (TBase::m_error = u_err_code) = p_err_neg_value; break;
-	case GL_INVALID_OPERATION : { (TBase::m_error = u_err_code) = p_err_inv_oper; } break;
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
 	default:
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);

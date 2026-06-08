@@ -35,10 +35,10 @@
     <_7>$(GL_Math)interface\</_7>
     <_8>$(GL_Procs)interface\</_8>
     <_9></_9>
-    <_a></_a>
+    <_n>!notes\</_n>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(Shared);$(_0);$(_0-0);$(_0-1);$(_1);$(_1-0);$(_1-1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(Shared);$(_0);$(_0-0);$(_0-1);$(_1);$(_1-0);$(_1-1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_n);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

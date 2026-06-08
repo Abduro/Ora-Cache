@@ -10,6 +10,7 @@
     <Filter Include="stack"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A05}</UniqueIdentifier></Filter>
     <Filter Include="utils"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A06}</UniqueIdentifier></Filter>
     <Filter Include="viewport"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A07}</UniqueIdentifier></Filter>
+    <Filter Include="projection\ortho"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C00000060A08}</UniqueIdentifier></Filter>
 
   </ItemGroup>
   <ItemGroup><!--_root-->
@@ -31,8 +32,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.frustum.h"><Filter>projection</Filter></ClInclude>
     <ClCompile Include="$(_1)test_case_$m$.frustum.cpp"><Filter>projection</Filter></ClCompile>
-    <ClInclude Include="$(_1)test_case_$m$.project.h"><Filter>projection</Filter></ClInclude>
-    <ClCompile Include="$(_1)test_case_$m$.project.cpp"><Filter>projection</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$m$.proj.defs.h"><Filter>projection</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$m$.proj.defs.cpp"><Filter>projection</Filter></ClCompile>
     <ClInclude Include="$(_0)test_adap_$m$.frustum.h"><Filter>projection</Filter></ClInclude>
     <ClCompile Include="$(_0)test_adap_$m$.frustum.cpp"><Filter>projection</Filter></ClCompile>
   </ItemGroup>
@@ -41,6 +42,12 @@
     <ClCompile Include="$(_0)test_adap_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
     <ClInclude Include="$(_1)test_case_$m$.matrix.h"><Filter>matrix</Filter></ClInclude>
     <ClCompile Include="$(_1)test_case_$m$.matrix.cpp"><Filter>matrix</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)test_adap_$m$.ortho.h"><Filter>projection\ortho</Filter></ClInclude>
+    <ClCompile Include="$(_0)test_adap_$m$.ortho.cpp"><Filter>projection\ortho</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$m$.ortho.h"><Filter>projection\ortho</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$m$.ortho.cpp"><Filter>projection\ortho</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$m$.stack.h"><Filter>stack</Filter></ClInclude>
