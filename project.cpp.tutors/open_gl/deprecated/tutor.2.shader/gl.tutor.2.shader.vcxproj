@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>$(EboProjectVersion)</VCProjectVersion>
-    <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000000B0005}</ProjectGuid>
+    <ProjectGuid>{00000C13-EEEE-BBBB-6667-A01020000002}</ProjectGuid>
     <Keyword>AtlProj</Keyword>
     <RootNamespace>$(EboRootNamespace)</RootNamespace>
     <WindowsTargetPlatformVersion>$(EboWindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
@@ -263,7 +263,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="gl.tutor.2.shader.lib.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000C0005}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-A010200C0002}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

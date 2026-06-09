@@ -2,23 +2,23 @@
 @cpp
 the tree of solution nodes:
 [!docs]   : {00000C13-EEEE-BBBB-6667-D00000000000} << the root node of documents for settings c/c++ projects;
-[_shared] : {00000C13-EEEE-BBBB-6667-100000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
-   +---[core]  : {00000C13-EEEE-BBBB-6667-100000000010} << the sub-root node of the root/core project;
+[_shared] : {00000C13-EEEE-BBBB-6667-F00000000000} << the root node of shared projects for OpenGL and DirectX tutorials;
+   +---[core]  : {00000C13-EEEE-BBBB-6667-F00000000010} << the sub-root node of the root/core project;
 	shared.trim_v15 : {00000C13-EEEE-BBBB-6667-000000000001} << this is the shared project of excerpts from Ebo Pack solution;
 
-   +---[data] : {00000C13-EEEE-BBBB-6667-100000000040} << the sub-root node of shared projects related to data providers;
+   +---[data] : {00000C13-EEEE-BBBB-6667-F00000000040} << the sub-root node of shared projects related to data providers;
 	ms.xml.6_v15    : {00000C13-EEEE-BBBB-6667-000000000009} << MS XML core service wrapper project;
 
-   +---[debug] : {00000C13-EEEE-BBBB-6667-100000000020} << the sub-root node of shared projects related to debugging;
+   +---[debug] : {00000C13-EEEE-BBBB-6667-F00000000020} << the sub-root node of shared projects related to debugging;
 	shared.dbg_v15  : {00000C13-EEEE-BBBB-6667-000000000003} << this is the shared project of the debug ouptup console wrapper for app main window;
 	trace.con_v15   : {00000C13-EEEE-BBBB-6667-000000000020} << this is console app project for test cases;
 
-   +---[gui]   : {00000C13-EEEE-BBBB-6667-100000000030} << the sub-root node of the GUI related projects;
+   +---[gui]   : {00000C13-EEEE-BBBB-6667-F00000000030} << the sub-root node of the GUI related projects;
 	shared.clr_v15  : {00000C13-EEEE-BBBB-6667-000000000019} << this is the shared project of excerpts from Ebo Pack draw color project;
 	shared.gui_v15  : {00000C13-EEEE-BBBB-6667-00000000000C} << this is the shared project of the composite GUI for app main window;
 
-   +---[!test.cases]: {00000C13-EEEE-BBBB-6667-100000000050} << the sub-root node of shared  projects' test cases;
-   +---------[core] : {00000C13-EEEE-BBBB-6667-100000000051} << the sub-root node for core project(s) of the test cases;
+   +---[!test.cases]: {00000C13-EEEE-BBBB-6667-F00000000050} << the sub-root node of shared  projects' test cases;
+   +---------[core] : {00000C13-EEEE-BBBB-6667-F00000000051} << the sub-root node for core project(s) of the test cases;
 		ebo_test_$$$    : {00000C13-EEEE-BBBB-6667-C00000060000} << the shared core project of test cases;
 
 	ebo_test_$dat$.prov : {00000C13-EEEE-BBBB-6667-000000060009} << unit test cases' project of data providers;
@@ -27,46 +27,46 @@ the tree of solution nodes:
    drawable_v15: {00000C13-EEEE-BBBB-6667-00000000000A} << this is the shared drawable project;
    runnable_v15: {00000C13-EEEE-BBBB-6667-000000000007} << this is the shared project for running a task in background mode;
 
-[tutors]  : {00000C13-EEEE-BBBB-6667-200000000000} << the sub-root of the tutorial projects;
-   +---[DirecX]  : {00000C13-EEEE-BBBB-6667-200000100000} << the sub-root for DirectX tutorials;
-   +---[OpenGL]  : {00000C13-EEEE-BBBB-6667-200000200000} << the sub-root for OpenGL tutorials;
+[tutors]  : {00000C13-EEEE-BBBB-6667-F01000000000} << the sub-root of the tutorial projects;
+   +---[DirecX]  : {00000C13-EEEE-BBBB-6667-F01010000000} << the sub-root for DirectX tutorials;
+   +---[OpenGL]  : {00000C13-EEEE-BBBB-6667-F01020000000} << the sub-root for OpenGL tutorials;
 		gl.math_v15     : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
 		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0000} << the shared project of OpenGL basic objects' wrappers;
 
-   +------[3rd_party] : {00000C13-EEEE-BBBB-6667-200000230000} << the sub-root for 3rd party projects;
+   +------[3rd_party] : {00000C13-EEEE-BBBB-6667-F01020300000} << the sub-root for 3rd party projects;
 		glm   : {00000C13-EEEE-BBBB-6667-3000000A0000} << GLM project;
 
-   +------[context]   : {00000C13-EEEE-BBBB-6667-200000260000} << the sub-root for OpenGL draw context project and its test cases one;
+   +------[context]   : {00000C13-EEEE-BBBB-6667-F01020501000} << the sub-root for OpenGL draw context project and its test cases one;
 		gl.context_v15    : {00000C13-EEEE-BBBB-6667-0000000B0001} << the OpenGL draw rendering context wrapper project;
 		test_cases.ctx.lib: {00000C13-EEEE-BBBB-6667-C000000C0000} << the project for sharing draw context test cases;
 		test_cases.ctx    : {00000C13-EEEE-BBBB-6667-C00000060009} << draw context unit test project;
 
-   +------[procs]     : {00000C13-EEEE-BBBB-6667-200000250000} << the sub-root for OpenGL API procedures wrapper projects and its test cases one;
+   +------[procs]     : {00000C13-EEEE-BBBB-6667-F01020502000} << the sub-root for OpenGL API procedures wrapper projects and its test cases one;
 		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
 		gl.procs.leg_v15: {00000C13-EEEE-BBBB-6667-0000000B0002} << OpenGL legacy API wrapper project;
 		test_cases.procs: {00000C13-EEEE-BBBB-6667-C0000006000A} << test cases project for OpenGL API procedure loader and wrapper project;
 
-   +------[!test.cases]   : {00000C13-EEEE-BBBB-6667-200000210000} << the sub-root node for test cases project(s);
+   +------[!test.cases]   : {00000C13-EEEE-BBBB-6667-F01020100000} << the sub-root node for test cases project(s);
 		ebo_test_$d$    : {00000C13-EEEE-BBBB-6667-C00000060002} << the unit test project for testing functionality of draw context;
 		ebo_test_$m$    : {00000C13-EEEE-BBBB-6667-C00000060001} << the unit test project for shared project of OpenGL basic math lib;
  
-   +------[!test.resource]: {00000C13-EEEE-BBBB-6667-200000220000} << the sub-root for test cases resources;
-   +---------[shaders]: {00000C13-EEEE-BBBB-6667-200000221000} << the sub-root for shaders' files;
+   +------[!test.resource]: {00000C13-EEEE-BBBB-6667-F01020200000} << the sub-root for test cases resources;
+   +---------[shaders]: {00000C13-EEEE-BBBB-6667-F01020201000} << the sub-root for shaders' files;
 
 #pragma region [excluded]
-   +------[tutor.0.fake] : {00000C13-EEEE-BBBB-6667-200000240000} << the node of the fake window project tutorial;
+   +------[tutor.0.fake] : {00000C13-EEEE-BBBB-6667-F01020400000} << the node of the fake window project tutorial;
 		gl.tutor.0.fake    : {00000C13-EEEE-BBBB-6667-0000000B0003} << the tutorial for creating OpenGL context based on fake window;
 		gl.tutor.0.fake.lib: {00000C13-EEEE-BBBB-6667-0000000C0003} << this is the static library of the fake window project;
 
-   +------[tutor.1.context] : {00000C13-EEEE-BBBB-6667-200000240001} << the node of the context project tutorial;
+   +------[tutor.1.context] : {00000C13-EEEE-BBBB-6667-F01020400001} << the node of the context project tutorial;
 		gl.tutor.1.ctx     : {00000C13-EEEE-BBBB-6667-0000000B0004} << the tutorial project for creating OpenGL context based on fake and real windows;
 		gl.tutor.1.ctx.lib : {00000C13-EEEE-BBBB-6667-0000000C0004} << this is the static library of the context project;
 
-   +------[tutor.2.shader] : {00000C13-EEEE-BBBB-6667-200000240002} << the node of the shader project tutorial;
+   +------[tutor.2.shader] : {00000C13-EEEE-BBBB-6667-F01020400002} << the node of the shader project tutorial;
 		gl.tutor.2.shader    : {00000C13-EEEE-BBBB-6667-0000000B0005} << the tutorial project for creating OpenGL shader based on the real window;
 		gl.tutor.2.shader.lib: {00000C13-EEEE-BBBB-6667-0000000C0005} << this is the static library of the shader project;
 #pragma endregion
-   +------[tutor.3.camera] : {00000C13-EEEE-BBBB-6667-200000240003} << the node of the camera project tutorial;
+   +------[tutor.3.camera] : {00000C13-EEEE-BBBB-6667-F01020400003} << the node of the camera project tutorial;
 		gl.tutor.3.camera    : {00000C13-EEEE-BBBB-6667-0000000B0006} << the tutorial project for creating OpenGL camera view on the client area of the window;
 		gl.tutor.3.camera.lib: {00000C13-EEEE-BBBB-6667-0000000C0006} << this is the static library of the camera project;
 
