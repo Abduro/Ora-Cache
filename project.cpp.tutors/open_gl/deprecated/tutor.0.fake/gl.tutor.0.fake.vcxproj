@@ -262,7 +262,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(GL_shared)gl.shared_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-0000000B0000}</Project>
     </ProjectReference>
     <ProjectReference Include="gl.tutor.0.fake.lib.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-0000000C0003}</Project>

@@ -31,19 +31,19 @@ the tree of solution nodes:
    +---[DirecX]  : {00000C13-EEEE-BBBB-6667-200000100000} << the sub-root for DirectX tutorials;
    +---[OpenGL]  : {00000C13-EEEE-BBBB-6667-200000200000} << the sub-root for OpenGL tutorials;
 		gl.math_v15     : {00000C13-EEEE-BBBB-6667-0000000B0007} << the shared project of OpenGL basic math data types' wrappers;
-		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0002} << the shared project of OpenGL basic objects' wrappers;
+		gl.shared_v15   : {00000C13-EEEE-BBBB-6667-0000000B0000} << the shared project of OpenGL basic objects' wrappers;
 
    +------[3rd_party] : {00000C13-EEEE-BBBB-6667-200000230000} << the sub-root for 3rd party projects;
 		glm   : {00000C13-EEEE-BBBB-6667-3000000A0000} << GLM project;
 
    +------[context]   : {00000C13-EEEE-BBBB-6667-200000260000} << the sub-root for OpenGL draw context project and its test cases one;
-		gl.context_v15    : {00000C13-EEEE-BBBB-6667-0000000B0009} << the OpenGL draw rendering context wrapper project;
+		gl.context_v15    : {00000C13-EEEE-BBBB-6667-0000000B0001} << the OpenGL draw rendering context wrapper project;
 		test_cases.ctx.lib: {00000C13-EEEE-BBBB-6667-C000000C0000} << the project for sharing draw context test cases;
 		test_cases.ctx    : {00000C13-EEEE-BBBB-6667-C00000060009} << draw context unit test project;
 
    +------[procs]     : {00000C13-EEEE-BBBB-6667-200000250000} << the sub-root for OpenGL API procedures wrapper projects and its test cases one;
 		gl.procs_v15    : {00000C13-EEEE-BBBB-6667-0000000B0008} << the shared project of OpenGL procedures' loader;
-		gl.procs.leg_v15: {00000C13-EEEE-BBBB-6667-0000000B000A} << OpenGL legacy API wrapper project;
+		gl.procs.leg_v15: {00000C13-EEEE-BBBB-6667-0000000B0002} << OpenGL legacy API wrapper project;
 		test_cases.procs: {00000C13-EEEE-BBBB-6667-C0000006000A} << test cases project for OpenGL API procedure loader and wrapper project;
 
    +------[!test.cases]   : {00000C13-EEEE-BBBB-6667-200000210000} << the sub-root node for test cases project(s);
