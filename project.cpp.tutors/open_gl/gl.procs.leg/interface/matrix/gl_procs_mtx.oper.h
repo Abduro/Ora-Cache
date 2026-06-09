@@ -8,7 +8,22 @@
 
 namespace open_gl { namespace procs { namespace matrix {
 namespace ver_1_1 {
+	using namespace ::open_gl::procs::ver_1_1;
 
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glmultmatrixf ;
+	// https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ; what matrix mode must be applied before calling glScale opengl version 1.1?
+
+	class COpers : public CBasic { typedef CBasic TBase;
+	public:
+		COpers (void); COpers (const COpers&) = delete; COpers (COpers&&) = delete; ~COpers (void) = default;
+
+		err_code Multiply (const f_mat_4x4& _by);
+		err_code Scale (const f_set_3& _to);     // scales current matrix in *model-view* matrix stack; 
+
+
+	private:
+		COpers& operator = (const COpers&) = delete; COpers& operator = (COpers&&) = delete;
+	};
 }
 namespace arb {}
 

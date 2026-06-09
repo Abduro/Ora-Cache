@@ -16,7 +16,7 @@
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the node of GUI rich app window composition;-->
     <Shared_Run Condition="'$(Shared_Run)'==''">..\..\runnable\</Shared_Run><!--This is the node of GUI rich app window composition;-->
     <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared><!--This is generic OpenGL functionality wrappers;-->
-    <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl.procs\</GL_Procs><!--This is OpenGL procedures' loader;-->
+    <GL_Procs Condition="'$(GL_Procs)'==''">..\gl.procs\</GL_Procs><!--This is OpenGL procedures' loader;-->
     <GL_Ctx Condition="'$(GL_Ctx)'==''">..\gl.context\</GL_Ctx>
     <GL_Math Condition="'$(GL_Math)'==''">..\open_gl.math\</GL_Math>
     <GL_Leg Condition="'$(GL_Leg)'==''">..\gl.procs.leg\</GL_Leg><!--This is the wrapper project of legacy pipeline of the OpenGL-->
@@ -32,7 +32,6 @@
     <_3>$(Shared_Gui)interface\</_3>
     <_4>$(Shared_Clr)interface\</_4>
     <_5>$(GL_Procs)interface\</_5>
-    <_5-1>$(GL_Procs)interface\ver_1_1\</_5-1>
     <_6>$(Shared_Run)interface\</_6>
     <_7>$(GL_Math)interface\</_7>
     <_8>$(GL_Ctx)interface\</_8>
@@ -40,7 +39,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_1-1);$(_2);$(_3);$(_4);$(_5);$(_5-1);$(_6);$(_7);$(_8);$(_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(_1);$(_1-1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

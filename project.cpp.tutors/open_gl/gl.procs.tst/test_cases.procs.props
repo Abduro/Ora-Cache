@@ -13,7 +13,7 @@
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--window message and handle wrapper;-->
     <GL_Ctx Condition="'$(GL_Ctx)'==''">..\gl.context\</GL_Ctx>
     <GL_Leg Condition="'$(GL_Leg)'==''">..\gl.procs.leg\</GL_Leg>
-    <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl.procs\</GL_Procs> <!--regular context device and draw renderer creator;-->
+    <GL_Procs Condition="'$(GL_Procs)'==''">..\gl.procs\</GL_Procs> <!--regular context device and draw renderer creator;-->
     <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared> <!--regular context device and draw renderer creator;-->
     <T3_Camera Condition="'$(T3_Camera)'==''">..\tutor.3.camera\</T3_Camera>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib> <!--this project of test cases;-->

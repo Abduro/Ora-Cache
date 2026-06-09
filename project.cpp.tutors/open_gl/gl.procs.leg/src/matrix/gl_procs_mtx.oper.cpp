@@ -5,8 +5,54 @@
 #include "gl_procs_mtx.oper.h"
 
 namespace open_gl { namespace procs { namespace matrix {
+namespace ver_1_1 {
 
-namespace ver_1_1 {}
+#pragma region cls::COpers
+
+COpers::COpers (void) : TBase() { TBase::m_error >>__CLASS__; }
+
+// https://learn.microsoft.com/en-us/windows/win32/opengl/glmultmatrixf ;
+err_code COpers::Multiply (const f_mat_4x4& _by) {
+	_by;
+	/* possible error codes:
+	GL_INVALID_OPERATION : The function was called between a call to glBegin and the corresponding call to glEnd.
+	*/
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	::glMultMatrixf(_by.data());
+	const
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code) {
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
+	default:
+		if (!!u_err_code)
+			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
+	}
+	return TBase::Error();
+}
+
+// https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
+err_code COpers::Scale (const f_set_3& _to) {
+	_to;
+	/* possible error codes:
+	GL_INVALID_OPERATION : The function was called between a call to glBegin and the corresponding call to glEnd.
+	*/
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	::glScalef(_to.at(0), _to.at(1), _to.at(2));
+	const
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code) {
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
+	default:
+		if (!!u_err_code)
+			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
+	}
+	return TBase::Error();
+}
+
+#pragma endregion
+}
 namespace arb {}
 
 }}}

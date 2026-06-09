@@ -6,11 +6,12 @@
 */
 #include "test_adap_$p$.defs.h"
 #include "gl_procs_matrix.h"
-/*
-	These test cases are espacially intended for OpenGL vers 1.1;
-*/
+#include "matrix\gl_procs_mtx.oper.h"
+
 namespace test { namespace open_gl { namespace ver_1_1 {
 
+	using namespace ::open_gl::procs;
+	using namespace ::open_gl::procs::ver_1_1;
 	using namespace ::open_gl::procs::matrix::ver_1_1;
 
 	class CTstMatrix {
@@ -27,6 +28,22 @@ namespace test { namespace open_gl { namespace ver_1_1 {
 	private:
 		CTstMatrix& operator = (const CTstMatrix&) = delete; CTstMatrix& operator = (CTstMatrix&&) = delete;
 		CMatrix m_matrix;
+		bool    m_verbose;
+	};
+
+	class CTstOpers {
+	public:
+		CTstOpers (const bool _b_verbose); CTstOpers (const CTstOpers&) = delete; CTstOpers (CTstOpers&&) = delete; ~CTstOpers (void) = default;
+
+		err_code Multiply (const f_mat_4x4&);  // multiplies the current matrix of the stack selected by input matrix;
+
+		const
+		COpers& operator ()(void) const;
+		COpers& operator ()(void) ;
+
+	private:
+		CTstOpers& operator = (const CTstOpers&) = delete; CTstOpers& operator = (CTstOpers&&) = delete;
+		COpers  m_opers;
 		bool    m_verbose;
 	};
 

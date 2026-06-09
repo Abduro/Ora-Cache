@@ -12,7 +12,7 @@
     <Shared_Clr Condition="'$(Shared_Clr)'==''">..\..\_shared.clr\</Shared_Clr>
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg>
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--This reference is only for getting fake window interface; -->
-    <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl.procs\</GL_Procs>
+    <GL_Procs Condition="'$(GL_Procs)'==''">..\gl.procs\</GL_Procs>
     <GL_Math Condition="'$(GL_Math)'==''">..\open_gl.math\</GL_Math>
     <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared>
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->

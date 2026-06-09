@@ -41,3 +41,24 @@ CMatrix& CTstMatrix::operator ()(void) const { return this->m_matrix; }
 CMatrix& CTstMatrix::operator ()(void)       { return this->m_matrix; }
 
 #pragma endregion
+#pragma region cls::CTstOpers{}
+
+CTstOpers::CTstOpers (const bool _b_verbose) : m_verbose(_b_verbose) { _out().Clear(); }
+
+err_code CTstOpers::Multiply (const f_mat_4x4& _data) {
+	_data;
+	if (this->m_verbose)
+	_out() += TString().Format(_T("[warn] cls::[%s::%s].%s():"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
+
+	if (__failed((*this)().Multiply(_data))) { _out() += (*this)().Error(); }
+	else {
+		_out() += TString().Format(_T("[impt] the current matrix is multiplied by %s%s;"), (_pc_sz)::_prn_params.m_sfx, (_pc_sz)CMatrix::To_str(_data));
+	}
+	return (*this)().Error();
+}
+
+const
+COpers& CTstOpers::operator ()(void) const { return this->m_opers; }
+COpers& CTstOpers::operator ()(void)       { return this->m_opers; }
+
+#pragma endregion

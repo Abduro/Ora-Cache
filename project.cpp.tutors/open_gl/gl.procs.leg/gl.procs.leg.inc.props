@@ -14,7 +14,7 @@
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--This reference is only for getting fake window interface; -->
     <GL_Ctx Condition="'$(GL_Ctx)'==''">..\gl.context\</GL_Ctx>
     <GL_Math Condition="'$(GL_Math)'==''">..\open_gl.math\</GL_Math>
-    <GL_Procs Condition="'$(GL_Procs)'==''">..\open_gl.procs\</GL_Procs><!--For error interface reference; -->
+    <GL_Procs Condition="'$(GL_Procs)'==''">..\gl.procs\</GL_Procs><!--For error interface reference; -->
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)\</ThisLib><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
