@@ -15,10 +15,10 @@
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\..\_shared.dbg\</Shared_Dbg><!--This is the node of debug output console wrapper;-->
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui><!--This is the node of GUI rich app window composition;-->
     <Shared_Run Condition="'$(Shared_Run)'==''">..\..\runnable\</Shared_Run><!--This is the node of GUI rich app window composition;-->
-    <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared><!--This is generic OpenGL functionality wrappers;-->
+    <GL_Shared Condition="'$(GL_Shared)'==''">..\gl.shared\</GL_Shared><!--This is generic OpenGL functionality wrappers;-->
     <GL_Procs Condition="'$(GL_Procs)'==''">..\gl.procs\</GL_Procs><!--This is OpenGL procedures' loader;-->
     <GL_Ctx Condition="'$(GL_Ctx)'==''">..\gl.context\</GL_Ctx>
-    <GL_Math Condition="'$(GL_Math)'==''">..\open_gl.math\</GL_Math>
+    <GL_Math Condition="'$(GL_Math)'==''">..\gl.math\</GL_Math>
     <GL_Leg Condition="'$(GL_Leg)'==''">..\gl.procs.leg\</GL_Leg><!--This is the wrapper project of legacy pipeline of the OpenGL-->
   </PropertyGroup>
   <PropertyGroup>

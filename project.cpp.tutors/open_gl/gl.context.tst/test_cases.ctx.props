@@ -13,7 +13,7 @@
     <Shared_Gui Condition="'$(Shared_Gui)'==''">..\..\_shared.gui\</Shared_Gui> <!--window message and handle wrapper;-->
     <GL_Ctx Condition="'$(GL_Ctx)'==''">..\gl.context\</GL_Ctx>
     <GL_Procs Condition="'$(GL_Procs)'==''">..\gl.procs\</GL_Procs> <!--regular context device and draw renderer creator;-->
-    <GL_Shared Condition="'$(GL_Shared)'==''">..\open_gl.shared\</GL_Shared> <!--regular context device and draw renderer creator;-->
+    <GL_Shared Condition="'$(GL_Shared)'==''">..\gl.shared\</GL_Shared> <!--regular context device and draw renderer creator;-->
     <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib> <!--this project of test cases;-->
   </PropertyGroup>
   <PropertyGroup>
