@@ -4,16 +4,12 @@
 	This is Ebo pack OpenGL camera tutorial include headers' property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Label="PropertySheets">
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <Import Project="$(SolutionDir)shared.all.inc.props" />
   <PropertyGroup>
-    <!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
-    <!--Required include paths are defined in tutor.all.inc.props; it is included to this project too;-->
-    <None Condition="'$(None)'==''"></None>
+    <GL_Draw Condition="'$(GL_Draw)'==''">..\gl.drawable\</GL_Draw>
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0></_0>
+    <_0>$(GL_Draw)interface\</_0>
     <_1></_1>
     <_2></_2>
     <_3></_3>
@@ -26,7 +22,7 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+    <IncludePath>$(_0);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />

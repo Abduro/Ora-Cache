@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000500}</UniqueIdentifier></Filter>
+    <Filter Include="_root\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000502}</UniqueIdentifier></Filter>
+
+    <Filter Include="scene"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000503}</UniqueIdentifier></Filter>
+    <Filter Include="scene\camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000504}</UniqueIdentifier></Filter>
+    <Filter Include="scene\drawable"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000505}</UniqueIdentifier></Filter>
+    <Filter Include="scene\model"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000506}</UniqueIdentifier></Filter>
+    <Filter Include="scene\view"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000507}</UniqueIdentifier></Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)drawable.defs.h"><Filter>scene\drawable</Filter></ClInclude>
+    <ClCompile Include="$(_1)drawable.defs.cpp"><Filter>scene\drawable</Filter></ClCompile>
+    <ClInclude Include="$(_0)drawable.drafter.h"><Filter>scene\drawable</Filter></ClInclude>
+    <ClCompile Include="$(_1)drawable.drafter.cpp"><Filter>scene\drawable</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(_1)camera.base.cpp"><Filter>scene\camera</Filter></ClCompile>
+    <ClInclude Include="$(_0)camera.base.h"><Filter>scene\camera</Filter></ClInclude>
+    <ClCompile Include="$(_1)camera.frustum.cpp"><Filter>scene\camera</Filter></ClCompile>
+    <ClInclude Include="$(_0)camera.frustum.h"><Filter>scene\camera</Filter></ClInclude>
+    <ClCompile Include="$(_1)model.base.cpp"><Filter>scene\model</Filter></ClCompile>
+    <ClInclude Include="$(_0)model.base.h"><Filter>scene\model</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(_1)view.base.cpp"><Filter>scene\view</Filter></ClCompile>
+    <ClInclude Include="$(_0)view.base.h"><Filter>scene\view</Filter></ClInclude>
+  </ItemGroup>
+</Project>

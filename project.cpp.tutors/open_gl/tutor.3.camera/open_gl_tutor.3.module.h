@@ -26,6 +26,7 @@ namespace ex_ui { namespace draw { namespace open_gl {  namespace camera {
 #pragma comment(lib, "shared.clr_v15.lib")    // shared color wrapper for applying to vertices of the shapes;
 
 #pragma comment(lib, "gl.context_v15.lib")    // open_gl context wrapper lib;
+#pragma comment(lib, "gl.drawable_v15.lib")   // open_gl drawable components' lib;
 #pragma comment(lib, "gl.math_v15.lib" )      // open_gl math wrapper lib;
 #pragma comment(lib, "gl.procs_v15.lib" )     // OpenGL driver's functions' loader;
 #pragma comment(lib, "gl.procs.leg_v15.lib" ) // OpenGL legacy API wrapper project lib;
