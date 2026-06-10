@@ -287,13 +287,13 @@
       <Project>{00000C13-EEEE-BBBB-6667-C000000C0000}</Project>
     </ProjectReference>
     <ProjectReference Include="$(GL_Leg)gl.procs.leg_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0002}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-C01020000001}</Project>
     </ProjectReference>
     <ProjectReference Include="$(GL_Procs)gl.procs_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0008}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-C01020000002}</Project>
     </ProjectReference>
     <ProjectReference Include="$(GL_Math)gl.math_v15.vcxproj">
-      <Project>{00000C13-EEEE-BBBB-6667-0000000B0007}</Project>
+      <Project>{00000C13-EEEE-BBBB-6667-C01020000003}</Project>
     </ProjectReference>
     <ProjectReference Include="$(GLM)glm_v15.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-3000000A0000}</Project>

@@ -9,11 +9,14 @@
  shared.gui_v15        : {00000C13-EEEE-BBBB-6667-00000000000C} << ebo_pack::ctl.base_v15 << ebo_pack::_uix.form;
  shared.clr_v15        : {00000C13-EEEE-BBBB-6667-000000000019} << ebo_pack::_uix.color;
  trace.con_v15         : {00000C13-EEEE-BBBB-6667-000000000020} << ebo_pack::console.ext_v15 << ebo_pack::_console;
- ebo_test_$dat$.prov   : {00000C13-EEEE-BBBB-6667-000000060009}
+ ebo_test_$dat$.prov   : {00000C13-EEEE-BBBB-6667-000000060009} !test project GUIs require review!
 
- gl.shared_v15         : {00000C13-EEEE-BBBB-6667-0000000B0000}
- gl.context_v15        : {00000C13-EEEE-BBBB-6667-0000000B0001} >> test_cases.ctx   : {00000C13-EEEE-BBBB-6667-C00000060009}; test_cases.ctx.lib {00000C13-EEEE-BBBB-6667-C000000C0000};
- gl.procs.leg_v15      : {00000C13-EEEE-BBBB-6667-0000000B0002} >> test_cases.procs : {00000C13-EEEE-BBBB-6667-C0000006000A};
+ gl.context_v15        : {00000C13-EEEE-BBBB-6667-C01020000000} >> test_cases.ctx   : {00000C13-EEEE-BBBB-6667-C00000060009}; test_cases.ctx.lib {00000C13-EEEE-BBBB-6667-C000000C0000};
+ gl.procs.leg_v15      : {00000C13-EEEE-BBBB-6667-C01020000001} >> test_cases.procs : {00000C13-EEEE-BBBB-6667-C0000006000A};
+ gl.procs_v15          : {00000C13-EEEE-BBBB-6667-C01020000002}
+ gl.math_v15           : {00000C13-EEEE-BBBB-6667-C01020000003}
+ gl.shared_v15         : {00000C13-EEEE-BBBB-6667-C01020000004} 'C':component;  '01': tutor;'02': OpenGL;'#n' - number at the end is priority level;
+
 #pragma region [deprecated]
  gl.tutor.0.fake       : {00000C13-EEEE-BBBB-6667-A01020000000} 'A': app;'01': tutor;'02': OpenGL;'0' at the end is # of tutor; 
  gl.tutor.0.fake.lib   : {00000C13-EEEE-BBBB-6667-A010200C0000} 'A': app;'01': tutor;'02': OpenGL;'C': component/lib; '0' at the end is # of tutor;
@@ -22,11 +25,9 @@
  gl.tutor.2.shader     : {00000C13-EEEE-BBBB-6667-A01020000002}
  gl.tutor.2.shader.lib : {00000C13-EEEE-BBBB-6667-A010200C0002}
 #pragma endregion
- gl.tutor.3.camera     : {00000C13-EEEE-BBBB-6667-0000000B0006}
- gl.math_v15           : {00000C13-EEEE-BBBB-6667-0000000B0007}
- gl.procs_v15          : {00000C13-EEEE-BBBB-6667-0000000B0008}
 
- gl.tutor.3.camera.lib : {00000C13-EEEE-BBBB-6667-0000000C0006}
+ gl.tutor.3.camera     : {00000C13-EEEE-BBBB-6667-A01020000003}
+ gl.tutor.3.camera.lib : {00000C13-EEEE-BBBB-6667-A010200C0003}
 
  [_shared]             : {00000C13-EEEE-BBBB-6667-F00000000000} 'F' stands for 'Folder';
  [core]                : {00000C13-EEEE-BBBB-6667-F00000000010}
@@ -49,8 +50,8 @@
  [context]             : {00000C13-EEEE-BBBB-6667-F01020501000}
  [procs]               : {00000C13-EEEE-BBBB-6667-F01020502000}
 
- glm                   : {00000C13-EEEE-BBBB-6667-3000000A0000}
- ebo_test_$$$          : {00000C13-EEEE-BBBB-6667-C00000060000}
+ glm                   : {00000C13-EEEE-BBBB-6667-3000000A0000} 'glm' stands for Graphics Library Mathematics;
+ ebo_test_$$$          : {00000C13-EEEE-BBBB-6667-C00000060000} 'C': component;'6': test project;'#n' - number at the end is priority level;
  ebo_test_$m$          : {00000C13-EEEE-BBBB-6667-C00000060001}
  ebo_test_$d$          : {00000C13-EEEE-BBBB-6667-C00000060002}
 
