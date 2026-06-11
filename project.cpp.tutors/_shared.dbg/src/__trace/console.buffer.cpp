@@ -30,6 +30,23 @@ err_code CScreenBuffer::Clear (const t_char _symbol/* = _T(' ')*/) {
 	return this->Error();
 }
 
+err_code CScreenBuffer::Clear (const uint32_t _u_line, const t_char _symbol/* = _T(' ')*/) {
+	_u_line; _symbol;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (__failed(this->Get()))
+		return this->Error();
+
+	if (static_cast<short>(_u_line) >= (*this)().dwSize.Y)
+		return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: line number (%u) must be less than row count (%d)"), _u_line, (*this)().dwSize.Y);
+
+	dword d_written = 0;
+	if (false == !!FillConsoleOutputCharacter(__out_handle, _symbol, (*this)().dwSize.Y, {0, static_cast<short>(_u_line)}, &d_written))
+		return this->m_error.Last();
+
+	return this->Error();
+}
+
 TError&  CScreenBuffer::Error (void) const { return this->m_error; }
 
 err_code CScreenBuffer::Get (void) {

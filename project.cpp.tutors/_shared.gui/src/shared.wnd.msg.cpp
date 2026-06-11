@@ -424,11 +424,11 @@ err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 	
 	g_event.Keys().Set(_w_param); g_event.Coords().Set(_l_param);
 	
-//	const bool b_moving  = WM_MOUSEMOVE  == _u_code;
+	const bool b_moving  = WM_MOUSEMOVE  == _u_code;
 	const bool b_spin    = WM_MOUSEWHEEL == _u_code;
 	const bool b_handled = g_event.Buttons().Set(_u_code);
 
-	if (false == b_handled && false == b_spin/* && false == b_moving*/)
+	if (false == b_handled && false == b_spin && false == b_moving)
 		return TBase::Error(); // __s_false is returned, i.e. the message is not handled;
 
 	TMouseHandlers& handlers = ::Get_mouse_handlers();
@@ -439,10 +439,15 @@ err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		IMouse_Handler* p_handler = const_cast<IMouse_Handler*>(*it_);
 
 		err_code n_result = __s_false;
+		if (b_moving) { if (__s_ok == (n_result = p_handler->IMouse_OnMove(g_event))) break; }
 		if (b_spin) { if (__s_ok == (n_result = p_handler->IMouse_OnWheel(g_event, GET_WHEEL_DELTA_WPARAM(_w_param)/WHEEL_DELTA))) break; }
-		else { if (__s_ok == (n_result = p_handler->IMouse_OnEvent(g_event))) break; }
-	//	if (__s_ok == (n_result = p_handler->IMouse_OnMove(g_event))) break;
-
+		if (__s_ok == (n_result = p_handler->IMouse_OnEvent(g_event))) {
+			/* the event is handled, the last mouse button state must be reset to 'none', otherwise after pressing the right button,
+			   the shortcut menu will be shown again on mouse move event;
+			*/
+			g_event.Buttons().The_last().State(e_action::e_none);
+			break;
+		}
 		if (__s_false == n_result)
 			continue;
 		else {

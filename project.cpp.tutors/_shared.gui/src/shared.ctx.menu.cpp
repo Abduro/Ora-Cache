@@ -63,6 +63,8 @@ uint32_t CCtxMenu::Track (const HWND _h_owner, const t_point _pt_screen) {
 	u_cmd_id = ::TrackPopupMenuEx(::GetSubMenu(TMenu::Handle(), 0), u_flags, _pt_screen.x, _pt_screen.y, _h_owner, nullptr);
 	if (u_cmd_id == 0) {
 		TMenu::m_error.Last();
+	} else {
+		__trace_info_2(_T("selected cmd_id: %u;\n"), u_cmd_id);
 	}
 	return u_cmd_id;
 }

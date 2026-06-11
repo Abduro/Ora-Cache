@@ -45,6 +45,74 @@ CBase::CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 TError& CBase::Error (void) const { return this->m_error; }
 
 #pragma endregion
+#pragma region cls::CLines{}
+
+static _pc_sz  p_sz_line_name = _T("Lines");
+
+CLines::CLines (void) : TBase(), m_lines(CLines::no_limit) { TBase::m_error >>__CLASS__; }
+
+bool CLines::Clear (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	bool b_changed = false;
+
+	return b_changed;
+}
+
+uint32_t CLines::Get (void) const { return this->m_lines; }
+err_code CLines::Set (const uint32_t _lines) {
+	_lines;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	uint32_t lines_ = _lines;
+
+	if (1 > lines_) lines_ = CLines::accepted;
+	if (CLines::accepted < _lines) lines_ = CLines::accepted;
+	this->m_lines = lines_;
+
+	return TBase::Error();
+}
+
+bool  CLines::Is_set (void) const { return this->Get() != CLines::no_limit; }
+
+err_code CLines::Load (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	uint32_t u_saved = 0;
+
+	TRegKeyEx the_key;
+	u_saved = the_key.Value().GetDword((_pc_sz) ::Get_reg_router().Trace().Root(), p_sz_line_name);
+
+	if (the_key.Error()) {
+		TBase::m_error = the_key.Error(); // it is not required, because the line limit is not set; just no change the current line limit value;
+		__trace_err_2(TBase::m_error);
+	}
+	else {
+		this->Set(u_saved);
+		__trace_impt_2(_T("Lines limit is: %u\n"), this->Get());
+	}
+
+	return TBase::Error();
+}
+
+err_code CLines::Save (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_set())
+		return TBase::Error();
+
+	TRegKeyEx the_key;
+	if (__failed(the_key.Value().Set((_pc_sz)::Get_reg_router().Trace().Root(), p_sz_line_name, (dword)this->Get()))) {
+		TBase::m_error = the_key.Error();
+		__trace_err_2(TBase::m_error);
+	}
+	else {
+		__trace_impt_2(_T("Lines limit is set to %u\n"), this->Get());
+	}
+
+	return TBase::Error();
+}
+
+#pragma endregion
 #pragma region cls::CPin{}
 
 static _pc_sz  p_sz_pin_name = _T("Pinned");
@@ -221,7 +289,8 @@ CPersistent::~CPersistent (void) {}
 
 err_code CPersistent::Load (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
-
+	
+	if (__failed(this->Lines().Load())) { /*nothing to do;*/ }
 	if (__failed(this->Pin().Load())) { TBase::m_error = this->Pin().Error(); }
 	if (__failed(this->Pos().Load())) { TBase::m_error = this->Pos().Error(); }
 	if (__failed(this->Show().Load())){ TBase::m_error = this->Show().Error();}
@@ -232,6 +301,7 @@ err_code CPersistent::Load (void) {
 err_code CPersistent::Save (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
+	if (__failed(this->Lines().Save())) { /*nothing to do;*/ }
 	if (__failed(this->Pin().Save())) { TBase::m_error = this->Pin().Error(); }
 	if (__failed(this->Pos().Save())) { TBase::m_error = this->Pos().Error(); }
 	if (__failed(this->Show().Save())){ TBase::m_error = this->Show().Error();}
@@ -239,6 +309,9 @@ err_code CPersistent::Save (void) {
 	return TBase::Error();
 }
 
+const
+CLines& CPersistent::Lines (void) const { return this->m_lines; }
+CLines& CPersistent::Lines (void)       { return this->m_lines; }
 const
 CPin&   CPersistent::Pin (void) const { return this->m_pin; }
 CPin&   CPersistent::Pin (void)       { return this->m_pin; }
@@ -291,7 +364,7 @@ err_code CShow::Save (void) {
 
 #pragma endregion
 
-TConPers&  ::Get_ConPers (void) {
+TConPers& ::Get_ConPers (void) {
 	static TConPers con_pers;
 	return con_pers;
 }

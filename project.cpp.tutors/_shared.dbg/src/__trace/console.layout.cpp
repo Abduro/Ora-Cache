@@ -159,14 +159,14 @@ err_code CLayout::OnCreate (void) {
 	if (__failed(buffer.Get())) {
 		__trace_err_ex_2(this->m_error = buffer.Error());
 	} else {
-		__trace_info_2(_T("*before* output buffer size: cols = %d; rows = %d;\n"), buffer().dwSize.X, buffer().dwSize.Y);
+//		__trace_info_2(_T("*before* output buffer size: cols = %d; rows = %d;\n"), buffer().dwSize.X, buffer().dwSize.Y);
 	}
 	buffer().dwSize.Y = 200; // no settings are saved for buffer size in the registry yet;
 	if (__failed(buffer.Set())) {
 		__trace_err_ex_2(this->m_error = buffer.Error());
 	}
 	else { // the console window frame size is not changed, but just output screen buffer size only;
-		__trace_info_2(_T("*after* output buffer size: cols = %d; rows = %d;\n"), buffer().dwSize.X, buffer().dwSize.Y);
+//		__trace_info_2(_T("*after* output buffer size: cols = %d; rows = %d;\n"), buffer().dwSize.X, buffer().dwSize.Y);
 	}
 	con_wnd.MoveWindow(&::Get_ConPers().Pos().Get(), false);
 	CAccessor() << ::Get_ConPers().Show().Is_visible();

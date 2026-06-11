@@ -21,6 +21,29 @@ namespace persistent {
 		mutable
 		CError m_error;
 	};
+	// actually, it is not a number of lines that is acceptable for trace console output,
+	// it is a count of trace messages being visible in the console;
+	class CLines : public CBase { typedef CBase TBase;
+	public:
+		 static const uint32_t accepted = 666u; // in fact it is maximum value that is reasonable for trace output monitoring; can be changed of course;
+		 static const uint32_t no_limit = static_cast<uint32_t>(-1);
+		 CLines (void);
+		~CLines (void) = default;
+
+		bool     Clear (void);                 // removes the lines' limit and clear the registry; returns 'true' in case of change the limit value;
+		uint32_t Get (void) const;             // gets number of acceptable lines in trace console output;
+		err_code Set (const uint32_t _lines);  // sets number of acceptable lines in trace console output;
+
+		bool  Is_set (void) const;  // returns 'false' in case if lines number is not saved in registry or has the default value 'no_limit';
+
+		err_code Load (void);
+		err_code Save (void);
+
+		CLines&  operator <<(const uint32_t _lines);
+
+	private:
+		uint32_t m_lines;
+	};
 
 	class CPin : public CBase { typedef CBase TBase;
 	public:
@@ -76,9 +99,10 @@ namespace persistent {
 }
 	class CPersistent : public persistent::CBase { typedef persistent::CBase TBase;
 	public:
-		using CPin  = persistent::CPin;
-		using CPos  = persistent::CPosition;
-		using CShow = persistent::CShow;
+		using CLines = persistent::CLines;
+		using CPin   = persistent::CPin;
+		using CPos   = persistent::CPosition;
+		using CShow  = persistent::CShow;
 
 		 CPersistent (void); CPersistent (const CPersistent&) = delete; CPersistent (CPersistent&&) = delete;
 		~CPersistent (void);
@@ -86,6 +110,9 @@ namespace persistent {
 		err_code Load (void); // loads all persistent components; if one of them is failed, just traces of the error;
 		err_code Save (void); // saves all persistent components; if one of them is failed, just traces of the error;
 
+		const
+		CLines& Lines (void) const;
+		CLines& Lines (void) ;
 		const
 		CPin& Pin (void) const;
 		CPin& Pin (void) ;
@@ -98,9 +125,10 @@ namespace persistent {
 
 	protected:
 		CPersistent& operator = (const CPersistent&) = delete; CPersistent& operator = (CPersistent&&) = delete;
-		CPin  m_pin;
-		CPos  m_pos;
-		CShow m_show;
+		CLines m_lines;
+		CPin   m_pin;
+		CPos   m_pos;
+		CShow  m_show;
 	};
 
 	bool operator != (const t_rect& _left, const t_rect& _right);

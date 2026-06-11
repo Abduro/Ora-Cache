@@ -33,6 +33,8 @@ err_code CDrafter::OnCreate (const HWND _h_surface) {
 	if (__failed(::Get_ViewPorts().Add(this->m_surface)))
 		__trace_err_ex_2(TBase::m_error = ::Get_ViewPorts().Error());
 
+	this->m_tria.Format();
+
 	return TBase::Error();
 }
 
@@ -88,12 +90,15 @@ void CDrafter::Run (void) {
 			continue;
 
 		::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // must be called before rendering each frame;
+		::glMatrixMode(GL_MODELVIEW);
+
+		this->m_tria.Draw();
+
+		::glPushMatrix();
 
 		const bool b_scaled = this->m_scale.Is_changed();
 		if (b_scaled) {
 		//	shared::sys_core::the_lock.lock();
-			::glMatrixMode(GL_MODELVIEW);
-			::glPushMatrix();
 #if (0)
 			const c_scaled scaled = this->m_scale();
 			::glMultMatrixf(&scaled); // https://learn.microsoft.com/en-us/windows/win32/opengl/glmultmatrixf ;
@@ -107,14 +112,15 @@ void CDrafter::Run (void) {
 		delay.Reset();
 		this->Model().Grid().Draw();
 
+		if (b_scaled || true) {
+		//	shared::sys_core::the_lock.unlock();
+			::glPopMatrix();
+		}
+
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
 		if (false == !!::SwapBuffers(this->View().Device())) {
 			TBase::m_error.Last();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_print::e_req));
-		}
-		if (b_scaled) {
-		//	shared::sys_core::the_lock.unlock();
-			::glPopMatrix();
 		}
 	}
 	::wglMakeCurrent(this->View().Device(), 0); // it must be set before marking event as signaled; ::wglMakeCurrent(0, 0) >> does not work!
@@ -144,6 +150,14 @@ err_code  CDrafter::IMouse_OnEvent (const CEvent& _event) {
 	this->m_mouse = _event.Coords().Get();
 
 	return __s_ok; // handled;
+}
+
+err_code  CDrafter::IMouse_OnMove  (const CEvent& _event) {
+	_event;
+	if (_event.Buttons().The_last().What() != e_button::e_left)
+		return __s_false;
+
+	return __s_false; // not handled;
 }
 
 err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) {

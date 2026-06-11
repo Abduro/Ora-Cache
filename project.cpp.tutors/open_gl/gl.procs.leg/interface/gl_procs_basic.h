@@ -6,7 +6,7 @@
 */
 #include "shared.defs.h"
 #include <gl/gl.h>       // the headers' include order is important: windows.h must go first;
-#include <gl/Glu.h>
+#include <gl/glu.h>
 #include "gl_error.h"
 /**important*:
   all functions related to legacy fixed pipeline of the OpenGL ver 1.1 does not require loading its addresses,

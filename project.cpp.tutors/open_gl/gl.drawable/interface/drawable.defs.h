@@ -13,6 +13,9 @@
 #include "math.matrix.h"
 #include "runner.tpl.h"
 
+#include "gl_procs_matrix.h"
+#include "matrix\gl_procs_mtx.stack.h"
+
 namespace shared { namespace drawable { using namespace shared::defs;
 
 	using CDelay = shared::runnable::CDelay;

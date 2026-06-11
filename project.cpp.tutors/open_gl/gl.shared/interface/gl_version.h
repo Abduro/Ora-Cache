@@ -130,6 +130,6 @@ namespace ex_ui { namespace draw { namespace open_gl { using namespace shared::d
 }}}
 
 typedef ex_ui::draw::open_gl::s_version version_t;
-typedef ex_ui::draw::open_gl::CVersion  TVersion; TVersion& Get_version (void);
+typedef ex_ui::draw::open_gl::CVersion  TVersion; TVersion& Get_version (void); // using this method must be deprecated; static class is initialized twice!
 
 #endif/*_GL_VERSION_H_INCLUDED*/

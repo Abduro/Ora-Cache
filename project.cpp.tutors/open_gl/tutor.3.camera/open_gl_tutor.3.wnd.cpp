@@ -160,12 +160,13 @@ err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
 	_evt;
 	TBase::m_error <<__METHOD__<<__s_false;
 
-	__trace_info(_T("%s\n"), (_pc_sz)_evt.To_str());
 	// the shortcut menu appears on releasing/unpressing the right mouse button;
 	if (_evt.Buttons().The_last().What() != e_button::e_right) return TBase::Error();  // checks the button first;
 	if (_evt.Buttons().The_last().State() != e_action::e_released) return TBase::Error();
 
-	TBase::m_error << __s_ok; // marks the message as handled; 
+	__trace_info(_T("%s\n"), (_pc_sz)_evt.To_str());
+
+	TBase::m_error << __s_ok; // marks the message as handled;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow ;
 	if (::GetForegroundWindow() == ::Get_app_wnd().Handle() )
@@ -174,7 +175,6 @@ err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
 	CCaretaker().ApplyTo(::Get_Shortcut());
 
 	const uint32_t u_cmd_id = ::Get_Shortcut().Track(*this, _evt.Coords().Get());
-	__trace_info(_T("selected cmd_id: %u;\n"), u_cmd_id);
 
 	COrganizer organizer;
 	if (__failed(organizer.On_command(u_cmd_id)))

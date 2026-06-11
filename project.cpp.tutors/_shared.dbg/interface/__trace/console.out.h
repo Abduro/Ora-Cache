@@ -5,9 +5,14 @@
 	This is Ebo Pack console output text blocks interface declaration files;
 */
 #include "console.defs.h"
-#include "console.format.h"
+#include "console.format.h" // console.buffer.h is included there;
 
 namespace shared { namespace console {
+
+	struct s_out_cfg {
+		uint32_t m_lines; bool m_use;
+		s_out_cfg (void) : m_lines(0), m_use(false) {}
+	};
 
 	// https://learn.microsoft.com/en-us/windows/console/console-screen-buffers ;
 	// https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c ;
@@ -20,6 +25,8 @@ namespace shared { namespace console {
 		static void Impt  (_pc_sz); // https://www.allacronyms.com/important/abbreviated ;
 		static void Info  (_pc_sz);
 		static void Warn  (_pc_sz);
+
+		static s_out_cfg& Cfg (void);
 	};
 
 }}

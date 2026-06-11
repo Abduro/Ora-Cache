@@ -10,6 +10,7 @@
 #include "camera.base.h"
 #include "model.base.h"
 #include "view.base.h"
+#include "shapes\shape.tria.h"
 
 namespace shared { namespace drawable {
 
@@ -22,6 +23,8 @@ namespace shared { namespace drawable {
 
 	using c_scaled = ex_ui::draw::open_gl::math::c_scaled_4x4;
 	using c_mutex = ::std::recursive_mutex;
+
+	using CTria = ::open_gl::shapes::CTria;
 
 	/* query: what scale factor should be set in order to change draw object a little smaller opengl (to Google AI);
 	To make an OpenGL object slightly smaller, set the scale factor to a value slightly less than 1.0
@@ -73,6 +76,7 @@ namespace shared { namespace drawable {
 
 		TError&   IMouse_Error (void) const override final;
 		err_code  IMouse_OnEvent (const CEvent&) override final;
+		err_code  IMouse_OnMove  (const CEvent&) override final;
 		err_code  IMouse_OnWheel (const CEvent&, const int32_t _delta) override final; // if it occurs, it will come before IMouse_OnEvent();
 
 	protected:
@@ -86,6 +90,7 @@ namespace shared { namespace drawable {
 		t_point   m_mouse;   // this is the last position of the mouse cursor at the moment of mouse message handling;
 		CCamera   m_camera;
 		CScale    m_scale;
+		CTria     m_tria;
 	};
 }}
 

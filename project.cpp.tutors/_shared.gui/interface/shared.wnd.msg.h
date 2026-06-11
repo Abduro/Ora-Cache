@@ -68,11 +68,11 @@ namespace ex_ui { namespace popup { namespace messages {
 			bool Is_released (void) const;
 			bool Is_released (const bool _yes_or_no);
 
-			e_action State (void) const;     // gets the action that changes the state of this button;
-			bool     State (const e_action); // sets the state that appropriate to given action, returns 'true' in case state change;
+			e_action State (void) const;      // gets the action that changes the state of this button;
+			bool     State (const e_action);  // sets the state that appropriate to given action, returns 'true' in case state change;
 
 			e_button What (void) const;
-			bool     What (const e_button); // it sets which button it is; returns 'true' in case of value change; no check for 'e_none';
+			bool     What (const e_button);   // it sets which button it is; returns 'true' in case of value change; no check for 'e_undef'; it must not be used in message handler;
 
 			bool operator <<(const e_action); // changes the state of the button;
 

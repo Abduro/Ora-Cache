@@ -109,6 +109,12 @@ namespace open_gl { namespace context {
 }
 	using namespace shared::defs;
 	/* this is a device context created on message-only window handle;
+	 *important*:
+	  creating context in CFake_Ctx constructor and destroying the context in the class destructor are *removed*,
+	  because using rendering context is required in every test case method, so using CFake_Ctx as singleton is obvious,
+	  but singleton class cannot be defined as static, otherwise the static class is constructed/initialized *twice*!
+	  https://pabloariasal.github.io/2020/01/02/static-variable-initialization/ ;
+	  https://stackoverflow.com/questions/26547454/static-variable-is-initialized-twice ;
 	*/
 	class CFake_Ctx { using CDevice = open_gl::context::CDevice;
 	public:

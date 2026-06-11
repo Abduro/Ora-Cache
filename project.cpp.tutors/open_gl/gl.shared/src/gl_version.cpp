@@ -182,8 +182,11 @@ void __str_2_vers_data (const _pc_sz _p_vers, s_version& _data) {
 	if (parts.size() > 1) _data.m_minor = ::_tstoi(parts.at(1));
 }
 
-CVersion:: CVersion (void) : m_data{0}, m_use_base(false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("#__e_not_inited: version data is not queried");
+static _pc_sz p_ver_not_inited = _T("#__e_not_inited: version data is not queried");
+
+CVersion:: CVersion (void) : m_data{0}, m_use_base(false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = p_ver_not_inited;
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetstring ;
+	// anyway, without creating fake device context and fake draw renderer only 'base' version '1.1' is available;
 #if (0)
 	CFakeWnd wnd; // message-only window (aka fake) is created in its constructor;
 	if (wnd.Is_valid() == false) {
@@ -194,8 +197,9 @@ CVersion:: CVersion (void) : m_data{0}, m_use_base(false) { this->m_error >>__CL
 	if (ctx_dev.Error()) {
 		this->m_error = ctx_dev.Error(); return;
 	}
-#else // anyway, without creating fake device context and fake draw renderer only 'base' version '1.1' is available;
-	::open_gl::CFake_Ctx fk_ctx;
+#else
+//	::open_gl::CFake_Ctx fk_ctx;
+	TCtx_Toggle();
 #endif
 
 	this->m_atts[e_atts::e_render ] << e_atts::e_render  >> reinterpret_cast<const char*>(::glGetString(GL_RENDERER));

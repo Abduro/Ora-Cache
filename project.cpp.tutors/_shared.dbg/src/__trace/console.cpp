@@ -114,13 +114,19 @@ err_code CConsole::Create (void) {
 		 return this->m_error.Last();
 
 	::Get_ConPers().Load();
+
+	using CLines = TConPers::CLines;
+	const CLines& lines = ::Get_ConPers().Lines();
+
+	COut::Cfg().m_use   = lines.Is_set();
+	COut::Cfg().m_lines = lines.Get();
 	
 	this->m_con_wnd = ::GetConsoleWindow(); // https://learn.microsoft.com/en-us/windows/console/getconsolewindow ;
 	this->Frame().OnCreate();
 
 	modes::CInput().EditMode(false);
 
-	CFont().Set(_T("consolas"), 15);
+	CFont().Set(_T("consolas"), 15); // to-do: must be in console settings;
 //	CBkgnd().Color(::Get_theme().Bkgnd_rgb());
 
 	CLayout layout;

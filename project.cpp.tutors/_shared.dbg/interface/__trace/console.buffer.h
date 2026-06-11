@@ -18,6 +18,7 @@ namespace shared { namespace console {
 		 CScreenBuffer (const CScreenBuffer&) = delete; CScreenBuffer (CScreenBuffer&&) = delete;
 
 		err_code Clear (const t_char _symbol = _T(' ')); // clears console screen buffer by filling the given symbol;
+		err_code Clear (const uint32_t _u_line, const t_char _symbol = _T(' ')); // clears console screen buffer by specified line number;
 
 		TError& Error (void) const;
 
