@@ -4,7 +4,6 @@
     <Filter Include="_root"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B000}</UniqueIdentifier></Filter>
     <Filter Include="_root\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B001}</UniqueIdentifier></Filter>
     <Filter Include="buffer"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0002}</UniqueIdentifier></Filter>
-    <Filter Include="drawable"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0004}</UniqueIdentifier></Filter>
     <Filter Include="program"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0005}</UniqueIdentifier></Filter>
     <Filter Include="shader"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0006}</UniqueIdentifier></Filter>
     <Filter Include="shader\compile"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000B0007}</UniqueIdentifier></Filter>
@@ -30,14 +29,6 @@
     <ClCompile Include="$(_1-4)gl_buf.bind.cpp"><Filter>buffer</Filter></ClCompile>
     <ClInclude Include="$(_0-4)gl_buf.data.h"><Filter>buffer</Filter></ClInclude>
     <ClCompile Include="$(_1-4)gl_buf.data.cpp"><Filter>buffer</Filter></ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(_0)gl_drawable.h"><Filter>drawable</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_drawable.cpp"><Filter>drawable</Filter></ClCompile>
-    <ClInclude Include="$(_0-5)gl_grid_layout.h"><Filter>drawable</Filter></ClInclude>
-    <ClCompile Include="$(_1-5)gl_grid_layout.cpp"><Filter>drawable</Filter></ClCompile>
-    <ClInclude Include="$(_0-5)gl_grid_pers.h"><Filter>drawable</Filter></ClInclude>
-    <ClCompile Include="$(_1-5)gl_grid_pers.cpp"><Filter>drawable</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0-1)gl_$_cache.h"><Filter>program</Filter></ClInclude>

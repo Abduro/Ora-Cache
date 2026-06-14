@@ -3,6 +3,7 @@
 	This is triangle drawable shape interface implementation file.
 */
 #include "shape.tria.h"
+#include "gl_procs_light.h"
 
 using namespace ::open_gl::shapes;
 
@@ -18,8 +19,10 @@ void   CTria::Draw (void) {
 //	CMatrix mat_4x4;
 //	if (__failed(mat_4x4.To_self())) { return; }
 
+	LtToggle(false);
+
 	CStack stack;
-	stack.Push(/*mat_4x4.Data()*/);
+	stack.Push();
 
 	::glBegin(GL_TRIANGLES);
 
@@ -29,7 +32,6 @@ void   CTria::Draw (void) {
 		::glColor3f (vert.Color().at(0), vert.Color().at(1), vert.Color().at(2));
 		::glVertex3f(vert.Point().at(0), vert.Point().at(1), vert.Point().at(2));
 	}
-
 	::glEnd();
 	stack.Pop();
 }

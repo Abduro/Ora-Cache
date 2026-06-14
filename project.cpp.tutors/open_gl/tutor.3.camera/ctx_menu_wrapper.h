@@ -5,7 +5,7 @@
 	This is Ebo Pack OpenGL tutorials'main window context menu wrapper interface declaration file;
 */
 #include "shared.ctx.menu.h"
-#include "gl_drawable.h"
+#include "view.grid.h"
 
 namespace ex_ui { namespace draw { namespace gui {
 	using namespace shared::defs;

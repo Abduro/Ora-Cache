@@ -69,9 +69,7 @@ namespace ex_ui { namespace color { namespace rgb {
 #endif
 		void  Reset  (void);                   // zeros value of all color channels and sets to invalid state;
 
-#ifdef _DEBUG
 		CString Print (const e_print = e_print::e_all) const;
-#endif
 
 	public:
 		CQuad&  operator = (const CQuad&);
@@ -121,9 +119,8 @@ namespace ex_ui { namespace color { namespace rgb {
 		bool  Lighten(const TPercent& );       // lightens a color by specified percent value in [0...100]; returns true if succeeds;
 		bool  Lighten(const uint8_t _percent); // lightens a color by specified percent value in [0...100]; returns true if succeeds;
 
-#ifdef _DEBUG
 		CString Print (const e_print = e_print::e_all) const;
-#endif
+
 	};
 
 	using e_rgba = CQuad::channel;
@@ -159,14 +156,19 @@ namespace ex_ui { namespace color { namespace rgb {
 		bool Set_b (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
 		bool Set_g (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
 		bool Set_r (const clr_value) ;    // sets a channel value of float color from rgb color channel value; returns 'true' in case of value change;
-#if defined(_DEBUG)
+
 		CString  Print (const e_print = e_print::e_all) const;
-#endif
-		bool Set (const clr_type);    // sets float color value from rgba color; returns 'true' in case of change float color value;
+
+		bool Set (const clr_type);     // sets float color value from rgba color; returns 'true' in case of change float color value;
+
+		// sets color as float value; if the value is out of range [0.0...1.0], the value is set to min or max value of the range;
+		void Set (const float _r, const float _g, const float _b, const float _a = 1.0f);
+		void Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a = 0xff);
+		bool Set (_pc_sz _clr_in_hex); // sets color from hexidecimal string;
 
 	public: // convertor(s); these methods below use CConvert class that is declared in color._defs.h;
-		clr_type ToRgb  (void) const; // converts current float color channels' values to RGB color, the alpha value is set to rgb_val_max (0xff);
-		clr_type ToRgbA (void) const; // converts current float color channels' values to RGB color, the alpha value is kept as is;
+		clr_type ToRgb  (void) const;  // converts current float color channels' values to RGB color, the alpha value is set to rgb_val_max (0xff);
+		clr_type ToRgbA (void) const;  // converts current float color channels' values to RGB color, the alpha value is kept as is;
 
 	public:
 		CFloat&  operator <<(const clr_type);
@@ -198,11 +200,10 @@ namespace ex_ui { namespace color { namespace rgb {
 		CQuad& Color (void) ;
 
 	public:
-#if defined (_DEBUG)
 		static CString Print (const clr_type);
 		static CString Print (const CQuad&, const e_print = e_print::e_req);
-#endif
-		bool   Set (_pc_sz); // returns 'true' in case of value changed; expected format is #xxxxxx, where 'x' is a digit in range [0..9];
+
+		bool   Set (_pc_sz); // returns 'true' in case of value changed; expected format is #xxxxxx, where 'x' is a symbol in range [0..9..f];
 	public:
 		CHex&  operator = (const CHex&);
 		CHex&  operator = (CHex&&) = delete;

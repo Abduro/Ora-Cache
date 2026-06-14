@@ -32,6 +32,7 @@ namespace open_gl { namespace procs { namespace ver_1_1 {
 	public:
 		CClear (void); CClear (const CClear&) = delete; CClear (CClear&&) = delete; ~CClear (void) = default;
 
+		err_code All (void);                          // makes direct call to glClear() with all buffer flags; 
 		err_code All (const s_clear_args&);           // clears color buffers, depth buffer and stencil by given values;
 
 		err_code Color (const f_clr_t _clr_value);    // specifies clear values for the color buffers; it must to go before glClear();

@@ -1,13 +1,13 @@
-#ifndef _GL_GRID_LAYOUT_H_INCLUDED
-#define _GL_GRID_LAYOUT_H_INCLUDED
+#ifndef _GRID_LAYOUT_H_INCLUDED
+#define _GRID_LAYOUT_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Apr-2026 at 08:42:49.539, UTC+4, Batumi, Thursday;
-	This is Ebo Pack OpenGL tutorials' grid view layout interfce declaration file;
+	This is Ebo Pack OpenGL tutorials' gview grid layout interfce declaration file;
 */
-#include "gl_grid_pers.h"
+#include "grid.pers.h"
 
 namespace open_gl { namespace views {
-namespace grid { using namespace shared::defs;
+namespace grid {
 
 	struct s_point_2d {
 		float m_x, m_y;
@@ -35,8 +35,8 @@ namespace grid { using namespace shared::defs;
 		s_point_3d& operator = (const s_point_3d&);
 		s_point_3d& operator <<(const s_point_2d&);
 		const
-		s_point_2d&  operator ()(void) const;
-		s_point_2d&  operator ()(void) ;
+		s_point_2d& operator ()(void) const;
+		s_point_2d& operator ()(void) ;
 
 		operator const s_point_2d& (void) const;
 		operator       s_point_2d& (void) ;
@@ -73,7 +73,7 @@ namespace grid { using namespace shared::defs;
 
 	typedef ::std::vector<s_line_2d> lines_t;
 
-	using CPers = ::open_gl::views::grid::CPersistent;
+	using CPers = CPersistent;
 
 	class CLayout {
 	public:
@@ -98,4 +98,4 @@ namespace grid { using namespace shared::defs;
 	};
 }
 }}
-#endif/*_GL_GRID_LAYOUT_H_INCLUDED*/
+#endif/*_GRID_LAYOUT_H_INCLUDED*/

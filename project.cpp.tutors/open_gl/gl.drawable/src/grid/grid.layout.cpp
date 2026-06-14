@@ -1,11 +1,9 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Apr-2026 at 08:47:09.435, UTC+4, Batumi, Thursday;
-	This is Ebo Pack OpenGL tutorials' grid view layout interfce implementation file;
+	This is Ebo Pack OpenGL tutorials' view grid layout interfce implementation file;
 */
-#include "gl_grid_layout.h"
-#include "gl_viewport.h"
+#include "grid.layout.h"
 
-using namespace open_gl::views;
 using namespace open_gl::views::grid;
 
 #pragma region str::s_point_2d{}

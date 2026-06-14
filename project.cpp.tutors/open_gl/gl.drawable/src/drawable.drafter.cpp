@@ -3,13 +3,15 @@
 	This is Ebo Pack drawable object/drafter interface implementation file;
 */
 #include "drawable.drafter.h"
+#include "gl_procs_light.h"
+#include "gl_procs_clear.h"
 
-using namespace shared::drawable;
+using namespace ::shared::drawable;
+using namespace ::open_gl::procs::ver_1_1;
 
 #pragma region cls::CDrafter{}
 
 CDrafter:: CDrafter (void) : TBase(), m_surface(0), m_mouse{0} { TBase::m_error >>__CLASS__; }
-//CDrafter:: CDrafter (const CDrafter& _src) : CDrafter() { *this = _src; }
 CDrafter::~CDrafter (void) {}
 const
 CCamera& CDrafter::Camera (void) const { return this->m_camera; }
@@ -18,6 +20,14 @@ CCamera& CDrafter::Camera (void)       { return this->m_camera; }
 err_code CDrafter::OnCreate (const HWND _h_surface) {
 	_h_surface;
 	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == ::Get_version().Is_base()) {
+		static _pc_sz p_err_ver_unsupp = _T("#__e_vers: OpenGL ver %s is not supported");
+		__trace_err_ex_2(
+			this->m_error <<(err_code)TErrCodes::eExecute::eState = TString().Format(p_err_ver_unsupp, (_pc_sz) ::Get_version().Data().To_str() )
+		);
+		return this->Error();
+	}
 
 	if (__failed(::Get_mouse() << this)) { __trace_err_ex_2(this->m_error = ::Get_mouse().Error()); }
 	if (__failed(this->Camera().Create())) { __trace_err_ex_2(this->m_error = this->Camera().Error()); }
@@ -66,63 +76,64 @@ void CDrafter::Run (void) {
 	__trace_impt_2(_T("drafter started: thread ID = %u;\n"), ((TBase&)(*this)).Id());
 
 	CDelay delay(10, 100);
+#if (1)
+	// this is must to be here: worker thread requires to set the curren renderer;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
 	if (0 == ::wglMakeCurrent(this->View().Device(), this->View().Graphs().Renderer())) {
 		__trace_err_ex_2(TBase::m_error(CError::e_cmds::e_get_last) = _T("#__e_exec: making draw context current is failed"));
 	}
-	if (__failed(this->Model().Init())) {
-		__trace_err_ex_2(TBase::m_error = this->Model().Error());
+#endif
+	if (__failed(this->View().Init())) {
+		__trace_err_ex_2(TBase::m_error = this->Model().Error()); return;  // nothing to draw; this is critical error;
 	} else {
 
 		t_size sz_client = ::Get_ViewPorts().Active().Get();
 		t_rect rc_client = {0, 0, sz_client.cx, sz_client.cy};
 		
-		this->Model().Grid().Layout() << rc_client;
+		this->View().Grid().Layout() << rc_client;
 		// https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ;
 		// https://learn.microsoft.com/en-us/windows/win32/opengl/glscissor ;
 		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
-		::glScissor(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
+		::glScissor (0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
 	}
 
+	::open_gl::procs::ver_1_1::CClear clear;
+
+#if (1)
 	while (false == ((TBase&)(*this))().Is_stopped()) {
 		delay.Wait();
 		if (false == delay.Elapsed())
 			continue;
-
-		::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // must be called before rendering each frame;
-		::glMatrixMode(GL_MODELVIEW);
-
-		this->m_tria.Draw();
-
-		::glPushMatrix();
+#endif
+		clear.All(); // must be called before rendering each frame;
+		::glLoadIdentity();
 
 		const bool b_scaled = this->m_scale.Is_changed();
 		if (b_scaled) {
 		//	shared::sys_core::the_lock.lock();
-#if (0)
-			const c_scaled scaled = this->m_scale();
-			::glMultMatrixf(&scaled); // https://learn.microsoft.com/en-us/windows/win32/opengl/glmultmatrixf ;
-#else
 			/* warning: when using glScalef() with lighting, enable GL_NORMALIZE to ensure lighting calculations remain correct.
 			*/
+			::glPushMatrix();
 			const float f_factor = this->m_scale.Get();
 			::glScalef(f_factor, f_factor, f_factor); // https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
-#endif
 		}
-		delay.Reset();
-		this->Model().Grid().Draw();
-
-		if (b_scaled || true) {
-		//	shared::sys_core::the_lock.unlock();
+		this->View().Grid().Draw();
+		if (b_scaled)
 			::glPopMatrix();
-		}
+		this->m_tria.Draw();
 
+	//	::glFinish(); // https://learn.microsoft.com/en-us/windows/win32/opengl/glfinish ;
+		glFlush();    // https://learn.microsoft.com/en-us/windows/win32/opengl/glflush ;
+		
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-swapbuffers ;
 		if (false == !!::SwapBuffers(this->View().Device())) {
 			TBase::m_error.Last();
 			__trace_err_2(_T("%s;\n"), (_pc_sz) TBase::Error().Print(TError::e_print::e_req));
 		}
+		delay.Reset();
+#if (1)
 	}
+#endif
 	::wglMakeCurrent(this->View().Device(), 0); // it must be set before marking event as signaled; ::wglMakeCurrent(0, 0) >> does not work!
 	(*this)().Event() << true; // sets the event to signal state, i.e. the job is done;
 	__trace_impt_2(_T("drafter ended: thread ID = %u;\n"), ((TBase&)(*this)).Id());

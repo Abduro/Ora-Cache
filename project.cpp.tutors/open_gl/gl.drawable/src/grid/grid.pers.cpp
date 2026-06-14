@@ -1,12 +1,12 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 02-May-2026 at 00:11:05.865, UTC+4, Batumi, Saturday;
-	This is Ebo Pack OpenGL tutorials' grid view persistent interface implementation file; 
+	This is Ebo Pack OpenGL tutorials' view grid persistent interface implementation file; 
 */
-#include "gl_grid_pers.h"
+#include "grid.pers.h"
 #include "sys.registry.h"
 
-using namespace open_gl::views::grid;
-using CHex = ex_ui::color::rgb::CHex;
+using namespace ::open_gl::views::grid;
+using CHex = ::ex_ui::color::rgb::CHex;
 
 #pragma region cls::CCell{}
 

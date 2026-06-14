@@ -2,140 +2,14 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 18-Dec-2025 at 10:50:26.070, UTC+4, Batumi, Thursday;
 	This is Ebo Pack OpenGL drawable components' interface implementation file;
 */
-#include "gl_drawable.h"
+#include "view.grid.h"
 #include "gl_renderer.h"
-#include "gl_viewport.h"
-#include "gl_uniform.h"
-#include "gl_grid_layout.h"
-
-#include "shared.theme.h"
-#include "sys.registry.h"
-
 #include "gl_procs_surface.h"
-#include "gl_procs_uniform.h"
+#include "gl_procs_light.h"
 
-#include "color._defs.h"
-
-using namespace open_gl::views;
-using namespace ex_ui::color::rgb;
-
-#pragma region cls::CBkgnd{}
-
-using e_clear_ops = ex_ui::draw::open_gl::procs::CEraser::e_clear_ops;
-
-CBkgnd:: CBkgnd (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CBkgnd::~CBkgnd (void) {}
-
-err_code CBkgnd::Draw (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-
-	using shared::gui::theme::s_flt_clr;
-	// (1) gets the background color from the registry; the background is drawn in anyway, regardless of renderer drawable object settings;
-	const s_flt_clr& clr_bkgnd = ::Get_theme().Bkgnd_flt();
-	
-	// (1.a) sets the color for using by background eraser;
-	if (__failed(::__get_eraser_procs().Clr(clr_bkgnd._red, clr_bkgnd._green, clr_bkgnd._blue, clr_bkgnd._alpha))) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
-		return this->m_error = ::__get_eraser_procs().Error();
-	}
-	/* setting e_clear_ops::e_depth for clean operation requires:
-	...ensure depth testing is enabled (glEnable(GL_DEPTH_TEST)) and clear the depth buffer, at the beginning of each frame to correctly handle overlapping geometry...
-	*/
-#if (0)
-	using e_caps = TCapsProcs::e_caps;
-	if (__failed(::__get_caps_procs().Enable(true, e_caps::e_depth_tst))) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_caps_procs().Error().Print(TError::e_print::e_req));
-		return this->m_error = ::__get_caps_procs().Error();
-	}
-#endif
-	// (1.b) applies the background color; the same color is also applied to the console of the debug output;
-	if (__failed(::__get_eraser_procs().All(e_clear_ops::e_color|e_clear_ops::e_depth))) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) ::__get_eraser_procs().Error().Print(TError::e_print::e_req));
-		return this->m_error = ::__get_eraser_procs().Error();
-	}
-
-	return this->Error();
-}
-
-TError&  CBkgnd::Error (void) const { return this->m_error; }
-
-#pragma endregion
-#pragma region cls::CClr_flt{}
-
-CClr_flt:: CClr_flt (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-CClr_flt::~CClr_flt (void) {}
-
-TError&  CClr_flt::Error (void) const { return this->m_error; }
-#if (0)
-err_code CClr_flt::Get (const e_object _target) {
-	_target;
-	this->m_error <<__METHOD__<<__s_ok;
-
-	CString cs_key;   // registry key path;
-	CString cs_name;  // registry key value name;
-
-	if (e_object::e_grid == _target) {
-		using CRegGrid = shared::sys_core::storage::route::CGrid;
-		CRegGrid& reg_grid = ::Get_reg_router().Viewport().Grid();
-
-		cs_key = reg_grid.Root(); cs_name = reg_grid.Clr_name();
-	}
-
-	if (cs_key.IsEmpty())
-		return this->m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_val: the object (%u) is unsupported"), _target);
-
-	TRegKeyEx reg_key;
-	CString cs_clr = reg_key.Value().GetString((_pc_sz) cs_key, (_pc_sz) cs_name);
-	if (reg_key.Error()) {
-		__trace_err_2(_T("%s;\n"), (_pc_sz) reg_key.Error().Print(TError::e_print::e_req));
-	}
-
-	TBase::Set((rgb_color)CHex((_pc_sz) cs_clr)); // alpha channel is set to 0 (zero), but it is not important for because it is not taken into account yet;
-#if defined(_DEBUG)
-	if (e_object::e_grid == _target) {
-	__trace_info_2(_T("grid line color: {%s};\n"), (_pc_sz) TBase::Print(e_print::e_req)); 
-	}
-#endif
-	return this->Error();
-}
-#endif
-err_code CClr_flt::Set (const float _r, const float _g, const float _b, const float _a) {
-	_r; _g; _b; _a;
-	(*this)()[e_rgba::r] = (0.0f > _r ? 0.0f : (1.0f < _r ? 1.0f : _r));
-	(*this)()[e_rgba::g] = (0.0f > _g ? 0.0f : (1.0f < _g ? 1.0f : _g));
-	(*this)()[e_rgba::b] = (0.0f > _b ? 0.0f : (1.0f < _b ? 1.0f : _b));
-	(*this)()[e_rgba::a] = (0.0f > _a ? 0.0f : (1.0f < _a ? 1.0f : _a));
-	return __s_ok;
-}
-
-err_code CClr_flt::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a) {
-	_r; _g; _b; _a;
-	(*this)()[e_rgba::r] = CConvert::ToFloat(_r);
-	(*this)()[e_rgba::g] = CConvert::ToFloat(_g);
-	(*this)()[e_rgba::b] = CConvert::ToFloat(_b);
-	(*this)()[e_rgba::a] = CConvert::ToFloat(_a);
-	return __s_ok;
-}
-
-err_code CClr_flt::Set (const CString& _cs_clr) {
-	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
-	if (_cs_clr.IsEmpty())
-		return this->m_error <<__e_inv_arg = _T("#__e_inv_arg: input color string is empty");
-
-	TBase::Set((rgb_color)CHex((_pc_sz)_cs_clr)); // alpha channel is set to 0 (zero), but it is not important for because it is not taken into account yet;
-#if defined(_DEBUG)
-//	if (e_object::e_grid == _target) {
-//	__trace_info_2(_T("grid line color: {%s};\n"), (_pc_sz) TBase::Print(e_print::e_req)); 
-//	}
-#endif
-	return this->Error();
-}
-
-const
-rgb::CFloat&  CClr_flt::operator ()(void) const { return (TBase&)*this; }
-rgb::CFloat&  CClr_flt::operator ()(void)       { return (TBase&)*this; }    
-
-#pragma endregion
+using namespace ::open_gl::views;
+using namespace ::ex_ui::color::rgb;
+using namespace ::open_gl::procs::matrix::ver_1_1;
 
 namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 
@@ -192,11 +66,11 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 			const float f_cells =  1.0f;
 			const float f_step  =  0.1f;
 
-			// to-do: all functions being called must be moved to procedure loader project;
+			LtToggle(false);
+
+			// to-do: all functions being called must be moved to procedure loader/wrapper project;
 			
 			::glLineWidth(1.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/gllinewidth ;
-
-			::glDisable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/gldisable ;
 			::glBegin(GL_LINES); // https://learn.microsoft.com/en-us/windows/win32/opengl/glbegin ;
 
 			const CPers& pers = _grid.Pers();
@@ -222,6 +96,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 				u_iter += 1;
 			}
 #else
+			CStack stack;
+			stack.Push();
+
 			using namespace ::open_gl::views::grid;
 			CLayout& layout = _grid.Layout();
 			const lines_t& lines = layout.Calc(); // it is supposed the grid rectangle is set;
@@ -234,7 +111,7 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 			}
 #endif
 			::glEnd(); // ::https://learn.microsoft.com/en-us/windows/win32/opengl/glend ;
-			::glEnable(GL_LIGHTING); // https://learn.microsoft.com/en-us/windows/win32/opengl/glenable ;
+			stack.Pop();
 
 			return _error;
 		}
@@ -252,8 +129,8 @@ CGrid:: CGrid (void) : m_layout(m_pers) { this->m_error >>__CLASS__<<__METHOD__<
 CGrid::~CGrid (void) {}
 
 const
-CClr_flt& CGrid::Clr (void) const { return this->m_color; }
-CClr_flt& CGrid::Clr (void)       { return this->m_color; }
+Color_f& CGrid::Clr (void) const { return this->m_color; }
+Color_f& CGrid::Clr (void)       { return this->m_color; }
 
 err_code CGrid::Create (void) {
 	this->m_error <<__METHOD__<<__s_ok;

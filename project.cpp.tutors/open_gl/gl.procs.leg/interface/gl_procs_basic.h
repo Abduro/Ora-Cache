@@ -9,14 +9,14 @@
 #include <gl/glu.h>
 #include "gl_error.h"
 /**important*:
-  all functions related to legacy fixed pipeline of the OpenGL ver 1.1 does not require loading its addresses,
-  because it is expected the libraries referenced below contain those functions;
+   all functions related to legacy fixed pipeline of the OpenGL ver 1.1 does not require loading its addresses,
+   because it is expected the libraries referenced below contain those functions;
 */
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
-/*	taking into account the fact that there tutorials are implemented under MS Windows and OpenGL ver 1.1 is used
-	the most of the reference is made to Microsoft documentation related to using OpenGL:
-	https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-reference ;
+/* taking into account the fact that these tutorials are implemented under MS Windows and OpenGL ver 1.1 is used,
+   the most of the reference is made to Microsoft documentation related to using OpenGL:
+   https://learn.microsoft.com/en-us/windows/win32/opengl/opengl-reference ;
 */
 #include "shared.preproc.h"
 #include "shared.dbg.h"
@@ -152,6 +152,7 @@ namespace ver_1_1 {
 	/* query: difference between option and property in programming ; (Google AI)
 	Key Summary:
 	a 'Property' is something an object is or has (e.g., its color), while an 'Option' is a choice for how an object should act or how a tool should work;
+	the class below is the wrapper of ::glEnable, glDisable and glIsEnabled functions;
 	*/
 	// https://stackoverflow.com/questions/2074384/options-settings-properties-configuration-preferences-when-and-why ;
 	class CProperty : public CBasic { typedef CBasic TBase;

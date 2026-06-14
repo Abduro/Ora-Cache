@@ -7,7 +7,8 @@
 #include "shared.defs.h"
 #include "shared.dbg.h"
 #include "shared.preproc.h"
-#include "shared.theme.h"
+#include "color.rgb.h"
+#include "shared.theme.h" // background color must be reviewed; (almost done);
 
 #include "math.defs.h"
 #include "math.matrix.h"
@@ -24,7 +25,7 @@ namespace shared { namespace drawable { using namespace shared::defs;
 
 #include "gl_viewport.h"
 
-namespace open_gl { namespace views {
+namespace open_gl { namespace views { using namespace shared::defs;
 	/* query: abbreviation for euclidean ; (Google AI) >> E or Euc ;
 	   (1) ED : Euclidean Distance; https://en.wikipedia.org/wiki/Euclidean_distance ;
 	   (2) EDM: Euclidean Distance Map or Matrix; https://en.wikipedia.org/wiki/Euclidean_distance_matrix ;

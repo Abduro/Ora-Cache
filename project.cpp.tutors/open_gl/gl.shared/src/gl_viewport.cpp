@@ -4,17 +4,7 @@
 */
 #include "gl_viewport.h"
 
-#include "gl_procs_surface.h"
-#include "gl_procs_vertex.h"
-#include "gl_procs_view.h"
-
-#include "sys.registry.h"
-
-#include "gl_renderer.h"
-#include "gl_uniform.h"
-
 using namespace ex_ui::draw::open_gl;
-using namespace ex_ui::color::rgb;
 
 #ifndef __H
 #define __H(rect) (rect.bottom - rect.top)
@@ -92,16 +82,9 @@ err_code  CViewPort::Set (const t_rect& _rect) {
 	this->m_error << __METHOD__<<__s_ok;
 	if (::IsRectEmpty(&_rect))
 		return this->m_error <<__e_inv_arg = TString().Format(_T("#__inv_arg: empty rect = {w:%04d|h:%04d}"), __W(_rect), __H(_rect));
-#if (0) // it is not the point for updating the grid, because this function is intended for setting the size of viewport only;
-	this->m_size.cy = __H(_rect);
-	this->m_size.cx = __W(_rect);
 
-	if (__failed(this->Grid().Update(this->m_size))) {
-		this->m_error = this->Grid().Error();
-	}
-#else
 	this->Set(__W(_rect), __H(_rect));
-#endif
+
 	return this->Error();
 }
 

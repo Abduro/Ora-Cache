@@ -207,10 +207,12 @@
     <ClCompile Include="$(_1-0)gl_procs_mtx.oper.cpp" />
     <ClInclude Include="$(_0-0)gl_procs_mtx.stack.h" />
     <ClCompile Include="$(_1-0)gl_procs_mtx.stack.cpp" />
+    <ClInclude Include="$(_0)gl_procs_matrix.h" />
+    <ClCompile Include="$(_1)gl_procs_matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0-1)gl_procs_perspect.h" />
-    <ClCompile Include="$(_1-1)gl_procs_perspect.cpp" />
+    <ClInclude Include="$(_0)gl_procs_viewport.h" />
+    <ClCompile Include="$(_1)gl_procs_viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_basic.h" />
@@ -219,16 +221,20 @@
     <ClCompile Include="$(_1)gl_procs_clear.cpp" />
     <ClInclude Include="$(_0)gl_procs_depth.h" />
     <ClCompile Include="$(_1)gl_procs_depth.cpp" />
+    <ClInclude Include="$(_0)gl_procs_light.h" />
+    <ClCompile Include="$(_1)gl_procs_light.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_frustum.h" />
     <ClCompile Include="$(_1)gl_procs_frustum.cpp" />
-    <ClInclude Include="$(_0)gl_procs_matrix.h" />
-    <ClCompile Include="$(_1)gl_procs_matrix.cpp" />
     <ClInclude Include="$(_0)gl_procs_ortho.h" />
     <ClCompile Include="$(_1)gl_procs_ortho.cpp" />
     <ClInclude Include="$(_0)gl_procs_project.h" />
     <ClCompile Include="$(_1)gl_procs_project.cpp" />
-    <ClInclude Include="$(_0)gl_procs_viewport.h" />
-    <ClCompile Include="$(_1)gl_procs_viewport.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-1)gl_procs_perspect.h" />
+    <ClCompile Include="$(_1-1)gl_procs_perspect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(_n)__read_me_arb.txt" />

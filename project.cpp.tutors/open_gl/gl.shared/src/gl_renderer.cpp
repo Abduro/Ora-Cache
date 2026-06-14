@@ -3,7 +3,6 @@
 	This is Ebo Pack OpenGL tutorials' draw renderer interface implementation file;
 */
 #include "gl_renderer.h"
-#include "gl_drawable.h"
 #include "shapes\gl_shape.bs.h"
 
 #include "shared.preproc.h"
@@ -139,9 +138,9 @@ err_code    CRenderer::Draw (void) {
 
 	if (false == this->Is_allowed())
 		return this->Error();
+#if (0)
 	// (1) draws the background first;
 	if (__failed(::open_gl::views::CBkgnd().Draw())) {}
-#if (0)
 	// (2) draws the viewport grid;
 	if (this->Cfg().Is_drawable(e_object::e_grid)) this->View().Grid().Draw();
 #endif

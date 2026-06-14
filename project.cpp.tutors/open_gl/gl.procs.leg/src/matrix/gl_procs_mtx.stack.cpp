@@ -63,11 +63,6 @@ err_code CStack::Push (void) {
 		if (!!u_err_code)
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code, u_err_code, u_err_code);
 	}
-	if (false == TBase::Error()) {
-		if (__failed(this->Matrix().Set())) {
-			TBase::m_error = this->Matrix().Error();
-		}
-	}
 
 	return TBase::Error();
 }

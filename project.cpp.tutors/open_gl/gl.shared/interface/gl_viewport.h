@@ -5,7 +5,6 @@
 	This is Ebo Pack OpenGL viewport wrapper interface declaration file;
 */
 #include "gl_defs.h"
-#include "gl_drawable.h"
 
 #pragma region __refs_f
 /* https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ; :: gettig the info of viewport;
@@ -42,7 +41,7 @@ namespace ex_ui { namespace draw { namespace open_gl {
 		// the conversion for screen coordinates is made for x|y values, z-coord has always 0.0f value;
 		static
 		err_code ToPos  (const t_size_u& _u_size, const uint32_t _in_x, const uint32_t _in_y, t_set_3& _pos_out, CError&);
-		err_code Update (void);         // updates the viewport grid layout;
+		err_code Update (void); 
 
 		CViewPort& operator = (const CViewPort&); CViewPort& operator = (CViewPort&&) = delete;
 		CViewPort& operator <<(const t_rect&);

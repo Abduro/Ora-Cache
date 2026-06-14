@@ -5,11 +5,9 @@
 	This is Ebo Pack OpenGL tutorials' model base interface declaration file;
 */
 #include "drawable.defs.h"
-#include "gl_drawable.h" // for grid declaration;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace models { using namespace shared::defs;
+namespace open_gl { namespace models { using namespace shared::defs;
 
-	using CGrid = ::open_gl::views::CGrid;
 	using CViewPort = ex_ui::draw::open_gl::CViewPort;
 
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;
@@ -22,11 +20,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 		err_code Destroy (void);
 		TError&  Error (void) const;
 
-		err_code Init (void);  // init OpenGL for working in base mode (ver 1.1); version 3.0+ is not concidered yet;
-
-		const
-		CGrid& Grid (void) const;         // gets the reference to the background grid object; (ro)
-		CGrid& Grid (void) ;              // gets the reference to the background grid object; (rw)
 		const
 		c_mat4x4&  Mat_model (void) const;
 		c_mat4x4&  Mat_model (void) ;
@@ -35,9 +28,8 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace models { using 
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 		mutable
 		CError    m_error;
-		CGrid     m_grid ;      // the grid is not implemented as a model yet;
 		c_mat4x4  m_model;
 	};
-}}}}
+}}
 
 #endif/*_MODEL_BASE_H_INCLUDED*/

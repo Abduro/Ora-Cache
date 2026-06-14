@@ -8,10 +8,13 @@
     <Filter Include="scene\camera"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000503}</UniqueIdentifier></Filter>
     <Filter Include="scene\drawable"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000504}</UniqueIdentifier></Filter>
     <Filter Include="scene\model"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000505}</UniqueIdentifier></Filter>
-    <Filter Include="scene\view"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000506}</UniqueIdentifier></Filter>
 
-    <Filter Include="shapes"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000507}</UniqueIdentifier></Filter>
-    <Filter Include="shapes\vertex"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000508}</UniqueIdentifier></Filter>
+    <Filter Include="shapes"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000506}</UniqueIdentifier></Filter>
+    <Filter Include="shapes\vertex"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000507}</UniqueIdentifier></Filter>
+
+    <Filter Include="view"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000508}</UniqueIdentifier></Filter>
+    <Filter Include="view\grid"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C01020000509}</UniqueIdentifier></Filter>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
@@ -38,7 +41,17 @@
     <ClInclude Include="$(_0-0)shape.vertex.h"><Filter>shapes\vertex</Filter></ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(_1)view.base.cpp"><Filter>scene\view</Filter></ClCompile>
-    <ClInclude Include="$(_0)view.base.h"><Filter>scene\view</Filter></ClInclude>
+    <ClInclude Include="$(_0-1)grid.layout.h"><Filter>view\grid</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)grid.layout.cpp"><Filter>view\grid</Filter></ClCompile>
+    <ClInclude Include="$(_0-1)grid.pers.h"><Filter>view\grid</Filter></ClInclude>
+    <ClCompile Include="$(_1-1)grid.pers.cpp"><Filter>view\grid</Filter></ClCompile>
+    <ClInclude Include="$(_0)view.grid.h"><Filter>view</Filter></ClInclude>
+    <ClCompile Include="$(_1)view.grid.cpp"><Filter>view</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(_1)view.base.cpp"><Filter>view</Filter></ClCompile>
+    <ClInclude Include="$(_0)view.base.h"><Filter>view</Filter></ClInclude>
+    <ClInclude Include="$(_0)view.bkgnd.h"><Filter>view</Filter></ClInclude>
+    <ClCompile Include="$(_1)view.bkgnd.cpp"><Filter>view</Filter></ClCompile>
   </ItemGroup>
 </Project>

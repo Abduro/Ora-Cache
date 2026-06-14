@@ -46,6 +46,8 @@
     <ClCompile Include="$(_1)gl_procs_project.cpp" ><Filter>projection</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)gl_procs_viewport.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_viewport.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0-1)gl_procs_perspect.h" ><Filter>utils</Filter></ClInclude>
@@ -58,7 +60,7 @@
     <ClCompile Include="$(_1)gl_procs_clear.cpp" ><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)gl_procs_depth.h" ><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)gl_procs_depth.cpp" ><Filter>src</Filter></ClCompile>
-    <ClInclude Include="$(_0)gl_procs_viewport.h" ><Filter>interface</Filter></ClInclude>
-    <ClCompile Include="$(_1)gl_procs_viewport.cpp" ><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)gl_procs_light.h" ><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)gl_procs_light.cpp" ><Filter>src</Filter></ClCompile>
   </ItemGroup>
 </Project>

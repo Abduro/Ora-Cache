@@ -15,8 +15,8 @@
 namespace shared { namespace drawable {
 
 	using CCamera = ::open_gl::CCamera;
-	using CModel = ex_ui::draw::open_gl::models::CBase;
-	using CView = ex_ui::draw::open_gl::views::CBase;
+	using CModel = ::open_gl::models::CBase;
+	using CView = ::open_gl::views::CBase;
 
 	using IMouse_Handler = ex_ui::popup::messages::IMouse_Handler;
 	using CEvent = ex_ui::popup::messages::IMouse_Handler::CEvent;
@@ -26,9 +26,9 @@ namespace shared { namespace drawable {
 
 	using CTria = ::open_gl::shapes::CTria;
 
-	/* query: what scale factor should be set in order to change draw object a little smaller opengl (to Google AI);
-	To make an OpenGL object slightly smaller, set the scale factor to a value slightly less than 1.0
-	(e.g., 0.9 for 10%) smaller, 0.95 for 5% smaller) using the glScalef(x, y, z) function.
+	/* the query to Google AI: what scale factor should be set in order to change draw object a little smaller opengl?
+	   To make an OpenGL object slightly smaller, set the scale factor to a value slightly less than 1.0
+	   (e.g., 0.9 for 10%) smaller, 0.95 for 5% smaller) using the glScalef(x, y, z) function.
 	Key Details:
 	(1) Scale Factor Range: values between 0.0 and 1.0 shrink the object, while values greater than 1.0 magnify it;
 	(2) Uniform vs. non-uniform: Use the same value for x, y, z (e.g., 0.9, 0.9, 0.9) to shrink proportionally without distortion;

@@ -209,14 +209,26 @@
     <ClCompile Include="$(_1)drawable.drafter.cpp" />
     <ClInclude Include="$(_0)model.base.h" />
     <ClCompile Include="$(_1)model.base.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="$(_0)view.base.h" />
     <ClCompile Include="$(_1)view.base.cpp" />
+    <ClInclude Include="$(_0)view.bkgnd.h" />
+    <ClCompile Include="$(_1)view.bkgnd.cpp" />
+    <ClInclude Include="$(_0)view.grid.h" />
+    <ClCompile Include="$(_1)view.grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0-0)shape.vertex.h" />
     <ClCompile Include="$(_1-0)shape.vertex.cpp" />
     <ClInclude Include="$(_0-0)shape.tria.h" />
     <ClCompile Include="$(_1-0)shape.tria.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0-1)grid.layout.h" />
+    <ClCompile Include="$(_1-1)grid.layout.cpp" />
+    <ClInclude Include="$(_0-1)grid.pers.h" />
+    <ClCompile Include="$(_1-1)grid.pers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Shared)shared.trim_v15.vcxproj">

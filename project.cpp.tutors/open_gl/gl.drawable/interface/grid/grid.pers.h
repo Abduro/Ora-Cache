@@ -1,11 +1,10 @@
-#ifndef _GL_GRID_PERS_H_INCLUDED
-#define _GL_GRID_PERS_H_INCLUDED
+#ifndef _GRID_PERS_H_INCLUDED
+#define _GRID_PERS_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 02-May-2026 at 00:13:21.809, UTC+4, Batumi, Saturday;
-	This is Ebo Pack OpenGL tutorials' grid view persistent interface declaration file; 
+	This is Ebo Pack OpenGL tutorials' view grid persistent interface declaration file; 
 */
-#include "gl_defs.h"
-#include "color.rgb.h"
+#include "drawable.defs.h"
 
 namespace open_gl { namespace views { namespace grid { using namespace shared::defs;
 
@@ -92,4 +91,4 @@ namespace open_gl { namespace views { namespace grid { using namespace shared::d
 
 }}}
 
-#endif/*_GL_GRID_PERS_H_INCLUDED*/
+#endif/*_GRID_PERS_H_INCLUDED*/

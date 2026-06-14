@@ -121,7 +121,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 //	if (__failed(::Get_ConPers().Load())) __trace_err_ex_2(::Get_ConPers().Error());
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 		shared::console::CBkgnd con_bkg;
-		con_bkg.Color(::Get_theme().Bkgnd_rgb());
+		con_bkg.Color(::Get_theme().Bkgnd().Rgba());
 
 		_con.Frame().Icon() << IDR_TUTOR_0_ICO;
 		_con.Frame().Caption((_pc_sz)_con.Frame().Caption_Dflt());

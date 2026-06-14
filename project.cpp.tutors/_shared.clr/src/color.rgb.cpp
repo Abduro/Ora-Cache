@@ -8,7 +8,6 @@
 
 using namespace ex_ui::color::rgb;
 
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::CQuad{}
 
 CQuad:: CQuad (clr_value _r, clr_value _g, clr_value _b, clr_value _a) : m_value{_r, _g, _b, _a}, m_valid(true){}
@@ -19,8 +18,6 @@ CQuad:: CQuad (clr_type _color , clr_value _alpha) : CQuad() {
 CQuad:: CQuad (const CQuad& _src) : CQuad() { *this = _src; }
 CQuad:: CQuad (CQuad&& _victim) : CQuad() { *this = _victim; }
 CQuad::~CQuad (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 clr_value CQuad::A (void) const { return this->m_value[channel::a]; }
 clr_value CQuad::B (void) const { return this->m_value[channel::b]; }
@@ -87,12 +84,8 @@ bool CQuad::Set (clr_value _r, clr_value _g, clr_value _b, clr_value _a) {
 	return b_changed;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 clr_type CQuad::ToRgb  (void) const { return _r_g_b   (this->R(), this->G(), this->B()); }
 clr_type CQuad::ToRgbA (void) const { return _r_g_b_a (this->R(), this->G(), this->B(), this->A()); }
-
-/////////////////////////////////////////////////////////////////////////////
 
 bool CQuad::Is_equal_to (const rgb_color _clr) const {
 	_clr;
@@ -113,7 +106,7 @@ const bool  CQuad::Is(void) const {
 
 bool& CQuad::Is(void) { return this->m_valid; }
 #endif
-#ifdef _DEBUG
+
 CString CQuad::Print (const e_print e_opt) const {
 	e_opt;
 	static _pc_sz pc_sz_pat_a  = _T("cls::[%s::%s]>>{value:[r=%u;g=%u;b=%u;a=%u];valid=%s}");
@@ -138,13 +131,10 @@ CString CQuad::Print (const e_print e_opt) const {
 
 	return  cs_out;
 } 
-#endif
 
 void    CQuad::Reset (void) {
 	::memset((void*)m_value[0], 0, sizeof(uint32_t) * channel::_count); this->m_valid = false;
 } 
-
-/////////////////////////////////////////////////////////////////////////////
 
 CQuad&  CQuad::operator = (const CQuad& _ref) { *this << _ref.Is() << _ref.ToRgb() << _ref.A(); return *this; }
 CQuad&  CQuad::operator = (CQuad&& _victim) { *this = _victim; /*_victim.Reset();*/ return *this; }
@@ -152,8 +142,6 @@ CQuad&  CQuad::operator = (CQuad&& _victim) { *this = _victim; /*_victim.Reset()
 CQuad&  CQuad::operator <<(bool _valid) { this->Is() = _valid; return *this; }
 CQuad&  CQuad::operator <<(rgb_color _color) { this->Set(_color, /*value_max*/0x0, true); return *this; }
 CQuad&  CQuad::operator <<(clr_value _alpha) { this->A(_alpha); return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
 
 CQuad::operator bool (void) const { return this->Is(); }
 CQuad::operator rgb_color (void) const { return this->ToRgb(); }
@@ -165,14 +153,11 @@ bool CQuad::operator == (const CQuad& _quad) const { return this->Is_equal_to(_q
 bool CQuad::operator != (const CQuad& _quad) const { return this->Is_equal_to(_quad) == false; }
 
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::Color{}
 
 CColor:: CColor (void) : TBase() {}
 CColor:: CColor (clr_type _color) : TBase(_color) {}
 CColor:: CColor (clr_type _color , clr_value _alpha) : TBase(_color, _alpha) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 float CColor::Chroma (void) const {
 	
@@ -269,8 +254,6 @@ bool  CColor::Lighten(const TPercent& _percent) {
 	return this->Lighten((uint8_t)_percent.GetAsInt()); // rude data type cast, but it is okay for this version of the implementation;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-#if defined(_DEBUG)
 CString CColor::Print (const e_print e_opt) const {
 	e_opt;
 #if (0)
@@ -298,17 +281,13 @@ CString CColor::Print (const e_print e_opt) const {
 		
 	return cs_out;
 }
-#endif
 
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::CFloat{}
 
 CFloat:: CFloat (void) : m_rgba{0.0f} {}
 CFloat:: CFloat (const clr_type _clr) : CFloat() { *this << _clr; }
 CFloat:: CFloat (const clr_value _r, const clr_value _g, const clr_value _b, const clr_value _a) : CFloat() { this->Set(_r_g_b_a(_r,_g,_b,_a)); }
-
-/////////////////////////////////////////////////////////////////////////////
 
 using e_ndx = CQuad::channel;
 
@@ -346,7 +325,6 @@ bool CFloat::Set_r (const clr_value _u_value) {
 	const bool  b_changed = !Is_equal(this->Get_r(), f_value); if (b_changed) this->m_rgba[e_ndx::r] = f_value;  return b_changed;
 }
 
-#if defined(_DEBUG)
 CString  CFloat::Print (const e_print _e_opt) const {
 	_e_opt;
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s::%s]>>{r:%s;g:%s;b:%s;a:%s};");
@@ -377,7 +355,6 @@ CString  CFloat::Print (const e_print _e_opt) const {
 
 	return  cs_out;
 }
-#endif
 
 bool CFloat::Set (const clr_type _clr) {
 	_clr;
@@ -389,6 +366,26 @@ bool CFloat::Set (const clr_type _clr) {
 	return b_changed;
 }
 
+void CFloat::Set (const float _r, const float _g, const float _b, const float _a) {
+	_r; _g; _b; _a;
+	(*this)[e_rgba::r] = (0.0f > _r ? 0.0f : (1.0f < _r ? 1.0f : _r));
+	(*this)[e_rgba::g] = (0.0f > _g ? 0.0f : (1.0f < _g ? 1.0f : _g));
+	(*this)[e_rgba::b] = (0.0f > _b ? 0.0f : (1.0f < _b ? 1.0f : _b));
+	(*this)[e_rgba::a] = (0.0f > _a ? 0.0f : (1.0f < _a ? 1.0f : _a));
+}
+
+void CFloat::Set (const uint8_t _r, const uint8_t _g, const uint8_t _b, const uint8_t _a) {
+	_r; _g; _b; _a;
+	(*this)[e_rgba::r] = CConvert::ToFloat(_r);
+	(*this)[e_rgba::g] = CConvert::ToFloat(_g);
+	(*this)[e_rgba::b] = CConvert::ToFloat(_b);
+	(*this)[e_rgba::a] = CConvert::ToFloat(_a);
+}
+
+bool CFloat::Set (_pc_sz _clr_in_hex) {
+	return this->Set((rgb_color)CHex((_pc_sz)_clr_in_hex));
+}
+
 clr_type CFloat::ToRgb  (void) const {
 	return CQuad(CConvert::ToValue(this->Get_r()), CConvert::ToValue(this->Get_g()), CConvert::ToValue(this->Get_b()), rgb_val_max).ToRgb();
 }
@@ -396,15 +393,12 @@ clr_type CFloat::ToRgbA (void) const {
 	return CQuad(CConvert::ToValue(this->Get_r()), CConvert::ToValue(this->Get_g()), CConvert::ToValue(this->Get_b()), CConvert::ToValue(this->Get_a())).ToRgbA();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CFloat&  CFloat::operator <<(const clr_type _clr) { this->Set(_clr); return *this; }
 const
 float&   CFloat::operator [] (const e_rgba _chan) const { switch (_chan) { case e_rgba::a: case e_rgba::b: case e_rgba::g: case e_rgba::r: return this->m_rgba[_chan]; default: static float f_na = 0.0f; return f_na; }}
 float&   CFloat::operator [] (const e_rgba _chan)       { switch (_chan) { case e_rgba::a: case e_rgba::b: case e_rgba::g: case e_rgba::r: return this->m_rgba[_chan]; default: static float f_na = 0.0f; return f_na; }}     
 
 #pragma endregion
-/////////////////////////////////////////////////////////////////////////////
 #pragma region cls::CHex{}
 
 CHex:: CHex (_pc_sz _p_value) : CHex() { *this << _p_value; }
@@ -412,12 +406,9 @@ CHex:: CHex (clr_type _type) : m_color(_type) {}
 CHex:: CHex (const CHex& _src) : CHex() { *this = _src; }
 CHex::~CHex (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
 const
 CQuad& CHex::Color (void) const { return this->m_color; }
 CQuad& CHex::Color (void)       { return this->m_color; }
-
-/////////////////////////////////////////////////////////////////////////////
 
 CHex& CHex::operator = (const CHex& _src) { *this << _src.Color(); return *this; }
 CHex& CHex::operator <<(const clr_type _type) { this->Color() = _type; return *this; }
@@ -428,8 +419,6 @@ const
 CQuad& CHex::operator ()(void) const { return this->m_color; }
 CHex::operator clr_type (void) const { return (*this)().ToRgbA(); }
 
-/////////////////////////////////////////////////////////////////////////////
-#if defined (_DEBUG)
 CString CHex::Print (const clr_type _clr) {
 	_clr;
 	static _pc_sz pc_sz_pat_v = _T("#%02x%02x%02x");
@@ -463,17 +452,21 @@ CString CHex::Print (const CQuad& _quad, const e_print e_opt) {
 
 	return  cs_out;
 }
-#endif
 
 bool CHex::Set (_pc_sz _p_val) {
 	_p_val;
 	bool b_changed = false;
 
 	CString cs_value(_p_val); cs_value.Trim();
-	if (_T("#") != cs_value.Left(1))
+	if (cs_value.IsEmpty())
 		return b_changed;
 
-	if (cs_value.GetLength() < 2)
+	if (_T("#") != cs_value.Left(1))
+		cs_value = TString().Format(_T("#%s"), (_pc_sz) cs_value);
+
+	// acceptable values: #xx or #xxx (min len = 3), #xxxxxx (max len = 7);
+
+	if (cs_value.GetLength() < 3)
 		return b_changed;
 
 	cs_value = cs_value.Right(cs_value.GetLength() - 1);

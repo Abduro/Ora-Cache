@@ -30,23 +30,29 @@ namespace shared { namespace gui { namespace theme { using namespace shared::def
 
 	typedef uint32_t rgb_color;
 
-	class CTheme {
-		CTheme (const CTheme&) = delete; CTheme (CTheme&&) = delete;
+	class CBkgnd { CBkgnd (const CBkgnd&) = delete; CBkgnd (CBkgnd&&) = delete;
 	public:
-		CTheme (void); ~CTheme (void) = default;
+		CBkgnd (void); ~CBkgnd (void) = default;
 
-		const rgb_color  Bkgnd_rgb (void) const;
-		const s_flt_clr& Bkgnd_flt (void) const;
+		const rgb_color  Rgba  (void) const;
+		const s_flt_clr& Float (void) const;
 
-		const rgb_color  Border (void) const;
+	private:
+		CBkgnd& operator = (const CBkgnd&) = delete; CBkgnd& operator = (CBkgnd&&) = delete;
+		mutable s_flt_clr m_bkgnd;
+		mutable bool    m_is_read;
+	};
 
-		TError& Error (void) const;
+	class CTheme {
+	public:
+		CTheme (void); CTheme (const CTheme&) = delete; CTheme (CTheme&&) = delete; ~CTheme (void) = default;
+
+		const CBkgnd&   Bkgnd  (void) const;
+		const rgb_color Border (void) const;
 
 	private:
 		CTheme& operator = (const CTheme&) = delete; CTheme& operator = (CTheme&&) = delete;
-		mutable s_flt_clr m_bkgnd;
-		mutable bool    m_is_read;
-		mutable CError    m_error;
+		CBkgnd  m_bkgnd;
 	};
 
 }}}
