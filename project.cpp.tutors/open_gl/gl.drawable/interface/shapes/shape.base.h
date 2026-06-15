@@ -18,11 +18,15 @@ namespace open_gl { namespace shapes {
 	(3) Scaling: Resizing an object by enlarging or shrinking it along the axes.
 	*/
 	using namespace ::open_gl::shapes::transfer;
+	using CMove = CTranslate;
 
 	class CBase {
 	protected:
 		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
 	public:
+		const
+		CMove&  Move (void) const;
+		CMove&  Move (void) ;
 		const
 		CScale& Scale (void) const;
 		CScale& Scale (void) ;
@@ -31,6 +35,7 @@ namespace open_gl { namespace shapes {
 		CBase& operator = (const CBase&) = delete;
 		CBase& operator = (CBase&&) = delete;
 		CScale m_scale;
+		CMove  m_move ;
 	};
 
 }}

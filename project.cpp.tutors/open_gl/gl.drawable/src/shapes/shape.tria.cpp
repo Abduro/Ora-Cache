@@ -9,7 +9,7 @@ using namespace ::open_gl::shapes;
 
 #pragma region cls::CTria{}
 
-CTria::CTria (void) {}
+CTria::CTria (void) : TBase() {}
 
 void   CTria::Draw (void) {
 

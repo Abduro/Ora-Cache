@@ -56,7 +56,6 @@ namespace shared { namespace drawable {
 		CModel    m_model;
 		CView     m_view;
 		HWND      m_surface;
-		t_point   m_mouse;   // this is the last position of the mouse cursor at the moment of mouse message handling;
 		CCamera   m_camera;
 		CTria     m_tria;
 	};

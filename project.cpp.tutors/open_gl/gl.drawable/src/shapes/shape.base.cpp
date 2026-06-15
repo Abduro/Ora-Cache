@@ -11,6 +11,10 @@ using namespace ::open_gl::shapes;
 CBase::CBase (void) {}
 
 const
+CMove&  CBase::Move (void) const { return this->m_move; }
+CMove&  CBase::Move (void)       { return this->m_move; }
+
+const
 CScale& CBase::Scale (void) const { return this->m_scale; }
 CScale& CBase::Scale (void)       { return this->m_scale; }
 

@@ -5,13 +5,14 @@
 #include "drawable.drafter.h"
 #include "gl_procs_light.h"
 #include "gl_procs_clear.h"
+#include "mouse.cache.h"
 
 using namespace ::shared::drawable;
 using namespace ::open_gl::procs::ver_1_1;
 
 #pragma region cls::CDrafter{}
 
-CDrafter:: CDrafter (void) : TBase(), m_surface(0), m_mouse{0} { TBase::m_error >>__CLASS__; }
+CDrafter:: CDrafter (void) : TBase(), m_surface(0) { TBase::m_error >>__CLASS__; }
 CDrafter::~CDrafter (void) {}
 const
 CCamera& CDrafter::Camera (void) const { return this->m_camera; }
@@ -42,6 +43,8 @@ err_code CDrafter::OnCreate (const HWND _h_surface) {
 	this->m_surface = _h_surface; // important: otherwise there is no grid drawn;
 	if (__failed(::Get_ViewPorts().Add(this->m_surface)))
 		__trace_err_ex_2(TBase::m_error = ::Get_ViewPorts().Error());
+	else {
+	}
 
 	this->m_tria.Format();
 
@@ -93,8 +96,8 @@ void CDrafter::Run (void) {
 		this->View().Grid().Layout() << rc_client;
 		// https://learn.microsoft.com/en-us/windows/win32/opengl/glviewport ;
 		// https://learn.microsoft.com/en-us/windows/win32/opengl/glscissor ;
-		::glViewport(0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
-		::glScissor (0, 0, rc_client.right - rc_client.left, rc_client.bottom - rc_client.top);
+		::glViewport(0, 0, sz_client.cx, sz_client.cy);
+		::glScissor (0, 0, sz_client.cx, sz_client.cy);
 	}
 
 	::open_gl::procs::ver_1_1::CClear clear;
@@ -144,18 +147,20 @@ err_code  CDrafter::IMouse_OnEvent (const CEvent& _event) {
 	if (_event.Buttons().The_last().What() != e_button::e_left)
 		return __s_false; // not handled;
 
-	const int32_t x_delta = _event.Coords().Get().x - this->m_mouse.x;
-	const int32_t y_delta = _event.Coords().Get().y - this->m_mouse.y;
-
-	this->m_mouse = _event.Coords().Get();
+	::Get_cursor() << _event.Coords().Get();
 
 	return __s_ok; // handled;
 }
 
 err_code  CDrafter::IMouse_OnMove  (const CEvent& _event) {
 	_event;
-	if (_event.Buttons().The_last().What() != e_button::e_left)
+	if (_event.Buttons().The_last().What() != e_button::e_left    // is hold for moving a draw object;
+	&&  _event.Buttons().The_last().What() != e_button::e_right)  // is hold for rotating a draw object;
 		return __s_false;
+
+	::Get_cursor() << _event.Coords().Get();
+	if (_event.Buttons().The_last().What() != e_button::e_left)
+		this->m_tria.Move().Update();
 
 	return __s_false; // not handled;
 }

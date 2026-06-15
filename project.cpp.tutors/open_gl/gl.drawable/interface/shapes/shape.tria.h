@@ -4,6 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 12-Jun-2026 at 00:54:49.204, UTC+4, Batumi, Friday;
 	This is triangle drawable shape interface declaration file.
 */
+#include "shape.base.h"
 #include "shape.vertex.h"
 
 namespace open_gl { namespace shapes {
@@ -13,7 +14,7 @@ namespace open_gl { namespace shapes {
 
 	typedef ::std::array<CVertex, 0x3u>  f_tria_vert;
 
-	class CTria {
+	class CTria : public ::open_gl::shapes::CBase { typedef ::open_gl::shapes::CBase TBase;
 	public:
 		CTria (void); CTria (const CTria&) = delete; CTria (CTria&&) = delete; ~CTria (void) = default;
 

@@ -11,6 +11,7 @@ namespace open_gl { namespace shapes { namespace transfer {
 
 	using namespace ::open_gl::procs::ver_1_1;
 	using namespace ::open_gl::procs::matrix::ver_1_1;
+	using f_set_3 = ::open_gl::procs::f_set_3;
 
 	/* the query to Google AI: how to name such operations as movement, rotation and scaling in opengl?
 	In OpenGL, operations that change an object's position, orientation, or size are collectively known as geometric transformations.
@@ -63,8 +64,12 @@ namespace open_gl { namespace shapes { namespace transfer {
 	public:
 		CTranslate (void); CTranslate (const CTranslate&) = delete; CTranslate (CTranslate&&) = delete; ~CTranslate (void) = default;
 
+		void Update (void);
+
 	private:
 		CTranslate& operator = (const CTranslate&) = delete; CTranslate& operator = (CTranslate&&) = delete;
+		f_set_3  m_trans;
+		t_point  m_prevs; // the previous position of the cursor is necessary for calculating a delta or a shift of the mouse cursor;
 	};
 
 }}}

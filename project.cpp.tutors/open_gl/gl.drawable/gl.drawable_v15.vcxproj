@@ -197,6 +197,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="$(_0)mouse.cache.h" />
+    <ClCompile Include="$(_1)mouse.cache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)camera.base.h" />

@@ -19,6 +19,8 @@
   <ItemGroup>
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
+    <ClInclude Include="$(_0)mouse.cache.h"><Filter>_root</Filter></ClInclude>
+    <ClCompile Include="$(_1)mouse.cache.cpp"><Filter>_root</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)drawable.defs.h"><Filter>scene\drawable</Filter></ClInclude>
