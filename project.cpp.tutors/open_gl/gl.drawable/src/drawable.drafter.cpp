@@ -77,7 +77,7 @@ void CDrafter::Run (void) {
 
 	CDelay delay(10, 100);
 #if (1)
-	// this is must to be here: worker thread requires to set the curren renderer;
+	// this *must* to be here: worker thread requires to set the current renderer;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;
 	if (0 == ::wglMakeCurrent(this->View().Device(), this->View().Graphs().Renderer())) {
 		__trace_err_ex_2(TBase::m_error(CError::e_cmds::e_get_last) = _T("#__e_exec: making draw context current is failed"));
@@ -98,6 +98,7 @@ void CDrafter::Run (void) {
 	}
 
 	::open_gl::procs::ver_1_1::CClear clear;
+	::open_gl::procs::matrix::ver_1_1::CStack stack;
 
 #if (1)
 	while (false == ((TBase&)(*this))().Is_stopped()) {
@@ -106,20 +107,8 @@ void CDrafter::Run (void) {
 			continue;
 #endif
 		clear.All(); // must be called before rendering each frame;
-		::glLoadIdentity();
 
-		const bool b_scaled = this->m_scale.Is_changed();
-		if (b_scaled) {
-		//	shared::sys_core::the_lock.lock();
-			/* warning: when using glScalef() with lighting, enable GL_NORMALIZE to ensure lighting calculations remain correct.
-			*/
-			::glPushMatrix();
-			const float f_factor = this->m_scale.Get();
-			::glScalef(f_factor, f_factor, f_factor); // https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
-		}
 		this->View().Grid().Draw();
-		if (b_scaled)
-			::glPopMatrix();
 		this->m_tria.Draw();
 
 	//	::glFinish(); // https://learn.microsoft.com/en-us/windows/win32/opengl/glfinish ;
@@ -175,52 +164,13 @@ err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) 
 	_event; _delta;
 	static int32_t n_delta_prev = 0;
 	if (n_delta_prev != _delta) {
-		__trace_warn_2(_T("zoom delta: %d;\n"), _delta);
+	//	__trace_warn_2(_T("zoom delta: %d;\n"), _delta);
 		n_delta_prev = _delta;
 	}
 
-	this->m_scale.Set(_delta);
+	this->View().Grid().Scale().Set(_delta);
 
 	return __s_ok; // handled;
-}
-
-#pragma endregion
-#pragma region cls::CScale{}
-
-CScale::CScale (void) : m_changed(false), m_factor(f_def_scale) {}
-
-bool CScale::Is_changed (void) const { TSafe_Lock(); const bool b_changed = this->m_changed; return b_changed; }
-void CScale::Is_changed (const bool _b_state) { TSafe_Lock(); this->m_changed = _b_state; }
-
-float CScale::Get (void) const { TSafe_Lock(); const float f_value = this->m_factor;  return f_value; }
-void  CScale::Set (const int32_t _n_factor) {
-	_n_factor;
-	static float f_factor_prev = f_def_scale;
-
-	using namespace ex_ui::draw::open_gl::math::defs;
-
-	TSafe_Lock();
-	if (false) {}
-	else if (_n_factor > 0) { this->m_factor += float(_n_factor) * f_delta; }
-	else if (_n_factor < 0) { this->m_factor += float(_n_factor) * f_delta; if (this->m_factor < f_epsilon) this->m_factor = 0.1f; }
-	else { return; }
-
-	if (f_epsilon > this->m_factor - f_factor_prev)
-		return;
-	else
-		f_factor_prev = this->m_factor;
-
-	__trace_warn_2(_T("scale factor: %.7f;\n"), this->m_factor);
-
-	this->m_scaled.Set(this->m_factor);
-	this->m_changed = true;
-	return;
-}
-
-c_scaled CScale::operator ()(void) const {
-	TSafe_Lock();
-	c_scaled scaled = this->m_scaled;
-	return scaled;
 }
 
 #pragma endregion

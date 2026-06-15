@@ -36,39 +36,7 @@ namespace open_gl { namespace views { using namespace shared::defs;
 	            the app: widely used in computer vision for skeletonization, path planning, medical imaging, and object recognition; (the image must be grayscale)
 	*/
 
-	using CViewPort = ex_ui::draw::open_gl::CViewPort;
-
-	typedef ::std::map<HWND, CViewPort> view_cache_t; // the key is a surface window handle; the value is a viewport object of the client area of the window;
-
-	class CCache {
-	public:
-		 CCache (void); CCache (const CCache&) = delete; CCache (CCache&&) = delete;
-		~CCache (void) = default;
-
-		err_code Activate (const HWND _h_surface); // sets the viewport associated with given handle to be active, thus any object interested for viewport will be able to deal with;
-		const
-		CViewPort& Active (void) const; // gets the reference to the active viewport object; if no active viewport is set, the reference to fake object is returned;
-		CViewPort& Active (void) ;      // gets the reference to the active viewport object; if no active viewport is set, the reference to fake object is returned;
-
-		err_code Add (const HWND _h_surface); // new viewport is created for given window handle, client area rectangle is taken from surface; viewport being added is activated;
-		TError&  Error (void) const;
-		const
-		CViewPort& Get (const HWND _h_surface) const; // gets the reference to viewport object associated with given surface handle; if not found the reference to fake object is returned; (ro)
-		CViewPort& Get (const HWND _h_surface) ;      // gets the reference to viewport object associated with given surface handle; if not found the reference to fake object is returned; (rw)
-
-		err_code Remove (const HWND _h_surface);      // removes a viewport from the cache by given surface handle;
-
-	private:
-		CCache& operator = (const CCache&) = delete; CCache& operator = (CCache&&) = delete;
-		mutable
-		CError  m_error;
-		view_cache_t m_cached;
-		HWND    m_active; // keeps HWND of surface window as the key for finding associated viewport object being active;
-	};
-
-}}
-
-typedef ::open_gl::views::CCache TViewPortCache; TViewPortCache& Get_ViewPorts (void); 
+}} 
 
 namespace open_gl { namespace views {
 	using c_mat4x4 = ex_ui::draw::open_gl::math::c_mat4x4;

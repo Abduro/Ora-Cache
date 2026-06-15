@@ -7,6 +7,7 @@
 #include "drawable.defs.h"
 #include "grid\grid.pers.h"
 #include "grid\grid.layout.h"
+#include "shapes\shape.base.h"
 
 namespace open_gl { namespace views { using namespace shared::defs;
 
@@ -18,7 +19,7 @@ namespace open_gl { namespace views { using namespace shared::defs;
 	Yes. A grid can be defined as a parametric shape formed by intersecting horizontal and vertical lines.
 	It is often used as a visual baseline (like a floor plane in 3D modeling software or game engines) to help spatial perception.
 	*/
-	class CGrid : private ex_ui::draw::open_gl::no_copy {
+	class CGrid : public ::open_gl::shapes::CBase { typedef ::open_gl::shapes::CBase TBase;
 	public:
 		CGrid (void); ~CGrid (void);
 

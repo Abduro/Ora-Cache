@@ -69,7 +69,17 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 			LtToggle(false);
 
 			// to-do: all functions being called must be moved to procedure loader/wrapper project;
-			
+			CStack stack;
+			const bool b_scaled = _grid.Scale().Is_changed();
+
+			if (b_scaled/* && false*/) {
+			/* warning: when using glScalef() with lighting, enable GL_NORMALIZE to ensure lighting calculations remain correct.
+			*/
+				stack.Push();
+				const float f_factor = _grid.Scale().Get();
+				::glScalef (f_factor, f_factor, f_factor); // https://learn.microsoft.com/en-us/windows/win32/opengl/glscalef ;
+			}
+
 			::glLineWidth(1.0f); // https://learn.microsoft.com/en-us/windows/win32/opengl/gllinewidth ;
 			::glBegin(GL_LINES); // https://learn.microsoft.com/en-us/windows/win32/opengl/glbegin ;
 
@@ -96,7 +106,6 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 				u_iter += 1;
 			}
 #else
-			CStack stack;
 			stack.Push();
 
 			using namespace ::open_gl::views::grid;
@@ -111,6 +120,9 @@ namespace ex_ui { namespace draw { namespace open_gl { namespace _impl {
 			}
 #endif
 			::glEnd(); // ::https://learn.microsoft.com/en-us/windows/win32/opengl/glend ;
+
+			if (b_scaled)
+			stack.Pop();
 			stack.Pop();
 
 			return _error;

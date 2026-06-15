@@ -217,12 +217,18 @@
     <ClCompile Include="$(_1)view.bkgnd.cpp" />
     <ClInclude Include="$(_0)view.grid.h" />
     <ClCompile Include="$(_1)view.grid.cpp" />
+    <ClInclude Include="$(_0)view.port.h" />
+    <ClCompile Include="$(_1)view.port.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_0-0)shape.vertex.h" />
-    <ClCompile Include="$(_1-0)shape.vertex.cpp" />
+    <ClInclude Include="$(_0-0)shape.base.h" />
+    <ClCompile Include="$(_1-0)shape.base.cpp" />
+    <ClInclude Include="$(_0-0)shape.trans.h" />
+    <ClCompile Include="$(_1-0)shape.trans.cpp" />
     <ClInclude Include="$(_0-0)shape.tria.h" />
     <ClCompile Include="$(_1-0)shape.tria.cpp" />
+    <ClInclude Include="$(_0-0)shape.vertex.h" />
+    <ClCompile Include="$(_1-0)shape.vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0-1)grid.layout.h" />

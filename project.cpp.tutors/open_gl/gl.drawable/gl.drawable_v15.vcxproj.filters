@@ -35,8 +35,12 @@
     <ClInclude Include="$(_0)model.base.h"><Filter>scene\model</Filter></ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(_1-0)shape.base.cpp"><Filter>shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)shape.base.h"><Filter>shapes</Filter></ClInclude>
     <ClCompile Include="$(_1-0)shape.tria.cpp"><Filter>shapes</Filter></ClCompile>
     <ClInclude Include="$(_0-0)shape.tria.h"><Filter>shapes</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)shape.trans.cpp"><Filter>shapes</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)shape.trans.h"><Filter>shapes</Filter></ClInclude>
     <ClCompile Include="$(_1-0)shape.vertex.cpp"><Filter>shapes\vertex</Filter></ClCompile>
     <ClInclude Include="$(_0-0)shape.vertex.h"><Filter>shapes\vertex</Filter></ClInclude>
   </ItemGroup>
@@ -53,5 +57,7 @@
     <ClInclude Include="$(_0)view.base.h"><Filter>view</Filter></ClInclude>
     <ClInclude Include="$(_0)view.bkgnd.h"><Filter>view</Filter></ClInclude>
     <ClCompile Include="$(_1)view.bkgnd.cpp"><Filter>view</Filter></ClCompile>
+    <ClInclude Include="$(_0)view.port.h"><Filter>view</Filter></ClInclude>
+    <ClCompile Include="$(_1)view.port.cpp"><Filter>view</Filter></ClCompile>
   </ItemGroup>
 </Project>
