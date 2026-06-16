@@ -112,6 +112,8 @@ namespace ex_ui { namespace popup { namespace messages {
 			bool Use_screen (void) const;
 			void Use_screen (const bool); // to-do: this option is not accessible from event consumer side, set to 'true' by default;
 
+			t_point  operator <<(const HWND) const; // converts from screen coordinates to local client area coordinates by given window handle;
+
 		private:
 			CCoords& operator = (const CCoords&) = delete; CCoords& operator = (CCoords&&) = delete;
 			bool     m_screen;  // this flag is for using point in different coordinate systems: 'true' - screen, 'false' - window client area;
@@ -155,7 +157,7 @@ namespace ex_ui { namespace popup { namespace messages {
 		};
 		// __s_ok: handled; __s_false = not handled; otherwise the error code;
 		virtual TError&  IMouse_Error (void) const = 0;
-		virtual err_code IMouse_OnEvent (const CEvent&) { return __s_false; } // occurs on mouse button pressing/releasing;
+		virtual err_code IMouse_OnButton(const CEvent&) { return __s_false; } // occurs on mouse button pressing/releasing;
 		virtual err_code IMouse_OnMove  (const CEvent&) { return __s_false; } // occurs on mouse movement;
 		virtual err_code IMouse_OnWheel (const CEvent&, const int32_t _delta) { _delta; return __s_false; } // occurs on spinning mouse wheel;
 		// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel ;

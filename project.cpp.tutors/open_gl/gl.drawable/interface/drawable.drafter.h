@@ -13,7 +13,7 @@
 #include "view.port.h"
 #include "shapes\shape.tria.h"
 
-namespace shared { namespace drawable {
+namespace shared { namespace drawable { using namespace ::shared::defs;
 
 	using CCamera = ::open_gl::CCamera;
 	using CModel = ::open_gl::models::CBase;
@@ -44,9 +44,9 @@ namespace shared { namespace drawable {
 		CView&    View (void) ;
 
 		TError&   IMouse_Error (void) const override final;
-		err_code  IMouse_OnEvent (const CEvent&) override final;
+		err_code  IMouse_OnButton (const CEvent&) override final;
 		err_code  IMouse_OnMove  (const CEvent&) override final;
-		err_code  IMouse_OnWheel (const CEvent&, const int32_t _delta) override final; // if it occurs, it will come before IMouse_OnEvent();
+		err_code  IMouse_OnWheel (const CEvent&, const int32_t _delta) override final; // if it occurs, it will come before IMouse_OnButton();
 
 	protected:
 		virtual void Run (void) override final;

@@ -259,7 +259,8 @@ bool CButton::Is_released (const bool _yes_or_no) {
 
 e_action CButton::State (void) const { return this->m_state; }
 bool CButton::State (const e_action _e_act) {
-	const bool b_changed = this->m_state != _e_act; if (b_changed) this->m_state = _e_act; return b_changed;
+	const bool b_changed = this->m_state != _e_act; if (b_changed) this->m_state = _e_act;
+	return b_changed;
 }
 
 e_button CButton::What (void) const { return this->m_what; }
@@ -362,6 +363,13 @@ bool     CCoords::Set (const l_param _l_pos) {
 bool CCoords::Use_screen (void) const { return this->m_screen; }
 void CCoords::Use_screen (const bool _b_use) { this->m_screen = _b_use; }
 
+t_point  CCoords::operator <<(const HWND _hwnd) const {
+	t_point pt_cursor = this->Get();
+//	::ScreenToClient(_hwnd, &pt_cursor); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient ;
+	::MapWindowPoints(HWND_DESKTOP, _hwnd, &pt_cursor, 1); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
+	return  pt_cursor;
+}
+
 #pragma endregion
 #pragma region cls::IMouse_Handler::CEvent{}
 
@@ -441,11 +449,12 @@ err_code CMouseRouter::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 		err_code n_result = __s_false;
 		if (b_moving) { if (__s_ok == (n_result = p_handler->IMouse_OnMove(g_event))) break; }
 		if (b_spin) { if (__s_ok == (n_result = p_handler->IMouse_OnWheel(g_event, GET_WHEEL_DELTA_WPARAM(_w_param)/WHEEL_DELTA))) break; }
-		if (__s_ok == (n_result = p_handler->IMouse_OnEvent(g_event))) {
+		if (__s_ok == (n_result = p_handler->IMouse_OnButton(g_event))) {
 			/* the event is handled, the last mouse button state must be reset to 'none', otherwise after pressing the right button,
 			   the shortcut menu will be shown again on mouse move event;
 			*/
-			g_event.Buttons().The_last().State(e_action::e_none);
+			if (g_event.Buttons().The_last().Is_released())
+				g_event.Buttons().The_last().State(e_action::e_none);
 			break;
 		}
 		if (__s_false == n_result)

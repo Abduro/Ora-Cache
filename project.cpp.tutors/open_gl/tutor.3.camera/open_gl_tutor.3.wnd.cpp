@@ -157,7 +157,7 @@ err_code camera::CWnd::IMsg_OnMessage (const uint32_t _u_code, const w_param _w_
 }
 
 TError&  camera::CWnd::IMouse_Error (void) const { return TBase::m_error; }
-err_code camera::CWnd::IMouse_OnEvent (const CEvent& _evt) {
+err_code camera::CWnd::IMouse_OnButton (const CEvent& _evt) {
 	_evt;
 	TBase::m_error <<__METHOD__<<__s_false;
 

@@ -22,6 +22,18 @@ void   CTria::Draw (void) {
 	LtToggle(false);
 
 	CStack stack;
+
+	const bool b_moved = TBase::Move().Is_changed();
+	if (b_moved) {
+		stack.Push();
+
+		COpers opers;
+		const f_set_3 f_move = /*{1.0f, 1.0f, 1.0f}*/ TBase::Move().Get();
+		if (__failed(opers.Translate(f_move.at(0), f_move.at(1), f_move.at(2)))) {
+			__trace_err_ex_2(opers.Error());
+		}
+	}
+
 	stack.Push();
 
 	::glBegin(GL_TRIANGLES);
@@ -33,6 +45,8 @@ void   CTria::Draw (void) {
 		::glVertex3f(vert.Point().at(0), vert.Point().at(1), vert.Point().at(2));
 	}
 	::glEnd();
+	if (b_moved)
+	stack.Pop();
 	stack.Pop();
 }
 

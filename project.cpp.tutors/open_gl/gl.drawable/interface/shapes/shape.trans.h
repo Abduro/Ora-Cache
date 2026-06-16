@@ -64,6 +64,7 @@ namespace open_gl { namespace shapes { namespace transfer {
 	public:
 		CTranslate (void); CTranslate (const CTranslate&) = delete; CTranslate (CTranslate&&) = delete; ~CTranslate (void) = default;
 
+		f_set_3 Get (void) const;
 		void Update (void);
 
 	private:

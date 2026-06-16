@@ -142,27 +142,32 @@ CView&  CDrafter::View (void)       { return this->m_view; }
 
 TError&   CDrafter::IMouse_Error (void) const { return this->Error(); }
 
-err_code  CDrafter::IMouse_OnEvent (const CEvent& _event) {
+err_code  CDrafter::IMouse_OnButton (const CEvent& _event) {
 	_event;
-	if (_event.Buttons().The_last().What() != e_button::e_left)
-		return __s_false; // not handled;
+	if (_event.Buttons().The_last().What() != e_button::e_left) return __s_false;
+	if (_event.Buttons().The_last().Is_pressed() == false) return __s_false; // not handled;
 
-	::Get_cursor() << _event.Coords().Get();
+	t_point pt_curs = _event.Coords() << this->m_surface;
+	::Get_cursor() << pt_curs;
+
+//	__trace_info_2(_T("cursor pos >> [x = %04d; y = %04d];\n"), pt_curs.x, pt_curs.y);
 
 	return __s_ok; // handled;
 }
 
 err_code  CDrafter::IMouse_OnMove  (const CEvent& _event) {
 	_event;
-	if (_event.Buttons().The_last().What() != e_button::e_left    // is hold for moving a draw object;
-	&&  _event.Buttons().The_last().What() != e_button::e_right)  // is hold for rotating a draw object;
-		return __s_false;
+	if (_event.Buttons().The_last().What() != e_button::e_left) return __s_false;   // is hold for moving a draw object;
+	if (_event.Buttons().The_last().Is_pressed() == false)  return __s_false;
 
-	::Get_cursor() << _event.Coords().Get();
-	if (_event.Buttons().The_last().What() != e_button::e_left)
-		this->m_tria.Move().Update();
+	t_point pt_curs = _event.Coords() << this->m_surface;
+	::Get_cursor() << pt_curs;
 
-	return __s_false; // not handled;
+	this->m_tria.Move().Update();
+
+//	__trace_info_2(_T("cursor pos >> [x = %04d; y = %04d];\n"), pt_curs.x, pt_curs.y);
+
+	return __s_ok; // not handled;
 }
 
 err_code  CDrafter::IMouse_OnWheel (const CEvent& _event, const int32_t _delta) {
