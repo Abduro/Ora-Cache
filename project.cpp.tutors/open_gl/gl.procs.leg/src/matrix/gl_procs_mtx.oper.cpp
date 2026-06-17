@@ -51,6 +51,25 @@ err_code COpers::Scale (const f_set_3& _to) {
 	return TBase::Error();
 }
 
+// https://learn.microsoft.com/en-us/windows/win32/opengl/glrotatef ;
+err_code COpers::Rotate (float _f_angle, const float _x, const float _y, const float _z) {
+	_f_angle; _x; _y; _z;
+	/* possible error codes:
+	GL_INVALID_OPERATION : The function was called between a call to glBegin and the corresponding call to glEnd.
+	*/
+	TBase::m_error <<__METHOD__<<__s_ok;
+	::glRotatef (_f_angle, _x, _y, _z);
+	const
+	dword  u_err_code = CErr_ex().Get_code();
+	switch(u_err_code) {
+	case GL_INVALID_OPERATION : (TBase::m_error = u_err_code) = p_err_inv_oper; break;
+	default:
+		if (!!u_err_code)
+			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
+	}
+	return TBase::Error();
+}
+
 // https://learn.microsoft.com/en-us/windows/win32/opengl/gltranslatef ;
 err_code COpers::Translate (const float _x, const float _y, const float _z) {
 	_x; _y; _z;

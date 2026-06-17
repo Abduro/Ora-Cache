@@ -8,6 +8,7 @@
 #include "test_case_$m$.stack.h"
 #include "test_case_$p$.viewport.h"
 #include "test_case_$u$.perspect.h"
+#include "test_case_$u$.vsync.h"
 
 namespace test { namespace open_gl { namespace utils { namespace ver_1_1 {
 
@@ -26,6 +27,15 @@ namespace test { namespace open_gl { namespace utils { namespace ver_1_1 {
 		__method (Set);  // sets the projection perspective matrix;
 	private:
 		c_perspect& operator = (const c_perspect&) = delete; c_perspect& operator = (c_perspect&&) = delete;
+	};
+
+	__class (c_vsync) {
+	public:
+		c_vsync (void) = default; c_vsync (const c_vsync&) = delete; c_vsync (c_vsync&&) = delete; ~c_vsync (void) = default;
+		__method (Get);  // gets the frame count that is currently set for buffers' swap;
+		__method (Set);  // sets the frame count for buffers' swap;
+	private:
+		c_vsync& operator = (const c_vsync&) = delete; c_vsync& operator = (c_vsync&&) = delete;
 	};
 
 }}}}

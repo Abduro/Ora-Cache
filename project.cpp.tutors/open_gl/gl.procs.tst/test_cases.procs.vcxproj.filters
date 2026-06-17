@@ -60,6 +60,8 @@
     <ClCompile Include="$(_0)test_adap_$u$.utils.cpp"><Filter>utils</Filter></ClCompile>
     <ClInclude Include="$(_1)test_case_$u$.perspect.h"><Filter>utils</Filter></ClInclude>
     <ClCompile Include="$(_1)test_case_$u$.perspect.cpp"><Filter>utils</Filter></ClCompile>
+    <ClInclude Include="$(_1)test_case_$u$.vsync.h"><Filter>utils</Filter></ClInclude>
+    <ClCompile Include="$(_1)test_case_$u$.vsync.cpp"><Filter>utils</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$p$.viewport.h"><Filter>viewport</Filter></ClInclude>

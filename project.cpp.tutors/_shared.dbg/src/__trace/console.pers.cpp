@@ -84,7 +84,7 @@ err_code CLines::Load (void) {
 
 	if (the_key.Error()) {
 		TBase::m_error = the_key.Error(); // it is not required, because the line limit is not set; just no change the current line limit value;
-		__trace_err_2(TBase::m_error);
+		__trace_err_ex_2(TBase::m_error);
 	}
 	else {
 		this->Set(u_saved);

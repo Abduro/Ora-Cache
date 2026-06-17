@@ -11,6 +11,7 @@
 #include "model.base.h"
 #include "view.base.h"
 #include "view.port.h"
+
 #include "shapes\shape.tria.h"
 
 namespace shared { namespace drawable { using namespace ::shared::defs;

@@ -5,6 +5,7 @@
 	This is OpenGL v.1.1 viewport related function set wrapper interface declaration file;
 */
 #include "gl_procs_basic.h"
+#include "gl_procs_params.h"
 
 /*taking into account that glViewport() function is supported in OpenGL from ver 1.1 to 4.6, there is no need to use it in ::ver_1_1 namespace only;
   https://registry.khronos.org/OpenGL-Refpages/gl4/html/glViewport.xhtml >> supported versions of OpenGL;

@@ -47,15 +47,15 @@ void  CScale::Set (const int32_t _n_factor) {
 }
 
 #pragma endregion
-#pragma region cls::CTranslate{}
+#pragma region cls::CMove{}
 
-CTranslate::CTranslate (void) : TBase(), m_trans{0.0f}, m_prevs{0} { TBase::m_error >>__CLASS__; }
+CMove::CMove (void) : TBase(), m_trans{0.0f}, m_prevs{0} { TBase::m_error >>__CLASS__; }
 
-f_set_3 CTranslate::Get (void) const { TSafe_Lock(); const f_set_3 f_trans = this->m_trans;
+f_set_3 CMove::Get (void) const { TSafe_Lock(); const f_set_3 f_trans = this->m_trans;
 	return f_trans;
 }
 
-void CTranslate::Update (void) {
+void CMove::Update (void) {
 
 	const t_size  sz_view = ::Get_ViewPorts().Active().Get();
 
@@ -76,7 +76,7 @@ void CTranslate::Update (void) {
 	this->m_trans.at(2)  = -1.0f ;
 #else
 	const float f_aspect = float(sz_view.cx) / float(sz_view.cy);
-	const f_set_3 f_ndc = {::Get_ViewPorts().Active().Get_X(cursor.x) * f_aspect, ::Get_ViewPorts().Active().Get_Y(cursor.y), -1.0f};
+	const f_set_3 f_ndc = {::Get_ViewPorts().Active().Get_X(cursor.x) * f_aspect, ::Get_ViewPorts().Active().Get_Y(cursor.y), 0.0f};
 	
 	float f_scale_x = 1.0f;
 	float f_scale_y = 1.0f;

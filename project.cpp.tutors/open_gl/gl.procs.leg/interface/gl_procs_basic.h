@@ -83,6 +83,7 @@ namespace ver_1_1 {
 	class CBasic {
 	public:
 		TError&  Error (void) const;
+		PROC     Get (_pc_sz _p_fun_name); // https://www.khronos.org/opengl/wiki/Load_OpenGL_Functions#Windows ;
 
 	protected:
 		CBasic (void); CBasic (const CBasic&) = delete; CBasic (CBasic&&) = delete; ~CBasic (void) = default;
@@ -90,94 +91,6 @@ namespace ver_1_1 {
 		CError  m_error;
 	private:
 		CBasic& operator = (const CBasic&) = delete; CBasic& operator = (CBasic&&) = delete;
-	};
-
-	// https://en.cppreference.com/cpp/utility/variant ;
-	// this class hides the casting inside of it;
-	class c_converter {
-	public:
-		 c_converter (void); c_converter (const float); c_converter (const double); c_converter (const c_converter&); c_converter (c_converter&&) = delete;
-		~c_converter (void) = default;
-
-		float Float (void) const;
-		double Double (void) const;
-
-		c_converter& operator = (const c_converter&); c_converter& operator = (c_converter&&) = delete;
-
-		double operator <<(const float);
-		float  operator <<(const double);
-
-		operator float (void) const;
-		operator double (void) const;
-
-	private:
-		double m_data;
-	};
-
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetbooleanv ;
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetdoublev  ;
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetfloatv   ;
-	// https://learn.microsoft.com/en-us/windows/win32/opengl/glgetintegerv ;
-
-	class CParam : public CBasic { typedef CBasic TBase;
-	public:
-		CParam (const uint32_t _param_id = 0); CParam (const CParam&) = delete; CParam (CParam&&) = delete; ~CParam (void) = default;
-		/* attention:
-		   all three below functions return plane data type value, no arrays are supposed, but with some parameter names it is available to get an array of values;
-		*/
-		bool    GetBool  (const uint32_t _u_param_id); // returns parameter value as boolean ;
-		double  GetDouble(const uint32_t _u_param_id); // returns parameter value as double ;
-		float   GetFloat (const uint32_t _u_param_id); // returns parameter value as float number; is not acceptable in some cases, for example how to get pointer to the matrix?
-		int32_t GetInt   (const uint32_t _u_param_id); // returns parameter value as integer ;
-
-		/* the query to the Google AI: if values array contains less elements as required by glGetFloatv how handle the error opengl?
-		   OpenGL will not catch or report this error. Because glGetFloatv accepts a raw C-style pointer (GLfloat *params), the OpenGL driver does not know the Size of your allocated array.
-		   It will blindly write the full number of required elements to your pointer, causing a buffer overflow (memory corruption) or an immediate segmentation fault / crash.
-		   (1) Ensure Proper Array Sizing (The Fix):
-		    (a) 1 element : Most simple state variables (e.g., GL_MAX_TEXTURE_SIZE); >> just plain float data value or ::std::array<float, 1u>;
-		    (b) 2 elements: Ranges (e.g., GL_ALIASED_POINT_SIZE_RANGE); >> ::std::array<float, 0x02u>;
-		    (c) 4 elements: Colors, viewports, and bounds (e.g., GL_COLOR_CLEAR_VALUE, GL_VIEWPORT); >> ::std::array<float, 0x04u>;
-		    (d) and 16 elements for getting matrix data; >> ::std::array<float, 0x10u>;
-		*/
-
-		err_code Get_ptr (const uint32_t _u_param_id, double* );
-		err_code Get_ptr (const uint32_t _u_param_id, float*  ); // this is for getting a pointer to specific array of float values, caller of this function must take care how many elements is returned;
-		err_code Get_ptr (const uint32_t _u_param_id, int32_t*);
-
-	private:
-		CParam& operator = (const CParam&) = delete; CParam& operator = (CParam&&) = delete;
-		uint32_t m_param_id;
-	};
-
-	/* query: difference between option and property in programming ; (Google AI)
-	Key Summary:
-	a 'Property' is something an object is or has (e.g., its color), while an 'Option' is a choice for how an object should act or how a tool should work;
-	the class below is the wrapper of ::glEnable, glDisable and glIsEnabled functions;
-	*/
-	// https://stackoverflow.com/questions/2074384/options-settings-properties-configuration-preferences-when-and-why ;
-	class CProperty : public CBasic { typedef CBasic TBase;
-	public:
-		CProperty (const uint32_t _prop_id = 0); CProperty (const CProperty&) = delete; CProperty (CProperty&&) = delete; ~CProperty (void) = default;
-
-		bool     Is_enabled (void) const;            // returns current state of input property; the error state is set if necessary;
-		err_code Is_enabled (const bool _yes_or_no); // sets depth comparator state to enabled or disabled; perhaps it would be better to name it 'Enable';
-
-		uint32_t PropId (void) const;
-		err_code PropId (const uint32_t); // returns '__s_ok' if succeeded, '__s_false' if no change, otherwise error code;
-
-		static   bool     Is_enabled (const uint32_t _prop_id, CError&);
-		static   err_code Is_enabled (const uint32_t _prop_id, const bool _yes_or_no, CError&);
-		static   bool     Is_valid   (const uint32_t _prop_id, CError&);
-
-		CProperty& operator <<(const bool _yes_or_no);    // sets current state of the property;
-		CProperty& operator <<(const uint32_t _prop_id);  // sets property identifier; must be called before setting/getting the property state;
-
-		const CProperty& operator >>(bool& _yes_or_no) const;   // gets current state of the property; returns 'false' if property identifier is not set;
-		const CProperty& operator >>(uint32_t& _prop_id) const; // gets current property identifier;
-
-	private:
-		CProperty& operator = (const CProperty&) = delete; CProperty& operator = (CProperty&&) = delete;
-		uint32_t m_prop_id;
 	};
 
 }}}

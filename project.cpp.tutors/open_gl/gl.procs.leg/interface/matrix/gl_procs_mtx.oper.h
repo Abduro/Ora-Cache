@@ -20,7 +20,10 @@ namespace ver_1_1 {
 		COpers (void); COpers (const COpers&) = delete; COpers (COpers&&) = delete; ~COpers (void) = default;
 
 		err_code Multiply (const f_mat_4x4& _by);
-		err_code Scale (const f_set_3& _to);     // scales current matrix in 'model-view' matrix stack; 
+		err_code Scale (const f_set_3& _to);     // scales current matrix in 'model-view' matrix stack;
+
+		err_code Rotate (float _f_angle, float _x, float _y, float _z); // https://learn.microsoft.com/en-us/windows/win32/opengl/glrotatef ;
+
 		/* the query to Google AI: what error can be thrown by glTranslatef opengl?
 		The glTranslatef function in OpenGL can only throw one specific runtime error: GL_INVALID_OPERATION;
 		Logical errors:

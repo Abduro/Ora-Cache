@@ -5,6 +5,7 @@
 	This is OpenGL projection related function set wrapper interface declaration file;
 */
 #include "gl_procs_basic.h"
+#include "utils\gl_procs_perspect.h"
 /*
 	These procedure wrappers are espacially intended for OpenGL vers 1.1 API (aka legacy);
 */
@@ -14,7 +15,7 @@ namespace open_gl { namespace procs { namespace projection {
 	using namespace ::open_gl::procs::ver_1_1;
 
 	using f_mat_4x4 = ::open_gl::procs::f_mat_4x4;
-	using var = ::open_gl::procs::ver_1_1::c_converter;
+	using var = ::open_gl::procs::utils::ver_1_1::c_converter;
 
 	using namespace ::open_gl::math::defs;
 

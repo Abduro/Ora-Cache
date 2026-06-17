@@ -5,6 +5,8 @@
 	This is OpenGL lighting  wrapper interface declaration file;
 */
 #include "gl_procs_basic.h"
+#include "gl_procs_props.h"
+
 namespace open_gl { namespace procs { namespace ver_1_1 {
 
 	/* the query to Google AI: GL_LIGHTING is enabled by default in OprnGL 1.1 or is disabled?

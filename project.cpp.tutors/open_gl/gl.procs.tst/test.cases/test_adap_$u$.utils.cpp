@@ -81,3 +81,15 @@ void c_perspect::Set (void) {/* TCtx_Toggle();*/
 }
 
 #pragma endregion
+#pragma region cls::c_vsync{}
+
+void c_vsync::Get (void) {
+
+	int32_t n_intervals= 0;
+	CTstVSync(true).Get(n_intervals); _out()();
+}
+void c_vsync::Set (void) {
+	CTstVSync(true).Set(1); _out()();
+}
+
+#pragma endregion

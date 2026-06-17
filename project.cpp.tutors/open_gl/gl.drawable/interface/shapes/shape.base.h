@@ -18,7 +18,7 @@ namespace open_gl { namespace shapes {
 	(3) Scaling: Resizing an object by enlarging or shrinking it along the axes.
 	*/
 	using namespace ::open_gl::shapes::transfer;
-	using CMove = CTranslate;
+	using CMove = CMove;
 
 	class CBase {
 	protected:

@@ -223,6 +223,10 @@
     <ClCompile Include="$(_1)gl_procs_depth.cpp" />
     <ClInclude Include="$(_0)gl_procs_light.h" />
     <ClCompile Include="$(_1)gl_procs_light.cpp" />
+    <ClInclude Include="$(_0)gl_procs_params.h" />
+    <ClCompile Include="$(_1)gl_procs_params.cpp" />
+    <ClInclude Include="$(_0)gl_procs_props.h" />
+    <ClCompile Include="$(_1)gl_procs_props.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_0)gl_procs_frustum.h" />
@@ -235,6 +239,9 @@
   <ItemGroup>
     <ClInclude Include="$(_0-1)gl_procs_perspect.h" />
     <ClCompile Include="$(_1-1)gl_procs_perspect.cpp" />
+    <ClInclude Include="$(_0-1)gl_procs_vsync.h" />
+    <ClCompile Include="$(_1-1)gl_procs_vsync.cpp" />
+    <Text Include="$(_0-1)__read_me_vsync.txt" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(_n)__read_me_arb.txt" />

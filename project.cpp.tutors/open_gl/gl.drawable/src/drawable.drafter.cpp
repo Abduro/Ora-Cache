@@ -5,10 +5,12 @@
 #include "drawable.drafter.h"
 #include "gl_procs_light.h"
 #include "gl_procs_clear.h"
+#include "utils\gl_procs_vsync.h"
 #include "mouse.cache.h"
 
 using namespace ::shared::drawable;
 using namespace ::open_gl::procs::ver_1_1;
+using namespace ::open_gl::procs::utils::ver_1_1;
 
 #pragma region cls::CDrafter{}
 
@@ -46,6 +48,13 @@ err_code CDrafter::OnCreate (const HWND _h_surface) {
 	else {
 	}
 
+	CVSync v_sync;
+	const int32_t n_intervals = v_sync.Get();
+	if (v_sync.Error()) { __trace_err_ex_2(v_sync.Error()); }
+	else {
+		__trace_warn_2(_T("vsync: currently set intevals is %d;\n"), n_intervals);
+	}
+
 	this->m_tria.Format();
 
 	return TBase::Error();
@@ -78,7 +87,7 @@ void CDrafter::Run (void) {
 
 	__trace_impt_2(_T("drafter started: thread ID = %u;\n"), ((TBase&)(*this)).Id());
 
-	CDelay delay(10, 100);
+	CDelay delay(10, 30);
 #if (1)
 	// this *must* to be here: worker thread requires to set the current renderer;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-wglmakecurrent ;

@@ -276,6 +276,8 @@
   <ItemGroup>
     <ClInclude Include="$(_1)test_case_$u$.perspect.h" />
     <ClCompile Include="$(_1)test_case_$u$.perspect.cpp" />
+    <ClInclude Include="$(_1)test_case_$u$.vsync.h" />
+    <ClCompile Include="$(_1)test_case_$u$.vsync.cpp" />
     <ClInclude Include="$(_0)test_adap_$u$.utils.h" />
     <ClCompile Include="$(_0)test_adap_$u$.utils.cpp" />
   </ItemGroup>

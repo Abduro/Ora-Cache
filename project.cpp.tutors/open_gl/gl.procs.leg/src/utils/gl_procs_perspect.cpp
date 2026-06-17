@@ -6,6 +6,25 @@
 
 using namespace ::open_gl::procs::utils::ver_1_1;
 
+#pragma region cls::c_converter{}
+
+c_converter::c_converter (void) : m_data(0.0) {}
+c_converter::c_converter (const float _f_value) : c_converter() { *this << _f_value; }
+c_converter::c_converter (const double _d_value) : c_converter() { *this << _d_value; }
+c_converter::c_converter (const c_converter& _src) : c_converter() { *this = _src; }
+
+float c_converter::Float (void) const { return static_cast<float>(this->m_data); }
+double c_converter::Double (void) const { return this->m_data; }
+
+c_converter& c_converter::operator = (const c_converter& _src) { *this << _src.Double(); return *this; }
+
+double c_converter::operator <<(const float _f_value) { return (this->m_data = static_cast<double>(_f_value)); }
+float  c_converter::operator <<(const double _d_value) { return static_cast<float>(this->m_data = _d_value); }
+
+c_converter::operator float (void) const { return static_cast<float>(this->m_data); }
+c_converter::operator double (void) const { return this->m_data; }
+
+#pragma endregion
 #pragma region str::s_pers_args{}
 
 s_pers_args::s_pers_args (void) : _fov_y(0.0f), _aspect(0.0f), _near(0.0f), _far(0.0f) {}

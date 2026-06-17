@@ -60,15 +60,15 @@ namespace open_gl { namespace shapes { namespace transfer {
 		float   m_factor;
 	};
 
-	class CTranslate : public COper_Base { typedef COper_Base TBase;
+	class CMove : public COper_Base { typedef COper_Base TBase;
 	public:
-		CTranslate (void); CTranslate (const CTranslate&) = delete; CTranslate (CTranslate&&) = delete; ~CTranslate (void) = default;
+		CMove (void); CMove (const CMove&) = delete; CMove (CMove&&) = delete; ~CMove (void) = default;
 
 		f_set_3 Get (void) const;
 		void Update (void);
 
 	private:
-		CTranslate& operator = (const CTranslate&) = delete; CTranslate& operator = (CTranslate&&) = delete;
+		CMove& operator = (const CMove&) = delete; CMove& operator = (CMove&&) = delete;
 		f_set_3  m_trans;
 		t_point  m_prevs; // the previous position of the cursor is necessary for calculating a delta or a shift of the mouse cursor;
 	};

@@ -5,6 +5,7 @@
 	This is OpenGL v.1.1 matrix related function set wrapper interface declaration file;
 */
 #include "matrix\gl_procs_mtx.defs.h"
+#include "gl_procs_params.h"
 /*These procedure wrappers are espacially intended for OpenGL vers 1.1 API (aka legacy);
 */
 namespace open_gl { namespace procs { namespace matrix {

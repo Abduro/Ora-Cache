@@ -15,8 +15,31 @@ namespace open_gl { namespace procs { namespace utils { namespace ver_1_1 {
 	using namespace ::open_gl::procs::ver_1_1;
 
 	using f_mat_4x4 = ::open_gl::procs::f_mat_4x4;
-	using var = ::open_gl::procs::ver_1_1::c_converter;
 	using CMode = ::open_gl::procs::matrix::ver_1_1::CMode;
+
+	// https://en.cppreference.com/cpp/utility/variant ;
+	// this class hides the casting inside of it;
+	class c_converter {
+	public:
+		 c_converter (void); c_converter (const float); c_converter (const double); c_converter (const c_converter&); c_converter (c_converter&&) = delete;
+		~c_converter (void) = default;
+
+		float Float (void) const;
+		double Double (void) const;
+
+		c_converter& operator = (const c_converter&); c_converter& operator = (c_converter&&) = delete;
+
+		double operator <<(const float);
+		float  operator <<(const double);
+
+		operator float (void) const;
+		operator double (void) const;
+
+	private:
+		double m_data;
+	};
+
+	using var = c_converter;
 
 	// https://learn.microsoft.com/en-us/windows/win32/opengl/gluperspective ;
 	/* Important Tips:
