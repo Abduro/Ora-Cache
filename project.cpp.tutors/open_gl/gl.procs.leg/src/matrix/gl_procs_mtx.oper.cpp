@@ -70,6 +70,10 @@ err_code COpers::Rotate (float _f_angle, const float _x, const float _y, const f
 	return TBase::Error();
 }
 
+err_code COpers::Rotate (float _f_angle, const f_set_3& _where) {
+	return this->Rotate (_f_angle, _where.at(0), _where.at(1), _where.at(2));
+}
+
 // https://learn.microsoft.com/en-us/windows/win32/opengl/gltranslatef ;
 err_code COpers::Translate (const float _x, const float _y, const float _z) {
 	_x; _y; _z;
@@ -87,6 +91,10 @@ err_code COpers::Translate (const float _x, const float _y, const float _z) {
 			TBase::m_error <<__e_fail = TString().Format(p_err_unk_code,  u_err_code,  u_err_code);
 	}
 	return TBase::Error();
+}
+
+err_code COpers::Translate (const f_set_3& _what) {
+	return this->Translate (_what.at(0), _what.at(1), _what.at(2));
 }
 
 #pragma endregion

@@ -9,9 +9,11 @@
 
 namespace open_gl { namespace shapes { namespace transfer {
 
+	using namespace ::shared::drawable;  // this is required for using mouse CEvent interface that is included in this namespace;
 	using namespace ::open_gl::procs::ver_1_1;
 	using namespace ::open_gl::procs::matrix::ver_1_1;
 	using f_set_3 = ::open_gl::procs::f_set_3;
+	using c_angle = ::open_gl::views::c_angle;
 
 	/* the query to Google AI: how to name such operations as movement, rotation and scaling in opengl?
 	In OpenGL, operations that change an object's position, orientation, or size are collectively known as geometric transformations.
@@ -32,8 +34,10 @@ namespace open_gl { namespace shapes { namespace transfer {
 
 	protected:
 		COper_Base& operator = (const COper_Base&) = delete; COper_Base& operator = (COper_Base&&) = delete;
-		bool m_changed;
+		mutable
 		CError m_error;
+		bool   m_changed;
+		COpers m_opers;
 	};
 
 	/* the query to Google AI: what scale factor should be set in order to change draw object a little smaller opengl?
@@ -60,6 +64,8 @@ namespace open_gl { namespace shapes { namespace transfer {
 		float   m_factor;
 	};
 
+	/* a movement of an object occurs: [Shift] key is held, left button of the mouse is pressed and mouse cursor changes its position;
+	*/
 	class CMove : public COper_Base { typedef COper_Base TBase;
 	public:
 		CMove (void); CMove (const CMove&) = delete; CMove (CMove&&) = delete; ~CMove (void) = default;
@@ -73,6 +79,27 @@ namespace open_gl { namespace shapes { namespace transfer {
 		t_point  m_prevs; // the previous position of the cursor is necessary for calculating a delta or a shift of the mouse cursor;
 	};
 
+	/* a rotation of an object occurs: [Ctrl] key is held, left button of the mouse is pressed and mouse cursor changes its position;
+	*/
+	class CRotate : public COper_Base { typedef COper_Base TBase;
+	public:
+		enum e_around : uint32_t { e_x = 0, e_y, e_z };
+		CRotate (void); CRotate (const CRotate&) = delete; CRotate (CRotate&&) = delete; ~CRotate (void) = default;
+
+		err_code Apply (void); // calls glRotate function;
+
+		bool  Is_accepted (const CEvent&) const; // checks required virtual key and mouse button are pressed;
+		const
+		c_angle& Get (const e_around) const; // returns a rotation angle around given axis;
+		err_code Set (const CEvent&);        // returns __s_ok: handled; __s_false: out of interest; otherwise: error code;
+
+	private:
+		CRotate& operator = (const CRotate&) = delete; CRotate& operator = (CRotate&&) = delete;
+		c_angle  m_angles[3]; // angles around each axis;
+		t_point  m_curs_prev; // the previous cursor coordinates;
+
+	static constexpr float f_sens = 0.5f; // a sensitivity factor; https://stackoverflow.com/questions/2454019/why-arent-static-const-floats-allowed ;
+	};
 }}}
 
 #endif/*_GL_TRANS_BASE_H_INCLUDED*/

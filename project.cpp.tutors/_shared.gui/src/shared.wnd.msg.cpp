@@ -414,6 +414,9 @@ bool CVirtKeys::Has (const e_v_key e_key, const w_param _values) {
 	return false;
 }
 
+bool CVirtKeys::Is_ctrl (void) const { return this->Get(e_v_key::e_ctrl); } 
+bool CVirtKeys::Is_shift (void) const { return this->Get(e_v_key::e_shft); }
+
 #pragma endregion
 #pragma region cls::CMouseRouter{}
 

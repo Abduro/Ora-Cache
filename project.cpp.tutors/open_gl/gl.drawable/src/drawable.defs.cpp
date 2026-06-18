@@ -20,23 +20,23 @@ using ex_ui::draw::open_gl::math::defs::rad_2_deg;
 c_angle::c_angle (const float _f_degrees) : m_degrees(0.0f), m_radians(0.0f) { *this << _f_degrees; }
 c_angle::c_angle (const c_angle& _src) : c_angle() { *this = _src; }
 
-float c_angle::Degrees (void) const  { return this->m_degrees; } 
-float c_angle::Degrees (const float _f_degrees) { this->m_degrees = _f_degrees; return this->m_radians = (this->m_degrees * deg_2_rad); }
+float c_angle::Deg (void) const  { return this->m_degrees; } 
+float c_angle::Deg (const float _f_degrees) { this->m_degrees = _f_degrees; return this->m_radians = (this->m_degrees * deg_2_rad); }
 
-float c_angle::Radians (void) const  { return this->m_radians; } 
-float c_angle::Radians (const float _f_radians) { this->m_radians = _f_radians; return this->m_degrees = (this->m_radians * rad_2_deg); }
+float c_angle::Rad (void) const  { return this->m_radians; } 
+float c_angle::Rad (const float _f_radians) { this->m_radians = _f_radians; return this->m_degrees = (this->m_radians * rad_2_deg); }
 
-float c_angle::operator << (const float _f_degrees) { return this->Degrees(_f_degrees); }
-float c_angle::operator >> (const float _f_radians) { return this->Radians(_f_radians); }
+float c_angle::operator << (const float _f_degrees) { return this->Deg(_f_degrees); }
+float c_angle::operator >> (const float _f_radians) { return this->Rad(_f_radians); }
 
-c_angle& c_angle::operator = (const c_angle& _src) { this->m_degrees = _src.Degrees(); this->m_radians = _src.Radians(); return *this; }
+c_angle& c_angle::operator = (const c_angle& _src) { this->m_degrees = _src.Deg(); this->m_radians = _src.Rad(); return *this; }
 
 CString c_angle::To_str (const bool _b_radians) const {
 	_b_radians;
 	static _pc_sz p_pat_deg = _T("%.7f deg.");
 	static _pc_sz p_pat_rad = _T("%.7f rad.");
 
-	CString cs_out; cs_out.Format(_b_radians ? p_pat_rad : p_pat_deg, _b_radians ? this->Radians() : this->Degrees());
+	CString cs_out; cs_out.Format(_b_radians ? p_pat_rad : p_pat_deg, _b_radians ? this->Rad() : this->Deg());
 	return  cs_out;
 }
 

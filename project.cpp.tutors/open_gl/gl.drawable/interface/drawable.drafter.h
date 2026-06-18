@@ -5,8 +5,6 @@
 	This is Ebo Pack drawable object/drafter interface declaration file;
 */
 #include "drawable.defs.h"
-#include "shared.wnd.msg.h"
-
 #include "camera.base.h"
 #include "model.base.h"
 #include "view.base.h"
@@ -19,12 +17,6 @@ namespace shared { namespace drawable { using namespace ::shared::defs;
 	using CCamera = ::open_gl::CCamera;
 	using CModel = ::open_gl::models::CBase;
 	using CView = ::open_gl::views::CBase;
-
-	using IMouse_Handler = ex_ui::popup::messages::IMouse_Handler;
-	using CEvent = ex_ui::popup::messages::IMouse_Handler::CEvent;
-
-	using c_mutex = ::std::recursive_mutex;
-
 	using CTria = ::open_gl::shapes::CTria;
 
 	class CDrafter : public CTplRunner, public IMouse_Handler { typedef CTplRunner TBase;

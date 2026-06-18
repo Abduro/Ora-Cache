@@ -114,7 +114,7 @@ err_code CFoV::CBase::Set (const e_angle _e_value) {
 	return this->Error();
 }
 
-bool  CFoV::CBase::Is_valid (void) const { return CFoV::Is_valid(this->Get().Degrees(), this->m_error); }
+bool  CFoV::CBase::Is_valid (void) const { return CFoV::Is_valid(this->Get().Deg(), this->m_error); }
 
 #pragma endregion
 #pragma region cls::CFoV{}
@@ -154,7 +154,7 @@ err_code CHorz::Set (const float _fov_y, const CAspect& _aspect) {
 	if (false == CFoV::Is_valid(_fov_y, CBase::m_error)) return CBase::Error();
 	if (false == _aspect.Is_valid()) return CBase::m_error = _aspect.Error();
 
-	CBase::m_angle >> 2.0f * ::std::atanf(::std::tanf( c_angle(_fov_y).Radians() / 2.0f ) * _aspect); // the operator of assigning radians to angle is not readable :(
+	CBase::m_angle >> 2.0f * ::std::atanf(::std::tanf( c_angle(_fov_y).Rad() / 2.0f ) * _aspect); // the operator of assigning radians to angle is not readable :(
 
 	return CBase::Error();
 }
@@ -249,7 +249,7 @@ err_code  CFrustum::Update  (void) {
 	if (__failed(hither.Dist(1.0f)))
 		return this->m_error = hither.Error();
 	// the step #2: calculating the near plane height by appliying specific vertical field of view;
-	if (__failed(hither.Height(fov_y.Get().Degrees())))
+	if (__failed(hither.Height(fov_y.Get().Deg())))
 		return this->m_error = hither.Error();
 	if (__failed(hither.Width(this->Aspect())))
 		return this->m_error = hither.Error();

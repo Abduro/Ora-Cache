@@ -8,7 +8,8 @@
 #include "shared.dbg.h"
 #include "shared.preproc.h"
 #include "color.rgb.h"
-#include "shared.theme.h" // background color must be reviewed; (almost done);
+#include "shared.theme.h"    // background color must be reviewed; (almost done);
+#include "shared.wnd.msg.h"  // mouse event, mouse handler interface;
 
 #include "math.defs.h"
 #include "math.matrix.h"
@@ -21,6 +22,15 @@ namespace shared { namespace drawable { using namespace shared::defs;
 
 	using CDelay = shared::runnable::CDelay;
 	using CTplRunner = shared::runnable::threads::pool::CTplRunner;
+	using namespace ex_ui::popup::messages;
+
+	using CEvent = IMouse_Handler::CEvent;
+	using IMouse_Handler = IMouse_Handler;
+
+	using e_button = IMouse_Handler::e_button;
+	using e_v_key  = IMouse_Handler::e_v_key;
+
+	using c_mutex  = ::std::recursive_mutex;
 }}
 
 #include "gl_viewport.h"
@@ -48,11 +58,11 @@ namespace open_gl { namespace views {
 	public:
 		c_angle (const float _f_degrees = 0.0f); c_angle (const c_angle&); c_angle (c_angle&&) = delete; ~c_angle (void) = default;
 
-		float Degrees (void) const;   // gets angle value in degrees;
-		float Degrees (const float);  // sets angle value in degrees; returns calculated value in radians;
+		float Deg (void) const;   // gets angle value in degrees;
+		float Deg (const float);  // sets angle value in degrees; returns calculated value in radians;
 
-		float Radians (void) const;   // gets angle value in radians;
-		float Radians (const float);  // sets angle value in radians; degrees value is updated automatially;
+		float Rad (void) const;   // gets angle value in radians;
+		float Rad (const float);  // sets angle value in radians; degrees value is updated automatially;
 		
 		c_angle& operator = (const c_angle&); c_angle& operator = (c_angle&&) = delete;
 

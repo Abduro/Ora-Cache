@@ -127,6 +127,9 @@ namespace ex_ui { namespace popup { namespace messages {
 			bool Get (const e_v_key) const;  // returns 'true' if the given key is pressed;
 			bool Set (const w_param) ;       // sets the flags from given w_param value; returns 'true' if at least one virtual key state is changed;
 
+			bool Is_ctrl (void) const;       // returns 'true' if [Ctrl] key is pressed and held, otherwise 'false';
+			bool Is_shift (void) const;      // returns 'true' if [Shift] key is pressed and held, otherwise 'false';
+
 			static bool Has (const e_v_key e_key, const w_param _values);
 
 		private:

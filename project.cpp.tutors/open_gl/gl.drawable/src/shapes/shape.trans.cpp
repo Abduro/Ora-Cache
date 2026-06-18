@@ -93,3 +93,51 @@ void CMove::Update (void) {
 }
 
 #pragma endregion
+#pragma region cls::CRotate{}
+
+CRotate::CRotate (void) : TBase(), m_curs_prev{0} { TBase::m_error >>__CLASS__; }
+
+err_code CRotate::Apply (void) {
+
+	if (__failed(TBase::m_opers.Rotate(this->m_angles[e_around::e_x].Rad(), {1.0f, 0.0f, 0.0f}))) { __trace_err_ex_2(TBase::m_opers.Error()); }
+	if (__failed(TBase::m_opers.Rotate(this->m_angles[e_around::e_y].Rad(), {0.0f, 1.0f, 0.0f}))) { __trace_err_ex_2(TBase::m_opers.Error()); }
+
+	return __s_ok;
+}
+
+bool  CRotate::Is_accepted (const CEvent& _event) const {
+
+	if (_event.Buttons().The_last().What() != e_button::e_left) return false;
+	if (_event.Buttons().The_last().Is_pressed() == false) return false;
+	if (_event.Keys().Is_ctrl() == false) return false;
+	return true;
+}
+
+const
+c_angle& CRotate::Get (const e_around _axis) const {
+	_axis;
+	if (false){}
+	else if (e_around::e_x == _axis) return this->m_angles[0];
+	else if (e_around::e_y == _axis) return this->m_angles[1];
+	else if (e_around::e_z == _axis) return this->m_angles[2];
+	else {
+		TBase::m_error <<__e_inv_arg = TString().Format(_T("#__e_inv_arg: axis index (%u) is unknown"), _axis);
+		static c_angle inv_angle; return inv_angle;
+	}
+}
+
+err_code CRotate::Set (const CEvent& _event) {
+	_event;
+	if (false == this->Is_accepted(_event)) return __s_false; // not handled;
+
+	const t_point pt_delta = { _event.Coords().Get().x - this->m_curs_prev.x, _event.Coords().Get().y - this->m_curs_prev.y };
+
+	this->m_angles[e_around::e_x] >> pt_delta.y * CRotate::f_sens; // the angle around X-axis is calculated from vertical mouse movement;
+	this->m_angles[e_around::e_y] >> pt_delta.x * CRotate::f_sens; // the angle around Y-axis is calculated from horizontal mouse movement;
+	this->m_angles[e_around::e_z] >> 0.0f; // is not considered yet; 
+
+	TBase::m_changed = true;
+	return __s_ok; // handled;
+}
+
+#pragma endregion

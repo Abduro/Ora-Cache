@@ -28,14 +28,18 @@ namespace open_gl { namespace shapes {
 		CMove&  Move (void) const;
 		CMove&  Move (void) ;
 		const
+		CRotate& Rotate (void) const;
+		CRotate& Rotate (void) ;
+		const
 		CScale& Scale (void) const;
 		CScale& Scale (void) ;
 
 	protected:
 		CBase& operator = (const CBase&) = delete;
 		CBase& operator = (CBase&&) = delete;
-		CScale m_scale;
-		CMove  m_move ;
+		CScale  m_scale;
+		CMove   m_move ;
+		CRotate m_rotate;
 	};
 
 }}

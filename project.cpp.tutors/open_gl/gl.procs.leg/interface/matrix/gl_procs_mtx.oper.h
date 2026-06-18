@@ -23,6 +23,7 @@ namespace ver_1_1 {
 		err_code Scale (const f_set_3& _to);     // scales current matrix in 'model-view' matrix stack;
 
 		err_code Rotate (float _f_angle, float _x, float _y, float _z); // https://learn.microsoft.com/en-us/windows/win32/opengl/glrotatef ;
+		err_code Rotate (float _f_angle, const f_set_3& _where); // input f_set_3 >> x|y|z;
 
 		/* the query to Google AI: what error can be thrown by glTranslatef opengl?
 		The glTranslatef function in OpenGL can only throw one specific runtime error: GL_INVALID_OPERATION;
@@ -32,6 +33,7 @@ namespace ver_1_1 {
 		State Order: translating after other transformations (like glRotatef) in the wrong sequence; OpenGL transforms operate in *reverse order* of how you type them.
 		*/
 		err_code Translate (const float _x, const float _y, const float _z); // input _x, _y, and _z is coordinates of a translation vector;
+		err_code Translate (const f_set_3& _what); // input f_set_3 >> x|y|z;
 
 	private:
 		COpers& operator = (const COpers&) = delete; COpers& operator = (COpers&&) = delete;

@@ -173,6 +173,7 @@ err_code  CDrafter::IMouse_OnMove  (const CEvent& _event) {
 	::Get_cursor() << pt_curs;
 
 	this->m_tria.Move().Update();
+	this->m_tria.Rotate().Set(_event);
 
 //	__trace_info_2(_T("cursor pos >> [x = %04d; y = %04d];\n"), pt_curs.x, pt_curs.y);
 
