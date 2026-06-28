@@ -1,7 +1,7 @@
 #ifndef _MSXML_ERROR_H_INCLUDED
 #define _MSXML_ERROR_H_INCLUDED
 /*
-	Created by Tech_dog (ebontrop@gmail.com) on 15-Apr-2024 at 22:37:20.5994402, UTC+7, Novosibirsk, Monday;
+	Created by Tech_dog (ebontrop@gmail.com) on 15-Apr-2024 at 22:37:20.599, UTC+7, Novosibirsk, Monday;
 	This is Ebo Pack MS XML error interface declaration file;
 */
 #include "msxml.defs.h"

@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 4-Jul-2015 at 3:36:56pm, GMT+7, Phuket, Rawai, Saturday;
 	This is Shared Lite Generic XML Data Provider class declaration file.
 	-----------------------------------------------------------------------------
-	Adopted to Ebo Pack shared MS XML Document interface on 14-Apr-2024 at 16:54:06.0964777, UTC+7, Novosibirsk, Sunday;
+	Adopted to Ebo Pack shared MS XML Document interface on 14-Apr-2024 at 16:54:06.096, UTC+7, Novosibirsk, Sunday;
 */
 #include "msxml.defs.h"
 #include "msxml.error.h"

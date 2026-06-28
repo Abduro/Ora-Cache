@@ -49,6 +49,54 @@ namespace shared { namespace console  { namespace _impl {
 
 }}} using namespace shared::console::_impl;
 
+#pragma region cls::CCaption{}
+
+using CCaption = CFrame::CCaption;
+
+CCaption::CCaption (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_false = _T("Caption is not set yet");}
+
+CString  CCaption::Default (const e_print _e_opt/* = e_print::e_all*/) const {
+	_e_opt;
+#if defined(WIN64)
+	static _pc_sz p_pat_a = _T("cls::[%s::%s] %s Trace (64-bits)");
+#else
+	static _pc_sz p_pat_a = _T("cls::[%s::%s] %s Trace (32-bits)");
+#endif
+
+	CString cs_out; cs_out.Format(p_pat_a, (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, _T("\u00a4")); // \u002d ;
+	return  cs_out;
+}
+
+TError&  CCaption::Error (void) const { return this->m_error; }
+
+err_code CCaption::Set (_pc_sz _p_cap) {
+	_p_cap;
+	this->m_error <<__METHOD__<<__s_ok;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw ;
+	if (0 == ::SetWindowText(CAccessor(), _p_cap)) { this->m_error.Last(); __trace_err_ex_2(this->Error());}
+
+	return this->Error();
+}
+
+err_code CCaption::Set (const uint16_t _res_id) {
+	_res_id;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == _res_id) {
+		return this->Set(TString().Format(_T("#__e_not_found: res_id = %d"), _res_id));
+	}
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa ; << is used by CString::LoadString();
+	CString cs_cap; cs_cap.LoadString(_res_id);
+	if (cs_cap.IsEmpty()) {
+		this->m_error.Last();
+		::__trace_err_ex_2(this->Error());
+	}
+	return this->Set((_pc_sz)cs_cap);
+}
+
+CCaption& CCaption::operator <<(const uint16_t _res_id) { this->Set(_res_id); return *this; }
+
+#pragma endregion
 #pragma region cls::CCmd_Handler{}
 
 CCmd_Handler::CCmd_Handler (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
@@ -87,18 +135,6 @@ err_code CCmd_Handler::On_command (const uint32_t _cmd_id) {
 	}
 
 	return this->Error();
-}
-
-#pragma endregion
-#pragma region cls::CIcon{}
-
-using CIcon = CFrame::CIcon;
-
-CIcon& CIcon::operator <<(const uint16_t _res_id) {
-	_res_id;
-	::SendMessage(TConAccess(), WM_SETICON, 0, (l_param) CLoader().Load(_res_id, 0));
-	::SendMessage(TConAccess(), WM_SETICON, 1, (l_param) CLoader().Load(_res_id, 1));
-	return *this;
 }
 
 #pragma endregion
@@ -206,26 +242,12 @@ CConsole::operator const HWND (void) const { return this->Handle(); }
 #pragma endregion
 #pragma region cls::CFrame{}
 
+using CCap = CFrame::CCaption;
+
 CFrame::CFrame (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-void CFrame::Caption (_pc_sz _p_cap) {
-	_p_cap;
-	this->m_error <<__METHOD__<<__s_ok;
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw ;
-	if (0 == ::SetWindowText(CAccessor(), _p_cap)) { this->m_error.Last(); __trace_err_ex_2(this->Error());}
-}
-
-CString  CFrame::Caption_Dflt (const e_print _e_opt/* = e_print::e_all*/) const {
-	_e_opt;
-#if defined(WIN64)
-	static _pc_sz p_pat_a = _T("cls::[%s::%s] %s Trace (64-bits)");
-#else
-	static _pc_sz p_pat_a = _T("cls::[%s::%s] %s Trace (86-bits)");
-#endif
-
-	CString cs_out; cs_out.Format(p_pat_a, (_pc_sz) __SP_NAME__, (_pc_sz) __CLASS__, _T("\u00a4")); // \u002d ;
-	return  cs_out;
-}
+const
+CCap&  CFrame::Caption (void) const { return this->m_cap; }
+CCap&  CFrame::Caption (void)       { return this->m_cap; }
 
 TError& CFrame::Error (void) const { return this->m_error; }
 const
@@ -253,6 +275,18 @@ err_code CFrame::OnCreate (void) {
 		__trace_err_ex_2(this->m_error(TError::e_get_last));
 
 	return this->Error();
+}
+
+#pragma endregion
+#pragma region cls::CIcon{}
+
+using CIcon = CFrame::CIcon;
+
+CIcon& CIcon::operator <<(const uint16_t _res_id) {
+	_res_id;
+	::SendMessage(TConAccess(), WM_SETICON, 0, (l_param) CLoader().Load(_res_id, 0));
+	::SendMessage(TConAccess(), WM_SETICON, 1, (l_param) CLoader().Load(_res_id, 1));
+	return *this;
 }
 
 #pragma endregion

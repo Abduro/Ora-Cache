@@ -70,13 +70,19 @@ namespace open_gl { namespace shapes { namespace transfer {
 	public:
 		CMove (void); CMove (const CMove&) = delete; CMove (CMove&&) = delete; ~CMove (void) = default;
 
-		f_set_3 Get (void) const;
+		f_set_3  Get (void) const;
+		err_code Set (const CEvent&); // returns __s_ok: handled; __s_false: out of interest; otherwise: error code;
+
+		bool  Is_accepted (const CEvent&) const; // checks required virtual key and mouse button are pressed;
+
 		void Update (void);
 
 	private:
 		CMove& operator = (const CMove&) = delete; CMove& operator = (CMove&&) = delete;
-		f_set_3  m_trans;
-		t_point  m_prevs; // the previous position of the cursor is necessary for calculating a delta or a shift of the mouse cursor;
+		f_set_3  m_where;
+		t_point  m_cursor; // the previous position of the cursor is necessary for calculating a delta or a shift of the mouse cursor;
+
+	static constexpr float f_sens = 1.0f;
 	};
 
 	/* a rotation of an object occurs: [Ctrl] key is held, left button of the mouse is pressed and mouse cursor changes its position;

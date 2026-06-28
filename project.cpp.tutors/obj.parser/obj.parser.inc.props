@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 17-Feb-2024 at 07:37:56.802, UTC+7, Novosibirsk, Saturday;
-	This is geometric curve library Win32 API wrapper project include property page declaration file;
-	Adopted to Stroke Over MS Windows shell extension project on 16-Aug-2024 at 20:51:54.447, UTC+4, Batumi, Friday;
+	Created by Tech_dog (ebontrop@gmail.com) on 28-Jun-2026 at 10:45:23.279, UTC+4, Batumi, Sunday;
+	This is 3D model OBJ format file parser project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
@@ -10,19 +9,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
     <Shared Condition="'$(Shared)'==''">..\_shared\</Shared> <!--This is the reference to the shared project of excerptions from Ebo Pack;-->
+    <Shared_Clr Condition="'$(Shared_Clr)'==''">..\_shared.clr\</Shared_Clr>
     <Shared_Dbg Condition="'$(Shared_Dbg)'==''">..\_shared.dbg\</Shared_Dbg>
-    <ThisLib Condition="'$(ThisLib)'==''">$(ProjectDir)</ThisLib><!--This project is being compiled; -->
+    <Shared_Gui Condition="'$(Shared_Gui)'==''">..\_shared.gui\</Shared_Gui>
+    <ThisExe Condition="'$(ThisExe)'==''">$(ProjectDir)</ThisExe><!--This project is being compiled; -->
   </PropertyGroup>
   <PropertyGroup>
-    <Root>$(ThisLib)</Root>
+    <Root>$(ThisExe)</Root>
   </PropertyGroup>
   <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>interface\</_0>
+    <_0>interface\</_0><!--The reference to the root node is not required due to these sub-folders are in this project's one;-->
     <_1>src\</_1>
+    <_1-0>src\res\</_1-0>
+    <_1-1>src\res\icons\</_1-1>
     <_2>$(Shared)interface\</_2>
     <_3>$(Shared_Dbg)interface\</_3>
-    <_4></_4>
-    <_5></_5>
+    <_3-0>$(Shared_Dbg)interface\__trace\</_3-0>
+    <_4>$(Shared_Gui)interface\</_4>
+    <_5>$(Shared_Clr)interface\</_5>
     <_6></_6>
     <_7></_7>
     <_8></_8>
@@ -30,8 +34,8 @@
     <_a></_a>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(_0);$(_1);$(_2);$(_3);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
-  </PropertyGroup>                           	
+    <IncludePath>$(_0);$(_1);$(_1-0);$(_1-1);$(_2);$(_3);$(_3-0);$(_4);$(_5);$(IncludePath)</IncludePath> <!--*important*::it does *not* work in c++ project file!-->
+  </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup />
 </Project>

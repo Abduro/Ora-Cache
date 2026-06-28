@@ -51,7 +51,7 @@ namespace shared { namespace console { namespace _impl { using namespace shared:
 #endif
 }}}
 
-#pragma comment(lib, "shared.dbg_v15.lib")    // shared debug outpu/trace console;
+#pragma comment(lib, "shared.dbg_v15.lib")    // shared debug output/trace console;
 #pragma comment(lib, "shared.gui_v15.lib")    // shared GUI lib for creating main/app window;
 #pragma comment(lib, "shared.trim_v15.lib")   // shared wrappers of required system functionality;
 

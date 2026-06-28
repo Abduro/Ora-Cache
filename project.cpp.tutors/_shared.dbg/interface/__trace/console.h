@@ -83,6 +83,21 @@ namespace shared { namespace console {
 
 	class CFrame {
 	public:
+		class CCaption {
+		public:
+			CCaption (void); CCaption (const CCaption&) = delete; CCaption (CCaption&&) = delete; ~CCaption (void) = default;
+
+			CString  Default (const e_print = e_print::e_all) const; // for trace console default caption;
+			TError&  Error (void) const;
+
+			err_code Set (_pc_sz);
+			err_code Set (const uint16_t _res_id);
+
+			CCaption& operator <<(const uint16_t _res_id);
+		private:
+			CCaption& operator = (const CCaption&) = delete; CCaption& operator = (CCaption&&) = delete;
+			CError  m_error;
+		};
 		class CIcon {
 		public:
 			CIcon (void) = default; CIcon (const CIcon&) = delete; CIcon (CIcon&&) = delete; ~CIcon (void) = default;
@@ -91,10 +106,13 @@ namespace shared { namespace console {
 			CIcon& operator = (const CIcon&) = delete; CIcon& operator = (CIcon&&) = delete;
 		};
 
+		using CCap = CFrame::CCaption;
+
 		CFrame (void); CFrame (const CFrame&) = delete; CFrame (CFrame&&) = delete; ~CFrame (void) = default;
 
-		void     Caption (_pc_sz);
-		CString  Caption_Dflt (const e_print = e_print::e_all) const;
+		const
+		CCap&  Caption (void) const;
+		CCap&  Caption (void) ;
 
 		TError&  Error (void) const;
 		const
@@ -105,8 +123,9 @@ namespace shared { namespace console {
 
 	private:
 		CFrame& operator = (const CFrame&) = delete; CFrame& operator = (CFrame&&) = delete;
+		CCap    m_cap;
 		CError  m_error;
-		CIcon   m_icon ;
+		CIcon   m_icon;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/console/creation-of-a-console ;

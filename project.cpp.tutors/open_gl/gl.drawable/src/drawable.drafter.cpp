@@ -166,13 +166,13 @@ err_code  CDrafter::IMouse_OnButton (const CEvent& _event) {
 
 err_code  CDrafter::IMouse_OnMove  (const CEvent& _event) {
 	_event;
-	if (_event.Buttons().The_last().What() != e_button::e_left) return __s_false;   // is hold for moving a draw object;
-	if (_event.Buttons().The_last().Is_pressed() == false)  return __s_false;
+//	if (_event.Buttons().The_last().What() != e_button::e_left) return __s_false;   // is hold for moving a draw object;
+//	if (_event.Buttons().The_last().Is_pressed() == false)  return __s_false;
 
 	t_point pt_curs = _event.Coords() << this->m_surface;
 	::Get_cursor() << pt_curs;
 
-	this->m_tria.Move().Update();
+	this->m_tria.Move().Set(_event);
 	this->m_tria.Rotate().Set(_event);
 
 //	__trace_info_2(_T("cursor pos >> [x = %04d; y = %04d];\n"), pt_curs.x, pt_curs.y);

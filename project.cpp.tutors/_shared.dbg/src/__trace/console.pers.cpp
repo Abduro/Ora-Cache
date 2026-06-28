@@ -202,12 +202,26 @@ err_code CPosition::Set (const t_rect& _rect) {
 		return TBase::Error();
 
 	TRegKeyEx the_key;
-	if (__failed(the_key.Value().Set((_pc_sz) cs_pos_key, _rect))) {
+	if (__failed(the_key.Value().Set(this->m_key_path.IsEmpty() ? (_pc_sz) cs_pos_key : (_pc_sz) this->m_key_path, _rect))) {
 		TBase::m_error = the_key.Error();
 		__trace_err_ex_2(TBase::Error());
 	} else {
 		this->m_rc_pos = rc_prev = _rect;
 		__trace_impt_2(_T("Position is saved at rect >> %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
+	}
+	return TBase::Error();
+}
+
+_pc_sz   CPosition::Key (void) const { return (_pc_sz) this->m_key_path; }
+err_code CPosition::Key (_pc_sz _p_path) {
+	_p_path;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_path || 0 == ::_tclen(_p_path)) {
+		TBase::m_error <<__e_inv_arg =_T("Root key path is empty");
+	}
+	else {
+		this->m_key_path = _p_path; this->m_key_path.Trim();
+		this->m_key_path = TString().Format(_T("%s\\Position"), _p_path);
 	}
 	return TBase::Error();
 }
@@ -218,7 +232,7 @@ err_code CPosition::Load (void) {
 	using namespace shared::layout;
 
 	TRegKeyEx the_key;
-	this->m_rc_pos = the_key.Value().GetRect((_pc_sz) cs_pos_key);
+	this->m_rc_pos = the_key.Value().GetRect(this->m_key_path.IsEmpty() ? (_pc_sz) cs_pos_key : (_pc_sz) this->m_key_path);
 
 	if (::IsRectEmpty(&this->m_rc_pos)) { // the position of the console window is not saved yet;
 
@@ -276,6 +290,8 @@ CString  CPosition::To_str (const e_print _e_opt/* = e_print::e_all*/) {
 
 	return  cs_out;
 }
+
+CPosition& CPosition::operator <<(_pc_sz _p_root_path) { this->Key(_p_root_path); return *this; }
 
 #pragma endregion
 #pragma region cls::CPersistent{}

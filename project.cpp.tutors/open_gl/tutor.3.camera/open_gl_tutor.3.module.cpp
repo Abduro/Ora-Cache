@@ -124,7 +124,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		con_bkg.Color(::Get_theme().Bkgnd().Rgba());
 
 		_con.Frame().Icon() << IDR_TUTOR_0_ICO;
-		_con.Frame().Caption((_pc_sz)_con.Frame().Caption_Dflt());
+		_con.Frame().Caption().Set((_pc_sz)_con.Frame().Caption().Default());
 	}
 	CHandler_auto handler_auto;
 #endif

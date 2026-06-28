@@ -8,6 +8,7 @@
  drawable_v15          : {00000C13-EEEE-BBBB-6667-00000000000A} << ebo_pack::gdi.plus_v15 << ebo_pack::_uix.draw;
  shared.gui_v15        : {00000C13-EEEE-BBBB-6667-00000000000C} << ebo_pack::ctl.base_v15 << ebo_pack::_uix.form;
  shared.clr_v15        : {00000C13-EEEE-BBBB-6667-000000000019} << ebo_pack::_uix.color;
+ obj.parser_v15        : {00000C13-EEEE-BBBB-6667-00000000001A}
  trace.con_v15         : {00000C13-EEEE-BBBB-6667-000000000020} << ebo_pack::console.ext_v15 << ebo_pack::_console;
  ebo_test_$dat$.prov   : {00000C13-EEEE-BBBB-6667-000000060009} !test project GUIs require review!
 
@@ -37,6 +38,8 @@
  [data]                : {00000C13-EEEE-BBBB-6667-F00000000040} :: data provider directory << ms.xml.6_v15.vcxproj; it is not included yet to OpenGL tutors;
  [!test.cases]         : {00000C13-EEEE-BBBB-6667-F00000000050} :: shared projects' test cases node;
  [core]                : {00000C13-EEEE-BBBB-6667-F00000000051}
+ [parsers]             : {00000C13-EEEE-BBBB-6667-F00000000060}
+ [obj]                 : {00000C13-EEEE-BBBB-6667-F00000000061}
  [tutors]              : {00000C13-EEEE-BBBB-6667-F01000000000}
  [DirecX]              : {00000C13-EEEE-BBBB-6667-F01010000000}
  [OpenGL]              : {00000C13-EEEE-BBBB-6667-F01020000000}

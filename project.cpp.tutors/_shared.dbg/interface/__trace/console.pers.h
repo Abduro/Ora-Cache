@@ -63,7 +63,9 @@ namespace persistent {
 	private:
 		bool m_pinned; // the flag of pinned/unpinned state of the console window; used by gui app;
 	};
-
+	/*to-do: all classes including CPosition is intended for using by debug trace console;
+	  but for the new version, other project requires console too, obj_parser for example;
+	*/
 	class CPosition : public CBase { typedef CBase TBase;
 	public:
 		 CPosition (void);
@@ -73,13 +75,19 @@ namespace persistent {
 		t_rect&  Get (void) const;
 		err_code Set (const t_rect&); // for direct set the window position and to save it to the registry;
 
+		_pc_sz   Key (void) const; // gets the registry path of the key that is the root for console settings; for position only this time;
+		err_code Key (_pc_sz);     // sets the registry path of the key that is the root for console settings;
+
 		err_code Load (void); // loads console window position;
 		err_code Save (void); // saves console window position; gets the actual window position before saving;
 
 		CString To_str (const e_print = e_print::e_all);
 
+		CPosition& operator <<(_pc_sz _p_root_path); // sets the root key path to read/write position data;
+
 	private:
-		t_rect m_rc_pos;  // the console window rectangle in screen coordinates;
+		t_rect  m_rc_pos;     // the console window rectangle in screen coordinates;
+		CString m_key_path;   // this is the path that is set for console settings that is not 'debug trace';
 	};
 
 	class CShow : public CBase { typedef CBase TBase;
