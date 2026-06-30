@@ -231,6 +231,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="$(_0)obj_parser.defs.h" />
+    <ClCompile Include="$(_1)obj_parser.defs.cpp" />
     <ClInclude Include="$(_1)obj_parser.module.h" />
     <ClCompile Include="$(_1)obj_parser.module.cpp" />
   </ItemGroup>

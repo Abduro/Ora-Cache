@@ -32,11 +32,6 @@ uint32_t _tmain (int argc, _TCHAR* argv[]) {
 
 using namespace shared::console::events;
 
-class COutput : public CHandler_Dflt {
-public:
-	COutput (void) = default; ~COutput (void) = default;
-};
-
 CTraceConsole _Module;
 
 err_code CTraceConsole::PreMessageLoop (int nShowCmd) {
@@ -53,6 +48,20 @@ err_code CTraceConsole::PreMessageLoop (int nShowCmd) {
 class CHandler : public CHandler_Dflt {
 public:
 	CHandler (void) {}
+
+	err_code On_close (const ctrl::CEvent::evt_source _dw_reason) override final {
+		_dw_reason; // does not matter;
+		::Get_ConPers().Save();
+		return __s_ok;
+	}
+
+	err_code On_move (const input::evt_mouse_data_t& _data) override final {
+		_data; return __s_ok;
+	}
+
+	err_code On_size  (const input::evt_buff_size_t _data) override final {
+		_data; return __s_ok;
+	}
 };
 
 class CHandler_auto {
@@ -93,6 +102,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	CString cs_root = TString().Format(_T("%s\\Utils\\ObjParser"), ::Get_reg_router().Root().Path());
 
 	::Get_ConPers().Pos() << (_pc_sz) cs_root;
+	_con.Frame().Use_close(true);
 
 	if (__failed(_con.Create())) { __trace_err_ex_2(_con.Error()); }
 	else {
@@ -105,6 +115,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		b_error = false;
 	}
+	CHandler_auto handler_auto;
 
 	do {} while (true == false);
 

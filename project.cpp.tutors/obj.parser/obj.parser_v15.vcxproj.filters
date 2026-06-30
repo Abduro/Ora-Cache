@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A0}</UniqueIdentifier></Filter>
-    <Filter Include="resources"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A1}</UniqueIdentifier></Filter>
-    <Filter Include="resources\icons"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A2}</UniqueIdentifier></Filter>
+    <Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A0}</UniqueIdentifier></Filter>
+    <Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A1}</UniqueIdentifier></Filter>
+
+    <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A2}</UniqueIdentifier></Filter>
+    <Filter Include="src\resources"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A3}</UniqueIdentifier></Filter>
+    <Filter Include="src\resources\icons"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000001A4}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_prec</Filter></ClInclude>
-    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_prec</Filter></ClCompile>
+    <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="$(_1-0)obj_parser.manifest"><Filter>resources</Filter></Manifest>
-    <ClInclude Include="$(_1-0)obj_parser.res.h"><Filter>resources</Filter></ClInclude>
-    <ResourceCompile Include="$(_1-0)obj_parser.res.rc"><Filter>resources</Filter></ResourceCompile>
-    <Image Include="$(_1-1)obj_parser.design.0.ico"><Filter>resources\icons</Filter></Image>
+    <ClInclude Include="$(_0)obj_parser.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)obj_parser.defs.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="$(_1-0)obj_parser.manifest"><Filter>src\resources</Filter></Manifest>
+    <ClInclude Include="$(_1-0)obj_parser.res.h"><Filter>src\resources</Filter></ClInclude>
+    <ResourceCompile Include="$(_1-0)obj_parser.res.rc"><Filter>src\resources</Filter></ResourceCompile>
+    <Image Include="$(_1-1)obj_parser.design.0.ico"><Filter>src\resources\icons</Filter></Image>
   </ItemGroup>
 </Project>

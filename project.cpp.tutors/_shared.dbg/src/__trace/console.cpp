@@ -244,7 +244,7 @@ CConsole::operator const HWND (void) const { return this->Handle(); }
 
 using CCap = CFrame::CCaption;
 
-CFrame::CFrame (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CFrame::CFrame (void) : m_use_close(false) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 const
 CCap&  CFrame::Caption (void) const { return this->m_cap; }
 CCap&  CFrame::Caption (void)       { return this->m_cap; }
@@ -260,9 +260,11 @@ err_code CFrame::OnCreate (void) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmenu ;
 	HMENU sys_mnu = ::GetSystemMenu(CAccessor(), false); sys_mnu;
 #if (1)
+	if (this->Use_close() == false) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablemenuitem ;
 	if (-1 == ::EnableMenuItem (sys_mnu, SC_CLOSE, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED))
 		__trace_err_ex_2(this->m_error <<__e_inv_arg = _T("#__e_inv_arg: 'SC_CLOSE' menu item not found"));
+	}
 #elif (false == true) // doesn't work;
 	if (0 == ::RemoveMenu (sys_mnu, MF_BYCOMMAND, SC_CLOSE))
 		__trace_err_ex_2(this->m_error(TError::e_get_last));
@@ -276,6 +278,9 @@ err_code CFrame::OnCreate (void) {
 
 	return this->Error();
 }
+
+bool CFrame::Use_close (void) const { return this->m_use_close; }
+void CFrame::Use_close (const bool _yes_or_no) { this->m_use_close = _yes_or_no; }
 
 #pragma endregion
 #pragma region cls::CIcon{}

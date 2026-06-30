@@ -121,11 +121,15 @@ namespace shared { namespace console {
 
 		err_code OnCreate (void);
 
+		bool Use_close (void) const;            // returns the option value of 'use close button and menu item'; by default is 'false';
+		void Use_close (const bool _yes_or_no); // sets the option of 'using close button and menu item';
+
 	private:
 		CFrame& operator = (const CFrame&) = delete; CFrame& operator = (CFrame&&) = delete;
 		CCap    m_cap;
 		CError  m_error;
 		CIcon   m_icon;
+		bool    m_use_close;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/console/creation-of-a-console ;
