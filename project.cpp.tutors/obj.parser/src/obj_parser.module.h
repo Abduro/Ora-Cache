@@ -4,11 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 26-Jun-2026 at 11:46:26.558, UTC+4, Batumi, Sunday;
 	This is 3D module object parser module interface declaration file;
 */
-#include "shared.defs.h"
-#include "shared.preproc.h"
-#include "shared.dbg.h"
-#include "shared.theme.h"
-#include "sys.registry.h"
+#include "obj_parser.defs.h"
 #include "console.h"
 
 namespace shared { namespace parsers { namespace obj { using namespace shared::defs;

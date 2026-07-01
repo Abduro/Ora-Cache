@@ -232,6 +232,8 @@
     <ClCompile Include="$(_1-0)console.cpp" />
     <ClInclude Include="$(_1-0)console.cmd.h" />
     <ClCompile Include="$(_1-0)console.cmd.cpp" />
+    <ClInclude Include="$(_0-0)console.cmd.ln.h" />
+    <ClCompile Include="$(_1-0)console.cmd.ln.cpp" />
     <ClInclude Include="$(_0-0)console.layout.h" />
     <ClCompile Include="$(_1-0)console.layout.cpp" />
     <ClInclude Include="$(_0-0)console.pers.h" />

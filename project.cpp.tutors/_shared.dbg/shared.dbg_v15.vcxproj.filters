@@ -58,6 +58,8 @@
     <ClCompile Include="$(_1-0)console.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_1-0)console.cmd.h"><Filter>src\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.cmd.cpp"><Filter>src\__trace</Filter></ClCompile>
+    <ClInclude Include="$(_0-0)console.cmd.ln.h"><Filter>interface\__trace</Filter></ClInclude>
+    <ClCompile Include="$(_1-0)console.cmd.ln.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.layout.h"><Filter>interface\__trace</Filter></ClInclude>
     <ClCompile Include="$(_1-0)console.layout.cpp"><Filter>src\__trace</Filter></ClCompile>
     <ClInclude Include="$(_0-0)console.pers.h"><Filter>interface\__trace</Filter></ClInclude>
