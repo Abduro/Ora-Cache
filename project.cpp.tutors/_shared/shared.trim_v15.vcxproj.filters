@@ -32,6 +32,8 @@
     <ClCompile Include="$(_1)sys.gen.time.cpp"><Filter>src\time</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shared.cmd.ln.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)shared.cmd.ln.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.defs.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)shared.defs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)shared.layout.h"><Filter>interface</Filter></ClInclude>

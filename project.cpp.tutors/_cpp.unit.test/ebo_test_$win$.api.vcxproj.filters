@@ -19,12 +19,21 @@
     <Filter Include="gui"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006003A}</UniqueIdentifier></Filter>
     <Filter Include="gui\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006003B}</UniqueIdentifier></Filter>
 
+    <Filter Include="input"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006003C}</UniqueIdentifier></Filter>
+    <Filter Include="input\shared"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-C0000006003D}</UniqueIdentifier></Filter>
+
   </ItemGroup>
   <ItemGroup><!--_root-->
     <ClInclude Include="$(Shared)shared.std.afx.h"><Filter>_root\_prec</Filter></ClInclude>
     <ClCompile Include="$(Shared)shared.std.afx.cpp"><Filter>_root\_prec</Filter></ClCompile>
     <ClInclude Include="$(_2)test_adap_$w$.defs.h"><Filter>_root</Filter></ClInclude>
     <ClCompile Include="$(_2)test_adap_$w$.defs.cpp"><Filter>_root</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup><!--input-->
+    <ClInclude Include="$(_2-0)test_case_$w$.cmd.ln.h"><Filter>input\shared</Filter></ClInclude>
+    <ClCompile Include="$(_2-0)test_case_$w$.cmd.ln.cpp"><Filter>input\shared</Filter></ClCompile>
+    <ClInclude Include="$(_2)test_adap_$w$.input.h"><Filter>input</Filter></ClInclude>
+    <ClCompile Include="$(_2)test_adap_$w$.input.cpp"><Filter>input</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--console-->
     <ClInclude Include="$(_2-0)test_case_$w$.con.h"><Filter>console\shared</Filter></ClInclude>

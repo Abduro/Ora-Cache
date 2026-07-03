@@ -226,6 +226,12 @@
     <ClInclude Include="$(_2)test_adap_$w$.defs.h" />
     <ClCompile Include="$(_2)test_adap_$w$.defs.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_2-0)test_case_$w$.cmd.ln.h" />
+    <ClCompile Include="$(_2-0)test_case_$w$.cmd.ln.cpp" />
+    <ClInclude Include="$(_2)test_adap_$w$.input.h" />
+    <ClCompile Include="$(_2)test_adap_$w$.input.cpp" />
+  </ItemGroup>
   <ItemGroup><!--console-->
     <ClInclude Include="$(_2)test_adap_$w$.con.pers.h" />
     <ClCompile Include="$(_2)test_adap_$w$.con.pers.cpp" />

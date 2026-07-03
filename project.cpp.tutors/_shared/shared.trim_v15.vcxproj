@@ -199,6 +199,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shared.cmd.ln.h" />
+    <ClCompile Include="$(_1)shared.cmd.ln.cpp" />
     <ClInclude Include="$(_0)shared.defs.h" />
     <ClCompile Include="$(_1)shared.defs.cpp" />
     <ClInclude Include="$(_0)shared.layout.h" />

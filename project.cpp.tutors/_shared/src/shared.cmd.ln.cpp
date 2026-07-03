@@ -8,15 +8,79 @@
 	Adopted to FG (thefileguardian.com) project on 11-Jun-2016 at 4:57:52p, GMT+7, Phuket, Rawai, Saturday;
 	Adopted to sound-bin-trans project on 5-Apr-2019 at 11:55:19a, UTC+7, Phuket, Rawai, Thursday;
 */
-#include "console.cmd.ln.h"
+#include "shared.cmd.ln.h"
+#include "shared.preproc.h"
 
-using namespace ::shared::console;
+using namespace ::shared::input;
 
 #pragma region cls::CCmdLine{}
 
-CCmdLine:: CCmdLine (void)
+CCmdLine:: CCmdLine (void) { this->m_error >> __CLASS__ << __METHOD__<<__s_ok; }
+CCmdLine::~CCmdLine (void) { this->Clear(); }
+
+err_code CCmdLine::Append (_pc_sz _p_sz_name, _pc_sz _p_sz_value) {
+	_p_sz_name; _p_sz_value;
+	this->m_error << __METHOD__ << __s_ok;
+
+	try {
+		m_args.insert(::std::make_pair(
+			CString(_p_sz_name), CString(_p_sz_value)
+		));
+	}
+	catch (const ::std::bad_alloc&){
+		this->m_error << __e_no_memory;
+	}
+	return this->Error();
+}
+err_code CCmdLine::Append (_pc_sz _p_sz_name, long _l_value) {
+      return this->Append(_p_sz_name, TString().Long(_l_value));
+}
+
+CString  CCmdLine::Arg (_pc_sz _p_sz_name) const {
+	_p_sz_name;
+	this->m_error << __METHOD__ << __s_ok;
+
+	TCmdLineArgs::const_iterator it_ = m_args.find(CString(_p_sz_name));
+
+	if (it_ == m_args.end()) {
+		this->m_error << (err_code) TErrCodes::eData::eNotFound;
+		return CString();
+	}
+	else
+		return it_->second;
+}
+
+long     CCmdLine::Arg (_pc_sz _p_sz_name, const long _def_val) const {
+	_p_sz_name; _def_val;
+	this->m_error << __METHOD__ << __s_ok;
+
+	TCmdLineArgs::const_iterator it_ = m_args.find(CString(_p_sz_name));
+
+	if (it_ == m_args.end()) {
+		this->m_error << (err_code) TErrCodes::eData::eNotFound;
+		return _def_val;
+	}
+	else
+		return ::_tstol(it_->second);
+}
+
+TCmdLineArgs  CCmdLine::Args  (void) const { return m_args; }
+void          CCmdLine::Clear (void)       { if (m_args.empty() == false) m_args.clear(); }
+uint16_t      CCmdLine::Count (void)const  { return static_cast<uint16_t>(m_args.size()); }
+bool          CCmdLine::Has   (_pc_sz pArgName) const
 {
-	this->m_error >> __CLASS__ << __METHOD__<<__s_ok;
+	TCmdLineArgs::const_iterator it__ = m_args.find(CString(pArgName));
+	return (it__ != m_args.end());
+}
+
+TError&  CCmdLine::Error(void) const { return this->m_error; }
+
+CString  CCmdLine::Path (void) const { return m_module_path; }
+
+err_code CCmdLine::Parse (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	this->Clear();
+
 	// https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinea ;
 	CString cs_cmd_line = ::GetCommandLine();
 	CString cs_key;
@@ -64,70 +128,31 @@ __end_of_story__:
 	if (nullptr != pCmdArgs) {
 		::LocalFree(pCmdArgs); pCmdArgs = nullptr;
 	}
-}
-
-CCmdLine::~CCmdLine(void) { this->Clear(); }
-
-err_code CCmdLine::Append(_pc_sz _p_sz_name, _pc_sz _p_sz_value) {
-	_p_sz_name; _p_sz_value;
-	this->m_error << __METHOD__ << __s_ok;
-
-	try {
-		m_args.insert(::std::make_pair(
-			CString(_p_sz_name), CString(_p_sz_value)
-		));
-	}
-	catch (const ::std::bad_alloc&){
-		this->m_error << __e_no_memory;
-	}
 	return this->Error();
 }
-err_code CCmdLine::Append(_pc_sz _p_sz_name, long _l_value) {
-      return this->Append(_p_sz_name, TString().Long(_l_value));
+
+err_code CCmdLine::Parse (const t_char* _p_args, const uint32_t _count) {
+	_p_args; _count;
+	return this->m_error <<__METHOD__<<__e_not_impl = _T("Not implemented yet");
 }
 
-CString  CCmdLine::Arg   (_pc_sz _p_sz_name) const {
-	_p_sz_name;
-	this->m_error << __METHOD__ << __s_ok;
-
-	TCmdLineArgs::const_iterator it_ = m_args.find(CString(_p_sz_name));
-
-	if (it_ == m_args.end()) {
-		this->m_error << (err_code) TErrCodes::eData::eNotFound;
-		return CString();
-	}
-	else
-		return it_->second;
+err_code CCmdLine::Parse (const t_char* _p_args) {
+	_p_args;
+	return this->m_error <<__METHOD__<<__e_not_impl = _T("Not implemented yet");
 }
 
-long     CCmdLine::Arg   (_pc_sz _p_sz_name, const long _def_val) const {
-	_p_sz_name; _def_val;
-	this->m_error << __METHOD__ << __s_ok;
+#if defined (_DEBUG) || defined(TRUE)
 
-	TCmdLineArgs::const_iterator it_ = m_args.find(CString(_p_sz_name));
+CString  CCmdLine::Print (void) const {
 
-	if (it_ == m_args.end()) {
-		this->m_error << (err_code) TErrCodes::eData::eNotFound;
-		return _def_val;
-	}
-	else
-		return ::_tstol(it_->second);
+	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{args=%s;count=%u}");
+
+	CString cs_out;
+	cs_out.Format(lp_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)this->To_str(), this->Count());
+	return  cs_out;
 }
-
-TCmdLineArgs  CCmdLine::Args  (void) const { return m_args; }
-void          CCmdLine::Clear (void)       { if (m_args.empty() == false) m_args.clear(); }
-uint16_t      CCmdLine::Count (void)const  { return static_cast<uint16_t>(m_args.size()); }
-bool          CCmdLine::Has   (_pc_sz pArgName) const
-{
-	TCmdLineArgs::const_iterator it__ = m_args.find(CString(pArgName));
-	return (it__ != m_args.end());
-}
-
-TError&  CCmdLine::Error(void) const { return this->m_error; }
-
-CString  CCmdLine::Path (void) const { return m_module_path; }
-
-CString  CCmdLine::ToString(_pc_sz _lp_sz_sep) const {
+#endif
+CString  CCmdLine::To_str (_pc_sz _lp_sz_sep) const {
 	_lp_sz_sep;
 
 	static _pc_sz lp_sz_pat = _T("{%s=%s}");
@@ -136,7 +161,7 @@ CString  CCmdLine::ToString(_pc_sz _lp_sz_sep) const {
 	CString cs_args;
 
 	if (m_args.empty())
-		return (cs_args = _T("#no_args;"));
+		return (cs_args = _T("#no_args"));
 #if (0)
 	for (TCmdLineArgs::const_iterator it_ = m_args.begin(); it_ != m_args.end(); ++it_)
 	{
@@ -163,19 +188,7 @@ CString  CCmdLine::ToString(_pc_sz _lp_sz_sep) const {
 	return cs_args;
 }
 
-#if defined (_DEBUG) || defined(TRUE)
-
-CString  CCmdLine::Print (void) const {
-
-	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{args=%s;count=%u}");
-
-	CString cs_out;
-	cs_out.Format(lp_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)this->ToString(), this->Count());
-	return  cs_out;
-}
-#endif
-
-CCmdLine::operator _pc_sz (void) const { return this->ToString(); }
+CCmdLine::operator _pc_sz (void) const { return this->To_str(); }
 
 bool CCmdLine::operator==(_pc_sz pszArgName) const { return this->Has(pszArgName); }
 

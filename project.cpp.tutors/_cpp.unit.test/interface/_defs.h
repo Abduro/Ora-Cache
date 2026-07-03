@@ -41,4 +41,8 @@ namespace ebo { namespace boo { namespace test {
 
 }}}
 
+	/* !important! this is details of how run test cases from command line prompt:
+	    https://learn.microsoft.com/en-us/visualstudio/test/vstest-console-options
+	*/
+
 #endif/*_DEFS_H_INCLUDED*/

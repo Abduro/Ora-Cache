@@ -5,9 +5,18 @@
 	This is 3D module object parser module interface declaration file;
 */
 #include "obj_parser.defs.h"
+#include "shared.cmd.ln.h"
 #include "console.h"
 
 namespace shared { namespace parsers { namespace obj { using namespace shared::defs;
+
+	/* the qu ery to Google AI: console main function winapi ;
+	wmain vs. wWinMain
+	wmain: Used for the Console subsystem. It sets up the standard std::cin/std::wcin and std::cout/std::wcout streams automatically.
+	wWinMain: Used for the Windows (GUI) subsystem. It does not allocate a console window by default and provides parameters for application state and the command line.
+	Forcing a Console Subsystem
+	#pragma comment(linker, "/SUBSYSTEM:CONSOLE /ENTRY:wmainCRTStartup")
+	*/
 
 #ifndef _USE_CONSOLE
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;

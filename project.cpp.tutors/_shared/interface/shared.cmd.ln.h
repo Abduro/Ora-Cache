@@ -1,5 +1,5 @@
-#ifndef _CONSOLE_CMD_LINE_INCLUDED
-#define _CONSOLE_CMD_LINE_INCLUDED
+#ifndef _SHARED_CMD_LINE_INCLUDED
+#define _SHARED_CMD_LINE_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 29-Apr-2012 at 07:46:04pm, GMT+3, Rostov-on-Don, Sunday;
 	This is Pulsepay project server application generic command line interface declaration file. [oDesk.com]
@@ -10,22 +10,33 @@
 	Adopted to FG (thefileguardian.com) project on 11-Jun-2016 at 1:28:28p, GMT+7, Phuket, Rawai, Saturday;
 	Adopted to sound-bin-trans project on 5-Apr-2019 at 11:52:11a, UTC+7, Phuket, Rawai, Friday;
 */
-#include "console.defs.h"
+#include "shared.defs.h"
 #include <shellapi.h>   // for CommandLineToArgvW(); https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw;
 #include <processenv.h> // for ::GetCommandLine(); https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinea ;
 
-namespace shared { namespace console {
+namespace shared { namespace input { using namespace shared::defs;
+
+	/* the query to Google AI: a slash is used as marker of command line option or argument name?
+	   In command-line interfaces (CLI), a slash (/) is primarily used as a marker for command-line options or switches, particularly in DOS, Windows, and legacy environments.
+	   In contrast, modern Unix-style commands (now common across all platforms, including PowerShell) typically use a single hyphen (-) for short options and a double hyphen (--) for long options or argument names (e.g., git commit -m "message" or ls --help).
+	   MS .Net command line description:
+	   https://learn.microsoft.com/en-us/dotnet/standard/commandline/syntax ;
+	*//*
+	   the query to Google AI: how to specify a negative value of argument through command line ?
+	   (1) Use the end-of-options delimiter (--), for example, node script.js -- -5 (passes -5 as a positional argument);
+	   (2) Use an explicit equals sign (=), for example, python script.py --temperature=-10;
+	   (3) Wrap the value in quotes or spaces, for example, my_command "-5";
+	*/
 
 	typedef ::std::map<CString, CString> TCmdLineArgs;  // a key is an argument name, value is argument value;
 
 	class CCmdLine {
 	public:
-		 CCmdLine (void);                     // gets all available command line arguments;
+		 CCmdLine (void);                 // gets all available command line arguments;
 		 CCmdLine (const CCmdLine&);      // just make copying;
 		 CCmdLine (CCmdLine&&) = delete;  // not required yet;
-		~CCmdLine (void);                     // just clean the collection of arguments if any;
+		~CCmdLine (void);                 // just clean the collection of arguments if any;
 
-	public:
 		err_code      Append(_pc_sz _p_sz_name, _pc_sz _p_sz_value);         // appends new command line argument to the collection;
 		err_code      Append(_pc_sz _p_sz_name, long _l_value);
 		CString       Arg   (_pc_sz _p_sz_name) const;                       // gets an argument value as string, if not found empty value is returned;
@@ -36,19 +47,19 @@ namespace shared { namespace console {
 		bool          Has   (_pc_sz pszArgName) const;                       // checks the existance an argument with the name specified;
 		CString       Path  (void) const;                                    // returns executable absolute path, that is the first arg in the command line;
 
+		err_code Parse (void); // parses command line received by calling ::GetCommandLine();
+		err_code Parse (const t_char* _p_args, const uint32_t _count); // parses command line received through ::main() function parameters;
+		err_code Parse (const t_char* _p_args); // parses command line received throug ::WinMain() function parameter;
+
 		TError&  Error (void) const;
 #if defined (_DEBUG) || defined (TRUE)
 		CString  Print (void) const;
 #endif
+		CString  To_str(_pc_sz _p_sz_sep = 0) const;
 
-	public:
-		CString       ToString (_pc_sz _p_sz_sep = NULL) const;
-
-	public:
 		CCmdLine& operator = (const CCmdLine&);
 		CCmdLine& operator = (CCmdLine&&) = delete;
 
-	public:
 		operator        _pc_sz (void) const;         // returns command line object as a string;
 		bool operator==(_pc_sz pszArgName) const;    // finds an argument by name provided;
 
@@ -59,6 +70,7 @@ namespace shared { namespace console {
 		TCmdLineArgs m_args;
 	};
 
+	// https://learn.microsoft.com/en-us/cpp/c-language/argument-description ;
 	class CArg {
 	public:
 		 CArg (void);
@@ -91,8 +103,8 @@ namespace shared { namespace console {
 	};
 }}
 
-typedef shared::console::CArg     TArgument;
-typedef ::std::vector<TArgument>  TArguments;
-typedef shared::console::CCmdLine TCmdLine;
+typedef shared::input::CArg      TArgument;
+typedef ::std::vector<TArgument> TArguments;
+typedef shared::input::CCmdLine  TCmdLine;
 
-#endif/*_CONSOLE_CMD_LINE_INCLUDED*/
+#endif/*_SHARED_CMD_LINE_INCLUDED*/
