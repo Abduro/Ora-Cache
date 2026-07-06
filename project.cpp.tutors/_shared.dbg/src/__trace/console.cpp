@@ -162,27 +162,24 @@ err_code CConsole::Create (void) {
 
 	modes::CInput().EditMode(false);
 
-	CFont().Set(_T("consolas"), 15); // to-do: must be in console settings;
-//	CBkgnd().Color(::Get_theme().Bkgnd_rgb());
-
 	CLayout layout;
 	if (__failed(layout.OnCreate()))
 		this->m_error = layout.Error();
-	
+
 	return this->Error();
 }
 
 err_code CConsole::Close (void) {
 
 	this->m_error <<__METHOD__<<__s_ok;
-
+#if (1)
 	::Get_ConPers().Save(); // if console window is not valid on this time this case is ignored: every available option is saved;
 
 	if (this->Is_valid() == false) // it is supposed the all opened file descriptors is already closed;
 		return this->m_error << __e_not_inited;
 
 	CLayout layout; layout.OnClose();
-
+#endif
 #if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ; throws the system error 'Access denied';
 	if (0 == ::DestroyWindow(this->m_con_wnd))

@@ -10,8 +10,54 @@
 */
 #include "shared.cmd.ln.h"
 #include "shared.preproc.h"
+#include "shared.dbg.h"
 
 using namespace ::shared::input;
+
+namespace shared { namespace input { namespace _impl {
+
+	class CLocal_args {
+	public:
+		 CLocal_args (void) : m_count(0), m_pp_args(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_false = _T("Not inited yet"); this->Load(); }
+		 CLocal_args (const CLocal_args&) = delete; CLocal_args (CLocal_args&&) = delete;
+		~CLocal_args (void) { this->Clear(); if (this->Error()) ::__trace_err_ex_2(this->Error());  }
+
+		err_code Clear (void) {
+			this->m_error <<__METHOD__<<__s_ok;
+			// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree ;
+			if (this->Is_valid()) { if (nullptr != ::LocalFree(this->m_pp_args)) this->m_error.Last(); else this->m_pp_args = 0; }				
+			return this->Error();
+		}
+		INT Count (void) const { return this->m_count; }
+		TError& Error (void) const { return this->m_error; }
+		bool  Is_valid (void) const { return this->m_pp_args != nullptr; }
+		wchar_t** Get (void) const { return this->m_pp_args; }
+
+		err_code Load (void) {
+			this->m_error <<__METHOD__<<__s_ok;
+			if (this->Is_valid()) {
+				__trace_warn_2(_T("Cmd line is already loaded;\n")); return this->Error();
+			}
+			// https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinea ;
+			CString cs_cmd_line = ::GetCommandLine();
+			// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw ;
+			this->m_pp_args = ::CommandLineToArgvW((_pc_sz) cs_cmd_line, &this->m_count);
+			if (this->Is_valid() == false)
+				this->m_error.Last();
+			else if (this->Count() == 0)
+				this->m_error << __s_false = _T("No arguments");
+
+			return this->Error();
+		}
+
+	private:
+		CLocal_args& operator = (const CLocal_args&) = delete; CLocal_args& operator = (CLocal_args&&) = delete;
+		wchar_t** m_pp_args;
+		INT m_count;
+		CError m_error;
+	};
+
+}}} using namespace ::shared::input::_impl;
 
 #pragma region cls::CCmdLine{}
 
@@ -81,27 +127,27 @@ err_code CCmdLine::Parse (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 	this->Clear();
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinea ;
-	CString cs_cmd_line = ::GetCommandLine();
+	CLocal_args args;
+	if (args.Error())
+		return this->m_error = args.Error();
+	if (args.Count() == 0)
+		return this->m_error = args.Error();
+
 	CString cs_key;
 	CString cs_arg;
 
-	INT n_count = 0;
-	bool bKey   = false;
-	// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw ;
-	wchar_t** pCmdArgs = ::CommandLineToArgvW(cs_cmd_line.GetString(), &n_count);
-	if (!pCmdArgs || 0 == n_count) {
-		if (!pCmdArgs)
-			this->m_error.Last();
-		else
-			this->m_error << __s_false = _T("No arguments");
-		goto __end_of_story__;
-	}
-	
-	m_module_path = pCmdArgs[0];
+	bool bKey = false;
+	using CModule = ::shared::dbg::CModule;
+	this->m_module_path = CModule::Get_path(this->m_error);
+	if (this->Error())
+		return this->Error();
 
-	for (INT i_ = 1; i_ < n_count; i_+= 1) {
-		CString cs_val = pCmdArgs[i_];
+	for (INT i_ = 0; i_ < args.Count(); i_+= 1) {
+		CString cs_val = args.Get()[i_];
+
+		if (0 == i_ && 0 == this->m_module_path.CompareNoCase((_pc_sz) cs_val))
+			continue; // the module path is provided as the first argument; ::CreateProcess() does not add this value to arguments;
+
 		bKey = (/*0 == cs_val.Find(_T("-")) // negative numbers are eaten when minus appears, quotes around value must be considered;
 				||*/ 0 == cs_val.Find(_T("/")));
 
@@ -109,14 +155,14 @@ err_code CCmdLine::Parse (void) {
 			if (cs_key.IsEmpty() == false) // the previous key is not saved yet;
 				m_args.insert(::std::make_pair(cs_key, cs_arg));
 
-			cs_key = pCmdArgs[i_]; cs_key.Replace(_T("-"), _T("")); cs_key.Replace(_T("/"), _T(""));
+			cs_key = args.Get()[i_]; cs_key.Replace(_T("-"), _T("")); cs_key.Replace(_T("/"), _T(""));
 			cs_arg = _T("");
 		}
 		else {
-			cs_arg+= pCmdArgs[i_];
+			cs_arg+= args.Get()[i_];
 		}
 
-		const bool bLast = (i_ == n_count - 1);
+		const bool bLast = (i_ == args.Count() - 1);
 		if (bLast && cs_key.IsEmpty() == false) {
 			try {
 				m_args.insert(::std::make_pair(cs_key, cs_arg));
@@ -124,10 +170,6 @@ err_code CCmdLine::Parse (void) {
 		}
 	}
 
-__end_of_story__:
-	if (nullptr != pCmdArgs) {
-		::LocalFree(pCmdArgs); pCmdArgs = nullptr;
-	}
 	return this->Error();
 }
 

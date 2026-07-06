@@ -5,8 +5,11 @@
 	This is 3D module object parser module interface declaration file;
 */
 #include "obj_parser.defs.h"
-#include "shared.cmd.ln.h"
+#include "obj_parser.load.h"
 #include "console.h"
+#include "sys.sync_obj.h"
+#include "shared.ctx.menu.h"
+#include "shared.wnd.fake.h"
 
 namespace shared { namespace parsers { namespace obj { using namespace shared::defs;
 
@@ -17,7 +20,6 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 	Forcing a Console Subsystem
 	#pragma comment(linker, "/SUBSYSTEM:CONSOLE /ENTRY:wmainCRTStartup")
 	*/
-
 #ifndef _USE_CONSOLE
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;
 	class CTraceConsole : public ATL::CAtlExeModuleT<CTraceConsole> { typedef ATL::CAtlExeModuleT<CTraceConsole> TModule;

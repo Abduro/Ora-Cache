@@ -11,12 +11,6 @@ using namespace ::shared::parsers::obj;
 uint32_t _tmain (int argc, _TCHAR* argv[]) {
 	argc; argv;
 	using namespace shared::console;
-
-	CInvader invader; invader.Deprive();
-
-	CPers pers; if (__failed(pers.Load())) __trace_err_ex_2(pers.Error());
-	CLoader().Do_it();
-	
 #if (0)
 	// https://stackoverflow.com/questions/21257544/c-wait-for-user-input ;
 	out_t << _T("\n\tPress [Enter] key or click [x] button to exit;");
@@ -25,12 +19,17 @@ uint32_t _tmain (int argc, _TCHAR* argv[]) {
 	::_tprintf(_T("\n\n\tPress any key or click [x] button to exit;")); // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/printf-printf-l-wprintf-wprintf-l ;
 	::_gettch();                                                        // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/getch-getwch ;
 #endif
-	invader.BringBack();
 	return 0;
 }
 #else
 
 using namespace shared::console::events;
+using CSyncObject = shared::sys_core::CSyncObject;
+
+CSyncObject& MsgQuitRef(void) { static CSyncObject crt_sect; return crt_sect; }
+
+#define Quit_Safe_Lock() Safe_Lock(MsgQuitRef());
+static bool b_quit = false;
 
 CTraceConsole _Module;
 
@@ -49,9 +48,55 @@ class CHandler : public CHandler_Dflt {
 public:
 	CHandler (void) {}
 
+	using CCmd_Handler = shared::console::CCmd_Handler;
+	using CBtn_enum  = shared::console::events::input::CBtn_enum;
+	using e_cmd_ids = shared::console::e_cmd_ids;
+
+	err_code On_button(const input::evt_mouse_data_t& _data) override final {
+		_data;
+		this->m_btns.Set(_data.dwButtonState);
+
+		if (this->m_btns.Get(VK_RBUTTON).Is_released()) {
+			if ((::Get_Shortcut() << IDR_OBJ_PARSER_CTX_MENU_0).Error()) {::__trace_err_ex_2(::Get_Shortcut().Error()); }
+			else {
+				TFakeWnd  m_fk_wnd;
+				const uint32_t u_cmd_id = ::Get_Shortcut().Track(/*TConAccess()*/m_fk_wnd); // doesn't work for direct call to console window;
+				switch (u_cmd_id) {
+				case IDR_OBJ_PARSER_CON_CLEAR: {
+					CCmd_Handler handler;
+					if (__failed(handler.On_command(e_cmd_ids::e_clear))) {
+						::__trace_err_ex_2(handler.Error());
+					} else {
+						__trace_info_2(_T("command 'Clear console' (%04u) is completed;\n"), u_cmd_id);
+					}
+				
+				} break;
+				case IDR_OBJ_PARSER_CON_CLOSE:  {
+					::Get_ConPers().Save();
+					{
+						Quit_Safe_Lock();
+						b_quit = true;
+					}
+					__trace_warn_2(_T("command 'Close console' (%04u) is completed;\n"), u_cmd_id);
+				} break;
+				default:;
+				}
+			}
+		}
+		return __s_ok;
+	}
+	/* *note*: calling ::FreeConsole() does not enter on event handler method 'On_close';
+	   https://stackoverflow.com/questions/45691954/native-exiting-with-with-code-1073741510-0xc000013a-while-using-prime-checke ;
+	   https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55 ;
+	   0xC000013A >> STATUS_CONTROL_C_EXIT >> {Application Exit by CTRL+C} The application terminated as a result of a CTRL+C.
+	*/
 	err_code On_close (const ctrl::CEvent::evt_source _dw_reason) override final {
 		_dw_reason; // does not matter;
 		::Get_ConPers().Save();
+		{
+		Quit_Safe_Lock();
+		b_quit = true;
+		}
 		return __s_ok;
 	}
 
@@ -62,6 +107,8 @@ public:
 	err_code On_size  (const input::evt_buff_size_t _data) override final {
 		_data; return __s_ok;
 	}
+private:
+	CBtn_enum m_btns;
 };
 
 class CHandler_auto {
@@ -96,15 +143,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	::DefWindowProc(nullptr, 0, 0, 0L);
 
 	MSG msg = {0};
-	bool b_error = true;
 	
 	// before creating the console, the root registry key must be set so as not to interfere with the 'debugging trace' settings;
-	CString cs_root = TString().Format(_T("%s\\Utils\\ObjParser"), ::Get_reg_router().Root().Path());
+	::Get_ConPers().Pos() << CLocator::Root();
+	_con.Frame().Use_close(false);
 
-	::Get_ConPers().Pos() << (_pc_sz) cs_root;
-	_con.Frame().Use_close(true);
-
-	if (__failed(_con.Create())) { __trace_err_ex_2(_con.Error()); }
+	if (__failed(_con.Create())) { ::__trace_err_ex_2(error = _con.Error()); }
 	else {
 		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 		shared::console::CBkgnd con_bkg;
@@ -112,23 +156,35 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 		_con.Frame().Icon() << IDR_OBJ_PARSER_CON_0_ICO;
 		_con.Frame().Caption() << IDS_OBJ_PARSER_CON_CAP;
-
-		b_error = false;
 	}
 	CHandler_auto handler_auto;
 
-	do {} while (true == false);
+	do {
+		if (error.Is()) break;
 
-	if (b_error != false) // goes to message loop and waits the app window will be closed;
-		msg.message = WM_QUIT;
+		CLocator locator;
+		if (__failed(locator.Locate())) {
+			::__trace_err_ex_2(error = locator.Error()); 
+			break;
+		}
 
-	while( WM_QUIT != msg.message ) {
+	} while (true == false);
+
+	if (error != false) { // goes to message loop and waits the app window will be closed;
+		Quit_Safe_Lock();
+		b_quit = true;
+	}
+	do {
+		Quit_Safe_Lock();
+		if (b_quit)
+			break;
+
 		if (::PeekMessage( &msg, 0, 0, 0, PM_REMOVE )) {
 		    ::TranslateMessage( &msg );
 		    ::DispatchMessage ( &msg );
 		}
-		::Sleep(100); // it looks like useless;
-	}
+		::Sleep(10); // it looks like useless;
+	} while( true != false );
 
 	__trace::OnTime();
 	return n_result;

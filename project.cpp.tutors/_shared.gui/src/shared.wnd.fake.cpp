@@ -43,6 +43,8 @@ const
 HDC& CMsgWnd::Get_ctx (void) const { return this->m_h_dc; }
 HDC& CMsgWnd::Get_ctx (void)       { return this->m_h_dc; }
 
+HWND CMsgWnd::Handle (void) const { return this->m_hWnd; }
+
 #if defined(_DEBUG) || defined(TRUE)
 	CString CMsgWnd::To_str (void) const {
 		CString cs_out;
@@ -59,3 +61,4 @@ HDC& CMsgWnd::Get_ctx (void)       { return this->m_h_dc; }
 #endif
 
 CMsgWnd::operator const HDC& (void) const { return this->Get_ctx(); }
+CMsgWnd::operator HWND (void) const { return this->Handle(); }

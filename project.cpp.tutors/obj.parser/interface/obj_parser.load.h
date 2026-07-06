@@ -5,6 +5,7 @@
 	This is 3D module object file loader interface declaration file;
 */
 #include "obj_parser.defs.h"
+#include "shared.cmd.ln.h"
 
 namespace shared { namespace parsers { namespace obj {
 
@@ -14,7 +15,6 @@ namespace shared { namespace parsers { namespace obj {
 
 		TError&  Error (void) const;
 
-
 	private:
 		CLoader& operator = (const CLoader&) = delete; CLoader& operator = (CLoader&&) = delete;
 		CError m_error;
@@ -22,14 +22,18 @@ namespace shared { namespace parsers { namespace obj {
 
 	class CLocator {
 	public:
-		CLocator (void); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete; ~CLocator (void);
+		CLocator (void); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete; ~CLocator (void) = default;
 
 		TError&  Error (void) const;
+		err_code Locate (void);      // checks command line first; if there is no path to object file, the system registry is checked then;
+		_pc_sz   Path (void) const;  // gets the path of object source file;
 
+		static _pc_sz Root (void);   // gets registry key path that is the root for object parser settings;
 
 	private:
 		CLocator& operator = (const CLocator&) = delete; CLocator& operator = (CLocator&&) = delete;
-		CError m_error;
+		CError  m_error;
+		CString m_obj_path;
 	};
 
 }}}
