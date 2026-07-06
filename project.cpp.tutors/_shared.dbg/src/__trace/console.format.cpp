@@ -45,4 +45,10 @@ err_code CBkgnd::Color (const colorref _clr) {
 #pragma endregion
 #pragma region cls::CFormat{}
 
+CFormat::CFormat (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+TError&  CFormat::Error (void) const { return this->m_error; }
+
+_pc_sz   CFormat::Indent (void) { static _pc_sz p_indent_left = _T(" "); return p_indent_left; }
+
 #pragma endregion

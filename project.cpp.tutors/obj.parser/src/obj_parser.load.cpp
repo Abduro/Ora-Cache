@@ -3,6 +3,7 @@
 	This is 3D module object file loader interface implementation file;
 */
 #include "obj_parser.load.h"
+#include "console.format.h"
 
 using namespace ::shared::parsers::obj;
 
@@ -85,7 +86,8 @@ err_code CLocator::Locate (void) {
 	if (__failed(file.Is_valid(this->m_obj_path)))
 		this->m_error = file.Error();
 	else {
-		__trace_impt_2(_T("The object file path:\n%s;"), this->Path());
+		using CFormat = ::shared::console::CFormat;
+		__trace_impt_2(_T("The object file path:\n%s%s;\n"), CFormat::Indent(), this->Path());
 	}
 
 	return this->Error();

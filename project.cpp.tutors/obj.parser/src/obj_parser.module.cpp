@@ -59,7 +59,7 @@ public:
 		if (this->m_btns.Get(VK_RBUTTON).Is_released()) {
 			if ((::Get_Shortcut() << IDR_OBJ_PARSER_CTX_MENU_0).Error()) {::__trace_err_ex_2(::Get_Shortcut().Error()); }
 			else {
-				TFakeWnd  m_fk_wnd;
+				TFakeWnd  m_fk_wnd(false);
 				const uint32_t u_cmd_id = ::Get_Shortcut().Track(/*TConAccess()*/m_fk_wnd); // doesn't work for direct call to console window;
 				switch (u_cmd_id) {
 				case IDR_OBJ_PARSER_CON_CLEAR: {
@@ -71,11 +71,11 @@ public:
 					}
 				
 				} break;
-				case IDR_OBJ_PARSER_CON_CLOSE:  {
+				case IDR_OBJ_PARSER_CON_CLOSE: {
 					::Get_ConPers().Save();
 					{
 						Quit_Safe_Lock();
-						b_quit = true;
+						b_quit = true; // signals to main message loop to exit;
 					}
 					__trace_warn_2(_T("command 'Close console' (%04u) is completed;\n"), u_cmd_id);
 				} break;
@@ -85,8 +85,7 @@ public:
 		}
 		return __s_ok;
 	}
-	/* *note*: calling ::FreeConsole() does not enter on event handler method 'On_close';
-	   https://stackoverflow.com/questions/45691954/native-exiting-with-with-code-1073741510-0xc000013a-while-using-prime-checke ;
+	/* https://stackoverflow.com/questions/45691954/native-exiting-with-with-code-1073741510-0xc000013a-while-using-prime-checke ;
 	   https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55 ;
 	   0xC000013A >> STATUS_CONTROL_C_EXIT >> {Application Exit by CTRL+C} The application terminated as a result of a CTRL+C.
 	*/
@@ -169,11 +168,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		}
 
 	} while (true == false);
-
+#if (0) // if an error occurred in one the previous steps, there is no ability to see that error in the console trace, so it is disabled;
 	if (error != false) { // goes to message loop and waits the app window will be closed;
 		Quit_Safe_Lock();
 		b_quit = true;
 	}
+#endif
 	do {
 		Quit_Safe_Lock();
 		if (b_quit)

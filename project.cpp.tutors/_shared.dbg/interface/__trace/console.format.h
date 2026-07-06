@@ -84,9 +84,10 @@ namespace shared { namespace console {
 	class CFormat {
 	public:
 		 CFormat (void); CFormat (const CFormat&) = delete; CFormat (CFormat&&) = delete;
-		~CFormat (void);
+		~CFormat (void) = default;
 
 		TError&  Error (void) const;
+		static  _pc_sz Indent (void);  // gets the left side indentation as a text;
 
 	private:
 		CFormat& operator = (const CFormat&) = delete; CFormat& operator = (CFormat&&) = delete;

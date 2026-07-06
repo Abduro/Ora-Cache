@@ -10,7 +10,7 @@ namespace ex_ui { namespace popup { using namespace shared::defs;
 	// creates the 'message' window in its constructor; and destroys the window in its destructor;
 	class CMsgWnd : public ::ATL::CWindowImpl<CMsgWnd> { typedef ::ATL::CWindowImpl<CMsgWnd> TWindow;
 	public:
-		 CMsgWnd (void); CMsgWnd (const CMsgWnd&) = delete; CMsgWnd (CMsgWnd&&) = delete;
+		 CMsgWnd (const bool _b_verbose = true); CMsgWnd (const CMsgWnd&) = delete; CMsgWnd (CMsgWnd&&) = delete;
 		~CMsgWnd (void);
 
 		 static
@@ -39,6 +39,7 @@ namespace ex_ui { namespace popup { using namespace shared::defs;
 		 mutable
 		 CError  m_error;
 		 HDC     m_h_dc ;
+		 bool    m_verbose;
 	};
 
 }}
