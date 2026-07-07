@@ -160,11 +160,16 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	do {
 		if (error.Is()) break;
-
+#if (0)
 		CLocator locator;
 		if (__failed(locator.Locate())) {
 			::__trace_err_ex_2(error = locator.Error()); 
 			break;
+		}
+#endif
+		CReader reader;
+		if (__failed(reader.Read())) {
+			::__trace_err_ex_2(error = reader.Error());
 		}
 
 	} while (true == false);
