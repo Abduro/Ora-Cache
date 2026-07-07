@@ -58,9 +58,11 @@ TError& CBase::Error (void) const { return this->m_error; }
 // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fopen-s-wfopen-s ;
 // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/strerror-s-strerror-s-wcserror-s-wcserror-s ;
 #if defined (_UNICODE)
+#define fdopen _wfdopen
 #define fopen_s _wfopen_s
 #define strerror_s _wcserror_s
 #else
+#define fdopen _fdopen
 #define strerror_s strerror_s
 #define fopen_s fopen_s
 #endif
@@ -118,6 +120,47 @@ err_code CLoader::Open (_pc_sz _path) {
 	__trace_info_2(_T("The file '%s' is opened;\n"), (_pc_sz) cs_path);
 
 	return TBase::Error();
+}
+
+err_code CLoader::To_handle (HANDLE& _h_out) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	return CLoader::To_handle(this->m_p_file, TBase::m_error, _h_out);
+}
+
+static _pc_sz p_err_file_handle = _T("File handle is invalid");
+static _pc_sz p_err_file_desc = _T("File desc is invalid or is not belong to open file");
+
+err_code CLoader::To_handle (FILE* _p_file, CError& _error, HANDLE& _h_out) {
+	_p_file; _error; _h_out;
+	if (nullptr == _p_file)
+		return _error << __e_pointer = _T("File stream pointer is invalid");
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fileno ;
+	const int n_desc = ::_fileno(_p_file);
+	if (0 > n_desc)
+		return _error << __e_inv_arg = p_err_file_desc;
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/get-osfhandle ;
+	_h_out = reinterpret_cast<HANDLE>(::_get_osfhandle(n_desc));
+	if (__e_handle == _h_out)
+		_error << (err_code)TErrCodes::eObject::eHandle = p_err_file_handle;
+	return _error;
+}
+
+err_code CLoader::To_stream (const HANDLE _h_file, CError& _error, FILE*& _p_stream, const dword _flags) {
+	_h_file; _error; _p_stream; _flags;
+	if (__e_handle == _h_file)
+		_error << (err_code)TErrCodes::eObject::eHandle = p_err_file_handle;
+
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/open-osfhandle ;
+	const int n_desc = ::_open_osfhandle(reinterpret_cast<intptr_t>(_h_file), static_cast<int>(_flags));
+	if (0 > n_desc)
+		return _error << (err_code)TErrCodes::eExecute::eParameter = _T("Creating file stream failed");
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fdopen-wfdopen ;
+	_p_stream = fdopen(n_desc, _T("r")); // to-do: this is default conversion to mode of opening the file, otherwise the converter must be created;
+	if (nullptr == _p_stream) {
+		_error << __e_inv_arg = p_err_file_desc;
+	}
+
+	return _error;
 }
 
 #pragma endregion

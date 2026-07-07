@@ -6,6 +6,7 @@
 */
 #include "obj_parser.defs.h"
 #include "shared.cmd.ln.h"
+#include <fcntl.h>  // for c-runtime file control options used by _open(), i.e. flags of access to file;
 
 namespace shared { namespace parsers { namespace obj {
 
@@ -24,6 +25,11 @@ namespace shared { namespace parsers { namespace obj {
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fsopen-wfsopen << file stream sharing;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fopen-s-wfopen-s << security enhancements; it is used in the class below;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fopen-wfopen << no security enhancements;
+	/* Recommendation:
+	Use std::ofstream / std::ifstream if writing modern cross-platform C++.
+	Use fopen_s / _wfopen_s if maintaining legacy C/C++ projects or interacting with plain C libraries.
+	Use CreateFile only if you specifically need overlapped (asynchronous) I/O, explicit Windows file sharing permissions, or integration with other Windows kernel attributes.
+	*/
 	class CLoader : public CBase { typedef CBase TBase;
 	public:
 		CLoader (void); CLoader (const CLoader&) = delete; CLoader (CLoader&&) = delete; ~CLoader (void);
@@ -31,6 +37,11 @@ namespace shared { namespace parsers { namespace obj {
 		err_code Close (void);         // closes the file handle;
 		bool Is_opened (void) const;   // returns true if the file handle/pointer is not nullptr/0, otherwise 'false' is returned;
 		err_code Open  (_pc_sz _path); // opens the file by given file path;
+		static
+		err_code To_handle (FILE*, CError&, HANDLE&);
+		err_code To_handle (HANDLE&);  // converts FILE* stream pointer to WinaAPI file handle; no check for input handle value;
+		static
+		err_code To_stream (const HANDLE, CError&, FILE*&, const dword _flags = _O_RDONLY); // converts input file handle to c-runtime file stream pointer; not check for input file ptr value;
 
 	private:
 		CLoader& operator = (const CLoader&) = delete; CLoader& operator = (CLoader&&) = delete;
