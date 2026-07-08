@@ -237,6 +237,8 @@
     <ClCompile Include="$(_1)obj_parser.load.cpp" />
     <ClInclude Include="$(_1)obj_parser.module.h" />
     <ClCompile Include="$(_1)obj_parser.module.cpp" />
+    <ClInclude Include="$(_0)obj_parser.self.h" />
+    <ClCompile Include="$(_1)obj_parser.self.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(_1-0)obj_parser.res.h" />

@@ -16,7 +16,6 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 	// https://www.geeksforgeeks.org/dsa/understanding-time-complexity-simple-examples/ ;
 	// https://en.wikipedia.org/wiki/Epoll ;
 	// https://en.wikipedia.org/wiki/POSIX ;
-	// https://en.wikipedia.org/wiki/Wavefront_.obj_file;
 	// https://stackoverflow.com/questions/4262503/whats-the-difference-between-material-and-texture ;
 	*/
 

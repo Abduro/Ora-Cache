@@ -17,6 +17,8 @@
     <ClCompile Include="$(_1)obj_parser.defs.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)obj_parser.load.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)obj_parser.load.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)obj_parser.self.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)obj_parser.self.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(_1-0)obj_parser.manifest"><Filter>src\resources</Filter></Manifest>

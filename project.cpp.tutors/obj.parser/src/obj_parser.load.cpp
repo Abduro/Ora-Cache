@@ -8,6 +8,52 @@
 using namespace ::shared::parsers::obj;
 
 namespace shared { namespace parsers { namespace _impl {
+#if (0)
+
+struct HandleDeleter { // defines a custom deleter for unique_ptr compatibility;
+	void operator()(HANDLE h) const noexcept {
+		if (nullptr == h && __e_handle != h) {
+			::CloseHandle(h);
+		}
+	}
+};
+
+using ScopedHandle = std::unique_ptr<void, HandleDeleter>; // creates a friendly alias for an RAII managed handle;
+void Do_raii(void) {
+	// wraps a standard file handle directly into a smart pointer;
+	ScopedHandle h_file(::CreateFile(_T("log.txt"), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0));
+	/*
+	reading from/writing to the open file;
+	h_file automatically goes out of scope here and triggers CloseHandle safely;
+	*/
+}
+#endif
+	class CHandle {
+	public:
+		 CHandle (void) : m_handle(0) {} CHandle (const CHandle&) = delete; CHandle (CHandle&&) = delete;
+		 CHandle (HANDLE _handle) : m_handle(_handle) {}
+		~CHandle (void) {
+			/* Common Pitfalls to Avoid
+			Double Closing: Never call CloseHandle twice on the same handle. This can result in unintended silent errors or closing a recycled handle belonging to a completely different thread.
+			Wrong Disposer Functions: Do not use CloseHandle on structures or handles returned by UI/GDI layers or specific subsystem APIs.
+			*/
+			if (true == (*this)) {
+				if (0 == ::CloseHandle(this->m_handle)) {
+					::__trace_err_ex_2(CError(__CLASS__, __METHOD__, __LastErrToHresult()));
+				}
+				else { this->m_handle = 0; }
+			}
+		}
+
+		operator HANDLE (void) const { return this->m_handle; }
+		operator bool (void) const { return this->m_handle != nullptr && this->m_handle != __e_handle; }
+
+	private:
+		CHandle& operator = (const CHandle&) = delete; CHandle& operator = (CHandle&&) = delete;
+		HANDLE m_handle;
+	};
+
+static _pc_sz p_err_inv_handle = _T("The input path is invalid");
 
 	class CFile {
 	public:
@@ -17,11 +63,53 @@ namespace shared { namespace parsers { namespace _impl {
 
 		TError& Error (void) const { return this->m_error; }
 
+		err_code Is_Text (_pc_sz _p_path) {
+			_p_path;
+			this->m_error <<__METHOD__<<__s_ok;
+
+			if (nullptr == _p_path || _MAX_DRIVE >= ::_tcslen(_p_path)) {
+				return this->m_error <<__e_inv_arg  = p_err_inv_handle;
+			}
+
+			CHandle h_file = ::CreateFile(_p_path, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+			if (false == h_file) {
+				return this->m_error.Last();
+			}
+
+			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex ;
+			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesize ;
+			// actually, getting the file size is not required because ::ReadFile() can take care it through param 'lpNumberOfBytesRead';
+
+			dword u_high = 0;
+			const dword u_size = ::GetFileSize(h_file, &u_high); // u_high is not taken into account in context of this function;
+			if (0 > (int32_t)u_size) {
+				return this->m_error.Last();
+			}
+			static
+			const uint32_t n_req_sz = 100;
+			const uint32_t n_buf_sz = u_size > n_req_sz ? n_req_sz : u_size;
+
+			::std::vector<char> v_buf(n_buf_sz, 0); 
+			// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile ;
+			if (0 == ::ReadFile(h_file, v_buf.data(), n_buf_sz, 0, 0))
+				return this->m_error.Last();
+
+			for (uint32_t i_ = 0; i_ < n_buf_sz; i_++) {
+				const char bt_ = v_buf.at(i_);
+				if ((bt_ < 9) || (bt_ > 13 && bt_ < 32) || (bt_ == 127) || (bt_ == 256)) { // checks for ASCII & UTF-8
+					this->m_error <<__s_false = _T("This is not text printable file");
+					break;
+				}
+			}
+
+			return this->Error();
+		}
 		err_code Is_valid (_pc_sz _p_path) const {
 			_p_path;
 			this->m_error <<__METHOD__<<__s_ok;
+
 			if (nullptr == _p_path || _MAX_DRIVE >= ::_tcslen(_p_path)) {
-				return this->m_error <<__e_inv_arg  = _T("The input path is invalid");
+				return this->m_error <<__e_inv_arg  = p_err_inv_handle;
 			}
 			/* https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesa ;
 			   https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants ;
@@ -89,6 +177,18 @@ err_code CLoader::Close (void) {
 }
 
 bool CLoader::Is_opened (void) const { return nullptr != this->m_p_file; }
+bool CLoader::Is_Text (_pc_sz _path, CError& _error) {
+	_path; _error;
+	bool b_text = false;
+	CFile file;
+	if (__failed(file.Is_Text(_path))) {
+		_error = file.Error();
+		return b_text;
+	} else if (__s_ok == file.Error().Result()) b_text = true;
+	else {/*__s_false == file.Error().Result()*/}
+	
+	return b_text;
+}
 
 err_code CLoader::Open (_pc_sz _path) {
 	_path;
@@ -162,6 +262,8 @@ err_code CLoader::To_stream (const HANDLE _h_file, CError& _error, FILE*& _p_str
 
 	return _error;
 }
+
+CLoader::operator FILE* (void) const { return this->m_p_file; }
 
 #pragma endregion
 #pragma region cls::CLocator{}
@@ -263,6 +365,14 @@ err_code CReader::Read (void) {
 	if (__failed(loader.Open(locator.Path()))) {
 		return TBase::m_error = loader.Error();
 	}
+	if (false == CLoader::Is_Text(locator.Path(), TBase::m_error)) {
+		__trace_warn_2(_T("The object file is not text file"));
+		return TBase::Error();
+	}
+
+	FILE* const pos = loader; pos;
+
+	
 
 	return TBase::Error();
 }
