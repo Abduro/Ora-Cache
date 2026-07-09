@@ -6,6 +6,7 @@
 */
 #include "obj_parser.defs.h"
 #include "obj_parser.load.h"
+#include "obj_parser.self.h"
 #include "console.h"
 #include "sys.sync_obj.h"
 #include "shared.ctx.menu.h"

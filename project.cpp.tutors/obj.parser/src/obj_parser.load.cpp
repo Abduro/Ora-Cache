@@ -372,8 +372,6 @@ err_code CReader::Read (void) {
 
 	FILE* const pos = loader; pos;
 
-	
-
 	return TBase::Error();
 }
 
