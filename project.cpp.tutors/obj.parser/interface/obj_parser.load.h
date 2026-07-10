@@ -5,6 +5,7 @@
 	This is 3D module object file loader interface declaration file;
 */
 #include "obj_parser.defs.h"
+#include "obj_parser.self.h"
 #include "shared.cmd.ln.h"
 #include <fcntl.h>  // for c-runtime file control options used by _open(), i.e. flags of access to file;
 

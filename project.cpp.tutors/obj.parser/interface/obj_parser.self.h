@@ -17,7 +17,7 @@ namespace shared { namespace parsers { namespace obj {
 	public:
 		CParser (void); CParser (const CParser&) = delete; CParser (CParser&&) = delete; ~CParser (void) = default;
 
-		err_code Do (const FILE*);   // it is supposed the input file stream is already checked for text data type;
+		err_code Do (const s_cache&);   // parses the cached line of text;
 		TError& Error (void) const;
 
 	private:
@@ -35,6 +35,8 @@ namespace shared { namespace parsers { namespace obj {
 		 CPrefx (const e_pfx_type, _pc_sz _p_spec);
 		~CPrefx (void) = default;
 
+		bool Is_valid (void) const;
+
 		const
 		CStringA&  Spec (void) const;  // gets specifier reference; (ro)
 		CStringA&  Spec (void) ;       // gets specifier reference; (rw);
@@ -44,6 +46,8 @@ namespace shared { namespace parsers { namespace obj {
 		CPrefx& operator = (const CPrefx&); CPrefx& operator = (CPrefx&&) = delete;
 		CPrefx& operator <<(const char* _p_spec);
 		CPrefx& operator <<(const e_pfx_type);
+
+		CString To_str (void) const;
 
 	private:
 		e_pfx_type m_type;
@@ -61,7 +65,7 @@ namespace shared { namespace parsers { namespace obj {
 		};
 
 		const
-		CPrefx&  Get (FILE* const _p_pos); // gets the prefix from the beginning of current line of the source object file;
+		CPrefx&  Get (const s_cache&); // gets the prefix from the beginning of current line of the source object file;
 
 		err_code Init (void); // fills the array of prefexes by predefined prefex class objects;
 

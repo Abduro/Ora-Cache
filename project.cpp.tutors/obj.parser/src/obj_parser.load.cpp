@@ -345,6 +345,13 @@ _pc_sz CLocator::Root (void) {
 
 CReader::CReader (void) : TBase() { TBase::m_error >>__CLASS__<<__s_ok; }
 
+/* the query to Google AI: difference between fgets and fread c++;
+The primary difference is that std::fgets is line-oriented and intended for text, while std::fread is block-oriented and designed for binary data.
+std::fgets automatically stops reading when it hits a newline character (\n) and appends a null-terminator (\0) to form a valid C-string.
+std::fread ignores all newlines, reads exactly the raw chunk size you request, and never modifies the buffer with a null terminator.
+*/
+// https://learn.microsoft.com/en-us/windows/win32/fileio/testing-for-the-end-of-a-file ;
+
 err_code CReader::Read (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
@@ -370,7 +377,25 @@ err_code CReader::Read (void) {
 		return TBase::Error();
 	}
 
-	FILE* const pos = loader; pos;
+	FILE* const p_str = loader;
+
+	s_cache chached;
+
+	// (3) reads file content and makes a call to parser;
+	CParser parser;
+
+	/*::fread() is much faster but requires additional programming for catching the end of line;*/
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/ferror ;
+	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/feof ;
+
+	while (!(::feof(p_str) || ::ferror(p_str))) {
+		::fgets(chached.buffer, chached.buf_len, p_str); // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fgets-fgetws ;
+		if (__failed(parser.Do(chached))) {
+			return TBase::m_error = parser.Error();
+		}
+	}
+	if (::ferror(p_str)) {
+	}
 
 	return TBase::Error();
 }

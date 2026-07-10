@@ -16,10 +16,39 @@ namespace persistent {
 	public:
 		TError& Error (void) const;
 
+		_pc_sz   Key (void) const; // gets the registry path of the key that is the root for console settings; for position only this time;
+		err_code Key (_pc_sz);     // sets the registry path of the key that is the root for console settings; should be protected;
+
 	protected:
 		CBase& operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
 		mutable
-		CError m_error;
+		CError  m_error;
+		CString m_key_path;   // this is the path that is set for console settings that is not 'debug trace';
+	};
+
+	class CFont : public CBase { typedef CBase TBase;
+	public:
+		 CFont (void);
+		~CFont (void) = default;
+
+		void  Default (void);  // sets default values of font settings: consolas, 15;
+
+		uint16_t Height (void) const;
+		err_code Height (const uint16_t);
+
+		err_code Key (_pc_sz); // sets the registry path of the key that is the root for console settings;
+
+		const
+		CString& Name (void) const;
+		err_code Name (_pc_sz);
+
+		err_code Load (void);
+		err_code Save (void);
+
+	private:
+		CFont& operator = (const CFont&) = delete; CFont& operator = (CFont&&) = delete;
+		CString  m_name;
+		uint16_t m_height; // to-do: there's inconsistency with shared::console::CFont that has 'int16_t' data type of the font height;
 	};
 	// actually, it is not a number of lines that is acceptable for trace console output,
 	// it is a count of trace messages being visible in the console;
@@ -75,19 +104,17 @@ namespace persistent {
 		t_rect&  Get (void) const;
 		err_code Set (const t_rect&); // for direct set the window position and to save it to the registry;
 
-		_pc_sz   Key (void) const; // gets the registry path of the key that is the root for console settings; for position only this time;
-		err_code Key (_pc_sz);     // sets the registry path of the key that is the root for console settings;
+		err_code Key (_pc_sz); // sets the registry path of the key that is the root for console settings;
 
-		err_code Load (void); // loads console window position;
-		err_code Save (void); // saves console window position; gets the actual window position before saving;
+		err_code Load (void);  // loads console window position;
+		err_code Save (void);  // saves console window position; gets the actual window position before saving;
 
-		CString To_str (const e_print = e_print::e_all);
+		CString  To_str (const e_print = e_print::e_all);
 
 		CPosition& operator <<(_pc_sz _p_root_path); // sets the root key path to read/write position data;
 
 	private:
-		t_rect  m_rc_pos;     // the console window rectangle in screen coordinates;
-		CString m_key_path;   // this is the path that is set for console settings that is not 'debug trace';
+		t_rect  m_rc_pos;      // the console window rectangle in screen coordinates;
 	};
 
 	class CShow : public CBase { typedef CBase TBase;
@@ -107,6 +134,7 @@ namespace persistent {
 }
 	class CPersistent : public persistent::CBase { typedef persistent::CBase TBase;
 	public:
+		using CFont  = persistent::CFont;
 		using CLines = persistent::CLines;
 		using CPin   = persistent::CPin;
 		using CPos   = persistent::CPosition;
@@ -114,6 +142,10 @@ namespace persistent {
 
 		 CPersistent (void); CPersistent (const CPersistent&) = delete; CPersistent (CPersistent&&) = delete;
 		~CPersistent (void);
+
+		const
+		CFont& Font (void) const;
+		CFont& Font (void) ;
 
 		err_code Load (void); // loads all persistent components; if one of them is failed, just traces of the error;
 		err_code Save (void); // saves all persistent components; if one of them is failed, just traces of the error;
@@ -133,6 +165,7 @@ namespace persistent {
 
 	protected:
 		CPersistent& operator = (const CPersistent&) = delete; CPersistent& operator = (CPersistent&&) = delete;
+		CFont  m_font;
 		CLines m_lines;
 		CPin   m_pin;
 		CPos   m_pos;

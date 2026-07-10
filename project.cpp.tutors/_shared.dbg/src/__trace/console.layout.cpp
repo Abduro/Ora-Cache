@@ -168,6 +168,9 @@ err_code CLayout::OnCreate (void) {
 	else { // the console window frame size is not changed, but just output screen buffer size only;
 //		__trace_info_2(_T("*after* output buffer size: cols = %d; rows = %d;\n"), buffer().dwSize.X, buffer().dwSize.Y);
 	}
+	// it is required to set the font settings before the positioning console window, otherwise the window changes its size due to new font settings;
+	CFont font; font.Set((_pc_sz)::Get_ConPers().Font().Name(), ::Get_ConPers().Font().Height()); // no error catching yet;
+
 	con_wnd.MoveWindow(&::Get_ConPers().Pos().Get(), false);
 	CAccessor() << ::Get_ConPers().Show().Is_visible();
 

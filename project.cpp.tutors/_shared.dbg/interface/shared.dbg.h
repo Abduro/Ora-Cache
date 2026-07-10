@@ -73,6 +73,7 @@ namespace shared { namespace dbg {
 			but unfortunately when using macros for calling those methods, the compliler generates the code that is not supposed to be:
 			by unknown reason fixed parameters are recognized as a part of variadic arguments' list;
 		*/
+		static void Out_$(const e_category, _pc_sz _p_sz_format, ...); // outputs formatted text without message type prefix;
 		static void Out_0(_pc_sz _p_sz_format, ...);
 		static void Out_0(const e_category, _pc_sz _p_sz_format, ...);
 
@@ -96,10 +97,12 @@ void __trace_err_ex_3 (shared::defs::TError&); // direct print out of the error 
 
 #define __empty_ln() __trace::Empty_ln();
 
-#define __trace_err(_p_format, ...)  __trace::Out_0(__trace::e_err , _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
-#define __trace_impt(_p_format, ...) __trace::Out_0(__trace::e_impt, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
-#define __trace_info(_p_format, ...) __trace::Out_0(__trace::e_info, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
-#define __trace_warn(_p_format, ...) __trace::Out_0(__trace::e_warn, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
+#define __trace_info_$(_p_format, ...) __trace::Out_$(__trace::e_info, _p_format, __VA_ARGS__);   // just formatted info message, no type prefix;
+
+#define __trace_err(_p_format, ...)    __trace::Out_0(__trace::e_err , _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
+#define __trace_impt(_p_format, ...)   __trace::Out_0(__trace::e_impt, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
+#define __trace_info(_p_format, ...)   __trace::Out_0(__trace::e_info, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
+#define __trace_warn(_p_format, ...)   __trace::Out_0(__trace::e_warn, _p_format, __VA_ARGS__);   // no namespace, class and method names are included;
 
 #define __trace_err_2(_p_format, ...)  __trace::Out_2(__trace::e_err , (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // class and metod names are included automatically;
 #define __trace_impt_2(_p_format, ...) __trace::Out_2(__trace::e_impt, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__, _p_format, __VA_ARGS__); // class and metod names are included automatically;
@@ -113,6 +116,7 @@ void __trace_err_ex_3 (shared::defs::TError&); // direct print out of the error 
 
 #else
 #define __empty_ln() {}
+#define __trace_info_$(_p_format, ...) { _p_format; __VA_ARGS__; }
 
 #define __trace_err(_p_format, ...)    { _p_format; __VA_ARGS__; }
 #define __trace_impt(_p_format, ...)   { _p_format; __VA_ARGS__; }

@@ -6,6 +6,7 @@
 */
 #include "console.defs.h"
 #include "console.buffer.h"
+#include "console.font.h"
 #include "console.pers.h"
 
 namespace shared { namespace console {

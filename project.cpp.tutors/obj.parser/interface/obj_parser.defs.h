@@ -12,6 +12,11 @@
 
 namespace shared { namespace parsers { namespace obj { using namespace shared::defs;
 
+	struct s_cache {
+		static constexpr uint32_t buf_len = 256;
+		char buffer[buf_len] = {0};
+	};
+
 	/* https://en.wikipedia.org/wiki/Big_O_notation ;
 	// https://www.geeksforgeeks.org/dsa/understanding-time-complexity-simple-examples/ ;
 	// https://en.wikipedia.org/wiki/Epoll ;

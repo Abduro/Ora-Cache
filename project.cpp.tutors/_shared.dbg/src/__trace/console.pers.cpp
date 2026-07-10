@@ -11,8 +11,8 @@
 #include "sys.registry.h"
 #include "win.gui.wnd.h"
 
-using namespace shared::console;
-using namespace shared::console::persistent;
+using namespace ::shared::console;
+using namespace ::shared::console::persistent;
 
 namespace shared { namespace console { namespace _impl {
 #if (0)
@@ -44,6 +44,83 @@ CBase::CBase (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 TError& CBase::Error (void) const { return this->m_error; }
 
+_pc_sz   CBase::Key (void) const { return (_pc_sz) this->m_key_path; }
+err_code CBase::Key (_pc_sz _p_path) {
+	_p_path;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (nullptr == _p_path || 0 == ::_tclen(_p_path)) {
+		this->m_error <<__e_inv_arg =_T("Root key path is empty");
+	}
+	return this->Error();
+}
+
+#pragma endregion
+#pragma region cls::CFont{}
+
+namespace shared { namespace console { namespace persistent {
+
+static CString cs_font_key = TString().Format(_T("%s\\Font"), (_pc_sz) ::Get_reg_router().Trace().Root());
+
+CFont::CFont (void) : m_height(0) { TBase::m_error >>__CLASS__; this->Default(); }
+
+void CFont::Default (void) {
+	this->m_name   = _T("Consolas");
+	this->m_height = 15;
+}
+
+uint16_t CFont::Height (void) const { return this->m_height; }
+err_code CFont::Height (const uint16_t _value) {
+	_value;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (10 > _value || _value > 20)
+		return TBase::m_error <<__e_inv_arg = _T("#__e_inv_arg: font height is out of acceptable range [10...20]");
+
+	this->m_height = _value;
+
+	return TBase::Error();
+}
+
+err_code CFont::Key (_pc_sz _p_path) {
+	_p_path;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (__failed(TBase::Key(_p_path))) {/*the error is set by the base class;*/}
+	else {
+		TBase::m_key_path = _p_path; TBase::m_key_path.Trim();
+		TBase::m_key_path = TString().Format(_T("%s\\Font"), _p_path);
+	}
+	return TBase::Error();
+}
+
+const
+CString& CFont::Name (void) const { return this->m_name; }
+err_code CFont::Name (_pc_sz _p_name) {
+	_p_name;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_name || 6 > ::_tcslen(_p_name)) // to-do: 6 symbols of minimum height must be reviewed;
+		return TBase::Error();
+
+	this->m_name = _p_name;
+
+	return TBase::Error();
+}
+
+static _pc_sz p_err_dflt_used = _T("The default font settigs is used");
+
+err_code CFont::Load (void) {
+	TBase::m_error <<__METHOD__<<__e_not_impl = p_err_dflt_used;
+
+	return this->Error();
+}
+
+err_code CFont::Save (void) {
+	TBase::m_error <<__METHOD__<<__e_not_impl = p_err_dflt_used;
+
+	return this->Error();
+}
+
+}}}
 #pragma endregion
 #pragma region cls::CLines{}
 
@@ -202,7 +279,7 @@ err_code CPosition::Set (const t_rect& _rect) {
 		return TBase::Error();
 
 	TRegKeyEx the_key;
-	if (__failed(the_key.Value().Set(this->m_key_path.IsEmpty() ? (_pc_sz) cs_pos_key : (_pc_sz) this->m_key_path, _rect))) {
+	if (__failed(the_key.Value().Set(TBase::m_key_path.IsEmpty() ? (_pc_sz) cs_pos_key : (_pc_sz) TBase::m_key_path, _rect))) {
 		TBase::m_error = the_key.Error();
 		__trace_err_ex_2(TBase::Error());
 	} else {
@@ -212,16 +289,13 @@ err_code CPosition::Set (const t_rect& _rect) {
 	return TBase::Error();
 }
 
-_pc_sz   CPosition::Key (void) const { return (_pc_sz) this->m_key_path; }
 err_code CPosition::Key (_pc_sz _p_path) {
 	_p_path;
 	TBase::m_error <<__METHOD__<<__s_ok;
-	if (nullptr == _p_path || 0 == ::_tclen(_p_path)) {
-		TBase::m_error <<__e_inv_arg =_T("Root key path is empty");
-	}
+	if (__failed(TBase::Key(_p_path))) {/*the error is set by the base class;*/}
 	else {
-		this->m_key_path = _p_path; this->m_key_path.Trim();
-		this->m_key_path = TString().Format(_T("%s\\Position"), _p_path);
+		TBase::m_key_path = _p_path; TBase::m_key_path.Trim();
+		TBase::m_key_path = TString().Format(_T("%s\\Position"), _p_path);
 	}
 	return TBase::Error();
 }
@@ -232,7 +306,7 @@ err_code CPosition::Load (void) {
 	using namespace shared::layout;
 
 	TRegKeyEx the_key;
-	this->m_rc_pos = the_key.Value().GetRect(this->m_key_path.IsEmpty() ? (_pc_sz) cs_pos_key : (_pc_sz) this->m_key_path);
+	this->m_rc_pos = the_key.Value().GetRect(TBase::m_key_path.IsEmpty() ? (_pc_sz) cs_pos_key : (_pc_sz) TBase::m_key_path);
 
 	if (::IsRectEmpty(&this->m_rc_pos)) { // the position of the console window is not saved yet;
 
@@ -242,7 +316,7 @@ err_code CPosition::Load (void) {
 	     __trace_warn_2(_T("Using default rect at << %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos)); }
 	else __trace_impt_2(_T("Position is restored at rect: %s\n"), (_pc_sz) ::_rect_to_str(this->m_rc_pos));
 
-	CFont font; font.Get();
+	::shared::console::CFont font; font.Get(); // the font is used that is set through console properties;
 	if (false == font.Error()) {
 		this->m_rc_pos.bottom += font.Size().cy;
 	}
@@ -264,14 +338,14 @@ err_code CPosition::Save (void) {
 	else if (0 == (wnd_place.showCmd & SW_NORMAL)) { // the state of the window either 'minimized' or 'maximized' is not interest;
 		return this->Error();
 	}
-
+#if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect ;
 	t_rect rc_ = {0};
 
 	if (false == !!::GetWindowRect(CAccessor()(), &rc_))
 		return TBase::m_error.Last();
-
-	return this->Set(rc_);
+#endif
+	return this->Set(wnd_place.rcNormalPosition);
 }
 
 CString  CPosition::To_str (const e_print _e_opt/* = e_print::e_all*/) {
@@ -296,12 +370,18 @@ CPosition& CPosition::operator <<(_pc_sz _p_root_path) { this->Key(_p_root_path)
 #pragma endregion
 #pragma region cls::CPersistent{}
 
-using CPin = persistent::CPin;
-using CPos = persistent::CPosition;
+using CPin  = persistent::CPin;
+using CPos  = persistent::CPosition;
 using CShow = persistent::CShow;
 
 CPersistent:: CPersistent (void) { TBase::m_error >>__CLASS__; }
 CPersistent::~CPersistent (void) {}
+
+using CFont_Pers = ::shared::console::persistent::CFont;
+
+const
+CFont_Pers& CPersistent::Font (void) const { return this->m_font; }
+CFont_Pers& CPersistent::Font (void)       { return this->m_font; }
 
 err_code CPersistent::Load (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;

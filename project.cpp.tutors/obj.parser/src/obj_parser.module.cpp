@@ -149,7 +149,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	if (__failed(_con.Create())) { ::__trace_err_ex_2(error = _con.Error()); }
 	else {
-		shared::console::CFont font_; font_.Set(_T("consolas"), 15);
 		shared::console::CBkgnd con_bkg;
 		con_bkg.Color(::Get_theme().Bkgnd().Rgba());
 
@@ -171,8 +170,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		if (__failed(reader.Read())) {
 			::__trace_err_ex_2(error = reader.Error());
 		}
-		TPrefxs& prefxs = ::Get_prefxs();
-		prefxs;
 
 	} while (true == false);
 #if (0) // if an error occurred in one the previous steps, there is no ability to see that error in the console trace, so it is disabled;

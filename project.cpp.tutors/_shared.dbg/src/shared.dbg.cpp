@@ -96,6 +96,28 @@ bool CTrace::Use_con  (void) {
 	return b_use_con;
 }
 
+void CTrace::Out_$ (const e_category _e_cat, _pc_sz _p_sz_format, ...) {
+	_e_cat; _p_sz_format;
+	va_list  args_;
+	va_start(args_, _p_sz_format);
+
+	CString cs_out; cs_out.FormatV(_p_sz_format, args_); // no category prefix is included here;
+
+	if (CTrace::Use_con()) {
+		if (e_category::e_err  == _e_cat) { COut::Error((_pc_sz)cs_out); }
+		if (e_category::e_impt == _e_cat) { COut::Impt ((_pc_sz)cs_out); }
+		if (e_category::e_info == _e_cat) { COut::Info ((_pc_sz)cs_out); }
+		if (e_category::e_warn == _e_cat) { COut::Warn ((_pc_sz)cs_out); }
+	}
+	::OutputDebugString((_pc_sz) cs_out);
+
+	TSafe_Lock();
+	if (_impl::m_test_out)
+		_impl::m_test_out->Write((_pc_sz) cs_out);
+
+	va_end  (args_);
+}
+
 void CTrace::Out_0 (_pc_sz _lp_sz_fmt, ...) {
 
 	va_list  args_;

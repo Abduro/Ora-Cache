@@ -29,7 +29,7 @@ namespace shared { namespace console { namespace _impl {
 		static void Print (const CTrace::e_category _e_cat, _pc_sz _p_text) {
 			_e_cat; _p_text;
 			u_long n_written = 0;
-			CString cs_out; cs_out.Format(_T(" %s"), _p_text); g_count += 1;
+			CString cs_out; cs_out.Format(_T(" %s"), _p_text); g_count += 1; // to-do: the text format includes hardcoded indentation, but it is defined outside of this function;
 
 			if (g_cfg.m_use && false) {
 				CScreenBuffer buffer;
