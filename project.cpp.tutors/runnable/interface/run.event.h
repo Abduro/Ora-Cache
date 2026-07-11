@@ -3,9 +3,10 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) 26-Dec-2010 at 7:00:02pm, GMT+3, Rostov-on-Don, Sunday;
 	This is SFX project Asynchronous notifying/waiting object interface declartion file.
-	-----------------------------------------------------------------------------
+	-----------------------------------------------------------------------------[oDesk projects]
 	Adopted to Pulspay Server project on 2-May-2012 at 1:09:18pm, GMT+3, Rostov-on-Don, Wednesday;
 	Adopted to Platinum Clocking project on 19-Mar-2014 at 11:21:09am, GMT+3, Taganrog, Wednesday;
+	-----------------------------------------------------------------------------[Upwork projects]
 	Adopted to E-Opinion project on 8-May-2014 at 7:17:15am, GMT+3, Saint-Petersburg, Thursday;
 	Adopted to Internext project on 20-Aug-2014 at 8:03:27pm, GMT+3, Taganrog, Wednesday;
 	Adopted to Fake GPS project on 11-Dec-2019 at 7:59:09p, UTC+7, Novosibirsk, Wednesday;
@@ -96,9 +97,9 @@ namespace shared { namespace runnable {
 		CMarshaller& operator = (const CMarshaller&) = delete;
 		CMarshaller& operator = (CMarshaller&&) = delete;
 	};
-	/* this class is intended to be used in worker thread procedure in order to create so delay in time, especially,
+	/* this class is intended to be used in worker thread procedure in order to create a delay in time, especially,
 	   in iterative loops of the processing data;
-	   also, this class may be used in the main thread for waiting when worker thead ends its job, for example, in test cases;
+	   also, this class may be used in the main thread for waiting for worker thead ends its job, for example, in test cases;
 	*/
 	class CDelay {
 	public:

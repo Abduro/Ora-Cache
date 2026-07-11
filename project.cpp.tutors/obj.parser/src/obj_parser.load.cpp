@@ -328,6 +328,48 @@ err_code CLocator::Locate (void) {
 	return TBase::Error();
 }
 
+err_code CLocator::Open (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	/* https://docs.microsoft.com/en-us/windows/win32/learnwin32/example--the-open-dialog-box ;
+	// https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog ;
+	// https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog ;
+	*/
+	using namespace ::ATL;
+
+	CComPtr<IFileOpenDialog> p_dialog;
+	TBase::m_error = p_dialog.CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL);
+	if (TBase::Error())
+		return TBase::Error();
+
+	COMDLG_FILTERSPEC flt_spec[] = {
+		{ _T("3D Model Object file (*.obj)"), _T("*.obj") }
+	};
+	err_code
+	n_result = p_dialog->SetFileTypes(_countof(flt_spec), flt_spec);
+	n_result = p_dialog->SetTitle(_T("Open 3D Model Object File"));
+	n_result = p_dialog->Show(TConAccess());
+
+	if (__succeeded(n_result)) {
+
+		CComPtr<IShellItem> p_item;
+		n_result = p_dialog->GetResult(&p_item);
+
+		if (__succeeded(n_result)) {
+			PWSTR lp_path = nullptr;
+			n_result = p_item->GetDisplayName(SIGDN_FILESYSPATH, &lp_path);
+
+			if (__succeeded(n_result)) {
+				this->m_obj_path = lp_path;
+			}
+			if (lp_path) {
+				::CoTaskMemFree(lp_path); lp_path = nullptr;
+			}
+		}
+	}
+	TBase::m_error = n_result;
+	return TBase::Error();
+}
+
 _pc_sz CLocator::Path (void) const { return (_pc_sz) this->m_obj_path; }
 
 _pc_sz CLocator::Root (void) {

@@ -51,7 +51,7 @@ public:
 	using CCmd_Handler = shared::console::CCmd_Handler;
 	using CBtn_enum  = shared::console::events::input::CBtn_enum;
 	using e_cmd_ids = shared::console::e_cmd_ids;
-
+	// to-do: this handler works in worker thread, not in the main one; it is required to redirect commands to the main thread; 
 	err_code On_button(const input::evt_mouse_data_t& _data) override final {
 		_data;
 		this->m_btns.Set(_data.dwButtonState);
@@ -78,6 +78,13 @@ public:
 						b_quit = true; // signals to main message loop to exit;
 					}
 					__trace_warn_2(_T("command 'Close console' (%04u) is completed;\n"), u_cmd_id);
+				} break;
+				case IDR_OBJ_FILE_SELECT: {
+
+					::shared::sys_core::CCoIniter_auto co_initer;
+
+					CLocator locator;
+					locator.Open();
 				} break;
 				default:;
 				}

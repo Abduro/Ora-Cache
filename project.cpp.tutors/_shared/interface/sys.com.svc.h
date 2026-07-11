@@ -3,12 +3,14 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 7-Mar-2011 at 1:48:50am, GMT+3, Rostov-on-Don, Monday;
 	This is Row27 project COM libraries auto-initializer interface declaration file.
-	-----------------------------------------------------------------------------
-	Adopted to PulsePay project on 2-May-2012 at 8:57:47am, GMT+3, Rostov-on-Don, Wednesday;
+	-----------------------------------------------------------------------------[oDesk projects]
+	Adopted to PulsePay project on 02-May-2012 at 8:57:47am, GMT+3, Rostov-on-Don, Wednesday;
 	Adopted to Platinum project on 19-Mar-2014 at 9:47:36am, GMT+4, Taganrog, Wednesday;
+	-----------------------------------------------------------------------------[Upwork projects]
 	Adopted to File Guardian project on 11-Jul-2018 at 10:29:00a, UTC+7, Phuket, Rawai, Wednesday;
 	Adopted to FakeGPS driver project on 13-Dec-2019 at 10:15:18a, UTC+7, Novosibirsk, Friday;
-	Adopted to Geometry Curve project on 18-Feb-2024 at 08:47:01.5887698, UTC+7, Novosibirsk, Sunday;
+	-----------------------------------------------------------------------------[trying to get hired]
+	Adopted to Geometry Curve project on 18-Feb-2024 at 08:47:01.588, UTC+7, Novosibirsk, Sunday;
 */
 #include "shared.defs.h"
 

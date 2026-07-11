@@ -5,10 +5,11 @@
 #include <winresrc.h>
 #include "obj_parser.res.h"
 
-// https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings ;
-// https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers ;
-// https://winprotocoldoc.z19.web.core.windows.net/MS-LCID/%5bMS-LCID%5d.pdf ;
-// https://learn.microsoft.com/en-us/windows/win32/menurc/language-statement ;
+/* https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings ;
+   https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers ;
+   https://winprotocoldoc.z19.web.core.windows.net/MS-LCID/%5bMS-LCID%5d.pdf ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/language-statement ;
+*/
 #ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
@@ -57,16 +58,18 @@ END
 // https://learn.microsoft.com/en-us/windows/win32/menurc/icon-resource ;
 IDR_OBJ_PARSER_CON_0_ICO ICON    "icons\\obj_parser.design.0.ico"
 
-// https://learn.microsoft.com/en-us/windows/win32/menurc/rcdata-resource ;
+/* https://learn.microsoft.com/en-us/windows/win32/menurc/rcdata-resource ;
 
-// https://learn.microsoft.com/en-us/windows/win32/menurc/menuex-resource ;
-// https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/menuex-resource ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ;
 
-// https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
-// https://learn.microsoft.com/en-us/windows/win32/menurc/dialog-resource ;
-// https://learn.microsoft.com/en-us/windows/win32/menurc/dialogex-resource ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/dialog-resource ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/dialogex-resource ;*/
 /* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/
 IDR_OBJ_PARSER_CTX_MENU_0 MENU { POPUP "" {
+	MENUITEM "Open File...", IDR_OBJ_FILE_SELECT
+	MENUITEM SEPARATOR
 	MENUITEM "Clear" , IDR_OBJ_PARSER_CON_CLEAR
 	MENUITEM SEPARATOR
 	MENUITEM "Close" , IDR_OBJ_PARSER_CON_CLOSE

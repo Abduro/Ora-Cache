@@ -8,6 +8,7 @@
 #include "shared.preproc.h"
 #include "shared.dbg.h"
 #include "shared.theme.h"
+#include "sys.com.svc.h"
 #include "sys.registry.h"
 
 namespace shared { namespace parsers { namespace obj { using namespace shared::defs;

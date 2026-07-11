@@ -7,7 +7,8 @@
 #include "obj_parser.defs.h"
 #include "obj_parser.self.h"
 #include "shared.cmd.ln.h"
-#include <fcntl.h>  // for c-runtime file control options used by _open(), i.e. flags of access to file;
+#include <fcntl.h>      // for c-runtime file control options used by _open(), i.e. flags of access to file;
+#include <shobjidl.h>   // shell dialog interface declaration;
 
 namespace shared { namespace parsers { namespace obj {
 
@@ -60,6 +61,7 @@ namespace shared { namespace parsers { namespace obj {
 		bool  Is_found (void) const; // if the object file is not empty, checks the file existance, if it is then 'true', otherwise 'false';
 
 		err_code Locate (void);      // checks command line first; if there is no path to object file, the system registry is checked then;
+		err_code Open (void);        // calls system 'Open File' dialog for selecting 3d model object file;
 		_pc_sz   Path (void) const;  // gets the path of object source file;
 
 		static _pc_sz Root (void);   // gets registry key path that is the root for object parser settings;
