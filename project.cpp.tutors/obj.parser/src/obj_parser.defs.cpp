@@ -18,7 +18,7 @@ s_draw_obj::s_draw_obj (void) {}
 #pragma endregion
 #pragma region str::s_face{}
 
-s_face::s_face (void) : _vert_ndx{0}, _tex_ndx{0} {}
+s_face::s_face (void) {}
 
 #pragma endregion
 #pragma region str::s_mat_info{}
@@ -55,6 +55,45 @@ CString s_vec_3::To_str (void) const {
 #pragma endregion
 #pragma region str::s_model{}
 
-s_model::s_model (void) {}
+s_model::s_model (void) { this->_objects.push_back(s_draw_obj()); }
 
 #pragma endregion
+
+s_model& ::Get_model (void) {
+	static s_model model;
+	return   model;
+}
+
+namespace shared { namespace parsers { namespace obj {
+
+CString To_str (const s_face& _face) {
+	_face;
+	static _pc_sz p_pair_pat = _T("%u/%u");
+	CString cs_out (_T("face: "));
+	CString cs_pair;
+	for (uint32_t i_ = 0; i_ < _face._indices.size(); i_++) {
+
+		cs_pair.Format(p_pair_pat, _face._indices.at(i_).first, _face._indices.at(i_).second);
+		cs_out += cs_pair;
+		if (i_ < _face._indices.size() - 1)
+			cs_out += _T(" ");
+	}
+
+	return  cs_out;
+}
+
+CString To_str (const normal_t& _norm) {
+	_norm;
+	static _pc_sz p_fmt_val = _T("%3.1f");
+
+	CString cs_out(_T("vn: "));
+	CString cs_val;
+	
+	cs_out += _T(" "); cs_val = TString().Float(_norm._x, t_fmt_spec::e_decimal, p_fmt_val); if (_T('-') == cs_val.Left(1)) {} else cs_out += _T(" "); cs_out += cs_val;
+	cs_out += _T(" "); cs_val = TString().Float(_norm._y, t_fmt_spec::e_decimal, p_fmt_val); if (_T('-') == cs_val.Left(1)) {} else cs_out += _T(" "); cs_out += cs_val;
+	cs_out += _T(" "); cs_val = TString().Float(_norm._z, t_fmt_spec::e_decimal, p_fmt_val); if (_T('-') == cs_val.Left(1)) {} else cs_out += _T(" "); cs_out += cs_val;
+	
+	return  cs_out;
+}
+
+}}}

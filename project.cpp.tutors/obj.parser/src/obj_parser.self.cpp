@@ -12,29 +12,45 @@ namespace shared { namespace parsers { namespace _impl {
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sprintf-s-sprintf-s-l-swprintf-s-swprintf-s-l ;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sscanf-s-sscanf-s-l-swscanf-s-swscanf-s-l ; << this one is used;
 
-	class CHelper {
+	class CConverter {
 	public:
-		CHelper (void) {} CHelper (const CHelper&) = delete; CHelper (CHelper&&) = delete; ~CHelper (void) = default;
+		CConverter (void) {} CConverter (const CConverter&) = delete; CConverter (CConverter&&) = delete; ~CConverter (void) = default;
 
-		void Get_norm (const CPrefx& _pfx, const s_cache& _cached, s_vec_3& _norm) {
-			_pfx; _cached; _norm;
-			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), "%f %f %f", &_norm._x, &_norm._y, &_norm._z); // the format is "v x y";
-			if (vars == 3){}
+		bool Get_face (const CPrefx& _pfx, const s_cache& _cached, s_face& _face) {
+			_pfx; _cached; _face;
+			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), "%d//%d %d//%d %d//%d", // the format is vert_ndx/norm_ndx ... vert_ndx/norm_ndx;
+				&_face._indices.at(0).first, &_face._indices.at(0).second,
+				&_face._indices.at(1).first, &_face._indices.at(1).second,
+				&_face._indices.at(2).first, &_face._indices.at(2).second
+			);
+			return (vars == 6);
 		}
 
-		void Get_vert (const CPrefx& _pfx, const s_cache& _cached, s_vec_3& _vert) {
+		bool Get_name (const CPrefx& _pfx, const s_cache& _cached, CString& _name) {
+			_name;
+			_name = (_cached.buffer + _pfx.Spec().GetLength()); _name.Trim();
+			return true;
+		}
+
+		bool Get_norm (const CPrefx& _pfx, const s_cache& _cached, normal_t& _norm) {
+			_pfx; _cached; _norm;
+			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), "%f %f %f", &_norm._x, &_norm._y, &_norm._z); // the format is "vn x y z";
+			return (vars == 3);
+		}
+
+		bool Get_vert (const CPrefx& _pfx, const s_cache& _cached, s_vec_3& _vert) {
 			_pfx; _cached; _vert;
 			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), "%f %f %f", &_vert._x, &_vert._y, &_vert._z); // the format is "v x y (z)";
-			if (vars == 3){}
+			return (vars == 3);
 		}
 
 	private:
-		CHelper& operator = (const CHelper&) = delete; CHelper& operator = (CHelper&&) = delete;
+		CConverter& operator = (const CConverter&) = delete; CConverter& operator = (CConverter&&) = delete;
 	};
 
-	CHelper& Get_helper (void) {
-		static CHelper helper;
-		return helper;
+	CConverter& Converter (void) {
+		static CConverter conv;
+		return conv;
 	}
 
 }}} using namespace shared::parsers::_impl;
@@ -53,10 +69,18 @@ err_code CParser::Do (const s_cache& _cached) {
 	}
 	else {
 		switch (prefx.Type()) {
-		case e_pfx_type::e_norm: { s_vec_3 vert; ::Get_helper().Get_norm(prefx, _cached, vert); } break;
-		case e_pfx_type::e_vert: { s_vec_3 vert; ::Get_helper().Get_vert(prefx, _cached, vert); } break;
+		case e_pfx_type::e_face: { s_face  face; if (::Converter().Get_face(prefx, _cached, face)) ::Get_model()._objects.at(0)._faces.push_back(face);
+			__trace_info_$(_T("%s\n"), (_pc_sz) To_str(face));
+		} break;
+		case e_pfx_type::e_group: {
+			CString cs_name; if (::Converter().Get_name(prefx, _cached, cs_name)) ::Get_model()._objects.at(0)._name = cs_name;
+			__trace_info_$(_T("%s\n"), (_pc_sz) TString().Format(_T("group name: %s"), (_pc_sz)cs_name));
+		} break;
+		case e_pfx_type::e_norm: { normal_t norm; if (::Converter().Get_norm(prefx, _cached, norm)) ::Get_model()._objects.at(0)._vertices.push_back(norm);
+			__trace_info_$(_T("%s\n"), (_pc_sz) To_str(norm));
+		} break;
+		case e_pfx_type::e_vert: { s_vec_3 vert; ::Converter().Get_vert(prefx, _cached, vert); } break;
 		}
-		__trace_info_$(_T("%s\n"), (_pc_sz) prefx.To_str());
 	}
 
 	return this->Error();

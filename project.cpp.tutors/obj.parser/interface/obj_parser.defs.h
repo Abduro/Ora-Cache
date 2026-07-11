@@ -30,10 +30,10 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 		s_color (const uint16_t _u_r = 0, const uint16_t _u_g = 0, const uint16_t _u_b = 0);
 	};
 
-	struct s_face { // this structure is used for indexing into the vertex and texture coordinate arrays;
-		uint32_t _vert_ndx[3]; // indicies for the verts that make up a triangle;
-		uint32_t _tex_ndx[3];  // indicies for the coords to texture a face;
+	typedef ::std::pair<uint32_t, uint32_t> pair_t;
 
+	struct s_face { // this structure is used for indexing into the vertex and texture coordinate arrays;
+		::std::vector<pair_t> _indices{{0,0}, {0,0}, {0,0}};
 		s_face (void);
 	};
 
@@ -73,12 +73,17 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 		s_mat_info (void); ~s_mat_info (void) = default;
 	};
 
+	typedef s_vec_3 normal_t;
+	typedef ::std::vector<normal_t> normals_t;
+
 	struct s_draw_obj {
 
 		::std::vector<s_vec_3> _vertices;   // object's vertices;
 		::std::vector<s_vec_3> _normals;    // object's normals;
 		::std::vector<s_vec_2> _uv_coord;   // texture's UV coordinates;
 		::std::vector<s_face>  _faces;      // faces' info;
+
+		CString _name; // the name of the group; it doesn't care regarding ansi or unicode characters;
 
 		s_draw_obj (void); ~s_draw_obj (void) = default;
 	};
@@ -90,6 +95,11 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 
 		s_model (void); ~s_model (void) = default;
 	};
+
+	CString To_str (const s_face&);
+	CString To_str (const normal_t&);
+
+	s_model& Get_model (void);
 }}}
 
 #endif/*_OBJ_PARSER_DEFS_H_INCLUDED*/
