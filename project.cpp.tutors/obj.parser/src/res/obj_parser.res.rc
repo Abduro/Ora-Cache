@@ -68,11 +68,11 @@ IDR_OBJ_PARSER_CON_0_ICO ICON    "icons\\obj_parser.design.0.ico"
    https://learn.microsoft.com/en-us/windows/win32/menurc/dialogex-resource ;*/
 /* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/
 IDR_OBJ_PARSER_CTX_MENU_0 MENU { POPUP "" {
-	MENUITEM "Open File...", IDR_OBJ_FILE_SELECT
+	MENUITEM "Open File...", CMD_OBJ_FILE_SELECT
 	MENUITEM SEPARATOR
-	MENUITEM "Clear" , IDR_OBJ_PARSER_CON_CLEAR
+	MENUITEM "Clear" , CMD_OBJ_PARSER_CON_CLEAR
 	MENUITEM SEPARATOR
-	MENUITEM "Close" , IDR_OBJ_PARSER_CON_CLOSE
+	MENUITEM "Close" , CMD_OBJ_PARSER_CON_CLOSE
 }}
 // https://learn.microsoft.com/en-us/windows/win32/menurc/stringtable-resource ;
 /* Google AI: *important*

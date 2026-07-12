@@ -75,6 +75,7 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 	};
 
 	typedef s_vec_3 normal_t;
+	typedef s_vec_3 vertex_t;
 	typedef ::std::vector<normal_t> normals_t;
 
 	struct s_draw_obj {
@@ -84,7 +85,10 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 		::std::vector<s_vec_2> _uv_coord;   // texture's UV coordinates;
 		::std::vector<s_face>  _faces;      // faces' info;
 
+		CString _desc; // the brief description of the group that precedes the group tagline as a comment; it may be optional;
 		CString _name; // the name of the group; it doesn't care regarding ansi or unicode characters;
+
+		void Reset (void); // clears this draw object content;
 
 		s_draw_obj (void); ~s_draw_obj (void) = default;
 	};
@@ -94,11 +98,22 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 		::std::vector<s_mat_info> _materials;
 		::std::vector<s_draw_obj> _objects;
 
+		void Reset (void); // clears this model content;
+
 		s_model (void); ~s_model (void) = default;
 	};
 
-	CString To_str (const s_face&);
-	CString To_str (const normal_t&);
+	class CPrint {
+	public:
+		CPrint (void) = default; CPrint (const CPrint&) = delete; CPrint (CPrint&&) = delete; ~CPrint (void) = default;
+
+		static CString Face (const s_face&);
+		static CString Norm (const normal_t&);
+		static CString Vert (const vertex_t&);
+
+	private:
+		CPrint& operator = (const CPrint&) = delete; CPrint& operator = (CPrint&&) = delete;
+	};
 
 	s_model& Get_model (void);
 }}}

@@ -15,9 +15,10 @@
 #pragma region __ctx_menu
 
 #define IDR_OBJ_PARSER_CTX_MENU_0 2000
-#define IDR_OBJ_PARSER_CON_CLEAR  2001
-#define IDR_OBJ_PARSER_CON_CLOSE  2002
-#define IDR_OBJ_FILE_SELECT       2003
+#define CMD_OBJ_PARSER_CON_CLEAR  2001
+#define CMD_OBJ_PARSER_CON_CLOSE  2002
+#define CMD_OBJ_FILE_SELECT       2003
+#define CMD_OBJ_PARSER_SHOW_CTX   2004
 
 #pragma endregion
 

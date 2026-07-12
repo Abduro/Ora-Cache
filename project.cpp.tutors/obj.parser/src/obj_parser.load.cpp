@@ -387,6 +387,10 @@ _pc_sz CLocator::Root (void) {
 
 CReader::CReader (void) : TBase() { TBase::m_error >>__CLASS__<<__s_ok; }
 
+const
+CLocator& CReader::Loc (void) const { return this->m_lctr; }
+CLocator& CReader::Loc (void)       { return this->m_lctr; }
+
 /* the query to Google AI: difference between fgets and fread c++;
 The primary difference is that std::fgets is line-oriented and intended for text, while std::fread is block-oriented and designed for binary data.
 std::fgets automatically stops reading when it hits a newline character (\n) and appends a null-terminator (\0) to form a valid C-string.
@@ -397,34 +401,33 @@ std::fread ignores all newlines, reads exactly the raw chunk size you request, a
 err_code CReader::Read (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	CLocator locator;
-
 	// (1) checks the locator first;
-	if (false == locator.Is_found()) { // the file path is empty or does not exist if the file path is read from command line or the registry;
-		if (locator.Error()) { // this error is set by locator.Is_found();
-			return TBase::m_error = locator.Error(); // returns the error;
+	if (false == this->Loc().Is_found()) { // the file path is empty or does not exist if the file path is read from command line or the registry;
+		if (this->Loc().Error()) { // this error is set by locator.Is_found();
+			return TBase::m_error = this->Loc().Error(); // returns the error;
 		}
 
-		if (__failed(locator.Locate())) { // it is suppossed to try to locate an object file again;
-			return TBase::m_error = locator.Error(); // file path is found, but the file does not exist or is the directory;
+		if (__failed(this->Loc().Locate())) { // it is suppossed to try to locate an object file again;
+			return TBase::m_error = this->Loc().Error(); // file path is found, but the file does not exist or is the directory;
 		}
 	}
 	// (2) the locator contains the path to the file that is suppossed to be an model object file; tries to opent the file;
 	CLoader loader;
-	if (__failed(loader.Open(locator.Path()))) {
+	if (__failed(loader.Open(this->Loc().Path()))) {
 		return TBase::m_error = loader.Error();
 	}
-	if (false == CLoader::Is_Text(locator.Path(), TBase::m_error)) {
+	if (false == CLoader::Is_Text(this->Loc().Path(), TBase::m_error)) {
 		__trace_warn_2(_T("The object file is not text file"));
 		return TBase::Error();
 	}
 
 	FILE* const p_str = loader;
 
-	s_cache chached;
+	::Get_model().Reset();
 
 	// (3) reads file content and makes a call to parser;
 	CParser parser;
+	s_cache chached;
 
 	/*::fread() is much faster but requires additional programming for catching the end of line;*/
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/ferror ;

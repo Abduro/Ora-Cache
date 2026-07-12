@@ -15,6 +15,10 @@ s_color::s_color (const uint16_t _u_r, const uint16_t _u_g, const uint16_t _u_b)
 
 s_draw_obj::s_draw_obj (void) {}
 
+void s_draw_obj::Reset (void) {
+	this->_vertices.clear(); this->_normals.clear(); this->_uv_coord.clear(); this->_faces.clear(); this->_desc.Empty();; this->_name.Empty();
+}
+
 #pragma endregion
 #pragma region str::s_face{}
 
@@ -55,18 +59,30 @@ CString s_vec_3::To_str (void) const {
 #pragma endregion
 #pragma region str::s_model{}
 
-s_model::s_model (void) { this->_objects.push_back(s_draw_obj()); }
+s_model::s_model (void) { this->_objects.push_back(s_draw_obj()); } // adds an empty draw object by default;
+
+void s_model::Reset (void) {
+	for (uint32_t i_ = 0; i_ < this->_objects.size(); i_++) {
+		this->_objects.at(i_).Reset();
+	}
+}
 
 #pragma endregion
 
-s_model& ::Get_model (void) {
-	static s_model model;
-	return   model;
-}
+namespace shared { namespace parsers { namespace _impl {
 
-namespace shared { namespace parsers { namespace obj {
+	void  _vert_to_str (const s_vec_3& _vert, _pc_sz _p_format, CString& _out) {
+	CString cs_val;
+	_out += _T(" "); cs_val = TString().Float(_vert._x, t_fmt_spec::e_decimal, _p_format); if (_T('-') == cs_val.Left(1)) {} else _out += _T(" "); _out += cs_val;
+	_out += _T(" "); cs_val = TString().Float(_vert._y, t_fmt_spec::e_decimal, _p_format); if (_T('-') == cs_val.Left(1)) {} else _out += _T(" "); _out += cs_val;
+	_out += _T(" "); cs_val = TString().Float(_vert._z, t_fmt_spec::e_decimal, _p_format); if (_T('-') == cs_val.Left(1)) {} else _out += _T(" "); _out += cs_val;
+	}
 
-CString To_str (const s_face& _face) {
+}}} using namespace ::shared::parsers::_impl;
+
+#pragma region cls::CPrint{}
+
+CString CPrint::Face (const s_face& _face) {
 	_face;
 	static _pc_sz p_pair_pat = _T("%u/%u");
 	CString cs_out (_T("face: "));
@@ -82,18 +98,28 @@ CString To_str (const s_face& _face) {
 	return  cs_out;
 }
 
-CString To_str (const normal_t& _norm) {
+CString CPrint::Norm (const normal_t& _norm) {
 	_norm;
 	static _pc_sz p_fmt_val = _T("%3.1f");
 
-	CString cs_out(_T("vn: "));
-	CString cs_val;
-	
-	cs_out += _T(" "); cs_val = TString().Float(_norm._x, t_fmt_spec::e_decimal, p_fmt_val); if (_T('-') == cs_val.Left(1)) {} else cs_out += _T(" "); cs_out += cs_val;
-	cs_out += _T(" "); cs_val = TString().Float(_norm._y, t_fmt_spec::e_decimal, p_fmt_val); if (_T('-') == cs_val.Left(1)) {} else cs_out += _T(" "); cs_out += cs_val;
-	cs_out += _T(" "); cs_val = TString().Float(_norm._z, t_fmt_spec::e_decimal, p_fmt_val); if (_T('-') == cs_val.Left(1)) {} else cs_out += _T(" "); cs_out += cs_val;
-	
+	CString cs_out(_T("vn: ")); _vert_to_str(_norm, p_fmt_val, cs_out);
 	return  cs_out;
 }
 
+CString CPrint::Vert (const vertex_t& _norm) {
+	_norm;
+	static _pc_sz p_fmt_val = _T("%7.4f");
+
+	CString cs_out(_T("v: ")); _vert_to_str(_norm, p_fmt_val, cs_out);
+	return  cs_out;
+}
+
+#pragma endregion
+
+s_model& ::Get_model (void) {
+	static s_model model;
+	return   model;
+}
+
+namespace shared { namespace parsers { namespace obj {
 }}}

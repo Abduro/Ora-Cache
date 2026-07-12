@@ -14,6 +14,18 @@
 
 namespace shared { namespace parsers { namespace obj { using namespace shared::defs;
 
+	// context menu command handler;
+	class CCmdHandler {
+	public:
+		CCmdHandler (void); CCmdHandler (const CCmdHandler&) = delete; CCmdHandler (CCmdHandler&&) = delete; ~CCmdHandler (void) = default;
+
+		uint32_t TrackMenu (void); // tracks shortcut menu and executes a command selected; returns the selected command ID;
+
+	private:
+		CCmdHandler& operator = (const CCmdHandler&) = default; CCmdHandler& operator = (CCmdHandler&&) = delete;
+		TFakeWnd m_fk_wnd;
+	};
+
 	/* the qu ery to Google AI: console main function winapi ;
 	wmain vs. wWinMain
 	wmain: Used for the Console subsystem. It sets up the standard std::cin/std::wcin and std::cout/std::wcout streams automatically.
@@ -21,6 +33,7 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 	Forcing a Console Subsystem
 	#pragma comment(linker, "/SUBSYSTEM:CONSOLE /ENTRY:wmainCRTStartup")
 	*/
+	
 #ifndef _USE_CONSOLE
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;
 	class CTraceConsole : public ATL::CAtlExeModuleT<CTraceConsole> { typedef ATL::CAtlExeModuleT<CTraceConsole> TModule;

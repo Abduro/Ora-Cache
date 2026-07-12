@@ -8,26 +8,59 @@ using namespace shared::parsers::obj;
 
 namespace shared { namespace parsers { namespace _impl {
 
-	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/scanf-s-scanf-s-l-wscanf-s-wscanf-s-l ;
-	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sprintf-s-sprintf-s-l-swprintf-s-swprintf-s-l ;
-	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sscanf-s-sscanf-s-l-swscanf-s-swscanf-s-l ; << this one is used;
+	/* https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/scanf-s-scanf-s-l-wscanf-s-wscanf-s-l ;
+	   https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sprintf-s-sprintf-s-l-swprintf-s-swprintf-s-l ;
+	   https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/sscanf-s-sscanf-s-l-swscanf-s-swscanf-s-l ; << this one is used;
+	*//*
+	   https://stackoverflow.com/questions/70511046/parsing-a-string-in-c-with-a-specfic-format << good answer of using std::istringstream;
+	*/
+	struct s_face_fmt {
+		char* p_pat  = 0;   // format pattern;
+		int   expect = 0;   // expected format result: how many variables is gotten;
+
+		s_face_fmt (char* const _p_pat, const int _exp) : p_pat(_p_pat), expect(_exp) {}
+	};
+
+	static s_face_fmt p_face_fmts[] = {
+		{"%d//%d %d//%d %d//%d", 6}, {"%d %d %d", 3} // '%u' is okay because an index is always positive, but if the face string is wrong formatted;
+	};
 
 	class CConverter {
 	public:
 		CConverter (void) {} CConverter (const CConverter&) = delete; CConverter (CConverter&&) = delete; ~CConverter (void) = default;
 
-		bool Get_face (const CPrefx& _pfx, const s_cache& _cached, s_face& _face) {
-			_pfx; _cached; _face;
-			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), "%d//%d %d//%d %d//%d", // the format is vert_ndx/norm_ndx ... vert_ndx/norm_ndx;
-				&_face._indices.at(0).first, &_face._indices.at(0).second,
-				&_face._indices.at(1).first, &_face._indices.at(1).second,
-				&_face._indices.at(2).first, &_face._indices.at(2).second
-			);
-			return (vars == 6);
+		bool Get_desc (const CPrefx& _pfx, const s_cache& _cached, CString& _desc) {
+			_desc; _pfx; _cached;
+			CString cs_cmnt = (_cached.buffer + _pfx.Spec().GetLength()); cs_cmnt.Trim();
+			if (false == cs_cmnt.IsEmpty()) {
+				if (false == _desc.IsEmpty()) _desc += _T("; "); _desc += cs_cmnt;
+			}
+			return (false == cs_cmnt.IsEmpty());
+		}
+
+		bool Get_face (const CPrefx& _pfx, const s_cache& _cached, const bool _norms, s_face& _face) {
+			_pfx; _cached; _face; _norms;
+			if (false){}
+			else if (_norms) {
+			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), p_face_fmts[0].p_pat,
+					&_face._indices.at(0).first, &_face._indices.at(0).second,
+					&_face._indices.at(1).first, &_face._indices.at(1).second,
+					&_face._indices.at(2).first, &_face._indices.at(2).second
+				);
+				return (vars == p_face_fmts[0].expect);
+			} else {
+			const int vars = ::sscanf_s(_cached.buffer + _pfx.Spec().GetLength(), p_face_fmts[1].p_pat,
+					&_face._indices.at(0).first,
+					&_face._indices.at(1).first,
+					&_face._indices.at(2).first
+				);
+				return (vars == p_face_fmts[1].expect);
+			}
+			return false;
 		}
 
 		bool Get_name (const CPrefx& _pfx, const s_cache& _cached, CString& _name) {
-			_name;
+			_name; _pfx; _cached;
 			_name = (_cached.buffer + _pfx.Spec().GetLength()); _name.Trim();
 			return true;
 		}
@@ -68,18 +101,26 @@ err_code CParser::Do (const s_cache& _cached) {
 	if ( false == prefx.Is_valid() ) {
 	}
 	else {
+		s_draw_obj& drw_obj = ::Get_model()._objects.at(0);
 		switch (prefx.Type()) {
-		case e_pfx_type::e_face: { s_face  face; if (::Converter().Get_face(prefx, _cached, face)) ::Get_model()._objects.at(0)._faces.push_back(face);
-			__trace_info_$(_T("%s\n"), (_pc_sz) To_str(face));
+		case e_pfx_type::e_desc: {
+			if (::Converter().Get_desc(prefx, _cached, drw_obj._desc))
+			__trace_info_$(_T("# %s\n"), (_pc_sz) drw_obj._desc);
+		} break;
+		case e_pfx_type::e_face: { s_face  face;
+			if (::Converter().Get_face(prefx, _cached, false == drw_obj._normals.empty(), face)) drw_obj._faces.push_back(face);
+			__trace_info_$(_T("%s\n"), (_pc_sz) CPrint::Face(face));
 		} break;
 		case e_pfx_type::e_group: {
-			CString cs_name; if (::Converter().Get_name(prefx, _cached, cs_name)) ::Get_model()._objects.at(0)._name = cs_name;
+			CString cs_name; if (::Converter().Get_name(prefx, _cached, cs_name)) drw_obj._name = cs_name;
 			__trace_info_$(_T("%s\n"), (_pc_sz) TString().Format(_T("group name: %s"), (_pc_sz)cs_name));
 		} break;
-		case e_pfx_type::e_norm: { normal_t norm; if (::Converter().Get_norm(prefx, _cached, norm)) ::Get_model()._objects.at(0)._vertices.push_back(norm);
-			__trace_info_$(_T("%s\n"), (_pc_sz) To_str(norm));
+		case e_pfx_type::e_norm: { normal_t norm; if (::Converter().Get_norm(prefx, _cached, norm)) drw_obj._normals.push_back(norm);
+			__trace_info_$(_T("%s\n"), (_pc_sz) CPrint::Norm(norm));
 		} break;
-		case e_pfx_type::e_vert: { s_vec_3 vert; ::Converter().Get_vert(prefx, _cached, vert); } break;
+		case e_pfx_type::e_vert: { vertex_t vert; if (::Converter().Get_vert(prefx, _cached, vert)) drw_obj._vertices.push_back(vert);
+			__trace_info_$(_T("%s\n"), (_pc_sz) CPrint::Vert(vert));
+		} break;
 		}
 	}
 
@@ -131,7 +172,7 @@ CPrefx&  CPrefx_enum::Get (const s_cache& _cached) {
 	_cached;
 	// for some values of the first symbol/letter there is no sense to know the next symbol;
 	switch (_cached.buffer[0]) {
-	case '#': return this->m_prefxs.at(size_t(e_pfx_type::e_comm));
+	case '#': return this->m_prefxs.at(size_t(e_pfx_type::e_desc));
 	case 'f': return this->m_prefxs.at(size_t(e_pfx_type::e_face));
 	case 'g': return this->m_prefxs.at(size_t(e_pfx_type::e_group));
 	case 'm': return this->m_prefxs.at(size_t(e_pfx_type::e_mtl));

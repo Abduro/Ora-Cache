@@ -26,7 +26,7 @@ namespace shared { namespace parsers { namespace obj {
 	};
 
 	enum class e_pfx_type : uint32_t {
-		e_comm = 0, e_face, e_group, e_mtl, e_norm, e_space, e_tex_uv, e_vert, e_use_mtl, e_undef
+		e_desc = 0, e_face, e_group, e_mtl, e_norm, e_space, e_tex_uv, e_vert, e_use_mtl, e_undef
 	};
 
 	class CPrefx {

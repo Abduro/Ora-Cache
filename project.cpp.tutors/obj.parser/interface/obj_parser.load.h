@@ -54,6 +54,7 @@ namespace shared { namespace parsers { namespace obj {
 		FILE*  m_p_file;
 	};
 
+	// https://www.allacronyms.com/locator/abbreviated >> LOC/LCTR;
 	class CLocator : public CBase { typedef CBase TBase;
 	public:
 		CLocator (void); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete; ~CLocator (void) = default;
@@ -75,10 +76,14 @@ namespace shared { namespace parsers { namespace obj {
 	public:
 		CReader (void); CReader (const CReader&) = delete; CReader (CReader&&) = delete; ~CReader (void) = default;
 
+		const
+		CLocator& Loc (void) const;
+		CLocator& Loc (void);
 		err_code Read (void);
 
 	private:
 		CReader& operator = (const CReader&) = delete; CReader& operator = (CReader&&) = delete;
+		CLocator m_lctr;
 	};
 
 }}}

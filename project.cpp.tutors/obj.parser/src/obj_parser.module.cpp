@@ -26,10 +26,11 @@ uint32_t _tmain (int argc, _TCHAR* argv[]) {
 using namespace shared::console::events;
 using CSyncObject = shared::sys_core::CSyncObject;
 
-CSyncObject& MsgQuitRef(void) { static CSyncObject crt_sect; return crt_sect; }
+CSyncObject& MsgExtRef(void) { static CSyncObject crt_sect; return crt_sect; }
 
-#define Quit_Safe_Lock() Safe_Lock(MsgQuitRef());
-static bool b_quit = false;
+#define Msg_Safe_Lock() Safe_Lock(MsgExtRef());
+
+static uint32_t g_the_last_cmd = 0;
 
 CTraceConsole _Module;
 
@@ -44,6 +45,47 @@ err_code CTraceConsole::PreMessageLoop (int nShowCmd) {
 		return n_result = __s_ok; // forces to continue working with pumping windows' messages;
 }
 
+#pragma region cls::CCmdHandler{}
+
+CCmdHandler::CCmdHandler (void) : m_fk_wnd(false) { if ((::Get_Shortcut() << IDR_OBJ_PARSER_CTX_MENU_0).Error()) {::__trace_err_ex_2(::Get_Shortcut().Error()); }}
+
+uint32_t CCmdHandler::TrackMenu (void) {
+
+	using CCmd_Handler = shared::console::CCmd_Handler;
+	using e_cmd_ids = shared::console::e_cmd_ids;
+
+	const uint32_t u_cmd_id = ::Get_Shortcut().Track(m_fk_wnd);
+	switch (u_cmd_id) {
+	case CMD_OBJ_PARSER_CON_CLEAR: {
+		CCmd_Handler handler;
+		if (__failed(handler.On_command(e_cmd_ids::e_clear))) {
+			::__trace_err_ex_2(handler.Error());
+		} else {
+			__trace_info_2(_T("command 'Clear console' (%04u) is completed;\n"), u_cmd_id);
+		}
+	} break;
+	case CMD_OBJ_PARSER_CON_CLOSE: {
+		::Get_ConPers().Save();
+		{
+			Msg_Safe_Lock();
+			g_the_last_cmd = u_cmd_id; // signals to main message loop to exit;
+		}
+		__trace_warn_2(_T("command 'Close Console' (%04u) is handled;\n"), u_cmd_id);
+	} break;
+	case CMD_OBJ_FILE_SELECT: {
+		{
+			Msg_Safe_Lock();
+			g_the_last_cmd = u_cmd_id; // indicates that 'Open File' command must be handled;
+		}
+		__trace_warn_2(_T("command 'Open File' (%04u) is handled;\n"), u_cmd_id);
+	} break;
+	default:;
+	}
+	return u_cmd_id;
+}
+
+#pragma endregion
+
 class CHandler : public CHandler_Dflt {
 public:
 	CHandler (void) {}
@@ -57,37 +99,11 @@ public:
 		this->m_btns.Set(_data.dwButtonState);
 
 		if (this->m_btns.Get(VK_RBUTTON).Is_released()) {
-			if ((::Get_Shortcut() << IDR_OBJ_PARSER_CTX_MENU_0).Error()) {::__trace_err_ex_2(::Get_Shortcut().Error()); }
-			else {
-				TFakeWnd  m_fk_wnd(false);
-				const uint32_t u_cmd_id = ::Get_Shortcut().Track(/*TConAccess()*/m_fk_wnd); // doesn't work for direct call to console window;
-				switch (u_cmd_id) {
-				case IDR_OBJ_PARSER_CON_CLEAR: {
-					CCmd_Handler handler;
-					if (__failed(handler.On_command(e_cmd_ids::e_clear))) {
-						::__trace_err_ex_2(handler.Error());
-					} else {
-						__trace_info_2(_T("command 'Clear console' (%04u) is completed;\n"), u_cmd_id);
-					}
-				
-				} break;
-				case IDR_OBJ_PARSER_CON_CLOSE: {
-					::Get_ConPers().Save();
-					{
-						Quit_Safe_Lock();
-						b_quit = true; // signals to main message loop to exit;
-					}
-					__trace_warn_2(_T("command 'Close console' (%04u) is completed;\n"), u_cmd_id);
-				} break;
-				case IDR_OBJ_FILE_SELECT: {
-
-					::shared::sys_core::CCoIniter_auto co_initer;
-
-					CLocator locator;
-					locator.Open();
-				} break;
-				default:;
-				}
+			if (true)
+			{
+				Msg_Safe_Lock();
+				g_the_last_cmd = CMD_OBJ_PARSER_SHOW_CTX;
+				return __s_ok;
 			}
 		}
 		return __s_ok;
@@ -100,8 +116,8 @@ public:
 		_dw_reason; // does not matter;
 		::Get_ConPers().Save();
 		{
-		Quit_Safe_Lock();
-		b_quit = true;
+			Msg_Safe_Lock();
+			g_the_last_cmd = CMD_OBJ_PARSER_CON_CLOSE;
 		}
 		return __s_ok;
 	}
@@ -110,7 +126,7 @@ public:
 		_data; return __s_ok;
 	}
 
-	err_code On_size  (const input::evt_buff_size_t _data) override final {
+	err_code On_size (const input::evt_buff_size_t _data) override final {
 		_data; return __s_ok;
 	}
 private:
@@ -148,7 +164,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(nullptr, 0, 0, 0L);
 
-	MSG msg = {0};
+	::shared::sys_core::CCoIniter_auto co_initer;
 	
 	// before creating the console, the root registry key must be set so as not to interfere with the 'debugging trace' settings;
 	::Get_ConPers().Pos() << CLocator::Root();
@@ -163,17 +179,11 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 		_con.Frame().Caption() << IDS_OBJ_PARSER_CON_CAP;
 	}
 	CHandler_auto handler_auto;
-
+	CReader reader;
+	CCmdHandler cmd_handler;
 	do {
 		if (error.Is()) break;
-#if (0)
-		CLocator locator;
-		if (__failed(locator.Locate())) {
-			::__trace_err_ex_2(error = locator.Error()); 
-			break;
-		}
-#endif
-		CReader reader;
+
 		if (__failed(reader.Read())) {
 			::__trace_err_ex_2(error = reader.Error());
 		}
@@ -181,19 +191,42 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	} while (true == false);
 #if (0) // if an error occurred in one the previous steps, there is no ability to see that error in the console trace, so it is disabled;
 	if (error != false) { // goes to message loop and waits the app window will be closed;
-		Quit_Safe_Lock();
+		Msg_Safe_Lock();
 		b_quit = true;
 	}
 #endif
-	do {
-		Quit_Safe_Lock();
-		if (b_quit)
+	MSG msg = {0};
+	uint32_t u_msg_loc = 0;
+	do {{
+			Msg_Safe_Lock();
+			u_msg_loc = g_the_last_cmd; // makes a quick-copy of the last command global value;
+		}
+		if (u_msg_loc == CMD_OBJ_PARSER_CON_CLOSE)
 			break;
+		if (u_msg_loc == CMD_OBJ_PARSER_SHOW_CTX) {
+			static bool b_track = false;
+			if (b_track)
+				continue;
+			else b_track = true;
+
+			const uint32_t u_cmd_id = cmd_handler.TrackMenu();
+			if (false) {}
+			else if (CMD_OBJ_PARSER_CON_CLOSE == u_cmd_id) break;
+			else if (CMD_OBJ_FILE_SELECT == u_cmd_id) {
+				if (__s_ok == (reader.Loc().Open()))
+				reader.Read();
+			}
+			b_track = false;
+			Msg_Safe_Lock(); g_the_last_cmd = 0;
+		}
 
 		if (::PeekMessage( &msg, 0, 0, 0, PM_REMOVE )) {
 		    ::TranslateMessage( &msg );
 		    ::DispatchMessage ( &msg );
+			if (msg.message == WM_QUIT)
+				break;
 		}
+		
 		::Sleep(10); // it looks like useless;
 	} while( true != false );
 
