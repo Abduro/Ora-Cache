@@ -56,6 +56,12 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 #endif
 	};
 
+	struct s_vec_4 : s_vec_3 {
+		float _w = 1.0f;
+		 s_vec_4 (const float _f_x = 0.0f, const float _f_y = 0.0f, const float _f_z = 0.0f, const float _f_w = 1.0f) : s_vec_3(_f_x, _f_y, _f_z), _w(_f_w) {}
+		~s_vec_4 (void) = default;
+	};
+
 	struct s_tex_info {     // this structure holds the information for a material;
 		uint32_t _id;       // texture identifier;
 		s_vec_2  _offset;   // texture UV offset;
@@ -76,12 +82,18 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 
 	typedef s_vec_3 normal_t;
 	typedef s_vec_3 vertex_t;
+	typedef s_vec_4 quad_t;
+
 	typedef ::std::vector<normal_t> normals_t;
+	typedef ::std::vector<quad_t>   quads_t;
+	typedef ::std::vector<s_vec_3>  verts_t;
 
 	struct s_draw_obj {
 
-		::std::vector<s_vec_3> _vertices;   // object's vertices;
-		::std::vector<s_vec_3> _normals;    // object's normals;
+		normals_t _normals;   // object's normals;
+		quads_t   _quads;     // object's quads;
+		verts_t   _vertices;  // object's vertices;
+		
 		::std::vector<s_vec_2> _uv_coord;   // texture's UV coordinates;
 		::std::vector<s_face>  _faces;      // faces' info;
 
@@ -109,7 +121,10 @@ namespace shared { namespace parsers { namespace obj { using namespace shared::d
 
 		static CString Face (const s_face&);
 		static CString Norm (const normal_t&);
+		static CString Quad (const quad_t&);
 		static CString Vert (const vertex_t&);
+
+		static void Reset (void); // resets indentation value;
 
 	private:
 		CPrint& operator = (const CPrint&) = delete; CPrint& operator = (CPrint&&) = delete;

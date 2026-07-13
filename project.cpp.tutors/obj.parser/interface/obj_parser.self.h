@@ -13,16 +13,24 @@ namespace shared { namespace parsers { namespace obj {
 
 	using CStringA = ::ATL::CStringA;
 
+	struct s_prs_state {
+		bool _vert_fmt_def = false; // this is the attribute indicating the vertex format is selected or not;
+		int  _vert_fmt_ndx = 1;
+		s_prs_state (void) = default; ~s_prs_state (void) = default;
+	};
+
 	class CParser {
 	public:
 		CParser (void); CParser (const CParser&) = delete; CParser (CParser&&) = delete; ~CParser (void) = default;
 
 		err_code Do (const s_cache&);   // parses the cached line of text;
-		TError& Error (void) const;
+		TError&  Error (void) const;
+		err_code Reset (void);          // resets the parser internal state;
 
 	private:
 		CParser& operator = (const CParser&) = delete; CParser& operator = (CParser&&) = delete;
 		CError m_error;
+		s_prs_state m_state;
 	};
 
 	enum class e_pfx_type : uint32_t {
