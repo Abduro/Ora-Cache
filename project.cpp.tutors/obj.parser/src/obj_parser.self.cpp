@@ -188,18 +188,18 @@ bool CPrefx::Is_valid (void) const {
 }
 
 const
-CStringA&  CPrefx::Spec (void) const { return this->m_spec; }
-CStringA&  CPrefx::Spec (void)       { return this->m_spec; }
+CStringA&  CPrefx::Spec (void) const noexcept { return this->m_spec; }
+CStringA&  CPrefx::Spec (void)       noexcept { return this->m_spec; }
 
-e_pfx_type CPrefx::Type (void) const { return this->m_type; }
-err_code   CPrefx::Type (const e_pfx_type _type) {
+e_pfx_type CPrefx::Type (void) const noexcept { return this->m_type; }
+err_code   CPrefx::Type (const e_pfx_type _type) noexcept {
 	_type;
 	this->m_type = _type; return e_pfx_type::e_undef == _type ? __e_inv_arg : __s_ok;
 }
 
-CPrefx& CPrefx::operator = (const CPrefx& _src) { *this << _src.Type() << _src.Spec(); return *this; }
+CPrefx& CPrefx::operator = (const CPrefx& _src)  { *this << _src.Type() << _src.Spec(); return *this; }
 CPrefx& CPrefx::operator <<(const char* _p_spec) { this->Spec() = _p_spec; return *this; }
-CPrefx& CPrefx::operator <<(const e_pfx_type _type) { this->Type(_type); return *this; }
+CPrefx& CPrefx::operator <<(const e_pfx_type _type) { (void)this->Type(_type); return *this; } // warning C4834: discarding return value of function with 'nodiscard' attribute;
 
 CString CPrefx::To_str (void) const {
 	static _pc_sz p_fmt_pat = _T("%s");

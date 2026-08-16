@@ -46,10 +46,10 @@ namespace shared { namespace parsers { namespace obj {
 		bool Is_valid (void) const;
 
 		const
-		CStringA&  Spec (void) const;  // gets specifier reference; (ro)
-		CStringA&  Spec (void) ;       // gets specifier reference; (rw);
-		e_pfx_type Type (void) const;  // gets prefix type, i.e. its identifier;
-		err_code   Type (const e_pfx_type); // sets prefix type, returns err_code if input arg value is e_pfx_type::e_undef;
+		[[nodiscard]] CStringA&  Spec (void) const noexcept;       // gets specifier reference; (ro)
+		[[nodiscard]] CStringA&  Spec (void) noexcept;             // gets specifier reference; (rw);
+		[[nodiscard]] e_pfx_type Type (void) const noexcept;       // gets prefix type, i.e. its identifier;
+		[[nodiscard]] err_code   Type (const e_pfx_type) noexcept; // sets prefix type, returns err_code if input arg value is e_pfx_type::e_undef;
 
 		CPrefx& operator = (const CPrefx&); CPrefx& operator = (CPrefx&&) = delete;
 		CPrefx& operator <<(const char* _p_spec);
