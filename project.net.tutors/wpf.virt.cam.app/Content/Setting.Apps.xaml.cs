@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Fake.Core.UI.Content {
+namespace Virt.Cam.UI.Content {
 	
 	public partial class SettingsAppearance : UserControl {
 

@@ -1,7 +1,7 @@
-﻿<Application x:Class   ="vert.cam.UI.App"
+﻿<Application x:Class   ="Virt.Cam.UI.App"
              xmlns     ="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x   ="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="vert.cam.frame.xaml"
+             StartupUri="Virt.Cam.Frame.xaml"
              >
     <Application.Resources>
         <ResourceDictionary>

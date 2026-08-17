@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Vert.Cam.UI.Pages {
+namespace Virt.Cam.UI.Pages {
 
 	public partial class Settings : UserControl {
 

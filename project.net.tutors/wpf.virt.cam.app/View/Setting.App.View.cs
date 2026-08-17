@@ -3,7 +3,7 @@ using System.Windows.Media ;
 
 using FirstFloor.ModernUI.Presentation;
 
-namespace Vert.Cam.UI.Content
+namespace Virt.Cam.UI.Content
 {
 	/// <summary>
 	/// A simple view model for configuring theme, font and accent colors.
@@ -73,7 +73,7 @@ namespace Vert.Cam.UI.Content
 					this.selectedTheme = this.themes[1];
 			}
 
-			// and make sure accent color is up-to-date
+			// and makes sure accent color is up-to-date;
 			this.SelectedAccentColor = AppearanceManager.Current.AccentColor;
 		}
 
