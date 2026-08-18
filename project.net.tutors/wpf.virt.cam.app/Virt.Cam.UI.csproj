@@ -8,19 +8,17 @@
     <ProjectGuid>{00000C13-EEEE-BBBB-6667-0000001D0007}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sato.Core.UI</RootNamespace>
-    <AssemblyName>Sato.Core.UI</AssemblyName>
+    <RootNamespace>Virt.Cam.UI</RootNamespace>
+    <AssemblyName>Virt.Cam.UI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ebo.sato.prn.man.logo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\virt.cam_blue_512px.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\!bin__\x64\Debug\</OutputPath>
-    <IntermediateOutputPath>..\!can_be_safely_removed__\obj\x64\Debug\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -28,8 +26,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\!bin__\x64\Release\</OutputPath>
-    <IntermediateOutputPath>..\!can_be_safely_removed__\obj\x64\Release\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -39,8 +35,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\!bin__\x86\Debug\</OutputPath>
-    <IntermediateOutputPath>..\!can_be_safely_removed__\obj\x86\Debug\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -48,8 +42,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\!bin__\x86\Release\</OutputPath>
-    <IntermediateOutputPath>..\!can_be_safely_removed__\obj\x86\Release\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -61,21 +53,13 @@
     <Reference Include="Accessibility" />
     <Reference Include="FirstFloor.ModernUI, Version=1.0.9.0, Culture=neutral, PublicKeyToken=bc9b0c37bf06c6a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core.UI.WPF\FirstFloor.ModernUI.dll</HintPath>
-    </Reference>
-    <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Core.QR\Gma.QrCodeNet.Encoding.dll</HintPath>
+      <HintPath>$(SolutionDir)wpf.core\FirstFloor.ModernUI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Windows.Shell">
-      <HintPath>..\Core.UI.WPF\Microsoft.Windows.Shell.dll</HintPath>
+      <HintPath>$(SolutionDir)wpf.core\Microsoft.Windows.Shell.dll</HintPath>
     </Reference>
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="ReachFramework" />
-    <Reference Include="Sato.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\!bin__\Ann\Debug\Sato.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -96,116 +80,32 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Content\Connect.exec.cmd.xaml.cs">
-      <DependentUpon>Connect.exec.cmd.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Picture.send.xaml.cs">
-      <DependentUpon>Picture.send.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Qrcodes.exch.xaml.cs">
-      <DependentUpon>Qrcodes.exch.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Setting.Apps.xaml.cs">
-      <DependentUpon>Setting.Apps.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers\Connect.ui.helper.cs" />
-    <Compile Include="View\Connect.New.View.cs" />
-    <Compile Include="View\Picture.Send.View.cs" />
-    <Compile Include="View\QrCode.Exch.View.cs" />
-    <Compile Include="View\Setting.App.View.cs" />
-    <Page Include="Content\Connect.exec.cmd.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Connect.List.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Connect.New.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Connect.Wait.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Picture.send.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Qrcodes.exch.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Setting.Apps.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Sato.Core.Main.Frame.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Content\Connect.List.xaml.cs">
-      <DependentUpon>Connect.List.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Connect.New.xaml.cs">
-      <DependentUpon>Connect.New.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Connect.Wait.xaml.cs">
-      <DependentUpon>Connect.Wait.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Sato.Core.Main.Frame.xaml.cs">
-      <DependentUpon>Sato.Core.Main.Frame.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Pages\About.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Pages\About.xaml.cs">
-      <DependentUpon>About.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Pages\Home.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Settings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Pages\Home.xaml.cs">
-      <DependentUpon>Home.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
-    </Compile>
+    <ApplicationDefinition Include="App.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></ApplicationDefinition>
+    <Compile Include="App.xaml.cs"><DependentUpon>App.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Compile Include="Content\Setting.App.xaml.cs"><DependentUpon>Setting.App.xaml</DependentUpon></Compile>
+    <Compile Include="Content\Test.Case.0.xaml.cs"><DependentUpon>Test.Case.0.xaml</DependentUpon></Compile>
+    <Compile Include="Pages\Settings.xaml.cs"><DependentUpon>Settings.xaml</DependentUpon></Compile>
+    <Compile Include="Pages\Test.Cases.xaml.cs"><DependentUpon>Test.Cases.xaml</DependentUpon></Compile>
+    <Compile Include="Virt.Cam.Frame.xaml.cs"><DependentUpon>Virt.Cam.Frame.xaml</DependentUpon><SubType>Code</SubType></Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\Stg.Registry.cs" />
+    <Compile Include="Storage\Stg.Registry.Theme.cs" />
+    <Compile Include="View\Setting.App.View.cs" />
+
+    <Page Include="Content\Setting.App.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Page Include="Content\Test.Case.0.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Page Include="Pages\Settings.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Page Include="Pages\Test.Cases.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Page Include="Virt.Cam.Frame.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ebo.sato.prn.man.logo.ico" />
-    <Content Include="Properties\ebo.sato.prn.man.base.ico" />
-    <Resource Include="Resources\typeset.ico.new.40.png" />
+    <Resource Include="Resources\virt.cam_blue_512px.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config">
+    <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

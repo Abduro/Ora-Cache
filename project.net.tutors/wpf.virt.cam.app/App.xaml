@@ -1,18 +1,19 @@
-﻿<Application x:Class   ="Virt.Cam.UI.App"
-             xmlns     ="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x   ="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="Virt.Cam.Frame.xaml"
-             >
-    <Application.Resources>
-        <ResourceDictionary>
-            <!-- WPF 4.0 workaround -->
-            <Style TargetType="{x:Type Rectangle}" />
-            <!-- end of workaround -->
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
-                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml"/>
-                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Application.Resources>
+﻿<Application
+	x:Class    = "Virt.Cam.UI.App"
+	xmlns      = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x    = "http://schemas.microsoft.com/winfx/2006/xaml"
+	StartupUri = "Virt.Cam.Frame.xaml"
+>
+	<Application.Resources>
+		<ResourceDictionary>
+			<!-- WPF 4.0 workaround -->
+			<Style TargetType="{x:Type Rectangle}" />
+			<!-- end of workaround -->
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
+				<ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml"/>
+				<ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
 </Application>

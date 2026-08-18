@@ -15,6 +15,14 @@ namespace Virt.Cam.UI.Content
 
 		// accent colors from metro design principles
 		private readonly Color[] accentColors = new Color[]{
+			Color.FromRgb(0x44, 0x44, 0x44),   // Pale Black;
+		//	Color.FromRgb(0x55, 0x55, 0x55),   // Dark Gray;
+			Color.FromRgb(0x66, 0x66, 0x66),   // Shaded Gray;
+		//	Color.FromRgb(0x77, 0x77, 0x77),   // Medium Gray;
+			Color.FromRgb(0x88, 0x88, 0x88),   // Tinted Gray;
+		//	Color.FromRgb(0x99, 0x99, 0x99),   // Light Gray;
+			Color.FromRgb(0xbb, 0xbb, 0xbb),   // Silver;
+		//	Color.FromRgb(0xdd, 0xdd, 0xdd),   // Shaded White;
 			Color.FromRgb(0x33, 0x99, 0xff),   // blue
 			Color.FromRgb(0x00, 0xab, 0xa9),   // teal
 			Color.FromRgb(0x33, 0x99, 0x33),   // greenF
@@ -23,7 +31,7 @@ namespace Virt.Cam.UI.Content
 			Color.FromRgb(0xff, 0x45, 0x00),   // orange red
 			Color.FromRgb(0xe5, 0x14, 0x00),   // red
 			Color.FromRgb(0xff, 0x00, 0x97),   // magenta
-			Color.FromRgb(0xa2, 0x00, 0xff),   // purple            
+			Color.FromRgb(0xa2, 0x00, 0xff),   // purple
 		};
 
 		private Color  selectedAccentColor;
@@ -45,11 +53,11 @@ namespace Virt.Cam.UI.Content
 
 		public bool IsSaved {
 			get {
-				Fake.Core.UI.Storage.Theme theme = new Fake.Core.UI.Storage.Theme();
+				Virt.Cam.UI.Storage.Theme theme = new Virt.Cam.UI.Storage.Theme();
 				return theme.Mode;
 			}
 			set {
-				Fake.Core.UI.Storage.Theme theme = new Fake.Core.UI.Storage.Theme();
+				Virt.Cam.UI.Storage.Theme theme = new Virt.Cam.UI.Storage.Theme();
 				if (value)
 					theme.Name = selectedTheme.DisplayName;
 				else
@@ -63,7 +71,7 @@ namespace Virt.Cam.UI.Content
 			// it is supposed the theme registry storage is applied on main form creation;
 			if (this.selectedTheme == null) {
 
-				Fake.Core.UI.Storage.Theme theme = new Fake.Core.UI.Storage.Theme();
+				Virt.Cam.UI.Storage.Theme theme = new Virt.Cam.UI.Storage.Theme();
 				string cs_path = theme.Locate.OriginalString;
 				AppearanceManager.Current.ThemeSource = theme.Locate;
 
@@ -97,7 +105,7 @@ namespace Virt.Cam.UI.Content
 					AppearanceManager.Current.ThemeSource = value.Source;
 
 					if (this.IsSaved) {
-						Fake.Core.UI.Storage.Theme theme = new Fake.Core.UI.Storage.Theme {
+						Virt.Cam.UI.Storage.Theme theme = new Virt.Cam.UI.Storage.Theme {
 							Name = selectedTheme.DisplayName
 						};
 					}
