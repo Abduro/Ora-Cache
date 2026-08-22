@@ -31,6 +31,7 @@
  gl.tutor.3.camera     : {00000C13-EEEE-BBBB-6667-A01020000003}
  gl.tutor.3.camera.lib : {00000C13-EEEE-BBBB-6667-A010200C0003}
 
+#pragma region 'solution explorer tree nodes'
  [_shared]             : {00000C13-EEEE-BBBB-6667-F00000000000} 'F' stands for 'Folder';
  [core]                : {00000C13-EEEE-BBBB-6667-F00000000010}
  [debug]               : {00000C13-EEEE-BBBB-6667-F00000000020}
@@ -53,11 +54,13 @@
  [tutor.3.camera]      : {00000C13-EEEE-BBBB-6667-F01020400003}
  [context]             : {00000C13-EEEE-BBBB-6667-F01020501000}
  [procs]               : {00000C13-EEEE-BBBB-6667-F01020502000}
+#pragma endregion
 
  glm                   : {00000C13-EEEE-BBBB-6667-3000000A0000} 'glm' stands for Graphics Library Mathematics;
+
  ebo_test_$$$          : {00000C13-EEEE-BBBB-6667-C00000060000} 'C': component;'6': test project;'#n' - number at the end is priority level;
  ebo_test_$m$          : {00000C13-EEEE-BBBB-6667-C00000060001}
  ebo_test_$d$          : {00000C13-EEEE-BBBB-6667-C00000060002}
-
  ebo_test_$win$.api    : {00000C13-EEEE-BBBB-6667-C00000060003}
+
  [!docs]               : {00000C13-EEEE-BBBB-6667-D00000000000}

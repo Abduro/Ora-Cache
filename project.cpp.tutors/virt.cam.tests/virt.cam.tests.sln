@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.35826.109
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!docs", "!docs", "{00000C13-EEEE-BBBB-6667-D00000000000}"
+	ProjectSection(SolutionItems) = preProject
+		!docs\virt.cam.guid.txt = !docs\virt.cam.guid.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{00000C13-EEEE-BBBB-6667-F00000000000}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{00000C13-EEEE-BBBB-6667-F00000000010}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.0.common", "test.0.common\test.0.common.vcxproj", "{00000C13-EEEE-BBBB-6667-005600000000}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00000C13-EEEE-BBBB-6667-005600000000}.Debug|x64.ActiveCfg = Debug|x64
+		{00000C13-EEEE-BBBB-6667-005600000000}.Debug|x64.Build.0 = Debug|x64
+		{00000C13-EEEE-BBBB-6667-005600000000}.Debug|x86.ActiveCfg = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-005600000000}.Debug|x86.Build.0 = Debug|Win32
+		{00000C13-EEEE-BBBB-6667-005600000000}.Release|x64.ActiveCfg = Release|x64
+		{00000C13-EEEE-BBBB-6667-005600000000}.Release|x64.Build.0 = Release|x64
+		{00000C13-EEEE-BBBB-6667-005600000000}.Release|x86.ActiveCfg = Release|Win32
+		{00000C13-EEEE-BBBB-6667-005600000000}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00000C13-EEEE-BBBB-6667-005600000000} = {00000C13-EEEE-BBBB-6667-F00000000000}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00000C13-EEEE-BBBB-6667-000000000111}
+	EndGlobalSection
+EndGlobal

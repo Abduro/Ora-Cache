@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 21-Aug-2026 at 21:00:48.624, UTC+4, Batumi, Friday;
+	This is virtual camera test solution common property page declaration file; not used yet;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!--how to include one properties' file to other ones:
+<PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)other-settings.props" />
+	Or import a file from a parent/relative directory
+	<Import Project="$([MSBuild]::GetPathOfFileAbove(common.props, $(MSBuildThisFileDirectory)..))" />
+</PropertyGroup>
+  -->
+</Project>

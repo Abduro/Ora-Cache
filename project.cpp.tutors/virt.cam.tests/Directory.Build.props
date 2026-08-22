@@ -1,0 +1,11 @@
+<Project>
+	<!--https://learn.microsoft.com/en-us/visualstudio/ide/how-to-change-the-build-output-directory?view=visualstudio&tabs=cpp-->
+	<!--https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory?view=visualstudio-->
+	<PropertyGroup>
+		<SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
+		<OutDir Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!bin__\x86\$(Configuration)\tutorials\</OutDir>
+		<OutDir Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!bin__\x64\$(Configuration)\tutorials\</OutDir>
+		<IntDir Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(MSBuildProjectName)\</IntDir>
+		<IntDir Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(MSBuildProjectName)\</IntDir>
+	</PropertyGroup>
+</Project>

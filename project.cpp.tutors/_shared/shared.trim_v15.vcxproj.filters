@@ -16,8 +16,8 @@
 
   </ItemGroup>
   <ItemGroup><!--src\_prec-->
-    <ClInclude Include="$(_0)shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
-    <ClCompile Include="$(_1)shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+    <ClInclude Include="shared.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
+    <ClCompile Include="shared.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup><!--registry-->
     <ClInclude Include="$(_0)sys.reg.router.h"><Filter>interface\registry</Filter></ClInclude>

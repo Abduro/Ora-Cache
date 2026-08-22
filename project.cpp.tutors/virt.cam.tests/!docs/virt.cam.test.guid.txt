@@ -1,0 +1,6 @@
+--------------+---------------------------------------+---------------------+
+project name  | GUID                                  | description         |
+--------------+---------------------------------------+---------------------+
+test.0.common   {00000C13-EEEE-BBBB-6667-005600000000}  the common classes' project lib;
+
+test.3.ray      {00000C13-EEEE-BBBB-6667-005600000003}  the project of testing the possible intersection of a ray with ddraw object;
