@@ -11,7 +11,8 @@
 </PropertyGroup>
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$([MSBuild]::GetPathOfFileAbove(virt.cam.tests.props)" />
+	<!--Import Project="$([MSBuild]::GetPathOfFileAbove(virt.cam.tests.props)" /--><!--Does not work for building by VS;-->
+	<Import Project="$(SolutionDir)virt.cam.tests.props"/><!--It works for building by VS;-->
 	<PropertyGroup>
 		<_0>interface\</_0>
 		<_1>src\</_1>

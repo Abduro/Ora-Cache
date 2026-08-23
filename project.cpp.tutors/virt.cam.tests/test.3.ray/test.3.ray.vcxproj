@@ -102,7 +102,7 @@
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN64;App_Manifest=$(Manifest);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -128,7 +128,7 @@
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;App_Manifest=$(Manifest);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Manifest>
       <AdditionalManifestFiles>
@@ -160,7 +160,7 @@
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;App_Manifest=$(Manifest);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -191,7 +191,7 @@
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;NDEBUG;App_Manifest=$(Manifest);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -204,14 +204,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="$([MSBuild]::GetPathOfFileAbove(virt.cam.tests.manifest)" />
+    <!--Manifest Include="$(Manifest)" /-->
+    <Manifest Include="$(Mfst)virt.cam.tests.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_3)win.gui.res.h" />
-    <ResourceCompile Include="$(_3)win.gui.res.rc" />
+    <ClInclude Include="$(Resource)com.test.res.h" />
+    <ResourceCompile Include="$(Resource)com.test.res.rc">
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="$(App_Icon)" />
+    <!--Image Include="$(App_Icon)" /-->
+    <Image Include="$(Icon_Dir)virt.cam_blue_512px.ico"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Common)test.0.common.vcxproj">
