@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 22-Aug-2026 at 18:10:51.361, UTC+4, Batumi, Saturday;
+	This is 'ray and sphere intersection' test project include property page declaration file;
+  -->
+<!--how to include one properties' file to other ones:
+<PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)other-settings.props" />
+	Or import a file from a parent/relative directory
+	<Import Project="$([MSBuild]::GetPathOfFileAbove(common.props, $(MSBuildThisFileDirectory)..))" />
+</PropertyGroup>
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$([MSBuild]::GetPathOfFileAbove(virt.cam.tests.props)" />
+	<PropertyGroup>
+		<_0>interface\</_0>
+		<_1>src\</_1>
+	</PropertyGroup>
+	<PropertyGroup>
+		<IncludePath>$(_0);$(_1);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
+	</PropertyGroup>
+</Project>

@@ -4,11 +4,16 @@
 	This is virtual camera test solution common property page declaration file; not used yet;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<!--how to include one properties' file to other ones:
-<PropertyGroup>
-	<Import Project="$(MSBuildThisFileDirectory)other-settings.props" />
-	Or import a file from a parent/relative directory
-	<Import Project="$([MSBuild]::GetPathOfFileAbove(common.props, $(MSBuildThisFileDirectory)..))" />
-</PropertyGroup>
-  -->
+	<PropertyGroup><!--$(MSBuildThisFileDirectory) always returns a path that ends with a backslash \;-->
+		<Common Condition="'$(Common)'==''">$(MSBuildThisFileDirectory)test.0.common\</Common>
+	</PropertyGroup>
+	<PropertyGroup>
+		<App_Icon Condition="'$(App_Icon)' == ''">$(MSBuildThisFileDirectory)test.0.common\src\resources\Icons\virt.cam_blue_512px.ico</App_Icon>
+	</PropertyGroup>
+	<PropertyGroup>
+		<_0>$(Common)interface</_0>
+	</PropertyGroup>
+	<PropertyGroup><!--it seems very look like a consumer project properties' file must include $(IncludePath) macro at the end of include sequence;-->
+		<IncludePath>$(_0);<!--$(IncludePath)--></IncludePath><!--*important*::it does *not* work in c++ project file!-->
+	</PropertyGroup>
 </Project>
