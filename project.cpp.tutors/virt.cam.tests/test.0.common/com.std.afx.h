@@ -27,6 +27,8 @@
 #pragma warning(disable: 4481)  // nonstandard extension used: override specifier 'override';
 #pragma warning(disable: 4996)  // security warning: function or variable may be unsafe;
 
+#include <atlbase.h>
+
 #ifdef _DEBUG
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>

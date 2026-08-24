@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 24-Aug-2026 at 08:31:24.253, UTC+4, Batumi, Monday;
+	This is virtual camera GUI test application project include property page declaration file;
+  -->
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<Root Condition = "'$(Root)' == ''">$(MSBuildThisFileDirectory)..\</Root>
+		<Test_0 Condition = "'$(Test_0)' == ''">$(Root)test.0.common\</Test_0>
+		<Test_1 Condition = "'$(Test_1)' == ''">$(Root)test.1.fov\</Test_1>
+		<Test_2 Condition = "'$(Test_2)' == ''">$(Root)test.2.matrix\</Test_2>
+		<Test_3 Condition = "'$(Test_3)' == ''">$(Root)test.3.ray\</Test_3>
+		<Test_4 Condition = "'$(Test_4)' == ''">$(Root)test.4.space\</Test_4>
+		<Test_5 Condition = "'$(Test_5)' == ''">$(Root)test.5.facet\</Test_5>
+		<Test_6 Condition = "'$(Test_6)' == ''">$(Root)test.6.fraud\</Test_6>
+	</PropertyGroup>
+	<PropertyGroup>
+		<_0>$(Test_0)interface\</_0>
+		<_1>$(Test_1)interface\</_1>
+		<_2>$(Test_2)interface\</_2>
+		<_3>$(Test_3)interface\</_3>
+		<_4>$(Test_4)interface\</_4>
+		<_5>$(Test_5)interface\</_5>
+		<_6>$(Test_6)interface\</_6>
+	</PropertyGroup>
+	<PropertyGroup>
+		<_i>interface\</_i>
+		<_s>src\</_s>
+		<_r>$(_s)resources\</_r>
+		<_p>$(_r)Icons\</_p>
+	</PropertyGroup>
+	<PropertyGroup>
+		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_i);$(_s);$(_r);$(_p);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
+	</PropertyGroup>
+</Project>

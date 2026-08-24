@@ -2,5 +2,25 @@
 project name  | GUID                                  | description         |
 --------------+---------------------------------------+---------------------+
 test.0.common   {00000C13-EEEE-BBBB-6667-005600000000}  the common classes' project lib;
+test.1.fov      {00000C13-EEEE-BBBB-6667-005600000001}  the project lib for testing a calculation of horizontal field of view of monitor including bezels;
+test.2.matrix   {00000C13-EEEE-BBBB-6667-005600000002}  the project lib for testing a calculation of horizontal field of bezel-less monitor, i.e. its matrix;
+test.3.ray      {00000C13-EEEE-BBBB-6667-005600000003}  the project of testing the possible intersection of a virtual camera ray with draw object;
+test.4.space    {00000C13-EEEE-BBBB-6667-005600000004}  the project of testing 'Calculation of Earth Surface Visible from Space Satellite';
+test.5.facet    {00000C13-EEEE-BBBB-6667-005600000005}  the project of testing 'Determining the Equation of Chamfer Plane of a Part';
+test.6.fraud    {00000C13-EEEE-BBBB-6667-005600000006}  the project of testing 'Exposing Fraud Involving the Weight of Spacecraft';
+test.gui.app    {00000C13-EEEE-BBBB-6667-005600A50500}  'A5050' >> 'A''P''P' >> the desktop GUI test application;
 
-test.3.ray      {00000C13-EEEE-BBBB-6667-005600000003}  the project of testing the possible intersection of a ray with draw object;
+
+Notes from the Google AI Overview
+A chamfer is a flat, sloped edge cut into the corner where two surfaces meet, while a facet is any flat surface or plane on a geometric object,
+often one of many that make up an entire multi-sided shape like a cut gemstone.
+
+Chamfer
+Definition: A specific transitional cut that replaces a sharp 90-degree edge with a single, slanted flat strip.
+Placement : Found strictly along the linear edges or corners of a manufactured part.
+Use       : Done to remove sharp burrs, make parts safer to handle, and help pins or bolts slide easily into holes.
+
+Facet
+Definition: Any distinct, flat planar face on a 3D object.
+Placement : Can cover an entire side of an object, not just the edge (e.g., the multiple flat faces of a diamond or a 3D computer model's low-poly surface).
+Use       : Used in optics, jewelry cutting (gemstones), and 3D computer graphics to define shape and reflect light.

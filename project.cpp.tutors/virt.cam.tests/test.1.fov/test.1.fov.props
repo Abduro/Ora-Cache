@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	Created by Tech_dog (ebontrop@gmail.com) on 22-Aug-2026 at 18:10:51.361, UTC+4, Batumi, Saturday;
-	This is 'Virtual Camera's Ray and Sphere Intersection' test project include property page declaration file;
+	Created by Tech_dog (ebontrop@gmail.com) on 23-Aug-2026 at 11:05:37.449, UTC+4, Batumi, Monday;
+	This is 'monitor horizontal field of view calculation' test project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!--Import Project="$([MSBuild]::GetPathOfFileAbove(virt.cam.tests.props)" /--><!--Does not work for building by VS;-->
 	<Root Condition = "'$(Root)' == ''">$(MSBuildThisFileDirectory)..\</Root><!--this msbuild property is recognizable by command line and VS builds;-->
 	<Import Project="$(Root)virt.cam.tests.props"/><!--common test project is referenced there;-->
 	<PropertyGroup>

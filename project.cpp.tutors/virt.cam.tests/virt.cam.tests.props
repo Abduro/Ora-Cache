@@ -10,10 +10,8 @@
 	<PropertyGroup>
 		<!--vc++ project accepts the direct reference to the file, but the project filter does not;
 		    thus, $(App_Icon) and $(Manifest) are not applied to project file unfortunately;-->
-		<App_Icon Condition="'$(App_Icon)' == ''">$(Common)src\resources\Icons\virt.cam_blue_512px.ico</App_Icon>
-		<Manifest Condition="'$(Manifest)' == ''">$(MSBuildThisFileDirectory)virt.cam.tests.manifest</Manifest>
-		<Resource Condition="'$(Resource)' == ''">$(Common)src\resources\</Resource>
-		<Icon_Dir Condition="'$(Icon_Dir)' == ''">$(Resource)\Icons\</Icon_Dir>
+		<!--App_Icon Condition="'$(App_Icon)' == ''">$(Common)src\resources\Icons\virt.cam_blue_512px.ico</App_Icon-->
+		<!--Manifest Condition="'$(Manifest)' == ''">$(MSBuildThisFileDirectory)virt.cam.tests.manifest</Manifest-->
 		<!--https://www.allacronyms.com/manifest/abbreviated-->
 		<Mfst_Dir Condition="'$(Mfst_Dir)' == ''">$(MSBuildThisFileDirectory)</Mfst_Dir>
 	</PropertyGroup>

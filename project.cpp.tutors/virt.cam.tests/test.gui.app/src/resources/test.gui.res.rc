@@ -1,9 +1,9 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 23-Aug-2026 at 15:48:10.658, UTC+4, Batumi, Sunday;
-	This is virtual camera tests' common resource script file.
+	This is virtual camera tests' app resource script file.
 */
 #include <winresrc.h>
-#include "com.test.res.h"
+#include "test.gui.res.h"
 
 /* https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings ;
    https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers ;
@@ -76,9 +76,9 @@ IDR_APP_ICO ICON    "Icons\\virt.cam_blue_512px.ico"
 // https://learn.microsoft.com/en-us/style-guide/capitalization?source=docs ;
 STRINGTABLE {
 #if defined(WIN64)
-	IDS_APP_CAP  "Virtual Camera %s Test Case App (64-bit)"
+	IDS_APP_CAP  "Virtual Camera Test Case App (64-bit)"
 #else
-	IDS_APP_CAP  "Virtual Camera %s Test Case App (32-bit)"
+	IDS_APP_CAP  "Virtual Camera Test Case App (32-bit)"
 #endif
 }
 
