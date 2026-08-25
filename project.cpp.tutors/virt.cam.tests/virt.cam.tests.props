@@ -4,21 +4,13 @@
 	This is virtual camera test solution common property page declaration file; not used yet;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup><!--$(MSBuildThisFileDirectory) always returns a path that ends with a backslash \;-->
-		<Common Condition="'$(Common)'==''">$(MSBuildThisFileDirectory)test.0.common\</Common>
-	</PropertyGroup>
 	<PropertyGroup>
-		<!--vc++ project accepts the direct reference to the file, but the project filter does not;
-		    thus, $(App_Icon) and $(Manifest) are not applied to project file unfortunately;-->
-		<!--App_Icon Condition="'$(App_Icon)' == ''">$(Common)src\resources\Icons\virt.cam_blue_512px.ico</App_Icon-->
-		<!--Manifest Condition="'$(Manifest)' == ''">$(MSBuildThisFileDirectory)virt.cam.tests.manifest</Manifest-->
-		<!--https://www.allacronyms.com/manifest/abbreviated-->
-		<Mfst_Dir Condition="'$(Mfst_Dir)' == ''">$(MSBuildThisFileDirectory)</Mfst_Dir>
+		<Common Condition="'$(Common)'==''">$(MSBuildThisFileDirectory)test.0.common\</Common>
 	</PropertyGroup>
 	<PropertyGroup>
 		<_0>$(Common)interface</_0>
 	</PropertyGroup>
-	<PropertyGroup><!--it seems very look like a consumer project properties' file must include $(IncludePath) macro at the end of include sequence;-->
+	<PropertyGroup><!--a consumer project properties' file must include $(IncludePath) property at the end of value of <IncludePath> node;-->
 		<IncludePath>$(_0);<!--$(IncludePath)--></IncludePath><!--*important*::it does *not* work in c++ project file!-->
 	</PropertyGroup>
 </Project>

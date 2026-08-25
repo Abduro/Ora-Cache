@@ -92,8 +92,8 @@
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN64;App_Manifest=$(Manifest);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(_r);$(_p);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -186,8 +186,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="$(Common)com.std.afx.h" />
-    <ClCompile Include="$(Common)com.std.afx.cpp" >
+    <ClInclude Include="$(Test_0)com.std.afx.h" />
+    <ClCompile Include="$(Test_0)com.std.afx.cpp" >
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -196,11 +196,11 @@
   </ItemGroup>
   <ItemGroup>
     <!--Manifest Include="$(Manifest)" /-->
-    <Manifest Include="$(Root)virt.cam.tests.manifest" />
+    <Manifest Include="$(_i)tests.gui.app.manifest;" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_r)com.test.res.h" />
-    <ResourceCompile Include="$(_r)com.test.res.rc">
+    <ClInclude Include="$(_r)test.gui.res.h" />
+    <ResourceCompile Include="$(_r)test.gui.res.rc">
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,8 +208,26 @@
     <Image Include="$(_p)virt.cam_blue_512px.ico"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(Common)test.0.common.vcxproj">
+    <ProjectReference Include="$(Test_0)test.0.common.vcxproj">
       <Project>{00000C13-EEEE-BBBB-6667-005600000000}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Test_1)test.1.fov.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-005600000001}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Test_2)test.2.matrix.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-005600000002}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Test_3)test.3.ray.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-005600000003}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Test_4)test.4.space.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-005600000004}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Test_5)test.5.facet.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-005600000005}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(Test_6)test.6.fraud.vcxproj">
+      <Project>{00000C13-EEEE-BBBB-6667-005600000006}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -28,6 +28,7 @@
 #pragma warning(disable: 4996)  // security warning: function or variable may be unsafe;
 
 #include <atlbase.h>
+#include <atlwin.h>
 
 #ifdef _DEBUG
 	#define _CRTDBG_MAP_ALLOC

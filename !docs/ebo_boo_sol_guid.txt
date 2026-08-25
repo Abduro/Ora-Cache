@@ -57,4 +57,6 @@ ora.net.base    : {00000C13-EEEE-BBBB-6667-200000001000}
 ora.net.base.csproj : {00000C13-EEEE-BBBB-6667-0AA000000000}
 ora.net.test.csproj : {00000C13-EEEE-BBBB-6667-CAA000000000}
 
+virt.cam.UI     : {00000C13-EEEE-BBBB-6667-0000001D0007}   FGPS::wpf.client; // is taken from Fake GPS v2 project;
+
 

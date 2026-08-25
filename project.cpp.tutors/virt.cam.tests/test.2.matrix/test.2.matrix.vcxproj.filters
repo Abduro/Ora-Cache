@@ -6,7 +6,7 @@
     <Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-005600000022}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(Common)com.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
-    <ClCompile Include="$(Common)com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+    <ClInclude Include="$(Test_0)com.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
+    <ClCompile Include="$(Test_0)com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
 </Project>

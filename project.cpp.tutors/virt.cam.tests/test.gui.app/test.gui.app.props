@@ -5,7 +5,7 @@
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<Root Condition = "'$(Root)' == ''">$(MSBuildThisFileDirectory)..\</Root>
+		<Root Condition = "'$(Root)' == ''">..\</Root>
 		<Test_0 Condition = "'$(Test_0)' == ''">$(Root)test.0.common\</Test_0>
 		<Test_1 Condition = "'$(Test_1)' == ''">$(Root)test.1.fov\</Test_1>
 		<Test_2 Condition = "'$(Test_2)' == ''">$(Root)test.2.matrix\</Test_2>

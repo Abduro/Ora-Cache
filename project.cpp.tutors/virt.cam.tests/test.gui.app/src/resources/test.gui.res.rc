@@ -56,7 +56,7 @@ END
 
 // https://learn.microsoft.com/en-us/windows/win32/menurc/bitmap-resource ;
 // https://learn.microsoft.com/en-us/windows/win32/menurc/icon-resource ;
-IDR_APP_ICO ICON    "Icons\\virt.cam_blue_512px.ico"
+IDR_APP_ICO ICON    "virt.cam_blue_512px.ico"
 
 /* https://learn.microsoft.com/en-us/windows/win32/menurc/rcdata-resource ;
 
@@ -91,4 +91,4 @@ STRINGTABLE {
    https://blogs.msdn.microsoft.com/junfeng/2007/06/26/rt_manifest-resource-and-isolation_aware_enabled/
 */
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST App_Manifest
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST tests.gui.app.manifest
