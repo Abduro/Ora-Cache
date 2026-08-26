@@ -10,6 +10,12 @@
     <ClCompile Include="com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)common.defs.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)common.defs.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)common.error.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)common.error.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)common.types.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)common.types.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)vec_3.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)vec_3.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

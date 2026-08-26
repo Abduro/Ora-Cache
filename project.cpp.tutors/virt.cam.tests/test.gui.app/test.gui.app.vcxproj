@@ -90,6 +90,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <GenerateManifest>false</GenerateManifest>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(_r);$(_p);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -116,15 +117,12 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <GenerateManifest>false</GenerateManifest>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;App_Manifest=$(Manifest);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
-    <Manifest>
-      <AdditionalManifestFiles>
-      </AdditionalManifestFiles>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -148,6 +146,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <GenerateManifest>false</GenerateManifest>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -179,6 +178,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <GenerateManifest>false</GenerateManifest>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -195,17 +195,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <!--Manifest Include="$(Manifest)" /-->
-    <Manifest Include="$(_i)tests.gui.app.manifest;" />
+    <ClInclude Include="$(_src)test.gui.module.h" />
+    <ClCompile Include="$(_src)test.gui.module.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(_r)test.gui.res.h" />
-    <ResourceCompile Include="$(_r)test.gui.res.rc">
+    <!--Manifest Include="$(Manifest)" /-->
+    <Manifest Include="$(_iface)tests.gui.app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_res)test.gui.res.h" />
+    <ResourceCompile Include="$(_res)test.gui.res.rc">
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <!--Image Include="$(App_Icon)" /-->
-    <Image Include="$(_p)virt.cam_blue_512px.ico"/>
+    <Image Include="$(_ico)virt.cam_blue_512px.ico"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(Test_0)test.0.common.vcxproj">

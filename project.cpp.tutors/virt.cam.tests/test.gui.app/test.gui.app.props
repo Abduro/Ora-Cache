@@ -24,12 +24,12 @@
 		<_6>$(Test_6)interface\</_6>
 	</PropertyGroup>
 	<PropertyGroup>
-		<_i>interface\</_i>
-		<_s>src\</_s>
-		<_r>$(_s)resources\</_r>
-		<_p>$(_r)Icons\</_p>
+		<_iface>interface\</_iface>
+		<_src>src\</_src>
+		<_res>$(_src)resources\</_res>
+		<_ico>$(_res)Icons\</_ico>
 	</PropertyGroup>
 	<PropertyGroup>
-		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_i);$(_s);$(_r);$(_p);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
+		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_iface);$(_src);$(_res);$(_ico);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
 	</PropertyGroup>
 </Project>

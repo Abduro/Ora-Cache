@@ -6,7 +6,7 @@
 */
 #pragma region __includes
 #include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/csimplestringt ;
-#include <atlwin.h>
+#include <atlwin.h>       // https://learn.microsoft.com/en-us/cpp/atl/reference/cwindow-class ;
 #include <atlstr.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class ;
 #include <atlfile.h>      // for loading disk file, e.g. shader source code;
 #include <cstdint>        // for declareing and/or defining data types such as: uint32_t for example;

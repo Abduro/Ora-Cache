@@ -12,9 +12,9 @@
 		<ClCompile Include="$(Test_0)com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
 	</ItemGroup>
 	<ItemGroup>
-		<Manifest Include="$(_i)tests.gui.app.manifest"><Filter>interface</Filter></Manifest>
-		<ClInclude Include="$(_r)test.gui.res.h"><Filter>src\resources</Filter></ClInclude>
-		<ResourceCompile Include="$(_r)test.gui.res.rc"><Filter>src\resources</Filter></ResourceCompile>
-		<Image Include="$(_p)virt.cam_blue_512px.ico"><Filter>src\resources\Icons</Filter></Image>
+		<Manifest Include="$(_iface)tests.gui.app.manifest"><Filter>interface</Filter></Manifest>
+		<ClInclude Include="$(_res)test.gui.res.h"><Filter>src\resources</Filter></ClInclude>
+		<ResourceCompile Include="$(_res)test.gui.res.rc"><Filter>src\resources</Filter></ResourceCompile>
+		<Image Include="$(_ico)virt.cam_blue_512px.ico"><Filter>src\resources\Icons</Filter></Image>
 	</ItemGroup>
 </Project>
