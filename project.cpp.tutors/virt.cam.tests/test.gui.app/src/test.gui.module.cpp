@@ -3,6 +3,7 @@
 	This is virtual camera test cases' desktop GUI app module interface implementation file;
 */
 #include "test.gui.module.h"
+#include "test.gui.res.h"
 
 using namespace ::test::app;
 
@@ -36,15 +37,33 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	::DefWindowProc(nullptr, 0, 0, 0L);
 
 	MSG msg = {0};
-	do {
-		if (::PeekMessage( &msg, 0, 0, 0, PM_REMOVE )) {
-		    ::TranslateMessage( &msg );
-		    ::DispatchMessage ( &msg );
-			if (msg.message == WM_QUIT)
-				break;
-			::Sleep(10);
-		}
-	} while( true != false );
+	CAppWnd app_wnd;
+	if (__failed(app_wnd.Create()))
+			return n_result;
 
+	app_wnd.Frame().Icons() << app_wnd.m_hWnd << IDR_APP_ICO;
+
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagea ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessage ;
+#if (0)
+	while (::PeekMessage( &msg, main_wnd.m_hWnd, 0, 0, PM_REMOVE )) {
+		::TranslateMessage( &msg );
+		::DispatchMessage ( &msg );
+		if (msg.message == WM_QUIT)
+			break;
+		::Sleep(10);
+	}
+#else
+	int32_t n_read = 0;
+	while ((n_read = ::GetMessage(&msg, app_wnd.m_hWnd, 0, 0)) != 0) {
+		if ( -1 == n_read )
+			break;
+		else {
+			::TranslateMessage( &msg );
+			::DispatchMessage ( &msg );
+		}
+	}
+#endif
 	return n_result;
 }

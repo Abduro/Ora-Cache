@@ -6,6 +6,13 @@
 */
 #include <winerror.h>  // h_result definition is kept for this version of the implementation;
 
+#ifndef __e_invalid_arg
+#define __e_invalid_arg E_INVALIDARG
+#define __e_inv_arg   __e_invalid_arg
+#endif
+#ifndef __e_hwnd
+#define __e_hwnd OLE_E_INVALIDHWND
+#endif
 #ifndef __s_ok
 #define __s_ok S_OK
 #endif
