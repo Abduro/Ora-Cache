@@ -5,8 +5,9 @@
 	This is virtual camera test cases' desktop GUI app module interface declaration file;
 */
 #include "common.defs.h"
+#include "test.gui.window.h"
 
-namespace test { namespace draw { using namespace ::test::draw::defs;
+namespace test { namespace app { using namespace ::test::draw::defs;
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/catlexemodulet-class ;
 	class CModule : public ATL::CAtlExeModuleT<CModule> { typedef ATL::CAtlExeModuleT<CModule> TModule;

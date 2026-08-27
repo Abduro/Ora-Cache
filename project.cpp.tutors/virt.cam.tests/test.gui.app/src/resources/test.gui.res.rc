@@ -91,4 +91,4 @@ STRINGTABLE {
    https://blogs.msdn.microsoft.com/junfeng/2007/06/26/rt_manifest-resource-and-isolation_aware_enabled/
 */
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST tests.gui.app.manifest
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST test.gui.app.manifest

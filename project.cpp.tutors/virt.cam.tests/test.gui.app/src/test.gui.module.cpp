@@ -4,7 +4,7 @@
 */
 #include "test.gui.module.h"
 
-using namespace ::test::draw;
+using namespace ::test::app;
 
 CModule _Module;
 
@@ -37,12 +37,12 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	MSG msg = {0};
 	do {
-
 		if (::PeekMessage( &msg, 0, 0, 0, PM_REMOVE )) {
 		    ::TranslateMessage( &msg );
 		    ::DispatchMessage ( &msg );
 			if (msg.message == WM_QUIT)
 				break;
+			::Sleep(10);
 		}
 	} while( true != false );
 
