@@ -4,6 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Jun-2025 at 12:30:07.531, UTC+4, Batumi, Saturday;
 	This is Ebo Pack color theme project include header(s) declaration file;
 */
+#include "shared.defs.h"
 #include <atlbase.h>
 #include <uxtheme.h>
 #include <array>

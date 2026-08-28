@@ -8,6 +8,8 @@
 
 namespace shared { namespace xml { namespace ms {
 
+	using CAtlString = ::ATL::CAtlString;
+
 	class CAttribute {
 	public:
 	    CAttribute (void);

@@ -109,6 +109,7 @@ namespace ex_ui { namespace theme { namespace storage {
 		CError   m_error;
 	};
 
+	using CRegKey = ::ATL::CRegKey;
 	class CRegKey_Ex {
 	public:
 		class CCache {

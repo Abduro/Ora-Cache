@@ -23,6 +23,7 @@ namespace shared { namespace memory
 {
 	using shared::sys_core::CError;
 	using TError  = const CError;
+	using CAtlStringA = ::ATL::CAtlStringA;
 
 	using namespace shared::types;
 
@@ -87,6 +88,10 @@ namespace shared { namespace memory
 	protected:
 		mutable CError m_error; // a mutability is required for methods or functions those do not change the state of this class object: IsValid()...;
 	};
+
+	using CStringA = ::ATL::CStringA;
+	using CStringW = ::ATL::CStringW;
+
 	class CRawData : public  CRawBuffer { typedef CRawBuffer TBase;
 	public:
 		 CRawData (void);

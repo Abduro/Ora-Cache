@@ -169,8 +169,8 @@ err_code CDataProvider::Load  (_pc_sz _p_file_path, const TImgFmt _e_type) {
 	if (__failed(stream.Create(_p_file_path)))
 		return this->m_error = stream.Error();
 
-	CComPtr<IWICBitmapSource>  pSource  = nullptr; // https://learn.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicbitmapsource  ;
-	CComPtr<IWICBitmapDecoder> pDecoder = nullptr; // https://learn.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicbitmapdecoder ;
+	::ATL::CComPtr<IWICBitmapSource>  pSource  = nullptr; // https://learn.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicbitmapsource  ;
+	::ATL::CComPtr<IWICBitmapDecoder> pDecoder = nullptr; // https://learn.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicbitmapdecoder ;
 
 	GUID guid_dec = __guid_null;
 
@@ -200,7 +200,7 @@ err_code CDataProvider::Load  (_pc_sz _p_file_path, const TImgFmt _e_type) {
 	if (0 == nFrameCount)
 		return this->m_error << (err_code) TErrCodes::eData::eUnsupport = _T("There is no image frame");
 
-	CComPtr<IWICBitmapFrameDecode> pFrame = nullptr;
+	::ATL::CComPtr<IWICBitmapFrameDecode> pFrame = nullptr;
 	// https://learn.microsoft.com/en-us/windows/win32/api/wincodec/nf-wincodec-iwicbitmapdecoder-getframe ;
 	n_result = pDecoder->GetFrame(0, &pFrame);
 	if (__failed(n_result))
