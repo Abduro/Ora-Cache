@@ -6,16 +6,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to Geometry Curve project on 17-Feb-2024 at 07:04:17.4393844, UTC+7, Novosibirsk, Saturday;
 */
-#include <atlstr.h>
-#include <strsafe.h>    // ::StringCchVPrintfEx();
-#include <stdlib.h>     // ::_ltoa_s; _tstol;
-
-#include <cstdio>       // std::printf; https://en.cppreference.com/w/cpp/io/c/fprintf
-#include <string>       // std::stoi, std::stol, std::stoll; https://en.cppreference.com/w/cpp/string/basic_string/stol ;
-#include <vector>
-
-#include <combaseapi.h> // CLSIDFromString(); https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring ;
-                        // StringFromGUID2(); https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromguid2 ;
+#include "shared.defs.h"
 #include "shared.types.h"
 #include "shared.str.var.h"
 

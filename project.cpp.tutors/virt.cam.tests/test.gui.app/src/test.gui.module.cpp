@@ -43,7 +43,6 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	app_wnd.Frame().Icons() << app_wnd.m_hWnd << IDR_APP_ICO;
 
-
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagea ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessage ;
 #if (0)

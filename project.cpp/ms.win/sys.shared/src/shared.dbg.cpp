@@ -9,6 +9,7 @@
 namespace shared { namespace dbg {
 
 namespace _impl {
+	using namespace ::shared::types;
 	CString CatToStr (const CTrace::e_category _e_cat) {
 		_e_cat;
 		switch (_e_cat) {

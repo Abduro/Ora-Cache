@@ -4,11 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 5-Feb-2025 at 11:24:55.955, UTC+4, Batumi, Wednesday;
 	This Ebo Pack shared data types declaration file;
 */
-#include <atlbase.h>
-#include <atlstr.h>
-#include <tchar.h>
-#include <cstdint>
-
+#include "shared.defs.h"
 #include "shared.dbg.h"
 
 namespace shared { namespace types {
@@ -49,6 +45,7 @@ namespace shared { namespace types {
 	typedef WPARAM  w_param ;   // for using in win.popup projects;
 
 #endif
+	using CString = ::ATL::CString;
 }}
 
 

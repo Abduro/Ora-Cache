@@ -4,14 +4,12 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 20-Aug-2024 at 20:05:33.2385865, UTC+4, Batumi, Tuesday;
 	This is Ebo pack shared lib _variant_t class string wrapper interface declaration file;
 */
-#include <atlstr.h>
-#include <comutil.h> // _variant_t;
-#include <wtypes.h>  // VARTYPE enum; https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum ;
-
+#include "shared.defs.h"
 #include "shared.types.h"
 namespace shared { namespace common {
 
 	using namespace shared::types;
+	using CString = ::ATL::CString;
 
 	using _var  = _variant_t; // https://learn.microsoft.com/en-us/cpp/cpp/variant-t-class ; 
 	                          // https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-variant ;

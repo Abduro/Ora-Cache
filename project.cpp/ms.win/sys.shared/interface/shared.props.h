@@ -4,8 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 21-Jun-2025 at 04:39:42.954, UTC+4, Batumi, Saturday;
 	This is Ebo Pack generic property interface declaration file;
 */
-#include <atlbase.h>
-#include <stdint.h>
+#include "shared.defs.h"
 #include "shared.types.h"
 #include "shared.preproc.h"
 #include "shared.string.h"

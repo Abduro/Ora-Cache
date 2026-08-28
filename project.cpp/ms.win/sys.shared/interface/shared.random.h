@@ -9,11 +9,7 @@
 	Adopted to Maars TS1 server project on 31-Oct-2015 at 12:15:34p, GMT+7, Phuket, Rawai, Saturday;
 	Adopted to Daya Dimensi Global Task project on 2-Apr-2017 at 02:46:52a, UTC+7, Phuket, Rawai, Sunday;
 */
-#include <limits>
-#include <guiddef.h>
-namespace std {
-#include <time.h>
-}
+#include "shared.defs.h"
 #include "shared.types.h"
 #include "shared.string.h"
 

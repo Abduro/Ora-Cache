@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 26-Aug-2026 at 12:25:11.300, UTC+4, Batumi, Wednesday;
 	This is virtual camera test cases' commom data types declaration file;
 */
-#include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/csimplestringt ;
+#include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl/reference/atl-classes ;
 #include <atlwin.h>       // https://learn.microsoft.com/en-us/cpp/atl/reference/cwindow-class ;
 #include <atlstr.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class ;
 #include <cstdint>

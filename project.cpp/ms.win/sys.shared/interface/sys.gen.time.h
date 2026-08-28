@@ -8,11 +8,7 @@
 	Adopted to FakeGPS driver project on 18-Apr-2020 at 3:40:47a, UTC+7, Novosibirsk, Saturday;
 	Adopted to Geometry Curve project on 18-Feb-2024 at 14:25:42.7173072, UTC+7, Novosibirsk, Sunday;
 */
-#include <atlbase.h>
-#include <atlstr.h>
-namespace std {
-	#include <time.h>
-}
+#include "shared.defs.h"
 #include "shared.preproc.h"
 #include "shared.str.ext.h"
 

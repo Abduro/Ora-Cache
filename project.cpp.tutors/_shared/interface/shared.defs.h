@@ -5,7 +5,7 @@
 	This is Ebo Pack tutorial shared definitions' declaration file;
 */
 #pragma region __includes
-#include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/csimplestringt ;
+#include <atlbase.h>      // https://learn.microsoft.com/en-us/cpp/atl/reference/atl-classes ;
 #include <atlwin.h>       // https://learn.microsoft.com/en-us/cpp/atl/reference/cwindow-class ;
 #include <atlstr.h>       // https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class ;
 #include <atlfile.h>      // for loading disk file, e.g. shader source code;

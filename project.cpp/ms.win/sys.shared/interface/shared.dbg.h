@@ -4,8 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 30-Apr-2025 at 00:09:05.317, UTC+4, Batumi, Wednesday;
 	This is Ebo Pack shared project debug config declarations' file;
 */
-#include <cstdint>
-#include <atltrace.h>
+#include "shared.defs.h"
 #if defined(_DEBUG)
 	// https://en.cppreference.com/w/cpp/language/enum ;
 	enum class e_print : uint32_t {
