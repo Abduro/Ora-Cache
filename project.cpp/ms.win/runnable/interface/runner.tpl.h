@@ -31,7 +31,11 @@
  *                                                                             *
  *******************************************************************************
 */
+#include "shared.defs.h"
+#if (0)
+#undef  _HAS_AUTO_PTR_ETC
 #define _HAS_AUTO_PTR_ETC 1
+#endif
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <memory>
@@ -67,7 +71,7 @@ namespace shared { namespace runnable {
 				)
 		{
 			typedef std::pair<void (T::*)(), T*> CallbackType;
-			std::auto_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
+			::std::unique_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
 
 			if (::QueueUserWorkItem(ThreadProc<T>, ptr_.get(), flags))
 			{
@@ -86,7 +90,7 @@ namespace shared { namespace runnable {
 				)
 		{
 			typedef std::pair<void (T::*)(T*), T*> CallbackType;
-			std::auto_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
+			::std::unique_ptr<CallbackType> ptr_(new CallbackType(pfn, pObject));
 
 			if (::QueueUserWorkItem(ThreadProcEx<T>, ptr_.get(), flags))
 			{
@@ -102,7 +106,7 @@ namespace shared { namespace runnable {
 		{
 			typedef std::pair<void (T::*)(), T*> CallbackType;
 
-			std::auto_ptr<CallbackType> p(static_cast<CallbackType*>(context));
+			::std::unique_ptr<CallbackType> p(static_cast<CallbackType*>(context));
 
 			(p->second->*p->first)();
 			return 0;
@@ -113,7 +117,7 @@ namespace shared { namespace runnable {
 		{
 			typedef std::pair<void (T::*)(T*), T*> CallbackType;
 
-			std::auto_ptr<CallbackType> ptr_(static_cast<CallbackType*>(context));
+			::std::unique_ptr<CallbackType> ptr_(static_cast<CallbackType*>(context));
 
 			(ptr_->second->*ptr_->first)(ptr_->second);
 			return 0;

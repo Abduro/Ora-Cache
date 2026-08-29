@@ -27,6 +27,7 @@ namespace shared { namespace log {
 	using namespace shared::types;
 	using CError  = shared::sys_core::CError;
 	using TError  = const CError;
+	using CAtlString = ::ATL::CAtlString;
 
 	typedef dword thread_id;
 
