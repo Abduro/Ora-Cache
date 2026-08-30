@@ -18,8 +18,14 @@
 		<Image Include="$(_ico)virt.cam_blue_512px.ico"><Filter>src\resources\Icons</Filter></Image>
 	</ItemGroup>
 	<ItemGroup>
+		<ClInclude Include="$(_iface)test.gui.defs.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_src)test.gui.defs.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_src)test.gui.layout.h"><Filter>src</Filter></ClInclude>
+		<ClCompile Include="$(_src)test.gui.layout.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.module.h"><Filter>src</Filter></ClInclude>
 		<ClCompile Include="$(_src)test.gui.module.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_src)test.gui.view.h"><Filter>src</Filter></ClInclude>
+		<ClCompile Include="$(_src)test.gui.view.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.window.h"><Filter>src</Filter></ClInclude>
 		<ClCompile Include="$(_src)test.gui.window.cpp"><Filter>src</Filter></ClCompile>
 	</ItemGroup>

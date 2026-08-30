@@ -17,5 +17,7 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 
 }}
 
+#pragma comment(lib, "sys.err.core_v15.lib")   // system error handling;
+
 
 #endif/*_TEST_GUI_MODULE_H_INCLUDED*/

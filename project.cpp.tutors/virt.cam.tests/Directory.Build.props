@@ -3,6 +3,8 @@
 	<!--https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory?view=visualstudio-->
 	<PropertyGroup>
 		<SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
+		<Shared_Libs Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!bin__\x86\$(Configuration)\</Shared_Libs>
+		<Shared_Libs Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!bin__\x64\$(Configuration)\</Shared_Libs>
 		<OutDir Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!bin__\x86\$(Configuration)\tutorials\</OutDir>
 		<OutDir Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!bin__\x64\$(Configuration)\tutorials\</OutDir>
 		<IntDir Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(MSBuildProjectName)\</IntDir>

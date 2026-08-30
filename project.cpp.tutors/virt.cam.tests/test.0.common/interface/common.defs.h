@@ -8,6 +8,9 @@
 #include "common.error.h"
 
 namespace test { namespace draw { namespace defs { using namespace ::test::data::types;
+
+	using CWindow = ::ATL::CWindow;
+
 }}}
 
 #endif/*_COMMON_DEFS_H_INCLUDED*/

@@ -5,6 +5,20 @@
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
+		<!--Ebo_pack projects' includes must be reviewed;-->
+		<Ebo_pack>$(SolutionDir)..\..\project.cpp\</Ebo_pack>
+		<Geo_2D>$(Ebo_pack)ms.win\uix\geometry\2D\</Geo_2D>
+		<Color>$(Ebo_pack)ms.win\uix\draw\color\</Color>
+		<Error>$(Ebo_pack)ms.win\sys.err.core\</Error>
+		<Popup>$(Ebo_pack)ms.win\uix\popup\</Popup>
+		<Shared>$(Ebo_pack)ms.win\sys.shared\</Shared>
+		<Control>$(Ebo_pack)ms.win.ctl\ctl.base\</Control>
+		<Tabbed>$(Ebo_pack)ms.win.ctl\sfx.tabbed\</Tabbed>
+		<Theme>$(Ebo_pack)ms.win\uix\draw\theme\</Theme>
+		<wtl>$(Ebo_pack)ms.wtl.10\</wtl>
+		<ZBuf>$(Ebo_pack)ms.win\uix\draw\gdi_zbuf\</ZBuf>
+	</PropertyGroup>
+	<PropertyGroup>
 		<Root Condition = "'$(Root)' == ''">..\</Root>
 		<Test_0 Condition = "'$(Test_0)' == ''">$(Root)test.0.common\</Test_0>
 		<Test_1 Condition = "'$(Test_1)' == ''">$(Root)test.1.fov\</Test_1>
@@ -14,6 +28,7 @@
 		<Test_5 Condition = "'$(Test_5)' == ''">$(Root)test.5.facet\</Test_5>
 		<Test_6 Condition = "'$(Test_6)' == ''">$(Root)test.6.fraud\</Test_6>
 	</PropertyGroup>
+	<!--Import Project="$(Root)virt.cam.tests.props"/-->
 	<PropertyGroup>
 		<_0>$(Test_0)interface\</_0>
 		<_1>$(Test_1)interface\</_1>
@@ -30,6 +45,23 @@
 		<_ico>$(_res)Icons\</_ico>
 	</PropertyGroup>
 	<PropertyGroup>
-		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_iface);$(_src);$(_res);$(_ico);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
+		<i_2d>$(Geo_2D)interface\</i_2d>
+		<i_clr>$(Color)interface\</i_clr>
+		<i_compl>$(i_clr)compl\</i_compl>
+		<i_ctrl>$(Control)interface\</i_ctrl>
+		<i_err>$(Error)interface\</i_err>
+		<i_handlers>$(Popup)interface\msg_handlers\</i_handlers>
+		<i_popup>$(Popup)interface\</i_popup>
+		<i_shared>$(Shared)interface\</i_shared>
+		<i_tabs>$(Tabbed)interface\</i_tabs>
+		<i_theme>$(Theme)interface\</i_theme>
+		<i_named>$(Theme)interface\named</i_named>
+		<i_wtl>$(wtl)include\</i_wtl>
+		<i_zbuf>$(ZBuf)interface\</i_zbuf>
+	</PropertyGroup>
+	<PropertyGroup>
+		<externals>$(i_2d);$(i_clr);$(i_compl);$(i_ctrl);$(i_err);$(i_handlers);$(i_popup);$(i_named);$(i_shared);$(i_tabs);$(i_theme);$(i_wtl);$(i_zbuf)</externals>
+		<internals>$(_iface);$(_src);$(_res);$(_ico)</internals>
+		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(internals);$(externals);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
 	</PropertyGroup>
 </Project>

@@ -7,9 +7,9 @@
 	Adopted to Pulsepay project on 21-May-2012 at 12:02:47pm, GMT+3, Rostov-on-Don, Monday;  
 	Adopted to Ebo Pack on 12-Jul-2020 at 8:23:49p, UTC+7, Novosibirsk, Sunday;
 */
+#include "sfx.tabs.inc.h"
 #include "sfx.tabs.fmt.h"
 #include "sfx.tabs.ext.h"
-#include "sfx.tabs.inc.h"
 #include "sfx.tabs.lay.h"
 
 namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
@@ -105,7 +105,6 @@ namespace ST_Ctrls {
 	public:
 		HRESULT      ParentRenderer (IRenderer*  const );
 
-	
 	private: // IControlEvent
 #pragma warning(disable:4481)
 		virtual HRESULT  IControlEvent_OnClick(const UINT ctrlId) override sealed;

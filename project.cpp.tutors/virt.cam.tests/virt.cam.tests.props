@@ -5,12 +5,15 @@
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
+		<Ebo_pack>$(SolutionDir)..\..\project.cpp\</Ebo_pack>
+		<Tabbed>$(Ebo_pack)ms.win.ctl\sfx.tabbed\</Tabbed>
 		<Common Condition="'$(Common)'==''">$(MSBuildThisFileDirectory)test.0.common\</Common>
 	</PropertyGroup>
 	<PropertyGroup>
-		<_0>$(Common)interface</_0>
+		<_0>$(Common)interface\</_0>
+		<_1>$(Tabbed)interface\</_1>
 	</PropertyGroup>
 	<PropertyGroup><!--a consumer project properties' file must include $(IncludePath) property at the end of value of <IncludePath> node;-->
-		<IncludePath>$(_0);<!--$(IncludePath)--></IncludePath><!--*important*::it does *not* work in c++ project file!-->
+		<IncludePath>$(_0);$(_1);<!--$(IncludePath)--></IncludePath><!--*important*::it does *not* work in c++ project file!-->
 	</PropertyGroup>
 </Project>

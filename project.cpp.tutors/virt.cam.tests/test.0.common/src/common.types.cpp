@@ -6,4 +6,4 @@
 
 using namespace ::test::data::types;
 
-namespace test { namespace draw { namespace _impl { void __warning_lnk_4221 (void) {}}}}
+namespace test { namespace data { namespace types { namespace _impl { void __warning_lnk_4221 (void) {}}}}}

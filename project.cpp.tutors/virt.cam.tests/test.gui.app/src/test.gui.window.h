@@ -44,21 +44,10 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 	public:
 		 CAppWnd (void); CAppWnd (const CAppWnd&) = delete; CAppWnd (CAppWnd&&) = delete;
 		~CAppWnd (void);
-
 		static
 		const uint32_t u_style = CS_DBLCLKS/*| CS_OWNDC*/; // cs_owndc is not required: OpenGL rendering context is not used in this project;
 
 		DECLARE_WND_CLASS_EX(_T("test::app::CAppWnd"), u_style, COLOR_ACTIVECAPTION);
-
-		BEGIN_MSG_MAP(CAppWnd)
-			MESSAGE_HANDLER (WM_CLOSE  , OnClose  ) // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-close   ; required for handling [x] close buttom and system menu command;
-			MESSAGE_HANDLER (WM_CREATE , OnCreate ) // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create  ;
-			MESSAGE_HANDLER (WM_DESTROY, OnDestroy) // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy ;
-		END_MSG_MAP()
-	private:
-		l_result OnClose   (const uint32_t, const l_param, const w_param, bool_t& _b_handled);
-		l_result OnCreate  (const uint32_t, const l_param, const w_param, bool_t& _b_handled);
-		l_result OnDestroy (const uint32_t, const l_param, const w_param, bool_t& _b_handled);
 
 	public:
 		err_code Create (void);
@@ -70,6 +59,17 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		bool  Is_valid (void) const;
 
 	private:
+		CAppWnd&  operator = (const CAppWnd&) = delete; CAppWnd& operator = (CAppWnd&&) = delete;
+
+		BEGIN_MSG_MAP("")
+			MESSAGE_HANDLER (WM_CLOSE  , OnClose  ) // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-close   ; required for handling [x] close buttom and system menu command;
+			MESSAGE_HANDLER (WM_CREATE , OnCreate ) // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create  ;
+			MESSAGE_HANDLER (WM_DESTROY, OnDestroy) // https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy ;
+		END_MSG_MAP()
+		l_result OnClose   (const uint32_t, const l_param, const w_param, bool_t& _b_handled);
+		l_result OnCreate  (const uint32_t, const l_param, const w_param, bool_t& _b_handled);
+		l_result OnDestroy (const uint32_t, const l_param, const w_param, bool_t& _b_handled);
+
 		CFrame m_frame;
 	};
 

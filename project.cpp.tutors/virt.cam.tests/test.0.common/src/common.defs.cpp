@@ -6,4 +6,4 @@
 
 using namespace ::test::draw::defs;
 
-namespace test { namespace draw { namespace _impl { void __warning_lnk_4221 (void) {}}}}
+namespace test { namespace draw { namespace defs { namespace _impl { void __warning_lnk_4221 (void) {}}}}}
