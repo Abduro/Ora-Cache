@@ -36,20 +36,18 @@ namespace ebo { namespace boo { namespace gui {
 		ex_ui::controls::sfx::CPane&    Pane (void) const;
 		ex_ui::controls::sfx::CPane&    Pane (void) ;
 #endif
-		const
-		CStatus&  Status (void) const;
-		CStatus&  Status (void) ;
-
 		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;
 		err_code  OnDestroy(void);     // it suould be called from main window destroy event handler;
-		err_code  OnDraw (const HDC, const t_rect& _drw_area);
+		err_code  OnDraw (const HDC, const rect_t& _drw_area);
 		const
 		CPages&   Pages (void) const;
 		CPages&   Pages (void) ;
 		const
 		CWindow&  Parent (void) const; // this is main window handle actually; (ro)
 		CWindow&  Parent (void) ;      // this is main window handle actually; (rw)
-
+		const
+		CStatus&  Status (void) const;
+		CStatus&  Status (void) ;
 		const
 		CSurface& Surface(void) const;
 		CSurface& Surface(void) ;

@@ -58,7 +58,7 @@ namespace ex_ui { namespace controls { namespace properties {
 		~CAlign (void);
 
 	public:
-		void ApplyTo (const t_rect& _rc_available, const t_size& _sz_accept, t_rect& _rc_aligned) const; // applies alignment setting to available rectangle;
+		void ApplyTo (const rect_t& _rc_available, const t_size& _sz_accept, rect_t& _rc_aligned) const; // applies alignment setting to available rectangle;
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif

@@ -34,8 +34,8 @@ namespace shared { namespace types {
 	typedef LPCTSTR   _pc_sz;   // since Win32 there is neither 'long' nor 'near' pointer types;
 	typedef LPTSTR    _p_sz ;
 	typedef LRESULT l_result;   // for using in win.popup projects;
-	typedef POINT   t_point ;   // it just is a base structure for holding point coordinate values;
-	typedef RECT    t_rect  ;   // for using in geometry and window projects;
+	typedef POINT   point_t ;   // it just is a base structure for holding point coordinate values;
+	typedef RECT    rect_t  ;   // for using in geometry and window projects;
 	typedef SIZE    t_size  ;   // it just is a base structure for holding shape size in two dimensional space;
 	typedef TCHAR    t_char ;   // https://learn.microsoft.com/en-us/office/client-developer/outlook/mapi/tchar ;
 	typedef UINT      _uint ;

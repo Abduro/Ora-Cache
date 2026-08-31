@@ -10,7 +10,7 @@ using namespace ex_ui::draw::shade;
 
 namespace ex_ui { namespace draw { namespace shade { namespace _impl {
 
-	bool operator != (const t_point& _lhv, const t_point& _rhv) {
+	bool operator != (const point_t& _lhv, const point_t& _rhv) {
 		return (_lhv.x != _rhv.x || _lhv.y != _rhv.y);
 	}
 
@@ -195,7 +195,7 @@ bool      CVertex::Clr (const TRgbQuad& _quad) {
 	return b_changed;
 }
 const
-t_point   CVertex::Point (void) const { return t_point{this->Raw().x, this->Raw().y}; }
+point_t   CVertex::Point (void) const { return point_t{this->Raw().x, this->Raw().y}; }
 bool      CVertex::Point (const int32_t _x, const int32_t _y) {
 	_x; _y;
 	const bool b_changed = (this->Raw().x != _x || this->Raw().y != _y);
@@ -205,7 +205,7 @@ bool      CVertex::Point (const int32_t _x, const int32_t _y) {
 	}
 	return b_changed;
 }
-bool      CVertex::Point (const t_point& _pt) {
+bool      CVertex::Point (const point_t& _pt) {
 	return this->Point(_pt.x, _pt.y);
 }
 
@@ -239,7 +239,7 @@ TVertex&  CVertex::Raw (void)       { return this->m_vertex; }
 CVertex&  CVertex::operator = (const CVertex& _src) { *this << _src.Raw(); return *this; }
 CVertex&  CVertex::operator = (CVertex&& _victim) { *this = (const CVertex&)_victim; return *this; }
 
-CVertex&  CVertex::operator <<(const t_point& _pt) { this->Point(_pt); return *this; }
+CVertex&  CVertex::operator <<(const point_t& _pt) { this->Point(_pt); return *this; }
 CVertex&  CVertex::operator <<(const TVertex& _vertex) { this->Raw() = _vertex; return *this; }
 
 CVertex::operator const TVertex& (void) const { return this->Raw(); }

@@ -60,7 +60,7 @@ CBorder&  CActiveTab::Get (const _ndx _n_item) {
 const
 TRawBorders& CActiveTab::Raw (void) const { return this->m_borders; }
 
-err_code CActiveTab::Set (const t_rect& _rect) {
+err_code CActiveTab::Set (const rect_t& _rect) {
 	_rect;
 	err_code n_result = __s_ok;
 
@@ -71,9 +71,9 @@ err_code CActiveTab::Set (const t_rect& _rect) {
 	if (0 == n_height || 0 == n_width || 0 > n_active)
 		return n_result = __e_inv_arg;
 #if (0)
-	const t_rect& rect_ = this->m_ctrl.Layout().Rect();
+	const rect_t& rect_ = this->m_ctrl.Layout().Rect();
 #else
-	t_rect rect_ = _rect;
+	rect_t rect_ = _rect;
 	/*
 		the border thickness is required to be taken into account; it would be better to request this control borders, but not is made yet;
 	*/
@@ -394,8 +394,8 @@ bool      CTabs::Height (const uint32_t _n_value) {
 }
 
 const
-t_rect&   CTabs::Ribbon (void) const { return m_ribbon ; }
-err_code  CTabs::Ribbon (const t_rect& _rc_area) {
+rect_t&   CTabs::Ribbon (void) const { return m_ribbon ; }
+err_code  CTabs::Ribbon (const rect_t& _rc_area) {
 
 	err_code n_result = __s_ok;
 
@@ -476,10 +476,10 @@ t_size&   CTabs::Size  (void) const { return m_size; }
 
 void      CTabs::Update(void) {
 
-	const t_rect& rc_area = this->m_ctrl.Layout().Rect(); // gets available rectangle to tabbed control;
-	const t_rect& rc_ribbon = this->Ribbon(); // this rectangle is expected to be calculated properly in accordance with tabs' side;
+	const rect_t& rc_area = this->m_ctrl.Layout().Rect(); // gets available rectangle to tabbed control;
+	const rect_t& rc_ribbon = this->Ribbon(); // this rectangle is expected to be calculated properly in accordance with tabs' side;
 
-	t_rect rc_page = rc_area;
+	rect_t rc_page = rc_area;
 
 	if (this->Sides().IsHorz()) {
 		if (TVertAlign::eBottom == this->Align().Vert().Value()) {
@@ -539,7 +539,7 @@ CPadding& CLayout::Padding(void) const { return this->m_padding; }
 CPadding& CLayout::Padding(void)       { return this->m_padding; }
 
 const
-t_rect&   CLayout::Rect (void) const { return this->m_rect; }
+rect_t&   CLayout::Rect (void) const { return this->m_rect; }
 
 err_code  CLayout::Update (void) {
 
@@ -551,7 +551,7 @@ err_code  CLayout::Update (void) {
 		return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
 	}
 
-	t_rect rc_area = {0};
+	rect_t rc_area = {0};
 
 	if (false == wnd_.GetClientRect(&rc_area)) {
 		return (this->m_error << __METHOD__).Last();
@@ -567,7 +567,7 @@ err_code  CLayout::Update (void) {
 	return n_result;
 }
 
-err_code  CLayout::Update (const t_rect& _rc_area) {
+err_code  CLayout::Update (const rect_t& _rc_area) {
 	_rc_area;
 	if (::IsRectEmpty(&_rc_area))
 		return this->m_error << __METHOD__ << __e_rect;
@@ -576,7 +576,7 @@ err_code  CLayout::Update (const t_rect& _rc_area) {
 	if (false == wnd_.IsWindow())
 		return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
 
-	t_rect rc_area_ = ((*this) = _rc_area);
+	rect_t rc_area_ = ((*this) = _rc_area);
 
 	if (false == wnd_.SetWindowPos(0, &rc_area_, SWP_NOACTIVATE|SWP_NOZORDER))
 		return (this->m_error << __METHOD__).Last();
@@ -590,11 +590,11 @@ ex_ui::controls::sfx::tabbed::layout::CTabs&    CLayout::Tabs (void)        { re
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout&  CLayout::operator<<(const t_rect& _rc_area) { this->Update(*this = _rc_area); return *this; }
+CLayout&  CLayout::operator<<(const rect_t& _rc_area) { this->Update(*this = _rc_area); return *this; }
 
-t_rect    CLayout::operator =(const t_rect& _rc_area) const {
+rect_t    CLayout::operator =(const rect_t& _rc_area) const {
 	
-	t_rect rc_ = {0};
+	rect_t rc_ = {0};
 
 	if (::IsRectEmpty(&_rc_area)) {
 		this->m_error << __METHOD__ << __e_rect;

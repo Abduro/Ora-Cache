@@ -41,7 +41,7 @@ err_code  CTracker::OnCreate (const CTab& _tab) {
 
 	layout::CTrack& track = ::shared::Get_Layout().Tracks().Get(_tab.Index());
 
-	const t_rect track_rect = track.GetPos(_tab);
+	const rect_t track_rect = track.GetPos(_tab);
 	if (::IsRectEmpty(&track_rect))
 		return this->m_error = track.Error();
 

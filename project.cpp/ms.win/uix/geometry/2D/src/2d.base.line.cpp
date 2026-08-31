@@ -107,7 +107,7 @@ bool CLine::Set (const CPoint& _begin, const CPoint& _end) {
 	return b_changed;
 }
 
-bool CLine::Set (const t_rect& _rect) {
+bool CLine::Set (const rect_t& _rect) {
 	_rect;
 	bool b_changed = false;
 
@@ -135,7 +135,7 @@ CLine&  CLine::operator <<(const uint8_t& _n_thick) { this->Thickness(_n_thick);
 CLine&  CLine::operator <<(const CPoint& _begin) { this->Begin() = _begin; return *this; }
 CLine&  CLine::operator >>(const CPoint& _end) { this->End() = _end; return *this; }
 
-CLine&  CLine::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
+CLine&  CLine::operator <<(const rect_t& _rect) { this->Set(_rect); return *this; }
 
 CLine&  CLine::operator = (const CLine& _src) {
 	*this << _src.Begin() >> _src.End() << _src.Thickness() << _src.Color(); return *this;

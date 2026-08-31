@@ -308,7 +308,7 @@ dword     CError::Code  (void) const     { return (dword)m_state; }
 void      CError::Code  (const dword _v) { ((CErr_Base&)m_state) = _v;
 	this->State() = (_pc_sz)(CErr_Fmt() << (CErr_Pattern() << CErr_Pattern::e_line) << *this);
 }
-_pc_sz    CError::Desc  (void) const     { return m_state; }
+_pc_sz    CError::Desc  (void) const { return m_state; }
 bool      CError::Is    (void) const { return ((bool)m_state == true); }
 err_code  CError::Last  (void)       { m_state.Set(::GetLastError()) ;  return *this; }
 TLangRef& CError::Lang  (void) const { return m_state;   }
@@ -377,7 +377,6 @@ dword     CError::Show  (const HWND _h_owner) const {
 CErr_State& CError::State (void)       { return m_state; }
 TErr_State& CError::State (void) const { return m_state; }
 
-#if defined(_DEBUG) || defined(TRUE)
 CString CError::Print (const e_print e_opt) const {
 
 	static _pc_sz lp_sz_pat_a = _T("cls::[%s]>>{state=[%s];context=[%s::%s()]}");
@@ -386,13 +385,12 @@ CString CError::Print (const e_print e_opt) const {
 	static _pc_sz lp_sz_pat_r = _T("cls::[%s]>>{code=0x%04x;result=0x%x;desc='%s';context=%s::%s()}");
 
 	CString cs_out;
-	if (e_print::e_all == e_opt) cs_out.Format(lp_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)this->State().Print(), this->Class(), this->Method());
-	if (e_print::e_base == e_opt) cs_out.Format(lp_sz_pat_b, (_pc_sz)__CLASS__, this->Code(), this->Result(), this->Desc());
-	if (e_print::e_ctx == e_opt) cs_out.Format(lp_sz_pat_c, (_pc_sz)__CLASS__, this->Class(), this->Method());
-	if (e_print::e_req == e_opt) cs_out.Format(lp_sz_pat_r, (_pc_sz)__CLASS__, this->Code(), this->Result(), this->Desc(), this->Class(), this->Method());
+	if (e_print::e_all == e_opt)  cs_out.Format(lp_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)this->State().Print(), this->Class(), this->Method());
+	if (e_print::e_base == e_opt) cs_out.Format(lp_sz_pat_b, (_pc_sz)__CLASS__, this->Code() , this->Result(), this->Desc());
+	if (e_print::e_ctx == e_opt)  cs_out.Format(lp_sz_pat_c, (_pc_sz)__CLASS__, this->Class(), this->Method());
+	if (e_print::e_req == e_opt)  cs_out.Format(lp_sz_pat_r, (_pc_sz)__CLASS__, this->Code() , this->Result(), this->Desc(), this->Class(), this->Method());
 	return  cs_out;
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -400,7 +398,7 @@ CError& CError::operator<<(const err_code _hr)  {  this->Result(_hr);       retu
 CError& CError::operator<<(const CString& _method) { *this << _method.GetString(); return *this; }
 CError& CError::operator<<(_pc_sz _p_method)  {  this->Method(_p_method); return *this; }
 
-CError& CError::operator= (const _com_error& err_ref) {
+CError& CError::operator = (const _com_error& err_ref) {
 	err_ref;
 	this->State().Set( // TODO: what is about this one: this->State() << _com_error()?
 		err_ref.Error(), (_pc_sz) err_ref.Description()
@@ -410,30 +408,28 @@ CError& CError::operator= (const _com_error& err_ref) {
 	return *this;
 }
 
-CError& CError::operator= (const CError& _err) {
+CError& CError::operator = (const CError& _err) {
 	_err;
-	this->State()   = _err.State();
-
+	this->State() = _err.State();
 	Safe_Lock(m_state);
-
-	this->m_method  = _err.m_method;
+	this->m_method = _err.m_method;
 
 	if (_err.m_class.IsEmpty() == false)
 		this->m_class  = _err.m_class;
 
 	return *this;
 }
-CError& CError::operator= (const dword  _code) { (m_state).Set(_code); return *this; }
-CError& CError::operator= (const err_code  _hr) { (m_state).Set(_hr); return *this; }
-CError& CError::operator= (_pc_sz  _p_desc  ) { this->State() = _p_desc; return *this; }
-CError& CError::operator>>(_pc_sz  _p_class ) { this->Class(_p_class, true); return *this; }
-CError& CError::operator>>(const CString& _class) { *this >> _class.GetString(); return *this; }
+CError& CError::operator = (const dword  _code) { (m_state).Set(_code); return *this; }
+CError& CError::operator = (const err_code  _hr) { (m_state).Set(_hr); return *this; }
+CError& CError::operator = (_pc_sz  _p_desc  ) { this->State() = _p_desc; return *this; }
+CError& CError::operator >>(_pc_sz  _p_class ) { this->Class(_p_class, true); return *this; }
+CError& CError::operator >>(const CString& _class) { *this >> _class.GetString(); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CError::operator const bool(void) const { return this->Is();     }
-CError::operator err_code   (void) const { return this->Result(); }
-CError::operator _pc_sz   (void) const { return this->Desc();   }
+CError::operator err_code  (void) const { return this->Result(); }
+CError::operator _pc_sz    (void) const { return this->Desc();   }
 
 /////////////////////////////////////////////////////////////////////////////
 

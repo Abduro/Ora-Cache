@@ -6,7 +6,7 @@
 
 using namespace ex_ui::draw::images;
 
-namespace ex_ui { namespace draw { namespace images { namespace _impl { void __warning_lnk_4221 (void) {}}}}}
+namespace ex_ui { namespace draw { namespace images { namespace _impl { void _f_warning_lnk_4221 (void) {}}}}}
 
 CImageType:: CImageType (void) {} CImageType::CImageType (const e_format _e_fmt) : CImageType() { *this << _e_fmt; }
 CImageType::~CImageType (void) {}

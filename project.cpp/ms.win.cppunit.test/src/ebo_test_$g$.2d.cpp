@@ -8,7 +8,7 @@ using namespace ebo::boo::test::_2D;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ebo { namespace boo { namespace test { void __warning_lnk_4221 (void) {}}}}
+namespace ebo { namespace boo { namespace test { void _1c_warning_lnk_4221 (void) {}}}}
 
 /////////////////////////////////////////////////////////////////////////////
 

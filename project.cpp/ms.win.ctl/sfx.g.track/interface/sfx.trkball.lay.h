@@ -37,7 +37,7 @@ namespace layout {}
 		err_code  Pref_Sz(const t_size&); // sets preferable size of this control; the rule: must be a square and each size not less than 64px;
 
 		err_code  Update (void) ;
-		err_code  Update (const t_rect& _rc_area);
+		err_code  Update (const rect_t& _rc_area);
 
 	private:
 		CLayout&  operator = (const CLayout&) = delete;
@@ -50,7 +50,7 @@ namespace layout {}
 		CMargins  m_margins;
 		CPadding  m_padding;
 		t_size    m_pref_sz;
-		t_rect    m_rect  ;  // cached client area rectangle;
+		rect_t    m_rect  ;  // cached client area rectangle;
 	};
 
 }}}}

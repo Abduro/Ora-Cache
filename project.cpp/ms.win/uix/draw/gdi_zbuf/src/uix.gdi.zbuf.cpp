@@ -175,10 +175,10 @@ err_code   CSurface::ApplyTo(const HDC _h_mem_dc) {
 	return this->Error();
 }
 const
-t_rect&    CSurface::Area (void) const { return this->m_rc_draw; }
-t_rect&    CSurface::Area (void)       { return this->m_rc_draw; }
+rect_t&    CSurface::Area (void) const { return this->m_rc_draw; }
+rect_t&    CSurface::Area (void)       { return this->m_rc_draw; }
 
-err_code   CSurface::Create (const HDC _h_origin, const t_rect& _rc_draw) {
+err_code   CSurface::Create (const HDC _h_origin, const rect_t& _rc_draw) {
 	_h_origin; _rc_draw;
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -248,12 +248,12 @@ HBITMAP&   CSurface::New  (void)       { return this->m_surface[1]; }
 /////////////////////////////////////////////////////////////////////////////
 
 CZBuffer:: CZBuffer (void) : m_origin(nullptr), m_mode(*this) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
-CZBuffer:: CZBuffer (const HDC _h_origin, const t_rect& _rc_draw) : CZBuffer() { this->Create(_h_origin, _rc_draw); }
+CZBuffer:: CZBuffer (const HDC _h_origin, const rect_t& _rc_draw) : CZBuffer() { this->Create(_h_origin, _rc_draw); }
 CZBuffer::~CZBuffer (void) { this->Reset(); }
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CZBuffer::Create (const HDC _h_origin, const t_rect& _rc_draw)  {
+err_code  CZBuffer::Create (const HDC _h_origin, const rect_t& _rc_draw)  {
 	_h_origin; _rc_draw;
 	err_code n_result = __s_ok;
 
@@ -285,7 +285,7 @@ err_code  CZBuffer::Reset (void){
 
 	if (this->m_surface.Prev()) {
 		// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt ;
-		const t_rect& rc_draw = this->m_surface.Area();
+		const rect_t& rc_draw = this->m_surface.Area();
 
 		const bool b_result = !!::BitBlt(
 		/*  the surface object that is applied to this in-memory device context sets the view port to 0:0,
@@ -409,10 +409,10 @@ err_code  CZBuffer::Draw (const CLine& _line, const rgb_color _clr) {
 }
 
 err_code  CZBuffer::Draw (const CRect& _rect, const TRgbQuad& _clr) {
-	return this->Draw((const t_rect&)_rect, _clr);
+	return this->Draw((const rect_t&)_rect, _clr);
 }
 
-err_code  CZBuffer::Draw (const t_rect& _rect, const TRgbQuad& _clr) {
+err_code  CZBuffer::Draw (const rect_t& _rect, const TRgbQuad& _clr) {
 	_rect; _clr;
 	err_code n_result = __s_ok;
 
@@ -449,8 +449,8 @@ err_code  CZBuffer::Draw (const t_rect& _rect, const TRgbQuad& _clr) {
 
 		CBlender blender;
 		blender.Func().PerPixelAlpha(false, rgb_value(int32_t(0xff * _clr.A() / 100)));
-		blender.Out() << this->m_origin << (const t_rect&)_rect;
-		blender.Src() << TDC::m_hDC << (const t_rect&)_rect;
+		blender.Out() << this->m_origin << (const rect_t&)_rect;
+		blender.Src() << TDC::m_hDC << (const rect_t&)_rect;
 
 		if (__failed(blender.Draw()))
 			n_result = this->m_error = blender.Error();
@@ -459,7 +459,7 @@ err_code  CZBuffer::Draw (const t_rect& _rect, const TRgbQuad& _clr) {
 	return n_result;
 }
 
-err_code  CZBuffer::Draw (const t_rect& _rect, const rgb_color _clr) {
+err_code  CZBuffer::Draw (const rect_t& _rect, const rgb_color _clr) {
 	_rect; _clr;
 	err_code n_result = __s_ok;
 
@@ -514,7 +514,7 @@ err_code  CZBuffer::Draw (const CDrawText& _text, const h_font& _fnt) {
 		n_result = (this->m_error << __METHOD__).Last();
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext ;
-	if (0 == ::DrawText(TDC::m_hDC, _text.Text().GetString(), -1, const_cast<t_rect*>(&_text.Out_to()), _text.Format().Get()))
+	if (0 == ::DrawText(TDC::m_hDC, _text.Text().GetString(), -1, const_cast<rect_t*>(&_text.Out_to()), _text.Format().Get()))
 		n_result = (this->m_error <<__METHOD__).Last();
 
 	TDC::RestoreDC(nSave);

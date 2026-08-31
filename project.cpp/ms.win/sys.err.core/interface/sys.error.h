@@ -1,5 +1,5 @@
-#ifndef _SHAREDLITESYSTEMERROR_H_INCLUDED
-#define _SHAREDLITESYSTEMERROR_H_INCLUDED
+#ifndef _SYS_ERROR_H_INCLUDED
+#define _SYS_ERROR_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 07-Jan-2010 at 6:50:29pm, GMT+3, Rostov-on-Don, Thursday;
 	This is Row27 project data model error class declaration file.
@@ -13,14 +13,9 @@
 #include <comdef.h> // https://learn.microsoft.com/en-us/cpp/cpp/com-error-class ;
 #include <map>
 
-#include "shared.preproc.h" // playing with some preprocessor definitions;
-#include "shared.string.h"  // it is just the string of some extended version;
-
 #include "shared.types.h"   // typedefs from shared::types;
-
-#include "sys.sync_obj.h"   // included for trying to make error object available to work in multithreaded environment;
 #include "sys.err.codes.h"  // for converting winapi system error codes to handle result;
-
+#include "sys.sync_obj.h"   // included for trying to make error object available to work in multithreaded environment;
 /*
 	error C7525: inline variables require at least '/std:c++17'
 	this error is removed by following setting the attribute of this project:
@@ -30,14 +25,14 @@
 	</Compile>
 	...
 */
-
+#include "shared.preproc.h" // playing with some preprocessor definitions;
 namespace shared { namespace sys_core {
 
 	using namespace shared::types;
 
 	struct CLang {
-		dword  dwPrimary;  // primary language Id
-		dword  dwSecond;   // sub-language Id
+		dword  dwPrimary;  // primary language Id;
+		dword  dwSecond;   // sub-language Id;
 
 		CLang(void) : dwPrimary(LANG_NEUTRAL), dwSecond(SUBLANG_DEFAULT) {}
 		CLang(const dword _primary, const dword _second) : dwPrimary(_primary), dwSecond(_second) {}
@@ -54,21 +49,16 @@ namespace shared { namespace sys_core {
 		CLang         m_lang   ;
 		CSyncObject   m_lock   ;
 
-	public:
 		CErr_Base(void);
 		CErr_Base(const dword  dwError, const CLang&);
 		CErr_Base(const err_code hError, const CLang&);
-#if defined(_DEBUG)
 	public:
 		CString Print (void) const;
-#endif
 
-	public:
-		CErr_Base& operator= (const dword   _code)    ;    // sets error result from win 32 error code;
-		CErr_Base& operator= (const err_code _hres)   ;    // sets error result; S_OK is acceptable;
-		CErr_Base& operator= (TLangRef) ;
+		CErr_Base& operator= (const dword   _code);  // sets error result from win 32 error code;
+		CErr_Base& operator= (const err_code _hres); // sets error result; S_OK is acceptable;
+		CErr_Base& operator= (TLangRef);
 
-	public:
 		operator dword    (void) const;   // gets error state Win API code;
 		operator err_code (void) const;   // gets error state of execution result;
 		operator TLangRef (void) const;   // gets error description language;
@@ -103,37 +93,33 @@ namespace shared { namespace sys_core {
 		CString  m_space ;  // name space full path; mostly used for global functions that is defined outside of structure or class; 
 	};
 #endif
+	// https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes ;
 	class CErr_State : public CErr_Base {
 	                  typedef CErr_Base TBase;
 	protected:
-		CString    m_buffer; // error details' buffer;
+		CString m_buffer; // error details' buffer;
 
 	public:
 		 CErr_State (void);
 		 CErr_State (const CErr_State&);
 		~CErr_State (void);
 
-	public:
 		_pc_sz  Get (void) const;        // gets error state details;
 		void    Set (const bool _reset); // if _reset is true, error state is OLE_E_BLANK; otherwise, the state is set to false (i.e. S_OK);
-		void    Set (const dword   _err_code);
-		void    Set (const dword   _err_code, _pc_sz _lp_sz_desc, ...); // sets the object state manually;
-		void    Set (const dword   _err_code, const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
+		void    Set (const dword    _err_code);
+		void    Set (const dword    _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
+		void    Set (const dword    _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
 		void    Set (const err_code _err_code); // sets error code and updates error description;
-		void    Set (const err_code _err_code, _pc_sz _lp_sz_desc, ...); // sets the object state manually;
-		void    Set (const err_code _err_code, const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
+		void    Set (const err_code _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
+		void    Set (const err_code _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
 		void    Set (_pc_sz  _sz_desc)     ; // sets a state description;
 		void    Set (_pc_sz  _sz_desc, ...); // sets a state description from pattern and multiple arguments;
 
-#if defined(_DEBUG)
 		CString Print (void) const;      // not thread-safe;
-#endif
 
-	public:
 		operator bool    (void) const;   // returns TRUE when state indicates a ***failure*** (i.e. is not S_OK);
 		operator _pc_sz  (void) const;   // gets error state details;
 
-	public:
 		CErr_State&   operator= (const bool _reset); // if _reset is true, error state is a failure ; otherwise, the state is false (i.e. S_OK);
 		CErr_State&   operator= (const CErr_State&);
 		CErr_State&   operator= (_pc_sz  _sz_desc);
@@ -152,16 +138,16 @@ namespace shared { namespace sys_core {
 	class CError {
 	public:
 		 CError(void);
-		 CError(const CError&);
+		 CError(const CError&);  CError (CError&&) = delete;
+		 CError (_pc_sz _p_cls, _pc_sz _p_method, const err_code _n_err_code = __s_ok);
+		 CError (const CString& _cs_cls, const CString& _cs_method, const err_code _n_err_code); // this is the most suitable for preprocessor directives;
 		~CError(void);
 
-	public:
 		virtual
 		err_code    Result(const err_code _new); // sets new error state result and returns a previous one;
 
-	public:
 		_pc_sz      Class (void) const ;                              // gets the error source class name;
-		void        Class (_pc_sz)    ;                               // sets the error source class name;
+		void        Class (_pc_sz)     ;                              // sets the error source class name;
 		void        Class (_pc_sz _lp_class, const bool bFormatted);  // sets the error source class name;
 		void        Clear (void)       ;        // sets the error object to success state, i.e. no error state;
 		dword       Code  (void) const ;        // gets Win API error code;
@@ -177,7 +163,7 @@ namespace shared { namespace sys_core {
 		dword       Show  (const HWND  = ::GetActiveWindow()) const;
 		CErr_State& State (void)       ;
 		TErr_State& State (void) const ;
-#if defined(_DEBUG)
+
 		enum e_print {
 		     e_all  = 0, // prints all parts of the error including: error base, error state, error context;
 		     e_base = 1, // prints error base content: win32 code, h_result, description;
@@ -185,28 +171,32 @@ namespace shared { namespace sys_core {
 		     e_req  = 3, // prints error code, result, description, class and method names;
 		};
 		CString Print (const CError::e_print = CError::e_print::e_all) const;
-#endif
 
-	public:
-		CError& operator= (const _com_error&);    // sets error info from COM error object;
-		CError& operator= (const CError&)    ;    // sets error info from other error object;
-		CError& operator= (const dword _code);    // sets error result from win 32 error code;
-		CError& operator= (const err_code _hr);   // sets error result; S_OK is acceptable;
-		CError& operator= (_pc_sz _lp_desc );     // sets error description;
+		CError& operator= (const _com_error&);      // sets error info from COM error object;
+		CError& operator= (const CError&)    ;      // sets error info from other error object;
+		CError& operator= (const dword _code);      // sets error result from win 32 error code;
+		CError& operator= (const err_code _hr);     // sets error result; S_OK is acceptable;
+		CError& operator= (_pc_sz _lp_desc );       // sets error description;
 
-	public:
+		// ToDo: there is some mess with assignment operators; needs to be reviewed;
 		CError& operator<<(const err_code _hr);     // sets error result; intended for using in routines for error initial state set;
 		CError& operator<<(const CString& _method); // sets method name the error occurs in; 
 		CError& operator>>(const CString& _class) ; // sets class name that is the source of the error;
 		CError& operator<<(_pc_sz _p_method);       // sets error method;
 		CError& operator>>(_pc_sz _p_class );       // sets error source; intended for using in routines for error initial state set;
 
-	public:
 		operator const bool  (void) const ;    // returns true if error object is ***IN*** error state, otherwise false;
 		operator err_code    (void) const ;    // returns error result;
 		operator _pc_sz      (void) const ;    // returns error description;
 		operator CErr_State& (void)       ;    // returns error state (rw) ;
 		operator TErr_State& (void) const ;    // returns error state (ra) ;
+
+		enum e_cmds : uint32_t {
+		e_do_nothing = 0x0,
+		e_get_last   = 0x1,   // performs command this::Last() for getting last system error code and its description;
+		};
+
+		CError&  operator () (const e_cmds _n_cmd); // executes command specified through input arg;
 	
 	protected:
 		mutable
@@ -219,7 +209,7 @@ namespace shared { namespace sys_core {
 	bool operator!=(const bool _lhs, const CError& _rhs);
 	bool operator==(const CError& _lhs, const bool _rhs);
 	bool operator!=(const CError& _lhs, const bool _rhs);
-#if (1)
+
 	class CErr_Format {
 	protected:
 		const
@@ -229,16 +219,14 @@ namespace shared { namespace sys_core {
 		 CErr_Format (const CError&);
 		~CErr_Format (void);
 
-	public:
 		CString   Do  (_pc_sz _lp_sz_sep = NULL) const; // gets formatted string: {code|@sep|description|@sep|module|@sep|source};
 		CString   Do_2(_pc_sz _lp_sz_sep = NULL) const; // gets formatted string: {code|@sep|description|@sep|module};
 		CString   Do_4(_pc_sz _lp_sz_sep = NULL) const; // gets formatted string: {code|@sep|description};
 		CString   Do_6(_pc_sz _lp_sz_pattern   ) const; // pattern: $(x) - err_code; $(c) - code; $(d) - desc; $(m) - module; $(s) - source;
-		                                                 // for example, output to console:
-		                                                 // This is error:\n\tcode=%d$(c)\n\tdesc=%s$(d)\n\tmodule=%s$(m)\n\tsrc=%s$(s);
+		                                                // for example, output to console:
+		                                                // This is error:\n\tcode=%d$(c)\n\tdesc=%s$(d)\n\tmodule=%s$(m)\n\tsrc=%s$(s);
 	};
-#endif
 }}
 typedef const shared::sys_core::CError&  TErrorRef;
 
-#endif/*_SHAREDLITESYSTEMERROR_H_INCLUDED*/
+#endif/*_SYS_ERROR_H_INCLUDED*/

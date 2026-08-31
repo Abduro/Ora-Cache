@@ -37,7 +37,7 @@ bool   CPlacement::DoNormal (void) {
 
 bool   CPlacement::IsNormal (void) const { return (this->Rect().left < this->Rect().right && this->Rect().top < this->Rect().bottom); }
 
-bool   CPlacement::Includes (const t_point& _pt) const {
+bool   CPlacement::Includes (const point_t& _pt) const {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect ;
 	bool b_result = this->IsNormal();
 	if (!b_result)
@@ -46,26 +46,26 @@ bool   CPlacement::Includes (const t_point& _pt) const {
 	return !!::PtInRect(&this->Rect(), _pt);
 }
 
-bool   CPlacement::Intercepts (const t_rect& _rect) const {
+bool   CPlacement::Intercepts (const rect_t& _rect) const {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect ;
 	bool b_result = !(::IsRectEmpty(&this->Rect()) || ::IsRectEmpty(&_rect));
 	if (!b_result)
 		return b_result;
 
-	t_rect rc_result = {0};
+	rect_t rc_result = {0};
 	b_result = !!::IntersectRect(&rc_result, &this->Rect(), &_rect);
 
 	return b_result;
 }
 
 const
-t_rect&  CPlacement::Rect (void) const { return this->m_rect; }
-t_rect&  CPlacement::Rect (void)       { return this->m_rect; }
+rect_t&  CPlacement::Rect (void) const { return this->m_rect; }
+rect_t&  CPlacement::Rect (void)       { return this->m_rect; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CPlacement&  CPlacement::operator = (const CPlacement& _ref) { *this << _ref.Rect(); return *this; }
-CPlacement&  CPlacement::operator <<(const t_rect& _rect) { this->Rect() = _rect; return *this;  }
+CPlacement&  CPlacement::operator <<(const rect_t& _rect) { this->Rect() = _rect; return *this;  }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -73,14 +73,14 @@ CPosition:: CPosition (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 const
-t_point  CPosition::Center (void) const {
-	return t_point{
+point_t  CPosition::Center (void) const {
+	return point_t{
 		this->Anchor().X() + static_cast<_long>(this->Size().W() / 2),
 		this->Anchor().Y() + static_cast<_long>(this->Size().H() / 2)
 	};
 }
 
-t_rect   CPosition::Place (void) const {
+rect_t   CPosition::Place (void) const {
 	return {
 		TBase::Anchor().X(), TBase::Anchor().Y(), TBase::Anchor().X() + _long(TBase::Size().W()), TBase::Anchor().Y() + _long(TBase::Size().H())
 	};
@@ -118,30 +118,30 @@ CPrimary::~CPrimary (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-t_rect  CPrimary::Autosize (void) const {
+rect_t  CPrimary::Autosize (void) const {
 	
 	const TSizeU  sz_wnd = { TBase::Size().W() / 2, (TBase::Size().H() / 4) * 2};
 	
 	return this->Centered(sz_wnd);
 }
 
-t_rect  CPrimary::Centered (const TSizeU & _size) const {
+rect_t  CPrimary::Centered (const TSizeU & _size) const {
 #if (0)
-	const t_point left_top = {
+	const point_t left_top = {
 		TBase::Size().W() / 2  - _size.W() / 2, // 4 (four) dividings;
 		TBase::Size().H() / 2  - _size.H() / 2,
 	};
 
-	t_rect center_ = {
+	rect_t center_ = {
 		left_top.x,
 		left_top.y,
 		left_top.x + _size.W(),
 		left_top.y + _size.H()
 	};
 #else
-	const t_point pt_at  = TBase::Center();
-//	const t_rect center_ = {pt_at.x - _size.W()/ 2, pt_at.y - _size.H() / 2, pt_at.x + _size.W() / 2, pt_at.y + _size.H() / 2};  // 4 (four) dividings;
-	const t_rect center_ = {
+	const point_t pt_at  = TBase::Center();
+//	const rect_t center_ = {pt_at.x - _size.W()/ 2, pt_at.y - _size.H() / 2, pt_at.x + _size.W() / 2, pt_at.y + _size.H() / 2};  // 4 (four) dividings;
+	const rect_t center_ = {
 		pt_at.x - static_cast<_long>(_size.W() / 2),
 		pt_at.y - static_cast<_long>(_size.H() / 2), center_.left + (_long)_size.W(), center_.top + (_long)_size.H()}; // 2 (two ) dividings;
 #endif
@@ -176,9 +176,9 @@ CRatios::~CRatios (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-t_rect    CRatios::Accepted (const t_rect& _work_area) const {
+rect_t    CRatios::Accepted (const rect_t& _work_area) const {
 
-	t_rect  rc_pos = {0};
+	rect_t  rc_pos = {0};
 	if (!!::IsRectEmpty(&_work_area))
 		return rc_pos;
 
@@ -192,7 +192,7 @@ t_rect    CRatios::Accepted (const t_rect& _work_area) const {
 	if (m_ratios.end() == it_) {} // actually it is almost impossible, but nevertheless;
 	else
 	{
-		const t_point pt_anchor = {
+		const point_t pt_anchor = {
 			_work_area.left + (__W(_work_area) - it_->cx) / 2,
 			_work_area.top  + (__H(_work_area) - it_->cy) / 2,
 		};

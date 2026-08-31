@@ -10,13 +10,13 @@
 */
 #include "sys.error.h"
 
-using namespace shared::common;
-using namespace shared::sys_core;
+using namespace ::shared::common;
+using namespace ::shared::sys_core;
 
 #include "sys.err.format.h"
 using namespace shared::sys_core::_impl;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CErr_Base{}
 
 CErr_Base::CErr_Base(void) : m_code(__s_ok), m_result(__s_ok), m_lang() {
 }
@@ -26,8 +26,7 @@ CErr_Base::CErr_Base(const dword  dwError, const CLang& _lng_id) : m_code(dwErro
 CErr_Base::CErr_Base(const err_code hError, const CLang& _lng_id) :
 	m_code(__HresultToDword(hError)), m_result(hError), m_lang(_lng_id) {
 }
-/////////////////////////////////////////////////////////////////////////////
-#if defined(_DEBUG)
+
 CString CErr_Base::Print (void) const {
 
 	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{code=%u;result=0x%x}");
@@ -35,8 +34,6 @@ CString CErr_Base::Print (void) const {
 	CString cs_out; cs_out.Format(lp_sz_pat, (_pc_sz)__CLASS__, this->m_code, this->m_result);
 	return  cs_out;
 }
-#endif
-/////////////////////////////////////////////////////////////////////////////
 
 CErr_Base& CErr_Base::operator = (const dword _code) {
 	Safe_Lock(m_lock);
@@ -56,14 +53,12 @@ CErr_Base& CErr_Base::operator= (TLangRef _lang) {
 	return *this;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CErr_Base::operator dword    (void) const { Safe_Lock(m_lock); return (m_code)  ; }
 CErr_Base::operator err_code (void) const { Safe_Lock(m_lock); return (m_result); }
 CErr_Base::operator TLangRef (void) const { Safe_Lock(m_lock); return (m_lang)  ; }
 CErr_Base::operator TSyncRef (void)       { return   (m_lock); }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 #if(0)
 CErr_Source:: CErr_Source (void) { this->Class() = __CLASS__; this->Method() = __METHOD__; this->NameSp() = __SP_NAME__; }
 CErr_Source:: CErr_Source (const CErr_Source& _ref) : CErr_Source() { *this = _ref; }
@@ -72,8 +67,6 @@ CErr_Source:: CErr_Source (_pc_sz _lp_sz_cls, _pc_sz _lp_sz_method, _pc_sz _lp_s
 }
 CErr_Source::~CErr_Source (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-
 _pc_sz   CErr_Source::Class (void) const { return this->m_class.GetString() ; }
 CString& CErr_Source::Class (void)       { return this->m_class ; }
 _pc_sz   CErr_Source::Method(void) const { return this->m_method.GetString(); }
@@ -81,13 +74,11 @@ CString& CErr_Source::Method(void)       { return this->m_method; }
 _pc_sz   CErr_Source::NameSp(void) const { return this->m_space.GetString() ; }
 CString& CErr_Source::NameSp(void)       { return this->m_space ; }
 
-/////////////////////////////////////////////////////////////////////////////
 #include "sys.std.seh.h"
 
 CString  CErr_Source::Get (_pc_sz _lp_sz_format/* = _T("Class = %s; Func = %s;")*/) const {
 
 	CString cs_formatted;
-
 	shared::sys_core::seh::CTranslator trans;
 
 	try {
@@ -109,17 +100,13 @@ bool CErr_Source::Set (_pc_sz _lp_sz_cls, _pc_sz _lp_sz_method, _pc_sz _lp_sz_na
 	return b_changed;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CErr_Source& CErr_Source::operator = (const CErr_Source& _ref) { this->Set(_ref.Class(), _ref.Method(), _ref.NameSp()); return *this; }
 #endif
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CErr_State{}
 
 CErr_State:: CErr_State(void) : TBase() {}
 CErr_State:: CErr_State(const CErr_State& _state) : TBase() { *this = _state; }
 CErr_State::~CErr_State(void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 _pc_sz   CErr_State::Get (void) const { Safe_Lock(TBase::m_lock); return m_buffer.GetString(); }
 void     CErr_State::Set (const bool _reset) {
@@ -229,7 +216,6 @@ void     CErr_State::Set (_pc_sz  _sz_desc, ...) {
 	va_end(args_);
 }
 
-#if defined(_DEBUG)
 CString CErr_State::Print (void) const {
 
 	static _pc_sz lp_sz_pat = _T("cls::[%s]>>{base=[%s];state=%s}");
@@ -237,14 +223,9 @@ CString CErr_State::Print (void) const {
 	CString cs_out; cs_out.Format(lp_sz_pat, (_pc_sz)__CLASS__, (_pc_sz)TBase::Print(), this->Get());
 	return  cs_out;
 }
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
 
 CErr_State::operator bool    (void) const { Safe_Lock(TBase::m_lock); return __failed(TBase::m_result); }
 CErr_State::operator _pc_sz  (void) const { return this->Get(); }
-
-/////////////////////////////////////////////////////////////////////////////
 
 CErr_State&   CErr_State::operator= (const bool _reset) { this->Set(_reset); return *this; }
 CErr_State&   CErr_State::operator= (const CErr_State& _state) {
@@ -264,7 +245,7 @@ CErr_State&   CErr_State::operator= (_pc_sz  _sz_desc) {
 bool CErr_State::operator == (err_code _value) const { return TBase::m_result == _value; }
 bool CErr_State::operator != (err_code _value) const { return TBase::m_result != _value; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 
 namespace shared { namespace sys_core {
 	bool operator==(const bool _lhs, const CErr_State& _rhs) { return (_lhs == (bool)_rhs); }
@@ -273,21 +254,19 @@ namespace shared { namespace sys_core {
 	bool operator!=(const CErr_State& _lhs, const bool _rhs) { return ((bool)_lhs != _rhs); }
 }}
 
-/////////////////////////////////////////////////////////////////////////////
-
 namespace shared { namespace sys_core { namespace _impl {
 }}}
 using namespace shared::sys_core::_impl;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CError{}
 
 CError:: CError(void) { m_state = false; }
 CError:: CError(const CError& _err) {*this = _err;}
+CError:: CError (_pc_sz _p_cls, _pc_sz _p_method, const err_code _n_err_code) : CError() { *this >>_p_cls<<_p_method<<_n_err_code; }
+CError:: CError (const CString& _cs_cls, const CString& _cs_method, const err_code _n_err_code) : CError((_pc_sz)_cs_cls, (_pc_sz)_cs_method, _n_err_code) {}
 CError::~CError(void) { }
 
-/////////////////////////////////////////////////////////////////////////////
-
-_pc_sz   CError::Class (void) const      { Safe_Lock(m_state); return m_class.GetString(); }
+_pc_sz   CError::Class (void) const { Safe_Lock(m_state); return m_class.GetString(); }
 void     CError::Class (_pc_sz _pClass) { Safe_Lock(m_state); m_class = _pClass;  }
 void     CError::Class (_pc_sz _lp_sz_val, const bool bFormatted) {
 	_lp_sz_val;
@@ -300,14 +279,12 @@ void     CError::Class (_pc_sz _lp_sz_val, const bool bFormatted) {
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 void      CError::Clear (void)           { m_state = false; }
 dword     CError::Code  (void) const     { return (dword)m_state; }
 void      CError::Code  (const dword _v) { ((CErr_Base&)m_state) = _v;
 	this->State() = (_pc_sz)(CErr_Fmt() << (CErr_Pattern() << CErr_Pattern::e_line) << *this);
 }
-_pc_sz    CError::Desc  (void) const     { return m_state; }
+_pc_sz    CError::Desc  (void) const { return m_state; }
 bool      CError::Is    (void) const { return ((bool)m_state == true); }
 err_code  CError::Last  (void)       { m_state.Set(::GetLastError()) ;  return *this; }
 TLangRef& CError::Lang  (void) const { return m_state;   }
@@ -319,10 +296,15 @@ err_code  CError::Result(const err_code _new)
 {
 	if (_new == (err_code)m_state)
 		return _new;
-
-	if (__succeeded(_new)) {
+#if (0)
+	if (__succeeded(_new)) { // this is the logical error: if previous code was '__s_ok' the code '__s_false' cannot be set;
 		m_state = false; return m_state;
 	}
+#else
+	if (__succeeded(_new)) {
+		this->m_state.Set(_new); /*this->m_state = false; this is the error: __s_false is overwritten by __s_ok;*/ return this->m_state;
+	} 
+#endif
 	Safe_Lock(m_state);
 
 	::ATL::CString    cs_module = m_method; // saves an original;
@@ -367,35 +349,29 @@ dword     CError::Show  (const HWND _h_owner) const {
 	return d_resp;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CErr_State& CError::State (void)       { return m_state; }
 TErr_State& CError::State (void) const { return m_state; }
 
-#if defined(_DEBUG)
 CString CError::Print (const e_print e_opt) const {
 
 	static _pc_sz lp_sz_pat_a = _T("cls::[%s]>>{state=[%s];context=[%s::%s()]}");
-	static _pc_sz lp_sz_pat_b = _T("cls::[%s]>>{code=%u;result=0x%x;desc='%s'}");
+	static _pc_sz lp_sz_pat_b = _T("cls::[%s]>>{code=0x%04x;result=0x%x;desc='%s'}"); // for keeping error code as is, for example, as in OpenGL;
 	static _pc_sz lp_sz_pat_c = _T("cls::[%s]>>{context=[%s::%s()]}");
-	static _pc_sz lp_sz_pat_r = _T("cls::[%s]>>{code=%u;result=0x%x;desc='%s';context=%s::%s()}");
+	static _pc_sz lp_sz_pat_r = _T("cls::[%s]>>{code=0x%04x;result=0x%x;desc='%s';context=%s::%s()}");
 
 	CString cs_out;
-	if (e_print::e_all == e_opt) cs_out.Format(lp_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)this->State().Print(), this->Class(), this->Method());
-	if (e_print::e_base == e_opt) cs_out.Format(lp_sz_pat_b, (_pc_sz)__CLASS__, this->Code(), this->Result(), this->Desc());
-	if (e_print::e_ctx == e_opt) cs_out.Format(lp_sz_pat_c, (_pc_sz)__CLASS__, this->Class(), this->Method());
-	if (e_print::e_req == e_opt) cs_out.Format(lp_sz_pat_r, (_pc_sz)__CLASS__, this->Code(), this->Result(), this->Desc(), this->Class(), this->Method());
+	if (e_print::e_all == e_opt)  cs_out.Format(lp_sz_pat_a, (_pc_sz)__CLASS__, (_pc_sz)this->State().Print(), this->Class(), this->Method());
+	if (e_print::e_base == e_opt) cs_out.Format(lp_sz_pat_b, (_pc_sz)__CLASS__, this->Code() , this->Result(), this->Desc());
+	if (e_print::e_ctx == e_opt)  cs_out.Format(lp_sz_pat_c, (_pc_sz)__CLASS__, this->Class(), this->Method());
+	if (e_print::e_req == e_opt)  cs_out.Format(lp_sz_pat_r, (_pc_sz)__CLASS__, this->Code() , this->Result(), this->Desc(), this->Class(), this->Method());
 	return  cs_out;
 }
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
 
 CError& CError::operator<<(const err_code _hr)  {  this->Result(_hr);       return *this; }
 CError& CError::operator<<(const CString& _method) { *this << _method.GetString(); return *this; }
 CError& CError::operator<<(_pc_sz _p_method)  {  this->Method(_p_method); return *this; }
 
-CError& CError::operator= (const _com_error& err_ref) {
+CError& CError::operator = (const _com_error& err_ref) {
 	err_ref;
 	this->State().Set( // TODO: what is about this one: this->State() << _com_error()?
 		err_ref.Error(), (_pc_sz) err_ref.Description()
@@ -405,37 +381,40 @@ CError& CError::operator= (const _com_error& err_ref) {
 	return *this;
 }
 
-CError& CError::operator= (const CError& _err) {
+CError& CError::operator = (const CError& _err) {
 	_err;
-	this->State()   = _err.State();
-
+	this->State() = _err.State();
 	Safe_Lock(m_state);
-
-	this->m_method  = _err.m_method;
+	this->m_method = _err.m_method;
 
 	if (_err.m_class.IsEmpty() == false)
 		this->m_class  = _err.m_class;
 
 	return *this;
 }
-CError& CError::operator= (const dword  _code) { (m_state).Set(_code); return *this; }
-CError& CError::operator= (const err_code  _hr) { (m_state).Set(_hr); return *this; }
-CError& CError::operator= (_pc_sz  _p_desc  ) { this->State() = _p_desc; return *this; }
-CError& CError::operator>>(_pc_sz  _p_class ) { this->Class(_p_class, true); return *this; }
-CError& CError::operator>>(const CString& _class) { *this >> _class.GetString(); return *this; }
-
-/////////////////////////////////////////////////////////////////////////////
+CError& CError::operator = (const dword  _code) { (m_state).Set(_code); return *this; }
+CError& CError::operator = (const err_code  _hr) { (m_state).Set(_hr); return *this; }
+CError& CError::operator = (_pc_sz  _p_desc  ) { this->State() = _p_desc; return *this; }
+CError& CError::operator >>(_pc_sz  _p_class ) { this->Class(_p_class, true); return *this; }
+CError& CError::operator >>(const CString& _class) { *this >> _class.GetString(); return *this; }
 
 CError::operator const bool(void) const { return this->Is();     }
-CError::operator err_code   (void) const { return this->Result(); }
-CError::operator _pc_sz   (void) const { return this->Desc();   }
-
-/////////////////////////////////////////////////////////////////////////////
+CError::operator err_code  (void) const { return this->Result(); }
+CError::operator _pc_sz    (void) const { return this->Desc();   }
 
 CError::operator CErr_State& (void)       { return m_state; }
 CError::operator TErr_State& (void) const { return m_state; }
 
-/////////////////////////////////////////////////////////////////////////////
+CError& CError::operator () (const e_cmds _n_cmd) {
+	_n_cmd;
+	switch (_n_cmd) {
+	case e_cmds::e_get_last: this->Last();
+	default:;
+	}
+	return *this;
+}
+
+#pragma endregion
 
 namespace shared { namespace sys_core {
 //
@@ -448,12 +427,9 @@ bool operator!=(const CError& _lhs, const bool _rhs) { return (__succeeded(_lhs.
 
 }}
 #if (1)
-/////////////////////////////////////////////////////////////////////////////
 
 CErr_Format:: CErr_Format(const CError& _err) : m_error_ref(_err) {}
 CErr_Format::~CErr_Format(void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 CString     CErr_Format::Do  (_pc_sz _lp_sz_sep) const {
 	return CString((_pc_sz)(CErr_Fmt() << (CErr_Pattern() << CErr_Pattern::e_line) << _lp_sz_sep << m_error_ref));

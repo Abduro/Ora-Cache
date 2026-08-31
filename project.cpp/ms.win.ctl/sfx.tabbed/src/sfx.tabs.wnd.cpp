@@ -38,10 +38,10 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	}
 #endif
 #if (0)
-	t_rect rc_area = {0};
+	rect_t rc_area = {0};
 	TWindow::GetClientRect(&rc_area);  // perhaps the layout knows about available area better than the window itself;
 #else
-	t_rect rc_area = this->m_ctrl.Layout().Rect();
+	rect_t rc_area = this->m_ctrl.Layout().Rect();
 #endif
 	ex_ui::draw::memory::CMode(_dev_ctx).Set(ex_ui::draw::memory::CMode::e_advanced);
 	CZBuffer z_buffer(_dev_ctx, rc_area);
@@ -138,7 +138,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 
 	CPaintDC dc_(*this);
 #if (0)
-	t_rect rc_area = {0};
+	rect_t rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
 	CZBuffer z_buffer(dc_.m_hDC, rc_area);
@@ -198,7 +198,7 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size) {
 	return   n_result;
 }
 
-err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
+err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, rect_t* _p_rect) {
 	_edges; _p_rect;
 	err_code n_result = __s_false;
 	return   n_result;
@@ -213,7 +213,7 @@ err_code CWnd::IEvtButton_OnReceive(const CEvent& _event) {
 	if (CAction::e_pressed != _event.Action().Type() || CPlace::e_Left != _event.Button().Place().Where())
 		return n_result;
 
-	const t_point& pt_ = _event.Point();
+	const point_t& pt_ = _event.Point();
 	const int16_t ndx_ = this->m_ctrl.Tabs().Has(pt_);
 	if (-1 < ndx_) {
 		n_result = this->m_ctrl.Tabs().Active(ndx_);

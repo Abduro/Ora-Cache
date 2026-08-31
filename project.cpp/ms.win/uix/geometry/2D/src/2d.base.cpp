@@ -26,8 +26,8 @@ void CPoint::Clear (void) { this->Set(0,0); }
 bool CPoint::Is_zero (void) const { return (!this->X() && !this->Y()); }
 
 const
-t_point&  CPoint::Raw (void) const { return this->m_point; }
-t_point&  CPoint::Raw (void)       { return this->m_point; }
+point_t&  CPoint::Raw (void) const { return this->m_point; }
+point_t&  CPoint::Raw (void)       { return this->m_point; }
 
 bool CPoint::Set (const int32_t _x, const int32_t _y) {
 	_x; _y;
@@ -76,10 +76,10 @@ CPoint& CPoint::operator = (CPoint&& _victim) {
 CPoint& CPoint::operator <<(const int32_t _x) { this->X(_x); return *this; }
 CPoint& CPoint::operator >>(const int32_t _y) { this->Y(_y); return *this; }
 
-CPoint& CPoint::operator <<(const t_point& _pt) { *this >> _pt.y << _pt.x; return *this; }
+CPoint& CPoint::operator <<(const point_t& _pt) { *this >> _pt.y << _pt.x; return *this; }
 
-CPoint::operator const t_point& (void) const { return this->Raw(); }
-CPoint::operator       t_point& (void)       { return this->Raw(); }
+CPoint::operator const point_t& (void) const { return this->Raw(); }
+CPoint::operator       point_t& (void)       { return this->Raw(); }
 
 bool CPoint::operator == (const CPoint& _rsv) const { return (this->X() == _rsv.X() && this->Y() == _rsv.Y()); }
 bool CPoint::operator != (const CPoint& _rsv) const { return (this->X() != _rsv.X() || this->Y() != _rsv.Y()); }
@@ -433,7 +433,7 @@ bool    CSize_U::Set (const uint32_t _width, const uint32_t _height) {
 	return b_changed;
 }
 
-bool     CSize_U::Set (const t_rect& _rect) {
+bool     CSize_U::Set (const rect_t& _rect) {
 	return this->Set(__W(_rect), __H(_rect));
 }
 
@@ -454,7 +454,7 @@ CSize_U& CSize_U::operator = (CSize_U&& _victim) {
 CSize_U& CSize_U::operator <<(const uint32_t _width) { this->W(_width); return *this; }
 CSize_U& CSize_U::operator >>(const uint32_t _height) { this->H(_height); return *this; }
 
-CSize_U& CSize_U::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
+CSize_U& CSize_U::operator <<(const rect_t& _rect) { this->Set(_rect); return *this; }
 
 CSize_U::operator const size_u& (void) const { return this->Raw(); }
 CSize_U::operator       size_u& (void)       { return this->Raw(); }
@@ -506,8 +506,8 @@ CString     CPosition::Print  (const e_print e_opt) const {
 	return  cs_out;
 }
 #endif
-t_rect      CPosition::Place(void) const {
-	return t_rect{
+rect_t      CPosition::Place(void) const {
+	return rect_t{
 		this->Anchor().X(), this->Anchor().Y(), this->Anchor().X() + (int32_t)this->Size().W(), this->Anchor().Y() + (int32_t)this->Size().H()
 	};
 }
@@ -522,8 +522,8 @@ CPosition&  CPosition::operator = (const CPosition& _src) { *this << _src.Anchor
 CPosition&  CPosition::operator = (CPosition&& _victim) { *this = (const CPosition&)_victim; return *this; }
 
 CPosition&  CPosition::operator <<(const CPoint& _anchor) { this->Anchor() = _anchor; return *this; }
-CPosition&  CPosition::operator <<(const t_point&  _pt) { this->Anchor() << _pt; return *this; }
-CPosition&  CPosition::operator <<(const t_rect& _rect) {
+CPosition&  CPosition::operator <<(const point_t&  _pt) { this->Anchor() << _pt; return *this; }
+CPosition&  CPosition::operator <<(const rect_t& _rect) {
 	this->Anchor() << _rect.left >> _rect.top;
 	this->Size() << _rect;
 	return *this;
@@ -532,6 +532,6 @@ CPosition&  CPosition::operator <<(const CSize_U& _size_u) { this->Size() = _siz
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPosition::operator const t_rect (void) const {
+CPosition::operator const rect_t (void) const {
 	return this->Place();
 }

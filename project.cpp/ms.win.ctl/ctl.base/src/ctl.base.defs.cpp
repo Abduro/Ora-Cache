@@ -6,6 +6,6 @@
 
 using namespace ex_ui::controls;
 
-namespace ex_ui { namespace controls { namespace _impl { void __warning_lnk_4221 (void) {} }}}
+namespace ex_ui { namespace controls { namespace _impl { void _11_warning_lnk_4221 (void) {} }}}
 
 /////////////////////////////////////////////////////////////////////////////

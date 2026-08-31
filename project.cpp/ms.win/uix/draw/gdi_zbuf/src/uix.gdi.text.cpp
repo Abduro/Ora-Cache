@@ -787,8 +787,8 @@ const
 rgb_color& CText_Base::Fore  (void) const { return this->m_clr_fore; }
 rgb_color& CText_Base::Fore  (void)       { return this->m_clr_fore; }
 const
-t_rect&    CText_Base::Out_to(void) const { return this->m_draw_rect; }
-t_rect&    CText_Base::Out_to(void)       { return this->m_draw_rect; }
+rect_t&    CText_Base::Out_to(void) const { return this->m_draw_rect; }
+rect_t&    CText_Base::Out_to(void)       { return this->m_draw_rect; }
 const
 CString&   CText_Base::Text  (void) const { return this->m_text; }
 CString&   CText_Base::Text  (void)       { return this->m_text; }
@@ -797,7 +797,7 @@ CString&   CText_Base::Text  (void)       { return this->m_text; }
 
 CText_Base&  CText_Base::operator <<(_pc_sz _p_text) { this->Text() = _p_text; return *this; }
 CText_Base&  CText_Base::operator <<(const rgb_color& _clr_fore) { this->Fore() = _clr_fore; return *this; }
-CText_Base&  CText_Base::operator <<(const t_rect& _out) { this->Out_to() = _out; return *this; }
+CText_Base&  CText_Base::operator <<(const rect_t& _out) { this->Out_to() = _out; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -810,8 +810,8 @@ ex_ui::draw::text::output::CAlign& CTextOut::Align (void) const { return this->m
 ex_ui::draw::text::output::CAlign& CTextOut::Align (void)       { return this->m_align; }
 
 const
-t_point&   CTextOut::Anchor(void) const { return this->m_anchor; }
-t_point&   CTextOut::Anchor(void)       { return this->m_anchor; }
+point_t&   CTextOut::Anchor(void) const { return this->m_anchor; }
+point_t&   CTextOut::Anchor(void)       { return this->m_anchor; }
 
 const
 HDC&  CTextOut::Ctx (void) const { return this->m_h_dc; }
@@ -843,7 +843,7 @@ err_code   CTextOut::Recalc_anchor (void) {
 /////////////////////////////////////////////////////////////////////////////
 
 CTextOut&  CTextOut::operator <<(const HDC& _h_dc) { this->Ctx() = _h_dc; return *this; }
-CTextOut&  CTextOut::operator <<(const t_rect& _out) {
+CTextOut&  CTextOut::operator <<(const rect_t& _out) {
 	(TBase&)*this << _out;
 	this->Recalc_anchor(); return *this;
 }

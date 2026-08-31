@@ -8,6 +8,6 @@ using namespace ora::base;
 
 namespace ora { namespace base { namespace _impl {
 
-	void __warning_lnk_4221(void) {}
+	void _1d_warning_lnk_4221(void) {}
 
 }}}

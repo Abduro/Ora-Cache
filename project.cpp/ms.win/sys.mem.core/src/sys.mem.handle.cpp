@@ -9,7 +9,7 @@
 */
 #include "sys.mem.handle.h"
 
-using namespace shared::memory;
+using namespace ::shared::memory;
 
 /////////////////////////////////////////////////////////////////////////////
 

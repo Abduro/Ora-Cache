@@ -36,7 +36,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	CPaintDC dc_(*this);
 
 	err_code n_result = __s_ok;  // this message is handled;
-	t_rect& rc_paint  = dc_.m_ps.rcPaint;
+	rect_t& rc_paint  = dc_.m_ps.rcPaint;
 
 	ex_ui::draw::memory::CMode(dc_).Set(ex_ui::draw::memory::CMode::e_advanced);
 	CZBuffer z_buffer(dc_, rc_paint);
@@ -73,7 +73,7 @@ using eEdges = IFormEvtSink::eEdges;
 err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size _size) {
 	_e_state; _size;
 #if (0) // this control layout must take care about this;
-	t_rect rc_area = {0, 0, _size.cx, _size.cy};
+	rect_t rc_area = {0, 0, _size.cx, _size.cy};
 
 	this->m_ctrl.Borders() << rc_area;
 #endif
@@ -81,7 +81,7 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size _size) {
 	return   n_result;
 }
 
-err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
+err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, rect_t* _p_rect) {
 	_edges; _p_rect;
 #if (0) // this control layout must take care about this; 
 	if (_p_rect)

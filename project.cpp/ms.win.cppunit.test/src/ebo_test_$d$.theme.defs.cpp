@@ -8,4 +8,4 @@ using namespace ebo::boo::test::theme;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ebo { namespace boo { namespace test { namespace theme { void __warning_lnk_4221 (void) {}}}}}
+namespace ebo { namespace boo { namespace test { namespace theme { void _1a_warning_lnk_4221 (void) {}}}}}

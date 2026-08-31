@@ -62,11 +62,11 @@ layout::CTrack:: CTrack (void) { this->m_error >>__CLASS__ << __METHOD__ << __s_
 
 TError& layout::CTrack::Error (void) const { return this->m_error; }
 
-t_rect layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) const {
+rect_t layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) const {
 	_tab;
 	this->m_error << __METHOD__ << __s_ok;
 
-	t_rect rect_track = {0};
+	rect_t rect_track = {0};
 
 	// it is suppossed the input 'tab' object is not the fake one;
 	if (_tab.Is_fake()) {
@@ -82,7 +82,7 @@ t_rect layout::CTrack::GetPos (const ex_ui::controls::sfx::tabbed::CTab& _tab) c
 	}
 
 	// (1) gets the tab page rectangle first;
-	t_rect rect_page = _tab.Page().Layout().Rect();
+	rect_t rect_page = _tab.Page().Layout().Rect();
 
 	_tab.Page().Layout().Padding().ApplyTo(rect_page); // applies padding values to the right and bottom sides of the page area;
 
@@ -122,20 +122,20 @@ const
 layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx) const { if (_ndx > cfg::n_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }
 layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx)       { if (_ndx > cfg::n_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }     
 
-t_rect layout::CTracks::GetPos (void) const {
+rect_t layout::CTracks::GetPos (void) const {
 	this->m_error << __METHOD__ << __s_ok;
 
 	CTabbed& tabbed = shared::Get_View().Pages().Get();
 
 	if (0 == tabbed.Tabs().Count()) {
 		this->m_error << __e_not_inited = _T("Tabbed control has no pages");
-		return t_rect {0};
+		return rect_t {0};
 	}
 
 	// it is suppossed the tabbed control always has selected or active tab page;
 	if (tabbed.Tabs().Current().Is_fake()) {
 		this->m_error << __e_not_inited = _T("Tabbed control has no active tab");
-		return t_rect {0};
+		return rect_t {0};
 	}
 
 	const uint16_t n_index = tabbed.Tabs().Current().Index();  // gets the index of the currently active tab page;
@@ -154,7 +154,7 @@ err_code  layout::CTracks::Update (void) {
 
 		layout::CTrack& track = this->Get(i_);
 
-		const t_rect rect_track = track.GetPos(tab_);
+		const rect_t rect_track = track.GetPos(tab_);
 		if (track.Error()) {
 			this->m_error = track.Error(); break;
 		}
@@ -189,10 +189,10 @@ err_code  layout::CTracks::Update (void) {
 
 CLayout:: CLayout (void) : m_draw_area{0} { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 
-t_rect    CLayout::DrawArea (void)/* const */{
+rect_t    CLayout::DrawArea (void)/* const */{
 	this->m_error << __METHOD__ << __s_ok;
 #if (0)
-	t_rect rc_draw = {0};
+	rect_t rc_draw = {0};
 	if (false == this->Is_valid()) {
 		this->m_error << __e_not_inited;
 		return  rc_draw;
@@ -233,7 +233,7 @@ err_code  CLayout::Update (void) {
 		return this->m_error << _what << __e_hwnd;
 	}
 
-	t_rect rect_ = {0};
+	rect_t rect_ = {0};
 	if (false == !!this->Window().GetClientRect(&rect_)) {
 		return (this->m_error << _what).Last();
 	}
@@ -241,7 +241,7 @@ err_code  CLayout::Update (void) {
 	return this->Update(rect_);
 }
 
-err_code  CLayout::Update (const t_rect& _rect) {
+err_code  CLayout::Update (const rect_t& _rect) {
 	_rect;
 	if (::IsRectEmpty(&_rect)) {
 		return this->m_error << _what << __e_rect;
@@ -252,7 +252,7 @@ err_code  CLayout::Update (const t_rect& _rect) {
 
 	this->m_draw_area.bottom -= CLayout_Default().Pane().Height(); // updates the bottom value for reserving the space of pane control;
 
-	t_rect rect_pane = _rect;
+	rect_t rect_pane = _rect;
 	rect_pane.top = rect_pane.bottom - CLayout_Default().Pane().Height();
 	/*
 		the issue which appears here is this layout works in client area coordinates of the main window,

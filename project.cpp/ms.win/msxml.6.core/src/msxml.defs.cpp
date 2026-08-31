@@ -8,7 +8,7 @@ using namespace shared::xml::ms;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace shared { namespace xml { namespace ms { namespace _impl { void __warning_lnk_4221 (void) {}}}}}
+namespace shared { namespace xml { namespace ms { namespace _impl { void _c_warning_lnk_4221 (void) {}}}}}
 
 /////////////////////////////////////////////////////////////////////////////
 

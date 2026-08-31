@@ -3,5 +3,6 @@
 	This is virtual camera test projects' common precompiled header implementation file;
 */
 #include "com.std.afx.h"
-
-namespace test { namespace _impl { void __warning_lnk_4221 (void) {}}}
+#if (0)
+namespace test { namespace _impl { void _0_warning_lnk_4221 (void) {}}}
+#endif

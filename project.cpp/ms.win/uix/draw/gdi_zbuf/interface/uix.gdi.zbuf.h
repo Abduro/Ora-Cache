@@ -89,10 +89,10 @@ namespace ex_ui { namespace draw { namespace memory {
 	public:
 		err_code  ApplyTo(const HDC _h_mem_dc);  // applies the new bitmap of a surface to memory device;
 		const
-		t_rect&   Area (void) const;
-		t_rect&   Area (void) ;
+		rect_t&   Area (void) const;
+		rect_t&   Area (void) ;
 
-		err_code  Create (const HDC _h_origin, const t_rect& _rc_draw); // creates a new surface bitmap that is compatible to input device context;
+		err_code  Create (const HDC _h_origin, const rect_t& _rc_draw); // creates a new surface bitmap that is compatible to input device context;
 		err_code  Destroy(void);
 
 		TError&   Error(void) const;
@@ -113,7 +113,7 @@ namespace ex_ui { namespace draw { namespace memory {
 		mutable
 		CError   m_error;
 		HBITMAP  m_surface[2]; // 0|old surface; 1|new surface;
-		t_rect   m_rc_draw;    // draw area of a surface; https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/crect-class ;
+		rect_t   m_rc_draw;    // draw area of a surface; https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/crect-class ;
 	};
 
 	//the CZBuffer is not inherited from ::WTL::CMemoryDC due to it makes public its fields, that is not necessary definitely;
@@ -124,7 +124,7 @@ namespace ex_ui { namespace draw { namespace memory {
 
 	public:
 		 CZBuffer (void);
-		 CZBuffer (const HDC _h_origin, const t_rect& _rc_draw);
+		 CZBuffer (const HDC _h_origin, const rect_t& _rc_draw);
 		 CZBuffer (const CZBuffer&) = delete; CZBuffer (CZBuffer&&) = delete;
 		~CZBuffer (void);
 
@@ -134,7 +134,7 @@ namespace ex_ui { namespace draw { namespace memory {
 			                   because it is assumed this in-memory device context serves the entire client area of the target;
 			it requires a review: the Reset() must be dependent on what draw area must be copied entire or just a part;
 		*/
-		err_code  Create(const HDC _h_origin, const t_rect& _rc_draw);
+		err_code  Create(const HDC _h_origin, const rect_t& _rc_draw);
 		err_code  Reset (void) ; // copies the buffer content to original device context and resets the buffer to uninitialized state;
 
 	public: // error handling;
@@ -149,8 +149,8 @@ namespace ex_ui { namespace draw { namespace memory {
 		/* draws plain rectangle by using color provided, alpha blending is applicable;
 		   it is assumed the rectangle is not created or extracted from 32-bpp image, thus per-pixel-alpha option is not used; */
 		err_code  Draw (const CRect& , const TRgbQuad&);
-		err_code  Draw (const t_rect&, const TRgbQuad&);
-		err_code  Draw (const t_rect&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
+		err_code  Draw (const rect_t&, const TRgbQuad&);
+		err_code  Draw (const rect_t&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
 
 		err_code  Draw (const CDrawText&, const h_font& _fnt);
 		err_code  Draw (const CTextOut& , const h_font& _fnt, const dword _u_format);

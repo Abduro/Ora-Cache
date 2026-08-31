@@ -8,6 +8,6 @@ using namespace shared::sys_core::com::security;
 
 namespace shared { namespace sys_core { namespace com { namespace security { namespace _impl {
 
-	void __warning_lnk_4221(void){}
+	void _3_warning_lnk_4221(void){}
 
 }}}}}

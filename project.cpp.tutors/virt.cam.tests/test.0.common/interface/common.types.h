@@ -20,6 +20,7 @@ namespace test { namespace data { namespace types {
 	typedef HRESULT err_code;   // https://en.wikipedia.org/wiki/err_code ;
 	typedef DWORD   dword_t ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
 	typedef LONG    long_t  ;
+	typedef RECT    rect_t  ;
 
 #pragma region wnd_message_handle   // https://stackoverflow.com/questions/2515261/what-are-the-definitions-for-lparam-and-wparam ;
 	typedef LPARAM  l_param ;   // a long (signed 32-bit) on win32 and __int64 (signed 64-bit) on x86_64;

@@ -25,14 +25,14 @@ namespace ebo { namespace boo { namespace gui { namespace render {
 		 CSurface (void) ; CSurface (const CSurface&) = delete; CSurface (CSurface&&) = delete;
 		~CSurface (void) ;
 
-	err_code  Create (const HWND _h_parent, const t_rect& _rc_place);
+	err_code  Create (const HWND _h_parent, const rect_t& _rc_place);
 
 	private:  // IDrawEvtSink override(s);
 		err_code IEvtDraw_OnPaint   (const w_param, const l_param) override final;
 
 	public: // IFormEvtSink override(s); 
-		err_code IEvtFrame_OnMove   (const t_point& _top_left_client_area) override final;
-		err_code IEvtFrame_OnMoving (const t_rect& _p_wnd_coords) override final;
+		err_code IEvtFrame_OnMove   (const point_t& _top_left_client_area) override final;
+		err_code IEvtFrame_OnMoving (const rect_t& _p_wnd_coords) override final;
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final;
 		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
 

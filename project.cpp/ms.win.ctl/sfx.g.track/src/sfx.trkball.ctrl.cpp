@@ -7,7 +7,7 @@
 
 using namespace ex_ui::controls::sfx::track;
 
-namespace ex_ui { namespace controls { namespace sfx { namespace track { namespace _impl { void __warning_lnk_4221 (void) {}}}}}}
+namespace ex_ui { namespace controls { namespace sfx { namespace track { namespace _impl { void _15_warning_lnk_4221 (void) {}}}}}}
 
 #define _wnd_ptr(_pvoid)   (reinterpret_cast<CWnd*>(_pvoid))
 #define _wnd_ref(_pvoid) (*(reinterpret_cast<CWnd*>(_pvoid)))
@@ -28,7 +28,7 @@ const
 CBorders&  CControl::Borders (void) const { return m_borders; }
 CBorders&  CControl::Borders (void)       { return m_borders; }
 
-err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id, const t_rect& _rect) {
+err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id, const rect_t& _rect) {
 	hParent; _ctrl_id;
 	this->m_error << __METHOD__ << __s_ok;
 
@@ -37,7 +37,7 @@ err_code   CControl::Create (const HWND hParent, const uint32_t _ctrl_id, const 
 	if (::IsRectEmpty(&_rect))        return this->m_error << __e_rect;
 
 	this->m_ctrl_id = _ctrl_id;
-	t_rect  rc_area = _rect;
+	rect_t  rc_area = _rect;
 #if (0)
 	if (false == ::GetClientRect(hParent, &rc_area)) {
 		return this->m_error.Last();

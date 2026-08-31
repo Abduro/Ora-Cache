@@ -56,7 +56,7 @@ namespace cfg {
 	// 0 : the test pane draw only; no surface of direct_x;
 	// 1 : the status bar control is enabled;
 //	#define _test_case_lvl 1
-	// 2 : tab control is has been introduced;
+	// 2 : tab control has been introduced;
 	#define _test_case_lvl 2
 }}}
 

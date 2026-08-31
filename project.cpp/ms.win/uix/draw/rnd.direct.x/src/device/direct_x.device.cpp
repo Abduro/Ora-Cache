@@ -8,7 +8,7 @@ using namespace ex_ui::draw::direct_x;
 
 /////////////////////////////////////////////////////////////////////////////
 namespace ex_ui { namespace draw { namespace direct_x { namespace _impl {
-	void __warning_lnk_4221 (const bool _b_dummy) { _b_dummy; }
+	void _9_warning_lnk_4221 (const bool _b_dummy) { _b_dummy; }
 }}}}
 
 #if defined(_DEBUG)

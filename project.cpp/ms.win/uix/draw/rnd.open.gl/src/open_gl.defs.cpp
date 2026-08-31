@@ -6,7 +6,7 @@
 
 using namespace ex_ui::draw::open_gl;
 
-namespace ex_ui { namespace draw { namespace open_gl { namespace _impl { void __warning_lnk_4221(void) {}
+namespace ex_ui { namespace draw { namespace open_gl { namespace _impl { void _b_warning_lnk_4221(void) {}
 
 	class CFake_Wnd : public ::ATL::CWindowImpl<CFake_Wnd> { typedef ::ATL::CWindowImpl<CFake_Wnd> TBase;
 	public:

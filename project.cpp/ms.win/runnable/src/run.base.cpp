@@ -8,4 +8,4 @@ using namespace shared::runnable;
 
 /////////////////////////////////////////////////////////////////////////////
 
-void __warning_lnk_4221 (void) {}
+void _e_warning_lnk_4221 (void) {}

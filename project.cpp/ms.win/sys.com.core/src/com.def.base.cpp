@@ -8,7 +8,7 @@ using namespace shared::sys_core::com;
 
 namespace shared { namespace sys_core { namespace com { namespace _impl {
 
-	void __warning_lnk_4221(void) {}
+	void _2_warning_lnk_4221(void) {}
 
 }}}}
 

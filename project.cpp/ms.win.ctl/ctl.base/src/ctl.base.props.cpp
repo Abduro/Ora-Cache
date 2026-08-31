@@ -126,7 +126,7 @@ CAlign::~CAlign (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAlign::ApplyTo (const t_rect& _rc_available, const t_size& _sz_accept, t_rect& _rc_aligned) const {
+void CAlign::ApplyTo (const rect_t& _rc_available, const t_size& _sz_accept, rect_t& _rc_aligned) const {
 	_rc_available; _sz_accept; _rc_aligned;
 	// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyrect
 	if (FALSE == ::CopyRect(&_rc_aligned, &_rc_available))

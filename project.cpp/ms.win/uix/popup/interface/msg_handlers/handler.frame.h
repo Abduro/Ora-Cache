@@ -49,10 +49,10 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 		// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move ; returns __s_ok: handled; __s_false: not handled; otherwise error code;
 		// wparam is not used; lparam coordinates of the left-top corner of the client area;
 		virtual err_code  IEvtFrame_OnMove (const w_param, const l_param _l_param) {
-			return IEvtFrame_OnMove (t_point{LOWORD(_l_param), HIWORD(_l_param)});
+			return IEvtFrame_OnMove (point_t{LOWORD(_l_param), HIWORD(_l_param)});
 		}
 
-		virtual err_code  IEvtFrame_OnMove (const t_point& _top_left_client_area) {
+		virtual err_code  IEvtFrame_OnMove (const point_t& _top_left_client_area) {
 			_top_left_client_area;
 			err_code n_result = __s_false; return n_result;
 		}
@@ -69,7 +69,7 @@ namespace ex_ui { namespace message { namespace handlers { namespace frame {
 			return __s_ok;
 		}
 
-		virtual err_code  IEvtFrame_OnMoving (const t_rect& _p_wnd_coords) {
+		virtual err_code  IEvtFrame_OnMoving (const rect_t& _p_wnd_coords) {
 			_p_wnd_coords; 
 			err_code n_result = __s_ok; return n_result;
 		}

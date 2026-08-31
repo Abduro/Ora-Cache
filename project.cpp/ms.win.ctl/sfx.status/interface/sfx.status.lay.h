@@ -28,11 +28,11 @@ namespace layout {
 		bool     Is     (void) const;               // returns true if height > 0;
 
 		err_code Update (void) ;                    // updates the internal components' layout by using this control window client area;
-		err_code Update (const t_rect& _rc_area);   // updates status bar control window position into an area provided;
+		err_code Update (const rect_t& _rc_area);   // updates status bar control window position into an area provided;
 
 	public:
-		CLayout& operator <<(const t_rect& _rc_area);        // updates status bar control window position in accordance with area  ;
-		t_rect   operator = (const t_rect& _rc_area) const;  // returns calculated rectangle of status bar control for area provided;
+		CLayout& operator <<(const rect_t& _rc_area);        // updates status bar control window position in accordance with area  ;
+		rect_t   operator = (const rect_t& _rc_area) const;  // returns calculated rectangle of status bar control for area provided;
 
 	private:
 		CLayout& operator = (const CLayout&) = delete;

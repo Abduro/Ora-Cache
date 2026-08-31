@@ -244,7 +244,7 @@ const
 CBorder& CSet_for_rect::Top (void) const { return this->Get(e_sides::e_top); }
 CBorder& CSet_for_rect::Top (void)       { return this->Get(e_sides::e_top); }
 
-bool  CSet_for_rect::Reduce (t_rect& _rc_what) const {
+bool  CSet_for_rect::Reduce (rect_t& _rc_what) const {
 	_rc_what;
 
 	bool b_changed = false;
@@ -257,7 +257,7 @@ bool  CSet_for_rect::Reduce (t_rect& _rc_what) const {
 	return b_changed;
 }
 
-bool  CSet_for_rect::Set (const t_rect& _rect) {
+bool  CSet_for_rect::Set (const rect_t& _rect) {
 	_rect;
 	bool b_changed = false;
 
@@ -335,5 +335,5 @@ bool  CSet_for_rect::Set (const t_rect& _rect) {
 	return b_changed;
 }
 
-CSet_for_rect& CSet_for_rect::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
+CSet_for_rect& CSet_for_rect::operator <<(const rect_t& _rect) { this->Set(_rect); return *this; }
 CSet_for_rect& CSet_for_rect::operator <<(const uint8_t _n_thickness) { (TBase&)*this << _n_thickness; return *this; }

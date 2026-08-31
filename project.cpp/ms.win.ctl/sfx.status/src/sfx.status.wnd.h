@@ -39,7 +39,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { class 
 
 	private: // IFormEvtSink override(s); 
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
-		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, t_rect*) override final;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, rect_t*) override final;
 #pragma endregion
 	private:
 		CWnd& operator = (const CWnd&) = delete;

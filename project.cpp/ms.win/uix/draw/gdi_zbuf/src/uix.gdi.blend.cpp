@@ -91,7 +91,7 @@ CPos&  CInput::Position (void) const { return this->m_pos; } const CPos& CInput:
 CPos&  CInput::Position (void)       { return this->m_pos; }       CPos& CInput::Pos (void)       { return this->m_pos; }
 
 CInput&  CInput::operator <<(const HDC _h_dc) { this->Ctx(_h_dc); return *this; }
-CInput&  CInput::operator <<(const t_rect& _rect) { this->Pos() << _rect; return *this; }
+CInput&  CInput::operator <<(const rect_t& _rect) { this->Pos() << _rect; return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
 

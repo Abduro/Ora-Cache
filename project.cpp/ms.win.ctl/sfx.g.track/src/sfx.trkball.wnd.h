@@ -30,7 +30,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace track { class C
 
 	private: // IFormEvtSink override(s); 
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
-		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, t_rect*) override final;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, rect_t*) override final;
 
 	private: // IBtnsEvtSink override;
 		err_code IEvtButton_OnReceive(const CEvent&) override final;

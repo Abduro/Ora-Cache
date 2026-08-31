@@ -35,7 +35,7 @@ namespace layout {
 		CTrack (void); CTrack (const CTrack&) = delete; CTrack (CTrack&&) = delete; ~CTrack (void) = default;
 
 		TError&   Error  (void) const;
-		t_rect    GetPos (const CTab&) const; // gets a position of the tracker window for tab page provided as input argument;
+		rect_t    GetPos (const CTab&) const; // gets a position of the tracker window for tab page provided as input argument;
 
 	private:
 		CTrack& operator = (const CTrack&) = delete; CTrack& operator = (CTrack&&) = delete;
@@ -53,7 +53,7 @@ namespace layout {
 		CTrack&  Get (const uint16_t _ndx) ;      // in case of input index value out of range; returned the reference to fake object; (rw)
 
 		// gets a position for the tracker window which resides into *currently* selected page, i.e. the *active* page of the tab control;
-		t_rect    GetPos (void) const;
+		rect_t    GetPos (void) const;
 
 		err_code  Update (void) ;  // updates the window position of each tracker; it is assumed the tab pages' layout is already updated;
 
@@ -71,7 +71,7 @@ namespace layout {
 		~CLayout (void) = default;
 
 	public:
-		t_rect  DrawArea (void) /*const*/;       // const is temporarilly removed due to this::Update() sets or changes value of the draw area;
+		rect_t  DrawArea (void) /*const*/;       // const is temporarilly removed due to this::Update() sets or changes value of the draw area;
 		bool    Is_valid (void) const;
 
 		TError&   Error  (void) const;
@@ -87,7 +87,7 @@ namespace layout {
 		layout::CTracks&  Tracks (void) ;
 
 		err_code  Update (void) ;                // gets main window client area rectangle and calls this::Update(rect);
-		err_code  Update (const t_rect&);        // recalculates the main view layout; the client rect can be provided on window sizing event;
+		err_code  Update (const rect_t&);        // recalculates the main view layout; the client rect can be provided on window sizing event;
 
 		const
 		CWindow&  Window (void) const;
@@ -104,7 +104,7 @@ namespace layout {
 		layout::CPage    m_page  ;
 		layout::CTracks  m_tracks;
 		CWindow  m_main ;   // main window handle;
-		t_rect   m_draw_area;
+		rect_t   m_draw_area;
 	};
 
 }}}

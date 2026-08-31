@@ -123,15 +123,15 @@ namespace ex_ui { namespace controls { namespace borders {
 		CBorder& Get (const e_sides) ;
 		// reduces the input rectangle area by removing the thickness of the borders from it; the borders' thickness may be different;
 		// no check for input rect emptiness or its normalization;
-		bool  Reduce (t_rect& _what) const;
+		bool  Reduce (rect_t& _what) const;
 
 		const CBorder& Bottom (void) const; const CBorder&  Left (void) const; const CBorder& Right (void) const; const CBorder& Top (void) const;
 		      CBorder& Bottom (void)      ;       CBorder&  Left (void) ;            CBorder& Right (void)      ;       CBorder& Top (void) ;
 		// ToDo: 'Set' method needs to have input parameter of the mode of the currently used device context in;
-		bool  Set (const t_rect&); // sets borders' points of all sides; empty rectangle is applicable; returns true in case if at least on side coords is changed;
+		bool  Set (const rect_t&); // sets borders' points of all sides; empty rectangle is applicable; returns true in case if at least on side coords is changed;
 
 	public:
-		CSet_for_rect& operator <<(const t_rect&); // calls this::Set(const t_rect&);
+		CSet_for_rect& operator <<(const rect_t&); // calls this::Set(const rect_t&);
 		CSet_for_rect& operator <<(const uint8_t _n_thickness);
 	};
 	typedef CSet_for_rect CBorders_for_rect;

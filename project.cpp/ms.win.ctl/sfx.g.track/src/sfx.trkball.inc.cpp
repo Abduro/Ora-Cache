@@ -8,4 +8,4 @@ using namespace ex_ui::controls::sfx;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ex_ui { namespace controls { namespace sfx { namespace _impl { void __warning_lnk_4221 (void) {} }}}}
+namespace ex_ui { namespace controls { namespace sfx { namespace _impl { void _16_warning_lnk_4221 (void) {} }}}}

@@ -124,8 +124,8 @@ CString   CLayout::Print(const e_print _e_opt/*= e_print::e_all*/) const {
 #endif
 
 const
-t_rect&   CLayout::Rect (void) const { return this->m_rect ; }
-t_rect&   CLayout::Rect (void) {
+rect_t&   CLayout::Rect (void) const { return this->m_rect ; }
+rect_t&   CLayout::Rect (void) {
 #if defined(_DEBUG) && defined (_use_break)
 	if (::IsRectEmpty(&this->m_rect)) {
 		::DebugBreak();
@@ -133,7 +133,7 @@ t_rect&   CLayout::Rect (void) {
 #endif
 	return this->m_rect ; }
 
-bool      CLayout::Rect (const t_rect& _rect) {
+bool      CLayout::Rect (const rect_t& _rect) {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setrect ;
 	const bool b_changed = this->Rect().left != _rect.left || this->Rect().top != _rect.top || this->Rect().right != _rect.right || this->Rect().bottom != _rect.bottom;
 	if (b_changed)
@@ -146,7 +146,7 @@ CLayout&  CLayout::operator = (const CLayout& _src) { *this << _src.Align() << _
 
 CLayout&  CLayout::operator <<(const CAlign& _align) { this->Align() = _align; return *this; }
 CLayout&  CLayout::operator <<(const ex_ui::controls::layout::CImage& _image) { this->Image() = _image; return *this; }
-CLayout&  CLayout::operator <<(const t_rect& _rect) { this->Rect(_rect); return *this; }
+CLayout&  CLayout::operator <<(const rect_t& _rect) { this->Rect(_rect); return *this; }
 CLayout&  CLayout::operator <<(const CPadding& _padding) { this->Padding() = _padding; return *this; }
 
 }}}
@@ -188,11 +188,11 @@ const
 CLayout&  CPane::Layout  (void) const { return this->m_layout ; }
 CLayout&  CPane::Layout  (void)       { return this->m_layout ; }
 
-err_code  CPane::Draw (const HDC _hdc, const t_rect& _drw_area) const {
+err_code  CPane::Draw (const HDC _hdc, const rect_t& _drw_area) const {
 	_hdc; _drw_area;
 	err_code n_result = __s_ok;
 
-	const t_rect drw_area = {0}; // this->Layout().Position();
+	const rect_t drw_area = {0}; // this->Layout().Position();
 
 	CZBuffer z_buffer(_hdc, drw_area);
 

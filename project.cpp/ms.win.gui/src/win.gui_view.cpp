@@ -3,10 +3,10 @@
 	This is Ebo Pack draw renderer test app main view interface implementation file;
 */
 #include "win.gui_view.h"
-using namespace ebo::boo::gui;
-
 #include "ebo.sha.gui.theme.h"
-using namespace ebo::sha::theme::paths;
+
+using namespace ::ebo::boo::gui;
+using namespace ::ebo::sha::theme::paths;
 
 #if (0) // unfortunately the integration this project with test-cases one is not easy deal, thus it is stopped;
 
@@ -16,10 +16,9 @@ using namespace ebo::sha::theme::paths;
 using namespace ebo::boo::test::cases;
 #endif
 
-namespace ebo { namespace boo { namespace gui { namespace _impl {}}}}
+namespace ebo { namespace boo { namespace gui { namespace _impl {}}}} using namespace ::ebo::boo::gui::_impl;
 
-using namespace ebo::boo::gui::_impl;
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CView{}
 
 CView:: CView (void) {
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
@@ -74,11 +73,6 @@ CView:: CView (void) {
 }
 CView::~CView (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-const
-ctl::CStatus& CView::Status (void) const { return this->m_status; }
-ctl::CStatus& CView::Status (void)       { return this->m_status; }
-
 err_code CView::OnCreate (void) {
 
 	err_code n_result = __s_ok;
@@ -101,7 +95,7 @@ err_code CView::OnDestroy (void) {
 	return n_result;
 }
 
-err_code CView::OnDraw (const HDC _h_dc, const t_rect& _drw_area) {
+err_code CView::OnDraw (const HDC _h_dc, const rect_t& _drw_area) {
 	_h_dc; _drw_area;
 	err_code n_result = __s_ok;
 #if defined(_test_case_lvl) && (_test_case_lvl == 0)
@@ -128,10 +122,14 @@ const
 CPages&   CView::Pages  (void) const { return this->m_pages; }
 CPages&   CView::Pages  (void)       { return this->m_pages; }
 const
+ctl::CStatus& CView::Status (void) const { return this->m_status; }
+ctl::CStatus& CView::Status (void)       { return this->m_status; }
+
+const
 CSurface& CView::Surface(void) const { return this->m_surface; }
 CSurface& CView::Surface(void)       { return this->m_surface; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 
 namespace shared {
 	TView&  Get_View (void) {

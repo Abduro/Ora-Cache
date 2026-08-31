@@ -43,7 +43,7 @@ err_code CPage::IEvtDraw_OnErase (const HDC _dev_ctx) {
 
 	const ex_ui::controls::sfx::tabbed::CControl& ctrl_ref = *(this->Get_ptr());
 
-	t_rect rc_area = {0};
+	rect_t rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 
 	ex_ui::draw::memory::CMode(_dev_ctx).Set(ex_ui::draw::memory::CMode::e_advanced);
@@ -77,7 +77,7 @@ err_code CPage::IEvtDraw_OnPaint (const w_param, const l_param) { // both input 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct ;
 	CPaintDC dc_(*this);
 
-	t_rect& rc_paint = dc_.m_ps.rcPaint;
+	rect_t& rc_paint = dc_.m_ps.rcPaint;
 
 	ex_ui::draw::memory::CMode(dc_).Set(ex_ui::draw::memory::CMode::e_advanced);
 	CZBuffer z_buffer(dc_, rc_paint);
@@ -114,7 +114,7 @@ using eEdges = IFormEvtSink::eEdges;
 err_code CPage::IEvtFrame_OnSize   (const eState _e_state, const t_size _size) {
 	_e_state; _size;
 
-	t_rect rc_area = {0, 0, _size.cx, _size.cy};
+	rect_t rc_area = {0, 0, _size.cx, _size.cy};
 
 	TPane::Borders() << rc_area;
 
@@ -122,7 +122,7 @@ err_code CPage::IEvtFrame_OnSize   (const eState _e_state, const t_size _size) {
 	return   n_result;
 }
 
-err_code CPage::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) { // it looks like the child window cannot be sizing by the pointing device, e.g. a mouse;
+err_code CPage::IEvtFrame_OnSizing (const eEdges _edges, rect_t* _p_rect) { // it looks like the child window cannot be sizing by the pointing device, e.g. a mouse;
 	_edges; _p_rect;
 
 	if (_p_rect)
@@ -138,7 +138,7 @@ err_code CPage::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) { // i
 
 #pragma endregion
 
-err_code CPage::Create (const HWND hParent, const t_rect& _rect, const bool _b_visible, const uint32_t _page_id) {
+err_code CPage::Create (const HWND hParent, const rect_t& _rect, const bool _b_visible, const uint32_t _page_id) {
 	hParent; _rect; _b_visible; _page_id;
 	err_code n_result = __s_ok;
 
@@ -150,7 +150,7 @@ err_code CPage::Create (const HWND hParent, const t_rect& _rect, const bool _b_v
 
 	const uint32_t n_style = WS_CHILD|(_b_visible ? WS_VISIBLE : 0)|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 
-	t_rect rect_ = _rect;
+	rect_t rect_ = _rect;
 	
 	TWindow::Create(
 		hParent, rect_, TString().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), n_style, 0, _page_id
@@ -213,7 +213,7 @@ bool  CPage::Set_ptr (TCtrlPtr _ptr) {
 	return b_changed;
 }
 
-err_code CPage::MoveTo (const t_rect& _rect, const bool _b_redraw) {
+err_code CPage::MoveTo (const rect_t& _rect, const bool _b_redraw) {
 	_rect;
 	err_code n_result = __s_ok;
 	if (::IsRectEmpty(&_rect))
@@ -260,8 +260,8 @@ CPage&     CTab::Page (void) const { return this->m_page; }
 CPage&     CTab::Page (void)       { return this->m_page; }
 
 const
-t_rect&    CTab::Strip (void) const { return this->m_strip; }
-t_rect&    CTab::Strip (void)       { return this->m_strip; }
+rect_t&    CTab::Strip (void) const { return this->m_strip; }
+rect_t&    CTab::Strip (void)       { return this->m_strip; }
 
 const bool CTab::Strip (const _long _left, const _long _top, const _long _right, const _long _bottom) {
 	_left; _top; _right; _bottom;
@@ -378,12 +378,12 @@ ITabEvents* CTabs::Events (void) const {
 	return this->m_sink;
 }
 
-int16_t  CTabs::Has (const t_point& _pt) const {
+int16_t  CTabs::Has (const point_t& _pt) const {
 
 	for (size_t i_ = 0; i_ < m_tabs.size(); i_++) {
 
 		const CTab&  tab_ = m_tabs.at(i_);
-		const t_rect& rc_ = tab_.Strip();
+		const rect_t& rc_ = tab_.Strip();
 
 		if (::PtInRect(&rc_, _pt)) {
 			return static_cast<int16_t>(i_);

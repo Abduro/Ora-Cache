@@ -67,7 +67,7 @@ err_code  CLayout::Update (void) {
 		if (false == wnd_.IsWindow()) {
 			return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
 		}
-		t_rect rc_area = {0};
+		rect_t rc_area = {0};
 
 		if (false == wnd_.GetClientRect(&rc_area)) {
 			return (this->m_error << __METHOD__).Last();
@@ -84,7 +84,7 @@ err_code  CLayout::Update (void) {
 /* the input rectangle is in parent window client area coords; it is expected the call comes from the test app;
     but actually it does not matter, ::OffsetRect takes the care of that;
 */
-err_code  CLayout::Update (const t_rect& _rc_area) {
+err_code  CLayout::Update (const rect_t& _rc_area) {
 	_rc_area;
 	if (::IsRectEmpty(&_rc_area))
 		return this->m_error << __METHOD__ << __e_rect;

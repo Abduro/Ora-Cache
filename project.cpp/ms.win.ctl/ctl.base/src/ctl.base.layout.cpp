@@ -13,8 +13,8 @@ CImage:: CImage (void) : m_size{0}, m_anchor{0} {}
 CImage:: CImage (const CImage& _src) : CImage() { *this = _src; }
 
 const
-t_point&   CImage::Anchor  (void) const { return this->m_anchor; }
-t_point&   CImage::Anchor  (void)       { return this->m_anchor; }
+point_t&   CImage::Anchor  (void) const { return this->m_anchor; }
+point_t&   CImage::Anchor  (void)       { return this->m_anchor; }
 bool       CImage::Anchor  (const int32_t _n_x, const int32_t _n_y) {
 	_n_x; _n_y;
 	const bool b_changed = this->Anchor().x != _n_x || this->Anchor().y != _n_y;
@@ -87,7 +87,7 @@ t_size     CImage::Total (void) const {
 
 CImage&    CImage::operator = (const CImage& _src) { *this << _src.Margins() << _src.Size(); return *this; }
 CImage&    CImage::operator <<(const CMargins& _margins) { this->Margins() = _margins; return *this; }
-CImage&    CImage::operator <<(const t_point& _anchor) { this->Anchor() = _anchor; return *this; }
+CImage&    CImage::operator <<(const point_t& _anchor) { this->Anchor() = _anchor; return *this; }
 CImage&    CImage::operator <<(const t_size&  _size) { this->Size() = _size; return *this; }
 
 }}}
@@ -304,7 +304,7 @@ CGaps_of_rect::~CGaps_of_rect (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CGaps_of_rect::ApplyTo (t_rect& _rect) const {
+bool CGaps_of_rect::ApplyTo (rect_t& _rect) const {
 	_rect;
 	bool b_changed = false;
 

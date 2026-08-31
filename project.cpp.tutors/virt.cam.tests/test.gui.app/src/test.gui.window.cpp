@@ -3,6 +3,8 @@
 	This is virtual camera test cases' desktop GUI main window interface implementation file;
 */
 #include "test.gui.window.h"
+#include "test.gui.layout.h"
+#include "test.gui.view.h"
 
 using namespace ::test::app;
 
@@ -49,7 +51,7 @@ namespace test { namespace app { namespace _impl {
 	};
 
 }}} using namespace ::test::app::_impl;
-
+#if (0)
 #pragma region cls::CAppWnd{}
 
 CAppWnd:: CAppWnd (void) {}
@@ -77,7 +79,6 @@ err_code CAppWnd::Destroy (void) {
 	}
 	return n_result;
 }
-
 const
 CFrame&  CAppWnd::Frame (void) const { return this->m_frame; }
 CFrame&  CAppWnd::Frame (void)       { return this->m_frame; }
@@ -106,7 +107,136 @@ l_result CAppWnd::OnDestroy (const uint32_t, const l_param _l_param, const w_par
 	::PostQuitMessage(0); // it is required to exit the message received loop;
 	return n_result;
 }
+#else
 
+CAppWnd:: CAppWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name) {
+	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this); TBase::Handlers().System().Subscribe(this);
+	TBase::Handlers().Frame().Subscribe(this);
+}
+CAppWnd::~CAppWnd(void) {
+	TBase::Handlers().Draw().Unsubscribe(this); TBase::Handlers().Live().Unsubscribe(this); TBase::Handlers().System().Unsubscribe(this);
+	TBase::Handlers().Frame().Unsubscribe(this);
+}
+
+err_code CAppWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
+	_dev_ctx;
+	static bool  b_fst_time = false;
+	if (false == b_fst_time) {
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra ;
+		HBRUSH brush = ::CreateSolidBrush(ex_ui::theme::Get_current().Form().Bkgnd().States().Normal().Color());
+		::SetClassLongPtr(*this, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
+		b_fst_time = true;
+	}
+	err_code n_result = __s_ok;  // does not hold this message, otherwise child windows will not be able to draw anything on this one;
+	return   n_result;
+}
+
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint ;
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint ;
+
+err_code CAppWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input args are useless;
+	using WTL::CPaintDC;
+	using ex_ui::color::rgb::CFloat;
+
+	CPaintDC dc_(*this);
+	::shared::Get_View().OnDraw(dc_.m_hDC, dc_.m_ps.rcPaint); // *important*: the rectangle being sent is entire window client area!
+	err_code n_result = __s_ok;  // this message is handled;
+	return   n_result;
+}
+
+err_code CAppWnd::IEvtLife_OnClose (const w_param, const l_param) {
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+err_code CAppWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
+	err_code n_result = __s_false;
+	::shared::Get_View().Parent() = *this;
+	::shared::Get_View().OnCreate();
+
+	rect_t rc_client = {0};
+	this->GetClientRect(&rc_client);
+
+	::shared::Get_Layout().Window() = *this;     // ATL::CWindow operator is applied here;
+	::shared::Get_Layout().Update(rc_client);
+
+	TBase::m_error << __METHOD__ << __s_ok;
+
+	return n_result;
+}
+
+err_code CAppWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
+
+	err_code n_result = __s_false;
+	::shared::Get_View().OnDestroy();
+
+	return n_result;
+}
+
+err_code CAppWnd::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
+	
+	err_code n_result = __s_false;
+	switch (_w_param)
+	{
+	case IMsgSysEventSink::eSysCmd::eClose: {
+			::PostQuitMessage(0);
+		} break;
+	}
+	return  n_result;
+}
+
+using eState = IFormEvtSink::eState;
+using eEdges = IFormEvtSink::eEdges;
+
+err_code CAppWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
+
+	err_code n_result = __s_false;
+
+	switch (_e_state) {
+	case eState::eRestored :
+	case eState::eMaximized: {
+		bool b_break = false;
+		if (!b_break)
+			 b_break = true ;
+
+		rect_t rect = {0};
+		this->GetClientRect(&rect);
+		// ToDo: does not work properly yet, needs to be checked;
+		::shared::Get_Layout().Update(rect);
+		::shared::Get_View().OnDraw(nullptr, rect); // calling the draw function for specific client area rectangle must be reviewed;
+
+	} break;
+	}
+
+	return   n_result;
+}
+
+err_code CAppWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
+	_edges; _p_rect;     // this rectangle is in screen coordinates of entire window, including non-client area;
+
+	rect_t rc_client = {0};
+	if (_p_rect && false) { // it doesn't work as expected because the input rectangle contains non-client area dimensions;
+		rc_client = {0, 0, _p_rect->right - _p_rect->left, _p_rect->bottom - _p_rect->top};
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
+		 if (0 == ::MapWindowPoints(HWND_DESKTOP, *this, (point_t*)&rc_client, sizeof(rect_t)/sizeof(point_t)))
+			TBase::m_error.Last();
+	}
+	else
+		if (0 == this->GetClientRect(&rc_client)) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+			(TBase::m_error << __METHOD__).Last();
+
+	if (TBase::m_error == false)
+		TBase::m_error << ::shared::Get_Layout().Update(rc_client);
+	if (TBase::m_error == false)
+		::shared::Get_View().OnDraw(nullptr, rc_client);
+
+	err_code n_result = __s_false;
+	return   n_result;
+}
+
+
+#endif
 #pragma endregion
 #pragma region cls::CFrame{}
 

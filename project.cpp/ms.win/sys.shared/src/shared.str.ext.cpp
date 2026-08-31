@@ -6,10 +6,33 @@
 */
 #include "shared.str.ext.h"
 
-using namespace shared::common;
+using namespace ::shared::common;
 
-/////////////////////////////////////////////////////////////////////////////
-#if (1)
+namespace shared { namespace common { namespace _impl {
+
+#ifndef __e_handle
+#define __e_handle INVALID_HANDLE_VALUE // (uint32_t)(-1)
+#endif
+
+	CString __get_inv_ptr_str (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
+
+		CString cs_out;
+		CString cs_val;
+
+		if (false){}
+		else if (!_p_fun_or_obj_ptr) {
+			cs_val.Format(!!_p_format ? _p_format : _T("0x%x"), 0);
+			cs_out.Format(_T("#nullptr (%s)"), (_pc_sz) cs_val);
+		}
+		else if (__e_handle == _p_fun_or_obj_ptr) {
+			cs_val.Format(!!_p_format ? _p_format : _T("0x%x"), __e_handle);
+			cs_out.Format(_T("#handle (%s)"), (_pc_sz) cs_val);
+		}
+		return cs_out;
+	}
+
+}}} using namespace ::shared::common::_impl;
+
 CString_Ex:: CString_Ex (const bool  _b_value) : TBase() { *this << _b_value; }
 CString_Ex:: CString_Ex (const dword _d_value) : TBase() { *this << _d_value; }
 CString_Ex:: CString_Ex (const float _f_value) : TBase() { *this << _f_value; }
@@ -17,9 +40,59 @@ CString_Ex:: CString_Ex (const long  _l_value) : TBase() { *this << _l_value; }
 
 CString_Ex:: CString_Ex (_pc_sz  _lp_sz_value) : TBase(_lp_sz_value) {}
 CString_Ex:: CString_Ex (const CString_Ex& _ref) : TBase() { *this = _ref; }
+
+#if defined WIN64
+_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case) {
+	return this->__address_of (_p_fun_or_obj_ptr, _T("0x%x"), _b_low_case);
+}
+
+_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format, const bool _b_low_case) {
+	_p_fun_or_obj_ptr; _p_format; _b_low_case;
+
+	(TBase&)*this = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
+	if (false == TBase::IsEmpty())
+		return (_pc_sz)*this;
+#if (0)
+	// https://stackoverflow.com/questions/22846721/pointer-outputs  ;
+	const
+	uint64_t* p_address = reinterpret_cast<const uint64_t*>(_p_fun_or_obj_ptr);
+
+	((TBase&)*this).Format(!!_p_format ? _p_format : _T("0x%x"), &p_address);
+#else
+	// https://stackoverflow.com/questions/2369541/where-is-p-useful-with-printf ;
+	((TBase&)*this).Format(_T("0x%p"), _p_fun_or_obj_ptr);
+	CString cs_loc = ((TBase&)*this).Right(8);
+	((TBase&)*this).Format(_T("0x%s"), (_pc_sz) cs_loc);
 #endif
-/////////////////////////////////////////////////////////////////////////////
-#if (1)
+	// https://learn.microsoft.com/en-us/cpp/atl-mfc-shared/reference/cstringt-class#makelower ;
+	if (_b_low_case)
+		((TBase&)*this).MakeLower();
+	return (_pc_sz)*this;
+}
+#else
+_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case) {
+	return this->__address_of (_p_fun_or_obj_ptr, _T("0x%x"), _b_low_case);
+}
+
+_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format, const bool _b_low_case) {
+	_p_fun_or_obj_ptr; _p_format; _b_low_case;
+
+	(TBase&)*this = __get_inv_ptr_str(_p_fun_or_obj_ptr, _p_format);
+	if (false == TBase::IsEmpty())
+		return (_pc_sz)*this;
+
+	const
+	uint32_t* p_address = reinterpret_cast<const uint32_t*>(_p_fun_or_obj_ptr);
+	uint32_t  n_address = (!!p_address ? *p_address : 0);
+	
+	((TBase&)*this).Format(!!_p_format ? _p_format : _T("0x%x"), n_address);
+	if (_b_low_case)
+		((TBase&)*this).MakeLower();
+
+	return  (_pc_sz)*this;
+}
+#endif
+
 USHORT  CString_Ex::Bytes (void) const { return static_cast<ushort>((TBase::IsEmpty() ? 0 : (TBase::GetLength() + 1) * sizeof(t_char))); }
 
 bool    CString_Ex::Bool  (void) const {
@@ -138,8 +211,7 @@ _pc_sz  CString_Ex::Long  (long _l_value) {
 }
 
 bool    CString_Ex::Is (void) const { return false == TBase::IsEmpty(); }
-#endif
-/////////////////////////////////////////////////////////////////////////////
+
 #if (0)
 _var    CString_Ex::Var  (void) const {
 	return _variant_t();
@@ -150,69 +222,6 @@ _pc_sz  CString_Ex::Var  (const _var&, _pc_sz _fmt/* = _T("type=%s;value=%s")*/)
 	return (_pc_sz)*this;
 }
 #endif
-/////////////////////////////////////////////////////////////////////////////
-#if(1)
-#if defined WIN64
-_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
-	return this->__address_of (_p_fun_or_obj_ptr, _T("0x%x"));
-}
-
-_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
-	_p_fun_or_obj_ptr; _p_format;
-
-	if (!_p_fun_or_obj_ptr) {
-		TBase::SetString(_T("#not_set"));
-		return TBase::GetString();
-	}
-
-	if (INVALID_HANDLE_VALUE == _p_fun_or_obj_ptr) {
-		TBase::SetString(_T("#invalid"));
-		return TBase::GetString();
-	}
-	// https://stackoverflow.com/questions/22846721/pointer-outputs  ;
-	const
-	uint64_t* p_address = reinterpret_cast<const uint64_t*>(_p_fun_or_obj_ptr);
-//	uint64_t  n_address = (p_address ? *p_address : 0);
-	if (nullptr == _p_format)
-		TBase::Format(_T("0x%x"), &p_address);
-	else
-		TBase::Format(_p_format , &p_address);
-
-	return TBase::GetString();
-}
-#else
-_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr) {
-	return this->__address_of (_p_fun_or_obj_ptr, _T("0x%x"));
-}
-
-_pc_sz CString_Ex::__address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format) {
-	_p_fun_or_obj_ptr;
-
-	if (!_p_fun_or_obj_ptr) {
-		TBase::SetString(_T("#not_set"));
-		return TBase::GetString();
-	}
-
-	if (INVALID_HANDLE_VALUE == _p_fun_or_obj_ptr) {
-		TBase::SetString(_T("#invalid"));
-		return TBase::GetString();
-	}
-
-	const
-	uint32_t* p_address = reinterpret_cast<const uint32_t*>(_p_fun_or_obj_ptr);
-	uint32_t  n_address = (!!p_address ? *p_address : 0);
-	
-	if (nullptr == _p_format)
-		TBase::Format(_T("0x%x"), n_address);
-	else
-		TBase::Format(_p_format , n_address);
-
-	return TBase::GetString();
-}
-#endif
-#endif
-/////////////////////////////////////////////////////////////////////////////
-#if (1)
 _pc_sz  CString_Ex::Before(t_char _lp_sz_sep, _pc_sz _lp_sz_pfx, const bool _b_exc_sep) {
 	_lp_sz_sep; _lp_sz_pfx;
 	const INT n_pos = TBase::ReverseFind(_lp_sz_sep);
@@ -290,8 +299,7 @@ TParts  CString_Ex::Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep) const 
 
 	return vec_;
 }
-#endif
-/////////////////////////////////////////////////////////////////////////////
+
 #if(0)
 CStdString&  CStdString::operator=(const _variant_t& _var) {
 
@@ -310,8 +318,7 @@ CStdString&  CStdString::operator=(const _variant_t& _var) {
 	return *this;
 }
 #endif
-/////////////////////////////////////////////////////////////////////////////
-#if (1)
+
 CString_Ex& CString_Ex::operator = (const CString_Ex& _ref) { (TBase&)*this = (const TBase&)_ref; return *this; }
 CString_Ex& CString_Ex::operator <<(bool  _b_value) { _pc_sz lp_sz_result  = this->Bool (_b_value); lp_sz_result; return *this; }
 CString_Ex& CString_Ex::operator <<(dword _d_value) { _pc_sz lp_sz_result  = this->Dword(_d_value); lp_sz_result; return *this; }
@@ -321,8 +328,6 @@ CString_Ex& CString_Ex::operator <<(long  _l_value) { _pc_sz lp_sz_result  = thi
 CString_Ex& CString_Ex::operator <<(_pc_sz _lp_sz_value) { *this = _lp_sz_value; return *this; }
 CString_Ex& CString_Ex::operator <<(_guid& _guid_value) { this->Guid(_guid_value); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CString_Ex::operator CString (void) const { return CString(TBase::GetString()); }
 CString_Ex::operator bool    (void) const { return this->Bool (); }
 CString_Ex::operator dword   (void) const { return this->Dword(); }
@@ -330,13 +335,9 @@ CString_Ex::operator float   (void) const { return this->Float(); }
 CString_Ex::operator _guid   (void) const { return this->Guid (); }
 CString_Ex::operator long    (void) const { return this->Long (); }
 CString_Ex::operator _pc_sz  (void) const { return TBase::GetString(); }
-#endif
-/////////////////////////////////////////////////////////////////////////////
-#if (1)
+
 CString_2:: CString_2 (void) : TBase() {}
 CString_2::~CString_2 (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 void CString_2::Format (_pc_sz _p_sz_format, ...) {
 	_p_sz_format;
@@ -345,7 +346,3 @@ void CString_2::Format (_pc_sz _p_sz_format, ...) {
 	TBase::FormatV( _p_sz_format, argList );
 	va_end( argList );
 }
-#endif
-/////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////

@@ -44,9 +44,9 @@ using namespace geometry::_2D::shapes::_impl;
 COblong:: COblong (void) : TBase(COblong::u_vertices) {}
 COblong:: COblong (const COblong& _src) : COblong() { *this = _src; }
 COblong:: COblong (const int32_t _left, const int32_t _top, const int32_t _right, const int32_t _bottom) : COblong() {
-	*this << t_rect{_left, _top, _right, _bottom};
+	*this << rect_t{_left, _top, _right, _bottom};
 }
-COblong:: COblong (const t_rect& _rect) : COblong() { *this << _rect; }
+COblong:: COblong (const rect_t& _rect) : COblong() { *this << _rect; }
 COblong:: COblong (COblong&& _victim) : COblong() { *this = _victim; }
 COblong::~COblong (void) {}
 
@@ -161,7 +161,7 @@ CPoint&  COblong::Vertex (const e_vertex _vertex) {
 	return _get_invalid_point();
 }
 
-t_rect   COblong::Get (void) const {
+rect_t   COblong::Get (void) const {
 #if (0)
 	return {
 		this->Vertex(e_vertex::e_left_top).X(),
@@ -177,7 +177,7 @@ t_rect   COblong::Get (void) const {
 #endif
 }
 
-bool     COblong::Set (const t_rect& _rect) {
+bool     COblong::Set (const rect_t& _rect) {
 	_rect;
 	bool b_changed = false;
 
@@ -198,4 +198,4 @@ COblong& COblong::operator = (COblong&& _victim) {
 COblong& COblong::operator <<(const CPoint& _left_up)   { this->Vertex(e_vertex::e_left_top) = _left_up; return *this; }
 COblong& COblong::operator >>(const CPoint& _right_low) { this->Vertex(e_vertex::e_right_low) = _right_low; return *this; }
 
-COblong& COblong::operator <<(const t_rect& _rect) { this->Set(_rect); return *this; }
+COblong& COblong::operator <<(const rect_t& _rect) { this->Set(_rect); return *this; }

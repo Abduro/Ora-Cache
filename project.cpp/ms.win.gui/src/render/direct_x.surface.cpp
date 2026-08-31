@@ -32,13 +32,13 @@ err_code CSurface::IEvtDraw_OnPaint (const w_param, const l_param) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code CSurface::IEvtFrame_OnMove   (const t_point& _top_left_client_area) {
+err_code CSurface::IEvtFrame_OnMove   (const point_t& _top_left_client_area) {
 	_top_left_client_area;
 	err_code n_result = __s_false;
 	return   n_result;
 
 }
-err_code CSurface::IEvtFrame_OnMoving (const t_rect& _p_wnd_coords){
+err_code CSurface::IEvtFrame_OnMoving (const rect_t& _p_wnd_coords){
 	_p_wnd_coords;
 	err_code n_result = __s_false;
 	return   n_result;
@@ -61,7 +61,7 @@ err_code CSurface::IEvtFrame_OnSize   (const eState _e_state, const SIZE) {
 
 err_code CSurface::IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect_applied) {
 
-	t_rect rc_applied = *_p_rect_applied;  // *attention*: this rectangle in parent window client area coordinates;
+	rect_t rc_applied = *_p_rect_applied;  // *attention*: this rectangle in parent window client area coordinates;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect ;
 	::OffsetRect(&rc_applied, -rc_applied.left, -rc_applied.top);
 
@@ -73,12 +73,12 @@ err_code CSurface::IEvtFrame_OnSizing (const eEdges, LPRECT _p_rect_applied) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-err_code  CSurface::Create (const HWND _h_parent, const t_rect& _rc_place) {
+err_code  CSurface::Create (const HWND _h_parent, const rect_t& _rc_place) {
 	_h_parent; _rc_place;
 
 	err_code n_result = __s_ok;
 
-	t_rect rc_place_ = _rc_place;
+	rect_t rc_place_ = _rc_place;
 
 	HWND h_surface = TBase::Create(_h_parent, &rc_place_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE);
 	if ( h_surface ) {

@@ -7,7 +7,7 @@
 
 using namespace ex_ui::controls::sfx::status;
 
-namespace ex_ui { namespace controls { namespace sfx { namespace status { namespace _impl { void __warning_lnk_4221 (void) {}
+namespace ex_ui { namespace controls { namespace sfx { namespace status { namespace _impl { void _13_warning_lnk_4221 (void) {}
 	// the error below may appear due to not proper reference: CPane base class can be implicitly used;
 	// https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/compiler-error-c2440 ;
 	using CPane = ex_ui::controls::sfx::status::CPane;

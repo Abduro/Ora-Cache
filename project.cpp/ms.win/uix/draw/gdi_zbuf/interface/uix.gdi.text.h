@@ -227,21 +227,21 @@ namespace format {
 		rgb_color& Fore  (void) const;
 		rgb_color& Fore  (void) ;
 		const
-		t_rect&    Out_to(void) const;
-		t_rect&    Out_to(void) ;
+		rect_t&    Out_to(void) const;
+		rect_t&    Out_to(void) ;
 		const
 		CString&   Text  (void) const;
 		CString&   Text  (void) ;
 
 	protected:
 		rgb_color  m_clr_fore ;
-		t_rect     m_draw_rect;
+		rect_t     m_draw_rect;
 		CString    m_text ;
 
 	public:
 		CText_Base&  operator <<(_pc_sz _p_text);
 		CText_Base&  operator <<(const rgb_color& _clr_fore);
-		CText_Base&  operator <<(const t_rect&);
+		CText_Base&  operator <<(const rect_t&);
 
 	private:
 		CText_Base&  operator = (const CText_Base&) = delete;
@@ -369,8 +369,8 @@ namespace output {
 		CAlign&    Align (void) ;
 
 		const
-		t_point&   Anchor(void) const;
-		t_point&   Anchor(void) ;
+		point_t&   Anchor(void) const;
+		point_t&   Anchor(void) ;
 
 		const
 		HDC&       Ctx   (void) const;
@@ -385,7 +385,7 @@ namespace output {
 
 	public:
 		CTextOut&  operator <<(const HDC&);
-		CTextOut&  operator <<(const t_rect&);
+		CTextOut&  operator <<(const rect_t&);
 
 	private:
 		CTextOut&  operator = (const CTextOut&) = delete;
@@ -394,7 +394,7 @@ namespace output {
 	private:
 		CAlign    m_align;
 		HDC       m_h_dc ;
-		t_point   m_anchor;
+		point_t   m_anchor;
 	};
 
 }}}

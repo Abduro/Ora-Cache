@@ -15,7 +15,6 @@
 #include <map>
 
 #include "shared.types.h"   // typedefs from shared::types;
-
 #include "sys.err.codes.h"  // for converting winapi system error codes to handle result;
 #include "sys.sync_obj.h"   // included for trying to make error object available to work in multithreaded environment;
 /*
@@ -34,8 +33,8 @@ namespace shared { namespace sys_core {
 	using namespace shared::types;
 
 	struct CLang {
-		dword  dwPrimary;  // primary language Id
-		dword  dwSecond;   // sub-language Id
+		dword  dwPrimary;  // primary language Id;
+		dword  dwSecond;   // sub-language Id;
 
 		CLang(void) : dwPrimary(LANG_NEUTRAL), dwSecond(SUBLANG_DEFAULT) {}
 		CLang(const dword _primary, const dword _second) : dwPrimary(_primary), dwSecond(_second) {}
@@ -57,15 +56,12 @@ namespace shared { namespace sys_core {
 		CErr_Base(const dword  dwError, const CLang&);
 		CErr_Base(const err_code hError, const CLang&);
 
-	public:
 		CString Print (void) const;
 
-	public:
-		CErr_Base& operator= (const dword   _code)    ;    // sets error result from win 32 error code;
-		CErr_Base& operator= (const err_code _hres)   ;    // sets error result; S_OK is acceptable;
-		CErr_Base& operator= (TLangRef) ;
+		CErr_Base& operator= (const dword   _code);  // sets error result from win 32 error code;
+		CErr_Base& operator= (const err_code _hres); // sets error result; S_OK is acceptable;
+		CErr_Base& operator= (TLangRef);
 
-	public:
 		operator dword    (void) const;   // gets error state Win API code;
 		operator err_code (void) const;   // gets error state of execution result;
 		operator TLangRef (void) const;   // gets error description language;
@@ -104,14 +100,13 @@ namespace shared { namespace sys_core {
 	class CErr_State : public CErr_Base {
 	                  typedef CErr_Base TBase;
 	protected:
-		CString    m_buffer; // error details' buffer;
+		CString m_buffer; // error details' buffer;
 
 	public:
 		 CErr_State (void);
 		 CErr_State (const CErr_State&);
 		~CErr_State (void);
 
-	public:
 		_pc_sz  Get (void) const;        // gets error state details;
 		void    Set (const bool _reset); // if _reset is true, error state is OLE_E_BLANK; otherwise, the state is set to false (i.e. S_OK);
 		void    Set (const dword    _err_code);
@@ -125,11 +120,9 @@ namespace shared { namespace sys_core {
 
 		CString Print (void) const;      // not thread-safe;
 
-	public:
 		operator bool    (void) const;   // returns TRUE when state indicates a ***failure*** (i.e. is not S_OK);
 		operator _pc_sz  (void) const;   // gets error state details;
 
-	public:
 		CErr_State&   operator= (const bool _reset); // if _reset is true, error state is a failure ; otherwise, the state is false (i.e. S_OK);
 		CErr_State&   operator= (const CErr_State&);
 		CErr_State&   operator= (_pc_sz  _sz_desc);
@@ -153,11 +146,9 @@ namespace shared { namespace sys_core {
 		 CError (const CString& _cs_cls, const CString& _cs_method, const err_code _n_err_code); // this is the most suitable for preprocessor directives;
 		~CError (void);
 
-	public:
 		virtual
 		err_code    Result(const err_code _new); // sets new error state result and returns a previous one;
 
-	public:
 		_pc_sz      Class (void) const ;                              // gets the error source class name;
 		void        Class (_pc_sz)     ;                              // sets the error source class name;
 		void        Class (_pc_sz _lp_class, const bool bFormatted);  // sets the error source class name;
@@ -175,7 +166,7 @@ namespace shared { namespace sys_core {
 		dword       Show  (const HWND  = ::GetActiveWindow()) const;
 		CErr_State& State (void)       ;
 		TErr_State& State (void) const ;
-#if defined(_DEBUG) || defined(TRUE)
+
 		enum e_print {
 		     e_all  = 0, // prints all parts of the error including: error base, error state, error context;
 		     e_base = 1, // prints error base content: win32 code, h_result, description;
@@ -183,16 +174,14 @@ namespace shared { namespace sys_core {
 		     e_req  = 3, // prints error code, result, description, class and method names;
 		};
 		CString Print (const CError::e_print = CError::e_print::e_all) const;
-#endif
+
 		// ToDo: there is some mess with assignment operators; needs to be reviewed;
-	public:
 		CError& operator = (const _com_error&);      // sets error info from COM error object;
 		CError& operator = (const CError&)    ;      // sets error info from other error object;
 		CError& operator = (const dword _code);      // sets error result from win 32 error code;
 		CError& operator = (const err_code _hr);     // sets error result; S_OK is acceptable;
 		CError& operator = (_pc_sz _lp_desc );       // sets error description;
 
-	public:
 		CError& operator <<(const err_code _hr);     // sets error result; intended for using in routines for error initial state set;
 		CError& operator <<(const CString& _method); // sets method name the error occurs in; 
 		CError& operator >>(const CString& _class) ; // sets class name that is the source of the error;
@@ -201,12 +190,11 @@ namespace shared { namespace sys_core {
 
 		CError& operator = (CError&&) = delete;
 
-	public:
-		operator const bool  (void) const ;         // returns true if error object is ***IN*** error state, otherwise false;
-		operator err_code    (void) const ;         // returns error result;
-		operator _pc_sz      (void) const ;         // returns error description;
-		operator CErr_State& (void)       ;         // returns error state (rw) ;
-		operator TErr_State& (void) const ;         // returns error state (ra) ;
+		operator const bool  (void) const ;          // returns true if error object is ***IN*** error state, otherwise false;
+		operator err_code    (void) const ;          // returns error result;
+		operator _pc_sz      (void) const ;          // returns error description;
+		operator CErr_State& (void)       ;          // returns error state (rw) ;
+		operator TErr_State& (void) const ;          // returns error state (ra) ;
 
 		enum e_cmds : uint32_t {
 		e_do_nothing = 0x0,
@@ -215,7 +203,6 @@ namespace shared { namespace sys_core {
 
 		CError&  operator () (const e_cmds _n_cmd); // executes command specified through input arg;
 
-	
 	protected:
 		mutable
 		CErr_State m_state ;   // error state;

@@ -53,7 +53,7 @@ err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 #if (0)
-	t_rect rc_draw = {0};
+	rect_t rc_draw = {0};
 	this->GetClientRect(&rc_draw);
 	shared::Get_View().OnDraw(_dev_ctx, rc_draw);
 #endif
@@ -109,7 +109,7 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	err_code n_result = __s_false;
 	
 #if (0)
-	t_rect rc_surface = m_layout.DrawArea();
+	rect_t rc_surface = m_layout.DrawArea();
 	HWND h_surface = this->m_surface.Create(TBase::m_hWnd, &rc_surface, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), WS_CHILD|WS_VISIBLE);
 	if ( h_surface ) {
 		_render().Init(h_surface); // this view window does not care about renderer init() result;
@@ -122,13 +122,13 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	::shared::Get_View().Tabbed().Create(*this, 0xB);
 #endif
 #if defined(_test_case_lvl) && (_test_case_lvl >= 3)
-	t_rect rc_surface = m_layout.DrawArea();
+	rect_t rc_surface = m_layout.DrawArea();
 	n_result = shared::Get_View().Surface().Create(*this, rc_surface);
 #endif
 
 	::shared::Get_View().OnCreate();
 
-	t_rect rc_client = {0};
+	rect_t rc_client = {0};
 	this->GetClientRect(&rc_client);
 
 	::shared::Get_Layout().Window() = *this;     // ATL::CWindow operator is applied here;
@@ -184,7 +184,7 @@ err_code CWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
 		if (!b_break)
 			 b_break = true ;
 
-		t_rect rect = {0};
+		rect_t rect = {0};
 		this->GetClientRect(&rect);
 		// ToDo: does not work properly yet, needs to be checked;
 		::shared::Get_Layout().Update(rect);
@@ -199,11 +199,11 @@ err_code CWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
 err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	_edges; _p_rect;     // this rectangle is in screen coordinates of entire window, including non-client area;
 #if (1)
-	t_rect rc_client = {0};
+	rect_t rc_client = {0};
 	if (_p_rect && false) { // it doesn't work as expected because the input rectangle contains non-client area dimensions;
 		rc_client = {0, 0, _p_rect->right - _p_rect->left, _p_rect->bottom - _p_rect->top};
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
-		 if (0 == ::MapWindowPoints(HWND_DESKTOP, *this, (t_point*)&rc_client, sizeof(t_rect)/sizeof(t_point)))
+		 if (0 == ::MapWindowPoints(HWND_DESKTOP, *this, (point_t*)&rc_client, sizeof(rect_t)/sizeof(point_t)))
 			TBase::m_error.Last();
 	}
 	else
@@ -215,7 +215,7 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	if (TBase::m_error == false)
 		::shared::Get_View().OnDraw(nullptr, rc_client);
 #else
-	t_rect rc_surface = m_layout.DrawArea();
+	rect_t rc_surface = m_layout.DrawArea();
 	// *important* : MoveWindow() does not send WM_MOVE nor WM_MOVING messages to target window;
 	if (::shared::Get_View().Surface()) {
 		::shared::Get_View().Surface().MoveWindow(&rc_surface, false);
@@ -223,7 +223,7 @@ err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints ;
 	// ::MapWindowPoints(HWND_DESKTOP, *this, (LPPOINT)_p_rect, 2);
-	t_rect rc_client = {0};
+	rect_t rc_client = {0};
 	TBase::GetClientRect(&rc_client);
 
 	::shared::Get_View().Status().Layout().Update(rc_client);

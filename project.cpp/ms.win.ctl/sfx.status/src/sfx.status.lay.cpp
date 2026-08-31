@@ -52,7 +52,7 @@ err_code CLayout::Update (void) {
 		return this->m_error << __METHOD__ << __e_hwnd = _T("The control window is not valid");
 	}
 
-	t_rect rc_area = {0};
+	rect_t rc_area = {0};
 	// it is possible to get the same rectangle as it was in the previous call of this method;
 	// it looks like there's no reason to recalculate this status bar control layout, but some settings may be changed, so no options;
 	if (false == wnd_.GetClientRect(&rc_area)) {
@@ -84,7 +84,7 @@ err_code CLayout::Update (void) {
 	if (glyph.Format().Image().Is_set()) { // because this function may be called on create window of this control, settings mey be not applied yet;
 
 		TPn_Lay& lay = glyph.Layout();
-		t_rect& rect = glyph.Layout().Rect(); rect = rc_area; rect.left = rect.right - lay.Fixed(); // takes into account fixed width;
+		rect_t& rect = glyph.Layout().Rect(); rect = rc_area; rect.left = rect.right - lay.Fixed(); // takes into account fixed width;
 
 		lay.Image().Size() = frm_sz;
 
@@ -97,7 +97,7 @@ err_code CLayout::Update (void) {
 		}
 
 		// takes into account the image margins; left side of the pane rectangle is already set above;
-		t_point pt_image = {
+		point_t pt_image = {
 			rect.left + lay.Image().Margins().Left(), rc_area.top + lay.Image().Margins().Top()
 		};
 
@@ -116,7 +116,7 @@ err_code CLayout::Update (void) {
 		CFormat& fmt = pane.Format(); fmt;
 		TPn_Lay& lay = pane.Layout(); lay;
 
-		t_rect& rect = pane.Layout().Rect(); rect = rc_area;
+		rect_t& rect = pane.Layout().Rect(); rect = rc_area;
 #if (1)
 		if (fmt.Image().Is_set()) { // may be it is not necessary and image size is already set, but nevertheless;
 			lay.Image().Size() = frm_sz;
@@ -144,7 +144,7 @@ err_code CLayout::Update (void) {
 		if (pane.Format().Image().Is_set()) {
 
 			// takes into account the image margins; this is the time to use padding of the pane;
-			t_point pt_image = {
+			point_t pt_image = {
 				rect.left + lay.Image().Margins().Left() + lay.Padding().Left(), rect.top + lay.Image().Margins().Top() + lay.Padding().Top()
 			};
 
@@ -162,7 +162,7 @@ err_code CLayout::Update (void) {
 	return n_result;
 }
 
-err_code CLayout::Update (const t_rect& _rc_area) {
+err_code CLayout::Update (const rect_t& _rc_area) {
 	_rc_area;
 
 	if (::IsRectEmpty(&_rc_area))
@@ -172,7 +172,7 @@ err_code CLayout::Update (const t_rect& _rc_area) {
 	if (false == wnd_.IsWindow())
 		return this->m_error << __METHOD__ << (err_code) TErrCodes::eExecute::eState;
 
-	t_rect rc_area_ = ((*this) = _rc_area);
+	rect_t rc_area_ = ((*this) = _rc_area);
 
 	if (false == wnd_.SetWindowPos(0, &rc_area_, SWP_NOACTIVATE|SWP_NOZORDER))
 		return (this->m_error << __METHOD__).Last();
@@ -182,14 +182,14 @@ err_code CLayout::Update (const t_rect& _rc_area) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-CLayout&  CLayout::operator <<(const t_rect& _rc_area) {
+CLayout&  CLayout::operator <<(const rect_t& _rc_area) {
 	this->Update(*this = _rc_area);
 	return *this;
 }
 
-t_rect    CLayout::operator = (const t_rect& _rc_area) const {
+rect_t    CLayout::operator = (const rect_t& _rc_area) const {
 	
-	t_rect rc_ = {0};
+	rect_t rc_ = {0};
 
 	if (::IsRectEmpty(&_rc_area)) {
 		this->m_error << __METHOD__ << __e_rect;

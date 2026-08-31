@@ -117,9 +117,9 @@ namespace ex_ui { namespace draw { namespace shade {
 		TRgbQuad  Clr (void) const;
 		bool      Clr (const TRgbQuad&); // returns 'true' in case of one of the color channel values is changed;
 		const
-		t_point   Point (void) const;
+		point_t   Point (void) const;
 		bool      Point (const int32_t _x, const int32_t _y); // returns 'true' in case when anchor point is changed;
-		bool      Point (const t_point&);
+		bool      Point (const point_t&);
 #if defined(_DEBUG)
 		CString   Print (const e_print = e_print::e_all) const;
 #endif
@@ -128,7 +128,7 @@ namespace ex_ui { namespace draw { namespace shade {
 		TVertex&  Raw (void) ;
 
 	public:
-		CVertex&  operator <<(const t_point&);
+		CVertex&  operator <<(const point_t&);
 		CVertex&  operator <<(const TVertex&);
 
 		operator const TVertex& (void) const;

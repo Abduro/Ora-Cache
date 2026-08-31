@@ -8,7 +8,7 @@ using namespace geometry::_2D;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace geometry { namespace _2D { namespace _impl { void __warning_lnk_4221 (void) {} }}}
+namespace geometry { namespace _2D { namespace _impl { void _5_warning_lnk_4221 (void) {} }}}
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -44,11 +44,11 @@ namespace defs {
 	#define _ATL_NO_AUTOMATIC_NAMESPACE
 
 	interface IExclusion {
-		virtual   err_code   Add  (const t_rect&)        { return __e_not_impl; }
+		virtual   err_code   Add  (const rect_t&)        { return __e_not_impl; }
 		virtual   err_code   Apply(const HDC  ) const    { return __e_not_impl; }
 		virtual   err_code   Clear(void)                 { return __e_not_impl; }
 		virtual   uint32_t   Count(void)        const    { return 0; }
-		virtual   t_rect&    Get  (const uint32_t _ndx)  { _ndx; static t_rect rc_empty = {0}; return rc_empty; }
+		virtual   rect_t&    Get  (const uint32_t _ndx)  { _ndx; static rect_t rc_empty = {0}; return rc_empty; }
 	};
 	interface IRenderer_Base {
 		virtual   IExclusion& Excluded(void);
@@ -67,8 +67,8 @@ namespace defs {
 			but at the same time, it is much easier (at least it seems to be so) to provide a rectangle being calculated by child control;
 			child control knows who its parent, and to use appropriate shift(s) while calculating a rectangle; but it is not truth always;
 		*/
-		virtual   err_code  DrawBackground(const HDC hSurface, const t_rect& rcDrawArea) {hSurface; rcDrawArea; return __e_not_impl;}
-		virtual   err_code  DrawParentBackground(const HWND hChild, const HDC hSurface, t_rect& rcUpdated) PURE;
+		virtual   err_code  DrawBackground(const HDC hSurface, const rect_t& rcDrawArea) {hSurface; rcDrawArea; return __e_not_impl;}
+		virtual   err_code  DrawParentBackground(const HWND hChild, const HDC hSurface, rect_t& rcUpdated) PURE;
 	};
 }}}
 

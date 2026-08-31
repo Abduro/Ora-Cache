@@ -37,14 +37,14 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	if (nullptr == m_wnd_ptr)         return this->m_error << __e_not_inited;
 
 	this->m_ctrl_id = _ctrl_id;
-	t_rect  rc_area = {0};
+	rect_t  rc_area = {0};
 
 	if (false == ::GetClientRect(hParent, &rc_area)) {
 		return this->m_error.Last();
 	}
 #if (1)
 	const uint32_t n_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
-	t_rect rc_ = (this->Layout() = rc_area);
+	rect_t rc_ = (this->Layout() = rc_area);
 	_wnd_ref(m_wnd_ptr).Create(
 		hParent, rc_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), n_style, 0, _ctrl_id
 	);

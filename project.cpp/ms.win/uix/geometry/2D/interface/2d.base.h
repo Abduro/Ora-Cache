@@ -24,8 +24,8 @@ namespace geometry { namespace _2D { namespace base {
 		bool Is_zero (void) const;  // returns true in case when all point structure attributes have zero value;
 
 		const
-		t_point& Raw (void) const;
-		t_point& Raw (void) ;
+		point_t& Raw (void) const;
+		point_t& Raw (void) ;
 
 		bool Set (const int32_t _x, const int32_t _y); // returns true if one of the point structure members changes its value;
 
@@ -43,10 +43,10 @@ namespace geometry { namespace _2D { namespace base {
 
 		CPoint&  operator <<(const int32_t _x);
 		CPoint&  operator >>(const int32_t _y);    // another operator symbol, for instance, like this '^', is not easy noticeable;
-		CPoint&  operator <<(const t_point&  );    // sets attributes value from raw/plain point data structure; 
+		CPoint&  operator <<(const point_t&  );    // sets attributes value from raw/plain point data structure; 
 
-		operator const t_point& (void) const;
-		operator       t_point& (void) ;
+		operator const point_t& (void) const;
+		operator       point_t& (void) ;
 
 		bool operator == (const CPoint&) const;
 		bool operator != (const CPoint&) const;
@@ -55,7 +55,7 @@ namespace geometry { namespace _2D { namespace base {
 		CPoint&  operator -= (const CPoint&);
 
 	protected:
-		t_point  m_point;
+		point_t  m_point;
 	};
 
 	class CPoint_2 : public CPoint { typedef CPoint TBase;
@@ -236,7 +236,7 @@ namespace geometry { namespace _2D { namespace base {
 		size_u&   Raw (void) ;
 
 		bool  Set (const uint32_t _width, const uint32_t _height);
-		bool  Set (const t_rect&);
+		bool  Set (const rect_t&);
 
 		uint32_t  W (void) const;
 		bool      W (const uint32_t);
@@ -251,7 +251,7 @@ namespace geometry { namespace _2D { namespace base {
 		CSize_U&  operator <<(const uint32_t _width);
 		CSize_U&  operator >>(const uint32_t _height);
 
-		CSize_U&  operator <<(const t_rect&);
+		CSize_U&  operator <<(const rect_t&);
 
 		operator const size_u& (void) const;
 		operator       size_u& (void) ;
@@ -293,7 +293,7 @@ namespace geometry { namespace _2D { namespace base {
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
 #endif
-		t_rect     Place(void) const;
+		rect_t     Place(void) const;
 		const
 		CSize_U&   Size (void) const;
 		CSize_U&   Size (void) ;
@@ -304,10 +304,10 @@ namespace geometry { namespace _2D { namespace base {
 
 		CPosition& operator <<(const CPoint&);
 		CPosition& operator <<(const CSize_U&);
-		CPosition& operator <<(const t_point&); // sets the anchor point;
-		CPosition& operator <<(const t_rect& ); // transfers rectangle to position as follows: anchor={x<<left|y<<top};size={right-left|bottom-top};
+		CPosition& operator <<(const point_t&); // sets the anchor point;
+		CPosition& operator <<(const rect_t& ); // transfers rectangle to position as follows: anchor={x<<left|y<<top};size={right-left|bottom-top};
 
-		operator const t_rect (void) const;     // transfers position to rectangle as follows: anchor>>left|top;right=left+size.width;bottom=top+size.height;
+		operator const rect_t (void) const;     // transfers position to rectangle as follows: anchor>>left|top;right=left+size.width;bottom=top+size.height;
 
 	protected:
 		CPoint   m_anchor;

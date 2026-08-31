@@ -170,7 +170,7 @@ namespace ex_ui { namespace controls { namespace layout {
 		/*
 			ToDo: ApplyTo() affects the target rectangle in difference ways in case of 'margins' and 'padding'; must be reviewed;
 		*/
-		bool  ApplyTo(t_rect& _rect) const; // returns true in case of change at least one side of the input rectangle;
+		bool  ApplyTo(rect_t& _rect) const; // returns true in case of change at least one side of the input rectangle;
 		const
 		CGap& Get (const e_sides) const;    // returns the reference to margin of input side; if not fount, the reference to fake object is returned;
 		CGap& Get (const e_sides) ;         // returns the reference to margin of input side; if not fount, the reference to fake object is returned;
@@ -209,8 +209,8 @@ namespace ex_ui { namespace controls { namespace layout {
 		~CImage (void) = default;
 
 		const
-		t_point&   Anchor  (void) const ; // this is the anchor point which is used to draw the image by image list;
-		t_point&   Anchor  (void)       ;
+		point_t&   Anchor  (void) const ; // this is the anchor point which is used to draw the image by image list;
+		point_t&   Anchor  (void)       ;
 		bool       Anchor  (const int32_t _n_x, const int32_t _n_y); // returns 'true' in case of change value of either 'x' or 'y';
 
 		const bool Is_valid(void) const ; // returns 'true' if size exists, i.e. cx and cy are not equal to zero (0); otherwise, false;
@@ -231,12 +231,12 @@ namespace ex_ui { namespace controls { namespace layout {
 	public:
 		CImage& operator = (const CImage&); CImage& operator = (CImage&&) = delete;
 		CImage& operator <<(const CMargins&);
-		CImage& operator <<(const t_point&);    // the point of the anchor;
+		CImage& operator <<(const point_t&);    // the point of the anchor;
 		CImage& operator <<(const t_size&);     // the image size;
 
 	private:
 		CMargins   m_margins ; // image rectangle magins; is used for creating a gap between an image and item text;
-		t_point    m_anchor  ; // this is the point of the anchor for drawing the image by image list;
+		point_t    m_anchor  ; // this is the point of the anchor for drawing the image by image list;
 		t_size     m_size    ; // image size; by default it's calculated by means of image list control, but can be set manually;
 	};
 }}}

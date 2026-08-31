@@ -80,7 +80,7 @@ _pc_sz CString_Ex::_addr_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_form
 	if (_b_low_case)
 		((TBase&)*this).MakeLower();
 
-	return  (_pc_sz)*this;;
+	return  (_pc_sz)*this;
 }
 #endif
 

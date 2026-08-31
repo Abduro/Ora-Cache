@@ -8,4 +8,4 @@ using namespace ex_ui::theme;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ex_ui { namespace theme { namespace _impl { void __warning_lnk_4221 (void) {} }}}
+namespace ex_ui { namespace theme { namespace _impl { void _10_warning_lnk_4221 (void) {} }}}

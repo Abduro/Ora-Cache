@@ -102,11 +102,11 @@ void CGaps_of_rect::ApplyMargins (void) {
 	_out() += TStringEx().Format(_T("*margins* : %s"), (_pc_sz) this->m_gaps.Print(e_print::e_all));
 
 	TRect rect_;
-	t_rect rect_input{40, 80, 40, 80}; rect_ << rect_input; // ToDo: static Print(const t_rect&) would be useful;
+	rect_t rect_input{40, 80, 40, 80}; rect_ << rect_input; // ToDo: static Print(const rect_t&) would be useful;
 
 	_out() += TStringEx().Format(_T("*before* : %s"), (_pc_sz) rect_.Print(e_print::e_all));
 
-	t_rect rect_margins = rect_.Get(); this->m_gaps.ApplyTo(rect_margins); rect_ << rect_margins;
+	rect_t rect_margins = rect_.Get(); this->m_gaps.ApplyTo(rect_margins); rect_ << rect_margins;
 	_out() += TStringEx().Format(_T("*after*  : %s"), (_pc_sz) rect_.Print(e_print::e_all));
 
 	_out()();
@@ -121,11 +121,11 @@ void CGaps_of_rect::ApplyPadding (void) {
 	_out() += TStringEx().Format(_T("*padding* : %s"), (_pc_sz) this->m_gaps.Print(e_print::e_all));
 
 	TRect rect_;
-	t_rect rect_input{40, 80, 40, 80}; rect_ << rect_input;
+	rect_t rect_input{40, 80, 40, 80}; rect_ << rect_input;
 
 	_out() += TStringEx().Format(_T("*before* : %s"), (_pc_sz) rect_.Print(e_print::e_all));
 
-	t_rect rect_padding = rect_.Get(); this->m_gaps.ApplyTo(rect_padding); rect_ << rect_padding;
+	rect_t rect_padding = rect_.Get(); this->m_gaps.ApplyTo(rect_padding); rect_ << rect_padding;
 	_out() += TStringEx().Format(_T("*after*  : %s"), (_pc_sz) rect_.Print(e_print::e_all));
 
 	_out()();

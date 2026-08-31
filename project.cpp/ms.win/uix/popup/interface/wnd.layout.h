@@ -31,20 +31,20 @@ namespace ex_ui { namespace popup {  namespace layout {
 		~CPlacement (void);
 	// https://learn.microsoft.com/en-us/windows/win32/gdi/rectangle-functions ;
 	public:
-		bool   Includes  (const t_point&) const; // checks this rectangle contains input point;  if placement rectangle is empty the false is returned;
-		bool   Intercepts(const t_rect&) const;  // checks an interception with input rectangle; empty rectangles are not taken into account;
+		bool   Includes  (const point_t&) const; // checks this rectangle contains input point;  if placement rectangle is empty the false is returned;
+		bool   Intercepts(const rect_t&) const;  // checks an interception with input rectangle; empty rectangles are not taken into account;
 
 		bool   DoNormal  (void)      ; // empty rectangle is not affected, otherwise rectangle sides' values that are not normal are swapped;
 		bool   IsNormal  (void) const; // this is required that left < right and top < bottom, otherwise Includes() never returns true;
 		const
-		t_rect& Rect (void) const;
-		t_rect& Rect (void)      ;
+		rect_t& Rect (void) const;
+		rect_t& Rect (void)      ;
 
 	public:
 		CPlacement& operator = (const CPlacement&);
-		CPlacement& operator <<(const t_rect&);
+		CPlacement& operator <<(const rect_t&);
 	protected:
-		t_rect   m_rect;
+		rect_t   m_rect;
 	};
 
 	class CPosition : public TPosition { typedef TPosition TBase;
@@ -56,8 +56,8 @@ namespace ex_ui { namespace popup {  namespace layout {
 		// it is supposed the left-top corner of the window frame is at the anchor point;
 		// calculates a center point of the position in absolute coordinates;
 		const
-		t_point    Center (void) const;
-		t_rect     Place  (void) const;
+		point_t    Center (void) const;
+		rect_t     Place  (void) const;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
@@ -69,8 +69,8 @@ namespace ex_ui { namespace popup {  namespace layout {
 		~CPrimary (void) ;
 
 	public:
-		t_rect Autosize (void) const;                        // a window size is calculated as: width = resolution / 2; height = (resolution / 4) * 2;
-		t_rect Centered (const TSizeU& _size) const;         // returns a rectangle of the specidied size at the center of monitor area;
+		rect_t Autosize (void) const;                        // a window size is calculated as: width = resolution / 2; height = (resolution / 4) * 2;
+		rect_t Centered (const TSizeU& _size) const;         // returns a rectangle of the specidied size at the center of monitor area;
 		t_size Default  (const float  _coeff = 1.56) const ; // this is a default size of a window; the size is dependable from current resolution;
 	};
 
@@ -85,7 +85,7 @@ namespace ex_ui { namespace popup {  namespace layout {
 		~CRatios (void);
 
 	public:
-		RECT   Accepted (const t_rect& _work_area) const; // gets an accepted ratio for primary monitor work area;
+		RECT   Accepted (const rect_t& _work_area) const; // gets an accepted ratio for primary monitor work area;
 		RECT   Accepted (const CPosition&  _res) const;   // gets an accepted ratio for primary monitor resolution;
 
 		const

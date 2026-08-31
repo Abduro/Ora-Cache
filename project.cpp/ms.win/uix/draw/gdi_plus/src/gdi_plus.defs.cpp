@@ -10,4 +10,4 @@ using namespace ex_ui::draw::gdi_pls;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ex_ui { namespace draw { namespace gdi_pls { namespace _impl { void __warning_lnk_4221 (void) {} }}}}
+namespace ex_ui { namespace draw { namespace gdi_pls { namespace _impl { void _7_warning_lnk_4221 (void) {} }}}}

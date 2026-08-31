@@ -9,7 +9,7 @@ using namespace ex_ui::controls::format;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ex_ui { namespace controls { namespace format { namespace _impl { void __warning_lnk_4221 (void) {}}}}}
+namespace ex_ui { namespace controls { namespace format { namespace _impl { void _12_warning_lnk_4221 (void) {}}}}}
 
 /////////////////////////////////////////////////////////////////////////////
 

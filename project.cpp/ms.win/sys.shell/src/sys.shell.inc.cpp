@@ -9,4 +9,4 @@ using namespace shared::sys_core::shell;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace shared { namespace sys_core { namespace shell { namespace _impl { void __warning_lnk_4221 (void) {}}}}}
+namespace shared { namespace sys_core { namespace shell { namespace _impl { void _4_warning_lnk_4221 (void) {}}}}}

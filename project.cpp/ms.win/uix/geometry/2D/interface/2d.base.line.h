@@ -54,7 +54,7 @@ namespace geometry { namespace _2D { namespace base {
 		bool Set (const CPoint& _begin, const CPoint& _end);
 		// sets the begin point to left-top vertex of the input rectangle and the end point to right-low vertex; returns 'true' in case of change;
 		// the notes above does not exactly to reflect the required truth: the line starts to be the diagonal of the rectangle that actually is not intended; 
-		bool Set (const t_rect&) ;
+		bool Set (const rect_t&) ;
 
 		uint8_t  Thickness (void) const;
 		bool     Thickness (const uint8_t);        // returns 'true' in case of thickness value is changed;
@@ -64,7 +64,7 @@ namespace geometry { namespace _2D { namespace base {
 		CLine&  operator >>(const CPoint& _end);   // sets an ending point of the side;
 		CLine&  operator <<(const TRgbQuad&) ;
 		CLine&  operator <<(const uint8_t&)  ;
-		CLine&  operator <<(const t_rect&);        // calls this::Set() for changing the begin and the end points;
+		CLine&  operator <<(const rect_t&);        // calls this::Set() for changing the begin and the end points;
 
 	public:
 		CLine&  operator = (const CLine&) ;

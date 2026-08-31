@@ -8,6 +8,6 @@ using namespace ora::cache;
 
 namespace ora { namespace cache { namespace _impl {
 
-	void __warning_lnk_4221(void) {}
+	void _17_warning_lnk_4221(void) {}
 
 }}}

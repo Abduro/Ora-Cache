@@ -64,7 +64,15 @@ namespace shared { namespace common {
 		 CString_Ex (CString_Ex&&) = delete;
 		~CString_Ex (void) = default;
 
-	public: // data conversion from numeric/boolean to string and vice versa;
+		// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
+#if defined WIN64
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/, const bool _b_low_case = true) ;
+#else
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, const bool _b_low_case = true);
+		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/, const bool _b_low_case = true) ;
+#endif
+		// data conversion from numeric/boolean to string and vice versa;
 		ushort  Bytes(void) const ;      // returns string length in bytes, including zero-terminated symbol at the end of string;
 
 		bool    Bool (void) const ;      // gets this string value as a boolean data type;
@@ -87,14 +95,6 @@ namespace shared { namespace common {
 		_var    Var  (void) const;       // converts string to _variant_t;
 		_pc_sz  Var  (const _var&, _pc_sz _fmt = _T("type=%s;value=%s")); // converts _variant_t to string in accordance with format pattern provided;
 #endif
-		// https://stackoverflow.com/questions/1950779/is-there-any-way-to-find-the-address-of-a-reference ;
-#if defined WIN64
-		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr);
-		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
-#else
-		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr);
-		_pc_sz __address_of (const void* const _p_fun_or_obj_ptr, _pc_sz _p_format/* = _T("0x%08x")*/) ;
-#endif
 		/*
 			Regarding the base class StringT::Format(...) method:
 				unfortunately it does not provide any description of an error that may occur during matching the format specification
@@ -105,7 +105,7 @@ namespace shared { namespace common {
 			ToDo:
 				It would be better to generate an error object and to throw the object to the caller of the format method;
 		*/
-	public:
+
 		_pc_sz   Before(t_char _lp_sz_sep = _T('\\'), _pc_sz _lp_sz_pfx = _T("..."), const bool _b_exc_sep = true);
 		_pc_sz   Format(_pc_sz _lp_sz_fmt, ...);
 
@@ -119,7 +119,6 @@ namespace shared { namespace common {
 		_pc_sz   Format(_pc_sz _lp_sz_fmt, va_list);
 		TParts   Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep = false) const;   // splits string by separator specified;
 
-	public:
 		CString_Ex& operator = (const CString_Ex&);
 		CString_Ex& operator <<(bool  _b_value);  // sets this string value from boolean data;
 		CString_Ex& operator <<(dword _d_value);  // sets this string value from dword data (unsigned long);
@@ -128,7 +127,6 @@ namespace shared { namespace common {
 		CString_Ex& operator <<(_pc_sz _lp_sz_value);
 		CString_Ex& operator <<(_guid& _guid_value );
 
-	public:
 		operator CString (void) const; // returns this string value as object; makes a copy of the string;
 		operator bool    (void) const; // returns this string value as boolean;
 		operator dword   (void) const; // returns this string value as unsigned long (dword);
@@ -148,6 +146,7 @@ namespace shared { namespace common {
 	};
 }}
 
-typedef shared::common::CString_Ex  TStringEx;
+typedef shared::common::CString_Ex TStringEx;
+typedef shared::common::CString_Ex TString;
 
 #endif/*_SHARED_STR_EXT_H_INCLUDED*/

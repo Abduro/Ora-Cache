@@ -8,7 +8,7 @@ using namespace shared::log;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace shared { namespace log { namespace _impl { void __warning_lnk_4221 (void) {}
+namespace shared { namespace log { namespace _impl { void _d_warning_lnk_4221 (void) {}
 
 	using shared::sys_core::CSyncObject;
 

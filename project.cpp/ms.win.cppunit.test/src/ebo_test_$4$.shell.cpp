@@ -8,4 +8,4 @@ using namespace ebo::boo::test::shell;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace ebo { namespace boo { namespace test { namespace shell { namespace _impl { void __warning_lnk_4221 (void) {}}}}}}
+namespace ebo { namespace boo { namespace test { namespace shell { namespace _impl { void _19_warning_lnk_4221 (void) {}}}}}}

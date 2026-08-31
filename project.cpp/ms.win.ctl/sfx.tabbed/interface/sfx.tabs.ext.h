@@ -31,7 +31,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		~CPage (void);
 
 	public:
-		err_code Create (const HWND hParent, const t_rect&, const bool _b_visible, const uint32_t _page_id = 0);
+		err_code Create (const HWND hParent, const rect_t&, const bool _b_visible, const uint32_t _page_id = 0);
 		err_code Destroy(void);
 		const
 		HWND     Handle (void) const;
@@ -45,7 +45,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		ex_ui::controls::pane::CLayout& Layout (void) const;
 		ex_ui::controls::pane::CLayout& Layout (void) ;
 		// *important*: when moving the window to given rectangle the layout of the page must have the same one or be updated;
-		err_code MoveTo (const t_rect&, const bool _b_redraw = false); // moves this page window to the specified rectangle;
+		err_code MoveTo (const rect_t&, const bool _b_redraw = false); // moves this page window to the specified rectangle;
 
 #pragma region __msg_handler_callbacks__
 	private:  // IDrawEvtSink override(s);
@@ -56,7 +56,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		err_code IEvtLife_OnDestroy (const w_param, const l_param) override final;
 	private: // IFormEvtSink override(s); 
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
-		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, t_rect*) override final;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, rect_t*) override final;
 #pragma endregion
 	public:
 		CPage& operator <<(TCtrlPtr);
@@ -91,8 +91,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		CPage&  Page (void) ;            // returns a reference to the content which this tab makes visible; (rw)
 
 		const
-		t_rect&    Strip (void) const;   // returns a reference to the rectangle of the tab bookmark or a visible part in the ribbon of tab control ;
-		t_rect&    Strip (void) ;
+		rect_t&    Strip (void) const;   // returns a reference to the rectangle of the tab bookmark or a visible part in the ribbon of tab control ;
+		rect_t&    Strip (void) ;
 		const bool Strip (const _long _left, const _long _top, const _long _right, const _long _bottom); // returns 'true' in case of change at least one of the rectangle values;
 
 		const
@@ -113,7 +113,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		uint16_t   m_id    ;  // the tab identifier;
 		uint16_t   m_index ;  // this is the index of the tab in the collection; i.e. this is vector element index;
 		TLayersEx  m_layers;  // for layered draw; not used yet;
-		t_rect     m_strip ;  // the tab rectangle that does not include the tab page rectangle; it is just the visible element of tab panel/document/page;
+		rect_t     m_strip ;  // the tab rectangle that does not include the tab page rectangle; it is just the visible element of tab panel/document/page;
 		TState     m_state ;  // the tab current state: either selected or not;
 		CString    m_cap   ;  // the tab caption;
 		CPage      m_page  ;
@@ -150,7 +150,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		void        Events (ITabEvents*);         // needs to be thread safe;
 		ITabEvents* Events (void) const;
 
-		int16_t  Has (const t_point&) const;      // returns an index of tab if it's found, otherwise #na (-1);
+		int16_t  Has (const point_t&) const;      // returns an index of tab if it's found, otherwise #na (-1);
 		const
 		CTab&    Tab (const int16_t _ndx ) const; // if input index is out of range of the tabs count, the reference to the fake tab is returned;
 		CTab&    Tab (const int16_t _ndx )      ; // if input index is out of range of the tabs count, the reference to the fake tab is returned;

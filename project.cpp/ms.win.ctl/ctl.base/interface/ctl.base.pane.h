@@ -94,21 +94,21 @@ namespace pane {
 		CString  Print (const e_print = e_print::e_all) const; // ToDo: not updated yet;
 #endif
 		const
-		t_rect&  Rect  (void) const;
-		t_rect&  Rect  (void) ;           // direct access to pane rectangle;
-		bool     Rect  (const t_rect&);
+		rect_t&  Rect  (void) const;
+		rect_t&  Rect  (void) ;           // direct access to pane rectangle;
+		bool     Rect  (const rect_t&);
 
 	public:
 		CLayout& operator = (const CLayout&); CLayout& operator = (CLayout&&) = delete; // is not required yet;
 		CLayout& operator <<(const CAlign& );     // sets the alignment of the pane;
 		CLayout& operator <<(const CImage& );     // makes a copy of the input image layout;
-		CLayout& operator <<(const t_rect& );     // calls Update(rect);
+		CLayout& operator <<(const rect_t& );     // calls Update(rect);
 		CLayout& operator <<(const CPadding&);
 
 	private:
 		CAlign   m_align; // this is a pane elements' alignment;
 		CImage   m_image; // an image layout if any image is assigned to the pane;
-		t_rect   m_rect ; // this is entire area of the pane;
+		rect_t   m_rect ; // this is entire area of the pane;
 		CPadding m_padding;
 	};
 }
@@ -159,7 +159,7 @@ namespace pane {
 		CLayout&  Layout  (void) const;
 		CLayout&  Layout  (void) ;
 
-		err_code  Draw (const HDC, const t_rect& _drw_area) const;
+		err_code  Draw (const HDC, const rect_t& _drw_area) const;
 #if defined(_DEBUG)
 		CString Print(const e_print = e_print::e_all, _pc_sz _p_pfx = _T("\t\t"), _pc_sz _p_sfx = _T("\n")) const;
 #endif

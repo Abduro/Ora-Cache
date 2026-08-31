@@ -33,7 +33,7 @@ namespace ex_ui { namespace draw { namespace blend {
 
 	public:
 		CInput&  operator <<(const HDC);
-		CInput&  operator <<(const t_rect&);
+		CInput&  operator <<(const rect_t&);
 
 	private:
 		CInput&  operator = (const CInput&) = delete;

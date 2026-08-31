@@ -4,7 +4,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Aug-2026 at 08:31:06.800, UTC+4, Batumi, Thursday;
 	This is virtual camera test cases' desktop GUI main window interface declaration file;
 */
-#include "common.defs.h"
+#include "test.gui.defs.h"
 
 namespace test { namespace app { using namespace ::test::draw::defs;
 
@@ -37,7 +37,7 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		CFrame& operator = (const CFrame&) = delete; CFrame& operator = (CFrame&&) = delete;
 		CIcons  m_icons;
 	};
-
+#if (0)
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/cwindow-class ;
 	// https://learn.microsoft.com/en-us/cpp/atl/implementing-a-window-with-cwindowimpl ;
 	class CAppWnd  : public ::ATL::CWindowImpl<CAppWnd> { typedef ::ATL::CWindowImpl<CAppWnd> TWindow;
@@ -72,7 +72,26 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 
 		CFrame m_frame;
 	};
-
+#else
+	class CAppWnd  : public CWndBase, IDrawEvtSink, ILifeEvtSink, ISysEvtSink, IFormEvtSink { typedef CWndBase TBase;
+	public:
+		 CAppWnd (_pc_sz _p_cls_name = nullptr); CAppWnd (const CAppWnd&) = delete; CAppWnd (CAppWnd&&) = delete;
+		~CAppWnd (void) ;
+	private: 
+		// IDrawEvtSink override(s);
+		err_code IEvtDraw_OnErase   (const HDC _dev_ctx) override final;
+		err_code IEvtDraw_OnPaint   (const w_param, const l_param) override final;
+		// ILifeEvtSink override(s);
+		err_code IEvtLife_OnClose   (const w_param, const l_param) override final; // reminder: if result is __s_ok, this window is still open;
+		err_code IEvtLife_OnCreate  (const w_param, const l_param) override final;
+		err_code IEvtLife_OnDestroy (const w_param, const l_param) override final;
+		// ISysEvtSink override(s);
+		err_code IEvtSys_OnSysCmd   (const w_param, const l_param) override final; // reminder: if result is __s_ok, this process will be ended up;
+		// IFormEvtSink override(s); 
+		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
+	};
+#endif
 }}
 
 

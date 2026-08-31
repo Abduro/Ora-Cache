@@ -38,14 +38,14 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	if (_wnd_ref(m_wnd_ptr).IsWindow()) return this->m_error << (err_code) TErrCodes::eObject::eInited;
 
 	this->m_ctrl_id = _ctrl_id;
-	t_rect  rc_area = {0};
+	rect_t  rc_area = {0};
 
 	if (false == ::GetClientRect(hParent, &rc_area)) {
 		return this->m_error.Last();
 	}
 
 	const dword u_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
-	t_rect rc_ = (this->Layout() = rc_area);
+	rect_t rc_ = (this->Layout() = rc_area);
 
 	_wnd_ref(m_wnd_ptr).Create(
 		hParent, rc_, TStringEx().Format(_T("%s::%s"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__), u_style, 0, _ctrl_id

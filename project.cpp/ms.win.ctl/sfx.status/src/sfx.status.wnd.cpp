@@ -100,7 +100,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace status { namesp
 
 				if (pane.Text() && 0 != ::_tcslen(pane.Text())) {
 
-					t_rect rect = pane.Layout().Rect();
+					rect_t rect = pane.Layout().Rect();
 					rect.left  += pane.Layout().Padding().Left();
 
 					pane.Layout().Padding().ApplyTo(rect); // this must be done not here, but there :-D ;
@@ -149,10 +149,10 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		b_fst_time = true;
 	}
 #endif
-	t_rect rc_area = {0};
+	rect_t rc_area = {0};
 	TWindow::GetClientRect(&rc_area);
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdaterect ;
-	t_rect rc_update = {0};
+	rect_t rc_update = {0};
 	if (false == !!TWindow::GetUpdateRect(&rc_update)) {
 		bool b_break = false;
 		b_break = !b_break;
@@ -196,7 +196,7 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	CPaintDC dc_(*this);
 
 #if (1)
-	const t_rect& rc_paint = dc_.m_ps.rcPaint;
+	const rect_t& rc_paint = dc_.m_ps.rcPaint;
 
 	CZBuffer z_buffer(dc_, rc_paint);
 
@@ -245,7 +245,7 @@ err_code CWnd::IEvtFrame_OnSize   (const eState _e_state, const t_size) {
 	return   n_result;
 }
 
-err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, t_rect* _p_rect) {
+err_code CWnd::IEvtFrame_OnSizing (const eEdges _edges, rect_t* _p_rect) {
 	_edges; _p_rect;
 	err_code n_result = __s_false;
 	return   n_result;

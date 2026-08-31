@@ -8,4 +8,4 @@ using namespace geometry::shapes::_3D;
 
 /////////////////////////////////////////////////////////////////////////////
 
-namespace geometry { namespace shapes { namespace _3D { namespace _impl { void __warning_lnk_4221 (void) {} }}}}
+namespace geometry { namespace shapes { namespace _3D { namespace _impl { void _6_warning_lnk_4221 (void) {} }}}}
