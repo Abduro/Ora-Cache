@@ -118,6 +118,37 @@ CAppWnd::~CAppWnd(void) {
 	TBase::Handlers().Frame().Unsubscribe(this);
 }
 
+err_code CAppWnd::Create (void) {
+	err_code n_result = __s_ok;
+	// https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles ;
+	// https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles ;
+	/*important*: do not use WS_EX_COMPOSITED style option! it leads to cyclic background erase events of the main window;
+	*/
+	static const dword_t dw_ext_style = WS_EX_OVERLAPPEDWINDOW ;
+	static const dword_t dw_std_style = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+	const // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw ;
+	HWND h_wnd = TWindow::Create(HWND_DESKTOP, 0, 0, dw_std_style, dw_ext_style);
+	if ( h_wnd == 0 )
+		return (n_result = __LastErrToHresult());
+
+	return n_result;
+}
+
+err_code CAppWnd::Destroy (void) {
+	err_code n_result = __s_ok;
+	if (this->Is_valid()) {
+		if (0 == TWindow::DestroyWindow()) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
+			return (n_result = __LastErrToHresult());
+	}
+	return n_result;
+}
+
+
+bool CAppWnd::Is_valid (void) const { return !!TWindow::IsWindow(); } 
+const
+CFrame&  CAppWnd::Frame (void) const { return this->m_frame; }
+CFrame&  CAppWnd::Frame (void)       { return this->m_frame; }
+
 err_code CAppWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
 	static bool  b_fst_time = false;

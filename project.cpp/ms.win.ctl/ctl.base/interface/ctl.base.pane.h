@@ -117,15 +117,15 @@ namespace pane {
 	// https://ux.stackexchange.com/questions/124588/whats-the-difference-between-a-panel-and-pane ;
 
 	class CPane {
-	using CBorders = ex_ui::controls::borders::CBorders_for_rect;
 	public:
+		 using CBorders = ex_ui::controls::borders::CBorders_for_rect;
 		 CPane (void); CPane (const CPane&); CPane (CPane&&);
 		~CPane (void);
 
 	public:
 		const
-		ex_ui::controls::borders::CBorders_for_rect& Borders (void) const;
-		ex_ui::controls::borders::CBorders_for_rect& Borders (void) ;
+		CBorders& Borders (void) const;
+		CBorders& Borders (void) ;
 
 		uint32_t Id (void) const;     // returns this pane identifier;
 		bool     Id (const uint32_t); // sets pane identifier, returns 'true' if text is changed in comparison with previous one;
@@ -138,7 +138,7 @@ namespace pane {
 		CPane& operator <<(const uint32_t _id);
 
 	protected:
-		ex_ui::controls::borders::CBorders_for_rect  m_borders;
+		CBorders m_borders;
 		uint32_t m_pane_id;
 	};
 

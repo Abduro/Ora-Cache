@@ -67,10 +67,10 @@ err_code  COne::Set (const rgb_color _from, const _algo e_how_to_make_it) {
 	switch (e_how_to_make_it) {
 	case _algo::e_simplistic: {
 			// https://stackoverflow.com/questions/3054873/programmatically-find-complement-of-colors ;
-			_long r_ = 0xff & (_from >>  0);  r_ = 0xff - r_;
-			_long g_ = 0xff & (_from >>  8);  g_ = 0xff - g_;
-			_long b_ = 0xff & (_from >> 16);  b_ = 0xff - b_;
-			_long a_ = 0xff & (_from >> 24);  // alpha value must not be affected, because it is treated as not pre-multiplied;
+			long_t r_ = 0xff & (_from >>  0);  r_ = 0xff - r_;
+			long_t g_ = 0xff & (_from >>  8);  g_ = 0xff - g_;
+			long_t b_ = 0xff & (_from >> 16);  b_ = 0xff - b_;
+			long_t a_ = 0xff & (_from >> 24);  // alpha value must not be affected, because it is treated as not pre-multiplied;
 
 			this->m_clr = _r_g_b_a(r_,g_,b_,a_);
 

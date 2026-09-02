@@ -65,10 +65,13 @@ namespace ex_ui { namespace controls { namespace borders {
 		 CSet (void); CSet (const CSet&) ; CSet (CSet&&);
 		~CSet (void) ;
 
-	public:
 		err_code   Add (const COne&);      // returns 's_ok' in case of success, otherwise error code; an identifier value must be set in margin class;
 		bool     Color (const TRgbQuad&);  // returns 'true' in case if at least one border's color is changed; input color quad is set to all borders;
 		uint32_t Count (void) const;       // https://en.cppreference.com/w/cpp/container/map/size ;
+
+		bool  Gdi_adv_mode (void) const;   // gets the currently set value for GDI advanced mode property;
+		bool  Gdi_adv_mode (const bool);   // sets the value of the GDI advances mode property;
+
 		const
 		CBorder&   Get (const uint32_t _n_id) const;   // returns a reference to fake object in case if not found; (ro);
 		CBorder&   Get (const uint32_t _n_id);         // returns a reference to fake object in case if not found; (rw);
@@ -99,6 +102,7 @@ namespace ex_ui { namespace controls { namespace borders {
 
 	protected:
 		TRawBorders m_borders;
+		bool   m_gdi_adv_mode;  // indicates the GDI of control window is set to advanced mode, by default it is 'false';
 	};
 	/*
 		// https://learn.microsoft.com/en-us/windows/win32/gdi/drawing-rectangles ;

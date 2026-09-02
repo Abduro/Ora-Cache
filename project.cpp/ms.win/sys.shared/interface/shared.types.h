@@ -29,7 +29,7 @@ namespace shared { namespace types {
 	typedef HANDLE    handle;   // for using in shared.mem project;
 	typedef HGLOBAL   global;   // for using in shared.mem project;
 	typedef HRESULT err_code;   // https://en.wikipedia.org/wiki/err_code ;
-	typedef LONG      _long ;
+	typedef LONG      long_t;
 	typedef LPARAM  l_param ;   // for using in win.popup projects;
 	typedef LPCTSTR   _pc_sz;   // since Win32 there is neither 'long' nor 'near' pointer types;
 	typedef LPTSTR    _p_sz ;

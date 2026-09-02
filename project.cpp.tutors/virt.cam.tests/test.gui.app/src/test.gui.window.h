@@ -49,7 +49,6 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 
 		DECLARE_WND_CLASS_EX(_T("test::app::CAppWnd"), u_style, COLOR_ACTIVECAPTION);
 
-	public:
 		err_code Create (void);
 		err_code Destroy (void);
 		const
@@ -77,6 +76,16 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 	public:
 		 CAppWnd (_pc_sz _p_cls_name = nullptr); CAppWnd (const CAppWnd&) = delete; CAppWnd (CAppWnd&&) = delete;
 		~CAppWnd (void) ;
+
+		err_code Create (void);
+		err_code Destroy(void);
+		TError&  Error  (void) const;
+		const
+		CFrame&  Frame (void) const;
+		CFrame&  Frame (void) ;
+
+		bool  Is_valid (void) const;
+
 	private: 
 		// IDrawEvtSink override(s);
 		err_code IEvtDraw_OnErase   (const HDC _dev_ctx) override final;
@@ -88,8 +97,13 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		// ISysEvtSink override(s);
 		err_code IEvtSys_OnSysCmd   (const w_param, const l_param) override final; // reminder: if result is __s_ok, this process will be ended up;
 		// IFormEvtSink override(s); 
-		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final;
-		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;
+		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const SIZE) override final; // works on clicking window title buttons or system menu commands;
+		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, LPRECT) override final;     // works on changing window size by mouse device;
+
+		CAppWnd& operator = (const CAppWnd&) = delete;
+		CAppWnd& operator = (CAppWnd&&) = delete;
+
+		CFrame m_frame;
 	};
 #endif
 }}

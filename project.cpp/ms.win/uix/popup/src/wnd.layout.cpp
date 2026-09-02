@@ -75,14 +75,14 @@ CPosition:: CPosition (void) {}
 const
 point_t  CPosition::Center (void) const {
 	return point_t{
-		this->Anchor().X() + static_cast<_long>(this->Size().W() / 2),
-		this->Anchor().Y() + static_cast<_long>(this->Size().H() / 2)
+		this->Anchor().X() + static_cast<long_t>(this->Size().W() / 2),
+		this->Anchor().Y() + static_cast<long_t>(this->Size().H() / 2)
 	};
 }
 
 rect_t   CPosition::Place (void) const {
 	return {
-		TBase::Anchor().X(), TBase::Anchor().Y(), TBase::Anchor().X() + _long(TBase::Size().W()), TBase::Anchor().Y() + _long(TBase::Size().H())
+		TBase::Anchor().X(), TBase::Anchor().Y(), TBase::Anchor().X() + long_t(TBase::Size().W()), TBase::Anchor().Y() + long_t(TBase::Size().H())
 	};
 }
 
@@ -142,8 +142,8 @@ rect_t  CPrimary::Centered (const TSizeU & _size) const {
 	const point_t pt_at  = TBase::Center();
 //	const rect_t center_ = {pt_at.x - _size.W()/ 2, pt_at.y - _size.H() / 2, pt_at.x + _size.W() / 2, pt_at.y + _size.H() / 2};  // 4 (four) dividings;
 	const rect_t center_ = {
-		pt_at.x - static_cast<_long>(_size.W() / 2),
-		pt_at.y - static_cast<_long>(_size.H() / 2), center_.left + (_long)_size.W(), center_.top + (_long)_size.H()}; // 2 (two ) dividings;
+		pt_at.x - static_cast<long_t>(_size.W() / 2),
+		pt_at.y - static_cast<long_t>(_size.H() / 2), center_.left + (long_t)_size.W(), center_.top + (long_t)_size.H()}; // 2 (two ) dividings;
 #endif
 	return center_;
 }
@@ -151,9 +151,9 @@ rect_t  CPrimary::Centered (const TSizeU & _size) const {
 t_size  CPrimary::Default  (const float _coeff) const {
 
 	if (0.0 == _coeff)
-		return t_size { _long(TBase::Size().W()), _long(TBase::Size().H()) };
+		return t_size { long_t(TBase::Size().W()), long_t(TBase::Size().H()) };
 	else
-		return t_size { _long(TBase::Size().W()/_coeff), _long(TBase::Size().H()/_coeff) };
+		return t_size { long_t(TBase::Size().W()/_coeff), long_t(TBase::Size().H()/_coeff) };
 }
 
 /////////////////////////////////////////////////////////////////////////////

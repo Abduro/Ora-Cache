@@ -131,7 +131,7 @@ namespace ex_ui { namespace draw {
 		bool      Angle (const int16_t); // sets the rotation angle; returns true if the value is changed;
 		/* inputs:
 				pszFamily - font name; dwOptions - font attributes; lParam - an exact font size or size factor (+/-); */
-		err_code  Create (_pc_sz pszFamily = nullptr, const dword dwOptions = CFontOptions::eNone, const _long lParam = 0);
+		err_code  Create (_pc_sz pszFamily = nullptr, const dword dwOptions = CFontOptions::eNone, const long_t lParam = 0);
 		HFONT     Detach (void);
 		_pc_sz    Family (void) const;
 #if defined(_DEBUG)

@@ -47,7 +47,8 @@ namespace ebo { namespace boo { namespace gui {
 	using TString = TStringEx;
 
 namespace cfg {
-	const uint16_t n_page_count = 2;
+	const uint16_t u_page_count = 3;   // this is the number of tab control pages: one page per test case of the virtual cam;
+	const uint8_t u_border_thick = 1; // tab control border thickness;
 }
 
 	// https://learn.microsoft.com/en-us/cpp/preprocessor/hash-if-hash-elif-hash-else-and-hash-endif-directives-c-cpp ;

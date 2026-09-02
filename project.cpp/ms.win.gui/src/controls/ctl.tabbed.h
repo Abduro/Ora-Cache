@@ -11,7 +11,6 @@
 namespace ebo { namespace boo { namespace gui { namespace ctl {
 
 	using namespace ebo::boo::gui;
-
 	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
 
 	class CPages {

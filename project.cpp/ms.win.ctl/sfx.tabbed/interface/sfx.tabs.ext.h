@@ -30,7 +30,6 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		 CPage (void); CPage (const CPage&) = delete; CPage (CPage&&) = delete;
 		~CPage (void);
 
-	public:
 		err_code Create (const HWND hParent, const rect_t&, const bool _b_visible, const uint32_t _page_id = 0);
 		err_code Destroy(void);
 		const
@@ -46,6 +45,11 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		ex_ui::controls::pane::CLayout& Layout (void) ;
 		// *important*: when moving the window to given rectangle the layout of the page must have the same one or be updated;
 		err_code MoveTo (const rect_t&, const bool _b_redraw = false); // moves this page window to the specified rectangle;
+		const
+		ex_ui::controls::CPane& operator ()(void) const;
+		ex_ui::controls::CPane& operator ()(void) ;
+
+		CPage& operator <<(TCtrlPtr);
 
 #pragma region __msg_handler_callbacks__
 	private:  // IDrawEvtSink override(s);
@@ -58,9 +62,6 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		err_code IEvtFrame_OnSize   (const IFormEvtSink::eState, const t_size) override final;
 		err_code IEvtFrame_OnSizing (const IFormEvtSink::eEdges, rect_t*) override final;
 #pragma endregion
-	public:
-		CPage& operator <<(TCtrlPtr);
-	private:
 		CPage& operator = (const CPage&) = delete; CPage& operator = (CPage&&) = delete;
 		ex_ui::controls::pane::CLayout m_layout;
 		TCtrlPtr m_p_ctrl;
@@ -93,7 +94,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		const
 		rect_t&    Strip (void) const;   // returns a reference to the rectangle of the tab bookmark or a visible part in the ribbon of tab control ;
 		rect_t&    Strip (void) ;
-		const bool Strip (const _long _left, const _long _top, const _long _right, const _long _bottom); // returns 'true' in case of change at least one of the rectangle values;
+		const bool Strip (const long_t _left, const long_t _top, const long_t _right, const long_t _bottom); // returns 'true' in case of change at least one of the rectangle values;
 
 		const
 		TState&    State (void) const;
@@ -152,8 +153,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 
 		int16_t  Has (const point_t&) const;      // returns an index of tab if it's found, otherwise #na (-1);
 		const
-		CTab&    Tab (const int16_t _ndx ) const; // if input index is out of range of the tabs count, the reference to the fake tab is returned;
-		CTab&    Tab (const int16_t _ndx )      ; // if input index is out of range of the tabs count, the reference to the fake tab is returned;
+		CTab&    Tab (const uint16_t _ndx ) const; // if input index is out of range of the tabs count, the reference to the fake tab is returned;
+		CTab&    Tab (const uint16_t _ndx )      ; // if input index is out of range of the tabs count, the reference to the fake tab is returned;
 		const
 		TTabArray& Raw   (void) const ;
 		err_code   Remove(const uint16_t _id);

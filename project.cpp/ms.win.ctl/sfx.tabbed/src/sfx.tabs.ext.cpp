@@ -18,7 +18,8 @@ shared::sys_core::CSyncObject sync_ob;
 
 }}}}}
 using namespace ex_ui::controls::sfx::tabbed;
-/////////////////////////////////////////////////////////////////////////////
+
+#pragma region cls::CPage()
 
 CPage:: CPage (void) : m_p_ctrl(0) {
 	TWindow::Handlers().Draw().Subscribe (this);
@@ -161,6 +162,7 @@ err_code CPage::Create (const HWND hParent, const rect_t& _rect, const bool _b_v
 	else {
 		TPane::Id(_page_id);
 		this->Layout().Rect() = _rect;
+		TPane::Borders().Gdi_adv_mode(true); // this::IEvtDraw_OnPaint() sets the GDI to advanced mode;
 		TPane::Borders().Set(_rect);
 	}
 
@@ -233,14 +235,17 @@ err_code CPage::MoveTo (const rect_t& _rect, const bool _b_redraw) {
 
 CPage&   CPage::operator <<(TCtrlPtr _ptr) { this->Set_ptr(_ptr); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+const
+ex_ui::controls::CPane&   CPage::operator ()(void) const { return (const CPane&)(*this); }
+ex_ui::controls::CPane&   CPage::operator ()(void)       { return (      CPane&)(*this); }
+
+#pragma endregion
+#pragma region cls::CTab()
 
 CTab:: CTab (const uint16_t _id, _pc_sz _lp_sz_cap) : m_id(0), m_strip{0}, m_fake(false), m_index(0) {*this << _lp_sz_cap << _id; }
 CTab:: CTab (const CTab& _tab) : CTab() { *this = _tab; }
 CTab:: CTab (CTab&& _victim) : CTab() { *this = _victim; }
 CTab::~CTab (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 _pc_sz     CTab::Caption (void) const { return this->m_cap.GetString(); }
 CString&   CTab::Caption (void)       { return this->m_cap; }
@@ -263,7 +268,7 @@ const
 rect_t&    CTab::Strip (void) const { return this->m_strip; }
 rect_t&    CTab::Strip (void)       { return this->m_strip; }
 
-const bool CTab::Strip (const _long _left, const _long _top, const _long _right, const _long _bottom) {
+const bool CTab::Strip (const long_t _left, const long_t _top, const long_t _right, const long_t _bottom) {
 	_left; _top; _right; _bottom;
 	bool b_changed = false;
 
@@ -279,12 +284,13 @@ const
 TState& CTab::State  (void) const { return this->m_state; }
 TState& CTab::State  (void)       { return this->m_state; }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CTab&   CTab::operator =  (const CTab& _tab) {
-	 this->Page() << _tab.Page().Get_ptr(); // the page is not copyable due to window messages' handlers, just copying the control pointer;
+	// the page is not copyable due to window messages' handlers, just copying the control pointer;
+	// the base class of the page CPane is also must be copied, otherwise, its borders will lose their properties;
+	this->Page()() = _tab.Page()();
+	this->Page()  << _tab.Page().Get_ptr();
 	*this << _tab.Caption() << _tab.Id() << _tab.State();
-	 this->m_index = _tab.m_index;  // no direct assigning of the index value;
+	this->m_index = _tab.m_index;  // no direct assigning of the index value;
 	return *this;
 }
 CTab&   CTab::operator =  (CTab&& _victim) { *this = (const CTab&)_victim; return *this; }
@@ -294,15 +300,16 @@ CTab&   CTab::operator << (const CString& _cs_cap) { this->Caption() = _cs_cap; 
 CTab&   CTab::operator << (const uint16_t _tab_id) { this->Id() = _tab_id; return *this; }
 CTab&   CTab::operator << (const TState& _state) { this->State() = _state; return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 
 CTab&  Get_fake_tab (void) { static CTab fake; return fake; }
+
+#pragma region cls::CTabs{}
 
 CTabs:: CTabs (CControl& _ctrl) : m_ctrl(_ctrl),  m_sink(nullptr) { m_error >> __CLASS__ << __METHOD__ << __e_not_inited; Get_fake_tab().m_fake = true; }
 CTabs:: CTabs (const CTabs& _src) : CTabs(_src.m_ctrl) { *this = _src; }
 CTabs::~CTabs (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
 int16_t  CTabs::Active (void) const {
 
 	for (int16_t i_ = 0; i_ < this->Count() ; i_++) {
@@ -393,16 +400,16 @@ int16_t  CTabs::Has (const point_t& _pt) const {
 }
 
 const
-CTab&    CTabs::Tab (const int16_t _ndx) const {
-	if (_ndx < 0 || _ndx >= static_cast<INT>(m_tabs.size())) {
+CTab&    CTabs::Tab (const uint16_t _ndx) const {
+	if (_ndx >= static_cast<INT>(m_tabs.size())) {
 		return Get_fake_tab();
 	}
 	else
 		return m_tabs[_ndx];
 }
 
-CTab&    CTabs::Tab (const int16_t _ndx) {
-	if (_ndx < 0 || _ndx >= static_cast<INT>(m_tabs.size())) {
+CTab&    CTabs::Tab (const uint16_t _ndx) {
+	if (_ndx >= static_cast<INT>(m_tabs.size())) {
 		return Get_fake_tab();
 	}
 	else
@@ -424,7 +431,6 @@ err_code CTabs::Remove(const uint16_t _id) {
 	}
 	return this->m_error << (err_code)TErrCodes::eData::eNotFound;
 }
-
 const
 TTabArray&CTabs::Raw (void) const { return m_tabs; }
 
@@ -439,8 +445,6 @@ err_code  CTabs::Reset (void) {
 	}
 	return m_error;
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 CTabs& CTabs::operator = (const CTabs& _src) { *this << _src.Raw() << _src.Events() << _src.Active(); return *this; }
 CTabs& CTabs::operator = (CTabs&& _victim) {
@@ -470,3 +474,5 @@ CTabs& CTabs::operator +=(_pc_sz _lp_sz_cap) { this->Append(0, _lp_sz_cap); retu
 CTabs& CTabs::operator +=(const CTab& _tab ) { this->Append(_tab); return *this; }
 
 CTabs& CTabs::operator -=(const uint16_t _id) { this->Remove(_id); return *this; }
+
+#pragma endregion

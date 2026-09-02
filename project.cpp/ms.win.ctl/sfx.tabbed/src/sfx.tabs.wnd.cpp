@@ -175,6 +175,8 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 		this->m_ctrl.Format().Font().Family(), this->m_ctrl.Format().Font().Options(), this->m_ctrl.Format().Font().Size()
 	);
 
+	this->m_ctrl.Borders().Gdi_adv_mode(true); // this::IEvtDraw_OnErase() sets the GDI to advanced mode;
+	
 #endif
 
 	err_code n_result = __s_false;

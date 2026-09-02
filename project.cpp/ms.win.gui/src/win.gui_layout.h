@@ -61,7 +61,7 @@ namespace layout {
 		CTracks& operator = (const CTracks&) = delete; CTracks& operator = (CTracks&&) = delete;
 		mutable
 		CError m_error;
-		CTrack m_tracks[cfg::n_page_count];
+		CTrack m_tracks[cfg::u_page_count];
 	};
 }
 

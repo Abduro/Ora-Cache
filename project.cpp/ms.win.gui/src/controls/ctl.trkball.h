@@ -64,7 +64,7 @@ namespace ebo { namespace boo { namespace gui { namespace ctl {
 #endif
 
 	private:
-		CTracker  m_trackers[cfg::n_page_count];
+		CTracker  m_trackers[cfg::u_page_count];
 		CError    m_error ;
 	};
 }}}}

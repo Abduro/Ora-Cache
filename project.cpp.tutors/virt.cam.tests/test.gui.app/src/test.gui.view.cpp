@@ -100,12 +100,21 @@ err_code CView::OnDestroy (void) {
 	return n_result;
 }
 
+err_code CView::OnDraw (const HDC _h_dc, const rect_t& _drw_area) {
+	_h_dc; _drw_area;
+	err_code n_result = __s_ok;
+	n_result = this->Pages().Get().Refresh();
+	return n_result;
+}
 const
 CWindow&  CView::Parent (void) const { return this->m_parent; }
 CWindow&  CView::Parent (void)       { return this->m_parent; }
 const
 CPages&   CView::Pages  (void) const { return this->m_pages; }
 CPages&   CView::Pages  (void)       { return this->m_pages; }
+
+CView& CView::operator <<(const HWND _h_app_wnd) { this->m_parent = _h_app_wnd;  return *this; }
+
 
 #pragma endregion
 

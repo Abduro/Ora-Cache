@@ -1,6 +1,6 @@
 https://stackoverflow.com/questions/13050395/where-are-the-symbols-for-asp-net-mvc-4-0-rtm :
 
-    Go to Tools -> Options -> Debugger -> General.
+    Go to Tools -> Options -> Debugging -> General.
 
 (a)    Uncheck “Enable Just My Code (Managed only)”.
 (b)    Uncheck “Enable .NET Framework source stepping”.
@@ -8,7 +8,7 @@ https://stackoverflow.com/questions/13050395/where-are-the-symbols-for-asp-net-m
 (c)    Check “Enable source server support”.
 (d)    Uncheck “Require source files to exactly match the original version”
 
-    Go to Tools -> Options -> Debugger -> Symbols.
+    Go to Tools -> Options -> Debugging -> Symbols.
 
 (a)    Select a folder for the local symbol/source cache.
 (b)    Add symbol servers under “Symbol file (.pdb) locations”.

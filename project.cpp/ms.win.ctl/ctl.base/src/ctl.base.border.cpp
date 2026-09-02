@@ -71,7 +71,7 @@ COne& COne::operator <<(const uint32_t _n_id) { this->Id(_n_id); return *this; }
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-CSet:: CSet (void) {}
+CSet:: CSet (void) : m_gdi_adv_mode(false) {}
 CSet:: CSet (const CSet& _src) : CSet() { *this = _src; }
 CSet:: CSet (CSet&& _victim) : CSet() { *this= _victim; }
 CSet::~CSet (void) {}
@@ -104,6 +104,9 @@ bool   CSet::Color (const TRgbQuad& _clr) {
 
 	return b_changed;
 }
+
+bool  CSet::Gdi_adv_mode (void) const { return this->m_gdi_adv_mode; }
+bool  CSet::Gdi_adv_mode (const bool _on_or_off) { const bool b_changed = _on_or_off != this->Gdi_adv_mode(); this->m_gdi_adv_mode = _on_or_off; return b_changed; }
 
 uint32_t CSet::Count (void) const {
 	return static_cast<uint32_t>(this->Raw().size());
@@ -303,25 +306,24 @@ bool  CSet_for_rect::Set (const rect_t& _rect) {
 		 +—+ — — — +—+  the bottom : the begin(_rect.right - right.thickness (C'), _rect.bottom - bottom.thickness()); the end(_rect.left - left.thickness, _rect.bottom - bottom.thickness);
 		(B)(B') (C')(C)
 	*/
+	const long l_shft = (this->Gdi_adv_mode() ? 0 : 1);
 	for (int16_t i_ = e_sides::e_left; i_ <= e_sides::e_bottom; i_++) {
 
 		const e_sides e_side = static_cast<e_sides>(i_);
 		
 		if (false) {} 
-		else if (e_sides::e_left   == e_side) { // B->A ;
-			if (this->Left().Set(CPoint(_rect.left, _rect.bottom - 1), CPoint(_rect.left, _rect.top - 1))) b_changed = true; // subtracting one from the top has no explanation for now;
+		else if (e_sides::e_left   == e_side) { // B->A ; note: the end of the border (the point A) takes precedence over the start of the top border;
+			b_changed = this->Left().Set(CPoint(_rect.left, _rect.bottom - l_shft), CPoint(_rect.left, _rect.top));
 		}
 		else if (e_sides::e_top    == e_side) { // A->D ;
-			if (this->Top().Set(CPoint(_rect.left  + this->Left().Thickness() , _rect.top),
-			                    CPoint(_rect.right - this->Right().Thickness(), _rect.top))) b_changed = true;
+			b_changed = this->Top().Set(CPoint(_rect.left  + this->Left().Thickness() , _rect.top), CPoint(_rect.right - this->Right().Thickness(), _rect.top));
 		}
-		else if (e_sides::e_right  == e_side) { // D->C ;
-			if (this->Right().Set(CPoint(_rect.right - this->Right().Thickness(), _rect.top),
-			                      CPoint(_rect.right - this->Right().Thickness(), _rect.bottom - 1))) b_changed = true;
+		else if (e_sides::e_right  == e_side) { // D->C ; note: the start of the right border (the point D) takes precedence over the end of the top border
+			b_changed = this->Right().Set(CPoint(_rect.right - this->Right().Thickness(), _rect.top), CPoint(_rect.right - this->Right().Thickness(), _rect.bottom - l_shft));
 		}
-		else if (e_sides::e_bottom == e_side) { // C->B ;
-			if (this->Bottom().Set(CPoint(_rect.right - this->Right().Thickness(), _rect.bottom - this->Bottom().Thickness()),
-			                       CPoint(_rect.left  - this->Left().Thickness() , _rect.bottom - this->Bottom().Thickness()))) b_changed = true;
+		else if (e_sides::e_bottom == e_side) { // C->B ; note: the left and right borders take precedence over the start and the end of the bottom border;
+			b_changed = this->Bottom().Set(CPoint(_rect.right - this->Right().Thickness(), _rect.bottom - this->Bottom().Thickness()),
+			                       CPoint(_rect.left  - this->Left().Thickness() , _rect.bottom - this->Bottom().Thickness()));
 		}
 		else
 			break;

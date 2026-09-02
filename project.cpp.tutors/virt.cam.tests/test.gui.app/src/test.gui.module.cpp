@@ -36,6 +36,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(nullptr, 0, 0, 0L);
 
+	::ex_ui::theme::Get_current().Load();  // no returned error code is concerned here yet;
+
 	MSG msg = {0};
 	CAppWnd app_wnd;
 	if (__failed(app_wnd.Create()))

@@ -82,32 +82,35 @@ namespace layout {
 		Selected& Active (void) ;
 
 		const
-		TAlign&   Align (void) const;     // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (ro);
-		TAlign&   Align (void) ;          // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (rw);
+		TAlign&   Align (void) const;      // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (ro);
+		TAlign&   Align (void) ;           // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (rw);
 
 		uint32_t  Gap (void) const;
 		bool      Gap (const uint32_t _u_value);
 
 		uint32_t  Height (void) const;
-		bool      Height (const uint32_t);// sets a height of all tabs; returns 'true' in case if the height value is changed;
+		bool      Height (const uint32_t); // sets a height of all tabs; returns 'true' in case if the height value is changed;
 		const
 		rect_t&   Ribbon (void) const;               // gets a rectangle of tabs area; in other words, it is tabs' ribbon or bookmarks' band;
 		err_code  Ribbon (const rect_t& _rc_client); // calculates a rectangle for tabs for available client area rectangle;
 
-		TSide     LocatedOn(void) const ; // gets a side where all tabs reside;
-		bool      LocatedOn(const TSide); // sets the side of the control on which the tabs will be located;
+		TSide     LocatedOn(void) const ;  // gets a side where all tabs reside;
+		bool      LocatedOn(const TSide);  // sets the side of the control on which the tabs will be located;
 		const
-		CSides&   Sides (void) const;     // gets a reference to all sides collection; (ro);
-		CSides&   Sides (void) ;          // gets a reference to all sides collection; (rw);
+		CSides&   Sides (void) const;      // gets a reference to all sides collection; (ro);
+		CSides&   Sides (void) ;           // gets a reference to all sides collection; (rw);
 		
 		// ToDo: t_size must be replaced to geometry::_2D::base::CSize_U;
 		const
-		t_size&   Size  (void) const;     // gets a size of each tab; TODO: needs to be reviewed;
+		t_size&   Size  (void) const;      // gets a size of each tab; TODO: needs to be reviewed;
 
-		void      Update(void) ;          // updates pages' window position especially;
+		uint32_t  TotalHeight(void) const; // returns total height of all tabs;
+		uint32_t  TotalWidth (void) const; // returns total width of all tabs;
 
-		uint32_t& Width (void) ;          // sets a width of each tab;
-		bool      Width (const uint32_t&);
+		void      Update(void) ;           // updates pages' window position especially;
+
+		uint32_t& Width (void) ;           // sets a width of each tab;
+		bool      Width (const uint32_t&); // sets a width for all tabs the same;
 
 	private:
 		CTabs&  operator = (const CTabs&) = delete;

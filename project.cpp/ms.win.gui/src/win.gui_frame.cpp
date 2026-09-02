@@ -67,6 +67,8 @@ err_code CFrame::Create (void) {
 	if (::IsRectEmpty(&rc_))
 		return (m_error << __e_rect);
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles ; WS_EX_COMPOSITED|WS_EX_NOPARENTNOTIFY|WS_EX_TRANSPARENT;
+	/*important*: do not use WS_EX_COMPOSITED style option! it leads to cyclic background erase events of the main window;
+	*/
 	static const DWORD std_style = WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	static const DWORD ext_style = WS_EX_NOPARENTNOTIFY;
 

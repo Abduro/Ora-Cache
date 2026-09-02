@@ -22,16 +22,14 @@ err_code CPages::At_1st(void) {
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
 	tabbed.Layout().Tabs().LocatedOn(TSide::e_top);
-	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
-#if (0)
-	this->m_error << tabbed.Tabs().Append(1, _T("DirectX")); if (this->Error()) { return this->Error(); } // the tab page #0;
-	this->m_error << tabbed.Tabs().Append(2, _T("OpenGL"));  if (this->Error()) { return this->Error(); } // the tab page #1; the total == cfg::n_page_count;
-#else
-	this->m_error << tabbed.Tabs().Append(_T("DirectX")); if (this->Error()) { return this->Error(); } // the tab page #0;
-	this->m_error << tabbed.Tabs().Append(_T("OpenGL"));  if (this->Error()) { return this->Error(); } // the tab page #1; the total == cfg::n_page_count;
-#endif
-	tabbed.Tabs().Tab(0).Page().Borders().Thickness(1);
-	tabbed.Tabs().Tab(1).Page().Borders().Thickness(1);
+	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
+
+	static t_char* p_titles[cfg::u_page_count] = {_T("DirectX"), _T("GDI++"), _T("OpenGL")};
+
+	for (uint16_t i_ = 0; i_ < _countof(p_titles); i_++) {
+		this->m_error << tabbed.Tabs().Append(TString().Format(p_titles[i_], (i_ + 1))); if (this->Error()) { break; }
+		tabbed.Tabs().Tab(i_).Page().Borders().Thickness(cfg::u_border_thick);
+	}
 
 	this->Trackers().At_1st(); // no error check yet;
 

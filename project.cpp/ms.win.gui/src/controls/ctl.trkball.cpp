@@ -76,7 +76,7 @@ CTrackers::~CTrackers (void) {}
 err_code CTrackers::At_1st(void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	for (uint16_t i_ = 0; i_ < cfg::n_page_count; i_++) {
+	for (uint16_t i_ = 0; i_ < cfg::u_page_count; i_++) {
 
 		this->m_trackers[i_]().Layout().Pref_Sz({128,128});
 
@@ -95,7 +95,7 @@ err_code CTrackers::OnCreate (void) {
 
 	const CPages& pages = ::shared::Get_View().Pages();
 
-	for (uint16_t i_ = 0; i_ < cfg::n_page_count; i_++) {
+	for (uint16_t i_ = 0; i_ < cfg::u_page_count; i_++) {
 
 		const ex_ui::controls::sfx::tabbed::CTab& tab_ = pages.Get().Tabs().Tab(i_);
 
@@ -114,7 +114,7 @@ err_code CTrackers::OnDestroy(void) {
 	// all trackers' windows are destroyed automatically because the page window is the parent one been destroyed first;
 	// that means this method must be called before tabbed control destroyng, because on destroying some resources must be freed;
 
-	for (uint16_t i_ = 0; i_ < cfg::n_page_count; i_++) {
+	for (uint16_t i_ = 0; i_ < cfg::u_page_count; i_++) {
 		if (__failed(this->m_trackers[i_].OnDestroy()))
 			this->m_error = this->m_trackers[i_].Error(); // no error handling is required yet;
 	}
@@ -128,10 +128,10 @@ CTracker& Get_facke_tracker (void) {
 }
 
 const
-CTracker& CTrackers::Get (const uint16_t _n_index) const { if (_n_index > cfg::n_page_count - 1) return Get_facke_tracker(); else return this->m_trackers[_n_index]; }
-CTracker& CTrackers::Get (const uint16_t _n_index)       { if (_n_index > cfg::n_page_count - 1) return Get_facke_tracker(); else return this->m_trackers[_n_index]; }
+CTracker& CTrackers::Get (const uint16_t _n_index) const { if (_n_index > cfg::u_page_count - 1) return Get_facke_tracker(); else return this->m_trackers[_n_index]; }
+CTracker& CTrackers::Get (const uint16_t _n_index)       { if (_n_index > cfg::u_page_count - 1) return Get_facke_tracker(); else return this->m_trackers[_n_index]; }
 #else
 const
-CTracker* CTrackers::Get (const uint16_t _n_index) const { if (_n_index > cfg::n_page_count - 1) return nullptr; else return &this->m_trackers[_n_index]; }
-CTracker* CTrackers::Get (const uint16_t _n_index)       { if (_n_index > cfg::n_page_count - 1) return nullptr; else return &this->m_trackers[_n_index]; }
+CTracker* CTrackers::Get (const uint16_t _n_index) const { if (_n_index > cfg::u_page_count - 1) return nullptr; else return &this->m_trackers[_n_index]; }
+CTracker* CTrackers::Get (const uint16_t _n_index)       { if (_n_index > cfg::u_page_count - 1) return nullptr; else return &this->m_trackers[_n_index]; }
 #endif

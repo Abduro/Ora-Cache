@@ -44,7 +44,7 @@ namespace ebo { namespace boo { namespace test {
 		err_code      Append(_pc_sz _p_sz_name, _pc_sz _p_sz_value);         // appends new command line argument to the collection;
 		err_code      Append(_pc_sz _p_sz_name, long _l_value);
 		CString       Arg   (_pc_sz _p_sz_name) const;                       // gets an argument value as string, if not found empty value is returned;
-		_long         Arg   (_pc_sz _p_sz_name, const _long _def_val) const; // gets an argument value as long, if not found the default value is returned;
+		long_t         Arg   (_pc_sz _p_sz_name, const long_t _def_val) const; // gets an argument value as long, if not found the default value is returned;
 		TCmdLineArgs  Args  (void) const;                                    // returns a copy of command line argument collection
 		void          Clear (void)      ;
 		uint16_t      Count (void) const;

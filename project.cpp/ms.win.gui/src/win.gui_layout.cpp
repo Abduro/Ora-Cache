@@ -119,8 +119,8 @@ layout::CTracks:: CTracks (void) { this->m_error >>__CLASS__ << __METHOD__ << __
 TError& layout::CTracks::Error (void) const { return this->m_error; }
 
 const
-layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx) const { if (_ndx > cfg::n_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }
-layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx)       { if (_ndx > cfg::n_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }     
+layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx) const { if (_ndx > cfg::u_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }
+layout::CTrack&  layout::CTracks::Get (const uint16_t _ndx)       { if (_ndx > cfg::u_page_count) { static layout::CTrack inv_track; return inv_track; } else return this->m_tracks[_ndx]; }     
 
 rect_t layout::CTracks::GetPos (void) const {
 	this->m_error << __METHOD__ << __s_ok;
@@ -148,7 +148,7 @@ err_code  layout::CTracks::Update (void) {
 
 	ctl::CTrackers& trackers = ::shared::Get_View().Pages().Trackers();
 
-	for (uint16_t i_ = 0; i_ < cfg::n_page_count; i_++) {
+	for (uint16_t i_ = 0; i_ < cfg::u_page_count; i_++) {
 
 		ex_ui::controls::sfx::tabbed::CTab& tab_ = ::shared::Get_View().Pages().Get().Tabs().Tab(i_);
 
