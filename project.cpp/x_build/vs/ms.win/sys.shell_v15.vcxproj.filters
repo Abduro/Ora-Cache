@@ -2,12 +2,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<ItemGroup>
 		<Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0000}</UniqueIdentifier></Filter>
-		<Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0001}</UniqueIdentifier></Filter>
-		<Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0002}</UniqueIdentifier></Filter>
+		<Filter Include="interface\registry"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0001}</UniqueIdentifier></Filter>
+		<Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0002}</UniqueIdentifier></Filter>
+		<Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0003}</UniqueIdentifier></Filter>
+		<Filter Include="src\registry"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0000000D0004}</UniqueIdentifier></Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="$(Shared)com.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
 		<ClCompile Include="$(Shared)com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="$(_0)sys.reg.router.h"><Filter>interface\registry</Filter></ClInclude>
+		<ClCompile Include="$(_1)sys.reg.router.cpp"><Filter>src\registry</Filter></ClCompile>
+		<ClInclude Include="$(_0)sys.registry.h"><Filter>interface\registry</Filter></ClInclude>
+		<ClCompile Include="$(_1)sys.registry.cpp"><Filter>src\registry</Filter></ClCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="$(_0)shell.fs.folder.h" ><Filter>interface</Filter></ClInclude>

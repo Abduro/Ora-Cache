@@ -116,9 +116,9 @@ namespace route { using namespace shared::defs;
 
 	class CRoot {
 	public:
-		enum e_renderer : uint32_t { // the renderer identifier changes the root path of the tutorials;
-			    e_direct_x = 0x0,
-				e_open_gl  = 0x1,    // default value for this version of the implementation;
+		enum e_renderer : uint32_t {  // the renderer identifier changes the root path of the tutorials;
+		     e_direct_x = 0x0,
+		     e_open_gl  = 0x1,        // default value for this version of the implementation;
 		};
 	public:
 		CRoot (void); CRoot (const CRoot&) = delete; CRoot (CRoot&&) = delete; ~CRoot (void) = default;

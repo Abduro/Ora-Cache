@@ -1,0 +1,165 @@
+#ifndef _SYS_REGISTRY_H_INCLUDED
+#define _SYS_REGISTRY_H_INCLUDED
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 03-Sep-2026 at 11:11:05.113, UTC+4, Batumi, Thursday;
+	The is system registry storage wrapper interface interface declaration file;
+*/
+#include "sys.shell.inc.h"
+#include "sys.reg.router.h"
+
+namespace shared { namespace sys_core { namespace storage {
+
+	using namespace shared::sys_core::shell;
+	using CRegKey = ::ATL::CRegKey;
+
+	class CRegistry {
+	public:
+		 CRegistry (void); CRegistry (const CRegistry&) = delete; CRegistry (CRegistry&&) = delete;
+		~CRegistry (void);
+
+		TError&  Error (void) const;
+		// if empty string is returned, the error occurs;
+		CString  Value (_pc_sz _p_key_path, _pc_sz _p_value_name) const; // returns value of the key by value name; empty value name means '(default)';
+
+		CRegistry& operator = (const CRegistry&) = delete;
+		CRegistry& operator = (CRegistry&&) = delete;
+
+	private:
+		mutable
+		CError   m_error;
+	};
+
+	typedef ::std::vector<CString> TSubKeys; // the enumeration of subkeys' names;
+
+	class CRegKey_Ex {
+	public:
+		class CCache {
+		public:
+			CCache (_pc_sz _p_path = 0, _pc_sz _name = 0) ; CCache (const CCache&) = delete; CCache (CCache&&) = delete; ~CCache (void) = default;
+			bool   Is   (void) const; // returns 'true' in case if trimmed registry key is not null or empty;
+			_pc_sz Name (void) const;
+			_pc_sz Path (void) const;
+			bool   Name (_pc_sz);     // returns 'true' in case of name value change; the input value is trimmed; null or empty name is accepted;
+			bool   Path (_pc_sz);     // returns 'true' in case of key path change; the input value is trimmed; neither null nor emptiness is accepted;
+			bool   Set  (_pc_sz _p_key_path, _pc_sz _p_value_name); // returns 'true' in case if value name or key path is changed;
+			CCache& operator << (_pc_sz _p_path); // calls this->Path(_p_name);
+			CCache& operator >> (_pc_sz _p_name); // calls this->Name(_p_name);
+			CCache& operator =  (const CCache& ) = delete; CCache& operator = (CCache&&) = delete;
+			operator bool (void) const; // returns result of this->Is();
+		private:
+			CString  m_name; // a name of the key value; empty string is accepted;
+			CString  m_path; // a path to the registry key; empty string is not accepted;
+		};
+		class CSubKeys {
+		public:
+			using CKey = CRegKey_Ex;
+			 CSubKeys (CKey& _parent); CSubKeys (void) = delete; CSubKeys (const CSubKeys&) = delete; CSubKeys (CSubKeys&&) = delete;
+			~CSubKeys (void) = default;
+
+			uint32_t  Count (void) const;
+			TError&   Error (void) const;
+			err_code  Enum  (void);
+
+			static err_code Enum (const HKEY _h_parent, TSubKeys&, CError&);                        // returns only names of all sub-keys;
+			static err_code Enum (_pc_sz _p_key_path, TSubKeys&, CError&, const bool _b_full_path); // returns full path of each sub-key if necessary;
+			
+			const
+			TSubKeys& Names (void) const;
+
+		private:
+			CSubKeys& operator = (const CSubKeys&) = delete; CSubKeys& operator = (CSubKeys&&) = delete;
+			CKey&    m_parent;
+			TSubKeys m_names;
+			CError   m_error;
+		};
+		class CValue {
+		public:
+			 CValue (CRegKey_Ex& _the_key); CValue (void) = delete; CValue (const CValue&) = delete; CValue (CValue&&) = delete;
+			~CValue (void) = default;
+		public:
+			const
+			CCache& Cache (void) const;
+			CCache& Cache (void) ;
+
+			uint32_t GetDword (_pc_sz _p_name);
+			uint32_t GetDword (_pc_sz _p_key_path, _pc_sz _p_name);
+
+			long GetLong (_pc_sz _p_name);
+			long GetLong (_pc_sz _p_key_path, _pc_sz _p_name);
+
+			rect_t  GetRect (_pc_sz _p_key_path); // uses the pre-defined key names: 'left','top','right','bottom';
+
+			CString GetString (_pc_sz _p_name);   // it is assumed the key is already open; empty value name means (default);
+			CString GetString (_pc_sz _p_key_path, _pc_sz _p_name)/* const*/; // returns empty string in case of error;
+
+			err_code Set (_pc_sz _p_value);
+			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, _pc_sz _p_value);
+
+			err_code Set (const uint32_t _u_value); // it is assumed the value name and key path are already set to the cache;
+			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value);
+
+			err_code SetLong (const long _u_value);
+			err_code SetLong (_pc_sz _p_key_path, _pc_sz _p_name, const long _u_value);
+
+			err_code Set (_pc_sz _p_key_path, const rect_t&);// uses the pre-defined key names: 'left','top','right','bottom';
+
+		public:
+			CValue& operator = (const CValue&) = delete; CValue& operator = (CValue&&) = delete;
+			const
+			CCache& operator ()(void) const;   // gets the reference to cache field value; (ro)
+			CCache& operator ()(void);         // gets the reference to cache field value; (rw)
+
+			operator _pc_sz  (void) /*const*/; // gets registry value by cached key path and value name; if error occurs, empty string is returned;
+
+		private:
+			CRegKey_Ex& m_the_key;
+			CCache  m_cache;
+		};
+
+	public:
+		 CRegKey_Ex (void); CRegKey_Ex (const CRegKey_Ex&) = delete; CRegKey_Ex (CRegKey_Ex&&) = delete;
+		 CRegKey_Ex (_pc_sz _p_key_path);
+		~CRegKey_Ex (void);
+
+		err_code Close (void);
+		TError&  Error (void) const;
+
+		bool  Is_exist (_pc_sz _p_key_path) const;
+		bool  Is_open (void) const;
+		err_code Open (_pc_sz _p_key_path);
+		const
+		CSubKeys& SubKeys (void) const;
+		CSubKeys& SubKeys (void);
+		const
+		CValue& Value (void) const;
+		CValue& Value (void) ;
+
+		CRegKey_Ex& operator = (const CRegKey_Ex&) = delete;
+		CRegKey_Ex& operator = (CRegKey_Ex&&) = delete;
+
+		TError&  operator [](const long _not_used) const; // returns the reference to the error object of this class; (ro)
+		CError&  operator [](const long _not_used) ;      // returns the reference to the error object of this class; (rw)
+
+		CRegKey& operator ()(void); // returns the reference to the CRegKey member of this class;
+
+		const
+		CValue&  operator [](_pc_sz _not_used) const;
+		CValue&  operator [](_pc_sz _not_used) ;
+
+	private:
+		mutable
+		CError   m_error;
+		CValue   m_value;
+		CRegKey  m_key  ;
+		CSubKeys m_sub_keys;
+		friend class CValue;
+	};
+
+}}}
+typedef shared::sys_core::storage::CRegKey_Ex TRegKeyEx;
+typedef TRegKeyEx::CCache TKeyCache;
+typedef TRegKeyEx::CValue TKeyValue;
+
+shared::sys_core::storage::CRegistry&  Get_registry (void); // returns the reference to the singleton of the registry object;
+
+#endif/*_SYS_REGISTRY_H_INCLUDED*/

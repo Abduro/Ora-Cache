@@ -4,46 +4,39 @@
 	This is Ebo pack user control base project include property page declaration file;
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Label="PropertySheets">
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
-    <Shared Condition="'$(Shared)'==''">..\..\..\ms.win\sys.shared\</Shared>
-    <Error Condition="'$(Error)'==''">..\..\..\ms.win\sys.err.core\</Error>
-    <!--Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory-->
-    <Color Condition="'$(Color)'==''">..\..\..\ms.win\uix\draw\color\</Color>
-    <Geo-2D Condition="'$(Geo-2D)'==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
-    <Popup Condition="'$(Popup)'==''">..\..\..\ms.win\uix\popup\</Popup>
-    <Image Condition="'$(Image)'==''">..\..\..\ms.win\uix\draw\image\</Image><!--For this control pane elements' image set; -->
-    <MS-WTL Condition="'$(MS-WTL)'==''">..\..\..\ms.wtl.10\</MS-WTL> <!--it is required for including the references to z-buffer, unfortunately; -->
-    <!--MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML-->
-    <ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
-    <ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\ctl.base\</ThisLib><!--This project is being compiled; -->
-  </PropertyGroup>
-  <PropertyGroup>
-    <Root>$(ThisLib)</Root>
-  </PropertyGroup>
-  <PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
-    <_0>$(Root)interface\</_0>
-    <_1>$(Root)src\</_1>
-    <_2>$(Shared)interface\</_2>
-    <_3>$(Error)interface\</_3>
-    <!--_4>$(Memory)interface\</_4-->
-    <_4>$(Image)interface\</_4>
-    <_5>$(Color)interface\</_5>
-    <_6>$(Color)interface\compl\</_6>
-    <_7>$(Color)interface\named\</_7>
-    <_8>$(Geo-2D)interface\</_8>
-    <_9>$(Popup)interface\</_9>
-    <_a>$(Popup)interface\msg_handlers\</_a>
-    <_b>$(MS-WTL)include\</_b>    <!--for including the reference to z-buffer project is required;-->
-    <_c>$(ZBuffer)interface\</_c>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
-    <Include_abc>$(_a);$(_b);$(_c)</Include_abc>
-    <IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
-  </PropertyGroup>
-  <ItemDefinitionGroup />
-  <ItemGroup />
+	<PropertyGroup><!--Node names must be unique and do not coincident with environment variable names neither system nor custom ones!-->
+		<Shared  Condition="'$(Shared)' ==''">..\..\..\ms.win\sys.shared\</Shared>
+		<Error   Condition="'$(Error)'  ==''">..\..\..\ms.win\sys.err.core\</Error>
+		<Shell   Condition="'$(Shell)'  ==''">..\..\..\ms.win\sys.shell\</Shell>
+		<!--Memory Condition="'$(Memory)'==''">..\..\..\ms.win\sys.mem.core\</Memory-->
+		<Color   Condition="'$(Color)'  ==''">..\..\..\ms.win\uix\draw\color\</Color>
+		<Geo-2D  Condition="'$(Geo-2D)' ==''">..\..\..\ms.win\uix\geometry\2D\</Geo-2D>
+		<Popup   Condition="'$(Popup)'  ==''">..\..\..\ms.win\uix\popup\</Popup>
+		<Image   Condition="'$(Image)'  ==''">..\..\..\ms.win\uix\draw\image\</Image><!--For this control pane elements' image set; -->
+		<MS-WTL  Condition="'$(MS-WTL)' ==''">..\..\..\ms.wtl.10\</MS-WTL> <!--it is required for including the references to z-buffer, unfortunately; -->
+		<!--MS-XML Condition="'$(MS-XML)'==''">..\..\..\ms.win\msxml.6.core\</MS-XML-->
+		<ZBuffer Condition="'$(ZBuffer)'==''">..\..\..\ms.win\uix\draw\gdi_zbuf\</ZBuffer>
+		<ThisLib Condition="'$(ThisLib)'==''">..\..\..\ms.win.ctl\ctl.base\</ThisLib> <!--This project is being built!-->
+	</PropertyGroup>
+	<PropertyGroup><!--this nodes must be specified directly in paths of project files!-->
+		<_0>$(ThisLib)interface\</_0>
+		<_1>$(ThisLib)src\</_1>
+		<_2>$(Shared)interface\</_2>
+		<_3>$(Error)interface\</_3>
+		<_d>$(Shell)interface\</_d>
+		<_4>$(Image)interface\</_4>
+		<_5>$(Color)interface\</_5>
+		<_6>$(Color)interface\compl\</_6>
+		<_7>$(Color)interface\named\</_7>
+		<_8>$(Geo-2D)interface\</_8>
+		<_9>$(Popup)interface\</_9>
+		<_a>$(Popup)interface\msg_handlers\</_a>
+		<_b>$(MS-WTL)include\</_b>    <!--for including the reference to z-buffer project is required;-->
+		<_c>$(ZBuffer)interface\</_c>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Include_0_9>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(_8);$(_9)</Include_0_9>
+		<Include_abc>$(_a);$(_b);$(_c);$(_d)</Include_abc>
+		<IncludePath>$(Include_0_9);$(Include_abc);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
+	</PropertyGroup>
 </Project>

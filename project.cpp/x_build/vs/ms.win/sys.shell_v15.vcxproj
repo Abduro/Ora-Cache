@@ -198,6 +198,10 @@
     <ClCompile Include="$(_1)shell.fs.folder.cpp" />
     <ClInclude Include="$(_0)sys.procs.list.h" />
     <ClCompile Include="$(_1)sys.procs.list.cpp" />
+    <ClInclude Include="$(_0)sys.reg.router.h" />
+    <ClCompile Include="$(_1)sys.reg.router.cpp" />
+    <ClInclude Include="$(_0)sys.registry.h" />
+    <ClCompile Include="$(_1)sys.registry.cpp" />
     <ClInclude Include="$(_0)sys.shell.dwm.h" />
     <ClCompile Include="$(_1)sys.shell.dwm.cpp" />
     <ClInclude Include="$(_0)sys.shell.font.h" />

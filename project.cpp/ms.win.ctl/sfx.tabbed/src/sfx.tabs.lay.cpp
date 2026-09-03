@@ -87,7 +87,7 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 #endif
 	switch (this->m_ctrl.Layout().Tabs().LocatedOn()) {
 	case TSide::e_bottom : {
-		const THorzAlign& h_align = align.Horz();
+		// const THorzAlign& h_align = align.Horz();
 		/*THorzAlign::eLeft; THorzAlign::eCenter; THorzAlign::eRight;
 		  (e)+-------+(f)     (e)+-------+(f)      (e)+-------+(f)
 		     |(c) (h)|           |(c) (h)|            |(c) (h)|
@@ -108,7 +108,7 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the left edge of the tab bookmark;
 		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the right edge of the tab bookmark;
 
-		if (THorzAlign::eLeft == h_align.Value()) { // the start X-coord value == rect_.left and is increased to the right side;
+	//	if (THorzAlign::eLeft == h_align.Value()) { // the start X-coord value == rect_.left and is increased to the right side;
 
 			CPoint d_(rect_.left, c_.Y()); // X-coord of the 'd_' point equals always to the *left* side of the rectangle;
 			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
@@ -122,10 +122,11 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 			CPoint g_(f_.X(), d_.Y());
 			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
 			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
-		}
-		else if (THorzAlign::eCenter == h_align.Value()) {
-			rc_strip;
-		}
+	//	}
+	//	else if (THorzAlign::eCenter == h_align.Value()) {
+	//		rc_strip;
+	//	}
+#if (0)
 		else {
 			CPoint d_(rect_.left, c_.Y()); // X-coord value always equals to the *left* side of the rectangle;
 			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
@@ -140,6 +141,7 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
 			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
 		}
+#endif
 	} break;
 	case TSide::e_left : {
 		const TVertAlign& v_align = align.Vert();

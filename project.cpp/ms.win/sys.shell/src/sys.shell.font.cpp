@@ -3,34 +3,15 @@
 	This is Ebo Pack system font collection generic wrapper interface implementation file;
 */
 #include "sys.shell.font.h"
+#include "com.def.base.h"
 
-using namespace shared::sys_core::shell;
-#if (0)
-CFontStub:: CFontStub (void) : m_log{0} {}
-CFontStub:: CFontStub (const CFontStub& _src) : CFontStub() { *this = _src; }
-CFontStub:: CFontStub (CFontStub&& _victim) : CFontStub() { *this = _victim; }
-CFontStub::~CFontStub (void) {}
+using namespace ::shared::sys_core::shell;
+using CCoItemIdList = shared::sys_core::com::CCoItemIdList;
 
-/////////////////////////////////////////////////////////////////////////////
-const
-LOGFONT&    CFontStub::Raw (void) const { return this->m_log; }
-LOGFONT&    CFontStub::Raw (void)       { return this->m_log; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-CFontStub&  CFontStub::operator = (const CFontStub& _src) { *this << _src.Raw(); return *this; }
-CFontStub&  CFontStub::operator = (CFontStub&& _victim) { *this = (const CFontStub&)_victim; return *this; }
-CFontStub&  CFontStub::operator <<(const LOGFONT& _log) {  this->Raw() = _log; return *this; }
-
-CFontStub::operator const LOGFONT& (void) const { return this->Raw(); }
-CFontStub::operator       LOGFONT& (void)       { return this->Raw(); }
-#endif
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CFonts{}
 
 CFonts:: CFonts (void) { this->m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CFonts::~CFonts (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 TError&  CFonts::Error (void) const { return this->m_error; }
 
@@ -174,3 +155,5 @@ CString  CFonts::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_sfx) cons
 	return  cs_out;
 }
 #endif
+
+#pragma endregion

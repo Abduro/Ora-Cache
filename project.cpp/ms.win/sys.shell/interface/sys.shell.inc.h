@@ -18,9 +18,6 @@
 #include "shared.types.h"
 #include "sys.err.codes.h"
 #include "sys.error.h"
-#include "sys.mem.handle.h"
-
-#include "com.def.base.h"
 
 #include <psapi.h>
 #pragma comment (lib, "psapi.lib")
@@ -33,8 +30,6 @@ namespace shared { namespace sys_core { namespace shell {
 	using namespace shared::types;
 	using CError  = shared::sys_core::CError;
 	using TError  = const CError;
-
-	using CCoItemIdList = shared::sys_core::com::CCoItemIdList;
 
 }}}
 

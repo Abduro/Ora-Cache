@@ -204,6 +204,8 @@
     <ClCompile Include="$(_1)ctl.base.image.cpp" />
     <ClInclude Include="$(_0)ctl.base.props.h" />
     <ClCompile Include="$(_1)ctl.base.props.cpp" />
+    <ClInclude Include="$(_0)ctl.base.reg.h" />
+    <ClCompile Include="$(_1)ctl.base.reg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ms.win\sys.shared_v15.vcxproj">

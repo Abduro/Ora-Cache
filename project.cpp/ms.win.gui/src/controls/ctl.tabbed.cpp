@@ -8,7 +8,7 @@ using namespace ebo::boo::gui::ctl;
 
 #include "win.gui_view.h"
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CPages{}
 
 CPages:: CPages (void) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 CPages::~CPages (void) {}
@@ -21,7 +21,7 @@ err_code CPages::At_1st(void) {
 
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
-	tabbed.Layout().Tabs().LocatedOn(TSide::e_top);
+	tabbed.Layout().Tabs().LocatedOn(TSide::e_bottom);
 	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
 
 	static t_char* p_titles[cfg::u_page_count] = {_T("DirectX"), _T("GDI++"), _T("OpenGL")};
@@ -98,3 +98,5 @@ err_code CPages::OnDestroy(void) {
 const
 CTrackers& CPages::Trackers(void) const { return this->m_tracks; }
 CTrackers& CPages::Trackers(void)       { return this->m_tracks; }
+
+#pragma endregion

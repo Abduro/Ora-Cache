@@ -7,6 +7,7 @@
 	Adopted to Ebo Pack system shell lib project on 25-06-2025 on 15:39:45.225, UTC+4, Batumi;
 */
 #include "sys.shell.inc.h"
+#include "sys.mem.handle.h"
 
 namespace shared { namespace sys_core { namespace shell {
 

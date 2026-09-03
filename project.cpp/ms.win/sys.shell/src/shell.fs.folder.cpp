@@ -6,6 +6,7 @@
 	Adopted to Ebo Pack on 11-Sep-2019 at 01:00:37a, UTC+7, Novosibirsk, Wednesday;
 */
 #include "shell.fs.folder.h"
+#include "sys.mem.handle.h"
 
 using TFindData = WIN32_FIND_DATA;
 /////////////////////////////////////////////////////////////////////////////
