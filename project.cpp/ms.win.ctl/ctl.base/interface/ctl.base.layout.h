@@ -146,7 +146,7 @@ namespace ex_ui { namespace controls { namespace layout {
 			typedef	_part  _e;
 			static size_t     EnumToIndex(const CSides::_part);
 			static CString    EnumToName (const CSides::_part);
-			static CSides::_e IndexToEnum(const size_t);        // if given index is greater than e_bottom, default e_top is returned;
+			static CSides::_e IndexToEnum(const uint32_t);        // if given index is greater than e_bottom, default e_top is returned;
 		};
 	public:
 		using e_sides = CSides::_part;

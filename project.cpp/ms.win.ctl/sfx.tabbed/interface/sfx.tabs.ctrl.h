@@ -45,7 +45,8 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
 		CFormat&  Format (void) const;
 		CFormat&  Format (void)      ;
 
-		bool    Is_valid (void) const; // checks for: (1) window pointer; (2) this control window handle validity;
+		uint32_t  Id (void) const;
+		bool      Is_valid (void) const; // checks for: (1) window pointer; (2) this control window handle validity;
 
 		const
 		CLayout&  Layout (void) const;
@@ -81,41 +82,4 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed {
 
 }}}}
 
-#if (0)
-
-namespace ST_Ctrls {
-
-	using shared::sys_core::CError;
-	using ex_ui::draw::defs::IRenderer;
-	using ex_ui::controls::IControlEvent;
-
-	interface ITabEvents : public IControlEvent {
-		virtual HRESULT  ITabEvent_OnAppend (const CTab& _added  ) PURE;
-		virtual HRESULT  ITabEvent_OnFormat (const TTabbedFmt&   ) PURE;
-		virtual HRESULT  ITabEvent_OnSelect (const DWORD _tab_ndx) PURE;
-	};
-
-	class CTabbed : private ITabEvents {
-	protected:
-		ITabEvents&  m_evt_snk;  // tab control owner event sink;
-	public:
-		 CTabbed (ITabEvents& _evt_sink);
-		~CTabbed (void);
-
-	public:
-		HRESULT      ParentRenderer (IRenderer*  const );
-
-	private: // IControlEvent
-#pragma warning(disable:4481)
-		virtual HRESULT  IControlEvent_OnClick(const UINT ctrlId) override sealed;
-		virtual HRESULT  IControlEvent_OnClick(const UINT ctrlId, const LONG_PTR nData) override sealed;
-#pragma warning(default:4481)
-	private: // copy protected;
-		CTabbed (const CTabbed&);
-		CTabbed& operator= (const CTabbed&);
-	};
-}
-
-typedef ST_Ctrls::CTabbed  TTabCtrl;
-#endif
 #endif/*_SFX_TABS_CTRL_H_INCLUDED*/

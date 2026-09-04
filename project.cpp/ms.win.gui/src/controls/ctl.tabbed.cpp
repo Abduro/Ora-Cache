@@ -21,8 +21,8 @@ err_code CPages::At_1st(void) {
 
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
-	tabbed.Layout().Tabs().LocatedOn(TSide::e_bottom);
-	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
+//	tabbed.Layout().Tabs().LocatedOn(TSide::e_bottom);
+//	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
 
 	static t_char* p_titles[cfg::u_page_count] = {_T("DirectX"), _T("GDI++"), _T("OpenGL")};
 

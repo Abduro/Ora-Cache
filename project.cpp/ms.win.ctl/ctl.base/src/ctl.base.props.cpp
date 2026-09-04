@@ -14,13 +14,11 @@ using namespace ex_ui::controls::properties;
 #define __W(_rc) (_rc.right - _rc.left)
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CAlign_Horz{}
 
 CAlign_Horz:: CAlign_Horz (const _value _n_value, _pc_sz _p_name, IProperty_Events* _p_events) : TBase (_n_value, _p_name, _p_events) {}
 CAlign_Horz:: CAlign_Horz (const CAlign_Horz& _src) : CAlign_Horz() { *this = _src; }
 CAlign_Horz::~CAlign_Horz (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 #if defined(_DEBUG)
 CString  CAlign_Horz::Print (const e_print _e_opt) const {
@@ -53,9 +51,13 @@ CString  CAlign_Horz::Print (const e_print _e_opt) const {
 	return  cs_out;
 }
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
-
+CAlign_Horz::
+_value CAlign_Horz::IndexToEnum(const uint32_t _u_value) {
+	if (_u_value <= _value::eRight)
+		return static_cast<_value>(_u_value);
+	else
+		return _value::eLeft;
+}
 CAlign_Horz::operator uint32_t (void) const
 {
 	if (TBase::Has(_value::eRight))  return _value::eRight ;
@@ -66,13 +68,12 @@ CAlign_Horz::operator uint32_t (void) const
 
 CAlign_Horz&  CAlign_Horz::operator = (const CAlign_Horz& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CAlign_Vert{}
 
 CAlign_Vert:: CAlign_Vert (const _value _n_value, _pc_sz _p_name, IProperty_Events* _p_events) : TBase (_n_value, _p_name, _p_events) {}
 CAlign_Vert:: CAlign_Vert (const CAlign_Vert& _src) : CAlign_Vert() { *this = _src; }
 CAlign_Vert::~CAlign_Vert (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 #if defined(_DEBUG)
 CString  CAlign_Vert::Print (const e_print _e_opt) const {
@@ -106,7 +107,14 @@ CString  CAlign_Vert::Print (const e_print _e_opt) const {
 }
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
+CAlign_Vert::
+_value CAlign_Vert::IndexToEnum(const uint32_t _u_value) {
+	if (_u_value <= _value::eBottom)
+		return static_cast<_value>(_u_value);
+	else
+		return _value::eTop;
+}
+
 CAlign_Vert::operator uint32_t (void) const
 {
 	if (TBase::Has(_value::eMiddle)) return _value::eMiddle ;
@@ -117,14 +125,13 @@ CAlign_Vert::operator uint32_t (void) const
 
 CAlign_Vert&  CAlign_Vert::operator = (const CAlign_Vert& _src) { (TBase&)*this = (const TBase&)_src; return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CAlign{}
 
 CAlign:: CAlign (void) {}
 CAlign:: CAlign (const CAlign& _ref) : CAlign() { *this = _ref; }
 CAlign:: CAlign (const CAlign_Horz& _horz, const CAlign_Vert& _vert) : CAlign() { *this << _horz << _vert; }
 CAlign::~CAlign (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 void CAlign::ApplyTo (const rect_t& _rc_available, const t_size& _sz_accept, rect_t& _rc_aligned) const {
 	_rc_available; _sz_accept; _rc_aligned;
@@ -183,14 +190,11 @@ const
 CAlign_Vert& CAlign::Vert(void) const { return m_vert; }
 CAlign_Vert& CAlign::Vert(void)       { return m_vert; }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CAlign& CAlign::operator = (const CAlign& _ref ) {*this << _ref.Horz() << _ref.Vert(); return *this; }
 CAlign& CAlign::operator <<(const CAlign_Horz& _horz) { this->Horz() = _horz; return *this; }
 CAlign& CAlign::operator <<(const CAlign_Vert& _vert) { this->Vert() = _vert; return *this; }
 CAlign& CAlign::operator <<(IProperty_Events* _p_events) { this->Horz().Events(_p_events);  this->Vert().Events(_p_events); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
 #if (0)
 CAlign& CAlign::operator <<(_pc_sz _lp_sz_style) {
 	if (NULL == _lp_sz_style || 0 == ::lstrlen(_lp_sz_style))
@@ -218,21 +222,18 @@ CAlign& CAlign::operator <<(_pc_sz _lp_sz_style) {
 	return *this;
 }
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CState{}
 
 CState:: CState (const uint32_t _n_value, _pc_sz _p_name, IProperty_Events* _p_events) : TBase(_n_value, _p_name, _p_events) {}
 CState:: CState (const CState& _src ) : TBase() { *this = _src; }
 CState::~CState (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 bool  CState::IsDisabled(void)    const { return this->Has(e_states::eDisabled); }
 bool  CState::IsHovered (void)    const { return this->Has(e_states::eHovered);  }
 bool  CState::IsPressed (void)    const { return this->Has(e_states::ePressed);  }
 bool  CState::IsSelected(void)    const { return this->Has(e_states::eSelected); }
 
-/////////////////////////////////////////////////////////////////////////////
 #if defined(_DEBUG)
 CString  CState::Print (void)    const {
 	CString cs_state = (
@@ -243,7 +244,6 @@ CString  CState::Print (void)    const {
 	return cs_state;
 }
 #endif
-/////////////////////////////////////////////////////////////////////////////
 
 uint32_t CState::Get (void) const { return TBase::m_value; }
 uint32_t CState::Set (const CState::e_states _value)
@@ -272,16 +272,12 @@ uint32_t CState::Set (const CState::e_states _value)
 	 return d_prev;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+CState&  CState::operator = (const CState& _ref) { (TBase&)*this = (const TBase&)_ref; return *this; }
+CState&  CState::operator <<(const CState::e_states _curr) { this->Set(_curr); return *this; }
 
-CState& CState::operator = (const CState& _ref) { (TBase&)*this = (const TBase&)_ref; return *this; }
-CState& CState::operator <<(const CState::e_states _curr) { this->Set(_curr); return *this; }
+uint32_t CState::EnumToIndex(const CState::e_states _value) {
 
-/////////////////////////////////////////////////////////////////////////////
-
-size_t  CState::EnumToIndex(const CState::e_states _value) {
-
-	size_t ndx_ = 0;
+	uint32_t ndx_ = 0;
 
 	switch(_value) {
 	case CState::eDisabled: { ndx_ = 1; } break;
@@ -293,7 +289,7 @@ size_t  CState::EnumToIndex(const CState::e_states _value) {
 	return ndx_;	
 }
 
-CString CState::EnumToName(const CState::e_states _value) {
+CString  CState::EnumToName(const CState::e_states _value) {
 
 	CString cs_name(_T("#Undef"));
 
@@ -307,7 +303,7 @@ CString CState::EnumToName(const CState::e_states _value) {
 	return cs_name;
 }
 
-CState::e_states CState::IndexToEnum(const size_t _ndx) {
+CState::e_states CState::IndexToEnum(const uint32_t _ndx) {
 
 	// stupid approach is going here:
 	if (0 == _ndx) return CState::eNormal;
@@ -319,12 +315,13 @@ CState::e_states CState::IndexToEnum(const size_t _ndx) {
 	return CState::eNormal;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CStyle{}
 
 CStyle:: CStyle(const uint32_t _n_value, _pc_sz _p_name, IProperty_Events* _p_events) : TBase(_n_value, _p_name, _p_events) {}
 CStyle::~CStyle(void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-
 bool   CStyle::IsBordered(void)   const  { return TBase::Has(e_styles::eBorder); }
 bool   CStyle::IsBordered(const bool _v) { return TBase::Modify(e_styles::eBorder, _v); }
+
+#pragma endregion

@@ -1,6 +1,6 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 03-Sep-2026 at 12:01:58.524, UTC+4, Batumi, Thursday;
-	The is base control registry storage wrapper interface interface implementation file;
+	The is base control registry storage wrapper interface implementation file;
 */
 #include "ctl.base.reg.h"
 
@@ -15,5 +15,9 @@ _pc_sz  CRoot::Path (void) const {
 	}
 	return (_pc_sz) cs_root;
 }
+
+const
+CRoot_base& CRoot::operator ()(void) const { return (TBase&)*this; }
+CRoot_base& CRoot::operator ()(void)       { return (TBase&)*this; }
 
 #pragma endregion

@@ -274,7 +274,7 @@ CString  CGaps_of_rect::CSides::EnumToName (const CSides::_part _value) {
 	return cs_name;
 }
 
-CGaps_of_rect::CSides::_e CGaps_of_rect::CSides::IndexToEnum(const size_t _ndx) {
+CGaps_of_rect::CSides::_e CGaps_of_rect::CSides::IndexToEnum(const uint32_t _ndx) {
 	_ndx;
 	if (_ndx <= CSides::e_bottom)
 		return static_cast<CSides::_e>(_ndx);

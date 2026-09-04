@@ -265,9 +265,9 @@ err_code CFrame::CPosition::Save (void) {
 	TRegKeyEx reg_key;
 	
 	reg_key.Value()() << wnd.Position();
-	reg_key.Value()() >> wnd.Side(e_pos::e_left); if (__failed(reg_key.Value().Set(rect.left))) this->m_error = reg_key.Error();
-	reg_key.Value()() >> wnd.Side(e_pos::e_right); if (__failed(reg_key.Value().Set(rect.right))) this->m_error = reg_key.Error();
-	reg_key.Value()() >> wnd.Side(e_pos::e_top); if (__failed(reg_key.Value().Set(rect.top))) this->m_error = reg_key.Error();
+	reg_key.Value()() >> wnd.Side(e_pos::e_left);   if (__failed(reg_key.Value().Set(rect.left)))   this->m_error = reg_key.Error();
+	reg_key.Value()() >> wnd.Side(e_pos::e_right);  if (__failed(reg_key.Value().Set(rect.right)))  this->m_error = reg_key.Error();
+	reg_key.Value()() >> wnd.Side(e_pos::e_top);    if (__failed(reg_key.Value().Set(rect.top)))    this->m_error = reg_key.Error();
 	reg_key.Value()() >> wnd.Side(e_pos::e_bottom); if (__failed(reg_key.Value().Set(rect.bottom))) this->m_error = reg_key.Error();
 
 	return this->Error();

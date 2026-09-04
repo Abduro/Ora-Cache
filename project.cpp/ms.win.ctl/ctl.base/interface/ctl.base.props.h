@@ -15,16 +15,17 @@ namespace ex_ui { namespace controls { namespace properties {
 	class CAlign_Horz : public CProperty {
 	                   typedef CProperty TBase;
 	public:
-		enum _value : uint32_t { eLeft = DT_LEFT, eCenter = DT_CENTER, eRight  = DT_RIGHT };
+//		enum _value : uint32_t { eLeft = DT_LEFT, eCenter = DT_CENTER, eRight  = DT_RIGHT };
+		enum _value : uint32_t { eLeft = 0, eCenter = 1, eRight = 2 };
 
-	public:
 		 CAlign_Horz (const _value _n_value = _value::eLeft, _pc_sz _p_name = _T("#horz_align"), IProperty_Events* = nullptr);
 		 CAlign_Horz (const CAlign_Horz&); CAlign_Horz (CAlign_Horz&&) = delete;
 		~CAlign_Horz (void);
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
-	public:
+		static _value IndexToEnum(const uint32_t);
+
 		CAlign_Horz& operator = (const CAlign_Horz&);
 		CAlign_Horz& operator = (CAlign_Horz&&) = delete; // not required yet;
 
@@ -34,16 +35,17 @@ namespace ex_ui { namespace controls { namespace properties {
 	class CAlign_Vert : public CProperty {
 	                   typedef CProperty TBase;
 	public:
-		enum _value : uint32_t { eMiddle = DT_VCENTER, eTop = DT_TOP , eBottom = DT_BOTTOM };
+//		enum _value : uint32_t { eMiddle = DT_VCENTER, eTop = DT_TOP , eBottom = DT_BOTTOM };
+		enum _value : uint32_t { eMiddle = 0, eTop = 1, eBottom = 2 };
 
-	public:
 		 CAlign_Vert (const _value = _value::eMiddle,  _pc_sz _p_name = _T("#vert_align"), IProperty_Events* = nullptr);
 		 CAlign_Vert (const CAlign_Vert&); CAlign_Vert (CAlign_Vert&&) = delete;
 		~CAlign_Vert (void);
 #if defined(_DEBUG)
 		CString  Print (const e_print = e_print::e_all) const;
 #endif
-	public:
+		static _value IndexToEnum(const uint32_t);
+
 		CAlign_Vert& operator = (const CAlign_Vert&);
 		CAlign_Vert& operator = (CAlign_Vert&&) = delete; // not required yet;
 
@@ -104,18 +106,15 @@ namespace ex_ui { namespace controls { namespace properties {
 #if defined(_DEBUG)
 		CString  Print (void) const;
 #endif
-	public:
 		uint32_t Get (void) const;
 		uint32_t Set (const CState::e_states);        // returns previous value;
 
-	public:
 		CState& operator = (const CState&);           // makes a copy;
 		CState& operator <<(const CState::e_states);  // sets the current state;
 
-	public:
-		static size_t     EnumToIndex(const CState::e_states);
+		static uint32_t   EnumToIndex(const CState::e_states);
 		static CString    EnumToName (const CState::e_states);
-		static CState::e_states IndexToEnum(const size_t);
+		static CState::e_states IndexToEnum(const uint32_t);
 	};
 
 	class CStyle : public CProperty { typedef CProperty TBase;

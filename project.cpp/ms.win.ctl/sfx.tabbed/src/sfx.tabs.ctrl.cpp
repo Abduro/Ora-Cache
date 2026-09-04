@@ -6,6 +6,7 @@
 */
 #include "sfx.tabs.ctrl.h"
 #include "sfx.tabs.wnd.h"
+#include "sfx.tabs.reg.h"
 
 using namespace ex_ui::controls::sfx::tabbed;
 
@@ -42,7 +43,7 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	if (false == ::GetClientRect(hParent, &rc_area)) {
 		return this->m_error.Last();
 	}
-#if (1)
+
 	const uint32_t n_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	rect_t rc_ = (this->Layout() = rc_area);
 	_wnd_ref(m_wnd_ptr).Create(
@@ -64,9 +65,14 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 		}
 	}
 
+	using CPersistent = ex_ui::controls::tabbed::CPersistent;
+
+	CPersistent::CAlign align; align << this; align.Load();
+	CPersistent::CSide  side; side << this; side.Load();
+
 	if (__failed(this->Layout().Update()))
 		this->m_error = this->Layout().Error();
-#endif
+
 	return this->Error();
 }
 err_code  CControl::Destroy(void) {
@@ -100,6 +106,7 @@ const
 CFormat&  CControl::Format (void) const { return this->m_format; }
 CFormat&  CControl::Format (void)       { return this->m_format; }
 
+uint32_t  CControl::Id (void) const { return this->m_ctrl_id; }
 bool      CControl::Is_valid (void) const {
 	return nullptr != m_wnd_ptr && true == !!_wnd_ref(m_wnd_ptr).IsWindow();
 }
