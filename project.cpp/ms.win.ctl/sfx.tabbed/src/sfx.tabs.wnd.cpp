@@ -73,15 +73,15 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		z_buffer.Draw( border, clr_active);
 	}
 
+	// ToDo: using the same names with classes, but of other namespace must be solved, otherwise the compiler generates the warning;
+	using TFlags_Horz = ::ex_ui::draw::text::format::CAlign_Horz::e_value;
+	using TFlags_Vert = ::ex_ui::draw::text::format::CAlign_Vert::e_value;
+	using TAlt_Flags  = ::ex_ui::draw::text::format::CAlterer::e_value;
+	using TCut_Flags  = ::ex_ui::draw::text::format::CCutter::e_value;
+	using TOpt_Flags  = ::ex_ui::draw::text::format::COptimizer::e_value;
+
 	// (4) draws captions of the tabs; the color of the text depends on activity of the tab and the same as tab border color;
 	if (this->m_ctrl.Layout().Tabs().Sides().IsHorz()) {
-		// ToDo: using the same names with classes, but of other namespace must be solved, otherwise the compiler generates the warning;
-		using TFlags_Horz = ex_ui::draw::text::format::CAlign_Horz::e_value;
-		using TFlags_Vert = ex_ui::draw::text::format::CAlign_Vert::e_value;
-		using TAlt_Flags  = ex_ui::draw::text::format::CAlterer::e_value;
-		using TCut_Flags  = ex_ui::draw::text::format::CCutter::e_value;
-		using TOpt_Flags  = ex_ui::draw::text::format::COptimizer::e_value;
-
 		ex_ui::draw::text::CDrawText text;
 
 		text.Format().Set(
@@ -99,30 +99,28 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		}
 	}
 	if (this->m_ctrl.Layout().Tabs().Sides().IsVert()) {
-#if (0)
-		const HFONT h_prev = z_buffer.SelectFont(this->m_font_vert.Handle());
-		CAlign align; align << z_buffer; align.Set(TVert_Flags::e_center); // no check of error yet; does not work: the text still is trimmed;
-#else
 		ex_ui::draw::text::CTextOut text;
+
 		text.Align().Horz().Set(THorz_Flags::e_center);
 		text.Align().Vert().Set(TVert_Flags::e_center);
 		text.Align() >> z_buffer;
 		text << z_buffer;  // it is required for correct calculation text position;
-#endif
+
 		const TTabArray& tabs = this->m_ctrl.Tabs().Raw();
 		for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 			const CTab& tab_ = tabs.at(i_);
-#if (0)
-			z_buffer.Draw(tab_.Caption(), this->m_font_vert.Handle(), tab_.Rect(), i_ == this->m_ctrl.Tabs().Active() ? act_clr : nrm_clr, dw_flags);
-#else
 			((ex_ui::draw::text::CText_Base&)text) << tab_.Caption()  << (i_ == this->m_ctrl.Tabs().Active() ? clr_active : clr_normal);
-			text << tab_.Strip();
+			// the font being used must be set before calculation an anchor point;
+			{
+				// there's incorrect calculation of the anchor point or the provided rectangle; temporarily corrected by reducing the width of the rectangle;
+				rect_t rc_tab = tab_.Strip();
+				if (this->m_ctrl.Layout().Tabs().Sides().Selected() == TSide::e_left ) rc_tab.right -= 10;
+				if (this->m_ctrl.Layout().Tabs().Sides().Selected() == TSide::e_right) rc_tab.left  += 10;
+				::ex_ui::draw::memory::CFont_Selector selector (z_buffer, this->m_font_vert.Handle());
+				text << rc_tab;
+			}
 			z_buffer.Draw(text, this->m_font_vert.Handle(), 0);
-#endif
 		}
-#if (0)
-		z_buffer.SelectFont(h_prev);
-#endif
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd ;

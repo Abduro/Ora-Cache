@@ -20,7 +20,7 @@ err_code CPages::At_1st(void) {
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
-
+//	these properties are set by tab persistent class from the system registry, if there no values, the default ones are set;
 //	tabbed.Layout().Tabs().LocatedOn(TSide::e_bottom);
 //	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
 

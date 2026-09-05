@@ -44,6 +44,15 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 		return this->m_error.Last();
 	}
 
+	using CPersistent = ex_ui::controls::tabbed::CPersistent;
+	/* it is required to be here: before creation a tab control window;
+	   otherwise, message handler of creating window does not receive these settings and expected feel & view will not appear,
+	   for example, the virtical text will not be created;
+	*/
+	CPersistent::CAlign  align; align << this; align.Load();
+	CPersistent::CSide   side; side << this; side.Load();
+	CPersistent::CActive active; active << this; active.Load();
+
 	const uint32_t n_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	rect_t rc_ = (this->Layout() = rc_area);
 	_wnd_ref(m_wnd_ptr).Create(
@@ -64,11 +73,6 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 			this->m_error = n_result; break;
 		}
 	}
-
-	using CPersistent = ex_ui::controls::tabbed::CPersistent;
-
-	CPersistent::CAlign align; align << this; align.Load();
-	CPersistent::CSide  side; side << this; side.Load();
 
 	if (__failed(this->Layout().Update()))
 		this->m_error = this->Layout().Error();

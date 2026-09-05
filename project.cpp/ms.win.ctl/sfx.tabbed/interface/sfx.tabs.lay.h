@@ -77,6 +77,11 @@ namespace layout {
 		~CTabs (void);
 
 	public:
+		enum e_txt_orient : uint32_t {
+		e_horz = 0, // a text in each tab is oriented horizontally; default for top and bottom sides of the ribbon being attached to;
+		e_vert = 1, // a text in each tab is oriented vertically; default for left and right sides of the ribbon being attached to;
+		};
+
 		const
 		Selected& Active (void) const;
 		Selected& Active (void) ;
@@ -84,6 +89,9 @@ namespace layout {
 		const
 		TAlign&   Align (void) const;      // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (ro);
 		TAlign&   Align (void) ;           // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (rw);
+
+		e_txt_orient Cap_orient (void) const;         // gets the text orientation in tabs; this::LocatedOn() does not affect this property value;
+		bool         Cap_orient (const e_txt_orient); // sets the text orientation in tabs; this::LocatedOn() does not affect this property value;
 
 		uint32_t  Gap (void) const;
 		bool      Gap (const uint32_t _u_value);
@@ -124,6 +132,7 @@ namespace layout {
 		CControl&  m_ctrl  ;
 		Selected   m_active;
 		TAlign     m_align ;
+		e_txt_orient m_txt_orient;
 	};
 }
 	class CLayout {

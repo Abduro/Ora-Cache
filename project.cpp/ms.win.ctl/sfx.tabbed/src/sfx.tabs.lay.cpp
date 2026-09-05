@@ -16,7 +16,7 @@ using namespace ex_ui::controls::sfx::tabbed::layout;
 #define __W(rc) (rc.right - rc.left)
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CActiveTab{}
 
 CActiveTab:: CActiveTab (CControl& _ctrl) : m_ctrl(_ctrl) {
 	// https://stackoverflow.com/questions/64772928/how-to-initialize-stdmap-by-an-array ;
@@ -34,7 +34,6 @@ CActiveTab:: CActiveTab (CControl& _ctrl) : m_ctrl(_ctrl) {
 }
 CActiveTab::~CActiveTab (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
 const
 CBorder&  CActiveTab::Get (const _ndx _n_item) const {
 	_n_item;
@@ -83,10 +82,9 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 	*/
 	rect_.right  -= u_thick;
 	rect_.bottom -= u_thick;
-	const TAlign& align = this->m_ctrl.Layout().Tabs().Align();
 #endif
 	switch (this->m_ctrl.Layout().Tabs().LocatedOn()) {
-	case TSide::e_bottom : {
+	case TSide::e_bottom :{
 		// const THorzAlign& h_align = align.Horz();
 		/*THorzAlign::eLeft; THorzAlign::eCenter; THorzAlign::eRight;
 		  (e)+-------+(f)     (e)+-------+(f)      (e)+-------+(f)
@@ -108,43 +106,20 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the left edge of the tab bookmark;
 		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the right edge of the tab bookmark;
 
-	//	if (THorzAlign::eLeft == h_align.Value()) { // the start X-coord value == rect_.left and is increased to the right side;
+		CPoint d_(rect_.left, c_.Y()); // X-coord of the 'd_' point equals always to the *left* side of the rectangle;
+		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
 
-			CPoint d_(rect_.left, c_.Y()); // X-coord of the 'd_' point equals always to the *left* side of the rectangle;
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
+		CPoint e_(d_.X(), rect_.top); // Y-coord of the 'e_' point equals always to the *top* value of the rectangle;
+		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; //  the left edge of the tab body;
 
-			CPoint e_(d_.X(), rect_.top); // Y-coord of the 'e_' point equals always to the *top* value of the rectangle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; //  the left edge of the tab body;
+		CPoint f_(rect_.right, e_.Y()); // X-coord of the 'f_' point equals always to the *right* value of the rectangle;
+		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; //  the top edge of the tab body;
 
-			CPoint f_(rect_.right, e_.Y()); // X-coord of the 'f_' point equals always to the *right* value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; //  the top edge of the tab body;
-
-			CPoint g_(f_.X(), d_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
-	//	}
-	//	else if (THorzAlign::eCenter == h_align.Value()) {
-	//		rc_strip;
-	//	}
-#if (0)
-		else {
-			CPoint d_(rect_.left, c_.Y()); // X-coord value always equals to the *left* side of the rectangle;
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
-
-			CPoint e_(d_.X(), rect_.top);  // Y-coord value always equals to the *top* side of the rectangle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; //  the left edge of the tab body;
-
-			CPoint f_(rect_.right, e_.Y()); // X-coord value of the 'f_' point has always the *right* side value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; //  the top edge of the tab body;
-
-			CPoint g_(f_.X(), d_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
-		}
-#endif
+		CPoint g_(f_.X(), d_.Y());
+		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
+		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
 	} break;
 	case TSide::e_left : {
-		const TVertAlign& v_align = align.Vert();
 		/*TVertAlign::eBottom; TVertAlign::eMiddle; TVertAlign::eTop;
 		      (d)+-----+(e)        (d)+-----+(e)    (b)+---+-----+(e)
 		         |     |         (b)  |(c)  |          | (c)(d)  |   
@@ -157,62 +132,30 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		 in case of bottom alignment the 'gh' border may have zero length if the active tab has index '0';
 		 in case of the top alignment the 'cd' border may have zero length if the active tab index equals to the count of the tabs - 1;
 		*/
-		if (TVertAlign::eBottom == v_align.Value()) {
+		// this is the points of the tab strip:
+		CPoint a_(rc_strip.left , rc_strip.bottom - u_thick);
+		CPoint b_(rc_strip.left , rc_strip.top + u_thick);
+		CPoint c_(rc_strip.right, rc_strip.top + u_thick);
+		CPoint h_(rc_strip.right, rc_strip.bottom - u_thick);
 
-			CPoint a_(rect_.left, rect_.bottom - (n_active * n_width));
-			CPoint b_(a_.X(), a_.Y() - n_width);
-		
-			CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
+		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
+		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
+		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
 
-			CPoint c_(b_.X() + n_height, b_.Y());
-			CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
+		CPoint d_(c_.X(), rect_.top); // Y-coord of 'd' point equals always to the *top* value of the rectangle; 
+		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_;
 
-			CPoint d_(c_.X(), rect_.top); // Y-coord of 'd' point equals always to the *top* value of the rectangle; 
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_;
+		CPoint e_(rect_.right,d_.Y()); // X-coord of 'e' point always equals to the *right* value of the rectnagle;
+		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
 
-			CPoint e_(rect_.right,d_.Y()); // X-coord of 'e' point always equals to the *right* value of the rectnagle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
+		CPoint f_(e_.X(), rect_.bottom); // Y-coord of 'f' point equals always to the *bottom* value of the rectangle;
+		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
 
-			CPoint f_(e_.X(), rect_.bottom); // Y-coord of 'f' point equals always to the *bottom* value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
-
-			CPoint g_(c_.X(), f_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
-
-			CPoint h_(c_.X(), a_.Y()); // possibly a.Y() == f.Y() when active tab index equals to '0';
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // may have '0' length in case of '0' index of active tab;
-
-			CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
-		}
-		else { // the middle alignment is not implemented for this version of the software;
-			CPoint a_(rect_.left, rect_.top + ((n_active + 1) * n_width));
-			CPoint b_(a_.X(), a_.Y() - n_width);
-		
-			CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
-
-			CPoint c_(b_.X() + n_height, b_.Y());
-			CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
-
-			CPoint d_(c_.X(), rect_.top); // Y-coord of 'd' point equals always to the *top* value of the rectangle; 
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // may have '0' length if active tab index equals to tabs.count - 1;
-
-			CPoint e_(rect_.right,d_.Y()); // X-coord of 'e' point always equals to the *right* value of the rectnagle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
-
-			CPoint f_(e_.X(), rect_.bottom); // Y-coord of 'f' point equals always to the *bottom* value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
-
-			CPoint g_(c_.X(), f_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
-
-			CPoint h_(c_.X(), a_.Y());
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_;
-
-			CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
-		}
+		CPoint g_(c_.X(), f_.Y());
+		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
+		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // may have '0' length in case of '0' index of active tab;
 	} break;
 	case TSide::e_right : {
-		const TVertAlign& v_align = align.Vert();
 		/*TVertAlign::eBottom; TVertAlign::eMiddle; TVertAlign::eTop;
 		 (f)+-----+(g)         (f)+-----+(g)        (f)+-----+---+ (a)
 		    |     |               |     |  (a)         |  (g)(h) |    
@@ -224,62 +167,30 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		 in case of the bottom alignment the 'cd' border may have '0' length if active tab index equals to 'tabs.count() - 1';
 		 in case of the top alignment the 'gh' border may have '0' length if active tab index equals to '0';
 		*/
-		if (TVertAlign::eBottom == v_align.Value()) {
+		// this is the points of the tab strip:
+		CPoint a_(rc_strip.right - u_thick, rc_strip.top);
+		CPoint b_(rc_strip.right - u_thick, rc_strip.bottom - u_thick);
+		CPoint c_(rc_strip.left, rc_strip.bottom - u_thick);
+		CPoint h_(rc_strip.left, rc_strip.top);
 
-			CPoint a_(rect_.right, rect_.bottom - ((n_active + 1) * n_width));
-			CPoint b_(a_.X(), a_.Y() + n_width);
-		
-			CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
+		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
+		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
+		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
 
-			CPoint c_(b_.X() - n_height, b_.Y());
-			CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
+		CPoint d_(c_.X(), rect_.bottom); // Y-coord value of the 'd' point equals always to the *bottom* value of the rectangle;
+		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // may have '0' length if active tab index equals to 'tabs.count() - 1';
 
-			CPoint d_(c_.X(), rect_.bottom); // Y-coord value of the 'd' point equals always to the *bottom* value of the rectangle;
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // may have '0' length if active tab index equals to 'tabs.count() - 1';
+		CPoint e_(rect_.left, d_.Y());  // X-coord value of the 'e' point equals always to the *left* value of the rectangle;
+		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
 
-			CPoint e_(rect_.left, d_.Y());  // X-coord value of the 'e' point equals always to the *left* value of the rectangle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
+		CPoint f_(e_.X(), rect_.top); // Y-coord value of the 'f' point equals always to the *top* value of the rectangle;
+		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
 
-			CPoint f_(e_.X(), rect_.top); // Y-coord value of the 'f' point equals always to the *top* value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
-
-			CPoint g_(c_.X(), f_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
-
-			CPoint h_(g_.X(), a_.Y());
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_;
-
-			CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
-		}
-		else { // the middle vertical alignment is ignored by this version of the user control implementation;
-			CPoint a_(rect_.right, rect_.top + (n_active * n_width)); // X-coord value of the 'a' point equals always to the *right* side of the rectangle;
-			CPoint b_(a_.X(), a_.Y() + n_width);
-		
-			CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
-
-			CPoint c_(b_.X() - n_height, b_.Y());
-			CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
-
-			CPoint d_(c_.X(), rect_.bottom); // Y-coord value of the 'd' point equals always to the *bottom* value of the rectangle;
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_;
-
-			CPoint e_(rect_.left, d_.Y());  // X-coord value of the 'e' point equals always to the *left* value of the rectangle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
-
-			CPoint f_(e_.X(), rect_.top); // Y-coord value of the 'f' point equals always to the *top* value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
-
-			CPoint g_(c_.X(), f_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
-
-			CPoint h_(g_.X(), a_.Y()); // possibly a.Y() == g.Y() if the active tab index equals to '0';
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_;  // may have '0' length if active tab index equals to '0';
-
-			CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
-		}
+		CPoint g_(c_.X(), f_.Y());
+		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
+		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_;
 	} break;
 	case TSide::e_top : {
-		const THorzAlign& h_align = align.Horz();
 		/*THorzAlign::eLeft; THorzAlign::eCenter; THorzAlign::eRight;
 		  (a)+---+(b)            (a)+---+(b)           (a)+---+(b)  
 		     |   |(c)               |   |                 |   |     
@@ -300,37 +211,18 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the right edge of the tab bookmark;
 		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the left edge of the tab bookmark;
 
-		if (THorzAlign::eLeft == h_align.Value()) {		
-			CPoint d_(rect_.right, c_.Y()); // X-coord of the 'd' point equals always to the *right* side value of the rectangle;
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the top-right edge of the tab body;
+		CPoint d_(rect_.right, c_.Y()); // X-coord of the 'd' point equals always to the *right* side value of the rectangle;
+		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the top-right edge of the tab body;
 
-			CPoint e_(d_.X(), rect_.bottom); // Y-coord of the 'e' point equals always to the *bottom* side value of the rectangle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; // the right edge of the tab body;
+		CPoint e_(d_.X(), rect_.bottom); // Y-coord of the 'e' point equals always to the *bottom* side value of the rectangle;
+		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; // the right edge of the tab body;
 
-			CPoint f_(rect_.left, e_.Y()); // X-coord of the 'f' point equals always to the *left* side value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; // the bottom edge of the tab body;
+		CPoint f_(rect_.left, e_.Y()); // X-coord of the 'f' point equals always to the *left* side value of the rectangle;
+		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; // the bottom edge of the tab body;
 
-			CPoint g_(f_.X(), d_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; // the left edge of the tab body;
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // the left-top edge of the tab body;
-		}
-		else if (THorzAlign::eCenter == h_align.Value()) {
-			rc_strip;
-		}
-		else {
-			CPoint d_(rect_.right, c_.Y()); // X-coord of the 'd' point equals always to the *right* side value of the rectangle;
-			CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the top-right edge of the tab body;
-
-			CPoint e_(d_.X(), rect_.bottom); // Y-coord of the 'e' point equals always to the *bottom* side value of the rectangle;
-			CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; // the right edge of the tab body;
-
-			CPoint f_(rect_.left, e_.Y()); // X-coord of the 'f' point equals always to the *left* side value of the rectangle;
-			CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; // the bottom edge of the tab body;
-
-			CPoint g_(f_.X(), d_.Y());
-			CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; // the left edge of the tab body;
-			CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // the left-top edge of the tab body;
-		}
+		CPoint g_(f_.X(), d_.Y());
+		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; // the left edge of the tab body;
+		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // the left-top edge of the tab body;
 	} break;
 	default:
 		n_result = (err_code) TErrCodes::eExecute::eParameter;
@@ -339,16 +231,16 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 	return n_result;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+
 namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { namespace layout {
 
-CTabs:: CTabs (CControl& _ctrl) : m_ribbon{0}, m_size{0}, m_gap(0), m_ctrl(_ctrl), m_active(_ctrl) {
+CTabs:: CTabs (CControl& _ctrl) : m_ribbon{0}, m_size{0}, m_gap(0), m_ctrl(_ctrl), m_active(_ctrl), m_txt_orient(e_txt_orient::e_horz) {
 	this->m_size.cy = 31;
 	this->m_size.cx = this->m_size.cy * 5; this->m_gap = this->m_size.cy / 2;
 }
 CTabs::~CTabs(void) {}
 
-/////////////////////////////////////////////////////////////////////////////
 const
 CActiveTab& CTabs::Active (void) const { return this->m_active; }
 CActiveTab& CTabs::Active (void)       { return this->m_active; }
@@ -356,6 +248,13 @@ CActiveTab& CTabs::Active (void)       { return this->m_active; }
 const
 TAlign&   CTabs::Align (void) const { return this->m_align; }
 TAlign&   CTabs::Align (void)       { return this->m_align; }
+
+using e_txt_orient = CTabs::e_txt_orient;
+
+e_txt_orient CTabs::Cap_orient (void) const { return this->m_txt_orient; }
+bool         CTabs::Cap_orient (const e_txt_orient _value) {
+	const bool b_changed = this->Cap_orient() != _value; if (b_changed) this->m_txt_orient = _value; return b_changed;
+}
 
 uint32_t  CTabs::Gap (void) const { return m_gap; }
 bool      CTabs::Gap (const uint32_t _n_value) {
@@ -436,7 +335,15 @@ err_code  CTabs::Ribbon (const rect_t& _rc_area) {
 				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
 			}
 		}
-		else { // the 'middle' alignment is ignored by this version of this user control implementation;
+		else if (TVertAlign::eMiddle == this->Align().Vert().Value()) {
+			long_t n_bottom = this->m_ribbon.bottom - (__H(this->m_ribbon) - this->TotalHeight()) / 2;
+			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
+				this->m_ctrl.Tabs().Tab(i_).Strip().bottom  = n_bottom; n_bottom -= this->Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
+			}
+		}
+		else {
 			long_t n_top = this->m_ribbon.top;
 			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
 				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;

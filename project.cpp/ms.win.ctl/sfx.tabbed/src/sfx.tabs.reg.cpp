@@ -30,6 +30,8 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace _impl {
 
 static _pc_sz p_err_ptr = _T("The pointer to tab control is not set");
 static _pc_sz p_align_horz = _T("Align_Horz");
+static _pc_sz p_align_vert = _T("Align_Vert");
+static _pc_sz p_active_tab = _T("Active_Tab");
 
 #pragma region cls::CActive{}
 
@@ -43,11 +45,13 @@ err_code CPersistent::CActive::Load (void) {
 		return this->m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	THorzAlign::_value align_horz = THorzAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_horz));
-	this->m_p_ctrl->Layout().Tabs().Align().Horz().Value() = align_horz;
+	const int16_t tab_ndx = static_cast<int16_t>(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_active_tab));
+	this->m_error << this->m_p_ctrl->Tabs().Active(tab_ndx);
 	
 	return this->Error();
 }
+
+CPersistent::CActive& CPersistent::CActive::operator <<(TabCtrl* _p_ctrl) { this->m_p_ctrl = _p_ctrl; return *this; }
 
 #pragma endregion	
 #pragma region cls::CAlign{}
@@ -64,6 +68,9 @@ err_code CPersistent::CAlign::Load (void) {
 	TRegKeyEx reg_key;
 	THorzAlign::_value align_horz = THorzAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_horz));
 	this->m_p_ctrl->Layout().Tabs().Align().Horz().Value() = align_horz;
+
+	TVertAlign::_value align_vert = TVertAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_vert));
+	this->m_p_ctrl->Layout().Tabs().Align().Vert().Value() = align_vert;
 	
 	return this->Error();
 }
