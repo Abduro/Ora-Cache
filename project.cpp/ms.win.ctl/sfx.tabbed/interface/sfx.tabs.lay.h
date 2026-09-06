@@ -6,7 +6,7 @@
 */
 #include "sfx.tabs.inc.h"
 
-namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class CControl;
+namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class CControl; using TabCtrl = CControl;
 
 	using CSides = ex_ui::controls::layout::CMargins_of_rect::CSides;
 	using TSide  = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
@@ -72,16 +72,63 @@ namespace layout {
 
 	// for this version of the implementation, all tabs have fixed value width and height, the text of tab is trimmed by '...' if necessary;
 	class CTabs { friend class ex_ui::controls::sfx::tabbed::CLayout;
-	public :
-		 CTabs (CControl&); CTabs (void) = delete; CTabs (const CTabs&) = delete; CTabs (CTabs&&) = delete;
-		~CTabs (void);
-
 	public:
-		enum e_txt_orient : uint32_t {
-		e_horz = 0, // a text in each tab is oriented horizontally; default for top and bottom sides of the ribbon being attached to;
-		e_vert = 1, // a text in each tab is oriented vertically; default for left and right sides of the ribbon being attached to;
+		/* query to Google AI: abbreviation for caption word in programming?
+		In programming, the most common abbreviations for the word 'caption' are 'cap' and 'lbl' (short for 'label').
+		(1) 'cap' – Used when you need a direct, literal abbreviation of the word 'caption' itself (e.g., capText, img_cap).
+		(2) 'lbl' (Label) – Used most frequently in frontend and UI development (like C#, JavaFX, or HTML).
+		    Developers typically use a visual UI component called a "Label" to display a caption
+		*/
+		class CCaps {
+		public:
+			enum e_orient : uint32_t {
+			e_horz = 0, // a caption text of each tab is oriented horizontally; default for top and bottom sides of the ribbon being attached to;
+			e_vert = 1, // a caption text of each tab is oriented vertically; default for left and right sides of the ribbon being attached to;
+			};
+			CCaps (void); CCaps (const CCaps&) = delete; CCaps (CCaps&&) = delete; ~CCaps (void) = default;
+
+			e_orient Get_orient (void) const;
+			bool     Set_orient (const e_orient);
+
+			bool     Is_horz (void) const;
+			bool     Is_vert (void) const;
+
+		private:
+			CCaps& operator = (const CCaps&) = delete; CCaps& operator = (CCaps&&) = delete;
+			e_orient m_orient;
 		};
 
+		class CSize : public ::geometry::_2D::base::CSize_U { typedef ::geometry::_2D::base::CSize_U TBase;
+		public:
+			class CHeight {
+			public:
+				CHeight (void); CHeight (const CHeight&) = delete; CHeight (CHeight&&) = delete; ~CHeight (void) = default;
+			private:
+				CHeight& operator = (const CHeight&) = delete; CHeight& operator = (CHeight&&) = delete;
+			};
+			class CWidth {
+			public:
+				CWidth (void); CWidth (const CWidth&) = delete; CWidth (CWidth&&) = delete; ~CWidth (void) = default;
+			private:
+				CWidth& operator = (const CWidth&) = delete; CWidth& operator = (CWidth&&) = delete;
+			};
+			CSize (void); CSize (const CSize&) = delete; CSize (CSize&&) = delete; ~CSize (void) = default;
+
+			const
+			CHeight& Hight (void) const;
+			CHeight& Hight (void) ;
+			const
+			CWidth&  Width (void) const;
+			CWidth&  Width (void) ;
+
+		private:
+			CSize& operator = (const CSize&) = delete; CSize& operator = (CSize&&) = delete;
+			CHeight m_height;
+			CWidth  m_width ;
+		};
+
+		 CTabs (CControl&); CTabs (void) = delete; CTabs (const CTabs&) = delete; CTabs (CTabs&&) = delete;
+		~CTabs (void);
 		const
 		Selected& Active (void) const;
 		Selected& Active (void) ;
@@ -89,24 +136,15 @@ namespace layout {
 		const
 		TAlign&   Align (void) const;      // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (ro);
 		TAlign&   Align (void) ;           // returns a reference to tabs' alignment that may be set differently to vertical and horizontal positions; (rw);
-
-		e_txt_orient Cap_orient (void) const;         // gets the text orientation in tabs; this::LocatedOn() does not affect this property value;
-		bool         Cap_orient (const e_txt_orient); // sets the text orientation in tabs; this::LocatedOn() does not affect this property value;
+		const
+		CCaps&    Caps (void) const;       // returns a reference to all tabs' captions' settings, especially for tabs' caption orientation either vertical or horizontal; (ro)
+		CCaps&    Caps (void) ;            // returns a reference to all tabs' captions' settings, especially for tabs' caption orientation either vertical or horizontal; (rw)
 
 		uint32_t  Gap (void) const;
 		bool      Gap (const uint32_t _u_value);
 
 		uint32_t  Height (void) const;
 		bool      Height (const uint32_t); // sets a height of all tabs; returns 'true' in case if the height value is changed;
-		const
-		rect_t&   Ribbon (void) const;               // gets a rectangle of tabs area; in other words, it is tabs' ribbon or bookmarks' band;
-		err_code  Ribbon (const rect_t& _rc_client); // calculates a rectangle for tabs for available client area rectangle;
-
-		TSide     LocatedOn(void) const ;  // gets a side where all tabs reside;
-		bool      LocatedOn(const TSide);  // sets the side of the control on which the tabs will be located;
-		const
-		CSides&   Sides (void) const;      // gets a reference to all sides collection; (ro);
-		CSides&   Sides (void) ;           // gets a reference to all sides collection; (rw);
 		
 		// ToDo: t_size must be replaced to geometry::_2D::base::CSize_U;
 		const
@@ -125,36 +163,64 @@ namespace layout {
 		CTabs&  operator = (CTabs&&) =  delete;
 
 	private:
-		CSides     m_sides ;   // sides of tab control where tabs can be located; the top side is default;
-		t_size     m_size  ;   // a size of each tab;
-		rect_t     m_ribbon;   // entire area of tabs, including free space of the background that is inline with tabs;
-		uint32_t   m_gap   ;   // a gap between tabs;
 		CControl&  m_ctrl  ;
+		CCaps      m_caps  ;
+		t_size     m_size  ;   // a size of each tab;
+		uint32_t   m_gap   ;   // a gap between tabs;
 		Selected   m_active;
 		TAlign     m_align ;
-		e_txt_orient m_txt_orient;
+	};
+
+	class CRibbon {
+	public:
+		CRibbon (TabCtrl&);
+		CRibbon (void) = delete; CRibbon (const CRibbon&) = delete; CRibbon (CRibbon&&) = delete; ~CRibbon (void) = default;
+
+		TSide     LocatedOn(void) const ;   // gets a side where all tabs reside;
+		bool      LocatedOn(const TSide);   // sets the side of the control on which the tabs will be located;
+		const
+		rect_t&   Rect (void) const;
+		const
+		CSides&   Sides (void) const;       // gets a reference to all sides collection; (ro);
+		CSides&   Sides (void) ;            // gets a reference to all sides collection; (rw);
+
+		err_code  Update(const rect_t& _rc_area); // calculates a rectangle for tabs for available client area rectangle;
+		const
+		CTabs&    Tabs (void) const;
+		CTabs&    Tabs (void) ;
+
+		CRibbon&  operator <<(const TSide); // sets the control side which this ribbon is glued to;
+
+	private:
+		CRibbon&  operator = (const CRibbon&) = delete; CRibbon& operator = (CRibbon&&) = delete;
+		CSides    m_sides;   // sides of ribbon location; the top side is default;
+		rect_t    m_rect ;   // the rectangle of the ribbon;
+		CTabs     m_tabs ;
+		TabCtrl&  m_ctrl ;
 	};
 }
 	class CLayout {
-	using  CTabs = layout::CTabs;
 	friend class  CControl;
 	private:
 		 CLayout (CControl&); CLayout (void) = delete; CLayout (const CLayout&) = delete; CLayout (CLayout&&) = delete;
 		~CLayout (void);
 
 	public:
+		using CTabs = layout::CTabs;
+		using CRibbon = layout::CRibbon;
+
 		TError&   Error  (void) const;
 		const
 		CPadding& Padding(void) const;
 		CPadding& Padding(void) ;
 		const
 		rect_t&   Rect (void) const;                 // returns the cashed rectangle of the tabbed control;
+		const
+		CRibbon&  Ribbon (void) const;
+		CRibbon&  Ribbon (void) ;
 
 		err_code  Update (void) ;                    // updates the internal components' layout by using this control window client area;
 		err_code  Update (const rect_t& _rc_area);   // updates tabbed control window *position* into an area provided;
-		const
-		CTabs&    Tabs (void) const;
-		CTabs&    Tabs (void) ;
 
 	public:
 		CLayout&  operator <<(const rect_t& _rc_area);        // updates tabbed control window position in accordance with area  ;
@@ -169,8 +235,8 @@ namespace layout {
 		CError    m_error ;
 		CControl& m_ctrl  ;
 		CPadding  m_padding;
-		CTabs     m_tabs  ;
 		rect_t    m_rect  ;  // cached client area rectangle;
+		CRibbon   m_ribbon;
 	};
 
 }}}}

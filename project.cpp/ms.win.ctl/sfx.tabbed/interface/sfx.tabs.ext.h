@@ -21,7 +21,7 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 	using IFormEvtSink = ex_ui::message::handlers::frame::IFrameEventSink;
 	using ILifeEvtSink = ex_ui::message::handlers::life::ILifeEvtSink;
 
-	typedef const CControl* TCtrlPtr;
+	typedef CControl* TCtrlPtr;
 
 	class CPage : public ex_ui::controls::CPane, IDrawEvtSink, ILifeEvtSink, IFormEvtSink, private CWndBase { // CWndBase is not copyable yet;
 		typedef CWndBase TWindow;
@@ -131,27 +131,27 @@ namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { class 
 		~CTabs (void);
 
 	public:
-		static const int16_t not_avbl = -1;       // not available, i.e. there is no available tab for the method being invoked;
-		// ToDo: it would be better to call the method below as 'SelectedIndex' or 'CurSelIndex', or TabCtrl_GetCurSel() as in common controls;
-		int16_t  Active (void) const;             // returns an index of tab that has state selected, otherwise e_na (-1);
-		err_code Active (const int16_t _ndx);     // no tab cannot be active, otherwise, it does not have a sense; updated: out of tab range makes no active tab;
+		static
+		const int16_t not_avbl = -1;               // not available, i.e. there is no available tab for the method being invoked;
+		int16_t  Active (void) const;              // returns an index of tab that has state selected, otherwise e_na (-1);
+		err_code Active (const int16_t _ndx);      // no tab cannot be active, otherwise, it does not have a sense; updated: out of tab range makes no active tab;
 
-		err_code Append (const CTab&);            // looks like useless, GUI of the app does not require to create 'tab' outside this collection;
+		err_code Append (const CTab&);             // looks like useless, GUI of the app does not require to create 'tab' outside this collection;
 		err_code Append (const uint16_t _id, _pc_sz _lp_sz_cap); // no identifier of the tab actually required for the appending new tab to this collection;
-		err_code Append (_pc_sz _lp_sz_cap);      // this is the most useful method of the appending new tab; the tab identifier and the index are assigned automatically;
+		err_code Append (_pc_sz _lp_sz_cap);       // this is the most useful method of the appending new tab; the tab identifier and the index are assigned automatically;
 
 		uint16_t Count  (void) const;
 		// if there's no active or currently selected tab in the tab control the reference to the fake tab object is returned: Is_fake() == true;
 		const
-		CTab&    Current(void) const;             // returns the reference to the currently selected tab or the currently active tab; (ro)
-		CTab&    Current(void) ;                  // returns the reference to the currently selected tab or the currently active tab; (rw)
+		CTab&    Current (void) const;             // returns the reference to the currently selected tab or the currently active tab; (ro)
+		CTab&    Current (void) ;                  // returns the reference to the currently selected tab or the currently active tab; (rw)
 
 		TError&  Error  (void) const;
 
-		void        Events (ITabEvents*);         // needs to be thread safe;
+		void        Events (ITabEvents*);          // needs to be thread safe;
 		ITabEvents* Events (void) const;
 
-		int16_t  Has (const point_t&) const;      // returns an index of tab if it's found, otherwise #na (-1);
+		int16_t  Has (const point_t&) const;       // returns an index of tab if it's found, otherwise #na (-1);
 		const
 		CTab&    Tab (const uint16_t _ndx ) const; // if input index is out of range of the tabs count, the reference to the fake tab is returned;
 		CTab&    Tab (const uint16_t _ndx )      ; // if input index is out of range of the tabs count, the reference to the fake tab is returned;

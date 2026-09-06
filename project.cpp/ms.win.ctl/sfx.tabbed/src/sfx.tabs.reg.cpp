@@ -67,10 +67,10 @@ err_code CPersistent::CAlign::Load (void) {
 
 	TRegKeyEx reg_key;
 	THorzAlign::_value align_horz = THorzAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_horz));
-	this->m_p_ctrl->Layout().Tabs().Align().Horz().Value() = align_horz;
+	this->m_p_ctrl->Layout().Ribbon().Tabs().Align().Horz().Value() = align_horz;
 
 	TVertAlign::_value align_vert = TVertAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_vert));
-	this->m_p_ctrl->Layout().Tabs().Align().Vert().Value() = align_vert;
+	this->m_p_ctrl->Layout().Ribbon().Tabs().Align().Vert().Value() = align_vert;
 	
 	return this->Error();
 }
@@ -80,7 +80,7 @@ err_code CPersistent::CAlign::Save (void) {
 		return this->m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_align_horz, this->m_p_ctrl->Layout().Tabs().Align().Horz().Value()))) this->m_error = reg_key.Error();
+	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_align_horz, this->m_p_ctrl->Layout().Ribbon().Tabs().Align().Horz().Value()))) this->m_error = reg_key.Error();
 
 	return this->Error();
 }
@@ -136,7 +136,7 @@ err_code CSide::Load (void) {
 
 	TRegKeyEx reg_key;
 	const TSide side = CSides::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_side_nm));
-	this->m_p_ctrl->Layout().Tabs().LocatedOn(side);
+	this->m_p_ctrl->Layout().Ribbon().LocatedOn(side);
 
 	return this->Error();
 }
@@ -147,7 +147,7 @@ err_code CSide::Save (void) {
 		return this->m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_side_nm, this->m_p_ctrl->Layout().Tabs().LocatedOn()))) this->m_error = reg_key.Error();
+	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_side_nm, this->m_p_ctrl->Layout().Ribbon().LocatedOn()))) this->m_error = reg_key.Error();
 
 	return this->Error();
 }

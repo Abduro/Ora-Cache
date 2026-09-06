@@ -63,8 +63,8 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 	_rect;
 	err_code n_result = __s_ok;
 
-	const uint32_t n_height = this->m_ctrl.Layout().Tabs().Height();
-	const uint32_t n_width  = this->m_ctrl.Layout().Tabs().Width ();
+	const uint32_t n_height = this->m_ctrl.Layout().Ribbon().Tabs().Height();
+	const uint32_t n_width  = this->m_ctrl.Layout().Ribbon().Tabs().Width ();
 	const  int16_t n_active = this->m_ctrl.Tabs().Active();
 	if (0 > n_active)
 		return n_result = __e_inv_arg;
@@ -83,7 +83,7 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 	rect_.right  -= u_thick;
 	rect_.bottom -= u_thick;
 #endif
-	switch (this->m_ctrl.Layout().Tabs().LocatedOn()) {
+	switch (this->m_ctrl.Layout().Ribbon().LocatedOn()) {
 	case TSide::e_bottom :{
 		// const THorzAlign& h_align = align.Horz();
 		/*THorzAlign::eLeft; THorzAlign::eCenter; THorzAlign::eRight;
@@ -232,10 +232,118 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 }
 
 #pragma endregion
+#pragma region cls::CRibbon{}
+using CRibbon  = ex_ui::controls::sfx::tabbed::layout::CRibbon;
+using CLayTabs = ex_ui::controls::sfx::tabbed::layout::CTabs;
+
+CRibbon::CRibbon (TabCtrl& _ctrl) : m_ctrl(_ctrl), m_tabs(_ctrl), m_rect{0} {}
+
+TSide    CRibbon::LocatedOn (void) const  { return this->m_sides.Selected(); }
+bool     CRibbon::LocatedOn (const TSide _side) {
+	_side;
+	const bool b_changed = this->LocatedOn() != _side;
+
+	if (b_changed)
+		this->m_sides.Selected() = _side;
+
+	return b_changed;
+}
+const
+rect_t&  CRibbon::Rect (void) const { return this->m_rect; }
+const
+CSides&  CRibbon::Sides (void) const { return this->m_sides; }
+CSides&  CRibbon::Sides (void)       { return this->m_sides; }
+
+err_code CRibbon::Update(const rect_t& _rc_area) {
+	err_code n_result = __s_ok;
+
+	if (::IsRectEmpty(&_rc_area))
+		return n_result = __e_rect;
+
+	this->m_rect = _rc_area;
+	// m_tabs.m_ledge is not taken into account for this time;
+	switch (this->LocatedOn()) {
+	case TSide::e_bottom: { this->m_rect.top    = _rc_area.bottom - this->Tabs().Height(); } break;
+	case TSide::e_left  : { this->m_rect.right  = _rc_area.left   + this->Tabs().Height(); } break;
+	case TSide::e_right : { this->m_rect.left   = _rc_area.right  - this->Tabs().Height(); } break;
+	case TSide::e_top   : { this->m_rect.bottom = _rc_area.top    + this->Tabs().Height(); } break;
+	default:
+		return n_result = (err_code) TErrCodes::eExecute::eParameter;
+	}
+
+	// ToDo:: no gaps between tabs are applied yet; this option is deprecated for this version of the implementation;
+
+	if (this->m_sides.IsHorz()) { // tabs reside in horizontal line;
+		if (THorzAlign::eLeft == this->Tabs().Align().Horz().Value())
+		{
+			long_t n_left = this->m_rect.left;
+			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
+				this->m_ctrl.Tabs().Tab(i_).Strip().left  = n_left; n_left += this->Tabs().Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().right = n_left;
+			}
+		}
+		else if (THorzAlign::eCenter == this->Tabs().Align().Horz().Value()) {
+			long_t u_left = this->m_rect.left + (__W(this->m_rect) - this->Tabs().TotalWidth()) / 2;
+			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
+				this->m_ctrl.Tabs().Tab(i_).Strip().left  = u_left; u_left += this->Tabs().Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().right = u_left;
+			}
+		}
+		else {
+			long_t n_right = this->m_rect.right;
+			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
+				this->m_ctrl.Tabs().Tab(i_).Strip().right  = n_right; n_right -= this->Tabs().Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().left   = n_right;
+			}
+		}
+	}
+
+	if (this->m_sides.IsVert()) { // tabs reside in vertical line;
+		if (TVertAlign::eBottom == this->Tabs().Align().Vert().Value()) {
+			long_t n_bottom = this->m_rect.bottom;
+			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
+				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_bottom; n_bottom -= this->Tabs().Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
+			}
+		}
+		else if (TVertAlign::eMiddle == this->Tabs().Align().Vert().Value()) {
+			long_t n_bottom = this->m_rect.bottom - (__H(this->m_rect) - this->Tabs().TotalHeight()) / 2;
+			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
+				this->m_ctrl.Tabs().Tab(i_).Strip().bottom  = n_bottom; n_bottom -= this->Tabs().Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
+			}
+		}
+		else {
+			long_t n_top = this->m_rect.top;
+			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
+				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
+				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_top; n_top += this->Tabs().Width();
+				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_top;
+			}
+		}
+	}
+
+	return n_result;
+}
+
+const
+CLayTabs& CRibbon::Tabs (void) const  { return this->m_tabs; }
+CLayTabs& CRibbon::Tabs (void)        { return this->m_tabs; }
+
+CRibbon&  CRibbon::operator <<(const TSide _side) { const bool b_changed = this->LocatedOn(_side); b_changed; return *this; }
+
+#pragma endregion
 
 namespace ex_ui { namespace controls { namespace sfx { namespace tabbed { namespace layout {
 
-CTabs:: CTabs (CControl& _ctrl) : m_ribbon{0}, m_size{0}, m_gap(0), m_ctrl(_ctrl), m_active(_ctrl), m_txt_orient(e_txt_orient::e_horz) {
+using CCaps = CTabs::CCaps;
+
+CTabs:: CTabs (CControl& _ctrl) : m_size{0}, m_gap(0), m_ctrl(_ctrl), m_active(_ctrl) {
 	this->m_size.cy = 31;
 	this->m_size.cx = this->m_size.cy * 5; this->m_gap = this->m_size.cy / 2;
 }
@@ -248,13 +356,9 @@ CActiveTab& CTabs::Active (void)       { return this->m_active; }
 const
 TAlign&   CTabs::Align (void) const { return this->m_align; }
 TAlign&   CTabs::Align (void)       { return this->m_align; }
-
-using e_txt_orient = CTabs::e_txt_orient;
-
-e_txt_orient CTabs::Cap_orient (void) const { return this->m_txt_orient; }
-bool         CTabs::Cap_orient (const e_txt_orient _value) {
-	const bool b_changed = this->Cap_orient() != _value; if (b_changed) this->m_txt_orient = _value; return b_changed;
-}
+const
+CCaps&    CTabs::Caps (void) const  { return this->m_caps; }
+CCaps&    CTabs::Caps (void)        { return this->m_caps; }
 
 uint32_t  CTabs::Gap (void) const { return m_gap; }
 bool      CTabs::Gap (const uint32_t _n_value) {
@@ -275,126 +379,33 @@ bool      CTabs::Height (const uint32_t _n_value) {
 
 	return b_changed;
 }
-
-const
-rect_t&   CTabs::Ribbon (void) const { return m_ribbon ; }
-err_code  CTabs::Ribbon (const rect_t& _rc_area) {
-
-	err_code n_result = __s_ok;
-
-	if (::IsRectEmpty(&_rc_area))
-		return n_result = __e_rect;
-
-	this->m_ribbon = _rc_area;
-	// m_tabs.m_ledge is not taken into account for this time;
-	switch (this->LocatedOn()) {
-	case TSide::e_bottom: { this->m_ribbon.top = _rc_area.bottom - this->Height(); } break;
-	case TSide::e_left  : { this->m_ribbon.right = _rc_area.left + this->Height(); } break;
-	case TSide::e_right : { this->m_ribbon.left = _rc_area.right - this->Height(); } break;
-	case TSide::e_top   : { this->m_ribbon.bottom = _rc_area.top + this->Height(); } break;
-	default:
-		return n_result = (err_code) TErrCodes::eExecute::eParameter;
-	}
-
-	// ToDo:: no gaps between tabs are applied yet; this option is deprecated for this version of the implementation;
-
-	if (this->m_sides.IsHorz()) { // tabs reside in horizontal line;
-		if (THorzAlign::eLeft == this->Align().Horz().Value())
-		{
-			long_t n_left = this->m_ribbon.left;
-			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
-				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Strip().left  = n_left; n_left += this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Strip().right = n_left;
-			}
-		}
-		else if (THorzAlign::eCenter == this->Align().Horz().Value()) {
-			long_t u_left = this->m_ribbon.left + (__W(this->m_ribbon) - this->TotalWidth()) / 2;
-			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
-				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Strip().left  = u_left; u_left += this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Strip().right = u_left;
-			}
-		}
-		else {
-			long_t n_right = this->m_ribbon.right;
-			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
-				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Strip().right  = n_right; n_right -= this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Strip().left   = n_right;
-			}
-		}
-	}
-
-	if (this->m_sides.IsVert()) { // tabs reside in vertical line;
-		if (TVertAlign::eBottom == this->Align().Vert().Value()) {
-			long_t n_bottom = this->m_ribbon.bottom;
-			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
-				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_bottom; n_bottom -= this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
-			}
-		}
-		else if (TVertAlign::eMiddle == this->Align().Vert().Value()) {
-			long_t n_bottom = this->m_ribbon.bottom - (__H(this->m_ribbon) - this->TotalHeight()) / 2;
-			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
-				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Strip().bottom  = n_bottom; n_bottom -= this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
-			}
-		}
-		else {
-			long_t n_top = this->m_ribbon.top;
-			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
-				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_ribbon;
-				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_top; n_top += this->Width();
-				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_top;
-			}
-		}
-	}
-
-	return n_result;
-}
-
-TSide     CTabs::LocatedOn (void) const  { return this->m_sides.Selected(); }
-bool      CTabs::LocatedOn (const TSide _side) {
-	_side;
-	const bool b_changed = this->LocatedOn() != _side;
-
-	if (b_changed)
-		this->m_sides.Selected() = _side;
-
-	return b_changed;
-}
-const
-CSides&   CTabs::Sides (void) const { return this->m_sides; }
-CSides&   CTabs::Sides (void)       { return this->m_sides; }
-
 const
 t_size&   CTabs::Size  (void) const { return m_size; }
 
 uint32_t  CTabs::TotalHeight(void) const { 
 	
 	uint32_t u_height = 0;
-	for (uint16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) u_height += this->m_ctrl.Layout().Tabs().Height();
+//	if (e_cap_orient::e_horz == this->m_cap_orient)
+	for (uint16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) u_height += this->m_ctrl.Layout().Ribbon().Tabs().Height();
 	return u_height;
 }
 uint32_t  CTabs::TotalWidth (void) const {
 
 	uint32_t u_width = 0;
-	for (uint16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) u_width += this->m_ctrl.Layout().Tabs().Width();
+	for (uint16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) u_width += this->m_ctrl.Layout().Ribbon().Tabs().Width();
 	return u_width;
 }
 
 void      CTabs::Update(void) {
 
 	const rect_t& rc_area = this->m_ctrl.Layout().Rect(); // gets available rectangle to tabbed control;
-	const rect_t& rc_ribbon = this->Ribbon(); // this rectangle is expected to be calculated properly in accordance with tabs' side;
+	const rect_t& rc_ribbon = this->m_ctrl.Layout().Ribbon().Rect(); // this rectangle is expected to be calculated properly in accordance with tabs' side;
+	const CSides& sides = this->m_ctrl.Layout().Ribbon().Sides();
 
 	rect_t rc_page = rc_area;
 	/* The ribbon rectangle is already updated and has proper values that can be taken into account like as the following conditions:
 	*/
-	if (this->Sides().IsHorz()) {
+	if (sides.IsHorz()) {
 		if (rc_ribbon.top == rc_area.top) { // the ribbon resides on the top side of the control;
 			rc_page.top = rc_ribbon.bottom;
 		}
@@ -435,10 +446,45 @@ void      CTabs::Update(void) {
 uint32_t& CTabs::Width (void)       { return (uint32_t&)m_size.cx; }
 
 }}}}}
+#pragma region cls::CTabs::Caps{}
 
+using CCaps = ex_ui::controls::sfx::tabbed::layout::CTabs::CCaps;
+using e_orient = CCaps::e_orient;
+
+CCaps::CCaps (void) : m_orient(e_orient::e_horz) {}
+
+e_orient CCaps::Get_orient (void) const { return this->m_orient; }
+bool     CCaps::Set_orient (const e_orient _value) { const bool b_changed = this->Get_orient() != _value; if (b_changed) this->m_orient = _value; return b_changed; }
+
+bool     CCaps::Is_horz (void) const { return e_orient::e_horz == this->m_orient; }
+bool     CCaps::Is_vert (void) const { return e_orient::e_vert == this->m_orient; }
+
+#pragma endregion
+#pragma region cls::CTabs::CSize{}
+
+using CTabSize = ex_ui::controls::sfx::tabbed::layout::CTabs::CSize;
+
+CTabSize::CSize (void) {}
+
+
+#pragma endregion
+#pragma region cls::CTabs::CSize::CHight{}
+
+using CHeight = ex_ui::controls::sfx::tabbed::layout::CTabs::CSize::CHeight;
+
+CHeight::CHeight (void) {}
+
+#pragma endregion
+#pragma region cls::CTabs::CSize::CWidth{}
+
+using CWidth = ex_ui::controls::sfx::tabbed::layout::CTabs::CSize::CWidth;
+
+CWidth::CWidth (void) {}
+
+#pragma endregion
 #pragma region cls::CLayout{}
 
-CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_rect{0}, m_tabs(_ctrl), m_padding(5,5,-5,-5) {
+CLayout:: CLayout (CControl& _ctrl) : m_ctrl(_ctrl), m_rect{0}, m_ribbon(_ctrl), m_padding(5,5,-5,-5) {
 	m_error >> __CLASS__ << __METHOD__ << __s_ok;
 }
 CLayout::~CLayout (void) {}
@@ -470,10 +516,10 @@ err_code  CLayout::Update (void) {
 	else
 		this->m_rect = rc_area;
 
-	n_result = this->Tabs().Ribbon(rc_area); // (1) sets the rectangle for tabs itself, aka ribbon of the tabs;
-	this->m_ctrl.Borders() << rc_area;       // (2) updates border position(s);
-	this->m_tabs.Active().Set(rc_area);      // (3) updates active tab borders;
-	this->m_tabs.Update();                   // (4) updates each tab page internal window size and position;
+	n_result = this->Ribbon().Update(rc_area);   // (1) sets the rectangle for tabs itself, aka ribbon of the tabs;
+	this->m_ctrl.Borders() << rc_area;           // (2) updates border position(s);
+	this->Ribbon().Tabs().Active().Set(rc_area); // (3) updates active tab borders;
+	this->Ribbon().Tabs().Update();              // (4) updates each tab page internal window size and position;
 
 	return n_result;
 }
@@ -496,8 +542,8 @@ err_code  CLayout::Update (const rect_t& _rc_area) {
 }
 
 const
-ex_ui::controls::sfx::tabbed::layout::CTabs&    CLayout::Tabs (void) const  { return this->m_tabs; }
-ex_ui::controls::sfx::tabbed::layout::CTabs&    CLayout::Tabs (void)        { return this->m_tabs; }
+CRibbon&  CLayout::Ribbon (void) const  { return this->m_ribbon; }
+CRibbon&  CLayout::Ribbon (void)        { return this->m_ribbon; }
 
 CLayout&  CLayout::operator<<(const rect_t& _rc_area) { this->Update(*this = _rc_area); return *this; }
 

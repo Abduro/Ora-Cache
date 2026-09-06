@@ -64,7 +64,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		}
 	}
 	// (3) draws active tab borders;
-	const TRawBorders& act_tab = this->m_ctrl.Layout().Tabs().Active().Raw();
+	const TRawBorders& act_tab = this->m_ctrl.Layout().Ribbon().Tabs().Active().Raw();
 	const rgb_color clr_active = this->m_ctrl.Format().Border().Color().Selected();
 	const rgb_color clr_normal = this->m_ctrl.Format().Border().Color().Normal();
 
@@ -81,7 +81,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	using TOpt_Flags  = ::ex_ui::draw::text::format::COptimizer::e_value;
 
 	// (4) draws captions of the tabs; the color of the text depends on activity of the tab and the same as tab border color;
-	if (this->m_ctrl.Layout().Tabs().Sides().IsHorz()) {
+	if (this->m_ctrl.Layout().Ribbon().Sides().IsHorz()) {
 		ex_ui::draw::text::CDrawText text;
 
 		text.Format().Set(
@@ -98,7 +98,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 			z_buffer.Draw(text, this->m_font.Handle());
 		}
 	}
-	if (this->m_ctrl.Layout().Tabs().Sides().IsVert()) {
+	if (this->m_ctrl.Layout().Ribbon().Sides().IsVert()) {
 		ex_ui::draw::text::CTextOut text;
 
 		text.Align().Horz().Set(THorz_Flags::e_center);
@@ -114,8 +114,8 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 			{
 				// there's incorrect calculation of the anchor point or the provided rectangle; temporarily corrected by reducing the width of the rectangle;
 				rect_t rc_tab = tab_.Strip();
-				if (this->m_ctrl.Layout().Tabs().Sides().Selected() == TSide::e_left ) rc_tab.right -= 10;
-				if (this->m_ctrl.Layout().Tabs().Sides().Selected() == TSide::e_right) rc_tab.left  += 10;
+				if (this->m_ctrl.Layout().Ribbon().Sides().Selected() == TSide::e_left ) rc_tab.right -= 10;
+				if (this->m_ctrl.Layout().Ribbon().Sides().Selected() == TSide::e_right) rc_tab.left  += 10;
 				::ex_ui::draw::memory::CFont_Selector selector (z_buffer, this->m_font_vert.Handle());
 				text << rc_tab;
 			}
@@ -164,9 +164,9 @@ err_code CWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
 	);
 	// ToDo: it must be made in format class of this tabbed control;
 	//       also, taking into account a user may change the tab position side, it should be dynamically updated;
-	if (this->m_ctrl.Layout().Tabs().LocatedOn() == TSide::e_left)
+	if (this->m_ctrl.Layout().Ribbon().LocatedOn() == TSide::e_left)
 		m_font_vert.Angle(90);
-	else if (this->m_ctrl.Layout().Tabs().LocatedOn() == TSide::e_right)
+	else if (this->m_ctrl.Layout().Ribbon().LocatedOn() == TSide::e_right)
 		m_font_vert.Angle(270);
 
 	TWindow::m_error << m_font_vert.Create(
@@ -243,7 +243,7 @@ LRESULT CTabs_Wnd::OnLButtonDn(UINT _u_msg, WPARAM _wp, LPARAM _lp, BOOL& _b_han
 	const INT n_clicked = m_control.Tabs().Has(pt_);
 	if (n_clicked < 0)
 		return l_res;
-	else if (n_clicked != m_control.Tabs().Active() && SUCCEEDED(m_control.Tabs().Active(n_clicked))) {
+	else if (n_clicked != m_control.Tabs().CurIndex() && SUCCEEDED(m_control.Tabs().CurIndex(n_clicked))) {
 		m_control.Refresh();
 		((ITabEvents&)m_control).ITabEvent_OnSelect(n_clicked);
 		((IControlEvent&)m_control).IControlEvent_OnClick(m_control.Tabs().Tab(n_clicked).Id());
