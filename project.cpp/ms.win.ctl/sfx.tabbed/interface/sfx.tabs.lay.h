@@ -98,21 +98,38 @@ namespace layout {
 			e_orient m_orient;
 		};
 
-		class CSize : public ::geometry::_2D::base::CSize_U { typedef ::geometry::_2D::base::CSize_U TBase;
+		class CSize {
 		public:
 			class CHeight {
 			public:
-				CHeight (void); CHeight (const CHeight&) = delete; CHeight (CHeight&&) = delete; ~CHeight (void) = default;
+				CHeight (TabCtrl&); CHeight (void) = delete; CHeight (const CHeight&) = delete; CHeight (CHeight&&) = delete; ~CHeight (void) = default;
+
+				uint32_t Get (void) const;            // gets a hight of each tab which is supposed to be the same for all tabs;
+				bool     Set (const uint32_t _value); // sets a height of all tabs; returns 'true' in case if the height value is changed;
+
+				uint32_t Total (void) const;          // returns total height of all tabs;
+
 			private:
 				CHeight& operator = (const CHeight&) = delete; CHeight& operator = (CHeight&&) = delete;
+				TabCtrl& m_ctrl;
+				uint32_t m_value;
 			};
+
 			class CWidth {
 			public:
-				CWidth (void); CWidth (const CWidth&) = delete; CWidth (CWidth&&) = delete; ~CWidth (void) = default;
+				CWidth (TabCtrl&); CWidth (void) = delete; CWidth (const CWidth&) = delete; CWidth (CWidth&&) = delete; ~CWidth (void) = default;
+
+				uint32_t Get (void) const;            // gets a width of each tab which is supposed to be the same for all tabs;
+				bool     Set (const uint32_t _value); // sets a width for all tabs the same;
+
+				uint32_t Total (void) const;          // returns total width of all tabs;
+
 			private:
 				CWidth& operator = (const CWidth&) = delete; CWidth& operator = (CWidth&&) = delete;
+				TabCtrl& m_ctrl;
+				uint32_t m_value;
 			};
-			CSize (void); CSize (const CSize&) = delete; CSize (CSize&&) = delete; ~CSize (void) = default;
+			CSize (TabCtrl&); CSize (void) = delete; CSize (const CSize&) = delete; CSize (CSize&&) = delete; ~CSize (void) = default;
 
 			const
 			CHeight& Hight (void) const;
@@ -123,11 +140,12 @@ namespace layout {
 
 		private:
 			CSize& operator = (const CSize&) = delete; CSize& operator = (CSize&&) = delete;
-			CHeight m_height;
-			CWidth  m_width ;
+			TabCtrl& m_ctrl  ;
+			CHeight  m_height;
+			CWidth   m_width ;
 		};
 
-		 CTabs (CControl&); CTabs (void) = delete; CTabs (const CTabs&) = delete; CTabs (CTabs&&) = delete;
+		 CTabs (TabCtrl&); CTabs (void) = delete; CTabs (const CTabs&) = delete; CTabs (CTabs&&) = delete;
 		~CTabs (void);
 		const
 		Selected& Active (void) const;
@@ -143,32 +161,23 @@ namespace layout {
 		uint32_t  Gap (void) const;
 		bool      Gap (const uint32_t _u_value);
 
-		uint32_t  Height (void) const;
-		bool      Height (const uint32_t); // sets a height of all tabs; returns 'true' in case if the height value is changed;
-		
-		// ToDo: t_size must be replaced to geometry::_2D::base::CSize_U;
 		const
-		t_size&   Size  (void) const;      // gets a size of each tab; TODO: needs to be reviewed;
-
-		uint32_t  TotalHeight(void) const; // returns total height of all tabs;
-		uint32_t  TotalWidth (void) const; // returns total width of all tabs;
+		CSize&    Size  (void) const;      // gets a size of each tab; (ro)
+		CSize&    Size  (void) ;           // gets a size of each tab; (rw)
 
 		void      Update(void) ;           // updates pages' window position especially;
-
-		uint32_t& Width (void) ;           // sets a width of each tab;
-		bool      Width (const uint32_t&); // sets a width for all tabs the same;
 
 	private:
 		CTabs&  operator = (const CTabs&) = delete;
 		CTabs&  operator = (CTabs&&) =  delete;
 
 	private:
-		CControl&  m_ctrl  ;
-		CCaps      m_caps  ;
-		t_size     m_size  ;   // a size of each tab;
-		uint32_t   m_gap   ;   // a gap between tabs;
-		Selected   m_active;
-		TAlign     m_align ;
+		TabCtrl&  m_ctrl  ;
+		CCaps     m_caps  ;
+		CSize     m_size  ;
+		uint32_t  m_gap   ;   // a gap between tabs;
+		Selected  m_active;
+		TAlign    m_align ;
 	};
 
 	class CRibbon {
