@@ -14,7 +14,7 @@ namespace ora { namespace notify {
 
 	using namespace shared::types;
 	using CError  = shared::sys_core::CError;
-	using d_word  = dword ;  // ToDo: typedefs and usings must be made coincident with shared::types;
+	using d_word  = dword_t ;  // ToDo: typedefs and usings must be made coincident with shared::types;
 }}               		
 
 #endif/*_ORA_NOTIFY_BASE_H_INCLUDED*/

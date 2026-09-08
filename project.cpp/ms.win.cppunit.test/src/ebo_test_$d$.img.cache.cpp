@@ -63,7 +63,7 @@ void CCache::Has (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	const t_size size_ = {24, 24};
-	const dword n_id_ = ex_ui::draw::images::CListId::ToDword(size_);
+	const dword_t n_id_ = ex_ui::draw::images::CListId::ToDword(size_);
 
 	_out() += TString().Format(_T("Trying to find the list of image size= %dx%d (px):"), size_.cx, size_.cy);
 	_out() += TString().Format(_T("*result*: %s"), TString().Bool(this->m_cache.Has(size_)));
@@ -85,7 +85,7 @@ void CCache::List (void) {
 	_out() += TString().Format(_T("cls::[%s::%s].%s()"), (_pc_sz)__SP_NAME__, (_pc_sz)__CLASS__, (_pc_sz)__METHOD__);
 
 	const t_size size_ = {24, 24};
-	const dword n_id_ = ex_ui::draw::images::CListId::ToDword(size_);
+	const dword_t n_id_ = ex_ui::draw::images::CListId::ToDword(size_);
 
 	_out() += TString().Format(_T("Trying to get the reference to the list of image size= %dx%d (px):"), size_.cx, size_.cy);
 

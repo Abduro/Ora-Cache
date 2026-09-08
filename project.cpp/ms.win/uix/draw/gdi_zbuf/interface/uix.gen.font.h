@@ -124,14 +124,14 @@ namespace ex_ui { namespace draw {
 	class CFont : public CFont_Base { typedef CFont_Base TBase;
 	public:
 		 CFont (void); // no font is created on this constructor;
-		 CFont (_pc_sz pszFamily, const dword dwOptions = TFontOpts::eNone, const LONG lParam = 0); // system font is created from the desktop;
+		 CFont (_pc_sz pszFamily, const dword_t dwOptions = TFontOpts::eNone, const LONG lParam = 0); // system font is created from the desktop;
 		~CFont (void);
 	public:
 		int16_t   Angle (void) const;    // gets the current rotation angle in degrees; by default is set to zero;
 		bool      Angle (const int16_t); // sets the rotation angle; returns true if the value is changed;
 		/* inputs:
 				pszFamily - font name; dwOptions - font attributes; lParam - an exact font size or size factor (+/-); */
-		err_code  Create (_pc_sz pszFamily = nullptr, const dword dwOptions = CFontOptions::eNone, const long_t lParam = 0);
+		err_code  Create (_pc_sz pszFamily = nullptr, const dword_t dwOptions = CFontOptions::eNone, const long_t lParam = 0);
 		HFONT     Detach (void);
 		_pc_sz    Family (void) const;
 #if defined(_DEBUG)

@@ -22,7 +22,7 @@ namespace geometry { namespace _2D { namespace shapes {
 
 	public:
 		const
-		uint32_t  Id (void) const;     // using typedef 'dword' or uint32_t is not important for the time being;
+		uint32_t  Id (void) const;     // using typedef 'dword_t' or uint32_t is not important for the time being;
 		uint32_t& Id (void) ;
 
 		bool Is_concave (void) const;

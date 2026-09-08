@@ -72,7 +72,7 @@ void   CErr_Details::normalize(void) {
 	}
 }
 
-dword  CErr_Details::size     (void) const { return static_cast<dword>(m_desc.GetLength()); }
+dword_t  CErr_Details::size     (void) const { return static_cast<dword_t>(m_desc.GetLength()); }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +81,7 @@ CErr_Details& CErr_Details::operator << (const CLang&   _err_lang) {
 	return *this;
 }
 
-CErr_Details& CErr_Details::operator << (const dword    _err_code) {
+CErr_Details& CErr_Details::operator << (const dword_t    _err_code) {
 	this->clear();
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessage ;
 	t_char t_buf[_MAX_PATH] = {0};
@@ -204,7 +204,7 @@ _pc_sz   CErr_Fmt::Format (TErrorRef _err) {
 	CString cs_desc = _err.State().Get();
 	if (cs_desc.IsEmpty()) {
 		if (_err.Code() != 0) {
-			cs_desc = CErr_Details() << _err.Lang() << (dword)_err.Code();
+			cs_desc = CErr_Details() << _err.Lang() << (dword_t)_err.Code();
 		}
 		else {
 			cs_desc = CErr_Details() << _err.Lang() << _err.Result();

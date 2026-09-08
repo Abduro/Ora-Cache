@@ -11,7 +11,7 @@ namespace ebo { namespace boo { namespace test {
 	using TParts  = shared::common::TParts;
 	using TString = shared::common::CString_Ex;
 
-	using shared::common::dword;
+	using shared::common::dword_t;
 
 	namespace common {
 
@@ -29,7 +29,7 @@ namespace ebo { namespace boo { namespace test {
 				TStringEx cs_out;
 
 				cs_out.Format(_T("CString_Ex((bool) :false != true) >> '%s'"), TStringEx(false != true)); _out().Cached() += cs_out;
-				cs_out.Format(_T("CString_Ex((dword):13) >> '%s'"), TStringEx((dword)13)); _out().Cached() += cs_out;
+				cs_out.Format(_T("CString_Ex((dword_t):13) >> '%s'"), TStringEx((dword_t)13)); _out().Cached() += cs_out;
 				cs_out.Format(_T("CString_Ex((float):0.013f) >> '%s'"), TStringEx(0.013f)); _out().Cached() += cs_out;
 				cs_out.Format(_T("CString_Ex((long) :static_cast<long>(0.013)) >> '%s'"), TStringEx(static_cast<long>(0.013))); _out().Cached() += cs_out;
 				cs_out.Format(_T("CString_Ex((text) :0.013f) >> '%s'"), TStringEx(_T("0.013f"))); _out().Cached() += cs_out;

@@ -83,7 +83,7 @@ namespace shared { namespace memory
 
 	protected:
 		byte*   m_pData ;
-		dword   m_dwSize;
+		dword_t   m_dwSize;
 
 	protected:
 		mutable CError m_error; // a mutability is required for methods or functions those do not change the state of this class object: IsValid()...;
@@ -100,26 +100,26 @@ namespace shared { namespace memory
 #if (0) // moved to sys.com.core adapter class;
 		 CRawData (const _variant_t&);       // is created from bstr data;
 #endif
-		 CRawData (const dword dwSize);
+		 CRawData (const dword_t dwSize);
 #if (0) // moved to sys.com.core adapter class;
 		 CRawData (const LPSAFEARRAY, const VARTYPE _v_expected = VT_UI1);
 #endif
-		 CRawData (const byte* pData, const dword dwSize);
+		 CRawData (const byte* pData, const dword_t dwSize);
 		~CRawData (void);
 
 	public:
 		err_code  Append (const CRawData&);
-		err_code  Append (const byte* pData, const dword dwSize);
+		err_code  Append (const byte* pData, const dword_t dwSize);
 		// ToDo:  Attach cannot use const byte* input arg due to const_cast must be applied;
-		err_code  Attach (const byte* pData, const dword dwSize , const bool _reset); // data must be created in current process memory heap;
+		err_code  Attach (const byte* pData, const dword_t dwSize , const bool _reset); // data must be created in current process memory heap;
 
 #if (0) // moved to sys.com.core adapter class;
 		err_code  CopyToVariantAsArray(_variant_t&)const;          // data is interpreted as binary and is copied to safe array as is;
 		err_code  CopyToVariantAsUtf16(_variant_t&)const;          // data is interpreted as Utf8 text and is converted to Utf16 bstr;
 		err_code  CopyToVariantAsUtf8 (_variant_t&)const;          // data is interpreted as Utf8 text and is copied to bstr as is;
 #endif
-		err_code  Create (const dword dwSize);                     // creates a memory block by specified size;
-		err_code  Create (const byte* pData, const dword dwSize);  // creates a memory block by specified size and copies input data to the block;
+		err_code  Create (const dword_t dwSize);                     // creates a memory block by specified size;
+		err_code  Create (const byte* pData, const dword_t dwSize);  // creates a memory block by specified size and copies input data to the block;
 #if (0) // moved to sys.com.core adapter class;
 		err_code  Create (const LPSAFEARRAY, const VARTYPE _v_expected = VT_UI1);
 #endif
@@ -127,11 +127,11 @@ namespace shared { namespace memory
 		p_byte    Detach (void) ;                    // detaches from the memory block handle;
 		err_code  Free   (void) ;                    // deallocates the memory block; destroys heap handle;
 		
-		err_code  Extend (const dword _sz_of_add);   // extends/increases the memory by reallocating it in accordance with given size;
+		err_code  Extend (const dword_t _sz_of_add);   // extends/increases the memory by reallocating it in accordance with given size;
 		const
 		byte*     GetData(void) const;               // returns const ptr to memory block data (ro);
 		byte*     GetData(void)      ;               // returns pointer to memory block data (rw);
-		dword     GetSize(void) const;               // gets the size of the memory block that is used in creating of it; no HeapSize() is used;
+		dword_t     GetSize(void) const;               // gets the size of the memory block that is used in creating of it; no HeapSize() is used;
 		                                             // https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize ;
 		err_code  ToFile (_pc_sz _lp_sz_path) const; // saves data to file specified;
 #if (0) // moved to sys.com.core adapter class;
@@ -144,7 +144,7 @@ namespace shared { namespace memory
 #endif
 	public:
 		operator const bool  (void) const;  // returns a validity state of the object;
-		operator const dword (void) const;  // returns a buffer size;
+		operator const dword_t (void) const;  // returns a buffer size;
 		operator const p_byte(void) const;  // returns a buffer data pointer (ra);
 		operator       p_byte(void)      ;  // returns a buffer data pointer (rw);
 

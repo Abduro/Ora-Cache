@@ -39,9 +39,9 @@ BOOL InsideStackHack(LPVOID p)
 		push    eax
 		push    ebx
 		mov     ebx,fs:[18h]
-		mov     eax,dword ptr [ebx+4h]
+		mov     eax,dword_t ptr [ebx+4h]
 		mov     pStackTop, eax
-		mov     eax,dword ptr [ebx+0xe0c] //Undocumented... probably subject to change! -David Delaune
+		mov     eax,dword_t ptr [ebx+0xe0c] //Undocumented... probably subject to change! -David Delaune
 		mov     pStackBottom, eax
 		pop     eax
 		pop     ebx
@@ -106,7 +106,7 @@ bool     CRawBuffer::IsEmpty(void) const {
 		return false;
 	// it works, but maybe there is better way of playing with it:
 #if (false != true)
-	for (dword i_ = 0; i_ < m_dwSize; i_ ++) {
+	for (dword_t i_ = 0; i_ < m_dwSize; i_ ++) {
 		if (this->m_pData[i_] != 0)
 			return false;
 	}
@@ -119,9 +119,9 @@ bool     CRawBuffer::IsEmpty(void) const {
 	// https://stackoverflow.com/questions/6938219/how-to-check-whether-all-bytes-in-a-memory-block-are-zero ;
 	byte* const p_data = this->m_pData;
 	word w_spec = 0;
-	const dword n_step = sizeof(word); // https://en.wikipedia.org/wiki/Data_structure_alignment ; perhaps the word data type is suitable;
-	const dword n_el_count = this->m_dwSize / n_step;
-	for ( dword i_ = 0; i_ < n_el_count - 1; i_ += n_step) {
+	const dword_t n_step = sizeof(word); // https://en.wikipedia.org/wiki/Data_structure_alignment ; perhaps the word data type is suitable;
+	const dword_t n_el_count = this->m_dwSize / n_step;
+	for ( dword_t i_ = 0; i_ < n_el_count - 1; i_ += n_step) {
 		if (w_spec |= p_data[i_]) {
 			return false;
 		}
@@ -173,16 +173,16 @@ CRawData:: CRawData (const _variant_t& _data) : CRawData() {
 	{
 		this->Create(
 				reinterpret_cast<p_byte>(_data.bstrVal),
-				static_cast<dword>(::SysStringByteLen(_data.bstrVal))
+				static_cast<dword_t>(::SysStringByteLen(_data.bstrVal))
 			);
 	}
 }
 #endif
-CRawData:: CRawData (const dword dwSize) : CRawData() { this->Create(dwSize); }
+CRawData:: CRawData (const dword_t dwSize) : CRawData() { this->Create(dwSize); }
 #if (0)
 CRawData:: CRawData (const LPSAFEARRAY __psa, const VARTYPE __v_type) : CRawData() { this->Create(__psa, __v_type); }
 #endif
-CRawData:: CRawData (const byte* pData, const dword dwSize) : CRawData() { this->Create(pData, dwSize); }
+CRawData:: CRawData (const byte* pData, const dword_t dwSize) : CRawData() { this->Create(pData, dwSize); }
 CRawData::~CRawData (void) { this->Free(); }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -191,7 +191,7 @@ err_code   CRawData::Append (const CRawData&  _raw_data) {
 	return this->Append( _raw_data.GetData(), _raw_data.GetSize());
 }
 
-err_code   CRawData::Append (const byte* pData, const dword dwSize) {
+err_code   CRawData::Append (const byte* pData, const dword_t dwSize) {
 	pData; dwSize;
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
@@ -205,7 +205,7 @@ err_code   CRawData::Append (const byte* pData, const dword dwSize) {
 	if (this->IsValid())
 	{
 		// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaprealloc ;
-		const dword dwNewSize = m_dwSize + dwSize;
+		const dword_t dwNewSize = m_dwSize + dwSize;
 		pLocator = reinterpret_cast<byte*>( ::HeapReAlloc(::GetProcessHeap(), HEAP_NO_SERIALIZE, m_pData, dwNewSize) );
 		if (pLocator)
 		{
@@ -235,7 +235,7 @@ err_code   CRawData::Append (const byte* pData, const dword dwSize) {
 	return m_error;
 }
 
-err_code   CRawData::Attach (const byte* pData, const dword dwSize, const bool _reset) {
+err_code   CRawData::Attach (const byte* pData, const dword_t dwSize, const bool _reset) {
 	pData; dwSize;
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
@@ -340,7 +340,7 @@ err_code   CRawData::CopyToVariantAsUtf8 (_variant_t& v_data)const {
 	return m_error;
 }
 #endif
-err_code   CRawData::Create (const dword dwSize) {
+err_code   CRawData::Create (const dword_t dwSize) {
 	dwSize;
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
@@ -363,7 +363,7 @@ err_code   CRawData::Create (const dword dwSize) {
 	return TBase::m_error;
 }
 
-err_code   CRawData::Create (const byte* pData, const dword dwSize) {
+err_code   CRawData::Create (const byte* pData, const dword_t dwSize) {
 	dwSize;
 	this->Free(); // it is necessary for creating new memory block, otherwise the Append() will extend the existing memory block to new size;
 	              // ToDo:: it is required to check new size of the memory block, because if it is less than existing one, a shrink operation is needed;
@@ -420,7 +420,7 @@ err_code   CRawData::Create (_pc_sz _lp_sz_file) {
 
 	if (u_size & 0x0000ffff)
 	{
-		const dword  n_sz_req  = (dword) u_size;
+		const dword_t  n_sz_req  = (dword_t) u_size;
 		this->Create(n_sz_req);
 
 		if (this->IsValid() == false)
@@ -434,7 +434,7 @@ err_code   CRawData::Create (_pc_sz _lp_sz_file) {
 	return TBase::Error();
 }
 
-err_code   CRawData::Extend (const dword _n_to_add) {
+err_code   CRawData::Extend (const dword_t _n_to_add) {
 	_n_to_add;
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
@@ -444,7 +444,7 @@ err_code   CRawData::Extend (const dword _n_to_add) {
 	if (this->IsValid() == false)
 		this->Create (_n_to_add);
 	else {
-		const dword n_req = this->m_dwSize + _n_to_add;
+		const dword_t n_req = this->m_dwSize + _n_to_add;
 		byte* pLocator = reinterpret_cast<byte*>(
 					::HeapReAlloc(::GetProcessHeap(), HEAP_ZERO_MEMORY, TBase::m_pData, n_req)
 				);
@@ -490,7 +490,7 @@ err_code   CRawData::Free   (void) {
 const
 byte*      CRawData::GetData(void) const { return this->m_pData ; }
 byte*      CRawData::GetData(void)       { return this->m_pData ; }
-dword      CRawData::GetSize(void) const { return this->m_dwSize; }
+dword_t      CRawData::GetSize(void) const { return this->m_dwSize; }
 
 err_code   CRawData::ToFile (_pc_sz _lp_sz_path) const {
 	_lp_sz_path;
@@ -594,7 +594,7 @@ CString    CRawData::Print (const e_print _e_opt) const {
 /////////////////////////////////////////////////////////////////////////////
 
 CRawData::operator const    bool  (void)const { return this->IsValid(); }
-CRawData::operator const    dword (void)const { return TBase::m_dwSize; }
+CRawData::operator const    dword_t (void)const { return TBase::m_dwSize; }
 CRawData::operator const    p_byte(void)const { return TBase::m_pData ; }
 CRawData::operator          p_byte(void)      { return TBase::m_pData ; }
 
@@ -609,7 +609,7 @@ CRawData& CRawData::operator= (const _variant_t& _data) {
 	{
 		this->Create(
 				reinterpret_cast<pc_byte>(_data.bstrVal),
-				static_cast<dword>(::SysStringByteLen(_data.bstrVal))
+				static_cast<dword_t>(::SysStringByteLen(_data.bstrVal))
 			);
 	}
 	return *this;
@@ -621,7 +621,7 @@ CRawData& CRawData::operator= (const ::std::vector<byte>& _vec) {
 		return *this;
 
 	this->Create(
-			(pc_byte)_vec.data(), static_cast<dword>(_vec.size()) * sizeof(byte)
+			(pc_byte)_vec.data(), static_cast<dword_t>(_vec.size()) * sizeof(byte)
 		);
 	return *this;
 }

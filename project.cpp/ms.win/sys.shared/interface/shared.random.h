@@ -29,8 +29,8 @@ namespace shared { namespace common {
 		long     SignedLong  (const long  _min = (std::numeric_limits<long>::min)() , 
 		                      const long  _max = (std::numeric_limits<long>::max)() ) const;
 
-		CString  UniqueSeq   (const dword _length, const bool bCaseSensitive = false) const;
-		CString  UniqueSeq_Ex(const dword _length, const bool bLowCase = true)const;
+		CString  UniqueSeq   (const dword_t _length, const bool bCaseSensitive = false) const;
+		CString  UniqueSeq_Ex(const dword_t _length, const bool bLowCase = true)const;
 
 		_uint    Unsigned    (const _uint _min = (std::numeric_limits<_uint>::min)(), 
 		                      const _uint _max = (std::numeric_limits<_uint>::max)()) const;

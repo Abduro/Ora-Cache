@@ -24,72 +24,75 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 	private:
 		CRoot& operator = (const CRoot&) = delete; CRoot& operator = (CRoot&&) = delete;
 	};
+
+	using TabCtrl = ::ex_ui::controls::sfx::tabbed::CControl;
+	class CBase {
+	protected:
+		CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete; ~CBase (void) = default;
+	public:
+		static
+		_pc_sz   Class (void);
+
+		TError&  Error (void) const;
+		bool  Is_valid (void) const;
+
+		CBase&   operator <<(TabCtrl*);
+		bool     operator ()(void) const;
+
+	protected:
+		CBase&   operator = (const CBase&) = delete; CBase& operator = (CBase&&) = delete;
+		CError   m_error;
+		TabCtrl* m_p_ctrl;
+	};
 }
 	using namespace ::ex_ui::controls;
 	using TabCtrl = ::ex_ui::controls::sfx::tabbed::CControl;
 
-	class CPersistent {
+	class CPersistent : public storage::CBase { typedef storage::CBase TBase;
 	public:
-		class CActive {
+		class CActive : public storage::CBase { typedef storage::CBase TBase;
 		public:
-			CActive (void); CActive (const CActive&) = delete; CActive (CActive&&) = delete; ~CActive (void) = default;
-
-			TError&  Error (void) const;
+			CActive (void); ~CActive (void) = default;
 
 			err_code Load (void);
 			err_code Save (void);
-
-			CActive& operator <<(TabCtrl*);
-
-		private:
-			CActive& operator = (const CActive&) = delete; CActive& operator = (CActive&&) = delete;
-			CError   m_error;
-			TabCtrl* m_p_ctrl;
 		};
-		class CAlign {
+		class CAlign : public storage::CBase { typedef storage::CBase TBase;
 		public:
-			CAlign (void); CAlign (const CAlign&) = delete; CAlign (CAlign&&) = delete; ~CAlign (void) = default;
-
-			TError&  Error (void) const;
+			CAlign (void); ~CAlign (void) = default;
 
 			err_code Load (void);
 			err_code Save (void);
-
-			CAlign& operator <<(TabCtrl*);
-
-		private:
-			CAlign& operator = (const CAlign&) = delete; CAlign& operator = (CAlign&&) = delete;
-			CError   m_error;
-			TabCtrl* m_p_ctrl;
 		};
-		class CSide {
-		public:
-			CSide (void); CSide (const CSide&) = delete; CSide (CSide&&) = delete; ~CSide (void) = default;
 
-			TError&  Error (void) const;
+		class CCaption : public storage::CBase { typedef storage::CBase TBase;
+		public:
+			CCaption (void); ~CCaption (void) = default;
 
 			err_code Load (void);
 			err_code Save (void);
-
-			CSide& operator <<(TabCtrl*);
-
-		private:
-			CSide& operator = (const CSide&) = delete; CSide& operator = (CSide&&) = delete;
-			CError   m_error;
-			TabCtrl* m_p_ctrl;
 		};
 
-		CPersistent (void); CPersistent (const CPersistent&) = delete; CPersistent (CPersistent&&) = delete; ~CPersistent (void) = default;
-	
-		TError& Error (void) const;
-		const
-		CSide&  Side (void) const;
-		CSide&  Side (void) ;
+		class CSide : public storage::CBase { typedef storage::CBase TBase;
+		public:
+			CSide (void); ~CSide (void) = default;
 
-	private:
-		CPersistent& operator = (const CPersistent&&) = delete; CPersistent& operator = (CPersistent&&) = delete;
-		CError m_error;
-		CSide  m_side ;
+			err_code Load (void);
+			err_code Save (void);
+		};
+
+		class CSize : public storage::CBase { typedef storage::CBase TBase;
+		public:
+			CSize (void); ~CSize (void) = default;
+
+			err_code Load (void);
+			err_code Save (void);
+		};
+
+		CPersistent (void); ~CPersistent (void) = default;
+
+		err_code Load (void);
+		err_code Save (void);
 	};
 }}}
 

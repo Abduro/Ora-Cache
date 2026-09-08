@@ -18,7 +18,7 @@ using namespace shared::sys_core::com;
 CCoMode:: CCoMode (void) : m_code(0), m_alias(_T("$undef")), m_desc(_T("$not_set")) {}
 CCoMode:: CCoMode (const CCoMode& _src) : CCoMode() { *this = _src; }
 CCoMode:: CCoMode (CCoMode&& _victim) : CCoMode() { *this = _victim; }
-CCoMode:: CCoMode (dword _code, _pc_sz _p_alias, _pc_sz _p_desc) : CCoMode() { *this >> _p_alias << _code << _p_desc; }
+CCoMode:: CCoMode (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc) : CCoMode() { *this >> _p_alias << _code << _p_desc; }
 CCoMode::~CCoMode (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -33,8 +33,8 @@ bool   CCoMode::Alias (_pc_sz _p_alias) {
 	return b_changed;
 }
 
-dword  CCoMode::Code (void) const { return this->m_code; }
-bool   CCoMode::Code (const dword _code) {
+dword_t  CCoMode::Code (void) const { return this->m_code; }
+bool   CCoMode::Code (const dword_t _code) {
 	_code;
 	const
 	bool b_changed = this->Code() != _code ;
@@ -56,7 +56,7 @@ bool   CCoMode::Desc (_pc_sz _p_desc) {
 
 /////////////////////////////////////////////////////////////////////////////
 
-void    CCoMode::Clear(void) { *this >> _T("$undef") << (dword)0 << _T("$not_set"); }
+void    CCoMode::Clear(void) { *this >> _T("$undef") << (dword_t)0 << _T("$not_set"); }
 #if defined(_DEBUG)
 CString CCoMode::Print(const e_print e_opt) const {
 	static _pc_sz p_sz_pat_a = _T("cls::[%s]>>{%s:code=%d(0x%x);desc='%s'}");
@@ -73,14 +73,14 @@ CString CCoMode::Print(const e_print e_opt) const {
 	return  cs_out;
 }
 #endif
-void    CCoMode::Set  (dword _code, _pc_sz _p_alias, _pc_sz _p_desc) { *this >> _p_alias << _code << _p_desc; }
+void    CCoMode::Set  (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc) { *this >> _p_alias << _code << _p_desc; }
 
 /////////////////////////////////////////////////////////////////////////////
 
 CCoMode& CCoMode::operator = (const CCoMode& _src) { *this >> _src.Alias() << _src.Code() << _src.Desc(); return *this;}
 CCoMode& CCoMode::operator = (CCoMode&& _victim) { *this = _victim; _victim.Clear(); return *this; }
 CCoMode& CCoMode::operator >>(_pc_sz _p_alias) { this->Alias(_p_alias); return *this; }
-CCoMode& CCoMode::operator <<(dword _code)     { this->Code(_code); return *this; }
+CCoMode& CCoMode::operator <<(dword_t _code)     { this->Code(_code); return *this; }
 CCoMode& CCoMode::operator <<(_pc_sz _p_desc)  { this->Desc(_p_desc); return *this; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ CCoMode& CCoMode::operator <<(_pc_sz _p_desc)  { this->Desc(_p_desc); return *th
 namespace shared { namespace sys_core { namespace com { namespace _impl {
 
 	struct raw_mode {
-		dword  _code ;
+		dword_t  _code ;
 		_pc_sz _alias;
 		_pc_sz _desc ;
 	};
@@ -111,9 +111,9 @@ CCoMode_enum::~CCoMode_enum (void) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool     CCoMode_enum::Has  (dword _code) const { return (this->Get().end() != this->Get().find(_code)); }
+bool     CCoMode_enum::Has  (dword_t _code) const { return (this->Get().end() != this->Get().find(_code)); }
 const
-TCoMode& CCoMode_enum::Find (dword _code) const {
+TCoMode& CCoMode_enum::Find (dword_t _code) const {
 	_code;
 	TRawModes::const_iterator it_found = this->Get().find(_code);
 
@@ -231,8 +231,8 @@ CCoModel::~CCoModel (void) {}
 const
 TRawModes& CCoModel::Accepted(void) const { return this->m_accepted; }
 TRawModes& CCoModel::Accepted(void)       { return this->m_accepted; }
-dword      CCoModel::CoInit  (void) const {
-	dword n_init = 0;
+dword_t      CCoModel::CoInit  (void) const {
+	dword_t n_init = 0;
 	for (TRawModes::const_iterator it_ = this->Accepted().begin(); it_ != this->Accepted().end(); it_++)
 		n_init |= it_->second.Code();
 	return n_init;
@@ -261,7 +261,7 @@ CString    CCoModel::Print (void) const {
 		cs_out.Format(p_sz_pat_def, (_pc_sz)__CLASS__, (_pc_sz)CCoMode_enum::Ref().Find(TModeAccept::e_default).Print(::e_print::e_all));
 	}
 	else {
-		const dword co_init = this->CoInit();
+		const dword_t co_init = this->CoInit();
 		cs_out.Format(p_sz_pat_yes, (_pc_sz)__CLASS__, this->Cfg(), _cfg_to_str(this->Cfg()), co_init, co_init, (_pc_sz)cs_accepted);
 	}
 	
@@ -272,7 +272,7 @@ CString    CCoModel::Print (void) const {
 
 CCoModel&  CCoModel::operator = (const CCoModel& _src) { this->Accepted() = _src.Accepted(); return *this; }
 
-CCoModel::operator dword (void) const { return this->CoInit(); }
+CCoModel::operator dword_t (void) const { return this->CoInit(); }
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -39,7 +39,7 @@ err_code CBase::CRoot::Set (void) {
 	CRegKey root_key;
 	LSTATUS n_result = root_key.Open(Get_router().Root(), (_pc_sz) cs_root);
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 
 	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
 
@@ -47,7 +47,7 @@ err_code CBase::CRoot::Set (void) {
 
 	n_result = root_key.QueryStringValue(_T("path"), sz_buffer, &n_chars);
 	if (!!n_result)
-		(this->m_error = dword(n_result)) = _T("Path to test cases is not specified;");
+		(this->m_error = dword_t(n_result)) = _T("Path to test cases is not specified;");
 	else
 		this->m_path = sz_buffer;
 #else
@@ -164,7 +164,7 @@ err_code CTestCase::Set_path (void) {
 
 	LSTATUS n_result = this->m_root.QueryStringValue(_T("path"), sz_buffer, &n_chars);
 	if (!!n_result)
-		(this->m_error = dword(n_result)) = _T("Path to test cases is not specified;");
+		(this->m_error = dword_t(n_result)) = _T("Path to test cases is not specified;");
 	else
 		this->m_path = sz_buffer;
 
@@ -180,7 +180,7 @@ err_code CTestCase::Open (void) {
 	CString cs_root  = this->Root();
 	LSTATUS n_result = this->m_root.Open(Get_router().Root(), (_pc_sz) cs_root);
 	if (!!n_result)
-		this->m_error = dword(n_result);
+		this->m_error = dword_t(n_result);
 
 	return this->Error();
 }
@@ -204,7 +204,7 @@ CString  CTestCase::Value (_pc_sz _p_name) {
 	unsigned long n_chars = u_count;
 	LSTATUS n_result = m_root.QueryStringValue((_pc_sz) _p_name, sz_buffer, &n_chars);
 	if (!!n_result) {
-		(this->m_error = dword(n_result)) = TStringEx().Format(_T("The value of name '%s' is not defined;"), _p_name);
+		(this->m_error = dword_t(n_result)) = TStringEx().Format(_T("The value of name '%s' is not defined;"), _p_name);
 		return CString();
 	}
 

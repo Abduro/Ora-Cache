@@ -1,0 +1,22 @@
+REGEDIT4
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\Controls]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\Controls\Tabbed]
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\Controls\Tabbed\0x000b]
+"Side"=dword:00000001
+"Align_Horz"=dword:00000001
+"Align_Vert"=dword:00000000
+@=""
+"Align_H_Desc"="eLeft = 0, eCenter = 1, eRight = 2"
+"Align_V_Desc"="eMiddle = 0, eTop = 1, eBottom = 2"
+"Side_Desc"="e_left = 0x0,  e_top = 0x1, e_right = 0x2, e_bottom = 0x3, e_default = e_top"
+"Active_Tab"=dword:00000001
+
+[HKEY_CURRENT_USER\SOFTWARE\ebo::pack\Controls\Tabbed\0x000b\Tab_size]
+"Height"=dword:0000001f
+"Width"=dword:00000078
+

@@ -35,7 +35,7 @@ namespace shared { namespace sys_core { namespace com {
 		 CCoMode (void);
 		 CCoMode (const CCoMode&);
 		 CCoMode (CCoMode&&);
-		 CCoMode (dword _code, _pc_sz _p_alias, _pc_sz _p_desc);
+		 CCoMode (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc);
 		~CCoMode (void);
 
 	public:
@@ -44,13 +44,13 @@ namespace shared { namespace sys_core { namespace com {
 
 		void   Clear(void)  ;       // clears this class object, i.e. resets all its attributes to initial state;
 
-		dword  Code (void) const;   // gets the code, in other words, actually this is one of the values of COINIT enumeration;
-		bool   Code (dword) ;       // sets the code, returns true in case of change;
+		dword_t  Code (void) const;   // gets the code, in other words, actually this is one of the values of COINIT enumeration;
+		bool   Code (dword_t) ;       // sets the code, returns true in case of change;
 
 		_pc_sz Desc (void) const;   // gets a brief description of this mode;
 		bool   Desc (_pc_sz) ;      // sets a brief description of this mode; returns true in case of change;
 
-		void   Set  (dword _code, _pc_sz _p_alias, _pc_sz _p_desc); // sets all atts together or at once; no interest is in return result;
+		void   Set  (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc); // sets all atts together or at once; no interest is in return result;
 
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_req) const;
@@ -59,33 +59,33 @@ namespace shared { namespace sys_core { namespace com {
 		CCoMode& operator = (const CCoMode&);
 		CCoMode& operator = (CCoMode&&);        // makes copying the input objects and clears it; no move operation is made;
 		CCoMode& operator >>(_pc_sz _p_alias);  // sets an alias;
-		CCoMode& operator <<(dword _code);      // sets a code;
+		CCoMode& operator <<(dword_t _code);      // sets a code;
 		CCoMode& operator <<(_pc_sz _p_desc );  // sets a description;
 
 	private:
-		dword   m_code ;
+		dword_t   m_code ;
 		CString m_alias;
 		CString m_desc ;
 	};
 }}}
 
-using shared::types::dword;
+using shared::types::dword_t;
 
 typedef shared::sys_core::com::CCoMode  TCoMode;
-typedef ::std::map<dword, TCoMode> TCoMode_raws; // a key is COINIT enum's element; a value - the element wrapper class;
+typedef ::std::map<dword_t, TCoMode> TCoMode_raws; // a key is COINIT enum's element; a value - the element wrapper class;
 typedef TCoMode_raws TRawModes;                  // makes the typedef name is little bit shorter;
 
 namespace shared { namespace sys_core { namespace com {
 
 	class CCoMode_enum {
 	public:
-		enum e_available : dword {
+		enum e_available : dword_t {
 			e_apart    = co_apartment,  // for GUI apps; due to GUI requires message pump that is not provided by COM;
 			e_default  = co_threaded ,
 			e_threaded = co_threaded ,  // multi-threaded for performing tasks concurrently, for multi-processor architecture usage;
 			e_ole_1    = co_ole_1_dde,  // the legacy code disbling;
 			e_speed    = co_speed_up ,  // increasing memory usage for making a performance of the COM calls faster;
-			e_the_fake = (dword)-1
+			e_the_fake = (dword_t)-1
 		};
 	public:
 		 CCoMode_enum (void);
@@ -97,9 +97,9 @@ namespace shared { namespace sys_core { namespace com {
 		TRawModes& Get (void) const;     // gets the reference to mode mapped collection ;
 		err_code   Set (void) ;          // adds a predefined concurrency mode classes;
 
-		bool Has (dword) const;          // returns true in case when predefined mode collection has the object of such code;
+		bool Has (dword_t) const;          // returns true in case when predefined mode collection has the object of such code;
 		const
-		TCoMode& Find (dword) const;     // returns found mode object, otherwise fake object is returned;
+		TCoMode& Find (dword_t) const;     // returns found mode object, otherwise fake object is returned;
 #if defined(_DEBUG)
 		CString Print (_pc_sz _pfx = _T("\t"), _pc_sz _sfx = _T("\n")) const;
 #endif
@@ -133,7 +133,7 @@ namespace shared { namespace sys_core { namespace com {
 		const
 		TRawModes& Accepted(void) const;
 		TRawModes& Accepted(void) ;
-		dword      CoInit  (void) const; // gets COINIT flags' value that is calculated from accepted modes;
+		dword_t      CoInit  (void) const; // gets COINIT flags' value that is calculated from accepted modes;
 
 		_cfg_4     Cfg(void) const;      // returns the config value that is used for creating set of accepted modes;
 #if defined(_DEBUG)
@@ -143,7 +143,7 @@ namespace shared { namespace sys_core { namespace com {
 		CCoModel&  operator = (const CCoModel&);
 		CCoModel&  operator = (CCoModel&&) = delete;
 
-		operator dword (void) const;
+		operator dword_t (void) const;
 
 	protected:
 		TRawModes  m_accepted;

@@ -43,7 +43,7 @@ namespace shared { namespace sys_core { namespace shell { namespace _impl {
 	public:
 		TError& Error (void) const { return this->m_error; }
 
-		err_code Get (_pc_sz _p_path, _pc_sz _p_key, dword& _value) {
+		err_code Get (_pc_sz _p_path, _pc_sz _p_key, dword_t& _value) {
 			_p_path; _p_key; _value = 0;
 			this->m_error << __METHOD__ << __s_ok;
 
@@ -203,7 +203,7 @@ bool    CDwmSettings::EnableTransparency (void) const {
 	bool b_use = false;
 
 	CReg_storage reg_stg;
-	dword n_value = 0;
+	dword_t n_value = 0;
 	this->m_error << reg_stg.Get(CReg_router::GetPersonalize(), _T("EnableTransparency"), n_value);
 
 	if (this->Error())
@@ -220,7 +220,7 @@ bool    CDwmSettings::SystemUsesLightTheme (void) const {
 	bool b_use = false;
 
 	CReg_storage reg_stg;
-	dword n_value = 0;
+	dword_t n_value = 0;
 	this->m_error << reg_stg.Get(CReg_router::GetPersonalize(), _T("SystemUsesLightTheme"), n_value);
 
 	if (this->Error())

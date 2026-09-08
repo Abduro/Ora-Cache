@@ -21,7 +21,7 @@ namespace shared { namespace runnable {
 	#define _pure PURE
 
 	using CError = shared::sys_core::CError;
-	using d_word = dword ;  // ToDo: typedefs and usings must be made coincident with shared::types;
+	using d_word = dword_t ;  // ToDo: typedefs and usings must be made coincident with shared::types;
 
 }}
 

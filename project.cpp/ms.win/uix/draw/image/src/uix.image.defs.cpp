@@ -38,10 +38,10 @@ CString  CImageType::ToExt (const CImageType::e_format _e_format) {
 CListId:: CListId (void) {}
 CListId::~CListId (void) {}
 
-dword  CListId::ToDword (const t_size& _size) {
-	return (static_cast<dword>(_size.cx) << 16) | static_cast<dword>(_size.cy);
+dword_t  CListId::ToDword (const t_size& _size) {
+	return (static_cast<dword_t>(_size.cx) << 16) | static_cast<dword_t>(_size.cy);
 }
 
-t_size CListId::ToSize  (const dword _n_id) {
+t_size CListId::ToSize  (const dword_t _n_id) {
 	return { _n_id >> 16, _n_id & 0xff };
 }

@@ -28,17 +28,17 @@ namespace shared { namespace memory {
 	struct shared_data { // this structure does not control the input data life cycle nether check its validity;
 	public:
 		shared_data (void);
-		shared_data (dword _size, const void* p_data = NULL);
+		shared_data (dword_t _size, const void* p_data = NULL);
 		shared_data (const shared_data&);
 
 	public:
 		const
 		void* p_data; // this member may point to no data, i.e. equals to null or zero;
-		dword n_size; // this member must have a value, otherwise a memory block being created is marked as discarded;
+		dword_t n_size; // this member must have a value, otherwise a memory block being created is marked as discarded;
 
 		shared_data& operator = (const shared_data&);
 		shared_data& operator <<(const void* p_data);
-		shared_data& operator <<(const dword n_size);
+		shared_data& operator <<(const dword_t n_size);
 
 		bool operator != (const shared_data&) const;
 		bool operator == (const shared_data&) const;
@@ -49,14 +49,14 @@ namespace shared { namespace memory {
 	// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags ;
 	struct shared_flags {
 	public:
-		enum e_flags : dword { // if take a look at documentation for GlobalAlloc() it very looks like e_movable flag discards e_fixed one;
+		enum e_flags : dword_t { // if take a look at documentation for GlobalAlloc() it very looks like e_movable flag discards e_fixed one;
 			e_fixed   = GMEM_FIXED   ,  // allocates fixed memory;
 			e_modify  = GMEM_MODIFY  ,  // modifies the attributes of an already-allocated block of memory; neither reallocation nor content change; 
 			e_movable = GMEM_MOVEABLE,  // memory blocks are never moved in physical memory, but they can be moved within the default heap ;
 			e_to_zero = GMEM_ZEROINIT,  // initializes memory contents to zero ;
 		};
 	public:
-		shared_flags (dword = e_movable | e_to_zero);
+		shared_flags (dword_t = e_movable | e_to_zero);
 
 	public:
 		err_code Get (const handle ) const; // gets flags that are set for memory block (to m_is_set), or GMEM_INVALID_HANDLE if an error occurs;
@@ -65,9 +65,9 @@ namespace shared { namespace memory {
 		CString  Print(const e_print = e_print::e_all) const;
 #endif
 	public:
-		mutable  dword m_is_set; // the flags that is set for creating a global memory block or those retrieved by calling Get() for handle provided;
+		mutable  dword_t m_is_set; // the flags that is set for creating a global memory block or those retrieved by calling Get() for handle provided;
 	public:
-		operator dword (void) const;
+		operator dword_t (void) const;
 
 		shared_flags& operator = (const shared_flags&);
 		shared_flags& operator +=(const e_flags);
@@ -187,7 +187,7 @@ namespace shared { namespace memory {
 
 		// https://english.stackexchange.com/questions/611086/refresh-vs-update ;
 		TError&  Error (void) const;
-		dword    Size  (void) const;      // returns the actual size of memory block in bytes;
+		dword_t    Size  (void) const;      // returns the actual size of memory block in bytes;
 		
 #if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;

@@ -53,7 +53,7 @@ namespace ex_ui { namespace draw { namespace images {
 		TError&   Error (void) const;
 		bool   Is_valid (void) const;
 
-		dword  Id (void) const;
+		dword_t  Id (void) const;
 
 		const
 		HImgList& Handle(void) const;
@@ -72,10 +72,10 @@ namespace ex_ui { namespace draw { namespace images {
 		CError   m_error;
 		t_size   m_size ;   // learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize >> maybe would be better;
 		HImgList m_list ;
-		dword    m_list_id; // (static_cast<dword>(_n_width) << 16) | static_cast<dword>(_n_height);
+		dword_t    m_list_id; // (static_cast<dword_t>(_n_width) << 16) | static_cast<dword_t>(_n_height);
 	};
 
-	typedef ::std::map<dword, CList> TRawLists;
+	typedef ::std::map<dword_t, CList> TRawLists;
 
 	class CCache {
 	public:
@@ -88,11 +88,11 @@ namespace ex_ui { namespace draw { namespace images {
 
 		TError&  Error (void) const;
 
-		const bool Has (const dword _n_id) const; // returns 'true' in case if the list of input identifier exists;
+		const bool Has (const dword_t _n_id) const; // returns 'true' in case if the list of input identifier exists;
 		const bool Has (const t_size&) const;     // returns 'true' in case if the list of input size of the image exists;
 		const
-		CList&   List  (const dword _n_id) const; // gets the list by the identifier; if not found the reference to fake list returned;
-		CList&   List  (const dword _n_id) ;      // gets the list by the identifier; if not found the reference to fake list returned;
+		CList&   List  (const dword_t _n_id) const; // gets the list by the identifier; if not found the reference to fake list returned;
+		CList&   List  (const dword_t _n_id) ;      // gets the list by the identifier; if not found the reference to fake list returned;
 		const
 		CList&   List  (const t_size&) const;  // gets the list by the required size of its images; if not found the reference to fake list returned;
 		CList&   List  (const t_size&) ;       // gets the list by the required size of its images; if not found the reference to fake list returned;

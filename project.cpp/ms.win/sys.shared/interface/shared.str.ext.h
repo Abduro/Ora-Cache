@@ -56,7 +56,7 @@ namespace shared { namespace common {
 	class CString_Ex : public CString { typedef CString TBase;
 	public:
 		 CString_Ex (const bool );
-		 CString_Ex (const dword);
+		 CString_Ex (const dword_t);
 		 CString_Ex (const float);
 		 CString_Ex (const long );
 		 CString_Ex (_pc_sz _lp_sz_value = nullptr);
@@ -78,8 +78,8 @@ namespace shared { namespace common {
 		bool    Bool (void) const ;      // gets this string value as a boolean data type;
 		_pc_sz  Bool (const bool) ;      // sets this string value to text: false or true;
 
-		dword   Dword(void) const ;      // gets this string as unsigned long data type;
-		_pc_sz  Dword(dword) ;           // sets this string to unsigned long value;
+		dword_t   Dword(void) const ;      // gets this string as unsigned long data type;
+		_pc_sz  Dword(dword_t) ;           // sets this string to unsigned long value;
 
 		float   Float(void) const ;      // gets this string value as a float data type;
 		_pc_sz  Float(float, t_fmt_spec = t_fmt_spec::e_decimal); // https://en.cppreference.com/w/cpp/io/c/fprintf ;
@@ -121,7 +121,7 @@ namespace shared { namespace common {
 
 		CString_Ex& operator = (const CString_Ex&);
 		CString_Ex& operator <<(bool  _b_value);  // sets this string value from boolean data;
-		CString_Ex& operator <<(dword _d_value);  // sets this string value from dword data (unsigned long);
+		CString_Ex& operator <<(dword_t _d_value);  // sets this string value from dword_t data (unsigned long);
 		CString_Ex& operator <<(float _f_value);  // sets this string value from float data;
 		CString_Ex& operator <<(long  _l_value);  // sets this string value from long  data;
 		CString_Ex& operator <<(_pc_sz _lp_sz_value);
@@ -129,7 +129,7 @@ namespace shared { namespace common {
 
 		operator CString (void) const; // returns this string value as object; makes a copy of the string;
 		operator bool    (void) const; // returns this string value as boolean;
-		operator dword   (void) const; // returns this string value as unsigned long (dword);
+		operator dword_t   (void) const; // returns this string value as unsigned long (dword_t);
 		operator float   (void) const; // returns this string value as float;
 		operator _guid   (void) const; // returns this string value as GUID structure;
 		operator long    (void) const; // returns this string value as long;

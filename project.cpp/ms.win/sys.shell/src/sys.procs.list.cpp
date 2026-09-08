@@ -24,7 +24,7 @@ CProcess::~CProcess (void) {}
 /////////////////////////////////////////////////////////////////////////////
 const
 TCertInfo& CProcess::Cert (void) const { return this->m_cert; }
-dword      CProcess::Id   (void) const { return this->m_id; }
+dword_t      CProcess::Id   (void) const { return this->m_id; }
 bool       CProcess::Is   (void) const { return this->Id() > 0 /*&& CGenericPath(this->Path()).Exists()*/; }
 _pc_sz     CProcess::Name (void) const { return this->m_name.GetString(); }
 _pc_sz     CProcess::Path (void) const { return this->m_path.GetString(); }
@@ -69,7 +69,7 @@ TModules&  CProcess::Modules (void)       { return this->m_dlls; }
 CProcess&  CProcess::operator = (const CProcess& _ref) { *this << _ref.Id() << _ref.Name() >> _ref.Path() << _ref.Cert() << _ref.Modules(); return *this; }
 
 CProcess&  CProcess::operator <<(const TCertInfo& _cert) { this->m_cert = _cert; return *this; }
-CProcess&  CProcess::operator <<(dword _id) { this->m_id = _id; return *this; }
+CProcess&  CProcess::operator <<(dword_t _id) { this->m_id = _id; return *this; }
 
 CProcess&  CProcess::operator <<(_pc_sz _name) { this->m_name = _name; return *this; }
 CProcess&  CProcess::operator >>(_pc_sz _path) { this->m_path = _path; return *this; }
@@ -95,9 +95,9 @@ err_code CProcess_List::Get_It(void) {
 
 #define dw_how_many_procs (1024)
 
-	dword dw_proc_ids[dw_how_many_procs] = {0};
-	dword dw_proc_req = 0;
-	dword dw_proc_got = 0;
+	dword_t dw_proc_ids[dw_how_many_procs] = {0};
+	dword_t dw_proc_req = 0;
+	dword_t dw_proc_got = 0;
 
 	// https://learn.microsoft.com/en-us/windows/win32/psapi/enumerating-all-processes ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses;
@@ -106,14 +106,14 @@ err_code CProcess_List::Get_It(void) {
 #if (0)
 	// gets a list of all available devices ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-querydosdevicew ;
-	dword d_size = 1024;
+	dword_t d_size = 1024;
 	TRawData raw_data;
 	while (true)
 	{
 		if (__s_ok != raw_data.Append(nullptr, d_size * sizeof(t_char))) {
 			this->m_error = raw_data.Error(); break;
 		}
-		dword d_copied = ::QueryDosDevice(nullptr, (t_char*)raw_data.GetData(), raw_data.GetSize() / sizeof(t_char));
+		dword_t d_copied = ::QueryDosDevice(nullptr, (t_char*)raw_data.GetData(), raw_data.GetSize() / sizeof(t_char));
 		if ( d_copied == 0) {
 			m_error.Last();
 			if (ERROR_INSUFFICIENT_BUFFER != m_error.Get())
@@ -129,7 +129,7 @@ err_code CProcess_List::Get_It(void) {
 #endif
 	dw_proc_got = dw_proc_req / sizeof (DWORD);
 
-	for (dword i_ = 0; i_ < dw_proc_got; i_++) {
+	for (dword_t i_ = 0; i_ < dw_proc_got; i_++) {
 		if (0 != dw_proc_ids[i_]) {
 			// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess ;
 			CAutoHandle h_proc; h_proc.Attach(::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dw_proc_ids[i_]));
@@ -139,7 +139,7 @@ err_code CProcess_List::Get_It(void) {
 			}
 
 			HMODULE h_module = nullptr;
-			dword dw_require = 0; // *attention*: value in bytes ;
+			dword_t dw_require = 0; // *attention*: value in bytes ;
 			// https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules ; this function is for 32-bit app;
 			// https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodulesex ; this function is for 64-bit app;
 			if (false == !!::EnumProcessModulesEx(h_proc, &h_module, sizeof(h_module), &dw_require, 0))
@@ -165,7 +165,7 @@ err_code CProcess_List::Get_It(void) {
 			for (size_t j_ = 0; j_ < dw_require / sizeof(HMODULE); j_++) {
 
 				t_char mod_path[_MAX_PATH] = {0};
-				dword  d_qry_size = _countof(mod_path);
+				dword_t  d_qry_size = _countof(mod_path);
 				// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew ;
 				if (false == !!::GetModuleFileNameEx(h_proc, p_modules[j_], mod_path, _countof(mod_path)) &&
 					// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamea
@@ -182,7 +182,7 @@ err_code CProcess_List::Get_It(void) {
 			delete p_modules;
 #else
 			t_char mod_path[_MAX_PATH] = {0};
-			dword d_qry_size = _countof(mod_path);
+			dword_t d_qry_size = _countof(mod_path);
 
 			if (false == !!::QueryFullProcessImageName(h_proc, 0, mod_path, &d_qry_size)) {
 				m_error.Last();
@@ -244,7 +244,7 @@ CString   CProcess_List::Print (const e_print _e_opt, _pc_sz _p_pfx, _pc_sz _p_s
 
 	for (TProc_map::const_iterator it_ = m_procs.begin(); it_ != this->m_procs.end(); ++it_) {
 
-		const dword proc_id  = it_->first ;
+		const dword_t proc_id  = it_->first ;
 		const CProcess& proc = it_->second;
 
 		cs_list += _p_sfx;

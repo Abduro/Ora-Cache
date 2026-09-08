@@ -32,38 +32,48 @@ static _pc_sz p_err_ptr = _T("The pointer to tab control is not set");
 static _pc_sz p_align_horz = _T("Align_Horz");
 static _pc_sz p_align_vert = _T("Align_Vert");
 static _pc_sz p_active_tab = _T("Active_Tab");
+static _pc_sz p_cap_orient = _T("Cap_orient");
 
+#pragma region cls::CBase{}
+
+using CPersBase = ::ex_ui::controls::tabbed::storage::CBase;
+
+CPersBase::CBase (void) : m_p_ctrl(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+
+_pc_sz   CPersBase::Class (void) { static CString cs_cls; if (cs_cls.IsEmpty()) cs_cls = __CLASS__; return (_pc_sz)cs_cls; }
+TError&  CPersBase::Error (void) const { return this->m_error; }
+
+bool  CPersBase::Is_valid (void) const { return this->m_p_ctrl != 0; }
+
+CPersBase& CPersBase::operator <<(TabCtrl* _p_ctrl) { this->m_p_ctrl = _p_ctrl; return *this; }
+bool CPersBase::operator () (void) const { return this->Is_valid(); }
+
+#pragma endregion
 #pragma region cls::CActive{}
 
-CPersistent::CActive::CActive (void) : m_p_ctrl(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-TError&  CPersistent::CActive::Error (void) const { return this->m_error; }
+CPersistent::CActive::CActive (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
 
 err_code CPersistent::CActive::Load (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-	if (this->m_p_ctrl == 0)
-		return this->m_error << __e_pointer = p_err_ptr;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
 	const int16_t tab_ndx = static_cast<int16_t>(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_active_tab));
-	this->m_error << this->m_p_ctrl->Tabs().Active(tab_ndx);
+	TBase::m_error << this->m_p_ctrl->Tabs().Active(tab_ndx);
 	
-	return this->Error();
+	return TBase::Error();
 }
 
-CPersistent::CActive& CPersistent::CActive::operator <<(TabCtrl* _p_ctrl) { this->m_p_ctrl = _p_ctrl; return *this; }
-
-#pragma endregion	
+#pragma endregion
 #pragma region cls::CAlign{}
 
-CPersistent::CAlign::CAlign (void) : m_p_ctrl(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-TError&  CPersistent::CAlign::Error (void) const { return this->m_error; }
+CPersistent::CAlign::CAlign (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
 
 err_code CPersistent::CAlign::Load (void) {
-	this->m_error <<__METHOD__<<__s_ok;
-	if (this->m_p_ctrl == 0)
-		return this->m_error << __e_pointer = p_err_ptr;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
 	THorzAlign::_value align_horz = THorzAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_horz));
@@ -72,20 +82,38 @@ err_code CPersistent::CAlign::Load (void) {
 	TVertAlign::_value align_vert = TVertAlign::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_align_vert));
 	this->m_p_ctrl->Layout().Ribbon().Tabs().Align().Vert().Value() = align_vert;
 	
-	return this->Error();
+	return TBase::Error();
 }
 err_code CPersistent::CAlign::Save (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	if (this->m_p_ctrl == 0)
-		return this->m_error << __e_pointer = p_err_ptr;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_align_horz, this->m_p_ctrl->Layout().Ribbon().Tabs().Align().Horz().Value()))) this->m_error = reg_key.Error();
+	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_align_horz, this->m_p_ctrl->Layout().Ribbon().Tabs().Align().Horz().Value()))) TBase::m_error = reg_key.Error();
 
-	return this->Error();
+	return TBase::Error();
 }
 
-CPersistent::CAlign& CPersistent::CAlign::operator <<(TabCtrl* _p_ctrl) { this->m_p_ctrl = _p_ctrl; return *this; }
+#pragma endregion
+#pragma region cls::CCaption{}
+
+CPersistent::CCaption::CCaption (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
+
+err_code CPersistent::CCaption::Load (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	using CCaps = CLayout::CTabs::CCaps;
+	using e_orient = CCaps::e_orient;
+
+	TRegKeyEx reg_key;
+	e_orient  cap_orient = CCaps::DwordToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_cap_orient));
+	this->m_p_ctrl->Layout().Ribbon().Tabs().Caps().Set_orient(cap_orient);
+
+	return TBase::Error();
+}
 
 #pragma endregion
 #pragma region cls::CRoot{}
@@ -111,47 +139,98 @@ CRoot_ctrl& CRoot::operator ()(void)       { return (TBase&)*this; }
 #pragma endregion
 #pragma region cls::CPersistent{}
 
-CPersistent::CPersistent (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CPersistent::CPersistent (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
 
-TError& CPersistent::Error (void) const { return this->m_error; }
-const
-CPersistent::CSide&  CPersistent::Side (void) const { return this->m_side; }
-CPersistent::CSide&  CPersistent::Side (void)       { return this->m_side; }
+err_code CPersistent::Load (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	CPersistent::CActive  active; active << TBase::m_p_ctrl; active.Load();
+	CPersistent::CAlign   align ; align  << TBase::m_p_ctrl; align.Load();
+	CPersistent::CCaption cap   ; active << TBase::m_p_ctrl; cap.Load();
+	CPersistent::CSide    side  ; side   << TBase::m_p_ctrl; side.Load();
+	CPersistent::CSize    size  ; size   << TBase::m_p_ctrl; size.Load();
+
+	return TBase::Error();
+}
+
+err_code CPersistent::Save (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	return TBase::Error();
+}
 
 #pragma endregion
 #pragma region cls::CSide{}
 
 using CSide = CPersistent::CSide;
 
-CSide::CSide (void) : m_p_ctrl(0) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
-
-TError& CSide::Error (void) const { return this->m_error; }
+CSide::CSide (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
 
 static _pc_sz p_side_nm = _T("Side");
 
 err_code CSide::Load (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	if (this->m_p_ctrl == 0)
-		return this->m_error << __e_pointer = p_err_ptr;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
 	const TSide side = CSides::IndexToEnum(reg_key.Value().GetDword(CRoot().Path(m_p_ctrl->Id()), p_side_nm));
 	this->m_p_ctrl->Layout().Ribbon().LocatedOn(side);
 
-	return this->Error();
+	return TBase::Error();
 }
 
 err_code CSide::Save (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	if (m_p_ctrl == 0)
-		return this->m_error << __e_pointer = p_err_ptr;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_side_nm, this->m_p_ctrl->Layout().Ribbon().LocatedOn()))) this->m_error = reg_key.Error();
+	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_side_nm, this->m_p_ctrl->Layout().Ribbon().LocatedOn()))) TBase::m_error = reg_key.Error();
 
-	return this->Error();
+	return TBase::Error();
 }
 
-CSide& CSide::operator <<(TabCtrl* _p_ctrl) { this->m_p_ctrl = _p_ctrl; return *this; }
+#pragma endregion
+#pragma region cls::CSize{}
+
+using CTabSize = CPersistent::CSize;
+
+CTabSize::CSize (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
+
+static _pc_sz  p_height_nm = _T("Height");
+static _pc_sz  p_width_nm = _T("Width");
+static _pc_sz  p_tab_size = _T("%s\\Tab_size");
+
+err_code CTabSize::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	CString cs_key = TString().Format(p_tab_size, CRoot().Path(TBase::m_p_ctrl->Id()));
+
+	TRegKeyEx reg_key;
+	const uint32_t u_height = reg_key.Value().GetDword((_pc_sz)cs_key, p_height_nm);
+	const uint32_t u_width  = reg_key.Value().GetDword((_pc_sz)cs_key, p_width_nm);
+
+	TBase::m_p_ctrl->Layout().Ribbon().Tabs().Size().Set(u_width, u_height); // the 'Set()' function checks input argument values;
+
+	return TBase::Error();
+}
+
+err_code CTabSize::Save (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	TRegKeyEx reg_key;
+	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_side_nm, this->m_p_ctrl->Layout().Ribbon().LocatedOn()))) TBase::m_error = reg_key.Error();
+
+	return TBase::Error();
+}
 
 #pragma endregion

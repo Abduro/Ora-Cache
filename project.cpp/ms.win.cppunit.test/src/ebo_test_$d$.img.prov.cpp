@@ -42,7 +42,7 @@ namespace ebo { namespace boo { namespace test { namespace cache { namespace _im
 
 			LSTATUS n_result = this->m_sta_bar.QueryStringValue(_T("app-ready"), sz_buffer, &n_chars);
 			if (!!n_result)
-				(this->m_error = dword(n_result)) = _T("The test image file name is not specified;");
+				(this->m_error = dword_t(n_result)) = _T("The test image file name is not specified;");
 			else {
 				cs_file = sz_buffer;
 				this->m_app_ready = TStringEx().Format (_T("%s\\%s"), this->Get_path(), (_pc_sz) cs_file);
@@ -61,7 +61,7 @@ namespace ebo { namespace boo { namespace test { namespace cache { namespace _im
 				CString cs_key = this->Root(); cs_key += _T("\\sta-bar"); // it is supposed the path value does not end up with the backslash;
 				LSTATUS n_result = this->m_sta_bar.Open(Get_router().Root(), (_pc_sz) cs_key);
 				if (!!n_result)
-					return this->m_error = dword(n_result);
+					return this->m_error = dword_t(n_result);
 			}
 
 			t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
@@ -70,7 +70,7 @@ namespace ebo { namespace boo { namespace test { namespace cache { namespace _im
 
 			LSTATUS n_result = this->m_sta_bar.QueryStringValue(_T("path"), sz_buffer, &n_chars);
 			if (!!n_result)
-				(this->m_error = dword(n_result)) = _T("Path to test images is not specified;");
+				(this->m_error = dword_t(n_result)) = _T("Path to test images is not specified;");
 			else
 				this->m_path = sz_buffer;
 

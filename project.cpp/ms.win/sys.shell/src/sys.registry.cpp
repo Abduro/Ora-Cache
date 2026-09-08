@@ -120,21 +120,21 @@ err_code  CSubKeys::Enum (const HKEY _h_parent, TSubKeys& _names, CError& _err) 
 	if (_names.empty() == false)
 		_names.clear();
 	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw ;
-	dword u_count = 0;
+	dword_t u_count = 0;
 	LSTATUS n_result = ::RegQueryInfoKey(_h_parent, 0, 0, 0, &u_count, 0, 0, 0, 0, 0, 0, 0);
 	if (!!n_result) {
-		return _err = (dword) n_result;
+		return _err = (dword_t) n_result;
 	}
 	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw ;
 	static const uint32_t req_sz = 256;
-	dword u_length = 0;
+	dword_t u_length = 0;
 
 	for (uint32_t i_ = 0; i_ < u_count; i_++) {
 		u_length = req_sz;
 		CString cs_name;
 		n_result = ::RegEnumKeyEx(_h_parent, i_, cs_name.GetBuffer(req_sz), &u_length, 0, 0, 0, 0);
 		if (!!n_result) {
-			return _err = (dword) n_result;
+			return _err = (dword_t) n_result;
 		}
 		try {
 			_names.push_back(cs_name);
@@ -170,10 +170,10 @@ uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
 	else
 		(*this)() >> _p_name;  // puts the name to the cache;
 
-	dword d_value  = 0;
+	dword_t d_value  = 0;
 	LSTATUS n_result = m_the_key().QueryDWORDValue(_p_name, d_value);
 	if (!!n_result) {
-		(m_the_key.m_error = dword(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
+		(m_the_key.m_error = dword_t(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
 		return 0u;
 	}
 	else
@@ -235,7 +235,7 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_name) {
 
 	LSTATUS n_result = m_the_key().QueryStringValue((_pc_sz) _p_name, sz_buffer, &n_chars);
 	if (!!n_result) {
-		(m_the_key.m_error = dword(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
+		(m_the_key.m_error = dword_t(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
 		return CString();
 	}
 	else
@@ -278,7 +278,7 @@ err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, _pc_sz _p_
 	}
 	n_result = m_the_key().SetStringValue(_p_name, _p_value);
 	if (!!n_result) {
-		(m_the_key.m_error = dword(n_result)) = TString().Format(_T("Set value '%s' to '%s' is failed"), _p_name, _p_value);
+		(m_the_key.m_error = dword_t(n_result)) = TString().Format(_T("Set value '%s' to '%s' is failed"), _p_name, _p_value);
 	}
 
 	return m_the_key.Error();
@@ -322,7 +322,7 @@ err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint
 	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw ;
 	n_result = m_the_key().SetDWORDValue(_p_name, _u_value);
 	if (!!n_result) {
-		(m_the_key.m_error = dword(n_result)) = TString().Format(_T("Set value '%s' to (%d) is failed"), _p_name, _u_value);
+		(m_the_key.m_error = dword_t(n_result)) = TString().Format(_T("Set value '%s' to (%d) is failed"), _p_name, _u_value);
 	}
 
 	return m_the_key.Error();
@@ -397,7 +397,7 @@ err_code CRegKey_Ex::Open (_pc_sz _p_key_path) {
 	const
 	LSTATUS n_result = (*this)().Open(CRoot().Key(), _p_key_path);
 	if (!!n_result) {
-		(this->m_error = dword(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path);
+		(this->m_error = dword_t(n_result)) = TString().Format(_T("The key path '%s' does not exist"), _p_key_path);
 	}
 
 	return this->Error();

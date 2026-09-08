@@ -99,13 +99,13 @@ err_code CLocator::Refresh (const e_finder _e_what_is) {
 
 		// https://stackoverflow.com/questions/6924195/get-dll-path-at-runtime ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexa 
-		static dword dw_flags = GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;
+		static dword_t dw_flags = GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT;
 
 		if (false == ::GetModuleHandleEx (dw_flags, cs_module.GetBuffer(), &h_module))
 			return this->m_error.Last();
 	}
 
-	const dword dw_result = ::GetModuleFileName(h_module, sz_path, _countof(sz_path));
+	const dword_t dw_result = ::GetModuleFileName(h_module, sz_path, _countof(sz_path));
 
 	this->m_error.Last(); // error_insufficient_buffer is not expected but nevertheless;
 
@@ -120,7 +120,7 @@ err_code CLocator::Refresh (const e_finder _e_what_is) {
 		sz_path, sz_drv_, _countof(sz_drv_), sz_dir_, _countof(sz_dir_), sz_file, _countof(sz_file), sz_ext, _countof(sz_ext)
 	);
 	if (!!n_result)
-		return this->m_error = (dword)n_result; // it is assumed the error code of win32 is positive;
+		return this->m_error = (dword_t)n_result; // it is assumed the error code of win32 is positive;
 
 	if (this->m_file.IsEmpty() == false) this->m_file.Empty();
 	if (this->m_path.IsEmpty() == false) this->m_path.Empty();

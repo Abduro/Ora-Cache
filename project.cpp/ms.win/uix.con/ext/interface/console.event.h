@@ -28,7 +28,7 @@ namespace shared { namespace console {
 	class CEvents
 	{
 	public:
-		enum Id : dword
+		enum Id : dword_t
 		{
 			eAbort    = CTRL_C_EVENT        ,  // https://www.lifewire.com/what-is-ctrl-c-used-for-2625834 ; 
 			eBreak    = CTRL_BREAK_EVENT    ,  // https://learn.microsoft.com/en-us/windows/console/ctrl-c-and-ctrl-break-signals

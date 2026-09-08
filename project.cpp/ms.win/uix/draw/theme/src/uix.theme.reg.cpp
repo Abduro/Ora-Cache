@@ -134,34 +134,34 @@ namespace _impl {
 			_plt_key; _raw; _palette;
 			this->m_error << __METHOD__ << __s_ok;
 
-			dword d_count = 0;
+			dword_t d_count = 0;
 			CRegKey plt_key_; plt_key_.Attach(_plt_key);
 			
 			LSTATUS n_result = plt_key_.QueryDWORDValue(_T("Count"), d_count);
 
 			if (!!n_result)
-				return this->m_error = dword(n_result);
+				return this->m_error = dword_t(n_result);
 
 			if (0 == d_count)
 				return this->Error(); // there is not such category theme;
 
 			t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer); u_count;
 			CString cs_theme;
-			for (dword i_ = 0; i_ < d_count; i_++) {
+			for (dword_t i_ = 0; i_ < d_count; i_++) {
 
 				cs_theme.Format(_T("Theme#%u"), i_);
 				CRegKey  theme_;
 				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexa ;
 				n_result = theme_.Open(plt_key_, (_pc_sz) cs_theme);
 				if (!!n_result) {
-					this->m_error = dword(n_result); break;
+					this->m_error = dword_t(n_result); break;
 				}
 				CNamed named;
 
 				unsigned long n_chars = u_count;
 				n_result = theme_.QueryStringValue(_T("Name"), sz_buffer, &n_chars);
 				if (!!n_result) {
-					this->m_error = dword(n_result); break;
+					this->m_error = dword_t(n_result); break;
 				}
 				else
 					named.Name(sz_buffer);
@@ -171,7 +171,7 @@ namespace _impl {
 				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexa ;
 				n_result = theme_.QueryStringValue(_T("Description"), sz_buffer, &n_chars);
 				if (!!n_result) {
-					this->m_error = dword(n_result); break;
+					this->m_error = dword_t(n_result); break;
 				}
 				else
 					named.Desc(sz_buffer);
@@ -282,7 +282,7 @@ err_code CRegistry::Node  (_pc_sz _p_path, CElement& _element) {
 	LSTATUS n_result = k_element.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 	else
 		_element.Is_valid(true);
 #if (1)
@@ -319,7 +319,7 @@ err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CNamed& _theme) {
 	LSTATUS n_result = k_theme.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 	else
 		_theme.Is_valid(true);
 
@@ -328,7 +328,7 @@ err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CNamed& _theme) {
 
 	n_result = k_theme.QueryStringValue(_T("Name"), sz_buffer, &n_chars);
 	if (!!n_result) {
-		this->m_error = dword(n_result);
+		this->m_error = dword_t(n_result);
 	}
 	else
 		_theme.Name(sz_buffer);
@@ -336,7 +336,7 @@ err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CNamed& _theme) {
 	n_chars  = u_count;
 	n_result = k_theme.QueryStringValue(_T("Description"), sz_buffer, &n_chars);
 	if (!!n_result) {
-		this->m_error = dword(n_result);
+		this->m_error = dword_t(n_result);
 	}
 	else
 		_theme.Desc(sz_buffer);
@@ -361,18 +361,18 @@ err_code CRegistry::Node  (_pc_sz _p_path, ex_ui::theme::CPalette& _palette) {
 	LSTATUS n_result = k_palette.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 	else
 		_palette.Is_valid(true);
 
-	dword d_count = 0;
+	dword_t d_count = 0;
 	n_result = k_palette.QueryDWORDValue(_T("Count"), d_count);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 
 	CString cs_path;
-	for (dword i_ = 0; i_ < d_count; i_++) {
+	for (dword_t i_ = 0; i_ < d_count; i_++) {
 		cs_path = Get_router().Theme(_palette.Id(), i_);
 		CNamed theme;
 		if (__failed(this->Node((_pc_sz) cs_path, theme)))
@@ -397,7 +397,7 @@ err_code CRegistry::Node  (_pc_sz _p_path, CPart& _part) {
 	LSTATUS n_result = k_part.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 	else
 		_part.Is_valid(true);
 
@@ -535,7 +535,7 @@ err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _
 	LSTATUS n_result = k_state.Open(Get_router().Root(), _p_path);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 
 	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
 
@@ -545,7 +545,7 @@ err_code CRegistry::Value (_pc_sz _p_path, const TThemeState _e_state, CState& _
 
 	n_result = k_state.QueryStringValue((_pc_sz) cs_name, sz_buffer, &n_chars);
 	if (!!n_result) // there is no value with such name;
-		(this->m_error = dword(n_result)) = TStringEx().Format(_T("%s such state is not defined;"), (_pc_sz) TPrint::Out(_e_state));
+		(this->m_error = dword_t(n_result)) = TStringEx().Format(_T("%s such state is not defined;"), (_pc_sz) TPrint::Out(_e_state));
 	else {
 		_state.Hex().Set(sz_buffer);
 		_state.Is_valid(true);
@@ -560,7 +560,7 @@ err_code CRegistry::Load (ex_ui::theme::CNamed_Enum& _enum) {
 	CRegKey themes;
 	LSTATUS n_result = themes.Open(Get_router().Root(), Get_router().Themes());
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 #if (0)
 	CTheme_enum theme_enum; TRawNamed& raw_themes = _enum.Raw();
 
@@ -617,26 +617,26 @@ err_code CRegistry::Load  (CCurrent& _theme) {
 	CRegKey current;
 	LSTATUS n_result = current.Open(Get_router().Root(), Get_router().Current());
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 
-	dword d_index = 0;
+	dword_t d_index = 0;
 	n_result = current.QueryDWORDValue(_T("ThemeIndex"), d_index);
 
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 	else {
 		Get_router().CurrentTheme().ThemeIndex(d_index); // the theme index value is not checked due to it is not necessary yet;
 	}
 
-	dword d_palette = 0;
+	dword_t d_palette = 0;
 
 	n_result = current.QueryDWORDValue(_T("PaletteId"), d_palette);
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 	else {
 		if (false){}
-		else if (d_palette == (dword)TThemePalette::e_dark ) Get_router().CurrentTheme().Palette() = (TThemePalette)d_palette;
-		else if (d_palette == (dword)TThemePalette::e_light) Get_router().CurrentTheme().Palette() = (TThemePalette)d_palette;
+		else if (d_palette == (dword_t)TThemePalette::e_dark ) Get_router().CurrentTheme().Palette() = (TThemePalette)d_palette;
+		else if (d_palette == (dword_t)TThemePalette::e_light) Get_router().CurrentTheme().Palette() = (TThemePalette)d_palette;
 		else {
 			// it is possibly to set current palette identifier to 'e_none', but it is better to keep default settings;
 		}
@@ -740,7 +740,7 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_name) {
 
 	LSTATUS n_result = m_the_key().QueryStringValue((_pc_sz) _p_name, sz_buffer, &n_chars);
 	if (!!n_result) {
-		(m_the_key.m_error = dword(n_result)) <<__METHOD__ = TStringEx().Format(_T("The value of name '%s' is not defined;"), _p_name);
+		(m_the_key.m_error = dword_t(n_result)) <<__METHOD__ = TStringEx().Format(_T("The value of name '%s' is not defined;"), _p_name);
 		return CString();
 	}
 	else
@@ -761,7 +761,7 @@ CString CRegKey_Ex::CValue::GetString (_pc_sz _p_key_path, _pc_sz _p_name) {
 	if (nullptr == m_the_key()){
 		n_result = m_the_key().Open(Get_router().Root(), (_pc_sz) _p_key_path);
 		if (!!n_result) {
-			m_the_key.m_error = dword(n_result); return CString();
+			m_the_key.m_error = dword_t(n_result); return CString();
 		}
 	}
 	return this->GetString(_p_name);

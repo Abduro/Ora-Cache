@@ -29,7 +29,7 @@ namespace shared { namespace log {
 	using TError  = const CError;
 	using CAtlString = ::ATL::CAtlString;
 
-	typedef dword thread_id;
+	typedef dword_t thread_id;
 
 	class eMsgType {
 	public:

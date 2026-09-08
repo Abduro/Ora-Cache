@@ -13,13 +13,13 @@ using TSehExcept = shared::sys_core::seh::CException ;
 /////////////////////////////////////////////////////////////////////////////
 
 shared_data:: shared_data (void) : p_data(0), n_size(0) {}
-shared_data:: shared_data (dword _size, const void* _p_data) : p_data(_p_data), n_size(_size) {}
+shared_data:: shared_data (dword_t _size, const void* _p_data) : p_data(_p_data), n_size(_size) {}
 
 shared_data:: shared_data (const shared_data& _ref) : shared_data() { *this = _ref; }
 
 shared_data&  shared_data::operator = (const shared_data& _ref) { *this << _ref.p_data << _ref.n_size; return *this; }
 shared_data&  shared_data::operator <<(const void* _p_data) { this->p_data = _p_data; return *this; }
-shared_data&  shared_data::operator <<(const dword _n_size) { this->n_size = _n_size; return *this; }
+shared_data&  shared_data::operator <<(const dword_t _n_size) { this->n_size = _n_size; return *this; }
 
 bool shared_data::operator != (const shared_data& _data) const { return (this->n_size != _data.n_size) || (this->p_data != _data.p_data); }
 bool shared_data::operator == (const shared_data& _data) const { return !(*this != _data); }

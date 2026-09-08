@@ -20,7 +20,7 @@ using namespace shared::sys_core::_impl;
 
 CErr_Base::CErr_Base(void) : m_code(__s_ok), m_result(__s_ok), m_lang() {
 }
-CErr_Base::CErr_Base(const dword  dwError, const CLang& _lng_id) : m_code(dwError), m_lang(_lng_id)  {
+CErr_Base::CErr_Base(const dword_t  dwError, const CLang& _lng_id) : m_code(dwError), m_lang(_lng_id)  {
 	m_result = __DwordToHresult(dwError);
 }
 CErr_Base::CErr_Base(const err_code hError, const CLang& _lng_id) :
@@ -35,7 +35,7 @@ CString CErr_Base::Print (void) const {
 	return  cs_out;
 }
 
-CErr_Base& CErr_Base::operator = (const dword _code) {
+CErr_Base& CErr_Base::operator = (const dword_t _code) {
 	Safe_Lock(m_lock);
 	m_code = _code;
 	m_result = __DwordToHresult(_code);
@@ -53,7 +53,7 @@ CErr_Base& CErr_Base::operator= (TLangRef _lang) {
 	return *this;
 }
 
-CErr_Base::operator dword    (void) const { Safe_Lock(m_lock); return (m_code)  ; }
+CErr_Base::operator dword_t    (void) const { Safe_Lock(m_lock); return (m_code)  ; }
 CErr_Base::operator err_code (void) const { Safe_Lock(m_lock); return (m_result); }
 CErr_Base::operator TLangRef (void) const { Safe_Lock(m_lock); return (m_lang)  ; }
 CErr_Base::operator TSyncRef (void)       { return   (m_lock); }
@@ -125,7 +125,7 @@ void     CErr_State::Set (const bool _reset) {
 	}
 }
 
-void     CErr_State::Set (const dword _err_code) {
+void     CErr_State::Set (const dword_t _err_code) {
 	_err_code;
 
 	Safe_Lock(TBase::m_lock) ;
@@ -136,7 +136,7 @@ void     CErr_State::Set (const dword _err_code) {
 	m_buffer = (_pc_sz)(CErr_Details() << TBase::m_lang << TBase::m_code);
 }
 
-void     CErr_State::Set (const dword _err_code, _pc_sz _lp_sz_desc, ...) {
+void     CErr_State::Set (const dword_t _err_code, _pc_sz _lp_sz_desc, ...) {
 	_err_code; _lp_sz_desc;
 
 	Safe_Lock(TBase::m_lock) ;
@@ -152,7 +152,7 @@ void     CErr_State::Set (const dword _err_code, _pc_sz _lp_sz_desc, ...) {
 	va_end(args_);
 }
 
-void     CErr_State::Set (const dword _err_code, const UINT resId) {
+void     CErr_State::Set (const dword_t _err_code, const UINT resId) {
 	_err_code; resId;
 
 	CString cs_desc;
@@ -280,8 +280,8 @@ void     CError::Class (_pc_sz _lp_sz_val, const bool bFormatted) {
 }
 
 void      CError::Clear (void)           { m_state = false; }
-dword     CError::Code  (void) const     { return (dword)m_state; }
-void      CError::Code  (const dword _v) { ((CErr_Base&)m_state) = _v;
+dword_t     CError::Code  (void) const     { return (dword_t)m_state; }
+void      CError::Code  (const dword_t _v) { ((CErr_Base&)m_state) = _v;
 	this->State() = (_pc_sz)(CErr_Fmt() << (CErr_Pattern() << CErr_Pattern::e_line) << *this);
 }
 _pc_sz    CError::Desc  (void) const { return m_state; }
@@ -340,10 +340,10 @@ err_code  CError::Result(const err_code _new)
 	return this->Result();
 }
 
-dword     CError::Show  (const HWND _h_owner) const {
+dword_t     CError::Show  (const HWND _h_owner) const {
 
 	CString  cs_desc =(_pc_sz)(CErr_Fmt() << (CErr_Pattern() << CErr_Pattern::e_box) << *this);
-	const dword d_resp = static_cast<dword>(
+	const dword_t d_resp = static_cast<dword_t>(
 		::MessageBox(_h_owner, cs_desc.GetString(), _T("Error"), MB_OK | MB_ICONEXCLAMATION)
 		);
 	return d_resp;
@@ -392,7 +392,7 @@ CError& CError::operator = (const CError& _err) {
 
 	return *this;
 }
-CError& CError::operator = (const dword  _code) { (m_state).Set(_code); return *this; }
+CError& CError::operator = (const dword_t  _code) { (m_state).Set(_code); return *this; }
 CError& CError::operator = (const err_code  _hr) { (m_state).Set(_hr); return *this; }
 CError& CError::operator = (_pc_sz  _p_desc  ) { this->State() = _p_desc; return *this; }
 CError& CError::operator >>(_pc_sz  _p_class ) { this->Class(_p_class, true); return *this; }

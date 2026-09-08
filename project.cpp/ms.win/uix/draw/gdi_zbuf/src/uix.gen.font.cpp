@@ -300,7 +300,7 @@ bool      ex_ui::draw::CFont::Angle (const int16_t _n_degrees) {
 	return b_changed;
 }
 
-err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const dword dwOptions, const long_t lParam) {
+err_code  ex_ui::draw::CFont::Create(_pc_sz pszFamily, const dword_t dwOptions, const long_t lParam) {
 	pszFamily; dwOptions; lParam;
 
 	err_code n_result = __s_ok;

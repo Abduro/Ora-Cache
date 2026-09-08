@@ -82,10 +82,10 @@ long    CRndGen::SignedLong (const long _min, const long _max) const {
 	return static_cast<long> ((double)::rand() / (RAND_MAX + 1) * (_max - _min) + _min);
 }
 
-CString CRndGen::UniqueSeq (const dword _length, const bool bCaseSensitive) const {
+CString CRndGen::UniqueSeq (const dword_t _length, const bool bCaseSensitive) const {
 	_length; bCaseSensitive;
 	CString cs_seq;
-	for ( dword i_ = 0; i_ < _length; i_++)
+	for ( dword_t i_ = 0; i_ < _length; i_++)
 	{
 		const WORD wIndex = (_word) (::rand() % (RandomValue_Hash_Size - 1));
 		cs_seq += RandomValue_Hash[wIndex];
@@ -96,7 +96,7 @@ CString CRndGen::UniqueSeq (const dword _length, const bool bCaseSensitive) cons
 	return cs_seq;
 }
 
-CString CRndGen::UniqueSeq_Ex (const dword _length, const bool bLowCase) const {
+CString CRndGen::UniqueSeq_Ex (const dword_t _length, const bool bLowCase) const {
 	_length; bLowCase;
 
 	if (!_length)

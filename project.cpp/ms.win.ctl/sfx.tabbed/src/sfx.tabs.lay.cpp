@@ -63,8 +63,8 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 	_rect;
 	err_code n_result = __s_ok;
 
-	const uint32_t n_height = this->m_ctrl.Layout().Ribbon().Tabs().Size().Hight().Get();
-	const uint32_t n_width  = this->m_ctrl.Layout().Ribbon().Tabs().Size().Width().Get();
+	const uint32_t n_height = this->m_ctrl.Layout().Ribbon().Tabs().Size().Height().Get();
+	const uint32_t n_width  = this->m_ctrl.Layout().Ribbon().Tabs().Size().Width ().Get();
 	const  int16_t n_active = this->m_ctrl.Tabs().Active();
 	if (0 > n_active)
 		return n_result = __e_inv_arg;
@@ -263,10 +263,10 @@ err_code CRibbon::Update(const rect_t& _rc_area) {
 	this->m_rect = _rc_area;
 	// m_tabs.m_ledge is not taken into account for this time;
 	switch (this->LocatedOn()) {
-	case TSide::e_bottom: { this->m_rect.top    = _rc_area.bottom - this->Tabs().Size().Hight().Get(); } break;
-	case TSide::e_left  : { this->m_rect.right  = _rc_area.left   + this->Tabs().Size().Hight().Get(); } break;
-	case TSide::e_right : { this->m_rect.left   = _rc_area.right  - this->Tabs().Size().Hight().Get(); } break;
-	case TSide::e_top   : { this->m_rect.bottom = _rc_area.top    + this->Tabs().Size().Hight().Get(); } break;
+	case TSide::e_bottom: { this->m_rect.top    = _rc_area.bottom - this->Tabs().Size().Height().Get(); } break;
+	case TSide::e_left  : { this->m_rect.right  = _rc_area.left   + this->Tabs().Size().Height().Get(); } break;
+	case TSide::e_right : { this->m_rect.left   = _rc_area.right  - this->Tabs().Size().Height().Get(); } break;
+	case TSide::e_top   : { this->m_rect.bottom = _rc_area.top    + this->Tabs().Size().Height().Get(); } break;
 	default:
 		return n_result = (err_code) TErrCodes::eExecute::eParameter;
 	}
@@ -433,6 +433,12 @@ bool     CCaps::Set_orient (const e_orient _value) { const bool b_changed = this
 bool     CCaps::Is_horz (void) const { return e_orient::e_horz == this->m_orient; }
 bool     CCaps::Is_vert (void) const { return e_orient::e_vert == this->m_orient; }
 
+e_orient CCaps::DwordToEnum (const dword_t _value) {
+	if (e_orient::e_vert == _value)
+	     return e_orient::e_vert;
+	else return e_orient::e_horz;
+}
+
 #pragma endregion
 #pragma region cls::CTabs::CSize{}
 
@@ -440,14 +446,31 @@ using CTabSize  = ex_ui::controls::sfx::tabbed::layout::CTabs::CSize;
 using CTabHight = CTabSize::CHeight;
 using CTabWidth = CTabSize::CWidth ;
 
-CTabSize::CSize (TabCtrl& _ctrl) : m_ctrl(_ctrl), m_height(_ctrl), m_width(_ctrl) {}
+CTabSize::CSize (TabCtrl& _ctrl) : m_ctrl(_ctrl), m_height(_ctrl), m_width(_ctrl) { this->Default(); }
+
+void CTabSize::Default (void) {
+	this->Height().Set(CTabHight::Min());
+	this->Width ().Set(CTabWidth::Min());
+}
 
 const
-CTabHight& CTabSize::Hight (void) const { return this->m_height; }
-CTabHight& CTabSize::Hight (void)       { return this->m_height; }
+CTabHight& CTabSize::Height (void) const { return this->m_height; }
+CTabHight& CTabSize::Height (void)       { return this->m_height; }
 const
 CTabWidth& CTabSize::Width (void) const { return this->m_width;  }
 CTabWidth& CTabSize::Width (void)       { return this->m_width;  }
+
+bool CTabSize::Set (const uint32_t _w, const uint32_t _h) {
+	_w; _h;
+	bool b_changed = false;
+	const uint32_t w_ = (CTabWidth::Min() < _w ? CTabWidth::Min() : (CTabWidth::Max() < _w ? CTabWidth::Max() : _w));
+	const uint32_t h_ = (CTabHight::Min() < _h ? CTabHight::Min() : (CTabHight::Max() < _h ? CTabHight::Max() : _h));
+
+	if (this->Height().Set(h_)) b_changed = true;
+	if (this->Width().Set(w_)) b_changed = true;
+
+	return b_changed;
+}
 
 #pragma endregion
 #pragma region cls::CTabs::CSize::CHight{}
@@ -459,9 +482,28 @@ THeight::CHeight (TabCtrl& _ctrl) : m_ctrl(_ctrl), m_value(0) {}
 uint32_t THeight::Get (void) const { return this->m_value; }
 bool     THeight::Set (const uint32_t _value) { const bool b_changed = this->Get() != _value; if (b_changed) this->m_value = _value; return b_changed; }
 
+bool  THeight::Is_valid (void) const { return (THeight::Min() >= this->Get() && this->Get() <= THeight::Max()); }
+
+uint32_t THeight::Max (void) { return 0x0032; }
+uint32_t THeight::Min (void) { return 0x001e; }
+
 uint32_t THeight::Total (void) const {
 	const CLayout& layout = this->m_ctrl.Layout(); layout;
-	return 0;
+//	const CRibbon& ribbon = layout.Ribbon();
+
+	uint32_t u_total = this->Get();
+	/*
+	if (ribbon.Sides().IsHorz()) {
+		if (false){}
+		else if (ribbon.Tabs().Caps().Is_horz()) { u_total = this->Get(); }
+		else if (ribbon.Tabs().Caps().Is_vert()) { u_total = ribbon.Tabs().Size().Width().Get(); }
+	}
+	else {
+		if (false){}
+		else if (ribbon.Tabs().Caps().Is_horz()) { u_total = this->m_ctrl.Tabs().Count() * this->Get(); }
+		else if (ribbon.Tabs().Caps().Is_vert()) { u_total = this->m_ctrl.Tabs().Count() * ribbon.Tabs().Size().Width().Get(); }
+	}*/
+	return u_total;
 }
 
 #pragma endregion
@@ -474,10 +516,12 @@ TWidth::CWidth (TabCtrl& _ctrl) : m_ctrl(_ctrl), m_value(0) {}
 uint32_t TWidth::Get (void) const { return this->m_value; }
 bool     TWidth::Set (const uint32_t _value) { const bool b_changed = this->Get() != _value; if (b_changed) this->m_value = _value; return b_changed; }
 
-uint32_t TWidth::Total (void) const {
-	const CLayout& layout = this->m_ctrl.Layout(); layout;
-	return 0;
-}
+bool TWidth::Is_valid (void) const { return (THeight::Min() >= this->Get() && this->Get() <= THeight::Max()); }
+
+uint32_t TWidth::Max (void) { return 0x00c8; }
+uint32_t TWidth::Min (void) { return 0x0064; }
+
+uint32_t TWidth::Total (void) const { return this->m_ctrl.Tabs().Count() * this->Get(); }
 
 #pragma endregion
 #pragma region cls::CLayout{}

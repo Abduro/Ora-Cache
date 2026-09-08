@@ -522,7 +522,7 @@ err_code  CZBuffer::Draw (const CDrawText& _text, const h_font& _fnt) {
 	return n_result;
 }
 
-err_code  CZBuffer::Draw (const CTextOut& _txt_out, const h_font& _fnt, const dword _u_format) {
+err_code  CZBuffer::Draw (const CTextOut& _txt_out, const h_font& _fnt, const dword_t _u_format) {
 	_txt_out; _fnt; _u_format;
 
 	err_code n_result = __s_ok;
@@ -562,11 +562,11 @@ CSurface& CZBuffer::Surface (void)       { return this->m_surface; }
 bool CZBuffer::Is_DC (const HDC _hdc) {
 	_hdc;
 	if (nullptr == _hdc) return false;
-	const dword d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type || OBJ_DC == d_type);
+	const dword_t d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type || OBJ_DC == d_type);
 }
 
 bool CZBuffer::Is_DC_mem (const HDC _hdc) {
 	_hdc;
 	if (nullptr == _hdc) return false;
-	const dword d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type/* || OBJ_DC == d_type*/);
+	const dword_t d_type = ::GetObjectType(_hdc); return (OBJ_MEMDC == d_type/* || OBJ_DC == d_type*/);
 }

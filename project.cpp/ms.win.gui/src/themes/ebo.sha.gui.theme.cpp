@@ -37,7 +37,7 @@ err_code CRoot::Set (void) {
 	CRegKey root_key;
 	LSTATUS n_result = root_key.Open(Get_router().Root(), (_pc_sz) cs_root);
 	if (!!n_result)
-		return this->m_error = dword(n_result);
+		return this->m_error = dword_t(n_result);
 
 	t_char  sz_buffer[512] = {0}; unsigned long u_count = _countof(sz_buffer);
 
@@ -45,7 +45,7 @@ err_code CRoot::Set (void) {
 
 	n_result = root_key.QueryStringValue(_T("path"), sz_buffer, &n_chars);
 	if (!!n_result)
-		(this->m_error = dword(n_result)) = _T("Path to test cases is not specified;");
+		(this->m_error = dword_t(n_result)) = _T("Path to test cases is not specified;");
 	else
 		this->m_path = sz_buffer;
 #elif (true==false)

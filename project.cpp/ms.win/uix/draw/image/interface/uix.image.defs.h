@@ -69,12 +69,12 @@ namespace ex_ui { namespace draw { namespace images {
 	class CListId {
 	public:
 		 CListId (void);
-		 CListId (const t_size&); CListId (const dword _id); CListId (const CListId&) = delete; CListId (CListId&&) = delete;
+		 CListId (const t_size&); CListId (const dword_t _id); CListId (const CListId&) = delete; CListId (CListId&&) = delete;
 		~CListId (void);
 
 	public:
-		static dword  ToDword (const t_size&);  // converts input image size to list identifier;
-		static t_size ToSize  (const dword);    // converts the input list identifier to image size;
+		static dword_t  ToDword (const t_size&);  // converts input image size to list identifier;
+		static t_size ToSize  (const dword_t);    // converts the input list identifier to image size;
 
 	private:
 		CListId& operator = (const CListId&) = delete; CListId& operator = (CListId&&) = delete;

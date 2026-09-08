@@ -153,7 +153,7 @@ namespace ex_ui { namespace draw { namespace memory {
 		err_code  Draw (const rect_t&, const rgb_color); // draws the input rectangle in solid color, alpha channel value is not applied;
 
 		err_code  Draw (const CDrawText&, const h_font& _fnt);
-		err_code  Draw (const CTextOut& , const h_font& _fnt, const dword _u_format);
+		err_code  Draw (const CTextOut& , const h_font& _fnt, const dword_t _u_format);
 		const
 		CMode&    Mode (void) const;       // gets a reference to graphics mode of the device context; (ro);
 		CMode&    Mode (void) ;            // gets a reference to graphics mode of the device context; (rw);

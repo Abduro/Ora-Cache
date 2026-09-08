@@ -91,16 +91,16 @@ namespace shared { namespace memory
 	{
 	private:
 		handle*    m_handles;
-		dword      m_size;
+		dword_t      m_size;
 		CError     m_error;
 	public:
-	    CAutoHandleArray(const dword dwSize);
+	    CAutoHandleArray(const dword_t dwSize);
 	   ~CAutoHandleArray(void);
 	public:
 		TErrorRef  Error  (void)const;
 		bool       Is     (void)const;
 		handle*    Handles(void)const;
-		dword      Size   (void)const;
+		dword_t      Size   (void)const;
 	public:
 		handle     operator[] (const INT) const;
 		handle&    operator[] (const INT)      ;
@@ -144,17 +144,17 @@ namespace shared { namespace memory
 	class CStdHandle : public CAutoHandle {
 	                  typedef CAutoHandle THandle;
 	protected:
-		dword     m_std_type;
+		dword_t     m_std_type;
 		CError    m_error;
 
 	public:
-		 CStdHandle (const dword _handle_type);
+		 CStdHandle (const dword_t _handle_type);
 		~CStdHandle (void);
 
 	public:
 		HRESULT   Close(void)      ;
 		TErrorRef Error(void) const;
-		dword     Type (void) const;
+		dword_t     Type (void) const;
 	public:
 		CStdHandle& operator=(const handle);
 	};

@@ -49,9 +49,7 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 	   otherwise, message handler of creating window does not receive these settings and expected feel & view will not appear,
 	   for example, the virtical text will not be created;
 	*/
-	CPersistent::CAlign  align; align << this; align.Load();
-	CPersistent::CSide   side; side << this; side.Load();
-	CPersistent::CActive active; active << this; active.Load();
+	CPersistent pers; pers << this; pers.Load();
 
 	const uint32_t n_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	rect_t rc_ = (this->Layout() = rc_area);

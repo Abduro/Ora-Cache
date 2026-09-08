@@ -44,7 +44,7 @@ err_code  CControl::Create (const HWND hParent, const uint32_t _ctrl_id) {
 		return this->m_error.Last();
 	}
 
-	const dword u_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
+	const dword_t u_style = WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	rect_t rc_ = (this->Layout() = rc_area);
 
 	_wnd_ref(m_wnd_ptr).Create(

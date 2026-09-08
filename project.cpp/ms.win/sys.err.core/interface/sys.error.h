@@ -31,35 +31,35 @@ namespace shared { namespace sys_core {
 	using namespace shared::types;
 
 	struct CLang {
-		dword  dwPrimary;  // primary language Id;
-		dword  dwSecond;   // sub-language Id;
+		dword_t  dwPrimary;  // primary language Id;
+		dword_t  dwSecond;   // sub-language Id;
 
 		CLang(void) : dwPrimary(LANG_NEUTRAL), dwSecond(SUBLANG_DEFAULT) {}
-		CLang(const dword _primary, const dword _second) : dwPrimary(_primary), dwSecond(_second) {}
+		CLang(const dword_t _primary, const dword_t _second) : dwPrimary(_primary), dwSecond(_second) {}
 
-		dword  Id (void) const { return MAKELANGID(dwPrimary, dwSecond); }
+		dword_t  Id (void) const { return MAKELANGID(dwPrimary, dwSecond); }
 	};
 
 	typedef const CLang& TLangRef;
 
 	class CErr_Base {
 	protected:
-		dword         m_code   ;
+		dword_t         m_code   ;
 		err_code      m_result ;
 		CLang         m_lang   ;
 		CSyncObject   m_lock   ;
 
 		CErr_Base(void);
-		CErr_Base(const dword  dwError, const CLang&);
+		CErr_Base(const dword_t  dwError, const CLang&);
 		CErr_Base(const err_code hError, const CLang&);
 	public:
 		CString Print (void) const;
 
-		CErr_Base& operator= (const dword   _code);  // sets error result from win 32 error code;
+		CErr_Base& operator= (const dword_t   _code);  // sets error result from win 32 error code;
 		CErr_Base& operator= (const err_code _hres); // sets error result; S_OK is acceptable;
 		CErr_Base& operator= (TLangRef);
 
-		operator dword    (void) const;   // gets error state Win API code;
+		operator dword_t    (void) const;   // gets error state Win API code;
 		operator err_code (void) const;   // gets error state of execution result;
 		operator TLangRef (void) const;   // gets error description language;
 		operator TSyncRef (void)      ;   // gets synchronize object referecnce;
@@ -106,9 +106,9 @@ namespace shared { namespace sys_core {
 
 		_pc_sz  Get (void) const;        // gets error state details;
 		void    Set (const bool _reset); // if _reset is true, error state is OLE_E_BLANK; otherwise, the state is set to false (i.e. S_OK);
-		void    Set (const dword    _err_code);
-		void    Set (const dword    _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
-		void    Set (const dword    _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
+		void    Set (const dword_t    _err_code);
+		void    Set (const dword_t    _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
+		void    Set (const dword_t    _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
 		void    Set (const err_code _err_code); // sets error code and updates error description;
 		void    Set (const err_code _err_code , _pc_sz _lp_sz_desc, ...); // sets the object state manually;
 		void    Set (const err_code _err_code , const UINT resId); // sets the object state manually, description is loaded from string resource specified by identifier
@@ -150,8 +150,8 @@ namespace shared { namespace sys_core {
 		void        Class (_pc_sz)     ;                              // sets the error source class name;
 		void        Class (_pc_sz _lp_class, const bool bFormatted);  // sets the error source class name;
 		void        Clear (void)       ;        // sets the error object to success state, i.e. no error state;
-		dword       Code  (void) const ;        // gets Win API error code;
-		void        Code  (const dword);        // sets Win API error code;
+		dword_t       Code  (void) const ;        // gets Win API error code;
+		void        Code  (const dword_t);        // sets Win API error code;
 		_pc_sz      Desc  (void) const ;        // gets the current description;
 		bool        Is    (void) const ;        // returns true if the object is in error state, otherwise, false, i.e. no error;
 		TLangRef&   Lang  (void) const ;        // gets language identifier;
@@ -160,7 +160,7 @@ namespace shared { namespace sys_core {
 		void        Method(_pc_sz)     ;        // sets method name that produces the error
 		void        Reset (void)       ;        // re-sets the error object to blank state (OLE_E_BLANK)
 		err_code    Result(void) const ;        // gets the current result code
-		dword       Show  (const HWND  = ::GetActiveWindow()) const;
+		dword_t       Show  (const HWND  = ::GetActiveWindow()) const;
 		CErr_State& State (void)       ;
 		TErr_State& State (void) const ;
 
@@ -174,7 +174,7 @@ namespace shared { namespace sys_core {
 
 		CError& operator= (const _com_error&);      // sets error info from COM error object;
 		CError& operator= (const CError&)    ;      // sets error info from other error object;
-		CError& operator= (const dword _code);      // sets error result from win 32 error code;
+		CError& operator= (const dword_t _code);      // sets error result from win 32 error code;
 		CError& operator= (const err_code _hr);     // sets error result; S_OK is acceptable;
 		CError& operator= (_pc_sz _lp_desc );       // sets error description;
 

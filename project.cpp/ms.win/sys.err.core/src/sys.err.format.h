@@ -25,11 +25,11 @@ namespace shared { namespace sys_core { namespace _impl {
 		_pc_sz args     (_pc_sz _lp_sz_pat, const va_list& _err_args);
 		void   clear    (void);        // does not clear argument template;
 		void   normalize(void);
-		dword  size     (void) const;
+		dword_t  size     (void) const;
 
 	public:
 		CErr_Details& operator << (const CLang&   _err_lang);
-		CErr_Details& operator << (const dword    _err_code);
+		CErr_Details& operator << (const dword_t    _err_code);
 		CErr_Details& operator << (const err_code _err_code);
 		CErr_Details& operator << (const va_list& _err_args);
 		CErr_Details& operator << (_pc_sz   _lp_sz_template);

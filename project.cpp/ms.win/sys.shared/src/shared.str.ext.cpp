@@ -34,7 +34,7 @@ namespace shared { namespace common { namespace _impl {
 }}} using namespace ::shared::common::_impl;
 
 CString_Ex:: CString_Ex (const bool  _b_value) : TBase() { *this << _b_value; }
-CString_Ex:: CString_Ex (const dword _d_value) : TBase() { *this << _d_value; }
+CString_Ex:: CString_Ex (const dword_t _d_value) : TBase() { *this << _d_value; }
 CString_Ex:: CString_Ex (const float _f_value) : TBase() { *this << _f_value; }
 CString_Ex:: CString_Ex (const long  _l_value) : TBase() { *this << _l_value; }
 
@@ -117,9 +117,9 @@ _pc_sz  CString_Ex::Bool  (const bool _b_value) {
 	return (_pc_sz)*this;
 }
 
-dword   CString_Ex::Dword (void) const {
+dword_t   CString_Ex::Dword (void) const {
 
-	dword u_result = 0;
+	dword_t u_result = 0;
 	// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/strtoul-strtoul-l-wcstoul-wcstoul-l ;
 	if (this->Is()) {
 		t_char* p_sz_end = 0;
@@ -128,7 +128,7 @@ dword   CString_Ex::Dword (void) const {
 	return u_result;
 }
 
-_pc_sz  CString_Ex::Dword(dword _u_value) {
+_pc_sz  CString_Ex::Dword(dword_t _u_value) {
 	_u_value;
 	TBase::Format(_T("%u"), _u_value);
 	return (_pc_sz)*this;
@@ -321,7 +321,7 @@ CStdString&  CStdString::operator=(const _variant_t& _var) {
 
 CString_Ex& CString_Ex::operator = (const CString_Ex& _ref) { (TBase&)*this = (const TBase&)_ref; return *this; }
 CString_Ex& CString_Ex::operator <<(bool  _b_value) { _pc_sz lp_sz_result  = this->Bool (_b_value); lp_sz_result; return *this; }
-CString_Ex& CString_Ex::operator <<(dword _d_value) { _pc_sz lp_sz_result  = this->Dword(_d_value); lp_sz_result; return *this; }
+CString_Ex& CString_Ex::operator <<(dword_t _d_value) { _pc_sz lp_sz_result  = this->Dword(_d_value); lp_sz_result; return *this; }
 CString_Ex& CString_Ex::operator <<(float _f_value) { _pc_sz lp_sz_result  = this->Float(_f_value); lp_sz_result; return *this; }
 CString_Ex& CString_Ex::operator <<(long  _l_value) { _pc_sz lp_sz_result  = this->Long (_l_value); lp_sz_result; return *this; }
 
@@ -330,7 +330,7 @@ CString_Ex& CString_Ex::operator <<(_guid& _guid_value) { this->Guid(_guid_value
 
 CString_Ex::operator CString (void) const { return CString(TBase::GetString()); }
 CString_Ex::operator bool    (void) const { return this->Bool (); }
-CString_Ex::operator dword   (void) const { return this->Dword(); }
+CString_Ex::operator dword_t   (void) const { return this->Dword(); }
 CString_Ex::operator float   (void) const { return this->Float(); }
 CString_Ex::operator _guid   (void) const { return this->Guid (); }
 CString_Ex::operator long    (void) const { return this->Long (); }

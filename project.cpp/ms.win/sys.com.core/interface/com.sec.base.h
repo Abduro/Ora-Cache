@@ -18,7 +18,7 @@ namespace shared { namespace sys_core { namespace com { namespace security {
 	class CImpersonate {
 		// https://docs.microsoft.com/en-us/windows/desktop/com/com-impersonation-level-constants ;
 	public:
-		enum _e : dword {
+		enum _e : dword_t {
 			eDefault    = RPC_C_IMP_LEVEL_DEFAULT    , // DCOM can choose the impersonation level using its normal security blanket negotiation algorithm;
 			eAnonymous  = RPC_C_IMP_LEVEL_ANONYMOUS  , // a client is anonymous to the server;
 			eIdentity   = RPC_C_IMP_LEVEL_IDENTIFY   , // a server can obtain the client's identity and to impersonate the client for ACL checking;
@@ -30,7 +30,7 @@ namespace shared { namespace sys_core { namespace com { namespace security {
 	class CNetwork {
 		// https://docs.microsoft.com/en-us/windows/desktop/com/com-authentication-level-constants ;
 	public:
-		enum _e : dword {
+		enum _e : dword_t {
 			eDefault    = RPC_C_AUTHN_LEVEL_DEFAULT, // DCOM to choose the authentication level using its normal security blanket negotiation algorithm;
 			eNone       = RPC_C_AUTHN_LEVEL_NONE   , // no authentication;
 			eConnect    = RPC_C_AUTHN_LEVEL_CONNECT, // for a relationship with the server; datagram transports always use RPC_AUTHN_LEVEL_PKT instead;

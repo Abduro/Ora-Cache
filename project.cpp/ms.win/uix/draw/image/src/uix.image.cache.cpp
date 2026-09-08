@@ -283,7 +283,7 @@ uint32_t  CList::Count  (void) const {
 
 TError&   CList::Error  (void) const { return m_error; }
 bool      CList::Is_valid (void) const { return !!this->Handle(); }
-dword     CList::Id  (void) const { return this->m_list_id; }
+dword_t     CList::Id  (void) const { return this->m_list_id; }
 const
 HImgList& CList::Handle (void) const { return this->m_list; }
 HImgList& CList::Handle (void)       { return this->m_list; }
@@ -421,10 +421,10 @@ err_code CCache::Append(const t_size& _size, const uint32_t _n_count, const uint
 
 TError&  CCache::Error (void) const { return this->m_error; }
 // https://en.cppreference.com/w/cpp/container/map/contains.html ;
-const bool CCache::Has (const dword _n_id) const { return (!!_n_id && this->m_lists.find(_n_id) != this->m_lists.end()); }
+const bool CCache::Has (const dword_t _n_id) const { return (!!_n_id && this->m_lists.find(_n_id) != this->m_lists.end()); }
 const bool CCache::Has (const t_size& _size) const { return this->Has(CListId::ToDword(_size)); }
 const
-CList&  CCache::List (const dword _n_id) const {
+CList&  CCache::List (const dword_t _n_id) const {
 	_n_id;
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -438,7 +438,7 @@ CList&  CCache::List (const dword _n_id) const {
 	}
 }
 
-CList&  CCache::List (const dword _n_id) {
+CList&  CCache::List (const dword_t _n_id) {
 	_n_id;
 	this->m_error <<__METHOD__<<__s_ok;
 

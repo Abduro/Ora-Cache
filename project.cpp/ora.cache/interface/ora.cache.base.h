@@ -14,7 +14,7 @@ namespace ora { namespace cache {
 
 	using namespace shared::types;
 	using CError  = shared::sys_core::CError;
-	using d_word  = dword ;  // ToDo: typedefs and usings must be made coincident with shared::types;
+	using d_word  = dword_t ;  // ToDo: typedefs and usings must be made coincident with shared::types;
 }}               		
 
 #endif/*_ORA_CACHE_BASE_H_INCLUDED*/

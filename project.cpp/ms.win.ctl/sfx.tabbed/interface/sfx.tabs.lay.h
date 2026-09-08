@@ -93,11 +93,21 @@ namespace layout {
 			bool     Is_horz (void) const;
 			bool     Is_vert (void) const;
 
+			static e_orient DwordToEnum (const dword_t);
+
 		private:
 			CCaps& operator = (const CCaps&) = delete; CCaps& operator = (CCaps&&) = delete;
 			e_orient m_orient;
 		};
-
+		/* The tab size consists of height and width with specific values. And it is dependable on what side a ribbon is:
+		   on left/right side:        ; on the top/bottom side: 
+		                      ||                       +-------+   
+		                  +---++---+                 H |   W   |   
+		                W |        | W              ---+       +---
+		                  |        |                ---+       +---
+		                  +---++---+                 H |   W   |   
+		                    H || H                     +-------+   , where 'H' is a height and 'W' is a width of a tab;
+		*/
 		class CSize {
 		public:
 			class CHeight {
@@ -107,7 +117,11 @@ namespace layout {
 				uint32_t Get (void) const;            // gets a hight of each tab which is supposed to be the same for all tabs;
 				bool     Set (const uint32_t _value); // sets a height of all tabs; returns 'true' in case if the height value is changed;
 
-				uint32_t Total (void) const;          // returns total height of all tabs;
+				bool  Is_valid (void) const;
+				uint32_t Total (void) const;          // returns total height of all tabs; it is dependable from caption text orientation;
+
+				static uint32_t Max (void);
+				static uint32_t Min (void);
 
 			private:
 				CHeight& operator = (const CHeight&) = delete; CHeight& operator = (CHeight&&) = delete;
@@ -122,7 +136,11 @@ namespace layout {
 				uint32_t Get (void) const;            // gets a width of each tab which is supposed to be the same for all tabs;
 				bool     Set (const uint32_t _value); // sets a width for all tabs the same;
 
-				uint32_t Total (void) const;          // returns total width of all tabs;
+				bool  Is_valid (void) const;
+				uint32_t Total (void) const;          // returns total width of all tabs; it is dependable from caption text orientation;
+
+				static uint32_t Max (void);
+				static uint32_t Min (void);
 
 			private:
 				CWidth& operator = (const CWidth&) = delete; CWidth& operator = (CWidth&&) = delete;
@@ -131,12 +149,15 @@ namespace layout {
 			};
 			CSize (TabCtrl&); CSize (void) = delete; CSize (const CSize&) = delete; CSize (CSize&&) = delete; ~CSize (void) = default;
 
+			void Default (void);                      // sets default values for height and width of this size; 
 			const
-			CHeight& Hight (void) const;
-			CHeight& Hight (void) ;
+			CHeight& Height (void) const;
+			CHeight& Height (void) ;
 			const
 			CWidth&  Width (void) const;
 			CWidth&  Width (void) ;
+
+			bool Set (const uint32_t _width, const uint32_t _height); // is used by setting values from the regestry;
 
 		private:
 			CSize& operator = (const CSize&) = delete; CSize& operator = (CSize&&) = delete;

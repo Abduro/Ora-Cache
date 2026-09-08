@@ -164,7 +164,7 @@ UINT          CBitmapInfo::ID    (void) const { return m_UID; }
 bool          CBitmapInfo::Is    (void) const { return CBitmapInfo::IsValid(m_handle); }
 TBmpInfo      CBitmapInfo::Raw   (void) const {
 
-	const dword n_size = static_cast<dword>(((TBase::bmWidth * TBase::bmBitsPixel + 31) / 32) * 4 * TBase::bmHeight);
+	const dword_t n_size = static_cast<dword_t>(((TBase::bmWidth * TBase::bmBitsPixel + 31) / 32) * 4 * TBase::bmHeight);
 
 	TBmpInfo bmp_info = {
 		{sizeof(TBmpInfo), TBase::bmWidth, TBase::bmHeight, 1, TBase::bmBitsPixel, BI_RGB, n_size, 0, 0, 0, 0}, // header;

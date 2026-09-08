@@ -25,7 +25,7 @@ namespace shared { namespace types {
 	typedef _GUID     _guid ;   // https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid ;
 	typedef BOOL      _bool ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
 	typedef BYTE      _byte ;
-	typedef DWORD     dword ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
+	typedef DWORD    dword_t;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
 	typedef HANDLE    handle;   // for using in shared.mem project;
 	typedef HGLOBAL   global;   // for using in shared.mem project;
 	typedef HRESULT err_code;   // https://en.wikipedia.org/wiki/err_code ;

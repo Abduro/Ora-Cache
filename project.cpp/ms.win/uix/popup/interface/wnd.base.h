@@ -65,7 +65,7 @@ namespace ex_ui { namespace popup {
 #elif (true != false)
 		// https://learn.microsoft.com/en-us/cpp/atl/reference/window-class-macros ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw ;
-		static const dword u_style = CS_DBLCLKS; // no CS_HREDRAW | CS_VREDRAW, otherwise the entire client area is erased on window resize;
+		static const dword_t u_style = CS_DBLCLKS; // no CS_HREDRAW | CS_VREDRAW, otherwise the entire client area is erased on window resize;
 		DECLARE_WND_CLASS_EX(__CLASS__, u_style, COLOR_ACTIVECAPTION); // does not work; window background still be as default and flashes on window create;
 #else
 		static ATL::CWndClassInfo& GetWndClassInfo(void); // this does not work due to the only one window class can be registered by the app that uses ATL;

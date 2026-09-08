@@ -38,7 +38,7 @@ namespace shared { namespace sys_core { namespace shell {
 	public:
 		const
 		TCertInfo&Cert (void) const;
-		dword     Id   (void) const ;
+		dword_t     Id   (void) const ;
 		bool      Is   (void) const ;   // is true when ID and path are valid, i.e. ID is not zero and process path is not empty;
 		_pc_sz    Name (void) const ;   // this is just executable name;
 		_pc_sz    Path (void) const ;   // this is full path to executable binary file;
@@ -53,14 +53,14 @@ namespace shared { namespace sys_core { namespace shell {
 		CProcess& operator = (const CProcess&);
 		CProcess& operator = (CProcess&&) = delete;
 		CProcess& operator <<(const TCertInfo&);
-		CProcess& operator <<(dword _dw_id);    // no error check is performed when this attribute is set to given value;
+		CProcess& operator <<(dword_t _dw_id);    // no error check is performed when this attribute is set to given value;
 		CProcess& operator <<(_pc_sz _name);    // no error check is performed when this attribute is set to given value;
 		CProcess& operator >>(_pc_sz _path);    // no error check is performed when this attribute is set to given value;
 
 		CProcess& operator <<(const TModules&); // input data does not have a lot of modules/dlls for one process;
 
 	private:
-		dword     m_id  ;
+		dword_t     m_id  ;
 		CString   m_name;
 		CString   m_args;
 		CString   m_path;
@@ -68,7 +68,7 @@ namespace shared { namespace sys_core { namespace shell {
 		TModules  m_dlls; // is not used yet;
 	};
 
-	typedef ::std::map<dword, CProcess> TProc_map; // a key is process ID, a value - a process instance;
+	typedef ::std::map<dword_t, CProcess> TProc_map; // a key is process ID, a value - a process instance;
 	typedef ::std::vector<CProcess> TRaw_List;
 
 	class CProcess_List {

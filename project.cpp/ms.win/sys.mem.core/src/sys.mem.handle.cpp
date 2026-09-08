@@ -223,7 +223,7 @@ err_code THandle::Is (const handle _handle) {
 	if (!_handle || __inv_handle_val == _handle)
 		return (n_result = TErrCodes::eObject::eHandle);
 	// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-gethandleinformation ;
-	dword dw_flags = 0;
+	dword_t dw_flags = 0;
 	if (!::GetHandleInformation(_handle, &dw_flags))
 		n_result = __LastErrToHresult();
 
@@ -237,7 +237,7 @@ using namespace shared::sys_core::_impl;
 
 /////////////////////////////////////////////////////////////////////////////
 #if (0)
-CAutoHandleArray:: CAutoHandleArray(const dword dwSize) : m_handles(NULL), m_size(0)
+CAutoHandleArray:: CAutoHandleArray(const dword_t dwSize) : m_handles(NULL), m_size(0)
 {
 	m_error.Reset();
 	if (dwSize)
@@ -268,7 +268,7 @@ CAutoHandleArray::~CAutoHandleArray(void)
 TErrorRef  CAutoHandleArray::Error  (void)const { return m_error; }
 bool       CAutoHandleArray::Is     (void)const { return (NULL != m_handles && m_size); }
 PHANDLE    CAutoHandleArray::Handles(void)const { return m_handles; }
-dword      CAutoHandleArray::Size   (void)const { return m_size; }
+dword_t      CAutoHandleArray::Size   (void)const { return m_size; }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -351,7 +351,7 @@ VOID       CHandleSafe::Reset(void)
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 #if (0)
-CStdHandle:: CStdHandle(const dword _handle_type) : THandle(), m_std_type(_handle_type) { m_error >> __CLASS__ << __METHOD__; 
+CStdHandle:: CStdHandle(const dword_t _handle_type) : THandle(), m_std_type(_handle_type) { m_error >> __CLASS__ << __METHOD__; 
 	switch (m_std_type) {
 	case STD_OUTPUT_HANDLE: { THandle::m_value = ::GetStdHandle(m_std_type); } break;
 	case STD_ERROR_HANDLE : { THandle::m_value = ::GetStdHandle(m_std_type); } break;
@@ -374,7 +374,7 @@ HRESULT   CStdHandle::Close(void) {
 	return m_error;
 }
 TErrorRef CStdHandle::Error(void) const { return m_error; }
-dword     CStdHandle::Type (void) const { return m_std_type; }
+dword_t     CStdHandle::Type (void) const { return m_std_type; }
 
 /////////////////////////////////////////////////////////////////////////////
 
