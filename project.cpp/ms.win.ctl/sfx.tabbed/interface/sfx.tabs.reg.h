@@ -44,11 +44,53 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 		CError   m_error;
 		TabCtrl* m_p_ctrl;
 	};
-}
-	using namespace ::ex_ui::controls;
-	using TabCtrl = ::ex_ui::controls::sfx::tabbed::CControl;
 
-	class CPersistent : public storage::CBase { typedef storage::CBase TBase;
+	class CPage : public CBase { typedef CBase TBase;
+	public:
+		class CBorders : public CBase { typedef CBase TBase;
+		public:
+			CBorders (void); CBorders (const CBorders&) = delete; CBorders (CBorders&&) = delete; ~CBorders (void) = default;
+
+			err_code  Load (void);
+			err_code  Save (void);
+		};
+		CPage (void); CPage (const CPage&) = delete; CPage (CPage&&) = delete; ~CPage (void) = default;
+
+		const
+		CBorders& Borders (void) const;
+		CBorders& Borders (void) ;
+
+		err_code  Load (void);
+		err_code  Save (void);
+
+	private:
+		CBorders m_borders;
+	};
+
+	class CRibbon : public CBase { typedef CBase TBase;
+	public:
+		class CSide : public CBase { typedef CBase TBase;
+		public:
+			CSide (void); ~CSide (void) = default;
+
+			err_code Load (void);
+			err_code Save (void);
+		};
+		CRibbon (void); CRibbon (const CRibbon&) = delete; CRibbon (CRibbon&&) = delete; ~CRibbon (void) = default;
+
+		err_code Load (void);
+		err_code Save (void);
+		const
+		CSide&  LocatedOn (void) const;
+		CSide&  LocatedOn (void) ;
+
+		CRibbon& operator <<(TabCtrl*);
+
+	private:
+		CSide m_side_on;
+	};
+
+	class CTabs : public CBase { typedef CBase TBase;
 	public:
 		class CActive : public storage::CBase { typedef storage::CBase TBase;
 		public:
@@ -57,6 +99,7 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 			err_code Load (void);
 			err_code Save (void);
 		};
+
 		class CAlign : public storage::CBase { typedef storage::CBase TBase;
 		public:
 			CAlign (void); ~CAlign (void) = default;
@@ -73,14 +116,6 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 			err_code Save (void);
 		};
 
-		class CSide : public storage::CBase { typedef storage::CBase TBase;
-		public:
-			CSide (void); ~CSide (void) = default;
-
-			err_code Load (void);
-			err_code Save (void);
-		};
-
 		class CSize : public storage::CBase { typedef storage::CBase TBase;
 		public:
 			CSize (void); ~CSize (void) = default;
@@ -89,10 +124,59 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 			err_code Save (void);
 		};
 
+		CTabs (void); CTabs (const CTabs&) = delete; CTabs (CTabs&&) = delete; ~CTabs (void) = default;
+
+		const
+		CActive& Active (void) const;
+		CActive& Active (void) ;
+		const
+		CAlign& Align (void) const;
+		CAlign& Align (void) ;
+		const
+		CCaption& Caption (void) const;
+		CCaption& Caption (void) ;
+
+		err_code Load (void);
+		err_code Save (void);
+
+		const
+		CSize& Size (void) const;
+		CSize& Size (void) ;
+
+		CTabs& operator <<(TabCtrl*);
+
+	private:
+		CActive  m_active;
+		CAlign   m_align ;
+		CCaption m_caption;
+		CSize    m_size  ;
+	};
+}
+	using namespace ::ex_ui::controls;
+	using TabCtrl = ::ex_ui::controls::sfx::tabbed::CControl;
+
+	class CPersistent : public storage::CBase { typedef storage::CBase TBase;
+	public:
+		using CRibbon = storage::CRibbon;
+		using CTabs = storage::CTabs;
+
 		CPersistent (void); ~CPersistent (void) = default;
 
 		err_code Load (void);
 		err_code Save (void);
+
+		const
+		CRibbon& Ribbon (void) const;
+		CRibbon& Ribbon (void) ;
+		const
+		CTabs& Tabs (void) const;
+		CTabs& Tabs (void) ;
+
+		CPersistent& operator <<(TabCtrl*);
+
+	private:
+		CRibbon m_ribbon;
+		CTabs   m_tabs;
 	};
 }}}
 

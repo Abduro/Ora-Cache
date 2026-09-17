@@ -24,7 +24,7 @@ err_code CPages::At_1st(void) {
 //	tabbed.Layout().Tabs().LocatedOn(TSide::e_bottom);
 //	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eRight;
 
-	static t_char* p_titles[cfg::u_page_count] = {_T("DirectX"), _T("GDI++"), _T("OpenGL")};
+	static t_char* p_titles[cfg::u_page_count] = {_T("Test #1"), _T("Test #2"), _T("Test #3")};
 
 	for (uint16_t i_ = 0; i_ < _countof(p_titles); i_++) {
 		this->m_error << tabbed.Tabs().Append(TString().Format(p_titles[i_], (i_ + 1))); if (this->Error()) { break; }

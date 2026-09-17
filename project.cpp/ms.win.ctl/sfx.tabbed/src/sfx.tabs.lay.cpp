@@ -134,8 +134,8 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		*/
 		// this is the points of the tab strip:
 		CPoint a_(rc_strip.left , rc_strip.bottom - u_thick);
-		CPoint b_(rc_strip.left , rc_strip.top + u_thick);
-		CPoint c_(rc_strip.right, rc_strip.top + u_thick);
+		CPoint b_(rc_strip.left , rc_strip.top /*+ u_thick*/);
+		CPoint c_(rc_strip.right, rc_strip.top /*+ u_thick*/);
 		CPoint h_(rc_strip.right, rc_strip.bottom - u_thick);
 
 		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
@@ -304,7 +304,7 @@ err_code CRibbon::Update(const rect_t& _rc_area) {
 	if (this->m_sides.IsVert()) { // tabs reside in vertical line;
 		if (TVertAlign::eBottom == this->Tabs().Align().Vert().Value()) {
 			long_t n_bottom = this->m_rect.bottom;
-			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; 0 <= i_; i_--) {
 				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
 				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_bottom; n_bottom -= this->Tabs().Size().Width().Get();
 				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
@@ -312,7 +312,7 @@ err_code CRibbon::Update(const rect_t& _rc_area) {
 		}
 		else if (TVertAlign::eMiddle == this->Tabs().Align().Vert().Value()) {
 			long_t n_bottom = this->m_rect.bottom - (__H(this->m_rect) - this->Tabs().Size().Width().Total()) / 2;
-			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
+			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
 				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
 				this->m_ctrl.Tabs().Tab(i_).Strip().bottom  = n_bottom; n_bottom -= this->Tabs().Size().Width().Get();
 				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_bottom;
@@ -320,7 +320,7 @@ err_code CRibbon::Update(const rect_t& _rc_area) {
 		}
 		else {
 			long_t n_top = this->m_rect.top;
-			for (int16_t i_ = this->m_ctrl.Tabs().Count() - 1; -1 < i_; i_--) {
+			for (int16_t i_ = 0; i_ < this->m_ctrl.Tabs().Count(); i_++) {
 				this->m_ctrl.Tabs().Tab(i_).Strip() = this->m_rect;
 				this->m_ctrl.Tabs().Tab(i_).Strip().top = n_top; n_top += this->Tabs().Size().Width().Get();
 				this->m_ctrl.Tabs().Tab(i_).Strip().bottom = n_top;
@@ -463,12 +463,15 @@ CTabWidth& CTabSize::Width (void)       { return this->m_width;  }
 bool CTabSize::Set (const uint32_t _w, const uint32_t _h) {
 	_w; _h;
 	bool b_changed = false;
+#if (0)
 	const uint32_t w_ = (CTabWidth::Min() < _w ? CTabWidth::Min() : (CTabWidth::Max() < _w ? CTabWidth::Max() : _w));
 	const uint32_t h_ = (CTabHight::Min() < _h ? CTabHight::Min() : (CTabHight::Max() < _h ? CTabHight::Max() : _h));
-
+#else
+	const uint32_t w_ = 0 == _w ? CTabWidth::Min() : _w;
+	const uint32_t h_ = 0 == _h ? CTabHight::Min() : _h;
+#endif
 	if (this->Height().Set(h_)) b_changed = true;
 	if (this->Width().Set(w_)) b_changed = true;
-
 	return b_changed;
 }
 

@@ -823,15 +823,16 @@ err_code   CTextOut::Recalc_anchor (void) {
 
 	if (::IsRectEmpty(&this->Out_to()))
 		return n_result = __e_rect;
-	// ToDo: using 2D::rect may be is better, but not for this time;
-	this->Anchor().x = this->Out_to().left + __W(this->Out_to())/2;
-	this->Anchor().y = this->Out_to().top  + __H(this->Out_to())/2;
+
+	this->Anchor().x = TBase::Out_to().left + __W(TBase::Out_to())/2;
+	this->Anchor().y = TBase::Out_to().top  + __H(TBase::Out_to())/2;
 
 	if (nullptr != this->Ctx()) {
 		t_size size = {0};
 		// the required font must be selected into device; otherwize the default font will be applied for the string size calculation;
 		if (::GetTextExtentPoint32(this->Ctx(), (_pc_sz) this->Text(), this->Text().GetLength(), &size)) {
-
+		//	this->Anchor().x -= size.cx / 2; // needs to review font horizontal alignment;
+			this->Anchor().y -= size.cy / 2;
 		}
 		else 
 			n_result = __LastErrToHresult();

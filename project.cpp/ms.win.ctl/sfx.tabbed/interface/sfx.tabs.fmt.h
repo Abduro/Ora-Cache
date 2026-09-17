@@ -19,35 +19,55 @@ namespace format {
 
 	class CColor {
 	public:
-		 CColor (void); CColor (const CColor&) = delete; CColor (CColor&&) = delete;
-		~CColor (void);
+		 CColor (void) = default; CColor (const CColor&) = default; CColor (CColor&&) = delete;
+		~CColor (void) = default;
 
 		rgb_color Get  (const TStateValue) const;
 
-	public:
 		rgb_color Disabled (void) const;
 		rgb_color Normal   (void) const;
 		rgb_color Selected (void) const;
 
-	public:
-		CColor& operator = (const CColor&) = delete;
+		CColor& operator = (const CColor&) = default;
 		CColor& operator = (CColor&&) = delete;
 	};
 
 	class CBorder {
 	public:
-		 CBorder (void); CBorder (const CBorder&) = delete; CBorder (CBorder&&) = delete;
+		 CBorder (void); CBorder (const CBorder&); CBorder (CBorder&&) = delete;
 		~CBorder (void);
-	public:
 		const
 		CColor&  Color (void) const;
 		CColor&  Color (void) ;
 
-	public:
-		CBorder& operator = (const CBorder&) = delete;
-		CBorder& operator = (CBorder&&) = delete;
+		uint8_t  Thickness (void) const;
+		bool     Thickness (const uint8_t);  // returns 'true' in case of thickness value is changed;
+
+		CBorder& operator = (const CBorder&);
+		CBorder& operator <<(const CColor&);
+		CBorder& operator <<(uint8_t _u_thick);
+
 	private:
-		CColor m_color;
+		CBorder& operator = (CBorder&&) = delete;
+		CColor   m_color;
+		uint8_t  m_thick;  // equals to 1px by default, because in the most cases the border should exist, otherwise, its thickness is specified intentionly;
+	};
+
+	class CPage {
+	public:
+		 CPage (void); CPage (const CPage&); CPage (CPage&&) = delete;
+		~CPage (void) = default;
+
+		const
+		CBorder& Border (void) const;
+		CBorder& Border (void) ;
+
+		CPage&  operator = (const CPage&);
+		CPage&  operator <<(const CBorder&);
+
+	private:
+		CPage&  operator = (CPage&&) = delete;
+		CBorder m_border;
 	};
 }
 	using format::TBorderAssoc;
@@ -59,9 +79,9 @@ namespace format {
 		~CFormat (void);
 
 	public:
-		const
-		format::CBorder&  Border (void) const;
-		void      Default(void);
+		const format::CBorder& Border (void) const;
+
+		void      Default (void);
 	
 	private:
 		CFormat&  operator = (const CFormat&) = delete;

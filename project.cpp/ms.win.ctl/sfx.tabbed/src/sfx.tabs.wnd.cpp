@@ -8,7 +8,13 @@
 using namespace ex_ui::controls::sfx::tabbed;
 using namespace ex_ui::message::handlers::mouse::buttons;
 
-/////////////////////////////////////////////////////////////////////////////
+#ifndef __H
+#define __H(rc) (rc.bottom - rc.top)
+#endif
+
+#ifndef __W
+#define __W(rc) (rc.right - rc.left)
+#endif
 
 CWnd:: CWnd(CControl& _ctrl) : TWindow(), m_ctrl(_ctrl) {
 	TWindow::Handlers().Draw().Subscribe (this); TWindow::Handlers().Live().Subscribe(this);
@@ -116,13 +122,19 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 				rect_t rc_tab = tab_.Strip();
 				if (this->m_ctrl.Layout().Ribbon().Sides().Selected() == TSide::e_left ) rc_tab.right -= 10;
 				if (this->m_ctrl.Layout().Ribbon().Sides().Selected() == TSide::e_right) rc_tab.left  += 10;
-				::ex_ui::draw::memory::CFont_Selector selector (z_buffer, this->m_font_vert.Handle());
-				text << rc_tab;
+
+				if (__W(rc_tab) > __H(rc_tab)) {
+					::ex_ui::draw::memory::CFont_Selector selector (z_buffer, this->m_font.Handle());
+					text << rc_tab;
+					z_buffer.Draw(text, this->m_font.Handle(), 0);
+				} else {
+					::ex_ui::draw::memory::CFont_Selector selector (z_buffer, this->m_font_vert.Handle());
+					text << rc_tab;
+					z_buffer.Draw(text, this->m_font_vert.Handle(), 0);
+				}
 			}
-			z_buffer.Draw(text, this->m_font_vert.Handle(), 0);
 		}
 	}
-
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd ;
 	// this message is handled; the handlers of the most windows messages returns 0 to indicate the message is handled,
 	// but erase background requires not zero value for doing that;
