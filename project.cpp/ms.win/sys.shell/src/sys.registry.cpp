@@ -162,7 +162,7 @@ const
 CRegKey_Ex::CCache& CRegKey_Ex::CValue::Cache (void) const { return this->m_cache; }
 CRegKey_Ex::CCache& CRegKey_Ex::CValue::Cache (void)       { return this->m_cache; }
 
-uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
+dword_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
 	_p_name;
 	if (nullptr == m_the_key()){
 		m_the_key.m_error <<__METHOD__<< __e_not_inited; return 0u;
@@ -180,7 +180,7 @@ uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
 		return static_cast<uint32_t>(d_value);
 }
 
-uint32_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_key_path, _pc_sz _p_name) {
+dword_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_key_path, _pc_sz _p_name) {
 	_p_key_path; _p_name;
 	m_the_key[(long)0] <<__METHOD__<<__s_ok; // not readable assignment to error object;
 	
@@ -299,7 +299,7 @@ err_code CRegKey_Ex::CValue::SetLong (_pc_sz _p_key_path, _pc_sz _p_name, const 
 	return this->Set(_p_key_path, _p_name, TString().Long(_u_value));
 }
 
-err_code CRegKey_Ex::CValue::Set (const uint32_t _u_value) {
+err_code CRegKey_Ex::CValue::Set (const dword_t _u_value) {
 	_u_value;
 	m_the_key.m_error <<__METHOD__<<__s_ok;
 
@@ -309,7 +309,7 @@ err_code CRegKey_Ex::CValue::Set (const uint32_t _u_value) {
 	return this->Set((*this)().Path(), (*this)().Name(), _u_value);
 }
 
-err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value) {
+err_code CRegKey_Ex::CValue::Set (_pc_sz _p_key_path, _pc_sz _p_name, const dword_t _u_value) {
 	_p_key_path; _p_name; _u_value;
 	m_the_key.m_error <<__METHOD__<<__s_ok;
 	if (nullptr == _p_key_path || 0 == ::_tcslen(_p_key_path)) { return m_the_key.m_error << __e_inv_arg = p_err_inv_path; }

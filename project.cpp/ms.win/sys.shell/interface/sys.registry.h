@@ -81,8 +81,8 @@ namespace shared { namespace sys_core { namespace storage {
 			CCache& Cache (void) const;
 			CCache& Cache (void) ;
 
-			uint32_t GetDword (_pc_sz _p_name);
-			uint32_t GetDword (_pc_sz _p_key_path, _pc_sz _p_name);
+			dword_t GetDword (_pc_sz _p_name);
+			dword_t GetDword (_pc_sz _p_key_path, _pc_sz _p_name);
 
 			long GetLong (_pc_sz _p_name);
 			long GetLong (_pc_sz _p_key_path, _pc_sz _p_name);
@@ -95,8 +95,8 @@ namespace shared { namespace sys_core { namespace storage {
 			err_code Set (_pc_sz _p_value);
 			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, _pc_sz _p_value);
 
-			err_code Set (const uint32_t _u_value); // it is assumed the value name and key path are already set to the cache;
-			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, const uint32_t _u_value);
+			err_code Set (const dword_t _u_value); // it is assumed the value name and key path are already set to the cache;
+			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, const dword_t _u_value);
 
 			err_code SetLong (const long _u_value);
 			err_code SetLong (_pc_sz _p_key_path, _pc_sz _p_name, const long _u_value);

@@ -28,7 +28,7 @@ err_code CPages::At_1st(void) {
 
 	for (uint16_t i_ = 0; i_ < _countof(p_titles); i_++) {
 		this->m_error << tabbed.Tabs().Append(TString().Format(p_titles[i_], (i_ + 1))); if (this->Error()) { break; }
-		tabbed.Tabs().Tab(i_).Page().Borders().Thickness(cfg::u_border_thick);
+		tabbed.Tabs().Tab(i_).Page().Borders().Weight(cfg::u_border_thick);
 	}
 
 	this->Trackers().At_1st(); // no error check yet;

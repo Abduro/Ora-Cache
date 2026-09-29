@@ -134,9 +134,9 @@ err_code CTabsAlign::Save (void) {
 #pragma endregion
 #pragma region cls::CBorders{}
 
-using CPgBorders = ::ex_ui::controls::tabbed::storage::CPage::CBorders;
+using CPgBorders = ::ex_ui::controls::tabbed::storage::CPages::CBorders;
 
-CPgBorders::CBorders (void) : TBase() { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
+CPgBorders::CBorders (void) : TBase(), m_weight(0) { TBase::m_error >>TString().Format(_T("%s::%s"), (_pc_sz)CPersBase::Class(), (_pc_sz)__CLASS__); }
 
 err_code CPgBorders::Load (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
@@ -144,10 +144,35 @@ err_code CPgBorders::Load (void) {
 		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	dword_t brd_thick = reg_key.Value().GetDword(CPage_router().Borders(m_p_ctrl->Id()), CPage_router::p_pg_brd_val); brd_thick;
+	this->m_weight = reg_key.Value().GetDword(CPage_router().Borders(m_p_ctrl->Id()), CPage_router::p_pg_brd_val);
+
+	for (uint16_t i_ = 0; i_ < TBase::m_p_ctrl->Tabs().Count(); i_++) {
+		TBase::m_p_ctrl->Tabs().Tab(i_).Page().Borders().Weight(static_cast<uint8_t>(this->m_weight));
+	}
 
 	return TBase::Error();
 }
+
+err_code CPgBorders::Save (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	TRegKeyEx reg_key;
+	if (__failed(reg_key.Value().Set(CPage_router().Borders(m_p_ctrl->Id()), CPage_router::p_pg_brd_val, this->Weight())))
+		TBase::m_error = reg_key.Error();
+
+	return TBase::Error();
+}
+
+dword_t  CPgBorders::Weight (void) const { return this->m_weight; }
+bool     CPgBorders::Weight (const dword_t _value) {
+	const bool b_changed = this->Weight() != _value; if (b_changed) this->m_weight = _value; return b_changed;
+}
+
+CPgBorders& CPgBorders::operator << (TabCtrl* _p_ctrl) { (TBase&)*this << _p_ctrl; return *this; }
+CPgBorders& CPgBorders::operator << (const dword_t _weight) { this->Weight(_weight); return *this; }
+CPgBorders& CPgBorders::operator >> (dword_t& _out) { _out = this->Weight(); return *this; }
 
 #pragma endregion
 #pragma region cls::CCaption{}
@@ -177,7 +202,8 @@ err_code CTabsCap::Save (void) {
 		return TBase::m_error << __e_pointer = p_err_ptr;
 
 	TRegKeyEx reg_key;
-	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_cap_orient, this->m_p_ctrl->Layout().Ribbon().Tabs().Caps().Get_orient()))) TBase::m_error = reg_key.Error();
+	if (__failed(reg_key.Value().Set(CRoot().Path(m_p_ctrl->Id()), p_cap_orient, this->m_p_ctrl->Layout().Ribbon().Tabs().Caps().Get_orient())))
+		TBase::m_error = reg_key.Error();
 
 	return TBase::Error();
 }
@@ -202,6 +228,37 @@ _pc_sz  CRoot::Path (const uint32_t _ctrl_id) const {
 const
 CRoot_ctrl& CRoot::operator ()(void) const { return (TBase&)*this; }
 CRoot_ctrl& CRoot::operator ()(void)       { return (TBase&)*this; }
+
+#pragma endregion
+#pragma region cls::CPages{}
+
+using CTabPages = ::ex_ui::controls::tabbed::storage::CPages;
+
+CTabPages::CPages (void) : TBase() {}
+const
+CPgBorders& CTabPages::Borders (void) const { return this->m_borders; }
+CPgBorders& CTabPages::Borders (void)       { return this->m_borders; }
+
+err_code CTabPages::Load (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	if (__failed(this->Borders().Load())) return TBase::m_error = this->Borders().Error();
+
+	return TBase::Error();
+}
+err_code CTabPages::Save (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+	if (false == (*this)())
+		return TBase::m_error << __e_pointer = p_err_ptr;
+
+	if (__failed(this->Borders().Save())) return TBase::m_error = this->Borders().Error();
+
+	return TBase::Error();
+}
+
+CTabPages& CTabPages::operator <<(TabCtrl* _p_ctrl) { (TBase&)(*this) << _p_ctrl; this->Borders() << _p_ctrl;  return *this; }
 
 #pragma endregion
 #pragma region cls::CPersistent{}
@@ -365,6 +422,7 @@ err_code CPersTabs::Load (void) {
 	if (__failed(this->Active().Load()))  return TBase::m_error = this->Active().Error();
 	if (__failed(this->Align().Load()))   return TBase::m_error = this->Align().Error();
 	if (__failed(this->Caption().Load())) return TBase::m_error = this->Caption().Error();
+//	if (__failed(this->Pages().Load()))   return TBase::m_error = this->Pages().Error();
 	if (__failed(this->Size().Load()))    return TBase::m_error = this->Size().Error();
 
 	return TBase::Error();
@@ -377,17 +435,24 @@ err_code CPersTabs::Save (void) {
 	if (__failed(this->Active().Save()))  return TBase::m_error = this->Active().Error();
 	if (__failed(this->Align().Save()))   return TBase::m_error = this->Align().Error();
 	if (__failed(this->Caption().Save())) return TBase::m_error = this->Caption().Error();
+	if (__failed(this->Pages().Save()))   return TBase::m_error = this->Pages().Error();
 	if (__failed(this->Size().Save()))    return TBase::m_error = this->Size().Error();
 
 	return TBase::Error();
 }
 
 const
+CTabPages& CPersTabs::Pages (void) const { return this->m_pages; }
+CTabPages& CPersTabs::Pages (void)       { return this->m_pages; }
+
+const
 CTabSize& CPersTabs::Size (void) const { return this->m_size; }
 CTabSize& CPersTabs::Size (void)       { return this->m_size; }
 
 CPersTabs& CPersTabs::operator <<(TabCtrl* _p_ctrl) {
-	(TBase&)(*this) <<_p_ctrl; this->Active() << _p_ctrl; this->Align() << _p_ctrl; this->Caption() << _p_ctrl; this->Size() << _p_ctrl; return *this;
+	(TBase&)(*this) <<_p_ctrl;
+	this->Active() << _p_ctrl;
+	this->Align()  << _p_ctrl; this->Caption() << _p_ctrl; this->Pages() << _p_ctrl; this->Size() << _p_ctrl; return *this;
 }
 
 #pragma endregion

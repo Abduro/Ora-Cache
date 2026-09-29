@@ -84,7 +84,13 @@ namespace ex_ui { namespace controls { namespace borders {
 		TRawBorders& Raw (void) const;
 		TRawBorders& Raw (void) ;
 
-		bool   Thickness (const uint8_t); // sets the same thickness to all borders; returns 'true' in case of thickness value at least of one border is changed;
+		enum e_approx : uint32_t {
+		e_min = 0,
+		e_max = 1,
+		};
+
+		bool    Weight (const uint8_t); // sets the same thickness to all borders; returns 'true' in case of thickness value at least of one border is changed;
+		uint8_t Weight (const e_approx = e_approx::e_max) const; // gets min or max weight of the borders of this set; 
 		
 	public:
 		CSet& operator = (const CSet&);

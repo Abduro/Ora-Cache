@@ -34,7 +34,7 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 		_pc_sz   Class (void);
 
 		TError&  Error (void) const;
-		bool  Is_valid (void) const;
+		bool  Is_valid (void) const; // returns 'true' in case if tab control pointer is set;
 
 		CBase&   operator <<(TabCtrl*);
 		bool     operator ()(void) const;
@@ -45,7 +45,7 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 		TabCtrl* m_p_ctrl;
 	};
 
-	class CPage : public CBase { typedef CBase TBase;
+	class CPages : public CBase { typedef CBase TBase;
 	public:
 		class CBorders : public CBase { typedef CBase TBase;
 		public:
@@ -53,8 +53,18 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 
 			err_code  Load (void);
 			err_code  Save (void);
+
+			dword_t   Weight (void) const;     // returns a cached line thickness value;
+			bool      Weight (const dword_t);  // returns 'true' in case when a line thickness is changed;
+
+			CBorders& operator <<(TabCtrl*);
+			CBorders& operator << (const dword_t _weight);  // sets the current value of these borders' weight (thickness);
+			CBorders& operator >> (dword_t& _out);          // returns the current cached value of these borders' weight / thickness value;
+
+		private:
+			dword_t   m_weight;
 		};
-		CPage (void); CPage (const CPage&) = delete; CPage (CPage&&) = delete; ~CPage (void) = default;
+		CPages (void); CPages (const CPages&) = delete; CPages (CPages&&) = delete; ~CPages (void) = default;
 
 		const
 		CBorders& Borders (void) const;
@@ -62,6 +72,8 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 
 		err_code  Load (void);
 		err_code  Save (void);
+
+		CPages& operator <<(TabCtrl*);
 
 	private:
 		CBorders m_borders;
@@ -140,6 +152,10 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 		err_code Save (void);
 
 		const
+		CPages& Pages (void) const;
+		CPages& Pages (void) ;
+
+		const
 		CSize& Size (void) const;
 		CSize& Size (void) ;
 
@@ -149,6 +165,7 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace storage {
 		CActive  m_active;
 		CAlign   m_align ;
 		CCaption m_caption;
+		CPages   m_pages ;
 		CSize    m_size  ;
 	};
 }

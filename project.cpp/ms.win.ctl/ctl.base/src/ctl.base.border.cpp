@@ -8,14 +8,12 @@
 
 using namespace ex_ui::controls::borders;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::COne{}
 
 COne:: COne (uint32_t _n_id) : TBase() { *this << _n_id; }
 COne:: COne (const COne& _src) : COne() { *this = _src; }
 COne:: COne (COne&& _victim) : COne() { *this = _victim;}
 COne::~COne (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 uint32_t COne::Id (void) const { return this->m_Id; }
 bool     COne::Id (const uint32_t _n_id) {
@@ -60,8 +58,6 @@ CString  COne::Print (const e_print _e_opt) const {
 }
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-
 COne& COne::operator = (const COne& _src) { (TBase&)*this = (const TBase&)_src; *this << _src.Id(); return *this;}
 COne& COne::operator = (COne&& _victim) { *this = (const COne&)_victim; return *this; }
 #if (0)
@@ -69,14 +65,13 @@ COne& COne::operator <<(const CMargin& _margin) { this->Margin() = _margin; retu
 #else
 COne& COne::operator <<(const uint32_t _n_id) { this->Id(_n_id); return *this; }
 #endif
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CSet{}
 
 CSet:: CSet (void) : m_gdi_adv_mode(false) {}
 CSet:: CSet (const CSet& _src) : CSet() { *this = _src; }
 CSet:: CSet (CSet&& _victim) : CSet() { *this= _victim; }
 CSet::~CSet (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 err_code  CSet::Add (const COne& _border) {
 	_border;
@@ -182,7 +177,7 @@ const
 TRawBorders& CSet::Raw (void) const { return this->m_borders; }
 TRawBorders& CSet::Raw (void)       { return this->m_borders; }
 
-bool   CSet::Thickness (const uint8_t _u_value) {
+bool   CSet::Weight (const uint8_t _u_value) {
 	_u_value;
 	bool b_changed = false;
 
@@ -194,7 +189,23 @@ bool   CSet::Thickness (const uint8_t _u_value) {
 	return b_changed;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+uint8_t CSet::Weight (const e_approx _value) const {
+	_value;
+	uint8_t u_weight = 0;
+
+	if (false) { return u_weight; }
+	else if (_value == e_approx::e_min) {
+		for (TRawBorders::const_iterator it_ = this->Raw().begin(); it_ != this->Raw().end(); ++it_) 
+			if ( u_weight > it_->second.Thickness() )
+			     u_weight = it_->second.Thickness();
+	}
+	else if (_value == e_approx::e_max) {
+		for (TRawBorders::const_iterator it_ = this->Raw().begin(); it_ != this->Raw().end(); ++it_) 
+			if ( u_weight < it_->second.Thickness() )
+			     u_weight = it_->second.Thickness();
+	}
+	return u_weight;
+}
 
 CSet&  CSet::operator = (const CSet& _src) { *this << _src.Raw(); return *this;}
 CSet&  CSet::operator = (CSet&& _victim) {
@@ -205,7 +216,7 @@ CSet&  CSet::operator <<(const TRawBorders& _raw) { this->Raw() = _raw; return *
 CSet&  CSet::operator <<(const TRgbQuad& _color) { this->Color(_color); return *this; }
 
 CSet&  CSet::operator <<(const uint8_t _n_thickness) {
-	this->Thickness(_n_thickness); return *this;
+	this->Weight(_n_thickness); return *this;
 }
 
 CSet&  CSet::operator +=(const CBorder& _border) { this->Add(_border); return *this; }
@@ -215,7 +226,8 @@ const
 COne&  CSet::operator [](const uint32_t _n_id) const { return this->Get(_n_id); }
 COne&  CSet::operator [](const uint32_t _n_id)       { return this->Get(_n_id); }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CSet_for_rect{}
 
 CSet_for_rect:: CSet_for_rect (void) : TBase() {
 	TBase::Add(COne(e_sides::e_left  ));
@@ -224,8 +236,6 @@ CSet_for_rect:: CSet_for_rect (void) : TBase() {
 	TBase::Add(COne(e_sides::e_bottom));
 }
 CSet_for_rect::~CSet_for_rect (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 const
 CBorder& CSet_for_rect::Get (const e_sides _e_side) const { return TBase::Get(_e_side); }
@@ -339,3 +349,5 @@ bool  CSet_for_rect::Set (const rect_t& _rect) {
 
 CSet_for_rect& CSet_for_rect::operator <<(const rect_t& _rect) { this->Set(_rect); return *this; }
 CSet_for_rect& CSet_for_rect::operator <<(const uint8_t _n_thickness) { (TBase&)*this << _n_thickness; return *this; }
+
+#pragma endregion
