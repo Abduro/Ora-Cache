@@ -20,44 +20,12 @@ using namespace ex_ui::controls::sfx::tabbed::layout;
 
 CActiveTab:: CActiveTab (CControl& _ctrl) : m_ctrl(_ctrl) {
 	// https://stackoverflow.com/questions/64772928/how-to-initialize-stdmap-by-an-array ;
-	try {
-		this->m_borders.insert(::std::make_pair(_ndx::e_ab, CBorder(_ndx::e_ab)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_bc, CBorder(_ndx::e_bc)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_cd, CBorder(_ndx::e_cd)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_de, CBorder(_ndx::e_de)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_ef, CBorder(_ndx::e_ef)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_fg, CBorder(_ndx::e_fg)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_gh, CBorder(_ndx::e_gh)));
-		this->m_borders.insert(::std::make_pair(_ndx::e_ha, CBorder(_ndx::e_ha)));
-	} catch (const ::std::bad_alloc&){}
-
 }
 CActiveTab::~CActiveTab (void) {}
 
 const
-CBorder&  CActiveTab::Get (const _ndx _n_item) const {
-	_n_item;
-	TRawBorders::const_iterator it_ = this->m_borders.find(_n_item);
-	if (it_ == this->m_borders.end()) {
-		static CBorder $na;
-		return $na;
-	}
-	else
-		return it_->second;
-}
-CBorder&  CActiveTab::Get (const _ndx _n_item) {
-	_n_item;
-	TRawBorders::iterator it_ = this->m_borders.find(_n_item);
-	if (it_ == this->m_borders.end()) {
-		static CBorder $na;
-		return $na;
-	}
-	else
-		return it_->second;
-}
-
-const
-TRawBorders& CActiveTab::Raw (void) const { return this->m_borders; }
+CActiveTab::CBorders& CActiveTab::Borders (void) const { return this->m_borders; }
+CActiveTab::CBorders& CActiveTab::Borders (void)       { return this->m_borders; }
 
 err_code CActiveTab::Set (const rect_t& _rect) {
 	_rect;
@@ -69,10 +37,12 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 	if (0 > n_active)
 		return n_result = __e_inv_arg;
 	const rect_t&  rc_strip = this->m_ctrl.Tabs().Tab(n_active).Strip();
-	const uint8_t  u_thick  = this->m_ctrl.Tabs().Tab(n_active).Page().Borders().Bottom().Thickness(); // it is supposed all borders have the same thickness;
+	const uint8_t  u_thick  = this->m_ctrl.Borders().Bottom().Thickness(); // it is supposed all borders have the same thickness;
 
 	if (::IsRectEmpty(&rc_strip) || 0 == u_thick)
 		return n_result = __e_inv_arg;
+
+	using e_ndx = CActiveTab::CBorders::e_ndx;
 #if (0)
 	const rect_t& rect_ = this->m_ctrl.Layout().Rect();
 #else
@@ -102,22 +72,22 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CPoint c_(rc_strip.left           , rc_strip.top);
 		CPoint h_(rc_strip.right - u_thick, rc_strip.top);
 
-		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_; // the bottom edge of the tab bookmark;
-		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the left edge of the tab bookmark;
-		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the right edge of the tab bookmark;
+		CBorder& ab_ = this->Borders().Get(e_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_; // the bottom edge of the tab bookmark;
+		CBorder& bc_ = this->Borders().Get(e_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the left edge of the tab bookmark;
+		CBorder& ha_ = this->Borders().Get(e_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the right edge of the tab bookmark;
 
 		CPoint d_(rect_.left, c_.Y()); // X-coord of the 'd_' point equals always to the *left* side of the rectangle;
-		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
+		CBorder& cd_ = this->Borders().Get(e_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the left-bottom edge of the tab body;
 
 		CPoint e_(d_.X(), rect_.top); // Y-coord of the 'e_' point equals always to the *top* value of the rectangle;
-		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; //  the left edge of the tab body;
+		CBorder& de_ = this->Borders().Get(e_ndx::e_de); de_.Begin() = d_; de_.End() = e_; //  the left edge of the tab body;
 
 		CPoint f_(rect_.right, e_.Y()); // X-coord of the 'f_' point equals always to the *right* value of the rectangle;
-		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; //  the top edge of the tab body;
+		CBorder& ef_ = this->Borders().Get(e_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; //  the top edge of the tab body;
 
 		CPoint g_(f_.X(), d_.Y());
-		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
-		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
+		CBorder& fg_ = this->Borders().Get(e_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; //  the right edge of the tab body;
+		CBorder& gh_ = this->Borders().Get(e_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; //  the right-bottom edge of the tab body;
 	} break;
 	case TSide::e_left : {
 		/*TVertAlign::eBottom; TVertAlign::eMiddle; TVertAlign::eTop;
@@ -138,22 +108,22 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CPoint c_(rc_strip.right, rc_strip.top /*+ u_thick*/);
 		CPoint h_(rc_strip.right, rc_strip.bottom - u_thick);
 
-		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
-		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
-		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
+		CBorder& ab_ = this->Borders().Get(e_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
+		CBorder& bc_ = this->Borders().Get(e_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
+		CBorder& ha_ = this->Borders().Get(e_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
 
 		CPoint d_(c_.X(), rect_.top); // Y-coord of 'd' point equals always to the *top* value of the rectangle; 
-		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_;
+		CBorder& cd_ = this->Borders().Get(e_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_;
 
 		CPoint e_(rect_.right,d_.Y()); // X-coord of 'e' point always equals to the *right* value of the rectnagle;
-		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
+		CBorder& de_ = this->Borders().Get(e_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
 
 		CPoint f_(e_.X(), rect_.bottom); // Y-coord of 'f' point equals always to the *bottom* value of the rectangle;
-		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
+		CBorder& ef_ = this->Borders().Get(e_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
 
 		CPoint g_(c_.X(), f_.Y());
-		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
-		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // may have '0' length in case of '0' index of active tab;
+		CBorder& fg_ = this->Borders().Get(e_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
+		CBorder& gh_ = this->Borders().Get(e_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // may have '0' length in case of '0' index of active tab;
 	} break;
 	case TSide::e_right : {
 		/*TVertAlign::eBottom; TVertAlign::eMiddle; TVertAlign::eTop;
@@ -173,22 +143,22 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CPoint c_(rc_strip.left, rc_strip.bottom - u_thick);
 		CPoint h_(rc_strip.left, rc_strip.top);
 
-		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
-		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
-		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
+		CBorder& ab_ = this->Borders().Get(e_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_;
+		CBorder& bc_ = this->Borders().Get(e_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_;
+		CBorder& ha_ = this->Borders().Get(e_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_;
 
 		CPoint d_(c_.X(), rect_.bottom); // Y-coord value of the 'd' point equals always to the *bottom* value of the rectangle;
-		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // may have '0' length if active tab index equals to 'tabs.count() - 1';
+		CBorder& cd_ = this->Borders().Get(e_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // may have '0' length if active tab index equals to 'tabs.count() - 1';
 
 		CPoint e_(rect_.left, d_.Y());  // X-coord value of the 'e' point equals always to the *left* value of the rectangle;
-		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
+		CBorder& de_ = this->Borders().Get(e_ndx::e_de); de_.Begin() = d_; de_.End() = e_;
 
 		CPoint f_(e_.X(), rect_.top); // Y-coord value of the 'f' point equals always to the *top* value of the rectangle;
-		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
+		CBorder& ef_ = this->Borders().Get(e_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_;
 
 		CPoint g_(c_.X(), f_.Y());
-		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
-		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_;
+		CBorder& fg_ = this->Borders().Get(e_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_;
+		CBorder& gh_ = this->Borders().Get(e_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_;
 	} break;
 	case TSide::e_top : {
 		/*THorzAlign::eLeft; THorzAlign::eCenter; THorzAlign::eRight;
@@ -207,22 +177,22 @@ err_code CActiveTab::Set (const rect_t& _rect) {
 		CPoint c_(rc_strip.right - u_thick, rc_strip.bottom);
 		CPoint h_(rc_strip.left , rc_strip.bottom);
 
-		CBorder& ab_ = this->Get(_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_; // the top edge of the tab bookmark;
-		CBorder& bc_ = this->Get(_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the right edge of the tab bookmark;
-		CBorder& ha_ = this->Get(_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the left edge of the tab bookmark;
+		CBorder& ab_ = this->Borders().Get(e_ndx::e_ab); ab_.Begin() = a_; ab_.End() = b_; // the top edge of the tab bookmark;
+		CBorder& bc_ = this->Borders().Get(e_ndx::e_bc); bc_.Begin() = b_; bc_.End() = c_; // the right edge of the tab bookmark;
+		CBorder& ha_ = this->Borders().Get(e_ndx::e_ha); ha_.Begin() = h_; ha_.End() = a_; // the left edge of the tab bookmark;
 
 		CPoint d_(rect_.right, c_.Y()); // X-coord of the 'd' point equals always to the *right* side value of the rectangle;
-		CBorder& cd_ = this->Get(_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the top-right edge of the tab body;
+		CBorder& cd_ = this->Borders().Get(e_ndx::e_cd); cd_.Begin() = c_; cd_.End() = d_; // the top-right edge of the tab body;
 
 		CPoint e_(d_.X(), rect_.bottom); // Y-coord of the 'e' point equals always to the *bottom* side value of the rectangle;
-		CBorder& de_ = this->Get(_ndx::e_de); de_.Begin() = d_; de_.End() = e_; // the right edge of the tab body;
+		CBorder& de_ = this->Borders().Get(e_ndx::e_de); de_.Begin() = d_; de_.End() = e_; // the right edge of the tab body;
 
 		CPoint f_(rect_.left, e_.Y()); // X-coord of the 'f' point equals always to the *left* side value of the rectangle;
-		CBorder& ef_ = this->Get(_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; // the bottom edge of the tab body;
+		CBorder& ef_ = this->Borders().Get(e_ndx::e_ef); ef_.Begin() = e_; ef_.End() = f_; // the bottom edge of the tab body;
 
 		CPoint g_(f_.X(), d_.Y());
-		CBorder& fg_ = this->Get(_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; // the left edge of the tab body;
-		CBorder& gh_ = this->Get(_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // the left-top edge of the tab body;
+		CBorder& fg_ = this->Borders().Get(e_ndx::e_fg); fg_.Begin() = f_; fg_.End() = g_; // the left edge of the tab body;
+		CBorder& gh_ = this->Borders().Get(e_ndx::e_gh); gh_.Begin() = g_; gh_.End() = h_; // the left-top edge of the tab body;
 	} break;
 	default:
 		n_result = (err_code) TErrCodes::eExecute::eParameter;
@@ -420,6 +390,17 @@ void      CTabs::Update (void) {
 }
 
 }}}}}
+#pragma region cls::CBorders{}
+
+using CActBorders = CActiveTab::CBorders;
+using eBrdIndex = CActiveTab::CBorders::e_ndx;
+
+CActBorders::CBorders (void) {
+	for (uint32_t i_ = 0; i_ < eBrdIndex::e_ha + 1; i_++)
+		TBase::Add(CBorder(i_));
+}
+
+#pragma endregion
 #pragma region cls::CTabs::Caps{}
 
 using CCaps = ex_ui::controls::sfx::tabbed::layout::CTabs::CCaps;

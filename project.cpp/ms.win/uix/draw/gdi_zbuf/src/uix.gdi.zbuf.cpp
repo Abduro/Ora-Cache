@@ -394,6 +394,9 @@ err_code  CZBuffer::Draw (const CLine& _line, const rgb_color _clr) {
 	if (_line.Is_valid() == false) return n_result = this->m_error << __METHOD__ << __e_inv_arg;
 	if (this->Is_valid() == false) return n_result = this->m_error << __METHOD__ << __e_not_inited;
 
+	if (_line.Thickness() == 0)
+		return n_result;
+
 	::WTL::CPen cPen;
 	cPen.CreatePen(PS_SOLID, _line.Thickness(), _clr);
 

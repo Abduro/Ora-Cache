@@ -16,7 +16,7 @@ CPages::~CPages (void) {}
 err_code CPages::At_1st(void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	CTabbed& tabbed = this->Get(); tabbed;
+	CTabbed& tabbed = this->Get(); tabbed.Borders().Weight(cfg::u_border_thick);
 #if defined(_test_case_lvl) && (_test_case_lvl >= 2)
 
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
@@ -30,7 +30,7 @@ err_code CPages::At_1st(void) {
 		this->m_error << tabbed.Tabs().Append(TString().Format(p_titles[i_], (i_ + 1))); if (this->Error()) { break; }
 		tabbed.Tabs().Tab(i_).Page().Borders().Weight(cfg::u_border_thick);
 	}
-
+	tabbed.Layout().Ribbon().Tabs().Active().Borders().Weight(cfg::u_border_thick);
 	this->Trackers().At_1st(); // no error check yet;
 
 #endif
@@ -74,6 +74,9 @@ err_code CPages::OnCreate (void) {
 	// (1) creates tabbed user control;
 	if (__failed(tabbed.Create(shared::Get_View().Parent(), 0xB)))
 		return this->m_error = tabbed.Error();
+	else {
+		tabbed.Borders().Weight(0x1); // sets tabbed control borders thickness to 1px by default;
+	}
 
 	// (2) creates the trackball controls;
 	if (__failed(this->Trackers().OnCreate()))

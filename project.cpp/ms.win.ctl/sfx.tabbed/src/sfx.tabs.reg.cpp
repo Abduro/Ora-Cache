@@ -18,7 +18,7 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace _impl {
 
 		_pc_sz  Tab_ctrl (const uint32_t _ctrl_id) {
 			// https://en.cppreference.com/cpp/utility/to_chars ; for using standard library;
-			return (_pc_sz)(m_cache = TString().Format(_T("0x04x"), _ctrl_id));
+			return (_pc_sz)(m_cache = TString().Format(_T("0x%04x"), _ctrl_id));
 		}
 
 	private:
@@ -39,7 +39,7 @@ namespace ex_ui { namespace controls { namespace tabbed { namespace _impl {
 			return (_pc_sz)(this->m_cache = TString().Format(p_pg_brd_pat, this->Pages(_ctrl_id)));
 		}
 		_pc_sz Pages (const uint32_t _ctrl_id) {
-			return (_pc_sz)(this->m_cache = TString().Format(p_pg_key_pat, CRouter_paths().Tab_ctrl(_ctrl_id)));
+			return (_pc_sz)(this->m_cache = TString().Format(p_pg_key_pat, CRoot().Path(_ctrl_id)));
 		}
 
 	private:
@@ -422,7 +422,7 @@ err_code CPersTabs::Load (void) {
 	if (__failed(this->Active().Load()))  return TBase::m_error = this->Active().Error();
 	if (__failed(this->Align().Load()))   return TBase::m_error = this->Align().Error();
 	if (__failed(this->Caption().Load())) return TBase::m_error = this->Caption().Error();
-//	if (__failed(this->Pages().Load()))   return TBase::m_error = this->Pages().Error();
+	if (__failed(this->Pages().Load()))   return TBase::m_error = this->Pages().Error();
 	if (__failed(this->Size().Load()))    return TBase::m_error = this->Size().Error();
 
 	return TBase::Error();

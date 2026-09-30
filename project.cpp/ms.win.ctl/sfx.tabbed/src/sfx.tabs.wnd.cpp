@@ -58,7 +58,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 #elif (1==0)
 	z_buffer.Draw(rc_area, shared::Get_Theme().Get(TThemePart::e_form, TThemeElement::e_back));
 #else
-	// (1) fills the background goes first;
+	// (1) filling the background goes first;
 	z_buffer.Draw(rc_area, this->m_ctrl.Format().Bkgnd().Solid().ToRgb()); // ToRgb() must be called, otherwise, black screen due to GDI does not know alpha channel;
 #endif
 	using ex_ui::controls::borders::TRawBorders;
@@ -70,7 +70,7 @@ err_code CWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 		}
 	}
 	// (3) draws active tab borders;
-	const TRawBorders& act_tab = this->m_ctrl.Layout().Ribbon().Tabs().Active().Raw();
+	const TRawBorders& act_tab = this->m_ctrl.Layout().Ribbon().Tabs().Active().Borders().Raw();
 	const rgb_color clr_active = this->m_ctrl.Format().Border().Color().Selected();
 	const rgb_color clr_normal = this->m_ctrl.Format().Border().Color().Normal();
 

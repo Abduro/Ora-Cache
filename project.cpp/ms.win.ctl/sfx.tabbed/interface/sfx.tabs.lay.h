@@ -44,28 +44,32 @@ namespace layout {
 	*/
 	class CActiveTab {
 	public:
-		enum _ndx : uint32_t {
-			e_ab = 0x0, e_bc = 0x1, e_cd = 0x2, e_de = 0x3, e_ef = 0x4, e_fg = 0x5, e_gh = 0x6, e_ha = 0x7,
+		using CSet = ::ex_ui::controls::borders::CSet;
+		class CBorders : public CSet { typedef CSet TBase;
+		public:
+			enum e_ndx : uint32_t {
+			     e_ab = 0x0, e_bc = 0x1, e_cd = 0x2, e_de = 0x3, e_ef = 0x4, e_fg = 0x5, e_gh = 0x6, e_ha = 0x7,
+			};
+			CBorders (void); CBorders (const CBorders&) = delete; CBorders (CBorders&&) = delete; ~CBorders (void) = default;
+		private:
+			CBorders& operator = (const CBorders&) = delete; CBorders& operator = (CBorders&&) = delete;
 		};
-	public:
+
 		 CActiveTab (CControl&); CActiveTab (void) = delete; CActiveTab (const CActiveTab&) = delete; CActiveTab (CActiveTab&&) = delete;
 		~CActiveTab (void) ;
+		
+		err_code  Set (const rect_t&);     // sets borders' positions of the active tab;
 
-	public:
 		const
-		CBorder&  Get (const _ndx) const;  // if the index is out of acceptable range, the reference to fake object is returned;
-		CBorder&  Get (const _ndx) ;       // if the index is out of acceptable range, the reference to fake object is returned;
-		const
-		TRawBorders& Raw (void) const;
-		err_code  Set (const rect_t&);     // sets border positions of the active tab;
+		CActiveTab::CBorders& Borders (void) const;
+		CActiveTab::CBorders& Borders (void) ;
 
 	private:
 		CActiveTab&  operator = (const CActiveTab&) = delete;
 		CActiveTab&  operator = (CActiveTab&&) = delete;
 
-	private:
-		CControl&   m_ctrl;
-		TRawBorders m_borders;
+		CControl& m_ctrl;
+		CBorders  m_borders;
 	};
 
 	using Selected = CActiveTab;
