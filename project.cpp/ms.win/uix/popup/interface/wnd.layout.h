@@ -4,18 +4,14 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 11-Dec-2021 at 2:01:28.3414539 pm, UTC+7, Novosibirsk, Saturday;
 	This is base window layout interface declaration file;
 */
-#include "sys.error.h"
+#include "wnd.defs.h"
 #include "2d.base.h"
 #include "2d.shape.rect.h"
 
-#include "shared.types.h"
-
 namespace ex_ui { namespace popup {  namespace layout {
 
-	using namespace shared::types;
+	using namespace ::ex_ui::popup::defs;
 
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
 	using TPosition = geometry::_2D::base::CPosition;
 	using CRect  = geometry::_2D::shapes::COblong;
 
@@ -47,17 +43,35 @@ namespace ex_ui { namespace popup {  namespace layout {
 		rect_t   m_rect;
 	};
 
-	class CPosition : public TPosition { typedef TPosition TBase;
+	class CPosition : public TPosition { typedef TPosition TBase; // this class needs to be reviewed due to it is not compatible with WinAPI: rect_t is not used;
 	public:
-		 CPosition (void);
-		~CPosition (void) = default;
+		CPosition (void); CPosition (const CPosition&) = delete; CPosition (CPosition&&) = delete; ~CPosition (void) = default;
 
-	public:
 		// it is supposed the left-top corner of the window frame is at the anchor point;
 		// calculates a center point of the position in absolute coordinates;
 		const
-		point_t    Center (void) const;
-		rect_t     Place  (void) const;
+		point_t  Center (void) const;
+		rect_t   Place  (void) const;
+
+		TError&  Error (void) const;
+
+		err_code Load (void);         // loads the app/main window position from the regestry;
+		err_code Save (const HWND);   // saves the app/main window position in the regestry;
+
+		const
+		rect_t&  Get (void) const;    // gets the reference to the rectangle of the main window frame position on the screen; (ro);
+		bool     Set (const rect_t&); // sets the window rectangle;
+
+		const
+		rect_t&  operator ()(void) const;
+		rect_t&  operator ()(void) ;
+
+		CPosition& operator <<(const rect_t&);
+
+	private:
+		CPosition& operator = (const CPosition&) = delete; CPosition& operator = (CPosition&&) = delete;
+		rect_t  m_rect;
+		CError  m_error;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint ;
@@ -89,8 +103,8 @@ namespace ex_ui { namespace popup {  namespace layout {
 		RECT   Accepted (const CPosition&  _res) const;   // gets an accepted ratio for primary monitor resolution;
 
 		const
-		TRatios& Get (void) const ;
-		TRatios& Get (void)       ;
+		TRatios& Get (void) const;
+		TRatios& Get (void) ;
 
 	public:
 		CRatios& operator = (const CRatios&);

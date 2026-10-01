@@ -192,8 +192,12 @@
   <ItemGroup>
     <ClInclude Include="$(_0)wnd.base.h" />
     <ClCompile Include="$(_1)wnd.base.cpp" />
+    <ClInclude Include="$(_0)wnd.defs.h" />
+    <ClCompile Include="$(_1)wnd.defs.cpp" />
     <ClInclude Include="$(_0)wnd.layout.h" />
     <ClCompile Include="$(_1)wnd.layout.cpp" />
+    <ClInclude Include="$(_0)wnd.reg.h" />
+    <ClCompile Include="$(_1)wnd.reg.cpp" />
     <ClInclude Include="$(_0)wnd.res.h" />
     <ClCompile Include="$(_1)wnd.res.cpp" />
   </ItemGroup>

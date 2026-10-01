@@ -2,7 +2,7 @@
 #define _SFX_TABS_INC_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 10-Jun-2025 at 02:20:22.293, UTC+4, Batumi, Tuesday;
-	This is Ebo Pack Sfx tab control include file(s) declaration file.
+	This is Ebo Pack Sfx tab control external files' includes.
 */
 #pragma region __atl_&_stl__
 #include <atlbase.h>

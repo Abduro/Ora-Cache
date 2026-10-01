@@ -19,13 +19,15 @@ err_code CPages::At_1st(void) {
 
 	using TSide = ex_ui::controls::layout::CMargins_of_rect::CSides::_part;
 
-	tabbed.Layout().Tabs().LocatedOn(TSide::e_top);
-	tabbed.Layout().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
+//	tabbed.Layout().Ribbon().LocatedOn(TSide::e_left);
+//	tabbed.Layout().Ribbon().Tabs().Align().Horz().Value() = THorzAlign::eLeft;
 
 	for (uint16_t i_ = 0; i_ < cfg::u_page_count; i_++) {
 		this->m_error << tabbed.Tabs().Append(TString().Format(_T("Test #%u"), (i_ + 1))); if (this->Error()) { break; }
-		tabbed.Tabs().Tab(i_).Page().Borders().Thickness(cfg::u_border_thick);
+		tabbed.Tabs().Tab(i_).Page().Borders().Weight(cfg::u_border_thick);
 	}
+
+	tabbed.Layout().Ribbon().Tabs().Active().Borders().Weight(cfg::u_border_thick);
 
 #endif
 	return this->Error();

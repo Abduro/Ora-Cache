@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="interface"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000E00}</UniqueIdentifier></Filter>
+		<Filter Include="src"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000E01}</UniqueIdentifier></Filter>
+		<Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000E02}</UniqueIdentifier></Filter>
+		<Filter Include="src\uix_impl"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-000000000E03}</UniqueIdentifier></Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="$(Shared)com.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
+		<ClCompile Include="$(Shared)com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="$(_0)web.ie.browser.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)web.ie.browser.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)web.ie.defs.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)web.ie.defs.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)web.ie.html.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)web.ie.html.cpp"><Filter>src</Filter></ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="$(_2)web.ie.obj.access.h"><Filter>src\uix_impl</Filter></ClInclude>
+		<ClCompile Include="$(_2)web.ie.obj.access.cpp"><Filter>src\uix_impl</Filter></ClCompile>
+		<ClInclude Include="$(_2)web.ie.browser.wrap.h"><Filter>src\uix_impl</Filter></ClInclude>
+		<ClCompile Include="$(_2)web.ie.browser.wrap.cpp"><Filter>src\uix_impl</Filter></ClCompile>
+	</ItemGroup>
+</Project>

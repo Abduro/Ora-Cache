@@ -54,8 +54,11 @@ err_code CFrame::Create (void) {
 	if (m_wnd.IsWindow())
 		return (this->m_error << (err_code) TErrCodes::eObject::eExists);
 
-//	RECT rc_ = CWndLayout().Centered(CWndLayout().Default());
-	RECT rc_ = CWndLayout().Autosize();
+	CWndLayout layout; layout.Load(); // return error code is ignored;
+
+	rect_t rc_ = layout();
+	if (::IsRectEmpty(&rc_))
+		rc_ = layout.Autosize();
 
 	_pc_sz pc_sz_title = _T("3D Graphics Test App [%s]"); // no loading string from resources yet;
 #if defined(WIN64)

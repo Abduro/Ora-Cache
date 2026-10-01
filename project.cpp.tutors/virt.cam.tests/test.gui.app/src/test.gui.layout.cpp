@@ -22,7 +22,7 @@ namespace test { namespace app { namespace _impl {
 			CPane& operator = (const CPane&) = delete;
 			CPane& operator = (CPane&&) = delete;
 		};
-		 CLayout_Default (void) { this->m_padding.Set(10,10,-10,-10); } // sets nagative values to the right and the bottom gaps!
+		 CLayout_Default (void) { this->m_padding.Set( 5, 0,-5,-5); } // sets nagative values to the right and the bottom gaps!
 		 CLayout_Default (const CLayout_Default&) = delete; CLayout_Default (CLayout_Default&&) = delete;
 		~CLayout_Default (void) {}
 

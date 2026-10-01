@@ -4,26 +4,18 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 27-Oct-2021 at 10:11:04.4118880 am, UTC+7, Novosibirsk, Wednesday;
 	This is Ebo Pack UIX window adapter base interface declaration file.
 */
-#include <atlbase.h>
-#include <atlwin.h>
-#include <set>
-
-#include "sys.error.h"
+#include "wnd.defs.h"
 #include "handlers.h"
-
-#include "shared.types.h"
 
 namespace ex_ui { namespace popup {
 
-	using namespace shared::types;
+	using namespace ::ex_ui::popup::defs;
 
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features ;
 	// https://www.equestionanswers.com/vcpp/client-non-client-area.php ;
 
 	using namespace ex_ui::message::handlers;
-	using CError = shared::sys_core::CError;
-	using TError = const CError;
-
+	
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexa ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassa ;
 	class CAtom {

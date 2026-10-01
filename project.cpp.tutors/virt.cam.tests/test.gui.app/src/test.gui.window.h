@@ -5,8 +5,12 @@
 	This is virtual camera test cases' desktop GUI main window interface declaration file;
 */
 #include "test.gui.defs.h"
+#include "shared.timer.h"
 
 namespace test { namespace app { using namespace ::test::draw::defs;
+
+	using IWaitable_Events = ::shared::common::IWaitable_Events;
+	using CStdTimer = ::shared::common::CStdTimer;
 
 	class CFrame {
 	public:
@@ -72,7 +76,7 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		CFrame m_frame;
 	};
 #else
-	class CAppWnd  : public CWndBase, IDrawEvtSink, ILifeEvtSink, ISysEvtSink, IFormEvtSink { typedef CWndBase TBase;
+	class CAppWnd  : public CWndBase, IDrawEvtSink, ILifeEvtSink, ISysEvtSink, IFormEvtSink, IWaitable_Events { typedef CWndBase TBase;
 	public:
 		 CAppWnd (_pc_sz _p_cls_name = nullptr); CAppWnd (const CAppWnd&) = delete; CAppWnd (CAppWnd&&) = delete;
 		~CAppWnd (void) ;
@@ -103,7 +107,10 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		CAppWnd& operator = (const CAppWnd&) = delete;
 		CAppWnd& operator = (CAppWnd&&) = delete;
 
-		CFrame m_frame;
+		virtual void IWaitable_OnComplete(void) override final;
+
+		CFrame    m_frame;
+		CStdTimer m_wait;  // to-do: this timer is not used;
 	};
 #endif
 }}

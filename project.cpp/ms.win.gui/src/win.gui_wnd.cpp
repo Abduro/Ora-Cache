@@ -4,6 +4,7 @@
 */
 #include "win.gui_wnd.h"
 #include "win.gui_layout.h"
+#include "wnd.layout.h"
 
 using namespace ebo::boo::gui;
 
@@ -15,12 +16,11 @@ using namespace ebo::boo::gui;
 #define __W(rect) (rect.right - rect.left)
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-
 namespace ebo { namespace boo { namespace gui { namespace _impl {
 }}}}
 using namespace ebo::boo::gui::_impl;
-/////////////////////////////////////////////////////////////////////////////
+
+#pragma region cls::CWnd{}
 
 CWnd:: CWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name) {
 	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this); TBase::Handlers().System().Subscribe(this);
@@ -30,8 +30,6 @@ CWnd::~CWnd(void) {
 	TBase::Handlers().Draw().Unsubscribe(this); TBase::Handlers().Live().Unsubscribe(this); TBase::Handlers().System().Unsubscribe(this);
 	TBase::Handlers().Frame().Unsubscribe(this);
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 err_code CWnd::IEvtDraw_OnErase   (const HDC _dev_ctx) {
 	_dev_ctx;
@@ -94,9 +92,11 @@ err_code CWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both input a
 	return __s_ok;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 err_code CWnd::IEvtLife_OnClose  (const w_param, const l_param) {
+
+	using namespace ex_ui::popup::layout;
+
+	CWndLayout layout; layout.Save(TBase::TWindow::m_hWnd); // error code is not important, because this function must return __s_false for closing this window;
 
 	err_code n_result = __s_false;
 	return   n_result;

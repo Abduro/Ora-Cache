@@ -109,7 +109,7 @@ l_result CAppWnd::OnDestroy (const uint32_t, const l_param _l_param, const w_par
 }
 #else
 
-CAppWnd:: CAppWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name) {
+CAppWnd:: CAppWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name), m_wait(*this) {
 	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this); TBase::Handlers().System().Subscribe(this);
 	TBase::Handlers().Frame().Subscribe(this);
 }
@@ -120,16 +120,43 @@ CAppWnd::~CAppWnd(void) {
 
 err_code CAppWnd::Create (void) {
 	err_code n_result = __s_ok;
+
+	using namespace ex_ui::popup::layout;
+
+	CWndLayout layout; layout.Load(); // return error code is ignored;
+
+	rect_t rc_ = layout();
+	if (::IsRectEmpty(&rc_))
+		rc_ = layout.Autosize();
+
+	_pc_sz p_title = _T("Answers to questions from http://www.codeabbey.com [%s]"); // no loading string from resources yet;
+#if defined(WIN64)
+	CString cs_bits; cs_bits.Format(p_title, _T("64-bits"));
+#else // duplication code lines is made intentionally;
+	CString cs_bits; cs_bits.Format(pc_sz_title, _T("32-bits"));
+#endif
+	if (::IsRectEmpty(&rc_))
+		return (m_error << __e_rect);
+
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles ;
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles ;
 	/*important*: do not use WS_EX_COMPOSITED style option! it leads to cyclic background erase events of the main window;
 	*/
-	static const dword_t dw_ext_style = WS_EX_OVERLAPPEDWINDOW ;
-	static const dword_t dw_std_style = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+	static const dword_t dw_ext_style = WS_EX_OVERLAPPEDWINDOW | WS_EX_NOPARENTNOTIFY;
+	static const dword_t dw_std_style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
 	const // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw ;
-	HWND h_wnd = TWindow::Create(HWND_DESKTOP, 0, 0, dw_std_style, dw_ext_style);
+	HWND h_wnd = TWindow::Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_std_style, dw_ext_style);
 	if ( h_wnd == 0 )
 		return (n_result = __LastErrToHresult());
+
+	if (__succeeded(n_result)) {
+
+		if (true || __failed(this->m_wait.Create(555)))
+			this->ShowWindow(SW_SHOW);
+		else
+			this->ShowWindow(SW_SHOW|SW_MINIMIZE);
+	}
 
 	return n_result;
 }
@@ -176,6 +203,10 @@ err_code CAppWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both inpu
 }
 
 err_code CAppWnd::IEvtLife_OnClose (const w_param, const l_param) {
+
+	using namespace ex_ui::popup::layout;
+
+	CWndLayout layout; layout.Save(TBase::TWindow::m_hWnd); // error code is not important, because this function must return __s_false for closing this window;
 
 	err_code n_result = __s_false;
 	return   n_result;
@@ -266,6 +297,20 @@ err_code CAppWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	return   n_result;
 }
 
+void  CAppWnd::IWaitable_OnComplete (void) {
+#pragma region __refs_a
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchtothiswindow ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow ;
+	// https://stackoverflow.com/questions/71437203/proper-way-of-activating-a-window-using-winapi ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowplacement ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement ;
+#pragma endregion
+	this->m_wait.Destroy();   // no error is checked;
+
+	WINDOWPLACEMENT wps = {0}; wps.length = sizeof(WINDOWPLACEMENT);
+	this->GetWindowPlacement(&wps); wps.showCmd = SW_RESTORE|SW_NORMAL;
+	this->SetWindowPlacement(&wps);
+}
 
 #endif
 #pragma endregion

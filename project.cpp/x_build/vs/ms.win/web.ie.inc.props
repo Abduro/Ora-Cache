@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<RootDir Condition="'$(RootDir)'==''">$(ProjectDir)..\..\..\ms.win\</RootDir>
+		<Shared Condition="'$(Shared)'==''">$(RootDir)sys.shared\</Shared>
+		<Error Condition="'$(Error)'==''">$(RootDir)sys.err.core\</Error>
+		<Com Condition="'$(Com)'==''">$(RootDir)sys.com.core\</Com>
+		<Memory Condition="'$(Memory)'==''">$(RootDir)sys.mem.core\</Memory>
+		<Shell Condition="'$(Shell)'==''">$(RootDir)sys.shell\</Shell>
+		<ThisLib Condition="'$(ThisLib)'==''">$(RootDir)web.ie\</ThisLib>
+	</PropertyGroup>
+	<PropertyGroup>
+		<_0>$(ThisLib)interface\</_0>
+		<_1>$(ThisLib)src\</_1>
+		<_2>$(ThisLib)src\uix_impl\</_2>
+		<_3>$(Shared)interface\</_3>
+		<_4>$(Error)interface\</_4>
+		<_5>$(Shell)interface\</_5>
+		<_6>$(Memory)interface\</_6>
+		<_7>$(Com)interface\</_7>
+		<_8></_8>
+		<_9></_9>
+		<_a></_a>
+		<_b></_b>
+		<_c></_c>
+	</PropertyGroup>
+	<PropertyGroup>
+		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(_7);$(IncludePath)</IncludePath>
+	</PropertyGroup>
+</Project>

@@ -3,21 +3,21 @@
 	This is base window layout interface implementation file;
 */
 #include "wnd.layout.h"
+#include "wnd.reg.h"
 
-using namespace ex_ui::popup::layout;
+using namespace ::ex_ui::popup::layout;
+using namespace ::ex_ui::popup::storage;
 
 #ifndef __H
 #define __H(rc) (rc.bottom - rc.top)
 #define __W(rc) (rc.right - rc.left)
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CPlacement{}
 
 CPlacement:: CPlacement (void) : m_rect{0} {}
 CPlacement:: CPlacement (const CPlacement& _ref) : CPlacement() { *this = _ref; }
 CPlacement::~CPlacement (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 bool   CPlacement::DoNormal (void) {
 	
@@ -62,16 +62,14 @@ const
 rect_t&  CPlacement::Rect (void) const { return this->m_rect; }
 rect_t&  CPlacement::Rect (void)       { return this->m_rect; }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CPlacement&  CPlacement::operator = (const CPlacement& _ref) { *this << _ref.Rect(); return *this; }
 CPlacement&  CPlacement::operator <<(const rect_t& _rect) { this->Rect() = _rect; return *this;  }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CPosition{}
 
-CPosition:: CPosition (void) {}
+CPosition:: CPosition (void): m_rect{0} { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
-/////////////////////////////////////////////////////////////////////////////
 const
 point_t  CPosition::Center (void) const {
 	return point_t{
@@ -80,13 +78,87 @@ point_t  CPosition::Center (void) const {
 	};
 }
 
+TError&  CPosition::Error (void) const { return this->m_error; }
+
 rect_t   CPosition::Place (void) const {
 	return {
 		TBase::Anchor().X(), TBase::Anchor().Y(), TBase::Anchor().X() + long_t(TBase::Size().W()), TBase::Anchor().Y() + long_t(TBase::Size().H())
 	};
 }
 
-/////////////////////////////////////////////////////////////////////////////
+const
+rect_t&  CPosition::Get (void) const { return this->m_rect; }
+bool     CPosition::Set (const rect_t& _rect) {
+	_rect;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-equalrect ;
+	const bool b_changed = !::EqualRect(&_rect, &this->Get()); if (b_changed) this->m_rect = _rect; return b_changed;
+}
+
+err_code CPosition::Load (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	using CRegWnd = route::CApp::CWindow;
+	using e_pos = CRegWnd::e_pos;
+	const CRegWnd& wnd = ::Get_reg_router().App().Window();
+
+	TRegKeyEx reg_key;
+	this->m_rect.left   = reg_key.Value().GetDword(wnd.Position(), wnd.Side(e_pos::e_left));   if (reg_key.Error()) { this->m_error = reg_key.Error(); }
+	this->m_rect.right  = reg_key.Value().GetDword(wnd.Position(), wnd.Side(e_pos::e_right));  if (reg_key.Error()) { this->m_error = reg_key.Error(); }
+	this->m_rect.top    = reg_key.Value().GetDword(wnd.Position(), wnd.Side(e_pos::e_top));    if (reg_key.Error()) { this->m_error = reg_key.Error(); }
+	this->m_rect.bottom = reg_key.Value().GetDword(wnd.Position(), wnd.Side(e_pos::e_bottom)); if (reg_key.Error()) { this->m_error = reg_key.Error(); }
+
+	if (::IsRectEmpty(&this->m_rect)) {
+	}
+
+	return this->Error();
+}
+
+err_code CPosition::Save (const HWND _hwnd) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (0 == _hwnd || !::IsWindow(_hwnd))
+		return this->m_error.Last();
+
+	using CRegWnd = route::CApp::CWindow;
+	using e_pos = CRegWnd::e_pos;
+	const CRegWnd& wnd = ::Get_reg_router().App().Window();
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement ; 
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement ;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow ; << for 'show window' flags;
+	WINDOWPLACEMENT wnd_place = {0};
+	wnd_place.length = sizeof(wnd_place);
+
+	if (0 == ::GetWindowPlacement(_hwnd, &wnd_place)) {
+		return this->m_error.Last();
+	}
+	else if (0 == (wnd_place.showCmd & SW_NORMAL)) { // the state of the window either 'minimized' or 'maximized' is not interest;
+		return this->Error();
+	}
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect ;
+	rect_t rect = {0};
+	if (false == !!::GetWindowRect(_hwnd, &rect)) {
+		return this->m_error.Last();
+	}
+
+	TRegKeyEx reg_key;
+	
+	reg_key.Value()() << wnd.Position();
+	reg_key.Value()() >> wnd.Side(e_pos::e_left);   if (__failed(reg_key.Value().Set(rect.left)))   this->m_error = reg_key.Error();
+	reg_key.Value()() >> wnd.Side(e_pos::e_right);  if (__failed(reg_key.Value().Set(rect.right)))  this->m_error = reg_key.Error();
+	reg_key.Value()() >> wnd.Side(e_pos::e_top);    if (__failed(reg_key.Value().Set(rect.top)))    this->m_error = reg_key.Error();
+	reg_key.Value()() >> wnd.Side(e_pos::e_bottom); if (__failed(reg_key.Value().Set(rect.bottom))) this->m_error = reg_key.Error();
+
+	return this->Error();
+}
+
+const
+rect_t&  CPosition::operator ()(void) const { return this->m_rect; }
+rect_t&  CPosition::operator ()(void)       { return this->m_rect; }
+
+CPosition& CPosition::operator <<(const rect_t& _rect) { this->Set(_rect); return *this; }
+
+#pragma endregion
 
 namespace ex_ui { namespace popup { namespace layout { namespace _impl {
 
@@ -109,14 +181,12 @@ namespace ex_ui { namespace popup { namespace layout { namespace _impl {
 
 }}}}
 
-using namespace ex_ui::popup::layout::_impl;
+using namespace ::ex_ui::popup::layout::_impl;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CPrimary{}
 
 CPrimary:: CPrimary (void) : TBase() {  PrimaryMonitorArea(*this); }
 CPrimary::~CPrimary (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 rect_t  CPrimary::Autosize (void) const {
 	
@@ -156,7 +226,8 @@ t_size  CPrimary::Default  (const float _coeff) const {
 		return t_size { long_t(TBase::Size().W()/_coeff), long_t(TBase::Size().H()/_coeff) };
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CRatios{}
 
 CRatios:: CRatios (void) {
 	/*
@@ -173,8 +244,6 @@ CRatios:: CRatios (void) {
 }
 CRatios:: CRatios (const CRatios& _ref) : CRatios() { *this = _ref; }
 CRatios::~CRatios (void) {} 
-
-/////////////////////////////////////////////////////////////////////////////
 
 rect_t    CRatios::Accepted (const rect_t& _work_area) const {
 
@@ -201,7 +270,7 @@ rect_t    CRatios::Accepted (const rect_t& _work_area) const {
 	return rc_pos;
 }
 
-RECT CRatios::Accepted (const CPosition& _res) const {
+rect_t CRatios::Accepted (const CPosition& _res) const {
 	return this->Accepted(_res.Place());
 }
 
@@ -209,15 +278,14 @@ const
 TRatios&  CRatios::Get (void) const { return this->m_ratios; }
 TRatios&  CRatios::Get (void)       { return this->m_ratios; }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CRatios&  CRatios::operator = (const CRatios& _ref) { this->Get() = _ref.Get(); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CWndLayout{}
 
 CWndLayout:: CWndLayout (void) : TBase() { m_error >> __CLASS__ << __METHOD__ << __e_not_inited; }
 CWndLayout::~CWndLayout (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-
 TErrorRef    CWndLayout::Error (void) const { return m_error; }
+
+#pragma endregion

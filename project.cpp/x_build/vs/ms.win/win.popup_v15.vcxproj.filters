@@ -42,8 +42,12 @@
 	<ItemGroup>
 		<ClInclude Include="$(_0)wnd.base.h" ><Filter>interface</Filter></ClInclude>
 		<ClCompile Include="$(_1)wnd.base.cpp" ><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)wnd.defs.h" ><Filter>interface</Filter></ClInclude>
+    		<ClCompile Include="$(_1)wnd.defs.cpp" ><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_0)wnd.layout.h" ><Filter>interface</Filter></ClInclude>
 		<ClCompile Include="$(_1)wnd.layout.cpp" ><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)wnd.reg.h" ><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)wnd.reg.cpp" ><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_0)wnd.res.h" ><Filter>interface</Filter></ClInclude>
 		<ClCompile Include="$(_1)wnd.res.cpp" ><Filter>src</Filter></ClCompile>
 	</ItemGroup>
