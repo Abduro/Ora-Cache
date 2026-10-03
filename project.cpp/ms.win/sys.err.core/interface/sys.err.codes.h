@@ -18,6 +18,9 @@
 #ifndef __e_fail
 #define __e_fail E_FAIL
 #endif
+#ifndef __e_handle
+#define __e_handle INVALID_HANDLE_VALUE // (uint32_t)(-1)
+#endif
 #ifndef __e_index
 #define __e_index DISP_E_BADINDEX
 #endif
@@ -43,11 +46,14 @@
 #ifndef __e_hwnd
 #define __e_hwnd OLE_E_INVALIDHWND
 #endif
+#ifndef __e_not_expect
+#define __e_not_expect E_UNEXPECTED
+#endif
 #ifndef __e_pointer
 #define __e_pointer E_POINTER
 #endif
-#ifndef __e_not_expect
-#define __e_not_expect E_UNEXPECTED
+#ifndef __e_type
+#define __e_type DISP_E_TYPEMISMATCH
 #endif
 
 #ifndef __s_ok

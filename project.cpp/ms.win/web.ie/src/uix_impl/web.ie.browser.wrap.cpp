@@ -4,6 +4,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to v15 on 28-May-2018 at 9:17:50p, UTC+7, Phuket, Rawai, Monday;
 */
+#if (0)
 #include "shared.web.brw.wrap.h"
 
 using namespace ex_ui::web;
@@ -565,4 +566,5 @@ HRESULT  CWebBrowserWrap::IsFeatureEnabled(const DWORD dwFeature, const DWORD dw
 	return hr_;
 }
 
+#endif
 #endif

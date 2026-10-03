@@ -4,6 +4,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to v15 on 28-May-2018 at 9:37:51p, UTC+7, Phuket, Rawai, Monday;
 */
+#if (0)
 #include "shared.web.html.el.h"
 #include "shared.web.obj.access.h"
 
@@ -428,3 +429,5 @@ HRESULT     CHtmlInput::Text(LPCWSTR lpszText)
 	hr_ = pInput->put_value(bs_text);
 	return  hr_;
 }
+
+#endif

@@ -17,6 +17,12 @@
 		<ClCompile Include="$(_1)web.ie.defs.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_0)web.ie.html.h"><Filter>interface</Filter></ClInclude>
 		<ClCompile Include="$(_1)web.ie.html.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)web.ie.locator.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)web.ie.locator.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)web.ie.reg.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)web.ie.reg.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_0)web.ie.version.h"><Filter>interface</Filter></ClInclude>
+		<ClCompile Include="$(_1)web.ie.version.cpp"><Filter>src</Filter></ClCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="$(_2)web.ie.obj.access.h"><Filter>src\uix_impl</Filter></ClInclude>

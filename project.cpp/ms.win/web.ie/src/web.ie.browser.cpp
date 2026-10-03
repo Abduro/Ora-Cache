@@ -5,6 +5,7 @@
 	Adopted to v15 on 28-May-2018 at 9:22:40p, UTC+7, Phuket, Rawai, Monday;
 	Adopted to v15a on 2-Oct-2018 at 8:33:03p, UTC+7, Novosibirsk, Tuesday;
 */
+#if (0)
 #include "shared.web.browser.h"
 #include "shared.web.brw.wrap.h"
 #include "shared.web.obj.access.h"
@@ -552,3 +553,4 @@ CWebBrowser::operator CAxWindow&(void)
 {
 	return this->GetAxWindowRef();
 }
+#endif

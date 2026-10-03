@@ -4,6 +4,7 @@
 	-----------------------------------------------------------------------------
 	Adopted to v15 on 28-May-2018 at 9:05:09p, UTC+7, Phuket, Rawai, Monday;
 */
+#if (0)
 #include "shared.web.obj.access.h"
 #include "shared.web.browser.h"
 
@@ -87,3 +88,5 @@ HRESULT    CWebBrowserObjectAccessor::ElementObject  (::ATL::CComPtr<IHTMLElemen
 		hr_ = TYPE_E_ELEMENTNOTFOUND;
 	return  hr_;
 }
+
+#endif
