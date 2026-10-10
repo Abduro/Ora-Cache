@@ -23,7 +23,7 @@ namespace shared { namespace types {
 	// https://learn.microsoft.com/en-us/cpp/cpp/data-type-ranges ;
 
 	typedef _GUID     _guid ;   // https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid ;
-	typedef BOOL      _bool ;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
+	typedef BOOL      bool_t;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
 	typedef BYTE      _byte ;
 	typedef DWORD    dword_t;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
 	typedef HANDLE    handle;   // for using in shared.mem project;

@@ -4,100 +4,103 @@
 	-----------------------------------------------------------------------------
 	Adopted to v15 on 28-May-2018 at 9:37:51p, UTC+7, Phuket, Rawai, Monday;
 */
-#if (0)
-#include "shared.web.html.el.h"
-#include "shared.web.obj.access.h"
+#include "web.ie.html.h"
+#include "web.ie.accessor.h"
 
-using namespace ex_ui::web;
-using namespace ex_ui::web::core;
+using namespace ::ex_ui::web::IE::core;
+using namespace ::ex_ui::web::IE::html;
+using CValue = COption::CValue;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CElement{}
 
-CHtmlElement::CHtmlElement(::ATL::CAxWindow& _browser, LPCWSTR lpszId):m_browser(_browser), m_el_id(lpszId)
-{
-	if (m_browser)
-	{
-		CWebBrowserObjectAccessor acc(m_browser);
-		acc.ElementObject(m_el, lpszId);
+CElement::CElement(CAxWindow& _ctrl_wnd, _pc_sz _p_el_id) : m_ctrl_wnd(_ctrl_wnd), m_el_id(_p_el_id) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+	if (m_ctrl_wnd) {
+		CAccessor accessor(this->m_ctrl_wnd);
+		accessor.Element(this->m_el, _p_el_id);
 	}
 }
 
-CHtmlElement::~CHtmlElement(void)
-{
-}
+CString  CElement::Content (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
 
-/////////////////////////////////////////////////////////////////////////////
+	if (this->Is_valid() == false) {
+		this->m_error <<__e_not_inited;
+		return CString();
+	}
 
-CStringW    CHtmlElement::Content(void)const
-{
-	CStringW cs_content;
-	if (!m_el)
-		return cs_content;
+	CString cs_content;
+
 	_bstr_t val_;
-	HRESULT hr_ = m_el->get_innerHTML(val_.GetAddress());
-	if (!FAILED(hr_))
-		cs_content = (LPCWSTR)val_;
+	this->m_error << m_el->get_innerHTML(val_.GetAddress());
+	if (this->Error() == false)
+		cs_content = (_pc_sz) val_;
+
 	return cs_content;
 }
 
-HRESULT     CHtmlElement::Content(LPCWSTR lpszInner)
-{
-	if (!m_el)
-		return OLE_E_BLANK;
-	_bstr_t val_(lpszInner);
-	HRESULT hr_ = m_el->put_innerHTML(val_);
-	return  hr_;
+err_code CElement::Content (_pc_sz _p_html) {
+	_p_html;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Is_valid() == false)
+		return this->m_error <<__e_not_inited;
+
+	_bstr_t val_(_p_html);
+
+	this->m_error << this->m_el->put_innerHTML(val_);
+	return  this->Error();
 }
 
-bool        CHtmlElement::Disabled(void)const
-{
+TError&  CElement::Error (void) const { return this->m_error; }
+
+bool     CElement::Disabled (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+
 	bool bDisabled = false;
-	if (this->IsValid())
+
+	if (this->Is_valid())
 	{
 		CComQIPtr<IHTMLElement3> ext_;
-		HRESULT hr_ = m_el.QueryInterface(&ext_);
-		if (FAILED(hr_))
+		this->m_error << this->m_el.QueryInterface(&ext_);
+		if (this->Error())
 			return bDisabled;
+
 		if (!ext_)
 			return bDisabled;
+
 		VARIANT_BOOL vDisabled = VARIANT_FALSE;
-		hr_ = ext_->get_isDisabled(&vDisabled);
-		if (FAILED(hr_))
-			return bDisabled;
-		bDisabled = (vDisabled == VARIANT_TRUE);
+		this->m_error << ext_->get_isDisabled(&vDisabled);
+
+		if (this->Error() == false)
+			 bDisabled = (vDisabled == VARIANT_TRUE);
 	}
 	return bDisabled;
 }
 
-HRESULT     CHtmlElement::Disabled(const bool bDisabled)
-{
-	if (!this->IsValid())
-		return OLE_E_BLANK;
+err_code CElement::Disabled (const bool bDisabled) {
+	bDisabled;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (!this->Is_valid())
+		return this->m_error <<__e_not_inited;
+
 	CComQIPtr<IHTMLElement3> ext_;
-	HRESULT hr_ = m_el.QueryInterface(&ext_);
-	if (FAILED(hr_))
-		return hr_;
+	this->m_error << this->m_el.QueryInterface(&ext_);
+	if (this->Error())
+		return this->Error();
 	if (!ext_)
-		return (hr_ = E_NOINTERFACE);
+		return this->m_error <<__e_not_impl;
 
-	hr_ = ext_->put_disabled(bDisabled ? VARIANT_TRUE : VARIANT_FALSE);
-	return hr_;
+	this->m_error << ext_->put_disabled(bDisabled ? VARIANT_TRUE : VARIANT_FALSE);
+	return this->Error();
 }
 
-CStringW    CHtmlElement::Identifier (void)const
-{
-	return m_el_id;
-}
+CString  CElement::Identifier (void) const { return this->m_el_id; }
+bool     CElement::Is_valid (void) const { return (m_el != false); }
 
-bool        CHtmlElement::IsValid(void)const
-{
-	return (m_el != false);
-}
-
-RECT        CHtmlElement::Rectangle(void) const
-{
-	RECT rc_ = {0};
-	if (!m_el)
+rect_t   CElement::Rectangle (void) const {
+	rect_t rc_ = {0};
+	if (this->Is_valid() == false)
 		return rc_;
 	else
 	{
@@ -109,325 +112,311 @@ RECT        CHtmlElement::Rectangle(void) const
 	return rc_;
 }
 
-CStringW    CHtmlElement::Style(void)const
-{
-	CStringW cs_style;
+CString  CElement::Style (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
+	
+	if (false == this->Is_valid()) {
+		this->m_error <<__e_not_inited;
+		return CString();
+	}
 
-	if (!this->IsValid())
-		return cs_style;
+	CString cs_style;
 
-	::ATL::CComPtr<IHTMLStyle> pStyle;
-	HRESULT hr_ = m_el->get_style(&pStyle);
-	if (FAILED(hr_) || !pStyle)
+	CComPtr<IHTMLStyle> pStyle;
+	this->m_error << m_el->get_style(&pStyle);
+	if (this->Error() || !pStyle)
 		return cs_style;
 
 	_bstr_t bs_style;
-	hr_ = pStyle->toString(bs_style.GetAddress());
-	if (SUCCEEDED(hr_))
-		cs_style = static_cast<LPCWSTR>(bs_style);
+	this->m_error << pStyle->toString(bs_style.GetAddress());
+	if (this->Error() == false)
+		cs_style = static_cast<_pc_sz>(bs_style);
 
 	return cs_style;
 }
 
-HRESULT     CHtmlElement::Style(LPCWSTR lpszStyle)
-{
-	if (!this->IsValid())
-		return OLE_E_BLANK;
-	HRESULT hr_ = m_el->setAttribute(_bstr_t(_T("style")), _variant_t(lpszStyle), NULL);
-	return  hr_;
+err_code CElement::Style (_pc_sz _p_style) {
+	_p_style;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid())
+		return this->m_error <<__e_not_inited;
+
+	this->m_error << this->m_el->setAttribute(_bstr_t(_T("style")), _variant_t(_p_style), 0);
+	return  this->Error();
 }
 
-bool        CHtmlElement::Visible(void) const
-{
-	bool b_result = true;
+bool CElement::Visible (void) const {
+	this->m_error <<__METHOD__<<__s_ok;
 
-	if (!this->IsValid())
+	bool b_result = false; // this is the default value for error cases: if this class is not initialized or COM-object method fails; 
+
+	if (false == this->Is_valid()) {
+		this->m_error <<__e_not_inited;
 		return b_result;
+	}
 
-	::ATL::CComPtr<IHTMLStyle> pStyle;
-	HRESULT hr_ = m_el->get_style(&pStyle);
-	if (FAILED(hr_) || !pStyle)
+	CComPtr<IHTMLStyle> pStyle;
+	this->m_error << this->m_el->get_style(&pStyle);
+	if (this->Error() || !pStyle)
 		return b_result;
 
 	_variant_t val_;
-	hr_ = pStyle->getAttribute(_bstr_t(_T("display")), 0, &val_);
-	if (FAILED(hr_))
+	this->m_error << pStyle->getAttribute(_bstr_t(_T("display")), 0, &val_);
+	if (this->Error())
 		return b_result;
 
-	switch (val_.vt)
-	{
-	case VT_BSTR:
-		{
-			::ATL::CStringW cs_value(val_.bstrVal);
-			cs_value.Trim();
-			b_result = (0 == cs_value.CompareNoCase(_T("block")));
-		} break;
-	case VT_BOOL:
-		{
-			b_result = (VARIANT_TRUE == val_.boolVal);
-		} break;
+	switch (val_.vt) {
+	case VT_BSTR: { CString cs_value(val_.bstrVal); cs_value.Trim(); b_result = (0 == cs_value.CompareNoCase(_T("block"))); } break;
+	case VT_BOOL: { b_result = (VARIANT_TRUE == val_.boolVal); } break;
 	}
-
 	return b_result;
 }
 
-HRESULT     CHtmlElement::Visible(const bool b_value)
-{
-	if (!this->IsValid())
-		return OLE_E_BLANK;
-	::ATL::CComPtr<IHTMLStyle> pStyle;
-	HRESULT hr_ = m_el->get_style(&pStyle);
-	if (FAILED(hr_))
-		return hr_;
-	else if (!pStyle)
-		return(hr_ = E_NOINTERFACE);
-	else
-	{
+err_code CElement::Visible (const bool b_value) {
+	b_value;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == this->Is_valid())
+		return this->m_error <<__e_not_inited;
+
+	CComPtr<IHTMLStyle> pStyle;
+	this->m_error << this->m_el->get_style(&pStyle);
+
+	if (false){}
+	else if (this->Error()){}
+	else if (!pStyle) this->m_error <<__e_not_impl;
+	else {
 		_variant_t val_ = (b_value ? _T("block") : _T("none"));
-		hr_ = pStyle->setAttribute(_bstr_t(_T("display")), val_,  0);
+		this->m_error << pStyle->setAttribute(_bstr_t(_T("display")), val_,  0);
+	}
+	return this->Error();
+}
+
+#pragma endregion
+#pragma region cls::CInput{}
+
+CInput::CInput(CAxWindow& _browser, _pc_sz _p_el_id) : TBase(_browser, _p_el_id) { TBase::m_error >>__CLASS__; }
+
+CString CInput::Text (void) const {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == TBase::Is_valid()) {
+		TBase::m_error <<__e_not_inited; return CString();
+	}
+	
+	CComQIPtr<IHTMLInputTextElement> pInput;
+	TBase::m_error << TBase::m_el.QueryInterface(&pInput);
+	if (TBase::Error() || !pInput)
+		return CString();
+
+	_bstr_t bs_val;
+	TBase::m_error << pInput->get_value(bs_val.GetAddress());
+	if (TBase::Error())
+		return CString();
+
+	CString cs_text;
+	cs_text = static_cast<_pc_sz>(bs_val);
+	return cs_text;
+}
+
+err_code CInput::Text (_pc_sz _p_text) {
+	_p_text;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (false == TBase::Is_valid()) {
+		return TBase::m_error <<__e_not_inited;
 	}
 
-	return hr_;
+	CComQIPtr<IHTMLInputTextElement> pInput;
+	TBase::m_error << TBase::m_el.QueryInterface(&pInput);
+	if (TBase::Error())
+		return TBase::Error();
+	if (!pInput)
+		return TBase::m_error <<__e_not_impl;
+
+	_bstr_t bs_text(_p_text);
+	TBase::m_error <<  pInput->put_value(bs_text);
+
+	return TBase::Error();
 }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::COption{}
 
-CHtmlOption:: CHtmlOption(void) : m_bSelected(false)
-{
+COption::COption (void) : m_selected(false){}
+COption::COption (COption&& _victim) : COption() { *this = _victim; }
+COption::COption (const COption& _src) : COption() { *this = _src; }
+
+bool     COption::Selected (void) const { return this->m_selected; }
+void     COption::Selected (const bool _yes_or_no) {  m_selected = _yes_or_no; }
+
+_pc_sz   COption::Text (void) const { return (_pc_sz) this->m_text; }
+void     COption::Text (_pc_sz _p_txt) { this->m_text = _p_txt; }
+const
+CValue&  COption::Value (void) const { return this->m_value; }
+CValue&  COption::Value (void)       { return this->m_value; }
+
+COption& COption::operator = (const COption& _src) { *this << _src.Text() << _src.Value(); return *this; }
+COption& COption::operator <<(_pc_sz _p_text) { this->Text(_p_text); return *this; }
+COption& COption::operator <<(const CValue& _value) { this->Value() = _value; return *this; }
+
+COption& COption::operator = (COption&& _victim) {
+	*this = (const COption&)_victim; return *this;
 }
 
-CHtmlOption::~CHtmlOption(void)
-{
+#pragma endregion
+#pragma region cls::CSelect{}
+
+CSelect::CSelect(CAxWindow& _browser, _pc_sz _p_el_id) : TBase(_browser, _p_el_id) { TBase::m_error >>__CLASS__; }
+
+long_t CSelect::Index (void) const {
+
+	for (size_t j_ = 0; j_ < m_items.size(); j_++){
+		if (m_items[j_].Selected())
+			return static_cast<long_t>(j_);
+	}
+	return -1;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+err_code CSelect::Index (const long_t  _n_index) {
+	_n_index;
+	TBase::m_error <<__METHOD__<<__s_ok;
 
-bool        CHtmlOption::HasValue(LPCWSTR pszValue)const
-{
-	return (0 == m_value.CompareNoCase(pszValue));
+	if (_n_index < 0 || this->Is_empty() || _n_index > static_cast<long_t>(this->m_items.size()) - 1)
+		return TBase::m_error <<__e_index;
+
+	const long_t curr_ndx = this->Index();
+	if (curr_ndx == _n_index )
+		return TBase::m_error <<__s_false;
+
+	CComQIPtr<IHTMLSelectElement> pSelect;
+	TBase::m_error << TBase::m_el.QueryInterface(&pSelect);
+
+	if (TBase::Error()) return TBase::Error();
+	if (!pSelect) return TBase::m_error <<__e_not_inited;
+
+	TBase::m_error << pSelect->put_selectedIndex(_n_index);
+	if (TBase::Error())
+		return TBase::Error();
+
+	try {
+		if (-1 != curr_ndx)
+			this->m_items.at(curr_ndx).Selected(false); // unselects the previously selected option;
+
+		m_items.at(_n_index).Selected(true); // selects new option;
+
+	} catch (const ::std::out_of_range&) { TBase::m_error <<__e_index; }
+
+	return TBase::Error();
 }
 
-bool        CHtmlOption::Selected(void)const
-{
-	return m_bSelected;
-}
+bool   CSelect::Is_empty (void) const { return this->m_items.empty(); }
+bool   CSelect::Is_valid (void) const { return this->Is_empty() == false;}
 
-VOID        CHtmlOption::Selected(const bool bSelected)
-{
-	m_bSelected = bSelected;
-}
+const
+TOptions& CSelect::Items (void) const { return m_items; }
+err_code  CSelect::Items (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
 
-LPCWSTR     CHtmlOption::Text (void)const
-{
-	return m_text;
-}
-
-VOID        CHtmlOption::Text (LPCWSTR pszText)
-{
-	m_text = pszText;
-}
-
-LPCWSTR     CHtmlOption::Value(void)const
-{
-	return m_value;
-}
-
-VOID        CHtmlOption::Value(LPCWSTR pszValue)
-{
-	m_value = pszValue;
-	m_value.Trim();
-}
-
-bool        CHtmlOption::ValueAsBool(void)const
-{
-	if (m_value.IsEmpty()) return false;
-	if (m_value.CompareNoCase(_T("yes")) == 0)return true;
-	if (m_value.CompareNoCase(_T("true")) == 0) return true;
-	const LONG lValue = ::_tstol(m_value);
-	return !!lValue;
-}
-
-LONG        CHtmlOption::ValueAsLong(void)const
-{
-	return ::_tstol(m_value);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-CHtmlSelect::CHtmlSelect(::ATL::CAxWindow& _wnd, LPCWSTR lpszId) : TBase(_wnd, lpszId)
-{
-	::ATL::CComQIPtr<IHTMLSelectElement> pSelect;
+	CComQIPtr<IHTMLSelectElement> pSelect;
 	TBase::m_el.QueryInterface(&pSelect);
 	if (!pSelect)
-		return;
+		return TBase::Error();
 
-	LONG lCount = 0;
-	HRESULT hr_ = pSelect->get_length(&lCount);
-	if (FAILED(hr_))
-		return;
-	for (LONG i_ = 0; i_ < lCount; i_++) {
-		::ATL::CComPtr<IDispatch> pdispOption;
-		hr_ = pSelect->item(_variant_t(i_), _variant_t(i_), &pdispOption);
-		if (FAILED(hr_))
-			return;
+	long_t lCount = 0;
+	TBase::m_error << pSelect->get_length(&lCount);
+	if (TBase::Error())
+		return TBase::Error();
+
+	for (long_t i_ = 0; i_ < lCount; i_++) {
+
+		CComPtr<IDispatch> pdispOption;
+		TBase::m_error << pSelect->item(_variant_t(i_), _variant_t(i_), &pdispOption);
+		if (TBase::Error())
+			break;
+
 		::ATL::CComQIPtr<IHTMLOptionElement> pSelectOption;
-		hr_ = pdispOption.QueryInterface(&pSelectOption);
-		if (FAILED(hr_))
-			return;
-		if (!pSelectOption)
-			return;
+		TBase::m_error <<  pdispOption.QueryInterface(&pSelectOption);
+		if (TBase::Error() || !pSelectOption)
+			break;
 		try
 		{
-			CHtmlOption item_;
+			COption item_;
 			bstr_t bs_txt;
 
-			hr_ = pSelectOption->get_text(bs_txt.GetAddress());
-			if (FAILED(hr_))
+			TBase::m_error << pSelectOption->get_text(bs_txt.GetAddress());
+			if (TBase::Error())
 				break;
-			item_.Text((LPCWSTR)bs_txt);
+			item_.Text((_pc_sz)bs_txt);
 
 			bstr_t bs_val;
-			hr_ = pSelectOption->get_value(bs_val.GetAddress());
-			if (FAILED(hr_))
+			TBase::m_error << pSelectOption->get_value(bs_val.GetAddress());
+			if (TBase::Error())
 				break;
-			item_.Value((LPCWSTR)bs_val);
+			item_.Value().Set((_pc_sz)bs_val);
 
 			VARIANT_BOOL bSelected = VARIANT_FALSE;
-			hr_ = pSelectOption->get_selected(&bSelected);
-			if (FAILED(hr_))
+			TBase::m_error <<  pSelectOption->get_selected(&bSelected);
+			if (TBase::Error())
 				break;
 			item_.Selected(VARIANT_TRUE == bSelected);
 
 			m_items.push_back(item_);
 		}
-		catch(::std::bad_alloc&)
-		{
-			hr_ = E_OUTOFMEMORY; break;
-		}
-		catch(_com_error& err_obj)
-		{
-			hr_ = err_obj.Error(); break;
-		}
+		catch(::std::bad_alloc&) { TBase::m_error << __e_no_memory; break; }
+		catch(_com_error& err_obj) { TBase::m_error = err_obj; break; }
 	}
+	return TBase::Error();
 }
-
-CHtmlSelect::~CHtmlSelect(void)
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 const
-THtmlOptions& CHtmlSelect::Options(void) const
+COption&  CSelect::Selected (void) const
 {
-	return m_items;
-}
+	const long_t l_ndx = this->Index();
 
-LONG        CHtmlSelect::Selected(void) const
-{
-	for (size_t j_ = 0; j_ < m_items.size(); j_++){
-		if (m_items[j_].Selected())
-			return static_cast<LONG>(j_);
-	}
-	return -1;
-}
-
-HRESULT     CHtmlSelect::Selected(const LONG lIndex)
-{
-	::ATL::CComQIPtr<IHTMLSelectElement> pSelect;
-	HRESULT hr_ = TBase::m_el.QueryInterface(&pSelect);
-	if (FAILED(hr_))
-		return hr_;
-	if (!pSelect)
-		return (hr_ = E_NOINTERFACE);
-
-	hr_ = pSelect->put_selectedIndex(lIndex);
-	if (FAILED(hr_))
-		return hr_;
-
-	const LONG selected_ = this->Selected();
-	if (-1 != selected_)
-		m_items[selected_].Selected(false);
-
-	m_items[lIndex].Selected(true);
-
-	return hr_;
-}
-
-HRESULT     CHtmlSelect::Selected(LPCWSTR lpszValue)
-{
-	for (size_t i_ = 0; i_ < m_items.size(); i_++)
-	{
-		const CHtmlOption& item_ = m_items[i_];
-		if (item_.HasValue(lpszValue))
-		{
-			return this->Selected(
-							static_cast<LONG>(i_)
-						);
-		}
-	}
-	return TYPE_E_ELEMENTNOTFOUND;
-}
-const
-CHtmlOption&CHtmlSelect::SelectedOption(void) const
-{
-	static CHtmlOption invalid_;
-	const LONG selected_ = this->Selected();
-	if (-1 == selected_)
+	if (0 > l_ndx || this->Is_empty() || l_ndx > this->Items().size() - 1) {
+		static COption invalid_;
 		return invalid_;
+	}
 
-	return m_items[selected_];
+	return m_items[l_ndx];
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-CHtmlInput::CHtmlInput(::ATL::CAxWindow& _wnd, LPCWSTR lpszId) : TBase(_wnd, lpszId)
-{
+err_code  CSelect::Selected (_pc_sz _p_value) {
+	_p_value;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	for (size_t i_ = 0; i_ < this->m_items.size(); i_++)
+	{
+		const COption& item_ = m_items[i_];
+		if (item_.Value().Has(_p_value)) {
+			return this->Index( static_cast<long_t>(i_));
+		}
+	}
+	return TBase::m_error <<__e_not_found;
 }
 
-CHtmlInput::~CHtmlInput(void)
-{
+#pragma endregion
+#pragma region cls::CValue{}
+
+CValue::CValue (void) {}
+CValue::CValue (const CValue& _src) : CValue() { *this = _src; }
+
+bool   CValue::AsBool (void) const {
+
+	if (this->m_value.IsEmpty()) return false;
+	if (this->m_value.CompareNoCase(_T("yes")) == 0) return true;
+	if (this->m_value.CompareNoCase(_T("true")) == 0) return true;
+
+	return !!this->AsLong();
 }
+long_t CValue::AsLong (void) const { return ::_tstol(this->m_value); }
 
-/////////////////////////////////////////////////////////////////////////////
+bool   CValue::Has (_pc_sz _p_value) const { return (0 == this->m_value.CompareNoCase(_p_value)); }
 
-CStringW  CHtmlInput::Text(void)const
-{
-	CStringW cs_text;
-	if (!TBase::m_el)
-		return cs_text;
+_pc_sz CValue::Get (void) const { return (_pc_sz) this->m_value; }
+void   CValue::Set (_pc_sz _p_value) { this->m_value = _p_value; this->m_value.Trim(); }
 
-	::ATL::CComQIPtr<IHTMLInputTextElement> pInput;
-	HRESULT hr_ = TBase::m_el.QueryInterface(&pInput);
-	if (FAILED(hr_))
-		return cs_text;
-	if (!pInput)
-		return cs_text;
+CValue& CValue::operator = (const CValue& _src) { *this << _src.Get(); return *this; }
+CValue& CValue::operator <<(_pc_sz _p_value) { this->Set(_p_value); return *this; }
 
-	_bstr_t bs_val;
-	hr_ = pInput->get_value(bs_val.GetAddress());
-	if (FAILED(hr_))
-		return cs_text;
-
-	cs_text = static_cast<LPCWSTR>(bs_val);
-	return cs_text;
-}
-
-HRESULT     CHtmlInput::Text(LPCWSTR lpszText)
-{
-	if (!TBase::m_el)
-		return OLE_E_BLANK;
-
-	::ATL::CComQIPtr<IHTMLInputTextElement> pInput;
-	HRESULT hr_ = TBase::m_el.QueryInterface(&pInput);
-	if (FAILED(hr_))
-		return hr_;
-	if (!pInput)
-		return (hr_ = E_NOINTERFACE);
-
-	_bstr_t bs_text(lpszText);
-	hr_ = pInput->put_value(bs_text);
-	return  hr_;
-}
-
-#endif
+#pragma endregion

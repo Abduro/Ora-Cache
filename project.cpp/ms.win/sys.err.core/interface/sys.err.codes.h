@@ -12,49 +12,23 @@
 
 #pragma region _err_code_defs
 // making things a little bit inconspicuous;
-#ifndef __e_aborted
-#define __e_aborted E_ABORT
-#endif
-#ifndef __e_fail
-#define __e_fail E_FAIL
-#endif
-#ifndef __e_handle
-#define __e_handle INVALID_HANDLE_VALUE // (uint32_t)(-1)
-#endif
-#ifndef __e_index
-#define __e_index DISP_E_BADINDEX
-#endif
-#ifndef __e_invalid_arg
-#define __e_invalid_arg E_INVALIDARG
-#define __e_inv_arg   __e_invalid_arg
-#endif
-#ifndef __e_no_iface
-#define __e_no_iface E_NOINTERFACE
-#endif
-#ifndef __e_no_memory
-#define __e_no_memory E_OUTOFMEMORY
-#endif
-#ifndef __e_not_impl
-#define __e_not_impl E_NOTIMPL
-#endif
-#ifndef __e_not_inited
+#define __e_aborted    E_ABORT
+#define __e_fail       E_FAIL
+#define __e_handle     INVALID_HANDLE_VALUE // (uint32_t)(-1)
+#define __e_index      DISP_E_BADINDEX
+#define __e_inv_arg    E_INVALIDARG
+#define __e_no_iface   E_NOINTERFACE
+#define __e_no_memory  E_OUTOFMEMORY
+#define __e_not_found  TYPE_E_ELEMENTNOTFOUND
+#define __e_not_impl   E_NOTIMPL
 #define __e_not_inited OLE_E_BLANK
-#endif
-#ifndef __e_rect
+
 #define __e_rect OLE_E_INVALIDRECT
-#endif
-#ifndef __e_hwnd
 #define __e_hwnd OLE_E_INVALIDHWND
-#endif
-#ifndef __e_not_expect
+
 #define __e_not_expect E_UNEXPECTED
-#endif
-#ifndef __e_pointer
-#define __e_pointer E_POINTER
-#endif
-#ifndef __e_type
-#define __e_type DISP_E_TYPEMISMATCH
-#endif
+#define __e_pointer    E_POINTER
+#define __e_type       DISP_E_TYPEMISMATCH
 
 #ifndef __s_ok
 #define __s_ok S_OK

@@ -190,22 +190,28 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)web.ie.aux.h" />
+    <ClCompile Include="$(_1)web.ie.aux.cpp" />
     <ClInclude Include="$(_0)web.ie.browser.h" />
     <ClCompile Include="$(_1)web.ie.browser.cpp" />
+    <ClInclude Include="$(_0)web.ie.content.h" />
+    <ClCompile Include="$(_1)web.ie.content.cpp" />
     <ClInclude Include="$(_0)web.ie.defs.h" />
     <ClCompile Include="$(_1)web.ie.defs.cpp" />
     <ClInclude Include="$(_0)web.ie.html.h" />
     <ClCompile Include="$(_1)web.ie.html.cpp" />
     <ClInclude Include="$(_0)web.ie.locator.h" />
     <ClCompile Include="$(_1)web.ie.locator.cpp" />
-    <ClInclude Include="$(_0)web.ie.version.h" />
-    <ClCompile Include="$(_1)web.ie.version.cpp" />
-    <ClInclude Include="$(_2)web.ie.browser.wrap.h" />
-    <ClCompile Include="$(_2)web.ie.browser.wrap.cpp" />
-    <ClInclude Include="$(_2)web.ie.obj.access.h" />
-    <ClCompile Include="$(_2)web.ie.obj.access.cpp" />
+    <ClInclude Include="$(_0)web.ie.emulate.h" />
+    <ClCompile Include="$(_1)web.ie.emulate.cpp" />
+    <ClInclude Include="$(_2)web.ie.window.h" />
+    <ClCompile Include="$(_2)web.ie.window.cpp" />
+    <ClInclude Include="$(_2)web.ie.accessor.h" />
+    <ClCompile Include="$(_2)web.ie.accessor.cpp" />
     <ClInclude Include="$(_0)web.ie.reg.h" />
     <ClCompile Include="$(_1)web.ie.reg.cpp" />
+    <ClInclude Include="$(_0)web.ie.script.h" />
+    <ClCompile Include="$(_1)web.ie.script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="sys.shared_v15.vcxproj">

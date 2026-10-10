@@ -8,6 +8,11 @@
 */
 #include <atlbase.h>
 #include <atlexcept.h>
+#include <atlwin.h>
+#include <atlstr.h>
+#include <atlsafe.h>
+#include <comdef.h>
+#include <comutil.h>
 #include <dispex.h>
 #include <map>
 #include <vector>
@@ -18,25 +23,48 @@
 #include "shared.types.h"
 #include "sys.error.h"
 
-namespace ex_ui { namespace web { namespace IE { namespace defs {
+namespace ex_ui { namespace web { namespace IE {
+namespace core {
+	class CBrowserWnd;
+}	
+namespace defs {
 
 	using namespace ::shared::types;
+	using namespace ::ATL;
 
 	using CError = ::shared::sys_core::CError;
 	using TError = const CError;
 
-	interface IWebBrowserEventHandler
+	using var_bool = VARIANT_BOOL;
+	
+	#define var_true  VARIANT_TRUE
+	#define var_false VARIANT_FALSE
+
+	using   ICmdTarget = IOleCommandTarget;
+
+	typedef CComPtr<ICmdTarget>     TCmdTargetPtr;
+	typedef CComPtr<IDispatch>      TDispatchPtr;    using TDispPtr = TDispatchPtr;
+	typedef CComPtr<IHTMLDocument>  TDocument0Ptr;   using TDoc0Ptr = TDocument0Ptr;
+	typedef CComPtr<IHTMLDocument2> TDocument2Ptr;   using TDoc2Ptr = TDocument2Ptr;
+	typedef CComPtr<IHTMLDocument3> TDocument3Ptr;   using TDoc3Ptr = TDocument3Ptr;
+	typedef CComPtr<IHTMLElement>   TElementPtr;     using TElemPtr = TElementPtr;
+
+	using   ex_ui::web::IE::core::CBrowserWnd;
+	typedef ::std::shared_ptr<CBrowserWnd> TBrwWndPtr; // https://learn.microsoft.com/en-us/cpp/standard-library/unique-ptr-class ;
+	// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa752127(v=vs.85) ;
+	typedef CComQIPtr<IWebBrowser2> TWebBrwPtr;
+
+	interface IWbEvtHandler
 	{
-		virtual err_code BrowserEvent_BeforeNavigate  (_pc_sz lpszUrl) PURE;
-		virtual err_code BrowserEvent_DocumentComplete(_pc_sz lpszUrl, const bool bStreamObject) PURE;
-		virtual err_code BrowserEvent_OnMouseMessage  (const MSG&) { return __e_not_impl; }
+		virtual err_code WbEvt_BeforeNavigate  (_pc_sz _p_url) = 0;
+		virtual err_code WbEvt_DocumentComplete(_pc_sz _p_url, const bool _b_use_stream) = 0;
+		virtual err_code WbEvt_OnMouseMessage  (const MSG&) { return __e_not_impl; }
 	};
 
-	interface IHtmlElementEventCallback
+	interface IHtmlElEvtClbk
 	{
-		virtual err_code HtmlEvent_OnGeneric( _pc_sz lpszElement, _pc_sz lpszEvent ) { lpszElement; lpszEvent; return __s_ok; }
+		virtual err_code ElEvt_OnGeneric ( _pc_sz _p_element, _pc_sz _p_event ) { _p_element; _p_event; return __s_ok; }
 	};
-
 }}}}
 
 #endif/*_WEB_IE_DEFS_H_INCLUDED*/

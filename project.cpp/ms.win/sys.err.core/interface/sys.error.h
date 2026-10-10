@@ -150,7 +150,7 @@ namespace shared { namespace sys_core {
 		void        Class (_pc_sz)     ;                              // sets the error source class name;
 		void        Class (_pc_sz _lp_class, const bool bFormatted);  // sets the error source class name;
 		void        Clear (void)       ;        // sets the error object to success state, i.e. no error state;
-		dword_t       Code  (void) const ;        // gets Win API error code;
+		dword_t     Code  (void) const ;        // gets Win API error code;
 		void        Code  (const dword_t);        // sets Win API error code;
 		_pc_sz      Desc  (void) const ;        // gets the current description;
 		bool        Is    (void) const ;        // returns true if the object is in error state, otherwise, false, i.e. no error;
@@ -160,7 +160,7 @@ namespace shared { namespace sys_core {
 		void        Method(_pc_sz)     ;        // sets method name that produces the error
 		void        Reset (void)       ;        // re-sets the error object to blank state (OLE_E_BLANK)
 		err_code    Result(void) const ;        // gets the current result code
-		dword_t       Show  (const HWND  = ::GetActiveWindow()) const;
+		dword_t     Show  (const HWND  = ::GetActiveWindow()) const;
 		CErr_State& State (void)       ;
 		TErr_State& State (void) const ;
 
@@ -192,11 +192,13 @@ namespace shared { namespace sys_core {
 		operator TErr_State& (void) const ;    // returns error state (ra) ;
 
 		enum e_cmds : uint32_t {
-		e_do_nothing = 0x0,
-		e_get_last   = 0x1,   // performs command this::Last() for getting last system error code and its description;
+		     e_do_nothing = 0x0,
+		     e_get_last   = 0x1,   // performs command this::Last() for getting last system error code and its description;
 		};
 
-		CError&  operator () (const e_cmds _n_cmd); // executes command specified through input arg;
+		CError& operator () (const e_cmds _n_cmd); // executes command specified through input arg;
+		bool    operator == (const err_code) const;
+		bool    operator != (const err_code) const;
 	
 	protected:
 		mutable

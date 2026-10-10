@@ -414,6 +414,9 @@ CError& CError::operator () (const e_cmds _n_cmd) {
 	return *this;
 }
 
+bool    CError::operator == (const err_code _code) const { return this->Result() == _code; }
+bool    CError::operator != (const err_code _code) const { return this->Result() != _code; }
+
 #pragma endregion
 
 namespace shared { namespace sys_core {

@@ -1,91 +1,132 @@
-#ifndef _UIXELEMENT_H_7F592FBD_AE95_40d1_B6B0_DFCE630991B4_INCLUDED
-#define _UIXELEMENT_H_7F592FBD_AE95_40d1_B6B0_DFCE630991B4_INCLUDED
+#ifndef _WEB_IE_HTML_H_INCLUDED
+#define _WEB_IE_HTML_H_INCLUDED
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 22-Nov-2014 at 5:47:22p, GMT+3, Taganrog, Saturday;
 	This is Ebo Pack UIX library HTML element wrapper class declaration file.
 	-----------------------------------------------------------------------------
 	Adopted to v15 on 30-Jul-2018 at 2:51:25p, UTC+7, Novosibirsk, Monday;
 */
-#include "shared.web.defs.h"
+#include "web.ie.defs.h"
 
-namespace ex_ui { namespace web
-{
-	typedef ::ATL::CComPtr<IHTMLElement> TElementObject;
-	class CHtmlElement
-	{
+namespace ex_ui { namespace web { namespace IE { namespace html { using namespace ::ex_ui::web::IE::defs;
+
+	using namespace ::ATL;
+	typedef CComPtr<IHTMLElement> TElement;
+
+	class CElement {
+	public:
+		 CElement (CAxWindow& _ctrl_wnd, _pc_sz _p_el_id);
+		 CElement (void) = delete; CElement (const CElement&) = delete; CElement (CElement&&) = delete;
+		~CElement (void) = default;
+
+		CString   Content (void) const;      // gets inner html of the element;
+		err_code  Content (_pc_sz _p_html);  // sets inner html of the element;
+
+		bool      Disabled (void) const;
+		err_code  Disabled (const bool);
+
+		TError&   Error (void) const;
+
+		CString   Identifier (void) const;
+		bool      Is_valid   (void) const;
+		rect_t    Rectangle  (void) const;
+
+		CString   Style (void) const;
+		err_code  Style (_pc_sz);            // adds style to existing one; if already defined, it is replaced;
+
+		bool      Visible (void) const;
+		err_code  Visible (const bool);
+
 	protected:
-		TElementObject  m_el;
-		CStringW        m_el_id;
-		CAxWindow&      m_browser;
-	public:
-		 CHtmlElement(::ATL::CAxWindow& _browser, LPCWSTR lpszId);
-		~CHtmlElement(void);
-	public:
-		CStringW        Content(void)             const;        // gets inner html of the element
-		HRESULT         Content(LPCWSTR lpszInner)     ;        // sets inner html of the element
-		bool            Disabled   (void)         const;
-		HRESULT         Disabled   (const bool)        ;
-		CStringW        Identifier (void)         const;
-		bool            IsValid    (void)         const;
-		RECT            Rectangle  (void)         const;
-		CStringW        Style      (void)         const;
-		HRESULT         Style      (LPCWSTR)           ;        // adds style to existing one; if already defined, it is replaced;
-		bool            Visible    (void)         const;
-		HRESULT         Visible    (const bool)        ;
+		CElement&  operator = (const CElement&) = delete; CElement& operator = (CElement&&) = delete;
+		mutable
+		CError     m_error;
+		CAxWindow& m_ctrl_wnd;
+		TElement   m_el;
+		CString    m_el_id;
 	};
 
-	class CHtmlOption
-	{
-	private:
-		CStringW        m_value;
-		CStringW        m_text;
-		bool            m_bSelected;
+	class COption {
 	public:
-		 CHtmlOption(void);
-		~CHtmlOption(void);
-	public:
-		bool           HasValue(LPCWSTR)         const;
-		bool           Selected(void)            const;
-		VOID           Selected(const bool)           ;
-		LPCWSTR        Text (void)               const;
-		VOID           Text (LPCWSTR)                 ;
-		LPCWSTR        Value(void)               const;
-		VOID           Value(LPCWSTR)                 ;
-		bool           ValueAsBool(void)         const;
-		LONG           ValueAsLong(void)         const;
-	};
+		 COption (void); COption (const COption&); COption (COption&&);
+		~COption (void) = default;
 
-	typedef ::std::vector<CHtmlOption> THtmlOptions;
+		bool   Selected (void) const;
+		void   Selected (const bool);
 
-	class CHtmlSelect :
-		public  CHtmlElement
-	{
-		typedef CHtmlElement TBase;
-	private:
-		THtmlOptions      m_items;
-	public:
-		 CHtmlSelect(::ATL::CAxWindow&, LPCWSTR lpszId);
-		~CHtmlSelect(void);
-	public:
+		_pc_sz Text (void) const;
+		void   Text (_pc_sz _p_txt);
+		
+		COption& operator = (const COption&); COption& operator = (COption&&);
+		COption& operator <<(_pc_sz _p_text);
+
+		class CValue {
+		public:
+			CValue (void); CValue (const CValue&); CValue (CValue&&) = delete; ~CValue (void) = default;
+
+			bool   AsBool (void) const;
+			long_t AsLong (void) const;
+
+			bool   Has (_pc_sz _p_text) const;
+
+			_pc_sz Get (void) const;
+			void   Set (_pc_sz _p_value);
+
+			CValue& operator = (const CValue&); CValue& operator = (CValue&&) = delete;
+			CValue& operator <<(_pc_sz _p_value);
+		private:
+			CString m_value;
+		};
+
 		const
-		THtmlOptions&     Options (void)            const;
-		LONG              Selected(void)            const;
-		HRESULT           Selected(const LONG lIndex)    ;
-		HRESULT           Selected(LPCWSTR lpszValue)    ;
-		const CHtmlOption&SelectedOption(void)      const;
+		CValue& Value (void) const;
+		CValue& Value (void) ;
+		COption& operator <<(const CValue&);
+
+	private:
+		CString m_text;
+		bool    m_selected;
+		CValue  m_value;
 	};
 
-	class CHtmlInput :
-		public  CHtmlElement
-	{
-		typedef CHtmlElement TBase;
-	public:
-		 CHtmlInput(::ATL::CAxWindow&, LPCWSTR lpszId);
-		~CHtmlInput(void);
-	public:
-		CStringW        Text(void)const;
-		HRESULT         Text(LPCWSTR);
-	};
-}}
+	typedef ::std::vector<COption> TOptions;
 
-#endif/*_UIXELEMENT_H_7F592FBD_AE95_40d1_B6B0_DFCE630991B4_INCLUDED*/
+	class CSelect : public CElement { typedef CElement TBase;
+	public:
+		 CSelect (CAxWindow& _browser, _pc_sz _p_el_id); CSelect (const CSelect&) = delete; CSelect (CSelect&&) = delete;
+		~CSelect (void);
+
+		long_t    Index (void) const;
+		err_code  Index (const long_t);
+
+		bool   Is_empty (void) const;
+		bool   Is_valid (void) const;
+
+		const
+		TOptions& Items (void) const;   // gets a reference to the vector of the available options;
+		err_code  Items (void) ;        // fills the vector by available options;
+
+		const
+		COption&  Selected (void) const;
+		err_code  Selected (_pc_sz _p_value);
+		
+	private:
+		CSelect& operator = (const CSelect&) = delete; CSelect& operator = (CSelect&&) = delete;
+		TOptions m_items;
+	};
+
+	class CInput : public CElement { typedef CElement TBase;
+	public:
+		 CInput (CAxWindow& _browser, _pc_sz _p_el_id);
+		 CInput (void) = delete; CInput (const CInput&) = delete; CInput (CInput&&) = delete;
+		~CInput (void) = default;
+
+		CString  Text (void) const;
+		err_code Text(_pc_sz _p_txt);
+
+	private:
+		CInput& operator = (const CInput&) = delete; CInput& operator = (CInput&&) = delete;
+	};
+}}}}
+
+#endif/*_WEB_IE_HTML_H_INCLUDED*/
