@@ -23,13 +23,6 @@ namespace none {
 
 namespace shared { namespace sys_core { namespace com {
 
-	using namespace shared::types;
-
-	using shared::sys_core::CError;
-	
-	using TError  = const CError&;
-	using TString = TStringEx;
-
 	class CCoMode {
 	public:
 		 CCoMode (void);
@@ -38,28 +31,25 @@ namespace shared { namespace sys_core { namespace com {
 		 CCoMode (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc);
 		~CCoMode (void);
 
-	public:
 		_pc_sz Alias(void) const;   // gets this mode alias value;
 		bool   Alias(_pc_sz);       // sets this mode alias ; returns true in cas of change;
 
-		void   Clear(void)  ;       // clears this class object, i.e. resets all its attributes to initial state;
+		void   Clear(void);         // clears this class object, i.e. resets all its attributes to initial state;
 
-		dword_t  Code (void) const;   // gets the code, in other words, actually this is one of the values of COINIT enumeration;
-		bool   Code (dword_t) ;       // sets the code, returns true in case of change;
+		dword_t  Code (void) const; // gets the code, in other words, actually this is one of the values of COINIT enumeration;
+		bool   Code (dword_t) ;     // sets the code, returns true in case of change;
 
 		_pc_sz Desc (void) const;   // gets a brief description of this mode;
 		bool   Desc (_pc_sz) ;      // sets a brief description of this mode; returns true in case of change;
 
 		void   Set  (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc); // sets all atts together or at once; no interest is in return result;
 
-#if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_req) const;
-#endif
-	public:
+
 		CCoMode& operator = (const CCoMode&);
 		CCoMode& operator = (CCoMode&&);        // makes copying the input objects and clears it; no move operation is made;
 		CCoMode& operator >>(_pc_sz _p_alias);  // sets an alias;
-		CCoMode& operator <<(dword_t _code);      // sets a code;
+		CCoMode& operator <<(dword_t _code);    // sets a code;
 		CCoMode& operator <<(_pc_sz _p_desc );  // sets a description;
 
 	private:
@@ -69,48 +59,44 @@ namespace shared { namespace sys_core { namespace com {
 	};
 }}}
 
-using shared::types::dword_t;
+using ::shared::types::dword_t;
 
-typedef shared::sys_core::com::CCoMode  TCoMode;
+typedef ::shared::sys_core::com::CCoMode  TCoMode;
 typedef ::std::map<dword_t, TCoMode> TCoMode_raws; // a key is COINIT enum's element; a value - the element wrapper class;
-typedef TCoMode_raws TRawModes;                  // makes the typedef name is little bit shorter;
+typedef TCoMode_raws TRawModes;                    // makes the typedef name is little bit shorter;
 
 namespace shared { namespace sys_core { namespace com {
 
 	class CCoMode_enum {
 	public:
 		enum e_available : dword_t {
-			e_apart    = co_apartment,  // for GUI apps; due to GUI requires message pump that is not provided by COM;
-			e_default  = co_threaded ,
-			e_threaded = co_threaded ,  // multi-threaded for performing tasks concurrently, for multi-processor architecture usage;
-			e_ole_1    = co_ole_1_dde,  // the legacy code disbling;
-			e_speed    = co_speed_up ,  // increasing memory usage for making a performance of the COM calls faster;
-			e_the_fake = (dword_t)-1
+		     e_apart    = co_apartment,  // for GUI apps; due to GUI requires message pump that is not provided by COM;
+		     e_default  = co_threaded ,
+		     e_threaded = co_threaded ,  // multi-threaded for performing tasks concurrently, for multi-processor architecture usage;
+		     e_ole_1    = co_ole_1_dde,  // the legacy code disbling;
+		     e_speed    = co_speed_up ,  // increasing memory usage for making a performance of the COM calls faster;
+		     e_the_fake = (dword_t)-1
 		};
-	public:
 		 CCoMode_enum (void);
 		 CCoMode_enum (const CCoMode_enum&) = delete; CCoMode_enum (CCoMode_enum&&) = delete;
 		~CCoMode_enum (void);
 
-	public:
 		const
 		TRawModes& Get (void) const;     // gets the reference to mode mapped collection ;
 		err_code   Set (void) ;          // adds a predefined concurrency mode classes;
 
-		bool Has (dword_t) const;          // returns true in case when predefined mode collection has the object of such code;
+		bool Has (dword_t) const;        // returns true in case when predefined mode collection has the object of such code;
 		const
-		TCoMode& Find (dword_t) const;     // returns found mode object, otherwise fake object is returned;
-#if defined(_DEBUG)
+		TCoMode& Find (dword_t) const;   // returns found mode object, otherwise fake object is returned;
+
 		CString Print (_pc_sz _pfx = _T("\t"), _pc_sz _sfx = _T("\n")) const;
-#endif
-	public:
+
 		static CCoMode_enum& Ref (void); // returns singleton object for avoiding a creation of predefined concurrency modes' set each time;
 
 	private:
 		CCoMode_enum& operator = (const CCoMode_enum&) = delete;
 		CCoMode_enum& operator = (CCoMode_enum&&) = delete;
 
-	private:
 		TRawModes m_modes;
 	};
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex ;
@@ -123,23 +109,20 @@ namespace shared { namespace sys_core { namespace com {
 			e_task = 0x2, // for multi-processor hardware architecture, running in multi-threaded apps with no gui; *default* cfg for COM init;
 			e_fast = 0x3, // the same as above configure + more intensive usage of memory for making COM to work faster;
 		};
-	public:
 		 CCoModel (_cfg_4 = _cfg_4::e_task); // no special method is created for filling acceptable mode set up; this constructor makes it;
 		 CCoModel (const CCoModel&);
 		 CCoModel (CCoModel&&) = delete;
 		~CCoModel (void);
 
-	public:
 		const
 		TRawModes& Accepted(void) const;
 		TRawModes& Accepted(void) ;
 		dword_t      CoInit  (void) const; // gets COINIT flags' value that is calculated from accepted modes;
 
 		_cfg_4     Cfg(void) const;      // returns the config value that is used for creating set of accepted modes;
-#if defined(_DEBUG)
+
 		CString Print (void) const;
-#endif
-	public:
+
 		CCoModel&  operator = (const CCoModel&);
 		CCoModel&  operator = (CCoModel&&) = delete;
 
@@ -151,11 +134,11 @@ namespace shared { namespace sys_core { namespace com {
 	};
 }}}
 
-typedef shared::sys_core::com::CCoMode_enum TCoMode_enum; using TCoModes = TCoMode_enum;
-typedef shared::sys_core::com::CCoMode_enum::e_available  TModeAccept;
+typedef ::shared::sys_core::com::CCoMode_enum TCoMode_enum; using TCoModes = TCoMode_enum;
+typedef ::shared::sys_core::com::CCoMode_enum::e_available  TModeAccept;
 
-typedef shared::sys_core::com::CCoModel TCoModel;
-typedef shared::sys_core::com::CCoModel::_cfg_4 TCoModelCfg; typedef TCoModelCfg TCo_Cfg; // just making name shorter;
+typedef ::shared::sys_core::com::CCoModel TCoModel;
+typedef ::shared::sys_core::com::CCoModel::_cfg_4 TCoModelCfg; typedef TCoModelCfg TCo_Cfg; // just making name shorter;
 
 namespace shared { namespace sys_core { namespace com {
 #pragma region __refs_9
@@ -172,28 +155,24 @@ namespace shared { namespace sys_core { namespace com {
 		 CCoGuard (CCoGuard&&) = delete;
 		~CCoGuard (void);               // if com-init operation was successfull, it automatically calls co-un-init winapi method;
 
-	public:
-		TError    Error (void) const; // no comment ;)
+		TError&   Error (void) const; // no comment ;)
 		bool      Is    (void) const; // returns true in case if COM init succeeded successfully;
 		const
 		TCoModel& Model (void) const; // just letting know what model is applied for the inits;
-#if defined(_DEBUG)
 		CString   Print (const e_print = e_print::e_req) const;
-#endif
-	private:
-		CCoGuard& operator = (const CCoGuard&) = delete;
-		CCoGuard& operator = (CCoGuard&&) = delete;
-	public:
+
 		operator const bool (void) const;
 
 	protected:
 		err_code  OnCreate (void); // calls co-init method; it is called from appropriate constructor; [for debug purpose];
 		err_code  OnDestroy(void); // calls co-un-init method; it is called from deconstructor of this class; [for debug purpose];
 
-	protected:
 		bool     m_auto ; // this flags controls the auto invocation such methods as co-init and co-un-init;
 		CError   m_error;
 		CCoModel m_model;
+	private:
+		CCoGuard& operator = (const CCoGuard&) = delete;
+		CCoGuard& operator = (CCoGuard&&) = delete;
 	};
 #if (0)
 	// https://learn.microsoft.com/en-us/windows/win32/learnwin32/initializing-the-com-library ; it is clear enough what type of COM initialization is required;
@@ -204,6 +183,6 @@ namespace shared { namespace sys_core { namespace com {
 #endif
 }}}
 
-typedef shared::sys_core::com::CCoGuard TCoGuard;
+typedef ::shared::sys_core::com::CCoGuard TCoGuard;
 
 #endif/*_COM_SVC_BASE_H_INCLUDED*/

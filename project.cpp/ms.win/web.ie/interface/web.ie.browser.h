@@ -35,12 +35,15 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 		TWebBrwPtr& Ctrl (void) ;      // gets the reference to IE WebBrowser2 activeX control; (rw)
 
 		TErrorRef  Error  (void) const;
-#if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
+		const
+		TBrwWndPtr& Host (void) const; // returns the reference to the activeX control (IWbBrowser2) host, i.e. CAxWindow, which holds its instance; (ro)
+		TBrwWndPtr& Host (void) ;      // returns the reference to the activeX control (IWbBrowser2) host, i.e. CAxWindow, which holds its instance; (rw)
+//#if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
 		err_code   Open (CComPtr<IStream>&);
-#else
+//#else
 		err_code   Open (CComPtr<IMoniker>&);
 		err_code   Open (const TRawData&);
-#endif
+//#endif
 		err_code   Open (_pc_sz pURL);
 		
 		err_code   Redirect (_pc_sz pTarget, const bool bAsync = true);
@@ -58,7 +61,7 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 	private:
 		CWebBrowser& operator = (const CWebBrowser&) = delete; CWebBrowser& operator = (CWebBrowser&&) = delete;
 		mutable CError m_error;
-		mutable TBrwWndPtr m_window;
+		mutable TBrwWndPtr m_host; // this is the window ptr that helds IWebBrowser2 ActiveX control instance;
 		TWebBrwPtr m_browser;
 		CCommand   m_command;
 		CContent   m_content;

@@ -7,7 +7,7 @@
 using namespace ::ex_ui::web::IE;
 using namespace ::ex_ui::web::IE::urls;
 
-using e_url_type = CType::e_url_type;
+using e_url_type = CSchema::e_url_type;
 using e_res_type = CExe_Url::e_res_type;
 
 namespace ex_ui { namespace web { namespace IE { namespace _impl {
@@ -120,7 +120,7 @@ bool CLocator::Accept (_pc_sz _lp_sz_pat) const {
 	this->m_error << __METHOD__ << __s_ok;
 	bool b_accept = false;
 
-	CType type_(_lp_sz_pat); // this object is just for pattern type test, otherwise, this method cannot be const;
+	CSchema type_(_lp_sz_pat); // this object is just for pattern type test, otherwise, this method cannot be const;
 	if (type_ == false)
 		return (m_error = type_);
 
@@ -145,8 +145,8 @@ dword_t       CLocator::DataAsCommand (void) const { if (VT_I4 != m_data.vt) ret
 
 TErrorRef     CLocator::Error (void) const { return this->m_error; }
 const
-CType& CLocator::Type (void) const { return this->m_type ; }
-CType& CLocator::Type (void)       { return this->m_type ; }
+CSchema& CLocator::Type (void) const { return this->m_type ; }
+CSchema& CLocator::Type (void)       { return this->m_type ; }
 
 _pc_sz CLocator::URL (void) const { return this->m_url.GetString(); }
 _pc_sz CLocator::URL (_pc_sz lpszPattern) { this->URL(lpszPattern, this->m_url);  return this->URL(); }
@@ -194,7 +194,7 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 	case e_url_type::eOuterBrowser: {
 
 			CString cs_pat(lpszPattern);
-			CString cs_pfx = CType::Prefix(m_type);
+			CString cs_pfx = CSchema::Prefix(m_type);
 
 			if (0 == cs_pat.Find(cs_pfx)) {
 				_result = cs_pat.Right(cs_pat.GetLength() - cs_pfx.GetLength());
@@ -206,7 +206,7 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 	case e_url_type::eInterCommand: {
 
 		CString cs_pat(lpszPattern);
-		CString cs_pfx = CType::Prefix(m_type);
+		CString cs_pfx = CSchema::Prefix(m_type);
 
 			if (0 == cs_pat.Find(cs_pfx)) {
 				_result = cs_pat.Right(cs_pat.GetLength() - cs_pfx.GetLength());
@@ -224,71 +224,71 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 }
 
 #pragma endregion
-#pragma region cls::CType{}
+#pragma region cls::CSchema{}
 
-CType:: CType (_pc_sz _lp_sz_pat) : m_type (e_url_type::eHostExecutable) { this->m_error >> __CLASS__ << __METHOD__;
+CSchema:: CSchema (_pc_sz _lp_sz_pat) : m_type (e_url_type::eHostExecutable) { this->m_error >> __CLASS__ << __METHOD__;
 	this->Set(_lp_sz_pat);
 }
-CType:: CType (const e_url_type _type) : CType(0) { this->m_type = _type; }
-CType::~CType (void) {}
+CSchema:: CSchema (const e_url_type _type) : CSchema(0) { this->m_type = _type; }
+CSchema::~CSchema (void) {}
 
-TError& CType::Error (void) const  { return m_error; }
-bool    CType::IsCmd (void) const  { return (e_url_type::eInterCommand == this->Get()); }
-bool    CType::IsExt (void) const  { return (e_url_type::eExternalLink == this->Get()); }
-bool    CType::IsOut (void) const  { return (e_url_type::eOuterBrowser == this->Get()); }
+TError& CSchema::Error (void) const  { return m_error; }
+bool    CSchema::IsCmd (void) const  { return (e_url_type::eInterCommand == this->Get()); }
+bool    CSchema::IsExt (void) const  { return (e_url_type::eExternalLink == this->Get()); }
+bool    CSchema::IsOut (void) const  { return (e_url_type::eOuterBrowser == this->Get()); }
 
-CType::e_url_type CType::Get (void) const { return this->m_type ; }
+CSchema::e_url_type CSchema::Get (void) const { return this->m_type ; }
 
-void   CType::Set (const e_url_type _value) { this->m_type = _value; }
+void   CSchema::Set (const e_url_type _value) { this->m_type = _value; }
 
-err_code CType::Set (_pc_sz _lp_sz_pat) {
+err_code CSchema::Set (_pc_sz _lp_sz_pat) {
 	_lp_sz_pat;
 	this->m_error << __METHOD__ << __s_ok;
 
 	CString cs_pat(_lp_sz_pat);
 
 	if (cs_pat.IsEmpty()) return (this->m_error << __e_inv_arg);
-	if (cs_pat.GetLength() < CType::MinLen()) return this->m_error << (err_code)TErrCodes::eData::eInvalid;
+	if (cs_pat.GetLength() < CSchema::MinLen()) return this->m_error << (err_code)TErrCodes::eData::eInvalid;
 
-	m_type = CType::ToType(_lp_sz_pat);
+	m_type = CSchema::ToType(_lp_sz_pat);
 
 	return this->Error();
 }
 
-CType& CType::operator << (_pc_sz _lp_sz_pat)  { this->Set(_lp_sz_pat); return *this; }
-CType& CType::operator << (const e_url_type _type) { this->Set(_type); return *this; }
+CSchema& CSchema::operator << (_pc_sz _lp_sz_pat)  { this->Set(_lp_sz_pat); return *this; }
+CSchema& CSchema::operator << (const e_url_type _type) { this->Set(_type); return *this; }
 
-CType::operator TError& (void) const { return this->Error(); }
-CType::operator e_url_type (void) const { return this->Get(); }
-CType::operator bool (void) const { return this->Error() == false; }
+CSchema::operator TError& (void) const { return this->Error(); }
+CSchema::operator e_url_type (void) const { return this->Get(); }
+CSchema::operator bool (void) const { return this->Error() == false; }
 
-int32_t CType::MinLen (void) {
+int32_t CSchema::MinLen (void) {
 	static const int32_t n_min_len = 7; // equals to length of possible prefix plus one character for URL itself;
 	return n_min_len;
 }
 
-CString CType::Prefix (const e_url_type _type) {
+CString CSchema::Prefix (const e_url_type _type) {
 	CString cs_pfx;
 	switch (_type) {
-	case CType::eExternalLink  : {} break;
-	case CType::eHostExecutable: { cs_pfx = _T("res://" ); } break;
-	case CType::eOuterBrowser  : { cs_pfx = _T("outer::"); } break;
-	case CType::eInterCommand  : { cs_pfx = _T("inter::"); } break;
+	case CSchema::eExternalLink  : {} break;
+	case CSchema::eHostExecutable: { cs_pfx = _T("res://" ); } break;
+	case CSchema::eOuterBrowser  : { cs_pfx = _T("outer::"); } break;
+	case CSchema::eInterCommand  : { cs_pfx = _T("inter::"); } break;
 	}
 	return cs_pfx;
 }
 
-e_url_type  CType::ToType (_pc_sz _lp_sz_pat) {
+e_url_type  CSchema::ToType (_pc_sz _lp_sz_pat) {
 	_lp_sz_pat;
-	e_url_type value = CType::eExternalLink;
+	e_url_type value = CSchema::eExternalLink;
 	CString cs_pat(_lp_sz_pat);
 
 	if (cs_pat.IsEmpty()) return value;
-	if (cs_pat.GetLength() < CType::MinLen()) return value;
+	if (cs_pat.GetLength() < CSchema::MinLen()) return value;
 
-	if (0 == cs_pat.Find(CType::Prefix(CType::eHostExecutable))) value = e_url_type::eHostExecutable;
-	if (0 == cs_pat.Find(CType::Prefix(CType::eOuterBrowser)))   value = e_url_type::eOuterBrowser;
-	if (0 == cs_pat.Find(CType::Prefix(CType::eInterCommand)))   value = e_url_type::eInterCommand;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::eHostExecutable))) value = e_url_type::eHostExecutable;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::eOuterBrowser)))   value = e_url_type::eOuterBrowser;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::eInterCommand)))   value = e_url_type::eInterCommand;
 
 	return value;
 }

@@ -20,6 +20,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 
 	typedef CWindowImpl<CBrowserWnd, CAxWindow> TBrwWindow;
 	typedef CComPtr<IOleInPlaceActiveObject>    TActiveObject;
+	typedef CComPtr<IServiceProvider>           TSvcProvider;
 
 	class CBrowserWnd : public TBrwWindow, THtmlSink {
 		friend class CWebBrowser;
@@ -48,19 +49,19 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_NAVIGATEERROR   , NavigateError   , &NavigateError_Info   )
 		END_SINK_MAP()
 
-		err_code CreateObject (const HWND hParent, const rect_t& rcArea, CComPtr<IServiceProvider>&, const bool bVisible);
+		err_code CreateObject (const HWND hParent, const rect_t& rcArea, TSvcProvider&, const bool bVisible); // creates an instance of IWebBrowser2 ActiveX control;
 		err_code SetBackColor (const COLORREF _clr);
 #if 0 /*(_WIN32_IE >= _WIN32_IE_IE60SP2)*/
-		err_code EnableFeature (const DWORD dwFeature, const bool bEnabled, const DWORD dwScope = SET_FEATURE_ON_PROCESS);
-		err_code IsFeatureEnabled (const DWORD dwFeature, const DWORD dwScope = GET_FEATURE_FROM_PROCESS);
+		err_code EnableFeature (const dword_t dwFeature, const bool bEnabled, const dword_t dwScope = SET_FEATURE_ON_PROCESS);
+		err_code IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope = GET_FEATURE_FROM_PROCESS);
 #endif
 		TError& Error (void) const;
 
 	private:
-		LRESULT OnClose    (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-		LRESULT OnCreate   (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-		LRESULT OnErase    (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-		LRESULT OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+		LRESULT OnClose    (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
+		LRESULT OnCreate   (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
+		LRESULT OnErase    (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
+		LRESULT OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 	
 		STDMETHOD(BeforeNavigate2)( LPDISPATCH pDisp, LPVARIANT pUrl, LPVARIANT pFlags, 
 		                            LPVARIANT  pTargetFrameName,

@@ -8,7 +8,7 @@
 
 namespace shared { namespace sys_core { namespace com { namespace security {
 
-	using namespace shared::types;
+	using namespace ::shared::types;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/objidlbase/nn-objidlbase-iserversecurity ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-iclientsecurity ;

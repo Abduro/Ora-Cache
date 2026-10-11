@@ -4,7 +4,7 @@
 */
 #include "com.sec.base.h"
 
-using namespace shared::sys_core::com::security;
+using namespace ::shared::sys_core::com::security;
 
 namespace shared { namespace sys_core { namespace com { namespace security { namespace _impl {
 

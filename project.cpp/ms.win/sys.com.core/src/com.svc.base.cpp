@@ -11,17 +11,15 @@
 #include "com.svc.base.h"
 #include "com.sec.base.h"
 
-using namespace shared::sys_core::com;
+using namespace ::shared::sys_core::com;
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma region cls::CCoMode{}
 
 CCoMode:: CCoMode (void) : m_code(0), m_alias(_T("$undef")), m_desc(_T("$not_set")) {}
 CCoMode:: CCoMode (const CCoMode& _src) : CCoMode() { *this = _src; }
 CCoMode:: CCoMode (CCoMode&& _victim) : CCoMode() { *this = _victim; }
 CCoMode:: CCoMode (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc) : CCoMode() { *this >> _p_alias << _code << _p_desc; }
 CCoMode::~CCoMode (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 _pc_sz CCoMode::Alias (void) const { return this->m_alias.GetString(); }
 bool   CCoMode::Alias (_pc_sz _p_alias) {
@@ -54,11 +52,9 @@ bool   CCoMode::Desc (_pc_sz _p_desc) {
 	return b_changed;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+void    CCoMode::Clear (void) { *this >> _T("$undef") << (dword_t)0 << _T("$not_set"); }
 
-void    CCoMode::Clear(void) { *this >> _T("$undef") << (dword_t)0 << _T("$not_set"); }
-#if defined(_DEBUG)
-CString CCoMode::Print(const e_print e_opt) const {
+CString CCoMode::Print (const e_print e_opt) const {
 	static _pc_sz p_sz_pat_a = _T("cls::[%s]>>{%s:code=%d(0x%x);desc='%s'}");
 	static _pc_sz p_sz_pat_r = _T("{%s=%d(0x%x):%s}");
 
@@ -72,10 +68,8 @@ CString CCoMode::Print(const e_print e_opt) const {
 	if (e_print::e_req == e_opt) cs_out.Format(p_sz_pat_r, this->Alias(), this->Code(), this->Code(), (_pc_sz)cs_desc);
 	return  cs_out;
 }
-#endif
-void    CCoMode::Set  (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc) { *this >> _p_alias << _code << _p_desc; }
 
-/////////////////////////////////////////////////////////////////////////////
+void    CCoMode::Set  (dword_t _code, _pc_sz _p_alias, _pc_sz _p_desc) { *this >> _p_alias << _code << _p_desc; }
 
 CCoMode& CCoMode::operator = (const CCoMode& _src) { *this >> _src.Alias() << _src.Code() << _src.Desc(); return *this;}
 CCoMode& CCoMode::operator = (CCoMode&& _victim) { *this = _victim; _victim.Clear(); return *this; }
@@ -83,7 +77,7 @@ CCoMode& CCoMode::operator >>(_pc_sz _p_alias) { this->Alias(_p_alias); return *
 CCoMode& CCoMode::operator <<(dword_t _code)     { this->Code(_code); return *this; }
 CCoMode& CCoMode::operator <<(_pc_sz _p_desc)  { this->Desc(_p_desc); return *this; }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
 
 namespace shared { namespace sys_core { namespace com { namespace _impl {
 
@@ -103,13 +97,12 @@ namespace shared { namespace sys_core { namespace com { namespace _impl {
 	};
 
 }}}}
-using namespace shared::sys_core::com::_impl;
-/////////////////////////////////////////////////////////////////////////////
+using namespace ::shared::sys_core::com::_impl;
+
+#pragma region cls::CCoMode_enum{}
 
 CCoMode_enum:: CCoMode_enum (void) { this->Set(); }
 CCoMode_enum::~CCoMode_enum (void) {}
-
-/////////////////////////////////////////////////////////////////////////////
 
 bool     CCoMode_enum::Has  (dword_t _code) const { return (this->Get().end() != this->Get().find(_code)); }
 const
@@ -127,7 +120,6 @@ TCoMode& CCoMode_enum::Find (dword_t _code) const {
 	else
 		return it_found->second;
 }
-
 const
 TRawModes& CCoMode_enum::Get (void) const { return this->m_modes; }
 err_code   CCoMode_enum::Set (void) {
@@ -150,12 +142,8 @@ err_code   CCoMode_enum::Set (void) {
 	return n_result;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-#if defined(_DEBUG)
-CString   CCoMode_enum::Print (_pc_sz _pfx, _pc_sz _sfx) const {
+CString    CCoMode_enum::Print (_pc_sz _pfx, _pc_sz _sfx) const {
 	_pfx;_sfx;
-
 	static _pc_sz p_sz_pat = _T("cls::[%s]%s%s");
 
 	CString cs_out;
@@ -168,19 +156,16 @@ CString   CCoMode_enum::Print (_pc_sz _pfx, _pc_sz _sfx) const {
 		cs_modes += _sfx;
 
 	}
-
 	cs_out.Format(p_sz_pat, (_pc_sz)__CLASS__, _sfx, (_pc_sz)cs_modes);
-
 	return  cs_out;
-} 
-#endif
+}
 
-/////////////////////////////////////////////////////////////////////////////
 CCoMode_enum& CCoMode_enum::Ref (void) {
 	static CCoMode_enum the_fake;
 	return the_fake;
 }
-/////////////////////////////////////////////////////////////////////////////
+
+#pragma endregion
 
 namespace shared { namespace sys_core { namespace com { namespace _impl {
 
@@ -197,8 +182,8 @@ namespace shared { namespace sys_core { namespace com { namespace _impl {
 	}
 
 }}}}
-using namespace shared::sys_core::com::_impl;
-/////////////////////////////////////////////////////////////////////////////
+
+#pragma region cls::CCoModel{}
 
 CCoModel:: CCoModel (_cfg_4 _cfg) : m_cfg(_cfg) {
 	_cfg;
@@ -227,7 +212,6 @@ CCoModel:: CCoModel (_cfg_4 _cfg) : m_cfg(_cfg) {
 CCoModel:: CCoModel (const CCoModel& _src) : CCoModel() { *this = _src; }
 CCoModel::~CCoModel (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
 const
 TRawModes& CCoModel::Accepted(void) const { return this->m_accepted; }
 TRawModes& CCoModel::Accepted(void)       { return this->m_accepted; }
@@ -240,8 +224,6 @@ dword_t      CCoModel::CoInit  (void) const {
 
 TCo_Cfg    CCoModel::Cfg (void) const { return this->m_cfg; }
 
-/////////////////////////////////////////////////////////////////////////////
-#if defined(_DEBUG)
 CString    CCoModel::Print (void) const {
 
 	static _pc_sz p_sz_pat_def = _T("cls::[%s]>>{default-mode:%s}");
@@ -263,18 +245,16 @@ CString    CCoModel::Print (void) const {
 	else {
 		const dword_t co_init = this->CoInit();
 		cs_out.Format(p_sz_pat_yes, (_pc_sz)__CLASS__, this->Cfg(), _cfg_to_str(this->Cfg()), co_init, co_init, (_pc_sz)cs_accepted);
-	}
-	
+	}	
 	return  cs_out;
-} 
-#endif
-/////////////////////////////////////////////////////////////////////////////
+}
 
 CCoModel&  CCoModel::operator = (const CCoModel& _src) { this->Accepted() = _src.Accepted(); return *this; }
 
 CCoModel::operator dword_t (void) const { return this->CoInit(); }
 
-/////////////////////////////////////////////////////////////////////////////
+#pragma endregion
+#pragma region cls::CCoGuard{}
 
 CCoGuard:: CCoGuard (bool _b_dbg) : m_auto(!_b_dbg), m_model(TCo_Cfg::e_none) {
 	m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK;
@@ -283,18 +263,15 @@ CCoGuard:: CCoGuard (bool _b_dbg) : m_auto(!_b_dbg), m_model(TCo_Cfg::e_none) {
 CCoGuard:: CCoGuard (TCo_Cfg _e_cfg) : m_auto(true), m_model(_e_cfg) { m_error >> __CLASS__ << __METHOD__ << OLE_E_BLANK; this->OnCreate(); }
 CCoGuard::~CCoGuard (void) { if (this->m_auto) this->OnDestroy(); }
 
-/////////////////////////////////////////////////////////////////////////////
-
 TError&   CCoGuard::Error (void) const { return ( this->m_error); }
 bool      CCoGuard::Is    (void) const { return (!this->m_error); }
 const
 TCoModel& CCoGuard::Model (void) const { return this->m_model; }
 
-#if defined(_DEBUG)
 CString   CCoGuard::Print (const e_print e_opt) const {
 	e_opt;
 	static _pc_sz p_sz_pat_all = _T("cls::[%s]>>{model=%s;err=%s;valid=%s}"); // the pattern for e_all option;
-	static _pc_sz p_sz_pat_req = _T("cls::[%s]>>{model=%s;valid=%s}");                 // the pattern for e_req option; e_req == e_required;
+	static _pc_sz p_sz_pat_req = _T("cls::[%s]>>{model=%s;valid=%s}");        // the pattern for e_req option; e_req == e_required;
 
 	CString cs_out;
 
@@ -304,12 +281,8 @@ CString   CCoGuard::Print (const e_print e_opt) const {
 	if (e_print::e_req == e_opt) {
 		cs_out.Format(p_sz_pat_req, (_pc_sz)__CLASS__, (_pc_sz)this->Model().Print(), (_pc_sz)TString(this->Is()));
 	}
-
 	return  cs_out;
 }
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
 
 err_code CCoGuard::OnCreate (void) {
 
@@ -338,6 +311,6 @@ err_code CCoGuard::OnDestroy(void) {
 	return this->Error();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 CCoGuard::operator const bool (void) const { return this->Is(); }
+
+#pragma endregion

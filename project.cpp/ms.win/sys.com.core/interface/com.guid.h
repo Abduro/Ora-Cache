@@ -28,7 +28,6 @@ namespace shared { namespace sys_core { namespace com {
 		 CGuid (CGuid&&) = delete;
 		~CGuid (void);
 
-	public:
 		err_code Create (void) ;       // https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateguid ; 
 		const
 		GUID&  Get (void) const;
@@ -39,12 +38,9 @@ namespace shared { namespace sys_core { namespace com {
 		bool   Is_null (void) const;   // returns true in case when all byies of this guid value is set to zero;
 		bool   Is_valid(void) const;   // returns true in case when the value of this guid is valid;
 
-#if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_req) const;
-#endif
 		CString To_string (void) const;
 
-	public:
 		CGuid&  operator = (const CGuid&);
 		CGuid&  operator = (CGuid&&) = delete;
 		CGuid&  operator <<(const GUID&);
@@ -58,7 +54,6 @@ namespace shared { namespace sys_core { namespace com {
 		bool operator == (const CGuid&) const ;
 		bool operator != (const CGuid&) const ;
 
-	public:
 		static CGuid&  Ref (void);           // gets a reference to a singleton of this class;
 		static bool Is_null (const GUID&);   // just one rule is applied: one of the bytes of guid struct is not equal to zero >> returns false;
 		static bool Is_valid (const GUID&);  // two rules are applied: (1) input guid is not null one and (2) can be converted to string and back; 

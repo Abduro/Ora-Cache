@@ -22,6 +22,7 @@
 #include "shared.dbg.h"
 #include "shared.types.h"
 #include "sys.error.h"
+#include "sys.mem.heap.h"
 
 namespace ex_ui { namespace web { namespace IE {
 namespace core {

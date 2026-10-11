@@ -4,9 +4,24 @@
 */
 #include "com.guid.h"
 
-using namespace shared::sys_core::com;
+using namespace ::shared::sys_core::com;
 
-/////////////////////////////////////////////////////////////////////////////
+namespace shell { namespace ext { namespace core {
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/guiddef/nf-guiddef-isequalguid ;
+#if (0)
+	bool operator == (const GUID& _lhv, const GUID& _rhv) {
+		_lhv; _rhv;
+		return !!::IsEqualGUID(_lhv, _rhv);
+	}
+	bool operator != (const GUID& _lhv, const GUID& _rhv) {
+		_lhv; _rhv;
+		return 0 == ::IsEqualGUID(_lhv, _rhv);
+	}
+#endif
+}}}
+
+#pragma region cls::CGuid{}
 
 CGuid:: CGuid (void) : m_guid{0}/*(__guid_null)*/ {}
 CGuid:: CGuid (_pc_sz _p_guid) : CGuid() { *this << _p_guid; }
@@ -14,12 +29,9 @@ CGuid:: CGuid (const CGuid& _src) : CGuid() { *this = _src; }
 CGuid:: CGuid (const GUID& _guid) : CGuid() { *this << _guid; }
 CGuid::~CGuid (void) {}
 
-/////////////////////////////////////////////////////////////////////////////
-
 err_code CGuid::Create (void) {
 	return ::CoCreateGuid(&this->m_guid);
 }
-
 const
 GUID&   CGuid::Get (void) const { return this->m_guid; }
 
@@ -39,13 +51,8 @@ bool    CGuid::Set (const GUID& _guid) {
 	return b_changed;
 }
 
-bool    CGuid::Is_equal (const GUID& _guid) const {
-	return !!::IsEqualGUID(this->Get(), _guid);
-}
-
-bool    CGuid::Is_null (void) const {
-	return CGuid::Is_null(this->Get());
-}
+bool    CGuid::Is_equal (const GUID& _guid) const { return !!::IsEqualGUID(this->Get(), _guid); }
+bool    CGuid::Is_null (void) const { return CGuid::Is_null(this->Get()); }
 
 bool    CGuid::Is_valid (void) const {
 #if (0)
@@ -55,7 +62,6 @@ bool    CGuid::Is_valid (void) const {
 #endif
 }
 
-#if defined(_DEBUG)
 CString CGuid::Print (const e_print e_opt) const {
 
 	static _pc_sz pc_sz_pat_a = _T("cls::[%s] >> {value=%s; valid=%s; is_null=%s}");
@@ -66,28 +72,8 @@ CString CGuid::Print (const e_print e_opt) const {
 	if (e_print::e_req == e_opt) cs_out.Format(pc_sz_pat_r, (_pc_sz)__CLASS__, TStringEx().Guid(this->Get()));
 	return  cs_out;
 }
-#endif
 
 CString CGuid::To_string (void) const { return TStringEx().Guid(this->Get()); }
-
-/////////////////////////////////////////////////////////////////////////////
-
-namespace shell { namespace ext { namespace core {
-
-	// https://learn.microsoft.com/en-us/windows/win32/api/guiddef/nf-guiddef-isequalguid ;
-#if (0)
-	bool operator == (const GUID& _lhv, const GUID& _rhv) {
-		_lhv; _rhv;
-		return !!::IsEqualGUID(_lhv, _rhv);
-	}
-	bool operator != (const GUID& _lhv, const GUID& _rhv) {
-		_lhv; _rhv;
-		return 0 == ::IsEqualGUID(_lhv, _rhv);
-	}
-#endif
-}}}
-
-/////////////////////////////////////////////////////////////////////////////
 
 CGuid&  CGuid::operator = (const CGuid& _src) { *this << _src.Get(); return *this; }
 CGuid&  CGuid::operator <<(const GUID& _guid) {  this->Set(_guid)  ; return *this; }
@@ -101,18 +87,11 @@ CGuid::operator const GUID& (void) const { return this->Get(); }
 bool CGuid::operator == (const CGuid& _guid) const { return this->Is_equal(_guid.Get()); }
 bool CGuid::operator != (const CGuid& _guid) const { return false == this->Is_equal(_guid.Get()); }
 
-/////////////////////////////////////////////////////////////////////////////
+CGuid& CGuid::Ref (void) { static CGuid stat_guid; return stat_guid; }
 
-CGuid& CGuid::Ref (void) {
-
-	static CGuid stat_guid;
-	return stat_guid;
-}
-
-bool  CGuid::Is_null (const GUID& _guid) {
-	return !!::IsEqualGUID(_guid,__guid_null);
-}
-
+bool  CGuid::Is_null (const GUID& _guid) { return !!::IsEqualGUID(_guid,__guid_null); }
 bool  CGuid::Is_valid (const GUID& _guid) {
 	return false == CGuid::Is_null(_guid) && nullptr != TStringEx().Guid(_guid);
 }
+
+#pragma endregion

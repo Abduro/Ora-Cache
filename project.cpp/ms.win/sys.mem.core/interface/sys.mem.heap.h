@@ -92,13 +92,13 @@ namespace shared { namespace memory
 	using CStringA = ::ATL::CStringA;
 	using CStringW = ::ATL::CStringW;
 
-	class CRawData : public  CRawBuffer { typedef CRawBuffer TBase;
+	class CRawData : public CRawBuffer { typedef CRawBuffer TBase;
 	public:
 		 CRawData (void);
 		 CRawData (const CRawData&);
 		 CRawData (CRawData&&);
 #if (0) // moved to sys.com.core adapter class;
-		 CRawData (const _variant_t&);       // is created from bstr data;
+		 CRawData (const _variant_t&); // is created from bstr data;
 #endif
 		 CRawData (const dword_t dwSize);
 #if (0) // moved to sys.com.core adapter class;
@@ -113,7 +113,7 @@ namespace shared { namespace memory
 		// ToDo:  Attach cannot use const byte* input arg due to const_cast must be applied;
 		err_code  Attach (const byte* pData, const dword_t dwSize , const bool _reset); // data must be created in current process memory heap;
 
-#if (0) // moved to sys.com.core adapter class;
+#if (0) // moved to sys.com.core adapter class; (is not done yet)
 		err_code  CopyToVariantAsArray(_variant_t&)const;          // data is interpreted as binary and is copied to safe array as is;
 		err_code  CopyToVariantAsUtf16(_variant_t&)const;          // data is interpreted as Utf8 text and is converted to Utf16 bstr;
 		err_code  CopyToVariantAsUtf8 (_variant_t&)const;          // data is interpreted as Utf8 text and is copied to bstr as is;
@@ -131,7 +131,7 @@ namespace shared { namespace memory
 		const
 		byte*     GetData(void) const;               // returns const ptr to memory block data (ro);
 		byte*     GetData(void)      ;               // returns pointer to memory block data (rw);
-		dword_t     GetSize(void) const;               // gets the size of the memory block that is used in creating of it; no HeapSize() is used;
+		dword_t   GetSize(void) const;               // gets the size of the memory block that is used in creating of it; no HeapSize() is used;
 		                                             // https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize ;
 		err_code  ToFile (_pc_sz _lp_sz_path) const; // saves data to file specified;
 #if (0) // moved to sys.com.core adapter class;

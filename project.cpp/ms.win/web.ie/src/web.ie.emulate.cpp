@@ -23,7 +23,8 @@ namespace ex_ui { namespace web { namespace IE { namespace _impl {
 
 }}}} using namespace ::ex_ui::web::IE::_impl;
 
-#pragma region cls::CEmulate{}
+#pragma region cls::CEmulate{} : 
 
+CEmulate::CEmulate (_pc_sz _p_host) : m_host_name(_p_host) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 #pragma endregion

@@ -37,7 +37,7 @@ namespace urls {
 		CString  m_cache; // the format: res://<path_to_binary_file>/<resource_type>/<resource_id> ;
 	};
 
-	class CType {
+	class CSchema {
 	public:
 		enum e_url_type : uint32_t {
 			eHostExecutable  = 0,   // a link that points to resource of browser host (default);
@@ -46,9 +46,9 @@ namespace urls {
 			eInterCommand    = 3,   // a link that provides command identifier for web control host;
 		};
 
-		 CType (_pc_sz _lp_sz_pat = 0); CType (const CType&) = delete; CType (CType&&) = delete;
-		 CType (const e_url_type = e_url_type::eHostExecutable);
-		~CType (void);
+		 CSchema (_pc_sz _lp_sz_pat = 0); CSchema (const CSchema&) = delete; CSchema (CSchema&&) = delete;
+		 CSchema (const e_url_type = e_url_type::eHostExecutable);
+		~CSchema (void);
 
 		TError& Error (void) const;
 		bool    IsCmd (void) const; // checks for internal command type;
@@ -59,8 +59,8 @@ namespace urls {
 		void       Set (const e_url_type);
 		err_code   Set (_pc_sz _lp_sz_pat);
 
-		CType& operator << (_pc_sz _lp_sz_pat);
-		CType& operator << (const e_url_type);
+		CSchema& operator << (_pc_sz _lp_sz_pat);
+		CSchema& operator << (const e_url_type);
 
 		operator TError& (void) const;     // returns encapsulated error object reference;
 		operator e_url_type (void) const;  // returns encapsulated type;
@@ -71,14 +71,14 @@ namespace urls {
 		static e_url_type ToType (_pc_sz _lp_sz_pat); // converts string to type if possible;
 
 	private:
-		CType& operator = (const CType&) = delete; CType& operator = (CType&&) = delete;
+		CSchema& operator = (const CSchema&) = delete; CSchema& operator = (CSchema&&) = delete;
 		e_url_type m_type ;
 		CError     m_error;
 	};
 
 	class CLocator {
 	public:
-		using e_url_type = CType::e_url_type;
+		using e_url_type = CSchema::e_url_type;
 
 		 CLocator (const e_url_type = e_url_type::eHostExecutable);
 		 CLocator (_pc_sz _lp_sz_pat); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete;
@@ -90,14 +90,14 @@ namespace urls {
 		dword_t       DataAsCommand (void) const;
 		TErrorRef     Error (void) const;
 		const
-		CType& Type (void) const;
-		CType& Type (void) ;
+		CSchema& Type (void) const;
+		CSchema& Type (void) ;
 
 		_pc_sz    URL  (void) const;
 		_pc_sz    URL  (_pc_sz lpszPattern);
 		err_code  URL  (_pc_sz lpszPattern, CString& _result);
 
-		CLocator& operator << (const CType&);
+		CLocator& operator << (const CSchema&);
 		CLocator& operator << (const e_url_type);
 		CLocator& operator << (_pc_sz _pattern);
 
@@ -109,7 +109,7 @@ namespace urls {
 	private:
 		mutable
 		CError     m_error;
-		CType      m_type ;
+		CSchema      m_type ;
 		CString    m_url  ;
 		_variant_t m_data ;
 	};

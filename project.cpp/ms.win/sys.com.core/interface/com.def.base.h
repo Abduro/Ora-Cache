@@ -19,7 +19,12 @@
 
 namespace shared { namespace sys_core { namespace com {
 
-	using namespace shared::types;
+	using namespace ::shared::types;
+	using ::shared::sys_core::CError;
+	
+	using TError  = const CError;
+	using TString = TStringEx;
+
 #pragma region __refs_8
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-progidfromclsid ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogid ;
@@ -34,23 +39,18 @@ namespace shared { namespace sys_core { namespace com {
 		 CClsId (CClsId&&) = delete;         // not required yet;
 		~CClsId (void) = default;
 
-	public:
 		CString  Get (void) const;           // gets class guid value as a string;
 		bool     Set (_pc_sz _p_cls_id);     // returns true if this class id value is changed, otherwise false;
 		bool     Set (const _guid& _cls_id); // sets this class value from input guid; it is supposed that given guid is a class id;
 
-		bool  Is_valid (void) const;      // checks class identifier for not null value; no program id check is involved;
+		bool  Is_valid (void) const;         // checks class identifier for not null value; no program id check is involved;
 
-		CString  ProgId (void) const;     // tries to get program identifier from this class guid that is currently set;
-
-#if defined(_DEBUG)
-		CString Print (const e_print = e_print::e_all) const;
-#endif
+		CString  ProgId (void) const;        // tries to get program identifier from this class guid that is currently set;
+		CString  Print (const e_print = e_print::e_all) const;
 		const
-		_guid& Raw (void) const;          // gets a reference to raw value of this class identifier; (ra)
-		_guid& Raw (void) ;               // gets a reference to raw value of this class identifier; (rw)
+		_guid& Raw (void) const;             // gets a reference to raw value of this class identifier; (ra)
+		_guid& Raw (void) ;                  // gets a reference to raw value of this class identifier; (rw)
 
-	public:
 		CClsId&  operator = (const CClsId&);
 		CClsId&  operator = (CClsId&&) = delete;      // not required yet;
 		CClsId&  operator <<(_pc_sz _p_cls_id);       // creates guid from input string;
@@ -60,7 +60,6 @@ namespace shared { namespace sys_core { namespace com {
 		operator const _guid&  (void) const; // gets class identifier as a plain guid data structure; (gets a reference);
 		operator const CString (void) const; // gets class identifier as a string data type;
 
-	public:
 		static _guid Get(_pc_sz _p_prog_id); // gets a registered class identifier for input program id; if not registered null guid is returned;
 		static  bool Has(_pc_sz _p_prog_id); // checks given program identifier for registered class id; if not registered false is returned;
 
@@ -76,7 +75,6 @@ namespace shared { namespace sys_core { namespace com {
 		 CProgId (CProgId&&) = delete;
 		~CProgId (void) = default;
 
-	public:
 		_guid    Cls (void) const;    // gets class identifier that is registered for this program id; if not found, null guid is returned;
 		_pc_sz   Get (void) const;    // returns program identifier plain text pointer;
 		bool     Set (_pc_sz)    ;    // returns true if this class value is changed; sets value of prog id as is;
@@ -87,12 +85,8 @@ namespace shared { namespace sys_core { namespace com {
 		const
 		CString& Raw (void) const;    // returns a reference to the raw value of this class; (ra)
 		CString& Raw (void);          // returns a reference to the raw value of this class; (rw)
-
-#if defined(_DEBUG)
 		CString Print (const e_print = e_print::e_all) const;
-#endif
 
-	public:
 		CProgId&  operator = (const CProgId&);
 		CProgId&  operator = (CProgId&&) = delete;
 		CProgId&  operator <<(_pc_sz _p_val);
@@ -101,7 +95,6 @@ namespace shared { namespace sys_core { namespace com {
 
 		operator _pc_sz (void) const;
 
-	public:
 		static _guid    Cls (_pc_sz _p_prog_id); // returns class guid that is registered for input prog-id arg, or null guid if not found;
 		static CString  Get (_pc_sz _p_cls_id);  // if no program id is registered for input class guid, empty string is returned;
 		static CString  Get (const _guid&);      // tries to get program identifier from input plain guid data arg value;
@@ -118,7 +111,6 @@ namespace shared { namespace sys_core { namespace com {
 		 CCoItemIdList (void); CCoItemIdList (const CCoItemIdList&) = delete; CCoItemIdList (CCoItemIdList&&) = delete;
 		~CCoItemIdList (void);
 
-	public:
 		bool  Is_valid (void) const; // just checks pointer value to be not equal to nullptr;
 		const
 		LPITEMIDLIST*  Ptr (void) const;
@@ -127,17 +119,15 @@ namespace shared { namespace sys_core { namespace com {
 		LPITEMIDLIST&  Ref (void) const;
 		LPITEMIDLIST&  Ref (void) ;
 
-	public:
 		operator const LPITEMIDLIST* (void) const;
 		operator       LPITEMIDLIST* (void) ;
 		operator const LPITEMIDLIST& (void) const;
 		operator       LPITEMIDLIST& (void) ;
 
 	private:
-		 CCoItemIdList&  operator = (const CCoItemIdList&) = delete;
-		 CCoItemIdList&  operator = (CCoItemIdList&&) = delete;
+		CCoItemIdList&  operator = (const CCoItemIdList&) = delete;
+		CCoItemIdList&  operator = (CCoItemIdList&&) = delete;
 
-	private:
 		LPITEMIDLIST m_p_list;
 	};
 }}}

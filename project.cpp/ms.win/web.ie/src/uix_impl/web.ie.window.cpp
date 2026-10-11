@@ -374,7 +374,7 @@ CBrowserWnd::CBrowserWnd (IWbEvtHandler& evt_ref) :  m_evt_handler(evt_ref), m_b
 	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 }
 
-err_code  CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, CComPtr<IServiceProvider>& pProvider, const bool bVisible) {
+err_code  CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSvcProvider& pProvider, const bool bVisible) {
 	hParent; rcArea; pProvider; bVisible;
 	this->m_error <<__METHOD__<<__s_ok;
 
