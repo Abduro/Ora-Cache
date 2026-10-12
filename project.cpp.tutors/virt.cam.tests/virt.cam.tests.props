@@ -5,15 +5,19 @@
   -->
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<Ebo_pack>$(SolutionDir)..\..\project.cpp\</Ebo_pack>
-		<Tabbed>$(Ebo_pack)ms.win.ctl\sfx.tabbed\</Tabbed>
-		<Common Condition="'$(Common)'==''">$(MSBuildThisFileDirectory)test.0.common\</Common>
+		<Ebo_pack>$(MSBuildThisFileDirectory)..\..\project.cpp\</Ebo_pack>
+		<Error>$(Ebo_pack)ms.win\sys.err.core\</Error>
+		<Memory>$(Ebo_pack)ms.win\sys.mem.core\</Memory>
+		<Shared>$(Ebo_pack)ms.win\sys.shared\</Shared>
+		<Browser>$(Ebo_pack)ms.win\web.ie\</Browser>
 	</PropertyGroup>
 	<PropertyGroup>
-		<_0>$(Common)interface\</_0>
-		<_1>$(Tabbed)interface\</_1>
+		<i_error>$(Error)interface\</i_error>
+		<i_shared>$(Shared)interface\</i_shared>
+		<i_browser>$(Browser)interface\</i_browser>
+		<i_memory>$(Memory)interface\</i_memory>
 	</PropertyGroup>
-	<PropertyGroup><!--a consumer project properties' file must include $(IncludePath) property at the end of value of <IncludePath> node;-->
-		<IncludePath>$(_0);$(_1);<!--$(IncludePath)--></IncludePath><!--*important*::it does *not* work in c++ project file!-->
+	<PropertyGroup>
+		<IncludePath>$(i_error);$(i_shared);$(i_browser);$(i_memory);$(IncludePath)</IncludePath>
 	</PropertyGroup>
 </Project>
