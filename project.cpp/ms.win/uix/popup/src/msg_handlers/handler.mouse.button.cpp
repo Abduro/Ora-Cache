@@ -277,7 +277,7 @@ namespace ex_ui { namespace message { namespace handlers { namespace mouse { nam
 					m_error << (err_code)TErrCodes::eData::eNotFound = _T("mouse button is not found;");
 			}
 			else
-				m_error << __e_invalid_arg = _T("event object is invalid;");
+				m_error << __e_inv_arg = _T("event object is invalid;");
 
 			static const TListeners lst_empty;
 			return lst_empty;

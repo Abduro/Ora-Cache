@@ -17,6 +17,7 @@
 		<Theme>$(Ebo_pack)ms.win\uix\draw\theme\</Theme>
 		<wtl>$(Ebo_pack)ms.wtl.10\</wtl>
 		<ZBuf>$(Ebo_pack)ms.win\uix\draw\gdi_zbuf\</ZBuf>
+		<Memory>$(Ebo_pack)ms.win\sys.mem.core\</Memory>
 	</PropertyGroup>
 	<PropertyGroup>
 		<Root Condition = "'$(Root)' == ''">..\</Root>
@@ -58,9 +59,10 @@
 		<i_named>$(Theme)interface\named</i_named>
 		<i_wtl>$(wtl)include\</i_wtl>
 		<i_zbuf>$(ZBuf)interface\</i_zbuf>
+		<i_memory>$(Memory)interface\</i_memory>
 	</PropertyGroup>
 	<PropertyGroup>
-		<externals>$(i_2d);$(i_clr);$(i_compl);$(i_ctrl);$(i_err);$(i_handlers);$(i_popup);$(i_named);$(i_shared);$(i_tabs);$(i_theme);$(i_wtl);$(i_zbuf)</externals>
+		<externals>$(i_2d);$(i_clr);$(i_compl);$(i_ctrl);$(i_err);$(i_handlers);$(i_popup);$(i_named);$(i_shared);$(i_tabs);$(i_theme);$(i_wtl);$(i_zbuf);$(i_memory)</externals>
 		<internals>$(_iface);$(_src);$(_res);$(_ico)</internals>
 		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(internals);$(externals);$(IncludePath)</IncludePath><!--*important*::it does *not* work in c++ project file!-->
 	</PropertyGroup>

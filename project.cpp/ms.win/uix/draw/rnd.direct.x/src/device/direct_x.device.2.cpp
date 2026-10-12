@@ -75,7 +75,7 @@ err_code  CDevice_HW::Create (const CAdapter& _adapter) {
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	if (false == _adapter.Is())
-		return (TBase::m_error << __e_invalid_arg) = _T("Input adapter is not valid;");
+		return (TBase::m_error << __e_inv_arg) = _T("Input adapter is not valid;");
 
 	if (TBase::Is_valid())
 		return TBase::m_error << (err_code)TErrCodes::eObject::eExists;
@@ -100,7 +100,7 @@ err_code CDevice_Warp::Create (const CAda_Warp& _ada_warp) {
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	if (false == _ada_warp.Is())
-		return (TBase::m_error << __e_invalid_arg) = _T("Warp adapter is not valid;");
+		return (TBase::m_error << __e_inv_arg) = _T("Warp adapter is not valid;");
 
 	if (TBase::Is_valid())
 		return (TBase::m_error << (err_code)TErrCodes::eObject::eInited);

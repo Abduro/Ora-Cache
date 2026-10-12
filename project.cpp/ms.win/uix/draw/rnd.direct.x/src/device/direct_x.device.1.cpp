@@ -325,7 +325,7 @@ err_code  CDevice::Get (CContext& _ctx) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (_ctx.Is_valid())
-		return (this->m_error << __e_invalid_arg) = _T("Input context is valid;");
+		return (this->m_error << __e_inv_arg) = _T("Input context is valid;");
 
 	if (false == this->Is_valid())
 		return (this->m_error << __e_not_inited);
@@ -345,7 +345,7 @@ err_code  CDevice::Get (CFeature& _feature) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == _feature.Is_valid())
-		return (this->m_error << __e_invalid_arg) = _T("Input feature is valid;");
+		return (this->m_error << __e_inv_arg) = _T("Input feature is valid;");
 
 	if (false == this->Is_valid())
 		return (this->m_error << __e_not_inited);
@@ -361,7 +361,7 @@ err_code  CDevice::Get (CTex_2D& _tex) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (_tex.Is_valid())
-		return (this->m_error << __e_invalid_arg) = _T("Input texture is valid;");
+		return (this->m_error << __e_inv_arg) = _T("Input texture is valid;");
 
 	if (false == this->Is_valid())
 		return (this->m_error << __e_not_inited);

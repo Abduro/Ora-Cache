@@ -87,7 +87,7 @@ CString CRndGen::UniqueSeq (const dword_t _length, const bool bCaseSensitive) co
 	CString cs_seq;
 	for ( dword_t i_ = 0; i_ < _length; i_++)
 	{
-		const WORD wIndex = (_word) (::rand() % (RandomValue_Hash_Size - 1));
+		const WORD wIndex = (word_t) (::rand() % (RandomValue_Hash_Size - 1));
 		cs_seq += RandomValue_Hash[wIndex];
 	}
 
@@ -119,12 +119,12 @@ CString CRndGen::UniqueSeq_Ex (const dword_t _length, const bool bLowCase) const
 	return seq_.Left(_length);
 }
 
-_uint   CRndGen::Unsigned (const _uint _min, const _uint _max) const
+uint_t   CRndGen::Unsigned (const uint_t _min, const uint_t _max) const
 {
 	if (_max < _min || _max == _min)
 		return 0;
 	::srand((unsigned)::std::time(0));
-	return static_cast<_uint> ((double)::rand() / (RAND_MAX + 1) * (_max - _min) + _min);
+	return static_cast<uint_t> ((double)::rand() / (RAND_MAX + 1) * (_max - _min) + _min);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -32,8 +32,8 @@ namespace shared { namespace common {
 		CString  UniqueSeq   (const dword_t _length, const bool bCaseSensitive = false) const;
 		CString  UniqueSeq_Ex(const dword_t _length, const bool bLowCase = true)const;
 
-		_uint    Unsigned    (const _uint _min = (std::numeric_limits<_uint>::min)(), 
-		                      const _uint _max = (std::numeric_limits<_uint>::max)()) const;
+		uint_t    Unsigned    (const uint_t _min = (std::numeric_limits<uint_t>::min)(), 
+		                      const uint_t _max = (std::numeric_limits<uint_t>::max)()) const;
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateguid ;
 	public:

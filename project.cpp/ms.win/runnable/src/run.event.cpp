@@ -33,7 +33,7 @@ namespace shared { namespace runnable { namespace _impl
 			MESSAGE_HANDLER(CMessageHandler::eInternalMsgId, OnGenericEventNotify)
 		END_MSG_MAP()
 	private:
-		virtual LRESULT  OnGenericEventNotify(_uint, w_param, l_param, bool_t&)
+		virtual LRESULT  OnGenericEventNotify(uint_t, w_param, l_param, bool_t&)
 		{
 			err_code hr_ = (TErrCodes::eExecute::eState);
 			if (__failed(hr_)) hr_ = m_sink_ref.GenEvt_OnNotify(m_event_id);

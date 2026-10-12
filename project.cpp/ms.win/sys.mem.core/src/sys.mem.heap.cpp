@@ -196,7 +196,7 @@ err_code   CRawData::Append (const byte* pData, const dword_t dwSize) {
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (nullptr == pData || 0 == dwSize) // error C2446: '==': no conversion from 'int' to 'nullptr' in case of using nullptr;
-		return (m_error << __e_invalid_arg);
+		return (m_error << __e_inv_arg);
 
 	byte* pLocator = nullptr; // error C2440: cannot convert from 'nullptr' to 'shared::sys_core::p_byte';
 
@@ -243,7 +243,7 @@ err_code   CRawData::Attach (const byte* pData, const dword_t dwSize, const bool
 		return (m_error << E_POINTER);
 
 	if (0 == dwSize)
-		return (m_error << __e_invalid_arg);
+		return (m_error << __e_inv_arg);
 
 	if (this->IsValid()) {
 		if (_reset == false)
@@ -345,7 +345,7 @@ err_code   CRawData::Create (const dword_t dwSize) {
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (0 == dwSize)
-		return (TBase::m_error << __e_invalid_arg);
+		return (TBase::m_error << __e_inv_arg);
 
 	if (this->IsValid())
 		this->Free();
@@ -402,7 +402,7 @@ err_code   CRawData::Create (_pc_sz _lp_sz_file) {
 	m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (nullptr == _lp_sz_file || 0 == ::_tcslen(_lp_sz_file))
-		return (m_error << __e_invalid_arg);
+		return (m_error << __e_inv_arg);
 
 	CFile the_file;
 	err_code e_result = the_file.Create(_lp_sz_file, FILE_READ_DATA, FILE_SHARE_READ, OPEN_EXISTING);
@@ -439,7 +439,7 @@ err_code   CRawData::Extend (const dword_t _n_to_add) {
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (0 == _n_to_add)
-		return (m_error << __e_invalid_arg);
+		return (m_error << __e_inv_arg);
 
 	if (this->IsValid() == false)
 		this->Create (_n_to_add);
@@ -497,7 +497,7 @@ err_code   CRawData::ToFile (_pc_sz _lp_sz_path) const {
 	TBase::m_error << __METHOD__ << TErrCodes::no_error;
 
 	if (nullptr ==_lp_sz_path || !::_tcslen(_lp_sz_path))
-		return (TBase::m_error << __e_invalid_arg) = _T("File path is invalid");
+		return (TBase::m_error << __e_inv_arg) = _T("File path is invalid");
 
 	CFile a_target;
 	err_code e_result  = a_target.Create(_lp_sz_path, FILE_WRITE_DATA, FILE_SHARE_READ, CREATE_ALWAYS);

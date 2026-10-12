@@ -16,7 +16,7 @@ static CWebBrowser* p_browser = 0;
 
 #pragma region cls::CWebBrowser{}
 
-CWebBrowser:: CWebBrowser(IWbEvtHandler& evt_ref) : m_command(m_host), m_content(m_host), m_script(m_host) {
+CWebBrowser:: CWebBrowser(IWbEvtHandler& evt_ref) : m_command(m_host), m_content(m_host), m_script(m_host), m_state(this) {
 	evt_ref;
 	m_error >> __CLASS__ << __METHOD__;
 	try { m_host = ::std::make_shared<CBrowserWnd>(evt_ref); } catch (::std::bad_alloc&){ ATLASSERT(0); this->m_error <<__e_no_memory; }

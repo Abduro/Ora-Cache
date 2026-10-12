@@ -222,7 +222,7 @@ err_code   CAdapter_Enum::GetWarp (CAdapter& _adapter) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (_adapter.Is())
-		return (this->m_error << __e_invalid_arg) = _T("The input adapter is already created;");
+		return (this->m_error << __e_inv_arg) = _T("The input adapter is already created;");
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nf-dxgi1_3-createdxgifactory2 << for loading debug dll;
 	// https://stackoverflow.com/questions/42354369/idxgifactory-versions ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_3/nf-dxgi1_3-createdxgifactory2 ;

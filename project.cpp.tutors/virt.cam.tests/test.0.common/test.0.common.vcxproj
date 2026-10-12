@@ -162,6 +162,8 @@
     <ClCompile Include="$(_1)common.error.cpp" />
     <ClInclude Include="$(_0)common.types.h" />
     <ClCompile Include="$(_1)common.types.cpp" />
+    <ClInclude Include="$(_0)common.view.h" />
+    <ClCompile Include="$(_1)common.view.cpp" />
     <ClInclude Include="$(_0)vec_3.h" />
     <ClCompile Include="$(_1)vec_3.cpp" />
   </ItemGroup>

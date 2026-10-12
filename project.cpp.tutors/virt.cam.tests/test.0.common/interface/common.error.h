@@ -5,32 +5,15 @@
 	This is virtual camera test cases' commom error wrapper declaration file;
 */
 #include <winerror.h>  // h_result definition is kept for this version of the implementation;
+#include "sys.error.h"
 
-#ifndef __e_invalid_arg
-#define __e_invalid_arg E_INVALIDARG
-#define __e_inv_arg   __e_invalid_arg
-#endif
-#ifndef __e_hwnd
-#define __e_hwnd OLE_E_INVALIDHWND
-#endif
-#ifndef __s_ok
-#define __s_ok S_OK
-#endif
-#ifndef __s_false
-#define __s_false S_FALSE
-#endif
+namespace test { namespace error {
 
-#ifndef __DwordToHresult
-#define __DwordToHresult(_dword) HRESULT_FROM_WIN32(_dword)
-#endif
-#define __HresultToDword(_hres) (_hres & 0x0000FFFF)
-#define __LastErrToHresult()   __DwordToHresult(::GetLastError())
-// tries to analyze what result is being gotten;
-#define __is_okay(_hresult)     (S_OK == _hresult)     // warning C4005: '__success': macro redefinition, specstrings_strict.h(620);
-#define __succeeded(_hresult)   (SUCCEEDED(_hresult))
-#define __failed(_hresult)      (FAILED(_hresult))
+	using namespace ::shared::sys_core;
+	using CError = ::shared::sys_core::CError;
+	using TError = const CError;
 
-namespace test { namespace error {}}
+}}
 
 
 #endif/*_COMMON_ERROR_H_INCLUDED*/

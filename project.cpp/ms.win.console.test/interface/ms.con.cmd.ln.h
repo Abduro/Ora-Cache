@@ -78,19 +78,19 @@ namespace ebo { namespace boo { namespace test {
 	public:
 		 CArgument (void);
 		 CArgument (const CArgument&);
-		 CArgument (const _word _w_res_name, const _word _w_res_verb, const dword_t _dw_type);
+		 CArgument (const word_t _w_res_name, const word_t _w_res_verb, const dword_t _dw_type);
 		 CArgument (_pc_sz _l_sz_name, _pc_sz _p_sz_verb, const dword_t _dw_type);
 		~CArgument (void);
 
 	public:
 		bool      Is   (void) const;
 		_pc_sz    Name (void) const;
-		err_code  Name (const _word _w_res_id);
+		err_code  Name (const word_t _w_res_id);
 		err_code  Name (_pc_sz _p_sz_name );
 		dword_t     Type (void) const;
 		bool      Type (const dword_t);
 		_pc_sz    Verb (void) const;
-		err_code  Verb (const _word _w_res_id);
+		err_code  Verb (const word_t _w_res_id);
 		err_code  Verb (_pc_sz _p_sz_desc );
 
 	public:

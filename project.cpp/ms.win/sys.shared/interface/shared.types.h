@@ -24,25 +24,28 @@ namespace shared { namespace types {
 
 	typedef _GUID     _guid ;   // https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid ;
 	typedef BOOL      bool_t;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
-	typedef BYTE      _byte ;
+	typedef BYTE      byte_t;
 	typedef DWORD    dword_t;   // https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types  ;
 	typedef HANDLE    handle;   // for using in shared.mem project;
 	typedef HGLOBAL   global;   // for using in shared.mem project;
 	typedef HRESULT err_code;   // https://en.wikipedia.org/wiki/err_code ;
 	typedef LONG      long_t;
-	typedef LPARAM  l_param ;   // for using in win.popup projects;
 	typedef LPCTSTR   _pc_sz;   // since Win32 there is neither 'long' nor 'near' pointer types;
 	typedef LPTSTR    _p_sz ;
-	typedef LRESULT l_result;   // for using in win.popup projects;
-	typedef POINT   point_t ;   // it just is a base structure for holding point coordinate values;
-	typedef RECT    rect_t  ;   // for using in geometry and window projects;
-	typedef SIZE    t_size  ;   // it just is a base structure for holding shape size in two dimensional space;
-	typedef TCHAR    t_char ;   // https://learn.microsoft.com/en-us/office/client-developer/outlook/mapi/tchar ;
-	typedef UINT      _uint ;
+	typedef POINT    point_t;   // it just is a base structure for holding point coordinate values;
+	typedef RECT      rect_t;   // for using in geometry and window projects;
+	typedef SIZE      t_size;   // it just is a base structure for holding shape size in two dimensional space;
+	typedef TCHAR     t_char;   // https://learn.microsoft.com/en-us/office/client-developer/outlook/mapi/tchar ;
+	typedef UINT      uint_t;
 	typedef ULONG     ulong ;
 	typedef USHORT    ushort;
-	typedef WORD      _word ;
-	typedef WPARAM  w_param ;   // for using in win.popup projects;
+	typedef WORD      word_t;
+
+#pragma region wnd_message_handle   // https://stackoverflow.com/questions/2515261/what-are-the-definitions-for-lparam-and-wparam ;
+	typedef LPARAM  l_param ;   // a long (signed 32-bit) on win32 and __int64 (signed 64-bit) on x86_64;
+	typedef LRESULT l_result;   // a long (signed 32-bit) on win32 and __int64 (signed 64-bit) on x86_64;
+	typedef WPARAM  w_param ;   // unsigned int (unsigned 32-bit) on win32 and unsigned __int64 (unsigned 64-bit) on x86_64;
+#pragma endregion
 
 #endif
 	using CString = ::ATL::CString;

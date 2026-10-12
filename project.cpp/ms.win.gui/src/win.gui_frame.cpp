@@ -27,7 +27,7 @@ err_code TIcon::Set (const uint16_t _u_res_id) {
 	TBase::m_error << __METHOD__ << __s_ok;
 
 	if (false == !!_u_res_id)
-		return TBase::m_error << __e_invalid_arg;
+		return TBase::m_error << __e_inv_arg;
 
 	if (false == !!m_frame.Window().IsWindow())
 		return TBase::m_error << __e_hwnd;

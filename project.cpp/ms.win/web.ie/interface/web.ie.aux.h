@@ -8,6 +8,8 @@
 
 namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::IE::defs;
 
+	class CWebBrowser; // it looks like a pointer to this class should be provided as an input one;
+
 	class CCommand {
 	public:
 		 CCommand (TBrwWndPtr&); CCommand (void) = delete; CCommand (const CCommand&) = delete; CCommand (CCommand&&) = delete;
@@ -28,7 +30,7 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 
 	class CState {
 	public:
-		 CState (void); CState (const CState&) = delete; CState (CState&&) = delete;
+		 CState (CWebBrowser*); CState (const CState&) = delete; CState (CState&&) = delete;
 		~CState (void) = default;
 
 		TErrorRef Error (void) const;
@@ -44,6 +46,7 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 		CState& operator = (const CState&) = delete; CState& operator = (CState&&) = delete;
 		mutable
 		CError m_error;
+		CWebBrowser* m_browser;
 	};
 
 }}}

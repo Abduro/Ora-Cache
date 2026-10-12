@@ -153,7 +153,7 @@ err_code    CDesc_Wrap::Set (const TSwapDesc& _desc) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (__failed(CDesc_Wrap::Is_valid(_desc)))
-		return (this->m_error << __e_invalid_arg);
+		return (this->m_error << __e_inv_arg);
 
 	this->m_desc = _desc;
 

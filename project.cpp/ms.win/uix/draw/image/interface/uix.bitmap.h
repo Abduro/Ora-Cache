@@ -85,7 +85,7 @@ namespace ex_ui { namespace draw { namespace bitmaps {
 		HBitmap    m_handle;   // attached bitmap handle;
 	};
 
-	typedef const _byte* _pc_byte;
+	typedef const byte_t* _pc_byte;
 	// https://docs.microsoft.com/en-us/windows/win32/gdi/storing-an-image
 	class CDibSection {
 	public:
@@ -102,7 +102,7 @@ namespace ex_ui { namespace draw { namespace bitmaps {
 
 	public: // bitmap attributes and other;
 		_pc_byte  Bits    (void) const;             // gets the pointer to bitmap data; (ro)
-		_byte*    Bits    (void)      ;             // gets the pointer to bitmap data; (rw)
+		byte_t*    Bits    (void)      ;             // gets the pointer to bitmap data; (rw)
 		TError&   Error   (void) const;
 		HBitmap   Handle  (void) const;             // gets a bitmap handle if success, otherwise returns NULL;
 		bool      Is      (void) const;             // checks a validity of the encapsulated bitmap descriptor;

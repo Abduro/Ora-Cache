@@ -32,7 +32,7 @@ namespace shared { namespace safe {
 #define __HresultToDword(_hres) (_hres & 0x0000FFFF)
 #endif
 #ifndef __DwordToHresult
-#define __DwordToHresult(_word)  HRESULT_FROM_WIN32(_word)
+#define __DwordToHresult(word_t)  HRESULT_FROM_WIN32(word_t)
 #endif
 namespace shared { namespace sys_core { namespace seh {
 

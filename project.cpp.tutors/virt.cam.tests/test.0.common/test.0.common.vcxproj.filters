@@ -16,6 +16,8 @@
     <ClCompile Include="$(_1)common.error.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)common.types.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)common.types.cpp"><Filter>src</Filter></ClCompile>
+    <ClInclude Include="$(_0)common.view.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)common.view.cpp"><Filter>src</Filter></ClCompile>
     <ClInclude Include="$(_0)vec_3.h"><Filter>interface</Filter></ClInclude>
     <ClCompile Include="$(_1)vec_3.cpp"><Filter>src</Filter></ClCompile>
   </ItemGroup>

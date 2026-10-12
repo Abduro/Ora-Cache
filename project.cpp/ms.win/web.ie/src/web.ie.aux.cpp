@@ -5,6 +5,7 @@
 #include "web.ie.aux.h"
 #include "web.ie.accessor.h"
 #include "web.ie.window.h"
+#include "web.ie.browser.h"
 
 using namespace ::ex_ui::web::IE;
 using namespace ::ex_ui::web::IE::core;
@@ -53,11 +54,11 @@ err_code CCommand::PrintPreview(void) {
 #pragma endregion
 #pragma region cls::CState{}
 
-CState::CState (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CState::CState (CWebBrowser* _p_browser) : m_browser(_p_browser) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
 TError& CState::Error (void) const { return m_error; }
 bool CState::Is_valid (void) const {
-	return (this->m_error << (nullptr != ::Get_IE_ptr() && ::Get_IE_ptr()->Window().IsWindow() ? __s_ok : __e_not_inited)).Is() == false;
+	return (this->m_error << (nullptr != this->m_browser && this->m_browser->Window().IsWindow() ? __s_ok : __e_not_inited)).Is() == false;
 }
 
 bool CState::Is_busy (void) const {
@@ -66,7 +67,7 @@ bool CState::Is_busy (void) const {
 		return false;
 
 	var_bool b_valid = var_false;
-	this->m_error = ::Get_IE_ptr()->Ctrl()->get_Busy(&b_valid);
+	this->m_error = this->m_browser->Ctrl()->get_Busy(&b_valid);
 	
 	return this->Error() ? var_false : b_valid == var_true;
 }
@@ -78,7 +79,7 @@ bool CState::Silent (void) const {
 		return false;
 
 	var_bool v_result = var_false;
-	::Get_IE_ptr()->Ctrl()->get_Silent( &v_result );
+	this->m_browser->Ctrl()->get_Silent( &v_result );
 	return (var_true == v_result );
 }
 
@@ -93,7 +94,7 @@ err_code CState::Silent (const bool _yes_or_no) {
 	if (!bChanged)
 		return this->m_error <<__s_false;
 #endif
-	this->m_error << ::Get_IE_ptr()->Ctrl()->put_Silent(_yes_or_no ? var_true : var_false);
+	this->m_error << this->m_browser->Ctrl()->put_Silent(_yes_or_no ? var_true : var_false);
 	return  this->Error();
 }
 

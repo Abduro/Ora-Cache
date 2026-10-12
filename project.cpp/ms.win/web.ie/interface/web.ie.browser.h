@@ -71,6 +71,6 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 }}}
 
 typedef ex_ui::web::IE::CWebBrowser TIEBrowser;
-TIEBrowser* Get_IE_ptr (void); // of course there nay be multiple instances of web browser object, but for test cases the singleton is acceptable;
+TIEBrowser* Get_IE_ptr (void); // of course there nay be multiple instances of web browser object, but for test cases the singleton is enough;
 
 #endif/*_WEB_IE_BROWSER_H_INCLUDED*/

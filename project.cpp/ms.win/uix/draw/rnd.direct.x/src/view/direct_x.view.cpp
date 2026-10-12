@@ -86,7 +86,7 @@ err_code  CView::Set (const CDevice& _device) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == _device.Is_valid())
-		return this->m_error << __e_invalid_arg;
+		return this->m_error << __e_inv_arg;
 
 	if (this->m_device.Is_valid())
 		return this->m_error << (err_code)TErrCodes::eObject::eExists;
@@ -101,7 +101,7 @@ err_code  CView::Set (const CSwapChain& _chain) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == _chain.Is_valid())
-		return this->m_error << __e_invalid_arg;
+		return this->m_error << __e_inv_arg;
 
 	if (this->m_swap.Is_valid())
 		return this->m_error << (err_code)TErrCodes::eObject::eExists;
@@ -116,7 +116,7 @@ err_code  CView::Set (const CTexture& _tex) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (false == _tex.Is_valid())
-		return this->m_error << __e_invalid_arg;
+		return this->m_error << __e_inv_arg;
 
 	if (this->m_texture.Is_valid())
 		return this->m_error << (err_code)TErrCodes::eObject::eExists;
