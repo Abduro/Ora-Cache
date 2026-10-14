@@ -55,7 +55,11 @@
 		<i_zbuf>$(ZBuf)interface\</i_zbuf>
 	</PropertyGroup>
 	<PropertyGroup>
-		<externals>$(i_2d);$(i_clr);$(i_compl);$(i_ctrl);$(i_handlers);$(i_popup);$(i_named);$(i_tabs);$(i_theme);$(i_wtl);$(i_zbuf)</externals>
+		<Test_1_res>$(Test_1)\src\resources\</Test_1_res>
+		<Test_res_all>$(Test_1_res);%(AdditionalIncludeDirectories)</Test_res_all>
+	</PropertyGroup>
+	<PropertyGroup>
+		<externals>$(i_2d);$(i_clr);$(i_compl);$(i_ctrl);$(i_handlers);$(i_popup);$(i_named);$(i_tabs);$(i_theme);$(i_wtl);$(i_zbuf);$(Test_1_res)</externals>
 		<internals>$(_iface);$(_src);$(_res);$(_ico)</internals>
 		<IncludePath>$(_0);$(_1);$(_2);$(_3);$(_4);$(_5);$(_6);$(internals);$(externals);$(IncludePath)</IncludePath>
 	</PropertyGroup>

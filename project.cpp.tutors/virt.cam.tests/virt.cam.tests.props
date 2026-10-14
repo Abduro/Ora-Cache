@@ -6,18 +6,20 @@
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<Ebo_pack>$(MSBuildThisFileDirectory)..\..\project.cpp\</Ebo_pack>
+		<Component>$(Ebo_pack)ms.win\sys.com.core\</Component>
 		<Error>$(Ebo_pack)ms.win\sys.err.core\</Error>
 		<Memory>$(Ebo_pack)ms.win\sys.mem.core\</Memory>
 		<Shared>$(Ebo_pack)ms.win\sys.shared\</Shared>
 		<Browser>$(Ebo_pack)ms.win\web.ie\</Browser>
 	</PropertyGroup>
 	<PropertyGroup>
+		<i_com>$(Component)interface\</i_com>
 		<i_error>$(Error)interface\</i_error>
 		<i_shared>$(Shared)interface\</i_shared>
 		<i_browser>$(Browser)interface\</i_browser>
 		<i_memory>$(Memory)interface\</i_memory>
 	</PropertyGroup>
 	<PropertyGroup>
-		<IncludePath>$(i_error);$(i_shared);$(i_browser);$(i_memory);$(IncludePath)</IncludePath>
+		<IncludePath>$(i_com);$(i_error);$(i_shared);$(i_browser);$(i_memory);$(IncludePath)</IncludePath>
 	</PropertyGroup>
 </Project>

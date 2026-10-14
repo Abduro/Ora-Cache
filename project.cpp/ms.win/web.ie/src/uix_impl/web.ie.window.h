@@ -41,6 +41,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 			MESSAGE_HANDLER(WM_CREATE     , OnCreate  )
 			MESSAGE_HANDLER(WM_ERASEBKGND , OnErase   )
 			MESSAGE_HANDLER(eAsyncRedirect, OnRedirect)
+			MESSAGE_HANDLER(WM_SIZE       , OnSize    )
 		END_MSG_MAP()
 
 		BEGIN_SINK_MAP(CBrowserWnd)
@@ -55,13 +56,15 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		err_code EnableFeature (const dword_t dwFeature, const bool bEnabled, const dword_t dwScope = SET_FEATURE_ON_PROCESS);
 		err_code IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope = GET_FEATURE_FROM_PROCESS);
 #endif
-		TError& Error (void) const;
+		TError&  Error (void) const;
+		err_code Refresh (void);
 
 	private:
 		LRESULT OnClose    (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 		LRESULT OnCreate   (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 		LRESULT OnErase    (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 		LRESULT OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
+		LRESULT OnSize     (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 	
 		STDMETHOD(BeforeNavigate2)( LPDISPATCH pDisp, LPVARIANT pUrl, LPVARIANT pFlags, 
 		                            LPVARIANT  pTargetFrameName,

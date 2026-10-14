@@ -9,4 +9,8 @@
     <ClInclude Include="$(Test_0)com.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
     <ClCompile Include="$(Test_0)com.std.afx.cpp"><Filter>src\_prec</Filter></ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(_0)test.1.view.h"><Filter>interface</Filter></ClInclude>
+    <ClCompile Include="$(_1)test.1.view.cpp"><Filter>src</Filter></ClCompile>
+  </ItemGroup>
 </Project>

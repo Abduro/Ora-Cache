@@ -58,7 +58,9 @@ CState::CState (CWebBrowser* _p_browser) : m_browser(_p_browser) { this->m_error
 
 TError& CState::Error (void) const { return m_error; }
 bool CState::Is_valid (void) const {
-	return (this->m_error << (nullptr != this->m_browser && this->m_browser->Window().IsWindow() ? __s_ok : __e_not_inited)).Is() == false;
+	return (this->m_error << (
+		nullptr != this->m_browser && nullptr != this->m_browser->Ctrl() && this->m_browser->Window().IsWindow() ? __s_ok : __e_not_inited
+	)).Is() == false;
 }
 
 bool CState::Is_busy (void) const {

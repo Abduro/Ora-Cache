@@ -228,8 +228,20 @@ err_code CPage::MoveTo (const rect_t& _rect, const bool _b_redraw) {
 	if (false == b_result)
 		n_result = __LastErrToHresult();
 	else
-		this->Layout().Rect() = _rect; // it is required!
-
+		this->Layout().Rect() = _rect; // it is required! *important*: this is the place that takes into account a ribbon position;
+	if (__s_ok == n_result) {
+		CWindow w_child = TWindow::GetWindow(GW_CHILD);
+		if (w_child) {
+			rect_t rect_ = {0};
+			if (false == !!TWindow::GetClientRect(&rect_)) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect ;
+				n_result = __LastErrToHresult();
+			else {
+				this->Layout().Padding().ApplyTo(rect_);
+				static const dword_t dw_flags = SWP_NOZORDER|SWP_NOSENDCHANGING|SWP_NOREDRAW|SWP_NOREPOSITION|SWP_NOCOPYBITS|SWP_NOACTIVATE;
+				w_child.SetWindowPos(0, &rect_, dw_flags); // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos ;
+			}
+		}
+	}
 	return n_result;
 }
 

@@ -1,0 +1,75 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 13-Oct-2021 at 19:30:03.989, UTC+4, Batumi, Tuesday;
+	This is virtual camera FoV test HTML help common format style sheet file;
+*/
+
+A:link     {color: #4799c8; background: transparent; text-decoration:none; }
+A:visited  {color: #4799c8; background: transparent; text-decoration:none; }
+A:active   {color: #4799c8; background: transparent; text-decoration:none; }
+
+body {
+	font            : 8.65pt 'Trebuchet MS', verdana, tahoma, arial;
+	background-color: #ffffff;
+	color           : #c8c8c8;
+	padding         : 0;
+	margin          : 0;
+	-ms-content-zooming: none;
+	touch-action    : none;
+	position        : relative;
+}
+
+h1 {
+	font-family     :'Trebuchet MS', verdana, tahoma, arial;
+	font-size       : 21px; 
+	font-weight     : bold;
+	text-shadow     : 0px 2px 3px #555;
+}
+
+h2 {
+	font-family     :'Trebuchet MS', verdana, tahoma, arial;
+	font-size       : 16px;
+	font-weight     : bold;
+	text-shadow     : 0px 2px 3px #555;
+	margin-bottom   :  5px;
+}
+
+.image-container {
+	position        : absolute;
+	top             : 0;
+	left            : 0;
+	width           : 100%;    /* Takes up full body width */
+	height          : 100%;    /* Height dynamically matches the image */
+/*	box-sizing      : border-box;*/
+
+	background-color: #fff;
+
+	display         : -ms-flexbox; /* IE10 Flexbox syntax support */  
+/*	display         : flex;        /* Modern Flexbox syntax */
+
+	-ms-flex-pack   : center;      /* Center horizontally in IE */
+/*	justify-content : center;      /* Center horizontally modern browsers */   
+
+	-ms-flex-align  : center;  /* Center vertically in IE */
+/*	align-items     : center;  /* Center vertically modern browsers */   
+}
+
+.strict-size {
+	width           : 277px !important;
+	height          : 277px !important;
+	min-width       : 277px !important;
+	min-height      : 277px !important;
+	max-width       : none  !important;
+	max-height      : none  !important;
+/*	flex-shrink     : 0     !important;*/
+	/* Vital for flex layouts: prevents the wrapper from squeezing the image */
+/*	-ms-flex-negative: 0 !important;  /* IE flex-shrink */
+/*	flex-shrink      : 0 !important;  /* Modern flex-shrink */
+	/* 2. Absolute centering calculations */
+/*	position  : absolute;
+	top       :  50%;
+	left      :  50%;
+
+	/* 3. Pulls the center of the image to the exact center of the screen */
+/*	-ms-transform: translate(-50%, -50%); /* Specific targeting for IE / MSHTML engine */
+/*	transform    : translate(-50%, -50%); /* Standard fallback */
+}

@@ -6,22 +6,24 @@
 */
 #include "test.gui.defs.h"
 #include "sfx.tabs.ctrl.h"
+#include "test.1.view.h"
 
 namespace test { namespace app { using namespace ::test::draw::defs;
 
 	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
+	using CTabPage = ex_ui::controls::sfx::tabbed::CPage;
 
 	class CPages {
 	public:
 		 CPages (void); CPages (const CPages&) = delete; CPages (CPages&&) = delete;
 		~CPages (void);
 
-		err_code  At_1st(void) ;      // this is just *before* creating tabbed control window: all tabs and their pages must be formatted and added;
+		err_code  At_1st(void) ;       // this is just *before* creating tabbed control window: all tabs and their pages must be formatted and added;
 		TError&   Error (void) const;
 		const
 		CTabbed&  Get (void) const;
 		CTabbed&  Get (void) ;
-		bool Is_valid (void) const;  // validates each page window handle;
+		bool Is_valid (void) const;    // validates each page window handle;
 
 		err_code  OnCreate (void) ;
 		err_code  OnDestroy(void) ;
@@ -33,12 +35,16 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		CTabbed m_tabs;
 	};
 
+	using CView_1 = ::test::gui::views::_1::CView;
+
 	class CView {
 	public:
 		CView (void); CView (const CView&) = delete; CView (CView&&) = delete; ~CView (void) = default;
 
+		TError&   Error (void) const;
+
 		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;
-		err_code  OnDestroy(void);     // it suould be called from main window destroy event handler;
+		err_code  OnDestroy(void);     // it should be called from main window destroy event handler;
 		err_code  OnDraw (const HDC, const rect_t& _drw_area);
 		const
 		CPages&   Pages (void) const;
@@ -51,8 +57,11 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 
 	private:
 		CView& operator = (const CView&) = delete; CView& operator = (CView&&) = delete;
+		mutable
+		CError   m_error;
 		CPages   m_pages;
 		CWindow  m_parent;  // this is the main window handle wrapper of this app;
+		CView_1  m_view_1;  // this is virtual camera FoV test case view;
 	};
 
 }}

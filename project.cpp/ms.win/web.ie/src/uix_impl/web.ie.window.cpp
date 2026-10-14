@@ -83,7 +83,7 @@ namespace _impl {
 			}
 			return this->Error();
 		}
-		err_code Register (const HWND hWnd, const ::ATL::CComPtr<IOleInPlaceActiveObject>& act_obj_ref) {
+		err_code Register (const HWND hWnd, const ::ATL::CComPtr<IOleInPlaceActiveObject> act_obj_ref) {
 			this->m_error <<__METHOD__<<__s_ok;
 			try {
 				m_cache[hWnd] = act_obj_ref;
@@ -107,7 +107,7 @@ namespace _impl {
 			TCache::iterator it_ = m_cache.find(hWnd);
 			if (m_cache.end() == it_)
 				return this->Error();
-
+			it_->second = nullptr; // it is required, otherwise, the access violation error may occur;
 			m_cache.erase(it_);
 			if (m_cache.empty() && nullptr != GetKeyboardHook_Ref())
 			{	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex ;
@@ -374,7 +374,7 @@ CBrowserWnd::CBrowserWnd (IWbEvtHandler& evt_ref) :  m_evt_handler(evt_ref), m_b
 	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 }
 
-err_code  CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSvcProvider& pProvider, const bool bVisible) {
+err_code CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSvcProvider& pProvider, const bool bVisible) {
 	hParent; rcArea; pProvider; bVisible;
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -424,7 +424,7 @@ err_code  CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TS
 	CComQIPtr<IWebBrowser2> pWebBrowser;
 	this->m_error << pControl.QueryInterface(&pWebBrowser);
 	if (pWebBrowser)
-		pWebBrowser->QueryInterface(IID_IOleInPlaceActiveObject, (void**)&m_act_object);
+		pWebBrowser->QueryInterface(IID_IOleInPlaceActiveObject, (void**)&this->m_act_object);
 
 	if (m_act_object)
 	KbrdHandler_GetCacheObject().Register(TBrwWindow::m_hWnd, m_act_object);
@@ -432,6 +432,12 @@ err_code  CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TS
 
 	if (this->Error())
 		return this->Error();
+
+	CComPtr<IOleInPlaceObject> spInPlace;
+	this->m_error << TBrwWindow::QueryControl(IID_PPV_ARGS(&spInPlace));
+	if (this->Error() == false) {
+		this->m_error << spInPlace->SetObjectRects(&rc_, &rc_);
+	}
 
 	CComQIPtr<IAxWinAmbientDispatch> spAmb;
 	this->m_error << TBrwWindow::QueryHost(&spAmb);
@@ -451,6 +457,20 @@ err_code  CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TS
 
 TError& CBrowserWnd::Error (void) const { return this->m_error; }
 
+err_code CBrowserWnd::Refresh (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == !!TBrwWindow::IsWindow())
+		return this->m_error <<__e_not_inited;
+
+	rect_t rect = {0};
+	TBrwWindow::GetClientRect(&rect);
+	rect.right += 1; TBrwWindow::MoveWindow(&rect);
+	rect.right -= 1; TBrwWindow::MoveWindow(&rect);
+
+	return this->Error();
+}
+
 #pragma endregion
 #pragma region event handlers
 
@@ -462,7 +482,7 @@ LRESULT CBrowserWnd::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 		n_result = THtmlSink::DispEventUnadvise(spUnk);
 	}
 	KbrdHandler_GetCacheObject().Unregister(TBrwWindow::m_hWnd); ATLASSERT(__s_ok == n_result);
-	MouseHandler_GetCacheObject().Unregister(TBrwWindow::m_hWnd); ATLASSERT(__s_ok == n_result);
+	MouseHandler_GetCacheObject().Unregister(TBrwWindow::m_hWnd); ATLASSERT(__s_ok == n_result); this->m_act_object = nullptr;
 	return 0;
 }
 
@@ -504,6 +524,23 @@ LRESULT CBrowserWnd::OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 			m_bDoNotNotify = false;
 		}
 	}
+	return 0;
+}
+
+LRESULT CBrowserWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled) {
+	uMsg; wParam; lParam; bHandled;
+	// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size ;
+	const SIZE size = { LOWORD(lParam), HIWORD(lParam) };
+	
+	CComPtr<IOleInPlaceObject> spInPlace;
+
+	err_code n_result = TBrwWindow::QueryControl(IID_PPV_ARGS(&spInPlace));
+	if (__succeeded(n_result) && nullptr != spInPlace) {
+
+		rect_t rect = {0, 0, size.cx, size.cy};
+		n_result = spInPlace->SetObjectRects(&rect, &rect);
+	}
+
 	return 0;
 }
 

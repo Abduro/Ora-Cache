@@ -4,8 +4,10 @@
 */
 #include "test.gui.module.h"
 #include "test.gui.res.h"
+#include "com.svc.base.h"
 
 using namespace ::test::app;
+using namespace ::shared::sys_core::com;
 
 CModule _Module;
 
@@ -35,6 +37,8 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used;
 	::DefWindowProc(nullptr, 0, 0, 0L);
+
+	CCoGuard com_quard(TCo_Cfg::e_gui);
 
 	::ex_ui::theme::Get_current().Load();  // no returned error code is concerned here yet;
 

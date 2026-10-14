@@ -42,21 +42,39 @@ CContent& CWebBrowser::Content (void)       { return this->m_content; }
 err_code  CWebBrowser::Create (const HWND hParent, const rect_t& rcArea, const bool bVisible) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (this->State() == false)
-		return this->m_error = this->State().Error();
+	if (this->Host() == nullptr)
+		return this->m_error << __e_not_inited;
 
 	::ATL::CComPtr<IServiceProvider> pProvider;
 	this->m_error << this->m_host->CreateObject(hParent, rcArea, pProvider, bVisible);
+	if (this->m_error)
+		this->m_error = this->m_host->Error();
+	else if (nullptr == this->m_browser) { // checks for browser control object validity;
+		CComPtr<IUnknown> pControl;
+		this->m_error << this->m_host->QueryControl(&pControl);
+		if (this->Error() == false) {
+			this->m_browser = pControl;
+		}
+	}
 	return this->Error();
 }
 
 err_code  CWebBrowser::Create (const HWND hParent, const rect_t& rcArea, CComPtr<IServiceProvider>& pProvider) {
 	this->m_error << __METHOD__ << __s_ok;
 	
-	if (this->State() == false)
-		return this->m_error = this->State().Error();
+	if (this->Host() == nullptr)
+		return this->m_error << __e_not_inited;
 
 	this->m_error << m_host->CreateObject(hParent, rcArea, pProvider, true); // creates a web browser control instance too;
+	if (this->m_error)
+		this->m_error = this->m_host->Error();
+	else if (nullptr == this->m_browser) { // checks for browser control object validity;
+		CComPtr<IUnknown> pControl;
+		this->m_error << this->m_host->QueryControl(&pControl);
+		if (this->Error() == false) {
+			this->m_browser = pControl;
+		}
+	}
 	return this->Error();
 }
 
@@ -64,6 +82,8 @@ err_code  CWebBrowser::Destroy (void) {
 	this->m_error << __METHOD__ << __s_ok;
 	if (this->m_host)
 		if (this->m_host->IsWindow()) this->m_host->SendMessage(WM_CLOSE);
+	if (this->Ctrl())
+		this->Ctrl().Release();
 
 	return this->Error();
 }
@@ -76,6 +96,7 @@ const
 TBrwWndPtr& CWebBrowser::Host (void) const { return this->m_host; }
 TBrwWndPtr& CWebBrowser::Host (void)       { return this->m_host; }     
 
+#if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
 err_code  CWebBrowser::Open (CComPtr<IStream>& p_stream) {
 	p_stream;
 	this->m_error << __METHOD__ << __s_ok;
@@ -106,7 +127,7 @@ err_code  CWebBrowser::Open (CComPtr<IStream>& p_stream) {
 	}
 	return this->Error();
 }
-
+#else
 err_code  CWebBrowser::Open (CComPtr<IMoniker>& _p_moniker) {
 	_p_moniker;
 	this->m_error << __METHOD__ << __s_ok;
@@ -169,7 +190,7 @@ err_code  CWebBrowser::Open (const TRawData& raw_data) {
 	this->m_error << ::SafeArrayDestroy(psa); // https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-safearraydestroy ;
 	return this->Error();
 }
-
+#endif
 #include <atlutil.h>
 
 err_code  CWebBrowser::Open (_pc_sz pURL) {
@@ -191,7 +212,7 @@ err_code  CWebBrowser::Open (_pc_sz pURL) {
 	return this->Error();
 }
 
-err_code  CWebBrowser::Redirect(_pc_sz pTarget, const bool bAsync) {
+err_code  CWebBrowser::Redirect (_pc_sz pTarget, const bool bAsync) {
 	pTarget; bAsync;
 	this->m_error << __METHOD__ <<__s_ok;
 
@@ -204,6 +225,25 @@ err_code  CWebBrowser::Redirect(_pc_sz pTarget, const bool bAsync) {
 	this->Host()->m_async_data = _variant_t(pTarget);
 	this->Host()->PostMessage(CBrowserWnd::eAsyncRedirect, 0, 0);
 
+	return this->Error();
+}
+
+err_code  CWebBrowser::Refresh (void) {
+	m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->State())
+		return this->m_error = this->State().Error();
+
+	// https://learn.microsoft.com/en-us/previous-versions//aa768258(v=vs.85) << does not use refresh operation levels;
+	// https://learn.microsoft.com/en-us/previous-versions//aa768260(v=vs.85) << this is the refresh2 that uses levels (see below);
+	// https://learn.microsoft.com/en-us/previous-versions//aa768363(v=vs.85) << this is an enumeration of levels of refresh operation;
+
+	_variant_t v_level((long)REFRESH_COMPLETELY); v_level;
+
+	this->m_error << this->Ctrl()->Refresh();
+//	if (this->Error() == false)  {
+		this->Host()->Refresh();
+//	}
 	return this->Error();
 }
 
@@ -222,17 +262,3 @@ CAxWindow& CWebBrowser::Window (void)       { return this->m_host == nullptr ? i
 #pragma endregion
 
 TIEBrowser* ::Get_IE_ptr (void) { return p_browser; }
-
-#if (0)
-
-#if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
-#else
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-CWebBrowser::operator CAxWindow&(void)
-{
-	return this->GetAxWindowRef();
-}
-#endif

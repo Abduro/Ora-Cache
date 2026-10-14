@@ -27,23 +27,23 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 		CContent&  Content (void) const;
 		CContent&  Content (void) ;
 
-		err_code   Create (const HWND hParent, const RECT& rcArea_ref, const bool bVisible = true);
-		err_code   Create (const HWND hParent, const RECT& rcArea_ref, CComPtr<IServiceProvider>&);
+		err_code   Create (const HWND hParent, const rect_t& rcArea_ref, const bool bVisible = true);
+		err_code   Create (const HWND hParent, const rect_t& rcArea_ref, CComPtr<IServiceProvider>&);
 		err_code   Destroy(void);
 		const
 		TWebBrwPtr& Ctrl (void) const; // gets the reference to IE WebBrowser2 activeX control; (ro)
 		TWebBrwPtr& Ctrl (void) ;      // gets the reference to IE WebBrowser2 activeX control; (rw)
 
-		TErrorRef  Error  (void) const;
+		TErrorRef   Error(void) const;
 		const
 		TBrwWndPtr& Host (void) const; // returns the reference to the activeX control (IWbBrowser2) host, i.e. CAxWindow, which holds its instance; (ro)
 		TBrwWndPtr& Host (void) ;      // returns the reference to the activeX control (IWbBrowser2) host, i.e. CAxWindow, which holds its instance; (rw)
-//#if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
+#if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
 		err_code   Open (CComPtr<IStream>&);
-//#else
+#else
 		err_code   Open (CComPtr<IMoniker>&);
 		err_code   Open (const TRawData&);
-//#endif
+#endif
 		err_code   Open (_pc_sz pURL);
 		
 		err_code   Redirect (_pc_sz pTarget, const bool bAsync = true);

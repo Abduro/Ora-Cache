@@ -3,6 +3,7 @@
 	This is virtual camera test desktop app main window view interface implementation file;
 */
 #include "test.gui.view.h"
+#include "test.gui.res.h"
 
 using namespace ::test::app;
 
@@ -85,20 +86,33 @@ err_code CPages::OnDestroy(void) {
 #pragma endregion
 #pragma region cls::CView{}
 
-CView:: CView (void) {}
+CView:: CView (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
+TError&  CView::Error (void) const { return this->m_error; }
 err_code CView::OnCreate (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	
+	this->m_error << this->Pages().At_1st();   if (this->Error()) return this->Error();
+	this->m_error << this->Pages().OnCreate(); if (this->Error()) return this->Error();
 
-	err_code n_result = __s_ok;
-	n_result = this->Pages().At_1st();
-	n_result = this->Pages().OnCreate(); if (__failed(n_result)) return n_result; // it is very discussable to exit on error throw;
+	const
+	CTabPage& page_1 = this->Pages().Get().Tabs().Tab(0).Page();
 
-	return n_result;
+	this->m_error << this->m_view_1.Create(page_1.Handle(), page_1.Layout().Rect());
+	if (this->Error() == false) {
+		this->m_error << this->m_view_1.Open(_T("res://%s/test.1.fov.html"));
+		if (this->m_error)
+			this->m_error = this->m_view_1.Error();
+	}
+
+	return this->Error();
 }
 
 err_code CView::OnDestroy (void) {
 
-	err_code n_result = this->Pages().OnDestroy();
+	err_code n_result = __s_ok;
+	n_result = this->m_view_1.Destroy();
+	n_result = this->Pages().OnDestroy();
 	return n_result;
 }
 

@@ -40,14 +40,15 @@ namespace urls {
 	class CSchema {
 	public:
 		enum e_url_type : uint32_t {
-			eHostExecutable  = 0,   // a link that points to resource of browser host (default);
-			eExternalLink    = 1,   // a link that does not require a parse process;
-			eOuterBrowser    = 2,   // a special link that contains a URL, which must be open by default browser separately;
-			eInterCommand    = 3,   // a link that provides command identifier for web control host;
+			e_undefined      = 0,
+			eHostExecutable  = 1,   // a link that points to resource of browser host (default);
+			eExternalLink    = 2,   // a link that does not require a parse process;
+			eOuterBrowser    = 3,   // a special link that contains a URL, which must be open by default browser separately;
+			eInterCommand    = 4,   // a link that provides command identifier for web control host;
 		};
 
 		 CSchema (_pc_sz _lp_sz_pat = 0); CSchema (const CSchema&) = delete; CSchema (CSchema&&) = delete;
-		 CSchema (const e_url_type = e_url_type::eHostExecutable);
+		 CSchema (const e_url_type);
 		~CSchema (void);
 
 		TError& Error (void) const;
@@ -80,7 +81,7 @@ namespace urls {
 	public:
 		using e_url_type = CSchema::e_url_type;
 
-		 CLocator (const e_url_type = e_url_type::eHostExecutable);
+		 CLocator (void);
 		 CLocator (_pc_sz _lp_sz_pat); CLocator (const CLocator&) = delete; CLocator (CLocator&&) = delete;
 		~CLocator (void);
 
@@ -109,7 +110,7 @@ namespace urls {
 	private:
 		mutable
 		CError     m_error;
-		CSchema      m_type ;
+		CSchema    m_type ;
 		CString    m_url  ;
 		_variant_t m_data ;
 	};

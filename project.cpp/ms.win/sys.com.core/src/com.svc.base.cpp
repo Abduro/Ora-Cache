@@ -314,3 +314,8 @@ err_code CCoGuard::OnDestroy(void) {
 CCoGuard::operator const bool (void) const { return this->Is(); }
 
 #pragma endregion
+#pragma region cls::CCoApartment{}
+#if (0)
+CCoApartment::CCoApartment (void) : TBase() { }
+#endif
+#pragma endregion

@@ -111,7 +111,7 @@ err_code  CExe_Url::Set (_pc_sz _file_path, const e_res_type _res_type, const ui
 #pragma endregion
 #pragma region cls::CLocator{}
 
-CLocator:: CLocator (const e_url_type _type) : m_type(_type), m_data((long_t)0) { this->m_error >> __CLASS__ << __METHOD__; }
+CLocator:: CLocator (void) : m_data((long_t)0) { this->m_error >> __CLASS__ << __METHOD__<<__e_not_inited = _T("URL is undefined"); }
 CLocator:: CLocator (_pc_sz _lp_sz_pat) : CLocator() { this->URL(_lp_sz_pat); }
 CLocator::~CLocator (void) {}
 
@@ -169,7 +169,13 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 		if (false == b_result)
 			return this->m_error.Last();
 
-		CString cs_path(buffer); cs_path.Replace(_T('/'), _T('\\'));
+		CString cs_exe_file(buffer);
+		const int n_found = cs_exe_file.ReverseFind(_T('\\'));
+		if (n_found > 0)
+			cs_exe_file = cs_exe_file.Right(cs_exe_file.GetLength() - 1 - n_found);
+
+		_result.Format(lpszPattern, (_pc_sz)cs_exe_file);
+
 #if (0)
 		// Unfortunately GetFileAttributesEx() fails on paths, which contain dot(s) inside, like c:\\folder_1\\..\\ ;
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesW ;
@@ -200,7 +206,7 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 				_result = cs_pat.Right(cs_pat.GetLength() - cs_pfx.GetLength());
 			}
 			else
-				m_error.State().Set((DWORD)ERROR_INVALID_DATA, _T("Input URL pattern cannot be parsed."));
+				this->m_error <<(err_code)TErrCodes::eData::eInvalid = _T("Input URL pattern cannot be parsed.");
 
 		} break;
 	case e_url_type::eInterCommand: {
@@ -213,12 +219,12 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 				m_data = ::_tstol(_result.GetString());
 			}
 			else
-				m_error.State().Set((DWORD)ERROR_INVALID_DATA, _T("Input URL pattern does not provide internal command ID."));
+				this->m_error <<(err_code)TErrCodes::eData::eInvalid = _T("Input URL pattern does not provide internal command ID.");
 
 		} break;
 
 	default:
-		m_error = DISP_E_TYPEMISMATCH;
+		m_error << __e_type = _T("Input URL type is undefined");
 	}
 	return this->Error();
 }
@@ -226,10 +232,10 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 #pragma endregion
 #pragma region cls::CSchema{}
 
-CSchema:: CSchema (_pc_sz _lp_sz_pat) : m_type (e_url_type::eHostExecutable) { this->m_error >> __CLASS__ << __METHOD__;
-	this->Set(_lp_sz_pat);
+CSchema:: CSchema (_pc_sz _lp_sz_pat) : m_type (e_url_type::e_undefined) { this->m_error >> __CLASS__ << __METHOD__;
+	if (_lp_sz_pat) this->Set(_lp_sz_pat);
 }
-CSchema:: CSchema (const e_url_type _type) : CSchema(0) { this->m_type = _type; }
+CSchema:: CSchema (const e_url_type _type) : CSchema() { this->m_type = _type; }
 CSchema::~CSchema (void) {}
 
 TError& CSchema::Error (void) const  { return m_error; }
@@ -280,7 +286,7 @@ CString CSchema::Prefix (const e_url_type _type) {
 
 e_url_type  CSchema::ToType (_pc_sz _lp_sz_pat) {
 	_lp_sz_pat;
-	e_url_type value = CSchema::eExternalLink;
+	e_url_type value = CSchema::e_undefined;
 	CString cs_pat(_lp_sz_pat);
 
 	if (cs_pat.IsEmpty()) return value;

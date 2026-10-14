@@ -4,6 +4,7 @@
 */
 #include <winresrc.h>
 #include "test.gui.res.h"
+#include "test.1.fov.res.rc2"
 
 /* https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings ;
    https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers ;

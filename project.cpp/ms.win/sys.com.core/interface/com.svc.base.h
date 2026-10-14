@@ -73,7 +73,7 @@ namespace shared { namespace sys_core { namespace com {
 		     e_apart    = co_apartment,  // for GUI apps; due to GUI requires message pump that is not provided by COM;
 		     e_default  = co_threaded ,
 		     e_threaded = co_threaded ,  // multi-threaded for performing tasks concurrently, for multi-processor architecture usage;
-		     e_ole_1    = co_ole_1_dde,  // the legacy code disbling;
+		     e_ole_1    = co_ole_1_dde,  // for disabling the legacy code;
 		     e_speed    = co_speed_up ,  // increasing memory usage for making a performance of the COM calls faster;
 		     e_the_fake = (dword_t)-1
 		};

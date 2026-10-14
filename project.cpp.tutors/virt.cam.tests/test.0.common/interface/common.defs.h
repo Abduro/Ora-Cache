@@ -15,8 +15,15 @@
 #include "sys.error.h"
 
 #include "web.ie.browser.h"
+#include "web.ie.locator.h"
 
 namespace test { namespace draw { namespace defs {
+
+	using namespace ::shared::types;
+	using namespace ::shared::sys_core;
+	using CError  = ::shared::sys_core::CError;
+	using TError  = const CError;
+
 }}}
 
 #endif/*_COMMON_DEFS_H_INCLUDED*/

@@ -12,7 +12,7 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 	public:
 		 CCharset (void) = delete;
 		 CCharset (TBrwWndPtr&); CCharset (const CCharset&) = delete; CCharset (CCharset&&) = delete;
-		~CCharset (void);
+		~CCharset (void) = default;
 
 		TError&  Error (void) const;
 		const

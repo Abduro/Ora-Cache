@@ -1,0 +1,33 @@
+<!--
+	Created by Tech_dog (ebontrop@gmail.com) on 13-Oct-2026 at 20:27:29.170, UTC+4, Batumi, Tuesday;
+	This is virtual camera FoV test HTML page code file;
+-->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
+
+</head>
+<body>
+	<div class="image-container">
+		<img src="curve_monitor_man_277px.png" class="strict-size" alt="This is the test case image" title="How the test schema looks like." />
+	</div>
+
+
+	<script type="text/javascript">
+		window.addEventListener('resize', On_page_size_changed);
+		function On_page_size_changed () {
+			var width  = window.innerWidth  || document.documentElement.clientWidth;
+			var height = window.innerHeight || document.documentElement.clientHeight;
+			var img    = document.getElementById('curve_monitor_man_277px.png');
+
+			if (img) {
+				img.style.position = "absolute"; 
+
+				img.style.left = "150px";/* (width  / 2 - 277) + "px";*/
+				img.style.top  = "150px";/* (height / 2 - 277) + "px";*/
+			}
+		}
+	</script>
+</body>
+</html>

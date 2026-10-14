@@ -3,5 +3,6 @@
 	This is virtual camera test projects' common precompiled header implementation file;
 */
 #include "com.std.afx.h"
-
+#if (0) // otherwise, error LNK2005: "void __cdecl test::_impl::__warning_lnk_4221(void): already defined in com.std.afx.obj;
 namespace test { namespace _impl { void __warning_lnk_4221 (void) {}}}
+#endif
