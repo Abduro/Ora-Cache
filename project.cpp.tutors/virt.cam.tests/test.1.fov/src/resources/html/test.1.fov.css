@@ -37,8 +37,8 @@ h2 {
 	position        : absolute;
 	top             : 0;
 	left            : 0;
-	width           : 100%;    /* Takes up full body width */
-	height          : 100%;    /* Height dynamically matches the image */
+	width           : 277px;    /* Takes up full body width */
+	height          : 277px;   /* Height dynamically matches the image */
 /*	box-sizing      : border-box;*/
 
 	background-color: #fff;

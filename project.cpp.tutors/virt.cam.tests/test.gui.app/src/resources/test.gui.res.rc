@@ -62,9 +62,14 @@ IDR_APP_ICO ICON    "virt.cam_blue_512px.ico"
 /* https://learn.microsoft.com/en-us/windows/win32/menurc/rcdata-resource ;
 
    https://learn.microsoft.com/en-us/windows/win32/menurc/menuex-resource ;
-   https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ;
+   https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ; */
 
-   https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
+/* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/
+IDR_VIEW_CTX_MENU MENU { POPUP "" {
+	MENUITEM "Load HTML...", IDC_VIEW_LOAD_HTML
+}}
+
+/* https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;
    https://learn.microsoft.com/en-us/windows/win32/menurc/dialog-resource ;
    https://learn.microsoft.com/en-us/windows/win32/menurc/dialogex-resource ;*/
 /* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/

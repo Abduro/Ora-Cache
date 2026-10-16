@@ -6,6 +6,8 @@
 */
 #include "test.gui.defs.h"
 #include "sfx.tabs.ctrl.h"
+#include "common.defs.h"
+#include "common.menu.h"
 #include "test.1.view.h"
 
 namespace test { namespace app { using namespace ::test::draw::defs;
@@ -35,11 +37,14 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		CTabbed m_tabs;
 	};
 
-	using CView_1 = ::test::gui::views::_1::CView;
+	using CShortcut = ::test::gui::menus::CShortcut;
+	using CView_1   = ::test::gui::views::_1::CView;
 
-	class CView {
+	class CView : public TViewEvtHandler {
 	public:
-		CView (void); CView (const CView&) = delete; CView (CView&&) = delete; ~CView (void) = default;
+		CView (void); CView (const CView&) = delete; CView (CView&&) = delete; ~CView (void);
+
+		virtual err_code IViewEvt_OnMessage (const MSG&) override final;
 
 		TError&   Error (void) const;
 
@@ -52,16 +57,20 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		const
 		CWindow&  Parent (void) const; // this is main window handle actually; (ro)
 		CWindow&  Parent (void) ;      // this is main window handle actually; (rw)
+		const
+		CShortcut& Shortcut (void) const;
+		CShortcut& Shortcut (void) ;
 
 		CView& operator <<(const HWND _h_app_wnd);
 
 	private:
 		CView& operator = (const CView&) = delete; CView& operator = (CView&&) = delete;
 		mutable
-		CError   m_error;
-		CPages   m_pages;
-		CWindow  m_parent;  // this is the main window handle wrapper of this app;
-		CView_1  m_view_1;  // this is virtual camera FoV test case view;
+		CError    m_error;
+		CPages    m_pages;
+		CWindow   m_parent;  // this is the main window handle wrapper of this app;
+		CView_1   m_view_1;  // this is virtual camera FoV test case view;
+		CShortcut m_shortcut;
 	};
 
 }}

@@ -1,3 +1,6 @@
+<!-- <!DOCTYPE html>
+	using this specifier breaks an output of the main image. this requires test cases and an explanation of a reason for this bag.
+-->
 <!--
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Oct-2026 at 20:27:29.170, UTC+4, Batumi, Tuesday;
 	This is virtual camera FoV test HTML page code file;
@@ -7,27 +10,109 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
 	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
 
+	 <style>
+	/*	#the_point {
+			background-color: lightblue;
+			padding: 20px;
+			margin-top: 10px;
+		}*/
+		html, body {
+			width   : 100%;
+			height  : 100%;
+			margin  :   0 ;
+			overflow: hidden; /* optional, depending on your layout */
+		}
+
+		.centered-div {
+			position: absolute;
+			top     : 50%;
+			left    : 50%;
+			width   : 277px;     /* Set your exact image/div width */
+			height  : 277px;     /* Set your exact image/div height */
+			margin-top : -138px; /* Half of height */
+			margin-left: -138px; /* Half of width  */
+		}
+
+		.centered-div img {
+			display : block;
+			width   : 100%;
+			height  : 100%;
+		}
+	</style>
+
 </head>
-<body>
-	<div class="image-container">
-		<img src="curve_monitor_man_277px.png" class="strict-size" alt="This is the test case image" title="How the test schema looks like." />
+<body id = "this_page">
+	<div class="centered-div" id = "the_holder">
+		<img id = "the_diagram" src = "curve_monitor_man_277px.png" class = "strict-size" alt = "This is the test case image" title = "How the test schema looks like." />
 	</div>
+	<!--canvas id="canvas" width="500" height="500" style="border:1px solid"></canvas-->
+	<div id = "the_point"></div>
 
 
 	<script type="text/javascript">
+/*
 		window.addEventListener('resize', On_page_size_changed);
 		function On_page_size_changed () {
 			var width  = window.innerWidth  || document.documentElement.clientWidth;
 			var height = window.innerHeight || document.documentElement.clientHeight;
-			var img    = document.getElementById('curve_monitor_man_277px.png');
+			var holder = document.getElementById('the_holder');
 
-			if (img) {
-				img.style.position = "absolute"; 
+			if (holder) {
+				holder.style.position = "absolute";
 
-				img.style.left = "150px";/* (width  / 2 - 277) + "px";*/
-				img.style.top  = "150px";/* (height / 2 - 277) + "px";*/
+				var x_of_pos = (width  / 2 - 277);
+				var y_of_pos = (height / 2 - 277);
+
+				holder.style.left = x_of_pos + "px";
+				holder.style.top  = y_of_pos + "px";
 			}
 		}
+
+		var body = document.getElementById("this_page");
+
+		body.onclick = function() {
+			var div = document.getElementById("the_point");
+      
+			if (div.style.display === "none") {
+				div.style.display = "block";
+			} else {
+				div.style.display = "none";
+		}
+    }; */
+/* https://stackoverflow.com/questions/33811677/html-canvas-draw-a-circle-on-mouse-click-and-drag-it-untill-the-required-radius << doesn't works;
+		var canvas  = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		var radius  = 50;
+		var nStartX = 0;
+		var nStartY = 0;
+		var bIsDrawing = false;
+
+		var putPoint = function(e) {
+			nStartX = e.clientX;nStartY = e.clientY;
+			bIsDrawing = true;
+			radius = 0;
+		}
+
+		var drawPoint = function(e) {
+			if (!bIsDrawing)
+				return;
+			var nDeltaX = nStartX - e.clientX;
+			var nDeltaY = nStartY - e.clientY;
+			radius = Math.sqrt(nDeltaX * nDeltaX + nDeltaY * nDeltaY)
+			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.beginPath();
+			context.arc(nStartX, nStartY, radius, 0, Math.PI*2);
+			context.fill();
+		}
+
+		var stopPoint = function(e) {
+			bIsDrawing = false;
+		}
+
+		canvas.addEventListener('mousedown', putPoint );
+		canvas.addEventListener('mousemove', drawPoint);
+		canvas.addEventListener('mouseup'  , stopPoint);
+*/
 	</script>
 </body>
 </html>

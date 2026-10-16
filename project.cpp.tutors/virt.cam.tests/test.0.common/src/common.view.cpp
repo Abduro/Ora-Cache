@@ -31,7 +31,7 @@ err_code CBase::Destroy (void) {
 	return this->Error();
 }
 
-TError& CBase::Error (void) const { return this->m_error; }
+TError&  CBase::Error (void) const { return this->m_error; }
 
 err_code CBase::Open (_pc_sz _p_url) {
 	_p_url;
@@ -54,6 +54,12 @@ err_code CBase::Open (_pc_sz _p_url) {
 
 err_code CBase::WbEvt_BeforeNavigate  (_pc_sz _p_url) {_p_url; return __e_not_impl; }
 err_code CBase::WbEvt_DocumentComplete(_pc_sz _p_url, const bool _b_use_stream) { _p_url; _b_use_stream;  return __e_not_impl; }
-err_code CBase::WbEvt_OnMouseMessage  (const MSG&) { return __e_not_impl; }
+err_code CBase::WbEvt_OnMouseMessage  (const MSG& _msg) {
+	_msg;
+	if (::Get_view_evt_handler())
+		return ::Get_view_evt_handler()->IViewEvt_OnMessage(_msg);
+	else
+		return __e_not_impl;
+}
 
 #pragma endregion

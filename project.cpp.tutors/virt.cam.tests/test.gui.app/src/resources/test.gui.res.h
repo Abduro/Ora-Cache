@@ -3,6 +3,9 @@
 	This is virtual camera tests' common resource declaration file.
 */
 #include "test.1.fov.res.h"
+
+#pragma region test.main.accepted.range[001...999]
+
 #pragma region __frame
 
 #define IDR_APP_ICO 101
@@ -10,4 +13,8 @@
 
 #pragma endregion
 
+#define IDR_VIEW_CTX_MENU  111
+#define IDC_VIEW_LOAD_HTML 113
+
+#pragma endregion
 

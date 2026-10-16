@@ -4,13 +4,13 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 12-Oct-2026 at 12:31:35.913, UTC+4, Batumi, Monday;
 	This is virtual camera common GUI base view interface declaration file;
 */
-#include <common.defs.h>
+#include "common.defs.h"
 
 namespace test { namespace gui { namespace views { using namespace ::test::draw::defs;
 
-	using CWebBrowser = ex_ui::web::IE::CWebBrowser;
-	using CLocator = ex_ui::web::IE::urls::CLocator;
-	using IWbEvtHandler = ex_ui::web::IE::defs::IWbEvtHandler;
+	using CWebBrowser   = ::ex_ui::web::IE::CWebBrowser;
+	using CLocator      = ::ex_ui::web::IE::urls::CLocator;
+	using IWbEvtHandler = ::ex_ui::web::IE::defs::IWbEvtHandler;
 
 	class CBase : public IWbEvtHandler {
 	public:
@@ -23,6 +23,7 @@ namespace test { namespace gui { namespace views { using namespace ::test::draw:
 		TError& Error (void) const;
 
 		err_code Open (_pc_sz _p_url);
+		
 		// IWbEvtHandler implementation;
 		virtual err_code WbEvt_BeforeNavigate  (_pc_sz _p_url) override;
 		virtual err_code WbEvt_DocumentComplete(_pc_sz _p_url, const bool _b_use_stream) override;

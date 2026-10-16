@@ -45,8 +45,8 @@ namespace _impl {
 		return m_msg_filter;
 	}
 
-	static LRESULT __stdcall KeyboardHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam);
-	static LRESULT __stdcall MouseEvtHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam);
+	static LRESULT __stdcall KeyboardHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam); // https://learn.microsoft.com/en-us/windows/win32/winmsg/keyboardproc ;
+	static LRESULT __stdcall MouseEvtHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam); // https://learn.microsoft.com/en-us/windows/win32/winmsg/mouseproc ;
 
 	class CKbrdHandler_Cache { typedef ::std::map<HWND, CComPtr<IOleInPlaceActiveObject> >  TCache;
 	public:
@@ -94,7 +94,7 @@ namespace _impl {
 			{	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexW ;
 				HHOOK& hook_ref = GetKeyboardHook_Ref();
 				hook_ref = ::SetWindowsHookEx(
-					WH_GETMESSAGE, KeyboardHandler_Func, ::ATL::_AtlBaseModule.GetModuleInstance(), ::GetCurrentThreadId()
+					WH_KEYBOARD, KeyboardHandler_Func, ::ATL::_AtlBaseModule.GetModuleInstance(), ::GetCurrentThreadId()
 				);
 				if (nullptr == hook_ref)
 					this->m_error.Last();
@@ -173,7 +173,7 @@ namespace _impl {
 
 			HHOOK&  hook_ref = GetMouseHook_Ref();
 			if (0 < m_cache.size() && nullptr == hook_ref)
-			{
+			{	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexa ;
 				hook_ref = ::SetWindowsHookEx(
 								WH_MOUSE, MouseEvtHandler_Func, ::ATL::_AtlBaseModule.GetModuleInstance(), ::GetCurrentThreadId()
 							);
@@ -243,7 +243,7 @@ namespace _impl {
 			return ::CallNextHookEx(hHook, nCode, wParam, lParam);
 
 		PMOUSEHOOKSTRUCT pMsg =  (PMOUSEHOOKSTRUCT)lParam;
-		if ( pMsg && (WM_LBUTTONDOWN == wParam || WM_LBUTTONUP == wParam))
+		if ( pMsg && (WM_MOUSEMOVE != wParam)) // there is no interest of mouse movement over HTML document content;
 		{
 			MouseHandler_GetCacheObject().Handle(pMsg, (DWORD)wParam);
 		}

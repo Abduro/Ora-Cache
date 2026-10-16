@@ -86,7 +86,25 @@ err_code CPages::OnDestroy(void) {
 #pragma endregion
 #pragma region cls::CView{}
 
-CView:: CView (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CView:: CView (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; ::Set_view_evt_handler(this); }
+CView::~CView (void) { ::Set_view_evt_handler(nullptr); }
+
+err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
+	_msg;
+	this->m_error <<__METHOD__<<__s_ok;
+	
+	if (_msg.message == WM_RBUTTONUP && this->Shortcut().Is_valid()) {
+
+		point_t pt_ = {0};
+		::GetCursorPos(&pt_);
+		const uint32_t u_cmd = this->Shortcut().Track(this->Parent(), pt_);
+		switch (u_cmd) {
+		case IDC_VIEW_LOAD_HTML: {} break;
+		default:;
+		}
+	}
+	return this->Error();
+}
 
 TError&  CView::Error (void) const { return this->m_error; }
 err_code CView::OnCreate (void) {
@@ -103,6 +121,7 @@ err_code CView::OnCreate (void) {
 		this->m_error << this->m_view_1.Open(_T("res://%s/test.1.fov.html"));
 		if (this->m_error)
 			this->m_error = this->m_view_1.Error();
+		this->Shortcut() << IDR_VIEW_CTX_MENU;
 	}
 
 	return this->Error();
@@ -128,9 +147,11 @@ CWindow&  CView::Parent (void)       { return this->m_parent; }
 const
 CPages&   CView::Pages  (void) const { return this->m_pages; }
 CPages&   CView::Pages  (void)       { return this->m_pages; }
+const
+CShortcut& CView::Shortcut (void) const { return this->m_shortcut; }
+CShortcut& CView::Shortcut (void)       { return this->m_shortcut; }
 
 CView& CView::operator <<(const HWND _h_app_wnd) { this->m_parent = _h_app_wnd;  return *this; }
-
 
 #pragma endregion
 
