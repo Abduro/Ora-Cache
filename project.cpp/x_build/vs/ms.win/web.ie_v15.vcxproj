@@ -194,6 +194,8 @@
     <ClCompile Include="$(_1)web.ie.aux.cpp" />
     <ClInclude Include="$(_0)web.ie.browser.h" />
     <ClCompile Include="$(_1)web.ie.browser.cpp" />
+    <ClInclude Include="$(_0)web.ie.cache.h" />
+    <ClCompile Include="$(_1)web.ie.cache.cpp" />
     <ClInclude Include="$(_0)web.ie.content.h" />
     <ClCompile Include="$(_1)web.ie.content.cpp" />
     <ClInclude Include="$(_0)web.ie.defs.h" />

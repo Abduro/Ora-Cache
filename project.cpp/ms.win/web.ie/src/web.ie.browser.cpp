@@ -8,6 +8,7 @@
 #include "web.ie.browser.h"
 #include "web.ie.accessor.h"
 #include "web.ie.window.h"
+#include "web.ie.cache.h"
 
 using namespace ::ex_ui::web::IE;
 using namespace ::ex_ui::web::IE::core;
@@ -84,6 +85,10 @@ err_code  CWebBrowser::Destroy (void) {
 		if (this->m_host->IsWindow()) this->m_host->SendMessage(WM_CLOSE);
 	if (this->Ctrl())
 		this->Ctrl().Release();
+
+	CCache cache;
+	if (__failed(cache.Clear()))
+		this->m_error = cache.Error();
 
 	return this->Error();
 }

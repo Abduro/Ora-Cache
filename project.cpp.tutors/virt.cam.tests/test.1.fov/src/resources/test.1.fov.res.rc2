@@ -3,7 +3,8 @@
 	This is virtual camera FoV test resource script file;
 */
 
-curve_monitor_man_277px.png   HTML  images\\curve_monitor_man_277px.png
+test.1.fov.monitor.png   HTML  images\\test.1.fov.monitor.png
+test.2.fov.viewer.png    HTML  images\\test.1.fov.viewer.png
 
 test.1.fov.css  HTML  html\\test.1.fov.css
 test.1.fov.html HTML  html\\test.1.fov.html

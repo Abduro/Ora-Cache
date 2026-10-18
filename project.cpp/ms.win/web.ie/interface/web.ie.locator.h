@@ -40,21 +40,23 @@ namespace urls {
 	class CSchema {
 	public:
 		enum e_url_type : uint32_t {
-			e_undefined      = 0,
-			eHostExecutable  = 1,   // a link that points to resource of browser host (default);
-			eExternalLink    = 2,   // a link that does not require a parse process;
-			eOuterBrowser    = 3,   // a special link that contains a URL, which must be open by default browser separately;
-			eInterCommand    = 4,   // a link that provides command identifier for web control host;
+			e_undef   = 0,   // default;
+			e_exe_res = 1,   // a link that points to resource of browser host;
+			e_file    = 2,   // HTML file path;
+			e_web_url = 3,   // a link that does not require a parse process;
+			e_outer   = 4,   // a special link that contains a URL, which must be open by default browser separately;
+			e_inter   = 5,   // a link that provides command identifier for web control host;
 		};
 
 		 CSchema (_pc_sz _lp_sz_pat = 0); CSchema (const CSchema&) = delete; CSchema (CSchema&&) = delete;
 		 CSchema (const e_url_type);
 		~CSchema (void);
 
-		TError& Error (void) const;
-		bool    IsCmd (void) const; // checks for internal command type;
-		bool    IsExt (void) const; // checks for external URL type;
-		bool    IsOut (void) const; // checks for outer browser URL type;
+		TError& Error   (void) const;
+		bool    Is_cmd  (void) const; // checks for internal command type;
+		bool    Is_ext  (void) const; // checks for external URL type;
+		bool    Is_out  (void) const; // checks for outer browser URL type;
+		bool    Is_file (void) const;
 
 		e_url_type Get (void) const;
 		void       Set (const e_url_type);
@@ -67,7 +69,7 @@ namespace urls {
 		operator e_url_type (void) const;  // returns encapsulated type;
 		operator bool (void) const;        // checks for type availability, i.e. for no error;
 
-		static int32_t MinLen (void);      // returns *pattern* length consistent with CStringW::GetLength();
+		static int32_t MinLen (void);      // returns *pattern* minimal length; to-do: does not work properly, every URL type has different minimal length;
 		static CString Prefix (const e_url_type) ;    // evaluates a prefix if any;
 		static e_url_type ToType (_pc_sz _lp_sz_pat); // converts string to type if possible;
 
@@ -90,11 +92,12 @@ namespace urls {
 		_variant_t&   Data  (void) const;
 		dword_t       DataAsCommand (void) const;
 		TErrorRef     Error (void) const;
+		err_code   Get_file (HWND const _h_owner); // opens system dialog 'Open File' and an HTML file can be selected for loading into web browser control;
 		const
 		CSchema& Type (void) const;
 		CSchema& Type (void) ;
 
-		_pc_sz    URL  (void) const;
+		_pc_sz    URL  (void) const; // gets the cached URL string pointer;
 		_pc_sz    URL  (_pc_sz lpszPattern);
 		err_code  URL  (_pc_sz lpszPattern, CString& _result);
 

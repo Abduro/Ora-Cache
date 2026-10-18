@@ -5,3 +5,5 @@
 #include "wnd.defs.h"
 
 using namespace ::ex_ui::popup::defs;
+
+namespace ex_ui { namespace popup { namespace defs { void _w_warning_lnk_4221 (void) {}}}}

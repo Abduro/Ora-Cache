@@ -3,6 +3,7 @@
 	This is IE web url locator interface implementation file.
 */
 #include "web.ie.locator.h"
+#include "shell.fs.dlg.h"
 
 using namespace ::ex_ui::web::IE;
 using namespace ::ex_ui::web::IE::urls;
@@ -125,13 +126,13 @@ bool CLocator::Accept (_pc_sz _lp_sz_pat) const {
 		return (m_error = type_);
 
 	switch (type_.Get()) {
-	case e_url_type::eHostExecutable: {
+	case e_url_type::e_exe_res: {
 			CString cs_pat(_lp_sz_pat);
 			const INT n_pos = cs_pat.Find(_T("%s"));
 			b_accept = (n_pos != -1);
 		} break;
-	case e_url_type::eInterCommand  :
-	case e_url_type::eOuterBrowser  : {
+	case e_url_type::e_inter  :
+	case e_url_type::e_outer  : {
 			b_accept = true;
 		} break;
 	}
@@ -144,6 +145,24 @@ _variant_t&   CLocator::Data (void) const { return this->m_data; }
 dword_t       CLocator::DataAsCommand (void) const { if (VT_I4 != m_data.vt) return 0; else return this->m_data.lVal; }
 
 TErrorRef     CLocator::Error (void) const { return this->m_error; }
+
+err_code CLocator::Get_file (HWND const _h_owner) {
+	this->m_error <<__METHOD__<<__s_ok;
+	this->Type().Set(e_url_type::e_file);
+
+	using CFileOpen = ::shared::shell::ntfs::dialogs::CFileOpen;
+	CFileOpen dlg;
+	dlg.Filter().Append(_T("HTML file (*.html)"), _T("*.html"));
+	this->m_error << dlg.Do(_T("Open HTML File"), _h_owner);
+	if (this->Error())
+		return this->m_error = dlg.Error();
+
+	CString cs_selected = dlg.Selected(); cs_selected.Replace(_T('\\'), _T('/'));
+
+	this->m_url = TString().Format(_T("%s%s"), (_pc_sz) CSchema::Prefix(e_url_type::e_file), (_pc_sz) cs_selected);
+
+	return this->Error();
+}
 const
 CSchema& CLocator::Type (void) const { return this->m_type ; }
 CSchema& CLocator::Type (void)       { return this->m_type ; }
@@ -160,7 +179,7 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 		return (this->m_error = this->m_type);
 
 	switch (this->Type().Get()) {
-	case e_url_type::eHostExecutable: {
+	case e_url_type::e_exe_res: {
 
 		t_char buffer[512] = {0};
 
@@ -196,8 +215,9 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 				);
 #endif
 		} break;
-	case e_url_type::eExternalLink: { _result = lpszPattern; } break;
-	case e_url_type::eOuterBrowser: {
+	case e_url_type::e_file:  { _result = lpszPattern; } break;
+	case e_url_type::e_web_url: { _result = lpszPattern; } break;
+	case e_url_type::e_outer: {
 
 			CString cs_pat(lpszPattern);
 			CString cs_pfx = CSchema::Prefix(m_type);
@@ -209,7 +229,7 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 				this->m_error <<(err_code)TErrCodes::eData::eInvalid = _T("Input URL pattern cannot be parsed.");
 
 		} break;
-	case e_url_type::eInterCommand: {
+	case e_url_type::e_inter: {
 
 		CString cs_pat(lpszPattern);
 		CString cs_pfx = CSchema::Prefix(m_type);
@@ -232,26 +252,27 @@ err_code CLocator::URL (_pc_sz lpszPattern, CString& _result) {
 #pragma endregion
 #pragma region cls::CSchema{}
 
-CSchema:: CSchema (_pc_sz _lp_sz_pat) : m_type (e_url_type::e_undefined) { this->m_error >> __CLASS__ << __METHOD__;
+CSchema:: CSchema (_pc_sz _lp_sz_pat) : m_type (e_url_type::e_undef) { this->m_error >> __CLASS__ << __METHOD__;
 	if (_lp_sz_pat) this->Set(_lp_sz_pat);
 }
 CSchema:: CSchema (const e_url_type _type) : CSchema() { this->m_type = _type; }
 CSchema::~CSchema (void) {}
 
-TError& CSchema::Error (void) const  { return m_error; }
-bool    CSchema::IsCmd (void) const  { return (e_url_type::eInterCommand == this->Get()); }
-bool    CSchema::IsExt (void) const  { return (e_url_type::eExternalLink == this->Get()); }
-bool    CSchema::IsOut (void) const  { return (e_url_type::eOuterBrowser == this->Get()); }
+TError& CSchema::Error (void) const { return m_error; }
+bool    CSchema::Is_cmd (void) const { return (e_url_type::e_inter == this->Get()); }
+bool    CSchema::Is_ext (void) const { return (e_url_type::e_web_url == this->Get()); }
+bool    CSchema::Is_out (void) const { return (e_url_type::e_outer == this->Get()); }
+bool    CSchema::Is_file (void) const { return (e_url_type::e_file == this->Get()); }
 
 CSchema::e_url_type CSchema::Get (void) const { return this->m_type ; }
 
-void   CSchema::Set (const e_url_type _value) { this->m_type = _value; }
+void CSchema::Set (const e_url_type _value) { this->m_type = _value; }
 
 err_code CSchema::Set (_pc_sz _lp_sz_pat) {
 	_lp_sz_pat;
 	this->m_error << __METHOD__ << __s_ok;
 
-	CString cs_pat(_lp_sz_pat);
+	CString cs_pat(_lp_sz_pat); cs_pat.Trim();
 
 	if (cs_pat.IsEmpty()) return (this->m_error << __e_inv_arg);
 	if (cs_pat.GetLength() < CSchema::MinLen()) return this->m_error << (err_code)TErrCodes::eData::eInvalid;
@@ -276,25 +297,27 @@ int32_t CSchema::MinLen (void) {
 CString CSchema::Prefix (const e_url_type _type) {
 	CString cs_pfx;
 	switch (_type) {
-	case CSchema::eExternalLink  : {} break;
-	case CSchema::eHostExecutable: { cs_pfx = _T("res://" ); } break;
-	case CSchema::eOuterBrowser  : { cs_pfx = _T("outer::"); } break;
-	case CSchema::eInterCommand  : { cs_pfx = _T("inter::"); } break;
+	case CSchema::e_web_url: {} break;
+	case CSchema::e_exe_res: { cs_pfx = _T("res://" ); } break;
+	case CSchema::e_outer  : { cs_pfx = _T("outer::"); } break;
+	case CSchema::e_inter  : { cs_pfx = _T("inter::"); } break;
+	case CSchema::e_file   : { cs_pfx = _T("file:///"); } break; // file://[empty host]/C:/YourFolder/page.html << empty host creates additional slash;thanks Google AI;
 	}
 	return cs_pfx;
 }
 
 e_url_type  CSchema::ToType (_pc_sz _lp_sz_pat) {
 	_lp_sz_pat;
-	e_url_type value = CSchema::e_undefined;
+	e_url_type value = CSchema::e_undef;
 	CString cs_pat(_lp_sz_pat);
 
 	if (cs_pat.IsEmpty()) return value;
 	if (cs_pat.GetLength() < CSchema::MinLen()) return value;
 
-	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::eHostExecutable))) value = e_url_type::eHostExecutable;
-	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::eOuterBrowser)))   value = e_url_type::eOuterBrowser;
-	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::eInterCommand)))   value = e_url_type::eInterCommand;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::e_exe_res))) value = e_url_type::e_exe_res;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::e_outer)))   value = e_url_type::e_outer;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::e_inter)))   value = e_url_type::e_inter;
+	if (0 == cs_pat.Find(CSchema::Prefix(CSchema::e_file)))    value = e_url_type::e_file;
 
 	return value;
 }

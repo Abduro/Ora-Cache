@@ -10,7 +10,6 @@ A:active   {color: #4799c8; background: transparent; text-decoration:none; }
 body {
 	font            : 8.65pt 'Trebuchet MS', verdana, tahoma, arial;
 	background-color: #ffffff;
-	color           : #c8c8c8;
 	padding         : 0;
 	margin          : 0;
 	-ms-content-zooming: none;
@@ -28,9 +27,17 @@ h1 {
 h2 {
 	font-family     :'Trebuchet MS', verdana, tahoma, arial;
 	font-size       : 16px;
-	font-weight     : bold;
-	text-shadow     : 0px 2px 3px #555;
+	font-weight     : normal;
+	margin-left     :  20px;
 	margin-bottom   :  5px;
+}
+
+h3 {
+	font-family     :'Trebuchet MS', verdana, tahoma, arial;
+	font-size       : 14px;
+	font-weight     : normal;
+	margin-left     :  10px;
+	margin-bottom   :   5px;
 }
 
 .image-container {
@@ -39,18 +46,14 @@ h2 {
 	left            : 0;
 	width           : 277px;    /* Takes up full body width */
 	height          : 277px;   /* Height dynamically matches the image */
-/*	box-sizing      : border-box;*/
 
 	background-color: #fff;
 
 	display         : -ms-flexbox; /* IE10 Flexbox syntax support */  
-/*	display         : flex;        /* Modern Flexbox syntax */
 
 	-ms-flex-pack   : center;      /* Center horizontally in IE */
-/*	justify-content : center;      /* Center horizontally modern browsers */   
 
 	-ms-flex-align  : center;  /* Center vertically in IE */
-/*	align-items     : center;  /* Center vertically modern browsers */   
 }
 
 .strict-size {
@@ -60,16 +63,4 @@ h2 {
 	min-height      : 277px !important;
 	max-width       : none  !important;
 	max-height      : none  !important;
-/*	flex-shrink     : 0     !important;*/
-	/* Vital for flex layouts: prevents the wrapper from squeezing the image */
-/*	-ms-flex-negative: 0 !important;  /* IE flex-shrink */
-/*	flex-shrink      : 0 !important;  /* Modern flex-shrink */
-	/* 2. Absolute centering calculations */
-/*	position  : absolute;
-	top       :  50%;
-	left      :  50%;
-
-	/* 3. Pulls the center of the image to the exact center of the screen */
-/*	-ms-transform: translate(-50%, -50%); /* Specific targeting for IE / MSHTML engine */
-/*	transform    : translate(-50%, -50%); /* Standard fallback */
 }

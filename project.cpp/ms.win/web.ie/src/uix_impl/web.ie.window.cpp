@@ -45,7 +45,7 @@ namespace _impl {
 		return m_msg_filter;
 	}
 
-	static LRESULT __stdcall KeyboardHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam); // https://learn.microsoft.com/en-us/windows/win32/winmsg/keyboardproc ;
+	static LRESULT __stdcall KeyboardHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam); // https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc ;
 	static LRESULT __stdcall MouseEvtHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam); // https://learn.microsoft.com/en-us/windows/win32/winmsg/mouseproc ;
 
 	class CKbrdHandler_Cache { typedef ::std::map<HWND, CComPtr<IOleInPlaceActiveObject> >  TCache;
@@ -94,7 +94,7 @@ namespace _impl {
 			{	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexW ;
 				HHOOK& hook_ref = GetKeyboardHook_Ref();
 				hook_ref = ::SetWindowsHookEx(
-					WH_KEYBOARD, KeyboardHandler_Func, ::ATL::_AtlBaseModule.GetModuleInstance(), ::GetCurrentThreadId()
+					WH_KEYBOARD_LL, KeyboardHandler_Func, ::ATL::_AtlBaseModule.GetModuleInstance(), ::GetCurrentThreadId()
 				);
 				if (nullptr == hook_ref)
 					this->m_error.Last();
@@ -220,19 +220,25 @@ namespace _impl {
 		return cache;
 	}
 
+	// https://learn.microsoft.com/en-us/windows/win32/winmsg/keyboardproc << this procedure does not allow to handle keyboard event, just only virtual code of the key;
+	// https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc ;
 	static LRESULT __stdcall KeyboardHandler_Func (INT nCode, WPARAM wParam, LPARAM lParam) {
 		nCode; wParam; lParam;
 		const HHOOK hHook = GetKeyboardHook_Ref();
 		if (HC_ACTION != nCode)
 			return ::CallNextHookEx(hHook, nCode, wParam, lParam);
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct ;
+		KBDLLHOOKSTRUCT* p_struct = {0};
+		p_struct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+		if (p_struct) {
+			// https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes << WPARAM holds one of these codes;
+			// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg ;
+			MSG msg = {0};
+			msg.message = static_cast<UINT>(wParam);
+			msg.wParam  = wParam;
+			msg.lParam  = p_struct->flags;
 
-		MSG* pMsg = (MSG*)lParam;
-		if ( pMsg && WM_KEYDOWN == pMsg->message
-#if !defined(_DEBUG)
-			&& VK_F5 != pMsg->wParam
-#endif
-		) {
-			KbrdHandler_GetCacheObject().Handle(pMsg);
+			KbrdHandler_GetCacheObject().Handle(&msg);
 		}
 		return ::CallNextHookEx(hHook, nCode, wParam, lParam);
 	}
@@ -242,7 +248,8 @@ namespace _impl {
 		if (HC_ACTION != nCode)
 			return ::CallNextHookEx(hHook, nCode, wParam, lParam);
 
-		PMOUSEHOOKSTRUCT pMsg =  (PMOUSEHOOKSTRUCT)lParam;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mousehookstruct ;
+		PMOUSEHOOKSTRUCT pMsg =  reinterpret_cast<PMOUSEHOOKSTRUCT>(lParam);
 		if ( pMsg && (WM_MOUSEMOVE != wParam)) // there is no interest of mouse movement over HTML document content;
 		{
 			MouseHandler_GetCacheObject().Handle(pMsg, (DWORD)wParam);

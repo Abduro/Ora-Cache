@@ -194,6 +194,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(_0)shell.fs.dlg.h" />
+    <ClCompile Include="$(_1)shell.fs.dlg.cpp" />
     <ClInclude Include="$(_0)shell.fs.folder.h" />
     <ClCompile Include="$(_1)shell.fs.folder.cpp" />
     <ClInclude Include="$(_0)sys.procs.list.h" />

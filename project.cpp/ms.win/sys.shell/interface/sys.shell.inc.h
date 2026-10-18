@@ -6,11 +6,12 @@
 */
 #include <atlbase.h>
 #include <dwmapi.h>
-#include <shlobj.h>     // for font enumeration in the system 'Font' folder;
-#include <sysinfoapi.h> // for getting OS version, it is required for DwmGetWindowAttribute() & DwmSetWindowAttribute();
-#include <winreg.h>     // required to be included after 'atlbase.h', otherwise the error C1189: "No Target Architecture";
+#include <shlobj.h>         // for font enumeration in the system 'Font' folder;
+#include <shobjidl_core.h>  // for system 'Open File' dialog;
+#include <sysinfoapi.h>     // for getting OS version, it is required for DwmGetWindowAttribute() & DwmSetWindowAttribute();
+#include <winreg.h>         // required to be included after 'atlbase.h', otherwise the error C1189: "No Target Architecture";
 
-#include <algorithm>    // for sorting the std::vector of string;
+#include <algorithm>        // for sorting the std::vector of string;
 
 #include "shared.preproc.h"
 #include "shared.string.h"
@@ -27,8 +28,9 @@
 
 namespace shared { namespace sys_core { namespace shell {
 
-	using namespace shared::types;
-	using CError  = shared::sys_core::CError;
+	using namespace ::ATL;
+	using namespace ::shared::types;
+	using CError  = ::shared::sys_core::CError;
 	using TError  = const CError;
 
 }}}

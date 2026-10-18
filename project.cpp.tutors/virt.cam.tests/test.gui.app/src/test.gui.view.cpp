@@ -99,8 +99,22 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 		::GetCursorPos(&pt_);
 		const uint32_t u_cmd = this->Shortcut().Track(this->Parent(), pt_);
 		switch (u_cmd) {
-		case IDC_VIEW_LOAD_HTML: {} break;
-		default:;
+			case IDC_VIEW_LOAD_HTML: {
+				using
+				CLocator = ex_ui::web::IE::urls::CLocator;
+				CLocator locator;
+				this->m_error << locator.Get_file(this->Parent());
+				if (this->Error())
+					this->m_error = locator.Error();
+				else if (locator.Error() == __s_false) // a file is not chosen;
+					return this->m_error;
+
+				if (this->Pages().Get().Tabs().Active() == 0) {
+					this->m_error << this->m_view_1.Open(locator.URL());
+				if (this->m_error) this->m_error = this->m_view_1.Error();
+				}
+			} break;
+			default:;
 		}
 	}
 	return this->Error();
