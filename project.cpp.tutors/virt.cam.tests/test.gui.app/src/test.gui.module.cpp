@@ -39,11 +39,9 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	::DefWindowProc(nullptr, 0, 0, 0L);
 
 	CCoGuard com_quard(TCo_Cfg::e_gui);
-	err_code n_ole_init = ::OleInitialize(0); n_ole_init;
 
 	::ex_ui::theme::Get_current().Load();  // no returned error code is concerned here yet;
 
-	MSG msg = {0};
 	CAppWnd app_wnd;
 	if (__failed(app_wnd.Create()))
 			return n_result;
@@ -52,25 +50,22 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagea ;
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessage ;
-#if (0)
-	while (::PeekMessage( &msg, main_wnd.m_hWnd, 0, 0, PM_REMOVE )) {
-		::TranslateMessage( &msg );
-		::DispatchMessage ( &msg );
-		if (msg.message == WM_QUIT)
-			break;
-		::Sleep(10);
-	}
-#else
-	int32_t n_read = 0;
-	while ((n_read = ::GetMessage(&msg, app_wnd.m_hWnd, 0, 0)) != 0) {
-		if ( -1 == n_read )
-			break;
-		else {
-			::TranslateMessage( &msg );
-			::DispatchMessage ( &msg );
+	// https://stackoverflow.com/questions/17884290/cappmodule-vs-catlexemodulet-getting-the-application-message-loop << this one is very good example;
+
+	/* This is the answer to Google IA explanation that doesn't work:
+		Yes, you're right regarding message pump, but there is one important thing, if you use ATL::CAtlExeModuleT as a base class of your application,
+		never create your own message loop like: while (::GetMessage()) {}
+		that means all messages created by IWebBrowser2 control will be never delivered because the control does know nothing about what is really going on.
+		The solution:
+		class CModule : public ATL::CAtlExeModuleT<CModule> {}
+		in method WinMain() {
+		...
+		CModule.RunMessageLoop(); // and this is the solution!
+		...
 		}
-	}
-	::OleUninitialize();
-#endif
+	*/
+
+	_Module.RunMessageLoop();
+
 	return n_result;
 }

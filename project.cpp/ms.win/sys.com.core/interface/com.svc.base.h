@@ -117,7 +117,7 @@ namespace shared { namespace sys_core { namespace com {
 		const
 		TRawModes& Accepted(void) const;
 		TRawModes& Accepted(void) ;
-		dword_t      CoInit  (void) const; // gets COINIT flags' value that is calculated from accepted modes;
+		dword_t    CoInit  (void) const; // gets COINIT flags' value that is calculated from accepted modes;
 
 		_cfg_4     Cfg(void) const;      // returns the config value that is used for creating set of accepted modes;
 
