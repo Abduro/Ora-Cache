@@ -103,6 +103,7 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 				using
 				CLocator = ex_ui::web::IE::urls::CLocator;
 				CLocator locator;
+
 				this->m_error << locator.Get_file(this->Parent());
 				if (this->Error())
 					this->m_error = locator.Error();
@@ -111,7 +112,9 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 
 				if (this->Pages().Get().Tabs().Active() == 0) {
 					this->m_error << this->m_view_1.Open(locator.URL());
-				if (this->m_error) this->m_error = this->m_view_1.Error();
+
+					if (this->m_error) this->m_error = this->m_view_1.Error();
+					else {}
 				}
 			} break;
 			default:;
@@ -123,6 +126,8 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 TError&  CView::Error (void) const { return this->m_error; }
 err_code CView::OnCreate (void) {
 	this->m_error <<__METHOD__<<__s_ok;
+
+	this->Pages().Get().Layout().Padding().Set(1, 5, -1, -1);
 	
 	this->m_error << this->Pages().At_1st();   if (this->Error()) return this->Error();
 	this->m_error << this->Pages().OnCreate(); if (this->Error()) return this->Error();
@@ -135,6 +140,13 @@ err_code CView::OnCreate (void) {
 		this->m_error << this->m_view_1.Open(_T("res://%s/test.1.fov.html"));
 		if (this->m_error)
 			this->m_error = this->m_view_1.Error();
+		else {
+			rect_t rect = {0};
+			this->Parent().GetWindowRect(&rect);
+			this->Parent().SetWindowPos(0, &rect, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+			this->Parent().Invalidate(true);
+			this->Parent().UpdateWindow();
+		}
 		this->Shortcut() << IDR_VIEW_CTX_MENU;
 	}
 

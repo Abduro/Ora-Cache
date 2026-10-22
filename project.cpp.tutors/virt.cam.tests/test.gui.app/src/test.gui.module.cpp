@@ -39,6 +39,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	::DefWindowProc(nullptr, 0, 0, 0L);
 
 	CCoGuard com_quard(TCo_Cfg::e_gui);
+	err_code n_ole_init = ::OleInitialize(0); n_ole_init;
 
 	::ex_ui::theme::Get_current().Load();  // no returned error code is concerned here yet;
 
@@ -69,6 +70,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 			::DispatchMessage ( &msg );
 		}
 	}
+	::OleUninitialize();
 #endif
 	return n_result;
 }

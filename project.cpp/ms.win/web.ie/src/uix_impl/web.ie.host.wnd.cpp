@@ -4,14 +4,16 @@
 	-----------------------------------------------------------------------------
 	Adopted to v15 on 28-May-2018 at 9:17:50p, UTC+7, Phuket, Rawai, Monday;
 */
-#include "web.ie.window.h"
+#include "web.ie.host.wnd.h"
 
 using namespace ::ex_ui::web::IE;
 using namespace ::ex_ui::web::IE::core;
 
+using CEvents = CBrowserHost::CEvents;
+
 namespace ex_ui { namespace web { namespace IE { namespace core
 {
-	_ATL_FUNC_INFO CBrowserWnd::BeforeNavigate2_Info = {
+	_ATL_FUNC_INFO CBrowserHost::BeforeNavigate2_Info = {
 		CC_STDCALL, VT_EMPTY, 7, { VT_DISPATCH, VT_BYREF | VT_VARIANT,
 		                           VT_BYREF | VT_VARIANT ,
 		                           VT_BYREF | VT_VARIANT ,
@@ -21,7 +23,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core
 		}
 	};
 
-	_ATL_FUNC_INFO CBrowserWnd::NavigateError_Info   = {
+	_ATL_FUNC_INFO CBrowserHost::NavigateError_Info   = {
 		CC_STDCALL, VT_EMPTY, 5, { VT_DISPATCH, VT_BYREF | VT_VARIANT,
 		                           VT_BYREF | VT_VARIANT ,
 		                           VT_BYREF | VT_VARIANT ,
@@ -29,7 +31,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core
 		}
 	};
 
-	_ATL_FUNC_INFO CBrowserWnd::DocumentComplete_Info   = {
+	_ATL_FUNC_INFO CBrowserHost::DocumentComplete_Info   = {
 			CC_STDCALL, VT_EMPTY, 2, { VT_DISPATCH, VT_BYREF | VT_VARIANT}
 	};
 namespace _impl {
@@ -375,20 +377,20 @@ namespace _impl {
 }
 }}}} using namespace _impl;
 
-#pragma region cls::CBrowserWnd{}
+#pragma region cls::CBrowserHost{}
 
-CBrowserWnd::CBrowserWnd (IWbEvtHandler& evt_ref) :  m_evt_handler(evt_ref), m_bInited(false), m_bDoNotNotify(false), m_bStreamObject(false) {
+CBrowserHost::CBrowserHost (IWbEvtHandler& evt_ref) :  m_evt_handler(evt_ref), m_bInited(false), m_bDoNotNotify(false), m_bStreamObject(false), m_events(*this) {
 	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 }
 
-err_code CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSvcProvider& pProvider, const bool bVisible) {
+err_code CBrowserHost::CreateObject(const HWND hParent, const rect_t& rcArea, TSvcProvider& pProvider, const bool bVisible) {
 	hParent; rcArea; pProvider; bVisible;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	if (!::IsWindow(hParent))
 		return this->m_error <<__e_hwnd;
 
-	if (TBrwWindow::IsWindow())
+	if (TBrowserHost::IsWindow())
 		return this->m_error << (err_code)TErrCodes::eObject::eExists = TString().Format(_T("The object of class '%s' does exist"), (_pc_sz)__CLASS__);
 
 	rect_t rc_ = rcArea;
@@ -397,17 +399,17 @@ err_code CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSv
 		return this->m_error = brw_guid.Error();
 
 	const dword_t dStyle = (bVisible ? WS_VISIBLE : 0)|WS_CHILD;
-	const HWND hBrowser = TBrwWindow::Create(hParent, rc_, brw_guid, dStyle);
+	const HWND hBrowser = TBrowserHost::Create(hParent, rc_, brw_guid, dStyle);
 	if (nullptr == hBrowser) {
 		this->m_error.Last(); return this->Error();
 	}
 
-	this->m_error << TBrwWindow::CreateControl(brw_guid);
+	this->m_error << TBrowserHost::CreateControl(brw_guid);
 	if (this->m_error)
 		return this->m_error;
 
 	CComPtr<IUnknown> pControl;
-	this->m_error << TBrwWindow::QueryControl(&pControl);
+	this->m_error << TBrowserHost::QueryControl(&pControl);
 	if (this->m_error)
 		return this->m_error;
 
@@ -417,7 +419,7 @@ err_code CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSv
 	if (pProvider)
 	{
 		CComPtr<IUnknown> pHost;
-		this->m_error << TBrwWindow::QueryHost(&pHost);
+		this->m_error << TBrowserHost::QueryHost(&pHost);
 		if (pHost)
 		{
 			CComQIPtr<IObjectWithSite> pObject;
@@ -426,28 +428,29 @@ err_code CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSv
 				pObject->SetSite(pProvider);
 		}
 	}
-	this->m_error << this->DispEventAdvise(pControl);
 	
 	CComQIPtr<IWebBrowser2> pWebBrowser;
 	this->m_error << pControl.QueryInterface(&pWebBrowser);
 	if (pWebBrowser)
 		pWebBrowser->QueryInterface(IID_IOleInPlaceActiveObject, (void**)&this->m_act_object);
-
+#if (0)
+	this->m_error << this->Events().AdviseAdvise();
+#endif
 	if (m_act_object)
-	KbrdHandler_GetCacheObject().Register(TBrwWindow::m_hWnd, m_act_object);
-	MouseHandler_GetCacheObject().Register(TBrwWindow::m_hWnd, &m_evt_handler);
+	KbrdHandler_GetCacheObject().Register(TBrowserHost::m_hWnd, m_act_object);
+	MouseHandler_GetCacheObject().Register(TBrowserHost::m_hWnd, &m_evt_handler);
 
 	if (this->Error())
 		return this->Error();
 
 	CComPtr<IOleInPlaceObject> spInPlace;
-	this->m_error << TBrwWindow::QueryControl(IID_PPV_ARGS(&spInPlace));
+	this->m_error << TBrowserHost::QueryControl(IID_PPV_ARGS(&spInPlace));
 	if (this->Error() == false) {
 		this->m_error << spInPlace->SetObjectRects(&rc_, &rc_);
 	}
 
 	CComQIPtr<IAxWinAmbientDispatch> spAmb;
-	this->m_error << TBrwWindow::QueryHost(&spAmb);
+	this->m_error << TBrowserHost::QueryHost(&spAmb);
 
 	if (this->m_error == __s_ok)
 	{
@@ -462,18 +465,20 @@ err_code CBrowserWnd::CreateObject(const HWND hParent, const rect_t& rcArea, TSv
 	return this->Error();
 }
 
-TError& CBrowserWnd::Error (void) const { return this->m_error; }
+TError& CBrowserHost::Error (void) const { return this->m_error; }
 
-err_code CBrowserWnd::Refresh (void) {
+CEvents& CBrowserHost::Events (void) { return this->m_events; }
+
+err_code CBrowserHost::Refresh (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	if (false == !!TBrwWindow::IsWindow())
+	if (false == !!TBrowserHost::IsWindow())
 		return this->m_error <<__e_not_inited;
 
 	rect_t rect = {0};
-	TBrwWindow::GetClientRect(&rect);
-	rect.right += 1; TBrwWindow::MoveWindow(&rect);
-	rect.right -= 1; TBrwWindow::MoveWindow(&rect);
+	TBrowserHost::GetClientRect(&rect);
+	rect.right += 1; TBrowserHost::MoveWindow(&rect);
+	rect.right -= 1; TBrowserHost::MoveWindow(&rect);
 
 	return this->Error();
 }
@@ -481,19 +486,22 @@ err_code CBrowserWnd::Refresh (void) {
 #pragma endregion
 #pragma region event handlers
 
-LRESULT CBrowserWnd::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+LRESULT CBrowserHost::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
 	uMsg; wParam; lParam; bHandled;
+	this->Events().Unadvise();
+#if (0)
 	CComPtr<IUnknown> spUnk;
-	err_code n_result = TBrwWindow::QueryControl(&spUnk);
+	err_code n_result = TBrowserHost::QueryControl(&spUnk);
 	if (__succeeded(n_result)) {
 		n_result = THtmlSink::DispEventUnadvise(spUnk);
 	}
-	KbrdHandler_GetCacheObject().Unregister(TBrwWindow::m_hWnd); ATLASSERT(__s_ok == n_result);
-	MouseHandler_GetCacheObject().Unregister(TBrwWindow::m_hWnd); ATLASSERT(__s_ok == n_result); this->m_act_object = nullptr;
+#endif
+	KbrdHandler_GetCacheObject().Unregister(TBrowserHost::m_hWnd);
+	MouseHandler_GetCacheObject().Unregister(TBrowserHost::m_hWnd); this->m_act_object = nullptr;
 	return 0;
 }
 
-LRESULT CBrowserWnd::OnCreate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+LRESULT CBrowserHost::OnCreate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
 	uMsg; wParam; lParam; bHandled;
 #if (0)
 	static _pc_sz lp_sz_cls[] = { _T("Shell Embedding"), _T("Shell DocObject View"), _T("Internet Explorer_Server")};
@@ -507,18 +515,18 @@ LRESULT CBrowserWnd::OnCreate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	return 0;
 }
 
-LRESULT CBrowserWnd::OnErase (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+LRESULT CBrowserHost::OnErase (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
 	uMsg; wParam; lParam; bHandled;
 	return 1;
 }
 
-LRESULT CBrowserWnd::OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+LRESULT CBrowserHost::OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
 	uMsg; wParam; lParam; bHandled;
 	if (VT_BSTR != m_async_data.vt || nullptr == m_async_data.bstrVal)
 		return 0;
 
 	CComPtr<IUnknown> spUnk;
-	err_code n_result = TBrwWindow::QueryControl(&spUnk);
+	err_code n_result = TBrowserHost::QueryControl(&spUnk);
 	if (__succeeded(n_result))
 	{
 		CComQIPtr<IWebBrowser2> spWeb;
@@ -526,6 +534,7 @@ LRESULT CBrowserWnd::OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 
 		if (__succeeded(n_result) && spWeb)
 		{
+		//	this->Events().Advise();
 			m_bDoNotNotify = true;
 			n_result = spWeb->Navigate2(&m_async_data, 0, 0, 0, 0);
 			m_bDoNotNotify = false;
@@ -534,14 +543,14 @@ LRESULT CBrowserWnd::OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	return 0;
 }
 
-LRESULT CBrowserWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled) {
+LRESULT CBrowserHost::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled) {
 	uMsg; wParam; lParam; bHandled;
 	// https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size ;
 	const SIZE size = { LOWORD(lParam), HIWORD(lParam) };
 	
 	CComPtr<IOleInPlaceObject> spInPlace;
 
-	err_code n_result = TBrwWindow::QueryControl(IID_PPV_ARGS(&spInPlace));
+	err_code n_result = TBrowserHost::QueryControl(IID_PPV_ARGS(&spInPlace));
 	if (__succeeded(n_result) && nullptr != spInPlace) {
 
 		rect_t rect = {0, 0, size.cx, size.cy};
@@ -555,7 +564,7 @@ LRESULT CBrowserWnd::OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bH
 #pragma region sink callbacks
 
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa768280(v=vs.85) ;
-STDMETHODIMP CBrowserWnd::BeforeNavigate2 (LPDISPATCH, LPVARIANT pUrl, LPVARIANT, LPVARIANT, LPVARIANT, LPVARIANT, VARIANT_BOOL* pCancel)
+STDMETHODIMP CBrowserHost::BeforeNavigate2 (LPDISPATCH, LPVARIANT pUrl, LPVARIANT, LPVARIANT, LPVARIANT, LPVARIANT, VARIANT_BOOL* pCancel)
 {
 	pUrl; pCancel;
 	this->m_error <<__METHOD__<<__s_ok;
@@ -580,19 +589,41 @@ STDMETHODIMP CBrowserWnd::BeforeNavigate2 (LPDISPATCH, LPVARIANT pUrl, LPVARIANT
 }
 
 // https://learn.microsoft.com/en-us/previous-versions/aa768329(v=vs.85) ;
-STDMETHODIMP CBrowserWnd::DocumentComplete( LPDISPATCH pDisp, LPVARIANT pUrl) {
+STDMETHODIMP CBrowserHost::DocumentComplete( LPDISPATCH pDisp, LPVARIANT pUrl) {
 	pDisp; pUrl;
 	this->m_error <<__METHOD__<<__s_ok;
 
 	CString csUrl((*pUrl).bstrVal);
 	bool bTopFrame = false;
+
 	CComPtr<IUnknown> pControl;
-	if ((this->m_error << TBrwWindow::QueryControl(&pControl)) == __s_ok)
-	{
-		CComPtr<IUnknown> pFrame;
-		if (__succeeded(this->m_error << pDisp->QueryInterface( IID_IUnknown, (void**)&pFrame)))
-			bTopFrame = (pControl == pFrame);
-	}
+	this->m_error << TBrowserHost::QueryControl(&pControl);
+	if (this->Error())
+		return this->Error();
+
+#if (1)
+	CComPtr<IUnknown> pFrame;
+	if (__succeeded(this->m_error << pDisp->QueryInterface( IID_IUnknown, (void**)&pFrame)))
+		bTopFrame = (pControl == pFrame);
+#else
+	CComQIPtr<IWebBrowser2> pWebBrowser;
+	this->m_error << pControl.QueryInterface(&pWebBrowser);
+	if (this->Error())
+		return this->Error();
+	 CComPtr<IDispatch> p_the_app;
+	 this->m_error << pWebBrowser->get_Application(&p_the_app);
+	 if (this->Error())
+		return this->Error();
+	 bTopFrame = p_the_app.IsEqualObject(pDisp);
+	 if (bTopFrame) {
+		 rect_t rect = {0};
+		 if (TBrowserHost::GetClientRect(&rect)) {
+			 TBrowserHost::SetWindowPos(0, &rect, SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE|SWP_FRAMECHANGED);
+			 TBrowserHost::Invalidate(true);
+			 TBrowserHost::UpdateWindow();
+		 }
+	 }
+#endif
 	if (bTopFrame)
 		m_evt_handler.WbEvt_DocumentComplete(csUrl.GetString(), m_bStreamObject);
 
@@ -600,14 +631,14 @@ STDMETHODIMP CBrowserWnd::DocumentComplete( LPDISPATCH pDisp, LPVARIANT pUrl) {
 }
 
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa768286(v=vs.85) ;
-STDMETHODIMP CBrowserWnd::NavigateError (LPDISPATCH, LPVARIANT, LPVARIANT, LPVARIANT, VARIANT_BOOL* ) {
+STDMETHODIMP CBrowserHost::NavigateError (LPDISPATCH, LPVARIANT, LPVARIANT, LPVARIANT, VARIANT_BOOL* ) {
 	return __s_ok;
 }
 
 #pragma endregion
 #pragma region properties
 
-err_code CBrowserWnd::SetBackColor (const COLORREF _clr) {
+err_code CBrowserHost::SetBackColor (const COLORREF _clr) {
 	_clr;
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -631,7 +662,7 @@ err_code CBrowserWnd::SetBackColor (const COLORREF _clr) {
 
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms537168(v=vs.85) ;
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms537169(v=vs.85) ;
-err_code CBrowserWnd::EnableFeature (const dword_t dwFeature, const bool bEnabled, const dword_t dwScope) {
+err_code CBrowserHost::EnableFeature (const dword_t dwFeature, const bool bEnabled, const dword_t dwScope) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	CComPtr<IWebBrowser2> browser;
@@ -643,7 +674,7 @@ err_code CBrowserWnd::EnableFeature (const dword_t dwFeature, const bool bEnable
 }
 
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms537164(v=vs.85) ;
-err_code CBrowserWnd::IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope) {
+err_code CBrowserHost::IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope) {
 	this->m_error <<__METHOD__<<__s_ok;
 
 	CComPtr<IWebBrowser2> browser;
@@ -655,4 +686,48 @@ err_code CBrowserWnd::IsFeatureEnabled (const dword_t dwFeature, const dword_t d
 }
 
 #endif
+#pragma endregion
+#pragma region cls::CEvemts{}
+
+CEvents:: CEvents (CBrowserHost& _host) : m_host(_host) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CEvents::~CEvents (void) {}
+
+TError& CEvents::Error (void) const { return this->m_error; }
+
+err_code CEvents::Advise (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CComPtr<IUnknown> pControl;
+	this->m_error << this->m_host.QueryControl(&pControl);
+	if (this->Error())
+		return this->Error();
+
+	CComQIPtr<IWebBrowser2> pWebBrowser;
+	this->m_error << pControl.QueryInterface(&pWebBrowser);
+	if (this->Error())
+		return this->Error();
+
+	this->m_error << this->m_host.DispEventAdvise(pWebBrowser, &DIID_DWebBrowserEvents2);
+
+	return this->Error();
+}
+
+err_code CEvents::Unadvise (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	CComPtr<IUnknown> pControl;
+	this->m_error << this->m_host.QueryControl(&pControl);
+	if (this->Error())
+		return this->Error();
+
+	CComQIPtr<IWebBrowser2> pWebBrowser;
+	this->m_error << pControl.QueryInterface(&pWebBrowser);
+	if (this->Error())
+		return this->Error();
+
+	this->m_error << this->m_host.DispEventUnadvise(pWebBrowser);
+
+	return this->Error();
+}
+
 #pragma endregion

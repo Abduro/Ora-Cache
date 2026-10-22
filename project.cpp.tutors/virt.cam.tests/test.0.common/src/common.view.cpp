@@ -44,11 +44,15 @@ err_code CBase::Open (_pc_sz _p_url) {
 	if (locator.Error())
 		return this->m_error = locator.Error();
 
-//	this->m_browser.Open(locator.URL());
-	if (false) {}
-	else if (__failed(this->m_browser.Open(locator.URL()))) this->m_error = this->m_browser.Error();
-	else if (__failed(this->m_browser.Refresh())) this->m_error = this->m_browser.Error();
-	else {}
+	static bool b_1st_time = true;
+	if (b_1st_time) {
+		this->m_error << this->m_browser.Open(_T("")); b_1st_time = false;
+	}
+
+	this->m_error << this->m_browser.Open(locator.URL());
+	if (this->Error())
+		this->m_error = this->m_browser.Error();
+	
 	return this->Error();
 }
 

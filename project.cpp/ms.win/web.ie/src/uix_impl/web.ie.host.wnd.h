@@ -13,22 +13,38 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/caxwindow2t ;
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/caxwindow-class ;
 
-	class CBrowserWnd;
+	class CBrowserHost;
 	static const uint32_t nWebBrowserCtrlId = 1;
 
-	typedef IDispEventImpl<nWebBrowserCtrlId, CBrowserWnd, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, -1, -1> THtmlSink;
+	typedef IDispEventImpl<nWebBrowserCtrlId, CBrowserHost, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 0> THtmlSink;
 
-	typedef CWindowImpl<CBrowserWnd, CAxWindow> TBrwWindow;
-	typedef CComPtr<IOleInPlaceActiveObject>    TActiveObject;
-	typedef CComPtr<IServiceProvider>           TSvcProvider;
+	typedef CWindowImpl<CBrowserHost, CAxWindow> TBrowserHost;
+	typedef CComPtr<IOleInPlaceActiveObject>     TActiveObject;
+	typedef CComPtr<IServiceProvider>            TSvcProvider;
 
-	class CBrowserWnd : public TBrwWindow, THtmlSink {
+	class CBrowserHost : public TBrowserHost, THtmlSink {
 		friend class CWebBrowser;
 		enum { eAsyncRedirect = WM_USER + 1 };
 	public:
-		 CBrowserWnd (void) = delete; CBrowserWnd (const CBrowserWnd&) = delete; CBrowserWnd (CBrowserWnd&&) = delete;
-		 CBrowserWnd (IWbEvtHandler&);
-		~CBrowserWnd (void) = default;
+		class CEvents {
+		public:
+			 CEvents (CBrowserHost&); CEvents (void) = delete; CEvents (const CEvents&) = delete; CEvents (CEvents&&) = delete;
+			~CEvents (void);
+
+			TError&  Error (void) const;
+
+			err_code Advise (void);
+			err_code Unadvise (void);
+
+		private:
+			CEvents& operator = (const CEvents&) = delete; CEvents& operator = (CEvents&&) = delete;
+			CBrowserHost& m_host;
+			CError       m_error;
+		};
+
+		 CBrowserHost (void) = delete; CBrowserHost (const CBrowserHost&) = delete; CBrowserHost (CBrowserHost&&) = delete;
+		 CBrowserHost (IWbEvtHandler&);
+		~CBrowserHost (void) = default;
 
 		static _ATL_FUNC_INFO BeforeNavigate2_Info;
 		static _ATL_FUNC_INFO DocumentComplete_Info;
@@ -36,15 +52,19 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 
 		DECLARE_WND_SUPERCLASS(_T("ex_ui::web::IE::Window"), ::ATL::CAxWindow::GetWndClassName());
 
-		BEGIN_MSG_MAP(CBrowserWnd)
+		BEGIN_MSG_MAP(CBrowserHost)
 			MESSAGE_HANDLER(WM_CLOSE      , OnClose   )
 			MESSAGE_HANDLER(WM_CREATE     , OnCreate  )
 			MESSAGE_HANDLER(WM_ERASEBKGND , OnErase   )
 			MESSAGE_HANDLER(eAsyncRedirect, OnRedirect)
 			MESSAGE_HANDLER(WM_SIZE       , OnSize    )
+#if (0)
+			if (TBrowserHost::ProcessWindowMessage(hWnd, uMsg, wParam, lParam, lResult, 0))
+				return true;
+#endif
 		END_MSG_MAP()
 
-		BEGIN_SINK_MAP(CBrowserWnd)
+		BEGIN_SINK_MAP(CBrowserHost)
 			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_BEFORENAVIGATE2 , BeforeNavigate2 , &BeforeNavigate2_Info )
 			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_DOCUMENTCOMPLETE, DocumentComplete, &DocumentComplete_Info)
 			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_NAVIGATEERROR   , NavigateError   , &NavigateError_Info   )
@@ -57,6 +77,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		err_code IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope = GET_FEATURE_FROM_PROCESS);
 #endif
 		TError&  Error (void) const;
+		CEvents& Events (void);
 		err_code Refresh (void);
 
 	private:
@@ -76,7 +97,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		                            LPVARIANT  pStatusCode,
 		                            VARIANT_BOOL* pCancel);
 
-		CBrowserWnd& operator = (const CBrowserWnd&) = delete; CBrowserWnd& operator = (CBrowserWnd&&) = delete;
+		CBrowserHost& operator = (const CBrowserHost&) = delete; CBrowserHost& operator = (CBrowserHost&&) = delete;
 
 		bool           m_bInited     ;
 		IWbEvtHandler& m_evt_handler ;
@@ -84,7 +105,8 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		_variant_t     m_async_data  ;
 		bool           m_bDoNotNotify;
 		bool           m_bStreamObject;
-		CError m_error;
+		CError  m_error;
+		CEvents m_events;
 	};
 }}}}
 

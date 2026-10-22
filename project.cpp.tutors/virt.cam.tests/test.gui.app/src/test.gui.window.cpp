@@ -146,7 +146,7 @@ err_code CAppWnd::Create (void) {
 	static const dword_t dw_std_style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
 	const // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw ;
-	HWND h_wnd = TWindow::Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_std_style, dw_ext_style);
+	HWND h_wnd = TWindow::Create(HWND_DESKTOP, &rc_, (_pc_sz) cs_bits, dw_std_style, /*dw_ext_style*/0);
 	if ( h_wnd == 0 )
 		return (n_result = __LastErrToHresult());
 

@@ -26,7 +26,7 @@
 
 namespace ex_ui { namespace web { namespace IE {
 namespace core {
-	class CBrowserWnd;
+	class CBrowserHost;
 }	
 namespace defs {
 
@@ -50,8 +50,8 @@ namespace defs {
 	typedef CComPtr<IHTMLDocument3> TDocument3Ptr;   using TDoc3Ptr = TDocument3Ptr;
 	typedef CComPtr<IHTMLElement>   TElementPtr;     using TElemPtr = TElementPtr;
 
-	using   ex_ui::web::IE::core::CBrowserWnd;
-	typedef ::std::shared_ptr<CBrowserWnd> TBrwWndPtr; // https://learn.microsoft.com/en-us/cpp/standard-library/unique-ptr-class ;
+	using   ex_ui::web::IE::core::CBrowserHost;
+	typedef ::std::shared_ptr<CBrowserHost> TBrwWndPtr; // https://learn.microsoft.com/en-us/cpp/standard-library/unique-ptr-class ;
 	// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa752127(v=vs.85) ;
 	typedef CComQIPtr<IWebBrowser2> TWebBrwPtr;
 

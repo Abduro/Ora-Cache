@@ -1,6 +1,6 @@
-<!-- <!DOCTYPE html>
-	using this specifier breaks an output of the main image. this requires test cases and an explanation of a reason for this bag.
--->
+<!--DOCTYPE html>
+	using this specifier breaks an output of the main image. this requires test cases and an explanation of a reason for this bag.-->
+<!DOCTYPE html>
 <!--
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Oct-2026 at 20:27:29.170, UTC+4, Batumi, Tuesday;
 	This is virtual camera FoV test HTML page code file;
@@ -9,14 +9,66 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
 	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" /><!-- Crucial for IWebBrowser2 to enable HTML5, SVG, and CSS3 -->
+	<meta http-equiv="X-UA-Compatible" content="content=IE=edge,chrome=1" /><!-- Crucial for IWebBrowser2 to enable HTML5, SVG, and CSS3 -->
 
-	 <style>
+	<script type="text/javascript">
+		/* https://stackoverflow.com/questions/33811677/html-canvas-draw-a-circle-on-mouse-click-and-drag-it-untill-the-required-radius << doesn't works;*/
+		var isDragging = false;
+		var offsetX, offsetY;
+
+		function On_mouse_down (e) {
+			isDragging = true;
+			// calculates click offset relative to the image top-left;
+			var img = document.getElementById('the_monitor');
+			if (img){
+				offsetX = e.clientX - img.offsetLeft;
+				offsetY = e.clientY - img.offsetTop;
+				Set_stat_message("On_mouse_down event occurred;");
+			}
+			e.preventDefault(); // prevents default drag-and-drop ghost image;
+		}
+
+		function On_mouse_move (e) {
+			if (!isDragging) return;
+			var img = document.getElementById('the_monitor');
+			if (img){
+				img.style.left = (e.clientX - offsetX) + 'px';
+				img.style.top = (e.clientY - offsetY) + 'px';
+				Set_stat_message("On_mouse_move event occurred;");
+			}
+			if (window.external && window.external.RefreshUI) {
+				window.external.RefreshUI();
+			}
+		}
+
+		function On_mouse_up (e) {
+			isDragging = false;
+			Set_stat_message("On_mouse_up event occurred;");
+		}
+
+		document.addEventListener('mousedown', On_mouse_down);
+		document.addEventListener('mousemove', On_mouse_move);
+		document.addEventListener('mouseup'  , On_mouse_up);
+
+		function Set_stat_message (_msg_text) {
+			var status_bar = document.getElementById("status_bar");
+			if (status_bar){
+				status_bar.innerHTML = _msg_text;
+			}
+		}
+	</script>
+	<style>
+		:root {
+			--status-bar-height: 24px;
+			--status-bar-color : #3f4448;
+		}
+
 		html, body {
 			width   : 100%;
 			height  : 100%;
-			margin  :   0 ;
+			margin  :   0 ;   /* Removes default browser margins */
 			overflow: hidden; /* optional, depending on your layout */
+			padding-bottom: var(--status-bar-height); /* MATCH THIS to the exact height of your status bar */
 		}
 
 		.centered-div {
@@ -34,19 +86,51 @@
 			width   : 100%;
 			height  : 100%;
 		}
+
+		#the_monitor {
+			position: absolute;
+			cursor  : move;
+			user-select: none;
+		-webkit-user-select: none;
+		}
+
+		.status-bar {
+			/* Layout alignment inside the status bar */
+			display         : flex;
+			display         : -ms-flexbox;    /* IE11 prefix */
+			/* Layers it on top of other content and prevents text selection */
+			z-index         : 9999; 
+			user-select     : none;
+			/* Visual styles*/
+			background-color: #fff;
+			color           : var(--status-bar-color);
+			font-family     : verdana, sans-serif;
+			font-size       : 12px;
+			border-top      : 1px solid #CDCDCD;
+		}
+		.status-bar-align {
+			-ms-flex-align  : center;     /* IE11 vertical center alignment */
+			align-items     : left;
+			padding         : 5 0 5 5px;  /* top, right, bottom, left */
+			box-sizing      : border-box; /* Ensures padding doesn't break the 100% width */
+		}
+		.status-bar-pos {
+			position        : fixed;
+			bottom          : 0;
+			left            : 0;
+			width           : 100%;
+			height          : var(--status-bar_height);
+		}
 	</style>
 
 </head>
 <body id = "this_page">
-	<h2>Question: How to Get Distance</h2>
+	<h3>Question: How to Get Distance::2</h3>
 	<div class="centered-div" id = "the_holder">
-		<img id = "the_diagram" src = "test.1.fov.monitor.png" class = "strict-size" alt = "This is the test case image" title = "How the test schema looks like." />
+		<img id = "the_monitor" src = "test.1.fov.monitor.png" alt = "This is the monitor image" title = "This is the target of a distance." />
 	</div>
-	<div id = "the_point"></div>
-
-
-	<script type="text/javascript">
-	/* https://stackoverflow.com/questions/33811677/html-canvas-draw-a-circle-on-mouse-click-and-drag-it-untill-the-required-radius << doesn't works;*/
-	</script>
+	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar">
+		<span>Status: Ready</span>
+	</div>
 </body>
 </html>

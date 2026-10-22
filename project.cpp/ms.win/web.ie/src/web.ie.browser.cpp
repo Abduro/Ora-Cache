@@ -7,7 +7,7 @@
 */
 #include "web.ie.browser.h"
 #include "web.ie.accessor.h"
-#include "web.ie.window.h"
+#include "web.ie.host.wnd.h"
 #include "web.ie.cache.h"
 
 using namespace ::ex_ui::web::IE;
@@ -20,7 +20,7 @@ static CWebBrowser* p_browser = 0;
 CWebBrowser:: CWebBrowser(IWbEvtHandler& evt_ref) : m_command(m_host), m_content(m_host), m_script(m_host), m_state(this) {
 	evt_ref;
 	m_error >> __CLASS__ << __METHOD__;
-	try { m_host = ::std::make_shared<CBrowserWnd>(evt_ref); } catch (::std::bad_alloc&){ ATLASSERT(0); this->m_error <<__e_no_memory; }
+	try { m_host = ::std::make_shared<CBrowserHost>(evt_ref); } catch (::std::bad_alloc&){ ATLASSERT(0); this->m_error <<__e_no_memory; }
 	p_browser = this;
 }
 
@@ -101,6 +101,7 @@ const
 TBrwWndPtr& CWebBrowser::Host (void) const { return this->m_host; }
 TBrwWndPtr& CWebBrowser::Host (void)       { return this->m_host; }     
 
+#define _use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_
 #if defined(_use_IE6_compatible_CB5829FE_6DE5_4fe2_B8D8_32996330F16B_)
 err_code  CWebBrowser::Open (CComPtr<IStream>& p_stream) {
 	p_stream;
@@ -204,7 +205,7 @@ err_code  CWebBrowser::Open (_pc_sz pURL) {
 
 	CString cs_url(pURL); cs_url.Trim();
 
-	if (cs_url.IsEmpty() || false == CUrl().CrackUrl((_pc_sz)cs_url)) // https://learn.microsoft.com/en-us/cpp/atl/reference/curl-class ;
+	if (cs_url.IsEmpty() || false == CUrl().CrackUrl((_pc_sz)cs_url)) // https://learn.microsoft.com/en-us/cpp/atl/referernce/curl-class ;
 		return this->m_error <<__e_inv_arg = _T("__e_inv_arg: Input URL string is not valid");
 
 	if (false == this->State())
@@ -213,7 +214,15 @@ err_code  CWebBrowser::Open (_pc_sz pURL) {
 	this->Host()->m_bStreamObject = false; 
 	CComVariant vUrl((_pc_sz)cs_url);
 
+	this->Host()->Events().Advise();
 	this->m_error << this->Ctrl()->Navigate2(&vUrl, 0, 0, 0, 0);
+	if (this->Error() == false) {
+		rect_t rect = {0};
+		this->Window().GetClientRect(&rect);
+		this->Window().SetWindowPos(0, &rect, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+		this->Window().Invalidate(true);
+		this->Window().UpdateWindow();
+	}
 	return this->Error();
 }
 
@@ -228,7 +237,7 @@ err_code  CWebBrowser::Redirect (_pc_sz pTarget, const bool bAsync) {
 		return this->m_error <<__e_not_impl;
 
 	this->Host()->m_async_data = _variant_t(pTarget);
-	this->Host()->PostMessage(CBrowserWnd::eAsyncRedirect, 0, 0);
+	this->Host()->PostMessage(CBrowserHost::eAsyncRedirect, 0, 0);
 
 	return this->Error();
 }

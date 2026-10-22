@@ -4,7 +4,7 @@
 */
 #include "web.ie.content.h"
 #include "web.ie.accessor.h"
-#include "web.ie.window.h"
+#include "web.ie.host.wnd.h"
 
 using namespace ::ex_ui::web::IE;
 using namespace ::ex_ui::web::IE::core;
