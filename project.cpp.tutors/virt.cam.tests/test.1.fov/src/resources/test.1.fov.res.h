@@ -8,8 +8,9 @@
 
 #define IDC_TEST_1_FOV_HTML   1000
 #define IDC_TEST_1_FOV_CSS    1003
-#define IDR_TEST_1_FOV_IMG_0  1005
-#define IDR_TEST_1_FOV_IMG_1  1007
+#define IDC_TEST_1_FOV_JS     1005
+#define IDR_TEST_1_FOV_IMG_0  1007
+#define IDR_TEST_1_FOV_IMG_1  1009
 
 #pragma endregion
 

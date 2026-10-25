@@ -7,6 +7,7 @@
 	Adopted to v15 on 30-Jul-2018 at 3:45:02p, UTC+7, Novosibirsk, Monday;
 */
 #include "web.ie.browser.h"
+#include "web.ie.events.h"
 
 namespace ex_ui { namespace web { namespace IE { namespace core { using namespace ::ex_ui::web::IE::defs;
 
@@ -46,10 +47,6 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		 CBrowserHost (IWbEvtHandler&);
 		~CBrowserHost (void) = default;
 
-		static _ATL_FUNC_INFO BeforeNavigate2_Info;
-		static _ATL_FUNC_INFO DocumentComplete_Info;
-		static _ATL_FUNC_INFO NavigateError_Info;
-
 		DECLARE_WND_SUPERCLASS(_T("ex_ui::web::IE::Window"), ::ATL::CAxWindow::GetWndClassName());
 
 		BEGIN_MSG_MAP(CBrowserHost)
@@ -65,9 +62,9 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		END_MSG_MAP()
 
 		BEGIN_SINK_MAP(CBrowserHost)
-			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_BEFORENAVIGATE2 , BeforeNavigate2 , &BeforeNavigate2_Info )
-			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_DOCUMENTCOMPLETE, DocumentComplete, &DocumentComplete_Info)
-			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_NAVIGATEERROR   , NavigateError   , &NavigateError_Info   )
+			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_BEFORENAVIGATE2 , BeforeNavigate2 , &func_defs::BeforeNavigate2_Info )
+			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_DOCUMENTCOMPLETE, DocumentComplete, &func_defs::DocumentComplete_Info)
+			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_NAVIGATEERROR   , NavigateError   , &func_defs::NavigateError_Info   )
 		END_SINK_MAP()
 
 		err_code CreateObject (const HWND hParent, const rect_t& rcArea, TSvcProvider&, const bool bVisible); // creates an instance of IWebBrowser2 ActiveX control;
@@ -77,7 +74,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core { using namespac
 		err_code IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope = GET_FEATURE_FROM_PROCESS);
 #endif
 		TError&  Error (void) const;
-		CEvents& Events (void);
+	//	CEvents& Events (void);
 		err_code Refresh (void);
 
 	private:

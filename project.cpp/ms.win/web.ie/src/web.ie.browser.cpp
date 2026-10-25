@@ -214,7 +214,6 @@ err_code  CWebBrowser::Open (_pc_sz pURL) {
 	this->Host()->m_bStreamObject = false; 
 	CComVariant vUrl((_pc_sz)cs_url);
 
-	this->Host()->Events().Advise();
 	this->m_error << this->Ctrl()->Navigate2(&vUrl, 0, 0, 0, 0);
 	if (this->Error() == false) {
 		rect_t rect = {0};

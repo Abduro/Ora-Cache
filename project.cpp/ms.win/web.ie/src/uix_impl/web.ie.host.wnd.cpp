@@ -13,27 +13,6 @@ using CEvents = CBrowserHost::CEvents;
 
 namespace ex_ui { namespace web { namespace IE { namespace core
 {
-	_ATL_FUNC_INFO CBrowserHost::BeforeNavigate2_Info = {
-		CC_STDCALL, VT_EMPTY, 7, { VT_DISPATCH, VT_BYREF | VT_VARIANT,
-		                           VT_BYREF | VT_VARIANT ,
-		                           VT_BYREF | VT_VARIANT ,
-		                           VT_BYREF | VT_VARIANT ,
-		                           VT_BYREF | VT_VARIANT ,
-		                           VT_BYREF | VT_BOOL
-		}
-	};
-
-	_ATL_FUNC_INFO CBrowserHost::NavigateError_Info   = {
-		CC_STDCALL, VT_EMPTY, 5, { VT_DISPATCH, VT_BYREF | VT_VARIANT,
-		                           VT_BYREF | VT_VARIANT ,
-		                           VT_BYREF | VT_VARIANT ,
-		                           VT_BYREF | VT_BOOL
-		}
-	};
-
-	_ATL_FUNC_INFO CBrowserHost::DocumentComplete_Info   = {
-			CC_STDCALL, VT_EMPTY, 2, { VT_DISPATCH, VT_BYREF | VT_VARIANT}
-	};
 namespace _impl {
 	HHOOK&  GetKeyboardHook_Ref (void)
 	{
@@ -433,8 +412,8 @@ err_code CBrowserHost::CreateObject(const HWND hParent, const rect_t& rcArea, TS
 	this->m_error << pControl.QueryInterface(&pWebBrowser);
 	if (pWebBrowser)
 		pWebBrowser->QueryInterface(IID_IOleInPlaceActiveObject, (void**)&this->m_act_object);
-#if (0)
-	this->m_error << this->Events().AdviseAdvise();
+#if (1)
+	this->m_error << this->m_events.Advise();
 #endif
 	if (m_act_object)
 	KbrdHandler_GetCacheObject().Register(TBrowserHost::m_hWnd, m_act_object);
@@ -466,9 +445,9 @@ err_code CBrowserHost::CreateObject(const HWND hParent, const rect_t& rcArea, TS
 }
 
 TError& CBrowserHost::Error (void) const { return this->m_error; }
-
+#if (0)
 CEvents& CBrowserHost::Events (void) { return this->m_events; }
-
+#endif
 err_code CBrowserHost::Refresh (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
@@ -488,7 +467,7 @@ err_code CBrowserHost::Refresh (void) {
 
 LRESULT CBrowserHost::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
 	uMsg; wParam; lParam; bHandled;
-	this->Events().Unadvise();
+	this->m_events.Unadvise();
 #if (0)
 	CComPtr<IUnknown> spUnk;
 	err_code n_result = TBrowserHost::QueryControl(&spUnk);

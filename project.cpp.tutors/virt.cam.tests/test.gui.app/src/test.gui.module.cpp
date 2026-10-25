@@ -55,7 +55,7 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	/* This is the answer to Google IA explanation that doesn't work:
 		Yes, you're right regarding message pump, but there is one important thing, if you use ATL::CAtlExeModuleT as a base class of your application,
 		never create your own message loop like: while (::GetMessage()) {}
-		that means all messages created by IWebBrowser2 control will be never delivered because the control does know nothing about what is really going on.
+		that means all events created by IWebBrowser2 control will be never delivered because the control does know nothing about what is really going on.
 		The solution:
 		class CModule : public ATL::CAtlExeModuleT<CModule> {}
 		in method WinMain() {

@@ -7,14 +7,23 @@ A:link     {color: #4799c8; background: transparent; text-decoration:none; }
 A:visited  {color: #4799c8; background: transparent; text-decoration:none; }
 A:active   {color: #4799c8; background: transparent; text-decoration:none; }
 
-body {
-	font            : 8.65pt 'Trebuchet MS', verdana, tahoma, arial;
+:root {
+	--status-bar-height: 24px;
+	--status-bar-color : #3f4448;
+}
+
+html, body {
+	font            : 10.0pt 'Verdana', tahoma, arial;
 	background-color: #ffffff;
 	padding         : 0;
-	margin          : 0;
+	margin          : 0; /* Removes default browser margins */
+	width   : 100%;
+	height  : 100%;
 	-ms-content-zooming: none;
 	touch-action    : none;
 	position        : relative;
+	overflow        : hidden;
+	padding-bottom: var(--status-bar-height); /* the exact height of status bar element is taken into account */
 }
 
 h1 {
@@ -66,4 +75,16 @@ h3 {
 	min-height      : 277px !important;
 	max-width       : none  !important;
 	max-height      : none  !important;
+}
+
+/*
+	Viewport Units Explained
+
+	• 100vw (Viewport Width) : This equals 100% of the viewport's total width. The viewport is the visible area of the browser window.
+	• 100vh (Viewport Height): This equals 100% of the viewport's total height.
+*/
+.workspace {
+	position: relative;
+	width   : 100vw;
+	height  : 100vh;
 }
