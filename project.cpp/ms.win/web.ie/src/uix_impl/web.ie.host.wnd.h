@@ -9,7 +9,10 @@
 #include "web.ie.browser.h"
 #include "web.ie.events.h"
 
-namespace ex_ui { namespace web { namespace IE { namespace core { using namespace ::ex_ui::web::IE::defs;
+namespace ex_ui { namespace web { namespace IE { namespace core {
+	
+	using namespace ::ex_ui::web::IE::defs;
+	using namespace ::ex_ui::web::IE::events;
 
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/caxwindow2t ;
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/caxwindow-class ;

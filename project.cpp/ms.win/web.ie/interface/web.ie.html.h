@@ -10,9 +10,6 @@
 
 namespace ex_ui { namespace web { namespace IE { namespace html { using namespace ::ex_ui::web::IE::defs;
 
-	using namespace ::ATL;
-	typedef CComPtr<IHTMLElement> TElement;
-
 	class CElement {
 	public:
 		 CElement (CAxWindow& _ctrl_wnd, _pc_sz _p_el_id);
@@ -40,10 +37,10 @@ namespace ex_ui { namespace web { namespace IE { namespace html { using namespac
 	protected:
 		CElement&  operator = (const CElement&) = delete; CElement& operator = (CElement&&) = delete;
 		mutable
-		CError     m_error;
-		CAxWindow& m_ctrl_wnd;
-		TElement   m_el;
-		CString    m_el_id;
+		CError      m_error;
+		CAxWindow&  m_ctrl_wnd;
+		TElementPtr m_el_ptr;
+		CString     m_el_id;
 	};
 
 	class COption {

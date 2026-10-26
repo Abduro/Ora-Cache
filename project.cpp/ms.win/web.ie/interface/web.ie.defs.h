@@ -10,14 +10,23 @@
 #include <atlexcept.h>
 #include <atlwin.h>
 #include <atlstr.h>
-#include <atlsafe.h>
-#include <comdef.h>
-#include <comutil.h>
-#include <dispex.h>
+#include <atlsafe.h>   // defines CComSafeArray<T, _vartype>, CComSafeArrayBound;
+#include <comdef.h>    // declares _bstr_t, _variant_t and _com_ptr_t; support for #import directives; dispatch functions: _com_dispatch_propget, _com_dispatch_propput;
+#include <comutil.h>   // declares such as ConvertStringToBSTR and ConvertBSTRToString, *uses* _bstr_t and _variant_t; error check: _com_util::CheckError(HRESULT);
+#include <dispex.h>    // defines: Extended Automation (IDispatchEx), Scripting Engine Integration (dynamic web host), COM/OLE Interoperability (GUIDs);
+
+// https://learn.microsoft.com/en-us/windows/win32/api/exdisp/ ;
+// https://learn.microsoft.com/en-us/windows/win32/api/exdisp/nn-exdisp-ishellwindows ;
+// https://learn.microsoft.com/en-us/windows/win32/api/exdisp/nn-exdisp-iwebbrowser2 ;
+#include <Exdisp.h>    // defines IWebBrowser2 ActiveX control interface and IShellWindows interface for access to shell and file explorer windows;
+#include <Exdispid.h>  // defines dispatch identifiers (DISPIDs) for Internet Explorer and WebBrowser ActiveX control events, methods, and properties;
+// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/hh801968(v=vs.85) << references for MSHTML;
+// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/hh801967(v=vs.85) << scripting interfaces;
+// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/jj206442(v=vs.85) << interfaces of MSHTML.IDL;
+#include <mshtml.h>
+
 #include <map>
 #include <vector>
-#include <Exdisp.h>
-#include <Exdispid.h>
 
 #include "shared.dbg.h"
 #include "shared.types.h"
@@ -37,6 +46,7 @@ namespace defs {
 	using TError = const CError;
 
 	using var_bool = VARIANT_BOOL;
+	using var_ptr  = VARIANT*;
 	
 	#define var_true  VARIANT_TRUE
 	#define var_false VARIANT_FALSE

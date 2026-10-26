@@ -16,7 +16,7 @@ using CValue = COption::CValue;
 CElement::CElement(CAxWindow& _ctrl_wnd, _pc_sz _p_el_id) : m_ctrl_wnd(_ctrl_wnd), m_el_id(_p_el_id) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	if (m_ctrl_wnd) {
 		CAccessor accessor(this->m_ctrl_wnd);
-		accessor.Element(this->m_el, _p_el_id);
+		accessor.Element(this->m_el_ptr, _p_el_id);
 	}
 }
 
@@ -31,7 +31,7 @@ CString  CElement::Content (void) const {
 	CString cs_content;
 
 	_bstr_t val_;
-	this->m_error << m_el->get_innerHTML(val_.GetAddress());
+	this->m_error << m_el_ptr->get_innerHTML(val_.GetAddress());
 	if (this->Error() == false)
 		cs_content = (_pc_sz) val_;
 
@@ -47,7 +47,7 @@ err_code CElement::Content (_pc_sz _p_html) {
 
 	_bstr_t val_(_p_html);
 
-	this->m_error << this->m_el->put_innerHTML(val_);
+	this->m_error << this->m_el_ptr->put_innerHTML(val_);
 	return  this->Error();
 }
 
@@ -61,7 +61,7 @@ bool     CElement::Disabled (void) const {
 	if (this->Is_valid())
 	{
 		CComQIPtr<IHTMLElement3> ext_;
-		this->m_error << this->m_el.QueryInterface(&ext_);
+		this->m_error << this->m_el_ptr.QueryInterface(&ext_);
 		if (this->Error())
 			return bDisabled;
 
@@ -85,7 +85,7 @@ err_code CElement::Disabled (const bool bDisabled) {
 		return this->m_error <<__e_not_inited;
 
 	CComQIPtr<IHTMLElement3> ext_;
-	this->m_error << this->m_el.QueryInterface(&ext_);
+	this->m_error << this->m_el_ptr.QueryInterface(&ext_);
 	if (this->Error())
 		return this->Error();
 	if (!ext_)
@@ -96,7 +96,7 @@ err_code CElement::Disabled (const bool bDisabled) {
 }
 
 CString  CElement::Identifier (void) const { return this->m_el_id; }
-bool     CElement::Is_valid (void) const { return (m_el != false); }
+bool     CElement::Is_valid (void) const { return (m_el_ptr != false); }
 
 rect_t   CElement::Rectangle (void) const {
 	rect_t rc_ = {0};
@@ -104,10 +104,10 @@ rect_t   CElement::Rectangle (void) const {
 		return rc_;
 	else
 	{
-		m_el->get_offsetLeft  (&rc_.left  );
-		m_el->get_offsetTop   (&rc_.top   );
-		m_el->get_offsetWidth (&rc_.right ); rc_.right  += rc_.left;
-		m_el->get_offsetHeight(&rc_.bottom); rc_.bottom += rc_.top;
+		m_el_ptr->get_offsetLeft  (&rc_.left  );
+		m_el_ptr->get_offsetTop   (&rc_.top   );
+		m_el_ptr->get_offsetWidth (&rc_.right ); rc_.right  += rc_.left;
+		m_el_ptr->get_offsetHeight(&rc_.bottom); rc_.bottom += rc_.top;
 	}
 	return rc_;
 }
@@ -123,7 +123,7 @@ CString  CElement::Style (void) const {
 	CString cs_style;
 
 	CComPtr<IHTMLStyle> pStyle;
-	this->m_error << m_el->get_style(&pStyle);
+	this->m_error << m_el_ptr->get_style(&pStyle);
 	if (this->Error() || !pStyle)
 		return cs_style;
 
@@ -142,7 +142,7 @@ err_code CElement::Style (_pc_sz _p_style) {
 	if (false == this->Is_valid())
 		return this->m_error <<__e_not_inited;
 
-	this->m_error << this->m_el->setAttribute(_bstr_t(_T("style")), _variant_t(_p_style), 0);
+	this->m_error << this->m_el_ptr->setAttribute(_bstr_t(_T("style")), _variant_t(_p_style), 0);
 	return  this->Error();
 }
 
@@ -157,7 +157,7 @@ bool CElement::Visible (void) const {
 	}
 
 	CComPtr<IHTMLStyle> pStyle;
-	this->m_error << this->m_el->get_style(&pStyle);
+	this->m_error << this->m_el_ptr->get_style(&pStyle);
 	if (this->Error() || !pStyle)
 		return b_result;
 
@@ -180,7 +180,7 @@ err_code CElement::Visible (const bool b_value) {
 		return this->m_error <<__e_not_inited;
 
 	CComPtr<IHTMLStyle> pStyle;
-	this->m_error << this->m_el->get_style(&pStyle);
+	this->m_error << this->m_el_ptr->get_style(&pStyle);
 
 	if (false){}
 	else if (this->Error()){}
@@ -205,7 +205,7 @@ CString CInput::Text (void) const {
 	}
 	
 	CComQIPtr<IHTMLInputTextElement> pInput;
-	TBase::m_error << TBase::m_el.QueryInterface(&pInput);
+	TBase::m_error << TBase::m_el_ptr.QueryInterface(&pInput);
 	if (TBase::Error() || !pInput)
 		return CString();
 
@@ -228,7 +228,7 @@ err_code CInput::Text (_pc_sz _p_text) {
 	}
 
 	CComQIPtr<IHTMLInputTextElement> pInput;
-	TBase::m_error << TBase::m_el.QueryInterface(&pInput);
+	TBase::m_error << TBase::m_el_ptr.QueryInterface(&pInput);
 	if (TBase::Error())
 		return TBase::Error();
 	if (!pInput)
@@ -290,7 +290,7 @@ err_code CSelect::Index (const long_t  _n_index) {
 		return TBase::m_error <<__s_false;
 
 	CComQIPtr<IHTMLSelectElement> pSelect;
-	TBase::m_error << TBase::m_el.QueryInterface(&pSelect);
+	TBase::m_error << TBase::m_el_ptr.QueryInterface(&pSelect);
 
 	if (TBase::Error()) return TBase::Error();
 	if (!pSelect) return TBase::m_error <<__e_not_inited;
@@ -319,7 +319,7 @@ err_code  CSelect::Items (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
 	CComQIPtr<IHTMLSelectElement> pSelect;
-	TBase::m_el.QueryInterface(&pSelect);
+	TBase::m_el_ptr.QueryInterface(&pSelect);
 	if (!pSelect)
 		return TBase::Error();
 
