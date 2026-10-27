@@ -60,7 +60,6 @@ namespace func_defs {
 		CProps&  Props (void) const;
 		CProps&  Props (void) ;
 
-
 		CBase_Sink& operator << (HWND _h_host_wnd); // just invokes this::Attach();
 		CBase_Sink& operator << (IWbEvtHandler*);   // sets event handler pointer; not threa-save, because it is called from main thread only;
 
@@ -122,5 +121,35 @@ namespace func_defs {
 		TDocument2Ptr m_pDoc2;
 	};
 
+	class CSinks {
+	public:
+		using CBrwSink = CBrowserSink;
+		using CDocSink = CDoc_2_Sink;
+
+		 CSinks (void); CSinks (const CSinks&) = delete; CSinks (CSinks&&) = delete;
+		~CSinks (void);
+
+		TError&   Error (void) const;
+		const
+		CBrwSink& GetBrwSink (void) const;
+		CBrwSink& GetBrwSink (void) ;
+		const
+		CDocSink& GetDocSink (void) const;
+		CDocSink& GetDocSink (void) ;
+		// there is no 'move' and 'copy' constructor in the error class yet, so a local variable of this class is an acceptable solution at the moment;
+		err_code  Unadvise (void); // unadvises all skins from their event sources;
+
+		CSinks&  operator << (HWND _h_host_wnd); // attaches all sinks to the input host window handle;
+		CSinks&  operator << (IWbEvtHandler*);
+
+	private:
+		CSinks&  operator = (const CSinks&) = delete; CSinks& operator = (CSinks&&) = delete;
+		CError   m_error;
+		CBrwSink m_brw_sink;
+		CDocSink m_doc_sink;
+	};
 }}}}
+
+typedef ::ex_ui::web::IE::events::CSinks  TWebEvtSinks;
+
 #endif/*_WEB_IE_EVENTS_H_INCLUDED*/

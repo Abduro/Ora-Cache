@@ -22,30 +22,14 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 
 	typedef IDispEventImpl<nWebBrowserCtrlId, CBrowserHost, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 0> THtmlSink;
 
-	typedef CWindowImpl<CBrowserHost, CAxWindow> TBrowserHost;
+	typedef CWindowImpl<CBrowserHost, CAxWindow> TBrowserHost;  // this is ATL::CWindowImpl<> template's specialization type definition;
 	typedef CComPtr<IOleInPlaceActiveObject>     TActiveObject;
-	typedef CComPtr<IServiceProvider>            TSvcProvider;
+	typedef CComPtr<IServiceProvider>            TSvcProvider;  // https://learn.microsoft.com/en-us/windows/win32/api/servprov/nn-servprov-iserviceprovider ;
 
-	class CBrowserHost : public TBrowserHost, THtmlSink {
+	class CBrowserHost : public TBrowserHost {
 		friend class CWebBrowser;
 		enum { eAsyncRedirect = WM_USER + 1 };
 	public:
-		class CEvents {
-		public:
-			 CEvents (CBrowserHost&); CEvents (void) = delete; CEvents (const CEvents&) = delete; CEvents (CEvents&&) = delete;
-			~CEvents (void);
-
-			TError&  Error (void) const;
-
-			err_code Advise (void);
-			err_code Unadvise (void);
-
-		private:
-			CEvents& operator = (const CEvents&) = delete; CEvents& operator = (CEvents&&) = delete;
-			CBrowserHost& m_host;
-			CError       m_error;
-		};
-
 		 CBrowserHost (void) = delete; CBrowserHost (const CBrowserHost&) = delete; CBrowserHost (CBrowserHost&&) = delete;
 		 CBrowserHost (IWbEvtHandler&);
 		~CBrowserHost (void) = default;
@@ -64,12 +48,6 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 #endif
 		END_MSG_MAP()
 
-		BEGIN_SINK_MAP(CBrowserHost)
-			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_BEFORENAVIGATE2 , BeforeNavigate2 , &func_defs::BeforeNavigate2_Info )
-			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_DOCUMENTCOMPLETE, DocumentComplete, &func_defs::DocumentComplete_Info)
-			SINK_ENTRY_INFO(nWebBrowserCtrlId, DIID_DWebBrowserEvents2, DISPID_NAVIGATEERROR   , NavigateError   , &func_defs::NavigateError_Info   )
-		END_SINK_MAP()
-
 		err_code CreateObject (const HWND hParent, const rect_t& rcArea, TSvcProvider&, const bool bVisible); // creates an instance of IWebBrowser2 ActiveX control;
 		err_code SetBackColor (const COLORREF _clr);
 #if 0 /*(_WIN32_IE >= _WIN32_IE_IE60SP2)*/
@@ -77,8 +55,10 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 		err_code IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope = GET_FEATURE_FROM_PROCESS);
 #endif
 		TError&  Error (void) const;
-	//	CEvents& Events (void);
 		err_code Refresh (void);
+		const
+		TWebEvtSinks& Sinks (void) const;
+		TWebEvtSinks& Sinks (void) ;
 
 	private:
 		LRESULT OnClose    (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
@@ -86,16 +66,6 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 		LRESULT OnErase    (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 		LRESULT OnRedirect (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
 		LRESULT OnSize     (UINT uMsg, WPARAM wParam, LPARAM lParam, bool_t& bHandled);
-	
-		STDMETHOD(BeforeNavigate2)( LPDISPATCH pDisp, LPVARIANT pUrl, LPVARIANT pFlags, 
-		                            LPVARIANT  pTargetFrameName,
-		                            LPVARIANT  pPostData,
-		                            LPVARIANT  pHeaders,
-		                            VARIANT_BOOL* pCancel);
-		STDMETHOD(DocumentComplete)(LPDISPATCH pDisp, LPVARIANT pUrl);
-		STDMETHOD(NavigateError)  ( LPDISPATCH pDisp, LPVARIANT pUrl, LPVARIANT pTargetFrameName,
-		                            LPVARIANT  pStatusCode,
-		                            VARIANT_BOOL* pCancel);
 
 		CBrowserHost& operator = (const CBrowserHost&) = delete; CBrowserHost& operator = (CBrowserHost&&) = delete;
 
@@ -106,7 +76,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 		bool           m_bDoNotNotify;
 		bool           m_bStreamObject;
 		CError  m_error;
-		CEvents m_events;
+		TWebEvtSinks   m_evt_sinks;
 	};
 }}}}
 

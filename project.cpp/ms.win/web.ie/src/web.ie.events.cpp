@@ -111,6 +111,14 @@ err_code CBrowserSink::BeforeNavigate2 (IDispatch* pDisp, var_ptr pUrl, var_ptr 
 	if (TBase::m_evt_handler_ptr == nullptr) // callback pointer is not set, there is nothing to do;
 		return TBase::Error();
 
+	if (TBase::Props().InActive()) // the 'silent' mode is turned on;
+		return TBase::Error();
+
+	TBase::m_error << TBase::m_evt_handler_ptr->WbEvt_BeforeNavigate((_pc_sz) CString((*pUrl).bstrVal));
+
+	if (pCancel && TBase::Error() != __s_ok) // perhaps, it requires a review of such condition, but it will be made later during an integration with test cases;
+		*pCancel = var_true;
+
 	return TBase::Error();
 }
 
@@ -161,6 +169,7 @@ err_code CBrowserSink::DocumentComplete (IDispatch* pDisp, var_ptr pUrl) {
 err_code CBrowserSink::NavigateError (IDispatch* pDisp, var_ptr pUrl, var_ptr pTargetFrame, var_ptr pStatusCode, var_bool* pCancel) {
 	pDisp; pUrl; pTargetFrame; pStatusCode; pCancel;
 	TBase::m_error <<__METHOD__<<__s_ok;
+	// to-do: TBase::m_error must contain navigation error details or callback interface needs to have additional callback function especially for this use case;
 	return TBase::Error();
 }
 
@@ -178,7 +187,12 @@ err_code CBrowserSink::Advise (void) {
 	if (TBase::Props().Advised() == true) // no auto-unadvising is implemented yet;
 		return TBase::m_error << (err_code)TErrCodes::eExecute::eState = p_sink_is_advised;
 
-	TBase::m_error << this->m_host_wnd.QueryControl(IID_IWebBrowser2, (void**)&this->m_pBrowser);
+	CComPtr<IUnknown> pControl;
+	TBase::m_error << this->m_host_wnd.QueryControl(&pControl);
+	if (TBase::Error())
+		return TBase::Error();
+
+	TBase::m_error << pControl->QueryInterface(IID_IWebBrowser2, (void**)&this->m_pBrowser);
 	if (TBase::Error())
 		return TBase::Error();
 
@@ -266,5 +280,41 @@ err_code CDoc_2_Sink::OnClick (IUnknown* pEvtObj) {
 
 	return TBase::Error();
 }
+
+#pragma endregion
+#pragma region cls::CSinks{}
+
+using CBrwSink = CBrowserSink;
+using CDocSink = CDoc_2_Sink;
+
+CSinks:: CSinks (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+CSinks::~CSinks (void) {}
+
+TError&  CSinks::Error (void) const { return this->m_error; }
+
+const
+CBrwSink& CSinks::GetBrwSink (void) const { return this->m_brw_sink; }
+CBrwSink& CSinks::GetBrwSink (void)       { return this->m_brw_sink; }
+const
+CDocSink& CSinks::GetDocSink (void) const { return this->m_doc_sink; }
+CDocSink& CSinks::GetDocSink (void)       { return this->m_doc_sink; }
+
+err_code  CSinks::Unadvise (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+	this->m_error << this->GetDocSink().Unadvise();
+	
+	if (this->Error()) {
+		return this->m_error = this->GetDocSink().Error();
+	}
+
+	this->m_error << this->GetBrwSink().Unadvise();
+	if (this->Error())
+		this->m_error = this->GetBrwSink().Error();
+
+	return this->Error();
+}
+
+CSinks&   CSinks::operator << (HWND _h_host_wnd) { this->GetBrwSink() << _h_host_wnd; this->GetDocSink() << _h_host_wnd; return *this; }
+CSinks&   CSinks::operator << (IWbEvtHandler* _p_handler) { this->GetBrwSink() << _p_handler; this->GetDocSink() << _p_handler; return *this; }
 
 #pragma endregion

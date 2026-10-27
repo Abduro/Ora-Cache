@@ -137,11 +137,11 @@ namespace shared { namespace sys_core {
 
 	class CError {
 	public:
-		 CError(void);
-		 CError(const CError&);  CError (CError&&) = delete;
+		 CError (void);
+		 CError (const CError&);  CError (CError&&) = delete;
 		 CError (_pc_sz _p_cls, _pc_sz _p_method, const err_code _n_err_code = __s_ok);
 		 CError (const CString& _cs_cls, const CString& _cs_method, const err_code _n_err_code); // this is the most suitable for preprocessor directives;
-		~CError(void);
+		~CError (void);
 
 		virtual
 		err_code    Result(const err_code _new); // sets new error state result and returns a previous one;
