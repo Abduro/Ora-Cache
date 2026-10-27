@@ -24,6 +24,7 @@
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/hh801967(v=vs.85) << scripting interfaces;
 // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/jj206442(v=vs.85) << interfaces of MSHTML.IDL;
 #include <mshtml.h>
+#include <mshtmdid.h>
 
 #include <map>
 #include <vector>
@@ -56,7 +57,7 @@ namespace defs {
 	typedef CComPtr<ICmdTarget>     TCmdTargetPtr;
 	typedef CComPtr<IDispatch>      TDispatchPtr;    using TDispPtr = TDispatchPtr;
 	typedef CComPtr<IHTMLDocument>  TDocument0Ptr;   using TDoc0Ptr = TDocument0Ptr;
-	typedef CComPtr<IHTMLDocument2> TDocument2Ptr;   using TDoc2Ptr = TDocument2Ptr;
+	typedef CComPtr<IHTMLDocument2> TDocument2Ptr;   using TDoc2Ptr = TDocument2Ptr; // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa752574(v=vs.85) ;
 	typedef CComPtr<IHTMLDocument3> TDocument3Ptr;   using TDoc3Ptr = TDocument3Ptr;
 	typedef CComPtr<IHTMLElement>   TElementPtr;     using TElemPtr = TElementPtr;
 

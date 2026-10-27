@@ -58,9 +58,25 @@ namespace ex_ui { namespace web { namespace IE { namespace events { namespace fu
 	_ATL_FUNC_INFO MouseClick_info = { CC_STDCALL, VT_EMPTY, 1, { VT_UNKNOWN } };
 }}}}} using namespace func_defs;
 
+#pragma region cls::CBase_Props{}
+
+CBase_Props::CBase_Props (void) : m_flags{false}{}
+
+bool   CBase_Props::Advised  (void) const { return this->m_flags[e_indices::e_advised]; }
+bool   CBase_Props::Attached (void) const { return this->m_flags[e_indices::e_attached]; }
+bool   CBase_Props::InActive (void) const { return this->m_flags[e_indices::e_inactive]; }
+bool&  CBase_Props::InActive (void)       { return this->m_flags[e_indices::e_inactive]; }     
+bool   CBase_Props::Streamed (void) const { return this->m_flags[e_indices::e_streamed]; }
+bool&  CBase_Props::Streamed (void)       { return this->m_flags[e_indices::e_streamed]; }     
+
+#pragma endregion
 #pragma region cls::CBase_Sink{}
 
-CBase_Sink::CBase_Sink (void) : m_advised(false) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("This sink is not initialized yet"); }
+using CProps = CBase_Props;
+
+CBase_Sink::CBase_Sink (void) : m_evt_handler_ptr(0) {
+	this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("This sink is not initialized yet");
+}
 
 err_code CBase_Sink::Attach (HWND _h_host_wnd) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -72,31 +88,77 @@ err_code CBase_Sink::Attach (HWND _h_host_wnd) {
 	return this->Error();
 }
 
-TError& CBase_Sink::Error (void) const { return this->m_error; }
-bool  CBase_Sink::Is_advised (void) const { return this->m_advised; }
-bool  CBase_Sink::Is_attached (void) const { return this->m_host_wnd.IsWindow(); }
+TError&  CBase_Sink::Error (void) const { return this->m_error; }
+const
+CProps&  CBase_Sink::Props (void) const { return this->m_props; }
+CProps&  CBase_Sink::Props (void)       { return this->m_props; }
+
+CBase_Sink& CBase_Sink::operator << (HWND _h_host_wnd) { this->Attach(_h_host_wnd); return *this; }
+CBase_Sink& CBase_Sink::operator << (IWbEvtHandler* _p_handler) { this->m_evt_handler_ptr = _p_handler; return *this; }
 
 #pragma endregion
 #pragma region cls::CBrowserSink{}
 
 CBrowserSink:: CBrowserSink (void) : TBase() { TBase::m_error >>__CLASS__; }
-CBrowserSink::~CBrowserSink (void) {}
+CBrowserSink::~CBrowserSink (void) { this->Unadvise(); }
 
 #pragma region event_sink_impl
+// https://learn.microsoft.com/en-us/previous-versions/aa768326(v=vs.85) ;
+// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa768280(v=vs.85) ;
 err_code CBrowserSink::BeforeNavigate2 (IDispatch* pDisp, var_ptr pUrl, var_ptr pFlags, var_ptr pTargetFrame, var_ptr pPostData, var_ptr pHeaders, var_bool* pCancel) {
 	pDisp; pUrl; pFlags; pTargetFrame; pPostData; pHeaders; pCancel;
 	TBase::m_error <<__METHOD__<<__s_ok;
+	if (TBase::m_evt_handler_ptr == nullptr) // callback pointer is not set, there is nothing to do;
+		return TBase::Error();
 
 	return TBase::Error();
 }
 
+// https://learn.microsoft.com/en-us/previous-versions/aa768329(v=vs.85) ;
 err_code CBrowserSink::DocumentComplete (IDispatch* pDisp, var_ptr pUrl) {
 	pDisp; pUrl;
 	TBase::m_error <<__METHOD__<<__s_ok;
+	if (TBase::m_evt_handler_ptr == nullptr) // callback pointer is not set, there is nothing to do;
+		return TBase::Error();
+
+	CComPtr<IUnknown> pControl;
+	TBase::m_error << this->m_host_wnd.QueryControl(&pControl);
+	if (TBase::Error())
+		return TBase::Error();
+
+	bool bTopFrame = false; // this is a flag for indicating the document is loaded to top frame, otherwise a document can be loaded by sub-frame;
+	CComPtr<IUnknown> pFrame;
+	if (__succeeded(TBase::m_error << pDisp->QueryInterface( IID_IUnknown, (void**)&pFrame)))
+		bTopFrame = (pControl == pFrame);
+
+#if (0) // this is alternative way in order to define the top frame has loaded the document or not;
+	CComQIPtr<IWebBrowser2> pWebBrowser;
+	this->m_error << pControl.QueryInterface(&pWebBrowser);
+	if (this->Error())
+		return this->Error();
+	 CComPtr<IDispatch> p_the_app;
+	 this->m_error << pWebBrowser->get_Application(&p_the_app);
+	 if (this->Error())
+		return this->Error();
+	 bTopFrame = p_the_app.IsEqualObject(pDisp);
+	 if (bTopFrame) { // this code block is not required, because the web browser control was not updatable due to incorrect main message loop of app;
+		 rect_t rect = {0};
+		 if (TBrowserHost::GetClientRect(&rect)) {
+			 TBrowserHost::SetWindowPos(0, &rect, SWP_NOZORDER|SWP_NOMOVE|SWP_NOACTIVATE|SWP_FRAMECHANGED);
+			 TBrowserHost::Invalidate(true);
+			 TBrowserHost::UpdateWindow();
+		 }
+	 }
+#endif
+	if (bTopFrame)
+		TBase::m_evt_handler_ptr->WbEvt_DocumentComplete((_pc_sz) CString((*pUrl).bstrVal), this->Props().Streamed());
+
 	return TBase::Error();
 }
 
-err_code CBrowserSink::NavigateError   (IDispatch* pDisp, var_ptr pUrl, var_ptr pTargetFrame, var_ptr pStatusCode, var_bool* pCancel) {
+// https://learn.microsoft.com/en-us/previous-versions//bb268221(v=vs.85) ;
+// https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa768286(v=vs.85) ;
+err_code CBrowserSink::NavigateError (IDispatch* pDisp, var_ptr pUrl, var_ptr pTargetFrame, var_ptr pStatusCode, var_bool* pCancel) {
 	pDisp; pUrl; pTargetFrame; pStatusCode; pCancel;
 	TBase::m_error <<__METHOD__<<__s_ok;
 	return TBase::Error();
@@ -110,10 +172,10 @@ static _pc_sz p_sink_is_advised = _T("__e_state: This sink is already advised");
 err_code CBrowserSink::Advise (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	if (TBase::Is_attached() == false)
+	if (TBase::Props().Attached() == false)
 		return TBase::m_error << (err_code)TErrCodes::eExecute::eState = p_host_wnd_not_attached;
 
-	if (TBase::Is_advised() == true) // no auto-unadvising is implemented yet;
+	if (TBase::Props().Advised() == true) // no auto-unadvising is implemented yet;
 		return TBase::m_error << (err_code)TErrCodes::eExecute::eState = p_sink_is_advised;
 
 	TBase::m_error << this->m_host_wnd.QueryControl(IID_IWebBrowser2, (void**)&this->m_pBrowser);
@@ -121,7 +183,7 @@ err_code CBrowserSink::Advise (void) {
 		return TBase::Error();
 
 	TBase::m_error << TBrowserEvtSnk::DispEventAdvise(this->m_pBrowser, &DIID_DWebBrowserEvents2);
-	TBase::m_advised = TBase::Error() == false;
+	TBase::Advised() = TBase::Error() == false;
 
 	return TBase::Error();
 }
@@ -131,14 +193,76 @@ bool CBrowserSink::Is_valid (void) const { return this->m_pBrowser != nullptr; }
 err_code CBrowserSink::Unadvise (void) {
 	TBase::m_error <<__METHOD__<<__s_ok;
 
-	if (TBase::Is_advised() == false) // nothing to do;
+	if (TBase::Props().Advised() == false) // nothing to do;
 		return TBase::Error();
 
 	if (this->Is_valid() == false) // actually it is not possible, but in any way, it should be checked;
 		return TBase::m_error <<__e_pointer = _T("__e_pointer: WebBrowser control is not inited");
 
 	TBase::m_error << TBrowserEvtSnk::DispEventUnadvise(this->m_pBrowser, &DIID_DWebBrowserEvents2);
-	TBase::m_advised = TBase::Error() == true; // the error has occurred while trying to unsunscribe from events;
+	TBase::Advised() = TBase::Error() == true; // the error has occurred while trying to unsubscribe from events;
+
+	if (TBase::Props().Advised() == false)
+		this->m_pBrowser = nullptr;
+
+	return TBase::Error();
+}
+
+#pragma endregion
+#pragma region cls::CDoc_2_Sink{}
+
+CDoc_2_Sink:: CDoc_2_Sink (void) { TBase::m_error >>__CLASS__; }
+CDoc_2_Sink::~CDoc_2_Sink (void) { this->Unadvise(); }
+
+err_code CDoc_2_Sink::Advise (const TWebBrwPtr& _p_browser) {
+	_p_browser;
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (nullptr == _p_browser)
+		TBase::m_error <<__e_pointer = _T("__e_pointer: Input web browser control pointer is invalid");
+
+	if (TBase::Props().Advised() == true) // no auto-unadvising is implemented yet;
+		return TBase::m_error << (err_code)TErrCodes::eExecute::eState = p_sink_is_advised;
+
+	CComPtr<IDispatch> pDocDisp;
+	TBase::m_error << _p_browser->get_Document(&pDocDisp);
+	if (TBase::Error())
+		return TBase::Error();
+
+	TBase::m_error << pDocDisp->QueryInterface(IID_IHTMLDocument2, (void**)&this->m_pDoc2);
+	if (TBase::Error())
+		return TBase::Error();
+
+	TBase::m_error << THtmlDocEvtSnk::DispEventAdvise(this->m_pDoc2, &DIID_HTMLDocumentEvents2);
+	TBase::Advised() = TBase::Error() == false;
+
+	return TBase::Error();
+}
+
+err_code CDoc_2_Sink::Unadvise (void) {
+	TBase::m_error <<__METHOD__<<__s_ok;
+
+	if (TBase::Props().Advised() == false) // nothing to do;
+		return TBase::Error();
+
+	if (this->Is_valid() == false)
+		return TBase::m_error <<__e_pointer = _T("__e_pointer: HTML Document2 object is not inited");
+
+	TBase::m_error << THtmlDocEvtSnk::DispEventUnadvise(this->m_pDoc2, &DIID_HTMLDocumentEvents2);
+	TBase::Advised() = TBase::Error() == true; // the error has occurred while trying to unsubscribe from events;
+
+	if (TBase::Props().Advised() == false)
+		this->m_pDoc2 = nullptr;
+
+	return TBase::Error();
+}
+
+bool CDoc_2_Sink::Is_valid (void) const { return this->m_pDoc2 != nullptr; }
+
+err_code CDoc_2_Sink::OnClick (IUnknown* pEvtObj) {
+	pEvtObj;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	// IHTMLEventObj is expected as input argument;
 
 	return TBase::Error();
 }
