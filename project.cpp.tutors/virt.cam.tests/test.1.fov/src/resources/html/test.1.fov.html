@@ -12,67 +12,24 @@
 	<!-- Crucial for IWebBrowser2 to enable HTML5, SVG, and CSS3 -->
 	<meta http-equiv="X-UA-Compatible" content="content=IE=edge,chrome=1" />
 
-	<script type="text/javascript">
-	</script>
-	<style>
-		.centered-div {
-			position: absolute;
-			top     : 50%;
-			left    : 50%;
-			width   : 192px;     /* Set your exact image/div width */
-			height  :  64px;     /* Set your exact image/div height */
-			margin-top : -32px; /* Half of height */
-			margin-left: -96px; /* Half of width  */
-		}
-
-		.centered-div img {
-			display : block;
-			width   : 100%;
-			height  : 100%;
-		}
-
-		#img_the_monitor {
-			position: absolute;
-			cursor  : move;
-			user-select: none;
-		-webkit-user-select: none;
-		}
-
-		.status-bar {
-			/* Layout alignment inside the status bar */
-			display         : flex;
-			display         : -ms-flexbox;    /* IE11 prefix */
-			/* Layers it on top of other content and prevents text selection */
-			z-index         : 9999; 
-			user-select     : none;
-			/* Visual styles*/
-			background-color: #fff;
-			color           : var(--status-bar-color);
-			font-family     : verdana, sans-serif;
-			font-size       : 12px;
-			border-top      : 1px solid #CDCDCD;
-		}
-		.status-bar-align {
-			-ms-flex-align  : center;     /* IE11 vertical center alignment */
-			align-items     : left;
-			padding         : 5 0 5 5px;  /* top, right, bottom, left */
-			box-sizing      : border-box; /* Ensures padding doesn't break the 100% width */
-		}
-		.status-bar-pos {
-			position        : fixed;
-			bottom          : 0;
-			left            : 0;
-			width           : 100%;
-			height          : var(--status-bar_height);
-		}
-	</style>
+	<script type="text/javascript"></script>
+	<style></style>
 
 </head>
 <body id = "this_page">
 	<h3>Question: How to Get Distance::3</h3>
-	<div class="centered-div" id = "the_holder">
-		<img id = "img_the_monitor" src = "test.1.fov.monitor.png" alt = "This is the monitor image" title = "This is the target of a distance." />
+	<div class="workspace" id="canvas">
+		<img src="test.1.fov.monitor.png" alt="Block 1" class="block-img" id="img_target" />
+        	<img src="test.1.fov.viewer.png"  alt="Block 2" class="block-img" id="img_viewer" />
+    </div>
+<!--
+	<div class="div_target" id = "the_target_container">
+		<img id = "img_target" src = "test.1.fov.monitor.png" alt = "This is the monitor image" title = "This is the target of a distance." />
 	</div>
+	<div class="div_viewer" id = "the_viewer_container">
+		<img id = "img_viewer" src = "test.1.fov.viewer.png" alt = "This is the viewer image" title = "This is the viewer of a distance." />
+	</div>
+-->
 	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar">
 		<span>Status: Ready</span>
 	</div>

@@ -1,0 +1,33 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 28-Oct-2021 at 10:43:30.305, UTC+4, Batumi, Wednesday;
+	This is virtual camera common test case content status bar HTML element CSS declaration file;
+*/
+@import url("root.0.comm.vars.css");
+
+.status-bar {
+	/* Layout alignment inside the status bar */
+	display         : flex;
+	display         : -ms-flexbox;    /* IE11 prefix */
+	/* Layers it on top of other content and prevents text selection */
+	z-index         : 9999; 
+	user-select     : none;
+	/* Visual styles*/
+	background-color: #fff;
+	color           : var(--status-bar-color);
+	font-family     : verdana, sans-serif;
+	font-size       : 12px;
+	border-top      : 1px solid #CDCDCD;
+}
+.status-bar-align {
+	-ms-flex-align  : center;     /* IE11 vertical center alignment */
+	align-items     : left;
+	padding         : 5 0 5 5px;  /* top, right, bottom, left */
+	box-sizing      : border-box; /* Ensures padding doesn't break the 100% width */
+}
+.status-bar-pos {
+	position        : fixed;
+	bottom          : 0;
+	left            : 0;
+	width           : 100%;
+	height          : var(--status-bar_height);
+}

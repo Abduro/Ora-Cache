@@ -1,0 +1,13 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 28-Oct-2021 at 10:16:56.074, UTC+4, Batumi, Wednesday;
+	This is virtual camera common test case content CSS variables' declaration file;
+*/
+:root {
+	--status-bar-height : 32px;
+	--status-bar-color  : #3f4448;
+	--target-obj-height : 64px;
+	--target-obj-width  : 192px;
+/*	--target-obj-v-shift: calc(var(--target-obj-height) / 2);*/
+/*	--targer-obj-h-shift: calc(var(--target-obj-width ) / 2);*/
+}
+
