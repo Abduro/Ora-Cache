@@ -1,0 +1,8 @@
+REGEDIT4
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION]
+"devenv.exe"=dword:00002af9
+"ServiceHub.SettingsHost.exe"=dword:00002af9
+"test.gui.app.exe"=dword:00002af9
+"msvsmon.exe"=dword:00002af9
+
