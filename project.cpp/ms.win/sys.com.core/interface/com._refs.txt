@@ -1,0 +1,2 @@
+https://learn.microsoft.com/en-us/cpp/atl/reference/specifying-compiler-optimization-for-an-atl-project << ATL_NO_VTABLE;
+https://learn.microsoft.com/en-us/cpp/atl/reference/ccomobjectrootex-class << FinalConstruct() and FinalRelease(); 

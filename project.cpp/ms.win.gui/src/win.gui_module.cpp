@@ -55,48 +55,15 @@ INT __stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lps
 	ebo::boo::gui::CFrame frame;
 
 	n_result = frame.Create();
+	if (__failed(n_result))
+		return n_result;
+
 #if (0) // the section of the code below is for testing the output of the __trace, because in tutorial projects it does not work;
 	HDC h_dc_ = frame.Window().GetDC();
 	__trace_err(_T("hdc=%s"), TString().__address_of(h_dc_));
 	frame.Window().ReleaseDC(h_dc_); h_dc_ = 0;
 #endif
-	if (__succeeded(n_result)) {
-#if (0)
-		_Module.WinMain(nCmdShow);
-#else
-		MSG msg = {0};
-		while( WM_QUIT != msg.message ) { // PeekMessage is used for getting an ability of drawing render surface when no message is in the queue;
-			if (::PeekMessage( &msg, NULL, 0, 0, PM_REMOVE )) {
-				::TranslateMessage( &msg );
-				::DispatchMessage ( &msg );
-			}
-			else {
-			#if (0)
-				const bool b_is_dark = TTheme::IsDark();
-				if (b_is_dark) {}
-			#else
-				static uint32_t n_counter = 0;
-				if (0 == n_counter) {
-					using CUI_Parts = ebo::sha::theme::direct_x::CUI_Parts;
-					_render().Target().OnDraw(CUI_Parts().Bkg()); // ToDo: eats a lot of CPU time, and needs to be reviewed;
-					n_counter += 1;
-				}
-				else {
-					n_counter += 1;
-					::Sleep(10);         // works unexpectedly great!;
-					if (n_counter == 60)
-						n_counter = 0;
-				}
-				// if no size of the direct_x surface is changed, it should not be called from here;
-				// maybe an animation can be produced, but at least on separate time event;
-			#endif
-			}
-		}
-#endif
-		frame.Destroy();       // a handling of possible error is not done yet; because it is not necessary for now;
-	}
-	else
-		error = frame.Error(); // for debug purpose;
+	_Module.RunMessageLoop();
 
 	return n_result;
 }

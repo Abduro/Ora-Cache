@@ -1,3 +1,7 @@
+::Important::
+This project solution heavily relies on Ebo_Pack static libraries, some of them requires system registry entries for proper drawing.
+The theme lib requires: Wanderer_goes_to_ora.reg
+
 ::To remove files/folders from the repository on github.com
 (1) To delete a file from both GitHub and your local computer:
     git rm filename.txt

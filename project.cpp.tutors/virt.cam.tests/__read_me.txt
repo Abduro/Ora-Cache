@@ -1,3 +1,10 @@
+::Imprtant::
+
+This project solution heavily relies on Ebo_Pack static libraries, some of them requires system registry entries for proper drawing.
+The theme lib requires: virt.cam.tests.reg;
+
+::Property Pages Settings::
+
 This is the preferable way of setting output and intermediate directory paths for all C++ projects being involeved in the solution:
 
 (1) the output path 'OutDir' for all projects can be changed in Directory.Build.props for 'Win32' and 'x64' platforms appropriately;
