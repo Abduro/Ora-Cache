@@ -7,7 +7,6 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
 	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
-	<script type="text/javascript" src="test.1.fov.js"></script>
 
 	<!-- Crucial for IWebBrowser2 to enable HTML5, SVG, and CSS3 -->
 	<meta http-equiv="X-UA-Compatible" content="content=IE=edge,chrome=1" />
@@ -17,11 +16,11 @@
 
 </head>
 <body id = "this_page">
-	<h3>Question: How to Get Distance::3</h3>
-	<div class="workspace" id="canvas">
-		<img src="test.1.fov.monitor.png" alt="Block 1" class="block-img" id="img_target" />
-        	<img src="test.1.fov.viewer.png"  alt="Block 2" class="block-img" id="img_viewer" />
-    </div>
+	<div class = "workspace" id = "canvas">
+	<h3  class = "caption" id = "caption">Question: How to Get Distance</h3>
+		<img src="test.1.fov.monitor.png" alt="Block 1" class="block-img" id="img_monitor" />
+		<img src="test.1.fov.viewer.png"  alt="Block 2" class="block-img" id="img_viewer" />
+	</div>                     r
 <!--
 	<div class="div_target" id = "the_target_container">
 		<img id = "img_target" src = "test.1.fov.monitor.png" alt = "This is the monitor image" title = "This is the target of a distance." />
@@ -33,5 +32,6 @@
 	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar">
 		<span>Status: Ready</span>
 	</div>
+	<script type="text/javascript" src="test.1.fov.js"></script>
 </body>
 </html>

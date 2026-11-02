@@ -7,64 +7,20 @@
 .block-img {
 	position: absolute;
 	cursor  : move;
-	border  : 2px solid #555;
-	background-color: #fff;
-	-ms-user-drag   : none; 
+	border  : 1px solid #bbb;
+	background-color: none;
+	-ms-user-drag   : none;
+	-ms-user-select : none;
+	user-select     : none; 
 }
 
+.caption {}
+
 .dragging {
-	border-color: #ff0000 !important;
+	border-color: #00f !important;
 	z-index : 999;
 }
 
-/*#pragma region cls::CTarget{}*/
-.div_target {
-	position: absolute;
-	top     : 50%;
-	left    : 50%;
-	width   : 192px;
-	height  : 64px;
-	margin-top : -32px;  /* Half of height */
-	margin-left: -96px;  /* Half of width  */
-}
-
-.div_target img {
-	display : block;
-	width   : 100%;
-	height  : 100%;
-}
-
-#img_target {
-	position: absolute;
-	cursor  : move;
-	user-select: none;
-	-webkit-user-select: none;
-}
-/*#pragma endregion*/
-/*#pragma region cls::CViewer{}*/
-.div_viewer {
-	position: absolute;
-	top     : 50%;
-	left    : 50%;
-	width   : 128px;
-	height  : 128px;
-	margin-top : -64px;  /* Half of height */
-	margin-left: -64px;  /* Half of width  */
-}
-
-.div_viewer img {
-	display : block;
-	width   : 100%;
-	height  : 100%;
-}
-
-#img_viewer {
-	position: absolute;
-	cursor  : move;
-	user-select: none;
-	-webkit-user-select: none;
-}
-/*#pragma endregion*/
 /*
 	Viewport Units Explained
 
