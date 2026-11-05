@@ -16,22 +16,22 @@
 
 </head>
 <body id = "this_page">
-	<div class = "workspace" id = "canvas">
+	<div class = "viewport" id = "viewport">
 	<h3  class = "caption" id = "caption">Question: How to Get Distance</h3>
 		<img src="test.1.fov.monitor.png" alt="Block 1" class="block-img" id="img_monitor" />
 		<img src="test.1.fov.viewer.png"  alt="Block 2" class="block-img" id="img_viewer" />
-	</div>                     r
-<!--
-	<div class="div_target" id = "the_target_container">
-		<img id = "img_target" src = "test.1.fov.monitor.png" alt = "This is the monitor image" title = "This is the target of a distance." />
 	</div>
-	<div class="div_viewer" id = "the_viewer_container">
-		<img id = "img_viewer" src = "test.1.fov.viewer.png" alt = "This is the viewer image" title = "This is the viewer of a distance." />
+	<div class="controls">
 	</div>
--->
+	<div class="canvas-wrapper">
+		<!-- explicit width/height attributes prevent canvas scaling blur -->
+		<canvas id="pieCanvas" width="640" height="420"></canvas>
+	</div>
+
 	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar">
 		<span>Status: Ready</span>
 	</div>
+	<script type="text/javascript" src="test.1.pie.js"></script>
 	<script type="text/javascript" src="test.1.fov.js"></script>
 </body>
 </html>

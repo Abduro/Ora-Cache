@@ -21,13 +21,19 @@
 	z-index : 999;
 }
 
+/*#pragma region el::pie*/
+.controls { margin-bottom: 15px; }
+.canvas-wrapper { position: relative; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+canvas { display: block; cursor: crosshair; }
+/*#pragma endregion*/
+
 /*
 	Viewport Units Explained
 
 	• 100vw (Viewport Width) : This equals 100% of the viewport's total width. The viewport is the visible area of the browser window.
 	• 100vh (Viewport Height): This equals 100% of the viewport's total height.
 */
-.workspace {
+.viewport {
 	position: relative;
 	width   : 100vw;
 	height  : 100vh;
