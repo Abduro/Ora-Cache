@@ -32,7 +32,7 @@ VS_VERSION_INFO VERSIONINFO
 	FILESUBTYPE    0x0L
 BEGIN
 	BLOCK "StringFileInfo" {   // https://learn.microsoft.com/en-us/windows/win32/menurc/stringfileinfo-block ;
-		BLOCK "040904B0" { // 0x0409 (U.S. English) | 0x04B0 (Unicode);
+		BLOCK "040904B0" {     // 0x0409 (U.S. English) | 0x04B0 (Unicode);
 #if defined(WIN64)
 			VALUE "Comments"        , "Virtual Camera Test Case GUI App (64-bit)"
 #else
@@ -67,6 +67,8 @@ IDR_APP_ICO ICON    "virt.cam_blue_512px.ico"
 /* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/
 IDR_VIEW_CTX_MENU MENU { POPUP "" {
 	MENUITEM "Load HTML...", IDC_VIEW_LOAD_HTML
+	MENUITEM SEPARATOR
+	MENUITEM "Refresh"     , IDC_VIEW_REFRESH
 }}
 
 /* https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;

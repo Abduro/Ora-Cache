@@ -23,6 +23,7 @@ namespace test { namespace gui { namespace views { using namespace ::test::draw:
 		TError& Error (void) const;
 
 		err_code Open (_pc_sz _p_url);
+		err_code Refresh (void);
 		
 		// IWbEvtHandler implementation;
 		virtual err_code WbEvt_BeforeNavigate  (_pc_sz _p_url) override;

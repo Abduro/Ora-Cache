@@ -24,6 +24,8 @@
 		<ClCompile Include="$(_src)test.gui.layout.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.module.h"><Filter>src</Filter></ClInclude>
 		<ClCompile Include="$(_src)test.gui.module.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_src)test.gui.reg.h"><Filter>src</Filter></ClInclude>
+		<ClCompile Include="$(_src)test.gui.reg.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.view.h"><Filter>src</Filter></ClInclude>
 		<ClCompile Include="$(_src)test.gui.view.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.window.h"><Filter>src</Filter></ClInclude>

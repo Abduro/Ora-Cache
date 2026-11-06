@@ -15,6 +15,7 @@
 
 #define IDR_VIEW_CTX_MENU  111
 #define IDC_VIEW_LOAD_HTML 113
+#define IDC_VIEW_REFRESH   115
 
 #pragma endregion
 

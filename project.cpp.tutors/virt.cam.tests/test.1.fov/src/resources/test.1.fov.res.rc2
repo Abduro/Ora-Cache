@@ -6,6 +6,12 @@
 test.1.fov.monitor.png   HTML  html\\test.1.fov.monitor.png
 test.2.fov.viewer.png    HTML  html\\test.1.fov.viewer.png
 
+root.0.comm.decl.css HTML html\\root.0.comm.decl.css
+root.0.comm.vars.css HTML html\\root.0.comm.vars.css
+root.0.stat.bar.css  HTML html\\root.0.stat.bar.css
+
 test.1.fov.css  HTML  html\\test.1.fov.css
 test.1.fov.js   HTML  html\\test.1.fov.js
 test.1.fov.html HTML  html\\test.1.fov.html
+
+test.1.pie.js   HTML  html\\test.1.pie.js

@@ -55,7 +55,7 @@ function drawScene() {
 	ctx.lineWidth = 4;
 	ctx.lineJoin = "round"; // prevents sharp pixelated edge spikes at the wedge center;
 	ctx.stroke();
-}
+}*/
 
 function getCenterPoint(_element) {
 	if (!_element)
@@ -78,7 +78,7 @@ function getCenterPoint(_element) {
 
 	return point;
 }
-
+/*
 function updateWedge(_event) {
 
 	var event  = _event || window.event;

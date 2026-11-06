@@ -10,16 +10,18 @@
 		<Error>$(Ebo_pack)ms.win\sys.err.core\</Error>
 		<Memory>$(Ebo_pack)ms.win\sys.mem.core\</Memory>
 		<Shared>$(Ebo_pack)ms.win\sys.shared\</Shared>
+		<Shell>$(Ebo_pack)ms.win\sys.shell\</Shell>
 		<Browser>$(Ebo_pack)ms.win\web.ie\</Browser>
 	</PropertyGroup>
 	<PropertyGroup>
 		<i_com>$(Component)interface\</i_com>
 		<i_error>$(Error)interface\</i_error>
 		<i_shared>$(Shared)interface\</i_shared>
+		<i_shell>$(Shell)interface\</i_shell>
 		<i_browser>$(Browser)interface\</i_browser>
 		<i_memory>$(Memory)interface\</i_memory>
 	</PropertyGroup>
 	<PropertyGroup>
-		<IncludePath>$(i_com);$(i_error);$(i_shared);$(i_browser);$(i_memory);$(IncludePath)</IncludePath>
+		<IncludePath>$(i_shared);$(i_com);$(i_error);$(i_memory);$(i_shell);$(i_browser);$(IncludePath)</IncludePath>
 	</PropertyGroup>
 </Project>

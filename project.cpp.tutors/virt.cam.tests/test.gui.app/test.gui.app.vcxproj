@@ -213,6 +213,8 @@
     <ClCompile Include="$(_src)test.gui.layout.cpp" />
     <ClInclude Include="$(_src)test.gui.module.h" />
     <ClCompile Include="$(_src)test.gui.module.cpp" />
+    <ClInclude Include="$(_src)test.gui.reg.h" />
+    <ClCompile Include="$(_src)test.gui.reg.cpp" />
     <ClInclude Include="$(_src)test.gui.view.h" />
     <ClCompile Include="$(_src)test.gui.view.cpp" />
     <ClInclude Include="$(_src)test.gui.window.h" />

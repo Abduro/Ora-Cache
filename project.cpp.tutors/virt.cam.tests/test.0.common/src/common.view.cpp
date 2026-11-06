@@ -56,6 +56,18 @@ err_code CBase::Open (_pc_sz _p_url) {
 	return this->Error();
 }
 
+err_code CBase::Refresh (void) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_browser.State().Is_valid() == false)
+		return this->m_error = this->m_browser.State().Error();
+
+	if (__failed(this->m_browser.Refresh()))
+		this->m_error = this->m_browser.Error();
+
+	return this->Error();
+}
+
 err_code CBase::WbEvt_BeforeNavigate  (_pc_sz _p_url) {_p_url; return __e_not_impl; }
 err_code CBase::WbEvt_DocumentComplete(_pc_sz _p_url, const bool _b_use_stream) { _p_url; _b_use_stream;  return __e_not_impl; }
 err_code CBase::WbEvt_OnMouseMessage  (const MSG& _msg) {

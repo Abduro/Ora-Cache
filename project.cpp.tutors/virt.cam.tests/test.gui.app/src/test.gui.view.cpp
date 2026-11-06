@@ -4,6 +4,7 @@
 */
 #include "test.gui.view.h"
 #include "test.gui.res.h"
+#include "test.gui.reg.h"
 
 using namespace ::test::app;
 
@@ -114,7 +115,19 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 					this->m_error << this->m_view_1.Open(locator.URL());
 
 					if (this->m_error) this->m_error = this->m_view_1.Error();
-					else {}
+					else {
+						using CCmd = ::test::app::storage::CCommand;
+						CCmd cmd;
+						if (__failed(cmd << u_cmd << locator.URL()))
+							this->m_error = cmd.Error(); // HTML file open is successful and perhaps a overwriting the error is not necessary;
+					}
+				}
+			} break;
+			case IDC_VIEW_REFRESH: {
+				if (this->Pages().Get().Tabs().Active() == 0) {
+					this->m_error << this->m_view_1.Refresh();
+					if (this->m_error)
+						this->m_error = this->m_view_1.Error();
 				}
 			} break;
 			default:;
@@ -137,9 +150,19 @@ err_code CView::OnCreate (void) {
 
 	this->m_error << this->m_view_1.Create(page_1.Handle(), page_1.Layout().Rect());
 	if (this->Error() == false) {
-		this->m_error << this->m_view_1.Open(_T("res://%s/test.1.fov.html"));
+
+		using CCmd = ::test::app::storage::CCommand;
+		CCmd cmd(IDC_VIEW_LOAD_HTML);
+		CString cs_path = cmd.Get();
+		if (cs_path.IsEmpty() == false) {
+			this->m_error << this->m_view_1.Open((_pc_sz) cs_path);
+		}
+		else {
+			this->m_error << this->m_view_1.Open(_T("res://%s/test.1.fov.html"));
+		}
 		if (this->m_error)
 			this->m_error = this->m_view_1.Error();
+#if (0) // this code block was intended to force IWebBrowser2 control host window to subscribe to browser events, but it didn't fix the error;
 		else {
 			rect_t rect = {0};
 			this->Parent().GetWindowRect(&rect);
@@ -147,6 +170,7 @@ err_code CView::OnCreate (void) {
 			this->Parent().Invalidate(true);
 			this->Parent().UpdateWindow();
 		}
+#endif
 		this->Shortcut() << IDR_VIEW_CTX_MENU;
 	}
 
