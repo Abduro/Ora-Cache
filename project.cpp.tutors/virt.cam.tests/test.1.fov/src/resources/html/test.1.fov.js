@@ -5,8 +5,8 @@
 /* https://stackoverflow.com/questions/33811677/html-canvas-draw-a-circle-on-mouse-click-and-drag-it-untill-the-required-radius << doesn't works;*/
 var caption   = document.getElementById("caption");
 var monitor   = document.getElementById('img_monitor');
-var statusbar = document.getElementById('status_bar');
 var viewer    = document.getElementById('img_viewer');
+var statusbar = document.getElementById('status_bar');
 var viewport  = document.getElementById("viewport");
 /* In IE11 emulation mode via the IWebBrowser2 control, the returned object contains the following six core properties:
    top   : Y-coordinate of the top edge of the rectangle relative to the viewport.
@@ -114,7 +114,7 @@ function On_mouse_leave (_event) {
 		(1) offsetLeft / offsetTop: The pixel distance from the image's top/left outer border to its parent container's (offsetParent) padding edge.
 		(2) offsetWidth / offsetHeight: The total visual width and height of the image element (includes the image size, borders, and padding).
 		(3) clientWidth / clientHeight: The inner width and height of the image (includes padding, but excludes borders or margins).
- 	Core Image Properties:
+ 	Core Image Properties:                                                                         	
 		(1) src: Gets or sets the full absolute URL of the image.
 		    (Note: In IE11, reading img.src always returns the fully qualified absolute URL, even if you set it as a relative path like ../pic.png).
 		(2) naturalWidth / naturalHeight: Supported in IE11. 
@@ -162,7 +162,11 @@ function On_mouse_move (_event) {
 
 		viewer.style.top  = tentativeTop  + 'px';
 		viewer.style.left = tentativeLeft + 'px';
-		status_msg("On_mouse_move: tentative point >> [x:" + tentativeLeft + ";y:" + tentativeTop + "] px; limits >> [left:"+ h_limit_l + "; right:" + h_limit_r +"] px;");
+		status_msg(
+			"On_mouse_move: tentative point >> [x:" + tentativeLeft + ";y:" + tentativeTop + "] px;"/* limits >> [left:"+ h_limit_l + "; right:" + h_limit_r +"] px;"*/
+		);
+
+//		updateWedgeDiagram(tentativeLeft, tentativeTop);
 		
 
 	} else if (act_element === monitor) {
@@ -194,7 +198,9 @@ function On_mouse_move (_event) {
 
 		monitor.style.top  = tentativeTop  + 'px';
 		monitor.style.left = tentativeLeft + 'px';
-		status_msg("On_mouse_move: tentative point >> [x:" + tentativeLeft + ";y:" + tentativeTop + "] px; limits >> [left:"+ h_limit_l + "; right:" + h_limit_r +"] px;");
+		status_msg(
+			"On_mouse_move: tentative point >> [x:" + tentativeLeft + ";y:" + tentativeTop + "] px; "/*limits >> [left:"+ h_limit_l + "; right:" + h_limit_r +"] px;"*/
+		);
 	}
 }
 
@@ -220,8 +226,19 @@ function On_html_load (_event) {
 		rc_viewport.bottom = rc_viewport.height = window.innerHeight || document.documentElement.clientHeight;
 		status_msg("On_html_load: viewport >> {left = 0; top = 0; right =" + rc_viewport.width + "; bottom = " + rc_viewport.height + "}(px);");
 	}
+	var v_top = 0;
+	var v_bottom = rc_viewport.height;
+
+	if (rc_caption) v_top += rc_caption.height;
+	if (rc_status)  v_bottom -= rc_status.height;
+
 	var x_center = rc_viewport.width / 2;
-	var y_center = rc_viewport.height / 2;
+	var y_center = v_top + (v_bottom - v_top) / 2;
+
+	/* to-do: placing images relative to the vertical center is not enough due to the fact that the images have different heights,
+	   and visually the images do not look vertically centered;
+	   it is necessary take into account a total height both images and correct the vertical center;
+	*/
 
 	monitor.style.left = (x_center - monitor.offsetWidth / 2) + "px";
 	monitor.style.top  = (y_center - monitor.offsetHeight) + "px";

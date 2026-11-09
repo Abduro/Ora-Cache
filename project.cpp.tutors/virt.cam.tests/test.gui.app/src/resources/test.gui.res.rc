@@ -57,7 +57,7 @@ END
 
 // https://learn.microsoft.com/en-us/windows/win32/menurc/bitmap-resource ;
 // https://learn.microsoft.com/en-us/windows/win32/menurc/icon-resource ;
-IDR_APP_ICO ICON    "virt.cam_blue_512px.ico"
+IDR_APP_ICO ICON    "virt.cam_blue_1k2px.ico"
 
 /* https://learn.microsoft.com/en-us/windows/win32/menurc/rcdata-resource ;
 

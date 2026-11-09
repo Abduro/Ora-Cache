@@ -1,0 +1,29 @@
+
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.canvas-container {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    display: inline-block;
+}
+
+#targetImage {
+    display: block;
+    width: 128px;
+    height: 128px;
+}
+
+#drawingCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 128px;
+    height: 128px;
+    pointer-events: none;
+}
+
