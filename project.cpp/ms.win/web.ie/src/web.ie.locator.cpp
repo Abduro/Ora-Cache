@@ -151,7 +151,20 @@ err_code CLocator::Get_file (HWND const _h_owner) {
 	this->Type().Set(e_url_type::e_file);
 
 	using CFileOpen = ::shared::shell::ntfs::dialogs::CFileOpen;
+	using CFileOpts = ::shared::shell::ntfs::dialogs::CFileOpts;
+
+	using e_common  = CFileOpts::e_common;
+
 	CFileOpen dlg;
+	CFileOpts& opts = dlg.Opts();
+
+	if (__failed(opts.Get()))
+		return this->m_error = opts.Error();
+
+	const dword_t flags = opts.Flags() | e_common::e_no_change_dir;
+	if (__failed(opts.Set(flags)))
+		return this->m_error = opts.Error();
+
 	dlg.Filter().Append(_T("HTML file (*.html)"), _T("*.html"));
 	this->m_error << dlg.Do(_T("Open HTML File"), _h_owner);
 	if (this->Error())

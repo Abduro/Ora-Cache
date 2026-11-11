@@ -8,7 +8,13 @@ using namespace ::shared::shell::ntfs::dialogs;
 
 #pragma region cls::CFileOpen{}
 
-CFileOpen::CFileOpen (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
+using COpts = CFileOpts;
+
+CFileOpen::CFileOpen (void) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
+
+	this->m_error << this->m_p_dlg.CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL);
+	this->m_opts  << this->m_p_dlg;
+}
 
 err_code CFileOpen::Do (_pc_sz _p_title, const HWND _h_owner) {
 	this->m_error <<__METHOD__<<__s_ok;
@@ -19,12 +25,10 @@ err_code CFileOpen::Do (_pc_sz _p_title, const HWND _h_owner) {
 	if (this->Filter().Is_valid() == false)
 		return this->m_error = this->Filter().Error();
 
-	CComPtr<IFileOpenDialog> p_dialog;
-	this->m_error << p_dialog.CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL);
-	if (this->Error())
-		return this->Error();
+	if (nullptr == this->m_p_dlg)
+		return this->m_error << (err_code)TErrCodes::eExecute::eState = _T("__e_state: 'File Open' dialog interface object is not created");
 
-	this->m_error << p_dialog->SetFileTypes(static_cast<UINT>(this->Filter().Items().size()), (COMDLG_FILTERSPEC*)this->Filter().Items().data());
+	this->m_error << this->m_p_dlg->SetFileTypes(static_cast<UINT>(this->Filter().Items().size()), (COMDLG_FILTERSPEC*)this->Filter().Items().data());
 	if (this->Error())
 		return this->Error();
 
@@ -32,16 +36,16 @@ err_code CFileOpen::Do (_pc_sz _p_title, const HWND _h_owner) {
 	if (cs_title.IsEmpty())
 		cs_title = _T("Open File");
 
-	this->m_error << p_dialog->SetTitle((_pc_sz)cs_title);
+	this->m_error << this->m_p_dlg->SetTitle((_pc_sz)cs_title);
 	if (this->Error())
 		return this->Error();
 
-	this->m_error << p_dialog->Show(_h_owner);
+	this->m_error << this->m_p_dlg->Show(_h_owner);
 	if (this->Error())
 		return this->Error();
 
 	CComPtr<IShellItem> p_item;
-	this->m_error << p_dialog->GetResult(&p_item);
+	this->m_error << this->m_p_dlg->GetResult(&p_item);
 	if (this->Error())
 		return this->Error();
 
@@ -61,7 +65,72 @@ const
 CFilter& CFileOpen::Filter (void) const { return this->m_filter; }
 CFilter& CFileOpen::Filter (void)       { return this->m_filter; }
 const
+COpts&   CFileOpen::Opts (void) const { return this->m_opts; }
+COpts&   CFileOpen::Opts (void)       { return this->m_opts; }
+     
+const
 CString& CFileOpen::Selected (void) const { return this->m_selected; }
+
+#pragma endregion
+
+namespace shared { namespace shell { namespace ntfs { namespace dialogs {
+
+}}}}
+
+#pragma region cls::CFileOpts{}
+
+using e_common = CFileOpts::e_common;
+using e_open = CFileOpts::e_open;
+using e_save = CFileOpts::e_save;
+
+static _pc_sz e_no_open_dlg = _T("__e_ptr: Invalid pointer to 'File Open' interface");
+
+CFileOpts::CFileOpts (void) : m_flags(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = _T("__e_not_inited: The flags are not set"); }
+
+TError&  CFileOpts::Error (void) const { return this->m_error; }
+
+dword_t  CFileOpts::Flags (void) const { return this->m_flags; }
+
+err_code CFileOpts::Get (void) {
+	return CFileOpts::Get(this->m_p_dlg, this->m_flags, this->m_error <<__METHOD__<<__s_ok); 
+}
+
+err_code CFileOpts::Get (IFileOpenDlgPtr& _p_dlg, dword_t& _flags, CError& _error) {
+	_p_dlg; _flags = 0; _error;
+	if (nullptr == _p_dlg)
+		return _error <<__e_pointer = e_no_open_dlg;
+
+	FILEOPENDIALOGOPTIONS dlg_options = 0;
+	_error << _p_dlg->GetOptions(&dlg_options); // https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions ;
+	if (false == _error)
+		_flags = static_cast<dword_t>(dlg_options);
+
+	return _error;
+}
+
+bool CFileOpts::Has (const e_common _e_flag, const dword_t _flags) { return _e_flag & _flags; }
+bool CFileOpts::Has (const e_open   _e_flag, const dword_t _flags) { return _e_flag & _flags; }
+bool CFileOpts::Has (const e_save   _e_flag, const dword_t _flags) { return _e_flag & _flags; }
+const
+IFileOpenDlgPtr& CFileOpts::Ptr (void) const { return this->m_p_dlg; }
+
+err_code CFileOpts::Set (const dword_t _flags) {
+	if (__succeeded(CFileOpts::Set(this->m_p_dlg, _flags, this->m_error <<__METHOD__<<__s_ok)))
+		this->m_flags = _flags;
+	return this->Error();
+}
+
+err_code CFileOpts::Set (IFileOpenDlgPtr& _p_dlg, const dword_t _flags, CError& _error) {
+	_p_dlg; _flags; _error;
+	if (nullptr == _p_dlg)
+		return _error <<__e_pointer = e_no_open_dlg;
+
+	_error << _p_dlg->SetOptions(_flags); // https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions ;
+	
+	return _error;
+}
+
+CFileOpts& CFileOpts::operator <<(IFileOpenDlgPtr& _p_dlg) { this->m_p_dlg = _p_dlg; return *this; }
 
 #pragma endregion
 #pragma region cls::CFilter{}

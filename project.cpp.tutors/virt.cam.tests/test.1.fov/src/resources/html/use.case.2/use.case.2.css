@@ -1,0 +1,85 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) om 10-Nov-2026 at 15:56:11.367, UTC+4, Batumi, Tuesday;
+	This is virtual camera drawing wedge diagram use case cascade stylesheet file;
+*/
+/*Does not work: IWebBrowser2 control interface in emulation mode IE11 can't resolve the path to this file;
+
+The reason is much simplier: the operating system applies some rules for naming a file and, for example, such names as 'use.case.#2.css', 'use.case.#2.js' and 'use.case.#2.html' are valid.
+But IWebBrowser2 control does not recognize neighter 'use.case.#2.css' nor 'use.case.#2.js' file name.
+The requirement is: to rename those files to 'use.case.2.css' and 'use.case.2.js' and everything starts to work as expected.
+
+Google AI:
+
+Ah, that is a brilliant catch! The reason is the # symbol (the hash or fragment identifier) in the filename.
+In a web browser context like IWebBrowser2, the # character has a reserved architectural meaning — it separates the file URL from an internal page anchor (e.g., index.html#section2).
+When the browser sees use.case.#2.css, it splits the string and tries to look for a file literally named use.case. and searches for a marker named 2.css inside it, which causes a silent failure!
+
+*/
+:root {
+	--image_height : 256px;  /*original image height;*/
+	--image_width  : 256px;  /*original image width;*/
+	--canvas_height: 512px;  /*this is the exact image height is multiplied by 2;*/
+	--canvas_width : 512px;  /*this is the exact image width is multiplied by 2;*/
+	--padding_horz : 128px;  /*this is the horizontal padding: (movable-container.height - image.hight) / 2*/
+	--padding_vert : 128px;  /*this is the vertical padding: (movable-container.width - image.width) / 2*/ 
+}
+
+html, body {
+	height: 100%;
+	width : 100%;
+	margin: 0;
+	overflow: hidden;
+	background-color: #fff;
+}
+
+.movable-container {
+	position: absolute;
+	height  : 512px; /*var(--canvas_height);*/
+	width   : 512px; /*var(--canvas_width);*/
+	cursor  : move;
+	user-select: none;
+	-ms-user-select: none;
+}
+
+#myImage {
+	display: block;
+	position: absolute;
+	top     : 128px; /*var(--padding_vert);*/
+	left    : 128px; /*var(--padding_horz);*/
+	width   : 256px; /*var(--image_width );*/
+	height  : 256px; /*var(--image_height);*/
+	border  : 1px solid #bbb;
+	background-color: none;
+	z-index : 2; /*the image must be over the background grid;*/
+}
+
+.canvas-grid {
+	position: absolute;
+	top   : 0;
+	left  : 0;
+	height  : 100%;
+	width   : 100%;
+	pointer-events: none;
+	z-index : 0; /*background grid;*/
+}
+
+.canvas-overlay {
+	position: absolute;
+	top   : 0;
+	left  : 0;
+	height  : 100%;
+	width   : 100%;
+	pointer-events: none;
+	border: 1px solid #0000ff;
+	z-index : 3; /*the wedge being drawn on the canvas must be over the image;*/
+}
+
+h3 {
+	font-family  :'Trebuchet MS', verdana, tahoma, arial;
+	font-size    : 14px;
+	font-weight  : normal;
+	margin-bottom:  5px;
+	margin-left  : 10px;
+	margin-top   :  2px;
+/*	text-shadow  :  0px 1px 2px #555; /*text-shadow: h-shadow v-shadow blur-radius color;*/
+}
