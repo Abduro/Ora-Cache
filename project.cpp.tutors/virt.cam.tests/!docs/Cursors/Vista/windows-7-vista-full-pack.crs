@@ -1,0 +1,48 @@
+﻿[Arrow]
+Path=windows 7 (vista) normal cur.cur
+
+[Help]
+Path=windows 7 (vista) help select cur.cur
+
+[AppStarting]
+Path=windows 7 (vista) working in background cur.ani
+
+[Wait]
+Path=windows 7 (vista) busy cur.ani
+
+[Crosshair]
+Path=windows 7 (vista)  precision  cur.cur
+
+[IBeam]
+Path=windows 7 (vista) text select cur.cur
+
+[NWPen]
+Path=windows 7 (vista) handwrite cur.cur
+
+[No]
+Path=windows 7 (vista) unavailable cur.cur
+
+[SizeNS]
+Path=windows 7 (vista) vertical resize cur.cur
+
+[SizeNWSE]
+Path=windows 7 (vista) diagonal resize 01 cur.cur
+
+[SizeNESW]
+Path=windows 7 (vista) diagonal resize 02cur.cur
+
+[SizeAll]
+Path=windows 7 (vista) move cur.cur
+
+[UpArrow]
+Path=windows 7 (vista) alternate select cur.cur
+
+[Hand]
+Path=windows 7 (vista) link cur.cur
+
+[Pin]
+Path=windows 7 (vista) location select cur.cur
+
+[Person]
+Path=windows 7 (vista) person select cur.cur
+

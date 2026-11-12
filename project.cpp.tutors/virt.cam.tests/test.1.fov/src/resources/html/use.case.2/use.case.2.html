@@ -16,6 +16,10 @@
 </head>
 <body>
 	<h3  class = "caption" id = "caption">Test Case #2: Movable Canvas</h3>
+<!-- the Google AI:
+	Avoid self-closing <div ... /> tags: In HTML5/IE 11 mode, <div> is not a void element.
+	Always close it with </div>, or IE 11 may treat subsequent elements as children of that div.  
+-->
 	<div id="dragContainer" class="movable-container">
 		<!-- Underlaid Image asset; note: regardless style definition, the required size is specified through attributes' values;-->
 		<img id="myImage" src="lenin_256px.png" width="256" height="256" alt="Base Image">

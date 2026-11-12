@@ -22,29 +22,52 @@ html, body {
         
 .dragging {
 	border-color: #f00 !important;
-	z-index : 999;
+}
+
+#circle {
+	background-color: none;
+	border  : 0px solid #f00;
+	position: absolute;
+	top     : 32px;
+	left    :  0px;
+	height  : 128px;
+	width   : 128px;
+	z-index : 0;
 }
 
 #square {
-	background-color: rgba( 0, 0, 255, 0.3);
+	background-color: transparent;
 	border  : 1px solid #00f;
-	top     : 0px;
-	left    : 0px;
+	position: absolute;
+	top     :  32px;
+	left    : 130px;
 	height  : 128px;
 	width   : 128px;
+	z-index : 1;
+}
+
+#triangle {
+	background-color: transparent;
+	border  : 1px solid #0f0;
+	position: absolute;
+	top     :  32px;
+	left    : 260px;
+	height  : 128px;
+	width   : 128px;
+	z-index : 2;
 }
 
 #myImage {
+	background-color: none;
+	border  : 1px solid #bbb;
 	display : block;
 	position: absolute;
-	top     : 128px;
-	left    : 128px;
+	top     : 162px;
+	left    : 130px;
 	height  : 128px;
 	width   : 128px;
-	border  : 1px solid #bbb;
-	background-color: none;
+	z-index : 3;
 }
-
 
 h3 {
 	font-family  :'Trebuchet MS', verdana, tahoma, arial;
@@ -54,4 +77,32 @@ h3 {
 	margin-left  : 10px;
 	margin-top   :  2px;
 /*	text-shadow  :  0px 1px 2px #555; /*text-shadow: h-shadow v-shadow blur-radius color;*/
+}
+
+.status-bar {
+	/* Layout alignment inside the status bar */
+	display         : flex;
+	display         : -ms-flexbox;    /* IE11 prefix */
+	/* Layers it on top of other content and prevents text selection */
+	z-index         : 9999; 
+	user-select     : none;
+	/* Visual styles*/
+	background-color: #fff;
+	color           : #3f4448; /*var(--status-bar-color);*/
+	font-family     : verdana, sans-serif;
+	font-size       : 12px;
+	border-top      : 1px solid #cdcdcd;
+}
+.status-bar-align {
+	-ms-flex-align  : center;     /* IE11 vertical center alignment */
+	align-items     : left;
+	padding         : 5 0 5 5px;  /* top, right, bottom, left */
+	box-sizing      : border-box; /* Ensures padding doesn't break the 100% width */
+}
+.status-bar-pos {
+	position        : fixed;
+	bottom          : 0;
+	left            : 0;
+	width           : 100%;
+	height          : 32px; /*var(--status-bar_height);*/
 }

@@ -7,18 +7,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
 	<!-- Forces IE11 edge rendering mode inside the IWebBrowser2 control -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="UTF-8">
 	<title>Canvas Circle Overlay</title>
 	<link rel="stylesheet" href="use.case.1.css">
 </head>
 <body>
-	<h3  class = "caption" id = "caption">Test Case #1: Draggable Elements</h3>
+	<h3  class = "caption" id = "caption">Test Case #1: Draggable Shapes</h3>
 
-	<img id="myImage" class="draggable" src="lenin_128px.png" alt="Target Reference" />
+	<img id="myImage" class="draggable" src="lenin_128px.png" alt="Target Reference" /><!--This is always first declaration, otherwise any canvas overlaps this image; -->
+<!-- For <canvas>, it helps to think of it as having two separate sizes:
+	• HTML attributes (width="128" height="128"): Sets the actual pixel resolution of the internal drawing bitmap (defaults to 300x150 if omitted).
+	• CSS styles (style="width: 128px; height: 128px;"): Only stretches or shrinks the finished image on the screen, just like resizing an <img> tag.
+-->
+	<canvas id="circle"   class="draggable" height="128" width="128"></canvas>
+	<canvas id="square"   class="draggable" height="128" width="128"></canvas><!--Closing tag is required, otherwise only one canvas is available! It is related to IE11 mode;-->
+	<canvas id="triangle" class="draggable" height="128" width="128"></canvas>
 
-	<canvas id="square" class="draggable" />
+	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar">
+		<span>Status: Ready</span>
+	</div>
 
 	<script src="use.case.1.js"></script>
 </body>

@@ -2,7 +2,7 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 28-Oct-2021 at 10:43:30.305, UTC+4, Batumi, Wednesday;
 	This is virtual camera common test case content status bar HTML element CSS declaration file;
 */
-@import url("root.0.comm.vars.css");
+/*@import url("root.0.comm.vars.css");*/
 
 .status-bar {
 	/* Layout alignment inside the status bar */
@@ -13,10 +13,10 @@
 	user-select     : none;
 	/* Visual styles*/
 	background-color: #fff;
-	color           : var(--status-bar-color);
+	color           : #3f4448; /*var(--status-bar-color);*/
 	font-family     : verdana, sans-serif;
 	font-size       : 12px;
-	border-top      : 1px solid #CDCDCD;
+	border-top      : 1px solid #cdcdcd;
 }
 .status-bar-align {
 	-ms-flex-align  : center;     /* IE11 vertical center alignment */
@@ -29,5 +29,5 @@
 	bottom          : 0;
 	left            : 0;
 	width           : 100%;
-	height          : var(--status-bar_height);
+	height          : 32px; /*var(--status-bar_height);*/
 }
