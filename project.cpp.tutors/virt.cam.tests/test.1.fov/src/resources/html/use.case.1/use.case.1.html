@@ -17,6 +17,8 @@
 	<h3  class = "caption" id = "caption">Test Case #1: Draggable Shapes</h3>
 
 	<img id="myImage" class="draggable" src="lenin_128px.png" alt="Target Reference" /><!--This is always first declaration, otherwise any canvas overlaps this image; -->
+
+	<canvas id="bkg-layer"></canvas><!--this canvas size is set by handler function of changing viewport area size;-->
 <!-- For <canvas>, it helps to think of it as having two separate sizes:
 	• HTML attributes (width="128" height="128"): Sets the actual pixel resolution of the internal drawing bitmap (defaults to 300x150 if omitted).
 	• CSS styles (style="width: 128px; height: 128px;"): Only stretches or shrinks the finished image on the screen, just like resizing an <img> tag.
