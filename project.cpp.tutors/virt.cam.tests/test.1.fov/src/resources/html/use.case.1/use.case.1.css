@@ -24,7 +24,7 @@ html, body {
 	border-color: #f00 !important;
 }
 
-#bkg-layer {
+#cross-layer {
 	background-color: none;
 	position: fixed;
 	top  : 0;
@@ -43,6 +43,13 @@ html, body {
 	height  : 128px;
 	width   : 128px;
 	z-index : 0;
+}
+
+#ruler-layer {
+	background-color: none;
+	position: fixed;
+	top  : 0;
+	left : 0;
 }
 
 #square {
@@ -80,13 +87,11 @@ html, body {
 }
 
 h3 {
-	font-family  :'Trebuchet MS', verdana, tahoma, arial;
-	font-size    : 14px;
-	font-weight  : normal;
-	margin-bottom:  5px;
-	margin-left  : 10px;
-	margin-top   :  2px;
-/*	text-shadow  :  0px 1px 2px #555; /*text-shadow: h-shadow v-shadow blur-radius color;*/
+	font-family:'Trebuchet MS', verdana, tahoma, arial;
+	font-size  : 14px;
+	font-weight: normal;
+	margin     : 2px 0 5px 15px;
+/*	text-shadow: 0px 1px 2px #555; /*text-shadow: h-shadow v-shadow blur-radius color;*/
 }
 
 .status-bar {
@@ -97,7 +102,7 @@ h3 {
 	display         : -ms-flexbox;
 	font-family     : verdana, sans-serif;
 	font-size       : 12px;
-	padding-left    : 10px;
+	margin-left     :  0px; /*otherwise the top border starts with indent that is not required;*/
 	user-select     : none;
 	z-index         : 9999; 
 }
