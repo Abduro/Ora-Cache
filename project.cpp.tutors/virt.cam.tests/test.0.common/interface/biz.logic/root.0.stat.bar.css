@@ -1,0 +1,56 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 28-Oct-2021 at 10:43:30.305, UTC+4, Batumi, Wednesday;
+	This is virtual camera common test case content status bar HTML element CSS declaration file;
+*/
+/*@import url("root.0.comm.vars.css");*/
+
+.status-bar {
+	align-items      : left;
+	background-color : none;
+	border-top       : 1px solid #cdcdcd;
+	color            : #3f4448; /*var(--status-bar-color);*/
+	/* Layout alignment inside the status bar */
+	-ms-flex-align   : left;
+	-ms-flex-negative: 0;
+	display          : flex;
+	display          : -ms-flexbox;    /* IE11 prefix */
+	height           : 26px;
+	/* Visual styles*/
+	flex-shrink: 0;
+	font-family      : verdana, sans-serif;
+	font-size        : 12px;
+	user-select      : none;
+	-ms-user-select  : none;
+	/* Layers it on top of other content and prevents text selection */
+	z-index          : 9999; 
+}
+
+.status-bar-align {
+	-ms-flex-align   : center;     /* IE11 vertical center alignment */
+	padding          : 5 0 5 5px;  /* top, right, bottom, left */
+	box-sizing       : border-box; /* Ensures padding doesn't break the 100% width */
+}
+
+.status-bar-pos {
+	position : fixed;
+	bottom   : 0;
+	left     : 0;
+	width    : 100%;
+	height   : 26px; /*var(--status-bar_height);*/
+}
+
+.status-indicator {
+	background-color: none;
+	border-radius: 50%;
+	display      : inline-block;
+	-ms-flex-negative: 0;
+	flex-shrink  : 0;
+	margin-right : 8px;
+	height: 8px;
+	width : 8px;
+}
+
+#status-text {
+	overflow   : hidden;
+	white-space: nowrap;
+}

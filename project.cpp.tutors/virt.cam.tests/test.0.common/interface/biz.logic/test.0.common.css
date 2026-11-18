@@ -7,6 +7,9 @@ html, body {
 /*	align-items: center;*//*this code snippet applies an alignment to center to all elements of the HTML page, it is not acceptable;*/
 /*	display : flex;*/
 /*	justify-content: center;*/
+	color   : #1F2937;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;/*for sidebar item title*/
+	font-size  : 14px;
 	height  : 100%;
 	width   : 100%;
 	margin  : 0;

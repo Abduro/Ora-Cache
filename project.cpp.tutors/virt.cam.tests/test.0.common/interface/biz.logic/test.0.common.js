@@ -53,7 +53,7 @@ function On_window_load (event) {
 	if (!the_image) { alert("On_window_load(): " + err_img_msg); return; }
 
 	scaleImage();
-        centerImage();
+	centerImage();
 }
 
 function On_window_resize (event) {

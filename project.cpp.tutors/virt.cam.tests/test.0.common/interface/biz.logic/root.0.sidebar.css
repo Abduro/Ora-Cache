@@ -1,0 +1,183 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 18-Nov-2026 at 23:35:23.776, UTC+4, Batumi, Wednesday;
+	This is virtual camera test cases' main HTML page sidebar control cascade style sheet file;
+*/
+/*sidebar control*/
+*{
+	box-sizing: border-box;
+	margin    : 0;
+	padding   : 0;
+}
+
+/* Outer Window Frame */
+.window-frame {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	height: 100%;
+	width : 100%;
+	border: 1px solid #D1D5DB;
+}
+
+/* Middle Split Area */
+.main-split {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex: 1;
+	flex: 1;
+	overflow: hidden;
+}
+
+/* Left/Center White Content Area */
+.content-area {
+	background-color: #fff;
+	-ms-flex: 1;
+	flex: 1;
+	padding: 24px 32px;
+	overflow-y: auto;
+}
+
+.content-area h1 {
+	border-bottom :  1px solid #E5E7EB;
+	font-size  : 20px;
+	font-weight: 600;
+	color: #0067C0;
+	margin-bottom :  8px;
+	padding-bottom: 10px;
+}
+
+.content-area p {
+	margin-top: 14px;
+	line-height: 1.5;
+	color: #374151;
+}
+
+/* Right-Side Navigation Pane */
+.sidebar-right {
+	background-color: #F3F4F6;
+	border-left: 1px solid #D1D5DB;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-direction: column;
+	-ms-user-select: none;
+	-ms-flex-negative: 0;
+	flex-direction: column;
+	flex-shrink: 0;
+	user-select: none;
+	width: 235px;
+}
+
+
+.sidebar-header {
+	align-items: center;
+	border-bottom: 1px solid #E5E7EB;
+	color  : #4B5563;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
+	font-size  : 11.5px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	height : 36px;
+	padding: 0 14px;
+}
+
+/* Vertical Step / Scroll Buttons (Up & Down) */
+.scroll-step-btn {
+	align-items: center;
+	background-color: #EAECEF;
+	border : none;
+	color  : #374151;
+	cursor : pointer;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	-ms-flex-pack: center;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
+	justify-content: center;
+	height : 22px;
+	width  : 100%;
+	outline: none;
+}
+
+.scroll-step-btn.top-btn {
+	border-bottom: 1px solid #D1D5DB;
+}
+
+.scroll-step-btn.bottom-btn {
+	border-top: 1px solid #D1D5DB;
+}
+
+.scroll-step-btn:hover:not(:disabled) {
+	background-color: #DDE1E6;
+	color: #0067C0;
+}
+
+.scroll-step-btn:disabled {
+	background-color: #F3F4F6;
+	color: #C0C5CE;
+	cursor: default;
+}
+
+/* Scrollable Viewport without Native Scrollbars */
+.nav-viewport {
+	-ms-flex: 1;
+	flex: 1;
+	overflow: hidden;
+	position: relative;
+}
+
+.nav-list {
+	list-style: none;
+	width: 100%;
+}
+
+
+/* Anchor Link Styled as Full-Width Sidebar Row */
+.nav-link {
+	align-items: center;
+	border-left: 3px solid transparent;
+	color  : #374151;
+	cursor : pointer;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	font-size: 13px;
+	padding: 0 14px 0 12px;
+	outline: none;
+	text-decoration: none;
+	height: 46px;
+	width: 100%;
+}
+
+.nav-link:hover {
+	background-color: #E5E7EB;
+	color: #111827;
+}
+
+.nav-link.active {
+	background-color: #EBF3FC;
+	border-left: 3px solid #0067C0;
+	color: #0067C0;
+	font-weight: 600;
+}
+
+.nav-icon {
+	margin-right: 10px;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
+	fill  : currentColor;
+	width : 16px;
+	height: 16px;
+}
+
+.nav-label {
+	line-height: 1.25;
+	max-height: 2.5em;
+	overflow: hidden;
+}
