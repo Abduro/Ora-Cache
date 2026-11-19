@@ -48,5 +48,5 @@ h3 {
 	/* optional: adds padding if it is necessary the image touching window edges; */
 	width : 95%; height: 95%; top: 5%; left: 5%;
 
-	z-index: 1;
+	z-index: 0;
 }

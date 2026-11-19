@@ -13,17 +13,48 @@
 	<link rel="stylesheet" href="root.0.sidebar.css">
 	<link rel="stylesheet" href="root.0.statusbar.css">
 </head>
-<body>
+<body onload="javascript:initPage()" onresize="javascript:updateScrollButtons()">
 	<h3  class = "caption" id = "caption">Virtual Camera Test Cases' Home Page</h3>
-	<!-- background Layer (naturally unclickable, no pointer-events needed); -->
-	<div class="bg-layer"></div>
 	<!-- the above division replaces the image and JavaScript functions related to the image positioning;-->
 	<!-- closing slash for image tag is not required, because the image is not a container;-->
 	<!-- img id="the_image" src="qa.engineer.master.png" alt="Very Important Person" title = "QA Engineer"/-->
 
-	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar" style="text-align: left; padding-left: 10px;">
+	<!-- the right navigation pane with direct URL links; -->
+	<div class="sidebar-right">
+		<div class="sidebar-header">Test Cases</div>
+		<button id = "btn-scroll-up" class = "scroll-step-btn top-btn" onclick = "javascript:stepSidebar(-1)" title = "Scroll items up" disabled>
+			<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+				<path d="M8 4l5 6H3l5-6z"/>
+			</svg>
+		</button>
+		<div id="nav-viewport" class="nav-viewport" onwheel="javascript:handleSidebarWheel(event)">
+			<ul class="nav-list">
+				<li>
+					<a class="nav-link" href="../../../test.1.fov/interface/biz.logic/test.1.fov.html"
+					   onmouseover="javascript:setStatus(this)" onmouseout="javascript:resetStatus()"
+					   data-desc="Calculates the physical distance between the monitor and the viewer.">
+						<svg class="nav-icon" viewBox="0 0 16 16">
+							<path d="
+								M8 3.5C4.5 3.5 1.7 5.6 0.5 8c1.2 2.4 4 4.5 7.5 4.5s6.3-2.1 7.5-4.5c-1.2-2.4-4-4.5-7.5-4.5zm0
+								 7.2A2.7 2.7 0 1 1 8 5.3a2.7 2.7 0 0 1 0 5.4z" />
+						</svg>
+						<span class="nav-label">(1) Monitor-to-Viewer Distance</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<button id = "btn-scroll-down" class = "scroll-step-btn bottom-btn" onclick = "javascript:stepSidebar(1)" title = "javascript:Scroll items down" disabled>
+			<svg width ="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+				<path d="M8 12l5-6H3l5 6z"/>
+			</svg>
+		</button>
+	</div>
+
+	<div class="status-bar status-bar-align status-bar-pos" id = "status-text">
 		Status: Ready
 	</div>
+	<!-- background Layer (naturally unclickable, no pointer-events needed); -->
+	<div class="bg-layer"></div>
 
 	<script src="root.0.sidebar.js"></script>
 	<script src="test.0.common.js"></script>

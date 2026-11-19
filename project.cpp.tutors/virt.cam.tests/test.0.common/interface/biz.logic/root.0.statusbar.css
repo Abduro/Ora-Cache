@@ -26,9 +26,11 @@
 }
 
 .status-bar-align {
-	-ms-flex-align   : center;     /* IE11 vertical center alignment */
-	padding          : 5 0 5 5px;  /* top, right, bottom, left */
-	box-sizing       : border-box; /* Ensures padding doesn't break the 100% width */
+	-ms-flex-align : center;     /* IE11 vertical center alignment */
+	padding        : 5 0 5 5px;  /* top, right, bottom, left */
+	box-sizing     : border-box; /* Ensures padding doesn't break the 100% width */
+	text-align     : left;       /* 'text-align' and 'padding-left' was set through <div style='...'></div>, but moved here; */
+	padding-left   : 10px;       /* applies the padding of the text from the left side of the status bar control; */
 }
 
 .status-bar-pos {
@@ -51,6 +53,6 @@
 }
 
 #status-text {
-	overflow   : hidden;
-	white-space: nowrap;
+	overflow    : hidden;
+	white-space : nowrap;
 }

@@ -48,6 +48,11 @@ function highlightCurrentUrl() {
 	document.getElementById("status-text").innerText = activeDesc;
 }
 
+function initPage () {
+	highlightCurrentUrl();
+	updateScrollButtons();
+}
+
 function resetStatus() {
 	document.getElementById("status-text").innerText = activeDesc;
 }
