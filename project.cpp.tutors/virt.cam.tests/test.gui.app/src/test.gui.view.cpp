@@ -140,7 +140,7 @@ TError&  CView::Error (void) const { return this->m_error; }
 err_code CView::OnCreate (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 
-	this->Pages().Get().Layout().Padding().Set(1, 5, -1, -1);
+	this->Pages().Get().Layout().Padding().Set(1, 1, -1, -1); // sets padding values for positioning of page window;
 	
 	this->m_error << this->Pages().At_1st();   if (this->Error()) return this->Error();
 	this->m_error << this->Pages().OnCreate(); if (this->Error()) return this->Error();

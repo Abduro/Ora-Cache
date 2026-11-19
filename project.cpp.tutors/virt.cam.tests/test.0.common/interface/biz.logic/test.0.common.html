@@ -11,12 +11,15 @@
 	<title>Virtual Camera Test Cases Home Page</title>
 	<link rel="stylesheet" href="test.0.common.css">
 	<link rel="stylesheet" href="root.0.sidebar.css">
-	<link rel="stylesheet" href="root.0.stat.bar.css">
+	<link rel="stylesheet" href="root.0.statusbar.css">
 </head>
 <body>
 	<h3  class = "caption" id = "caption">Virtual Camera Test Cases' Home Page</h3>
-	<!--closing slash for image tag is not required, because the image is not a container;-->
-	<img id="the_image" src="qa.engineer.master.png" alt="Very Important Person" title = "QA Engineer"  width="688" height="595" />
+	<!-- background Layer (naturally unclickable, no pointer-events needed); -->
+	<div class="bg-layer"></div>
+	<!-- the above division replaces the image and JavaScript functions related to the image positioning;-->
+	<!-- closing slash for image tag is not required, because the image is not a container;-->
+	<!-- img id="the_image" src="qa.engineer.master.png" alt="Very Important Person" title = "QA Engineer"/-->
 
 	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar" style="text-align: left; padding-left: 10px;">
 		Status: Ready

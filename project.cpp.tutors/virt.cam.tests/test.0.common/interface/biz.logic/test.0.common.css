@@ -22,12 +22,31 @@ h3 {
 	font-family:'Trebuchet MS', verdana, tahoma, arial;
 	font-size  : 15px;
 	font-weight: normal;
-	margin     : 1px 0px 5px 15px; /*top-right-bottom-left*/
+	margin     : 5px 0px 5px 15px; /*top-right-bottom-left*/
 	text-shadow: 0px 1px 3px #aaa; /*text-shadow: h-shadow v-shadow blur-radius color;*/
 }
 
+/* the background layer class below replaces loading a background image as object; */
 #the_image {
 	position: absolute; /*it is required, otherwise the image cannot be moved by JavaScript function;*/
 	width : auto;
 	height: auto;
+}
+
+/* rock-solid background layer for IE11 Trident engine; */
+.bg-layer {
+	/* centers the image and scales it down proportionally without cropping; */
+	background-image: url('qa.engineer.master.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+
+	position: fixed;
+	top   : 0;
+	left  : 0;
+	height: 100%;
+	/* optional: adds padding if it is necessary the image touching window edges; */
+	width : 95%; height: 95%; top: 5%; left: 5%;
+
+	z-index: 1;
 }

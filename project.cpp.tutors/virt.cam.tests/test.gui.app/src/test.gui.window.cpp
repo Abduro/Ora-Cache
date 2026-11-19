@@ -51,63 +51,6 @@ namespace test { namespace app { namespace _impl {
 	};
 
 }}} using namespace ::test::app::_impl;
-#if (0)
-#pragma region cls::CAppWnd{}
-
-CAppWnd:: CAppWnd (void) {}
-CAppWnd::~CAppWnd (void) { this->Destroy(); }
-
-err_code CAppWnd::Create (void) {
-	err_code n_result = __s_ok;
-	// https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles ;
-	// https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles ;
-	static const dword_t dw_ext_style = WS_EX_OVERLAPPEDWINDOW | WS_EX_COMPOSITED;
-	static const dword_t dw_std_style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-	const // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw ;
-	HWND h_wnd = TWindow::Create(HWND_DESKTOP, 0, 0, dw_std_style, dw_ext_style);
-	if ( h_wnd == 0 )
-		return (n_result = __LastErrToHresult());
-
-	return n_result;
-}
-
-err_code CAppWnd::Destroy (void) {
-	err_code n_result = __s_ok;
-	if (this->Is_valid()) {
-		if (0 == TWindow::DestroyWindow()) // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow ;
-			return (n_result = __LastErrToHresult());
-	}
-	return n_result;
-}
-const
-CFrame&  CAppWnd::Frame (void) const { return this->m_frame; }
-CFrame&  CAppWnd::Frame (void)       { return this->m_frame; }
-
-bool CAppWnd::Is_valid (void) const { return !!TWindow::IsWindow(); } 
-
-l_result CAppWnd::OnClose (const uint32_t, const l_param, const w_param, bool_t& _b_handled) {
-	_b_handled = true;
-	this->Destroy(); // no prompt for this time, just destroying this window;
-	return __s_ok;
-}
-
-l_result CAppWnd::OnCreate (const uint32_t, const l_param _l_param, const w_param _w_param, bool_t& _b_handled) {
-	_l_param; _w_param; _b_handled = true;
-	l_result n_result = __s_ok; // this message is handled, otherwise, it should equals to -1;
-	const CREATESTRUCT* p_struct = reinterpret_cast<CREATESTRUCT*>(_w_param);
-	if (nullptr != p_struct) {}
-
-	return n_result;
-}
-
-l_result CAppWnd::OnDestroy (const uint32_t, const l_param _l_param, const w_param _w_param, bool_t& _b_handled) {
-	_l_param; _w_param; _b_handled = false;
-
-	l_result n_result = __s_false; // this message is not handled, otherwise, it should be __s_ok;
-	::PostQuitMessage(0); // it is required to exit the message received loop;
-	return n_result;
-}
-#else
 
 CAppWnd:: CAppWnd(_pc_sz _p_cls_name) : TBase(_p_cls_name), m_wait(*this) {
 	TBase::Handlers().Draw().Subscribe(this); TBase::Handlers().Live().Subscribe(this); TBase::Handlers().System().Subscribe(this);
@@ -274,6 +217,15 @@ err_code CAppWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
 	return   n_result;
 }
 
+err_code CAppWnd::IEvtFrame_OnSizeInfo(MINMAXINFO& _info) {
+	_info;
+	// no saved preferemces in the registry store regarding minimum size of the window that is acceptable for proper HTML page displaying;
+	static const point_t pt_min_size = { 500, 400 };
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-minmaxinfo ;
+	_info.ptMinTrackSize = pt_min_size;
+	return __s_ok;
+}
+
 err_code CAppWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	_edges; _p_rect;     // this rectangle is in screen coordinates of entire window, including non-client area;
 
@@ -312,7 +264,6 @@ void  CAppWnd::IWaitable_OnComplete (void) {
 	this->SetWindowPlacement(&wps);
 }
 
-#endif
 #pragma endregion
 #pragma region cls::CFrame{}
 

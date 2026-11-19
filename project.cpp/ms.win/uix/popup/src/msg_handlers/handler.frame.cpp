@@ -18,7 +18,7 @@ CHandler::~CHandler (void) {}
 
 l_result   CHandler::OnActivate (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = true; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -29,7 +29,7 @@ l_result   CHandler::OnActivate (uint32_t, w_param _w_param, l_param _l_param, i
 
 		err_code n_result = pSink->IEvtFrame_OnActivate(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			_b_handled = true;
+			_b_handled = false; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -43,7 +43,7 @@ l_result   CHandler::OnActivate (uint32_t, w_param _w_param, l_param _l_param, i
 
 l_result   CHandler::OnChanged (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = true; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -54,7 +54,7 @@ l_result   CHandler::OnChanged (uint32_t, w_param _w_param, l_param _l_param, in
 
 		err_code n_result = pSink->IEvtFrame_OnChanged(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			_b_handled = true;
+			_b_handled = false; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -68,7 +68,7 @@ l_result   CHandler::OnChanged (uint32_t, w_param _w_param, l_param _l_param, in
 
 l_result   CHandler::OnChanging (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = true; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -79,7 +79,7 @@ l_result   CHandler::OnChanging (uint32_t, w_param _w_param, l_param _l_param, i
 
 		err_code n_result = pSink->IEvtFrame_OnChanging(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			_b_handled = true;
+			_b_handled = false; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -93,7 +93,7 @@ l_result   CHandler::OnChanging (uint32_t, w_param _w_param, l_param _l_param, i
 
 l_result   CHandler::OnEnable (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = true; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -104,7 +104,7 @@ l_result   CHandler::OnEnable (uint32_t, w_param _w_param, l_param _l_param, int
 
 		err_code n_result = pSink->IEvtFrame_OnEnable(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			_b_handled = true;
+			_b_handled = false; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -118,7 +118,7 @@ l_result   CHandler::OnEnable (uint32_t, w_param _w_param, l_param _l_param, int
 
 l_result   CHandler::OnMove (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = true; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -129,7 +129,7 @@ l_result   CHandler::OnMove (uint32_t, w_param _w_param, l_param _l_param, int32
 
 		err_code n_result = pSink->IEvtFrame_OnMove(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			_b_handled = true;
+			_b_handled = false; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -143,7 +143,7 @@ l_result   CHandler::OnMove (uint32_t, w_param _w_param, l_param _l_param, int32
 
 l_result   CHandler::OnMoving (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = false; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -154,7 +154,7 @@ l_result   CHandler::OnMoving (uint32_t, w_param _w_param, l_param _l_param, int
 
 		err_code n_result = pSink->IEvtFrame_OnMoving(_w_param, _l_param);
 		if (__s_false == n_result) {
-			_b_handled = true;
+			_b_handled = true; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -168,7 +168,7 @@ l_result   CHandler::OnMoving (uint32_t, w_param _w_param, l_param _l_param, int
 
 l_result   CHandler::OnSize (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = true; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -179,7 +179,7 @@ l_result   CHandler::OnSize (uint32_t, w_param _w_param, l_param _l_param, int32
 
 		err_code n_result = pSink->IEvtFrame_OnSize(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			l_result = true;
+			l_result = false; // handled;
 			break;
 		}
 		if (__failed (n_result)) {
@@ -191,9 +191,33 @@ l_result   CHandler::OnSize (uint32_t, w_param _w_param, l_param _l_param, int32
 	return  l_result;
 }
 
+l_result   CHandler::OnSizeInfo (uint32_t, w_param _w_param, l_param _l_param, int32_t& _b_handled) {
+	_b_handled = __s_ok;
+	l_result l_result = true; // not handled;
+
+	Safe_Lock(TBase::m_guard);
+
+	for (TFrameEvtListeners::iterator it_ = m_sinks.begin (); it_ != m_sinks.end (); ++it_) {
+		IFrameEventSink* const pSink = *it_;
+		if (0 == pSink)
+			continue;
+
+		err_code n_result = pSink->IEvtFrame_OnSizeInfo(_w_param, _l_param);
+		if (__s_ok == n_result) {
+			_b_handled = false; // handled;
+			break;
+		}
+		if (__failed (n_result)) {
+			m_error << __METHOD__ << n_result;
+			break;
+		}
+	}
+	return  l_result;
+}
+
 l_result   CHandler::OnSizing (uint32_t,  w_param _w_param, l_param _l_param, int32_t& _b_handled) {
 	_w_param; _l_param; _b_handled = __s_ok;
-	l_result l_result = 0;
+	l_result l_result = 0; // not handled;
 
 	Safe_Lock(TBase::m_guard);
 
@@ -204,7 +228,7 @@ l_result   CHandler::OnSizing (uint32_t,  w_param _w_param, l_param _l_param, in
 
 		err_code n_result = pSink->IEvtFrame_OnSizing(_w_param, _l_param);
 		if (__s_ok == n_result) {
-			l_result = true;
+			l_result = true; // handled;
 			break;
 		}
 		if (__failed (n_result)) {

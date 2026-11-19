@@ -13,6 +13,8 @@ var size_cache = {
 	width  : 0
 };
 
+const b_use_img = false; // the background image functions are not used anymore, setting appropriate style to backfround layer is used;
+
 function centerImage () {
 
 	if (!the_image)
@@ -48,12 +50,13 @@ function scaleImage () {
 function On_window_load (event) {
 	if (false)
 	alert('Document Mode: ' + document.documentMode + '\nCanvas supported: ' + !!window.HTMLCanvasElement);
-
+if (b_use_img) {
 	if (is_loaded) return; else is_loaded = true;
 	if (!the_image) { alert("On_window_load(): " + err_img_msg); return; }
 
 	scaleImage();
 	centerImage();
+}
 }
 
 function On_window_resize (event) {
@@ -67,9 +70,10 @@ function On_window_resize (event) {
 
 	size_cache.hight = curr_size.height;
 	size_cache.width = curr_size.width ;
-
+if (b_use_img) {
 	scaleImage();
 	centerImage();
+}
 }                                         
 
 window.onload = On_window_load;
