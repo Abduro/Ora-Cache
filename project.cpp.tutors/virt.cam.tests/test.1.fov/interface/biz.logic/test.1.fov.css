@@ -2,10 +2,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Oct-2021 at 19:30:03.989, UTC+4, Batumi, Tuesday;
 	This is virtual camera FoV test HTML help common format style sheet file;
 */
-@import url("root.0.comm.decl.css");
-
 .block-img {
-	position: absolute;
+	position: relative;
 	cursor  : move;
 	border  : 1px solid #bbb;
 	background-color: none;
@@ -21,12 +19,6 @@
 	z-index : 999;
 }
 
-/*#pragma region el::pie*/
-.controls { margin-bottom: 15px; }
-.canvas-wrapper { position: relative; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-canvas { display: block; cursor: crosshair; }
-/*#pragma endregion*/
-
 /*
 	Viewport Units Explained
 
@@ -34,17 +26,7 @@ canvas { display: block; cursor: crosshair; }
 	• 100vh (Viewport Height): This equals 100% of the viewport's total height.
 */
 .viewport {
-	position: relative;
+	position: absolute;
 	width   : 100vw;
 	height  : 100vh;
-}
-
-.fov-canvas {
-	position: relative;
-	top : 0;
-	left: 0;
-	width   : 100%;
-	height  : 100%;
-	background-color: none;
-	pointer-events  : none;
 }

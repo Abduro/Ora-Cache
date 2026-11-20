@@ -74,6 +74,7 @@ if (b_use_img) {
 	scaleImage();
 	centerImage();
 }
+	status_msg("On_window_resize(): viewport rect >> " + rect_2_str(get_viewport_rect()));
 }                                         
 
 window.onload = On_window_load;

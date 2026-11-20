@@ -45,7 +45,7 @@ function highlightCurrentUrl() {
 		links[0].className += " active";
 		activeDesc = links[0].getAttribute("data-desc") || "";
 	}
-	document.getElementById("status-text").innerText = activeDesc;
+	status_msg (activeDesc);
 }
 
 function initPage () {
@@ -54,13 +54,15 @@ function initPage () {
 }
 
 function resetStatus() {
-	document.getElementById("status-text").innerText = activeDesc;
+	if (activeDesc === "")
+		activeDesc = "Select test case to run;";
+	status_msg (activeDesc);
 }
 
 function setStatus(link) {
 	var desc = link.getAttribute("data-desc");
 	if (desc) {
-		document.getElementById("status-text").innerText = desc;
+		status_msg (desc);
 	}
 }
 

@@ -47,7 +47,7 @@
 }
 
 .nav-link:hover {
-	background-color: rgba(229, 231, 235, 0.85);
+	background-color: rgba(181, 214, 252, 0.77); /*rgba(229, 231, 235, 0.85);*/
 	color: #111827;
 }
 

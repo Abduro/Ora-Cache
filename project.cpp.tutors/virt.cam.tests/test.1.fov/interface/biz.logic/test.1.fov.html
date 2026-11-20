@@ -5,28 +5,30 @@
 -->
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
-	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
-
 	<!-- Crucial for IWebBrowser2 to enable HTML5, SVG, and CSS3 -->
 	<meta http-equiv="X-UA-Compatible" content="content=IE=edge,chrome=1" />
-
-	<script type="text/javascript"></script>
-	<style></style>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.btn.home.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.comm.body.css"/>
+	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.statusbar.css"/>
 
 </head>
 <body id = "this_page">
+	<h3  class = "caption" id = "caption">Defining a Distance Between a Viewer and a Monitor</h3>
 	<div class = "viewport" id = "viewport">
-	<h3  class = "caption" id = "caption">Question: How to Get Distance::Updated</h3>
-		<img src="test.1.fov.monitor.png" alt="This is the monitor" class="block-img" id="img_monitor" />
-		<img src="test.1.fov.viewer.png"  alt="This is the viewer" class="block-img" id="img_viewer" />
-
-		<canvas class = "fov-canvas" id = "fov-canvas" />
+		<!--img src="test.1.fov.monitor.png" alt="This is the monitor" class="block-img" id="img_monitor" /-->
+		<!--img src="test.1.fov.viewer.png"  alt="This is the viewer" class="block-img" id="img_viewer" /-->
 	</div>
-	<div class="status-bar status-bar-align status-bar-pos" id = "status_bar">
+	<a href="../../../test.0.common/interface/biz.logic/test.0.common.html" class="home-btn" title="Home">
+		<img src="../../../test.0.common/interface/biz.logic/images/home-button-blue_064px.png" alt="Home" width="64" height="64">
+	</a>
+	<div class="status-bar status-bar-align status-bar-pos" id = "status-text">
 		<span>Status: Ready</span>
 	</div>
-	<script type="text/javascript" src="test.1.pie.js"></script>
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.comm.utils.js"></script>
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.statusbar.js"></script>
+	<!--script type="text/javascript" src="test.1.pie.js"></script-->
 	<script type="text/javascript" src="test.1.fov.js"></script>
 </body>
 </html>

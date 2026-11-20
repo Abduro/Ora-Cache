@@ -9,12 +9,13 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta charset="UTF-8">
 	<title>Virtual Camera Test Cases Home Page</title>
+	<link rel="stylesheet" href="root.0.comm.body.css">
 	<link rel="stylesheet" href="test.0.common.css">
 	<link rel="stylesheet" href="root.0.sidebar.css">
 	<link rel="stylesheet" href="root.0.statusbar.css">
 </head>
 <body onload="javascript:initPage()" onresize="javascript:updateScrollButtons()">
-	<h3  class = "caption" id = "caption">Virtual Camera Test Cases' Home Page</h3>
+	<h3  id = "caption">Virtual Camera Test Cases' Home Page</h3>
 	<!-- the above division replaces the image and JavaScript functions related to the image positioning;-->
 	<!-- closing slash for image tag is not required, because the image is not a container;-->
 	<!-- img id="the_image" src="qa.engineer.master.png" alt="Very Important Person" title = "QA Engineer"/-->
@@ -56,6 +57,8 @@
 	<!-- background Layer (naturally unclickable, no pointer-events needed); -->
 	<div class="bg-layer"></div>
 
+	<script src="root.0.comm.utils.js"></script>
+	<script src="root.0.statusbar.js"></script>
 	<script src="root.0.sidebar.js"></script>
 	<script src="test.0.common.js"></script>
 </body>

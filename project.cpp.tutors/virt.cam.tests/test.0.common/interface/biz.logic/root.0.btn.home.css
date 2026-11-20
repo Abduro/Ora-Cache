@@ -1,0 +1,24 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 20-Nov-2026 at 23:44:13.060, UTC+4, Batumi, Friday;
+	This is virtual camera test cases' cascade style sheet definition of 'Go Home' button;
+*/
+
+.home-btn {
+	position  : fixed;  /* Pins the button to the browser viewport */
+	bottom    : 33px;   /* Distance from the bottom edge */
+	right     : 10px;   /* Distance from the right edge */
+	z-index   : 9999;   /* Keeps the button above diagrams and images */
+      
+	opacity   : 0.4;    /* Semi-transparent so it doesn't block diagrams underneath */
+	transition: opacity 0.25s ease-in-out;
+	display   : block;
+}
+
+.home-btn:hover {
+	opacity: 1.0;    /* Fully opaque on mouse hover */
+}
+
+.home-btn img {
+	display: block;
+	border : none;   /* Prevents IE from drawing a blue border around linked images */
+}

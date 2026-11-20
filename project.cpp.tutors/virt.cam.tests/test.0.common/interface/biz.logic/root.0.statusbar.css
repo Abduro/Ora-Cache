@@ -54,5 +54,7 @@
 
 #status-text {
 	overflow    : hidden;
-	white-space : nowrap;
+	white-space : /*normal;*/ nowrap;
+	word-wrap   : break-word;
+	box-sizing  : border-box;
 }

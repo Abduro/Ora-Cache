@@ -4,9 +4,8 @@
 */
 /* https://stackoverflow.com/questions/33811677/html-canvas-draw-a-circle-on-mouse-click-and-drag-it-untill-the-required-radius << doesn't works;*/
 var caption   = document.getElementById("caption");
-var monitor   = document.getElementById('img_monitor');
-var viewer    = document.getElementById('img_viewer');
-var statusbar = document.getElementById('status_bar');
+//var monitor   = document.getElementById('img_monitor');
+//var viewer    = document.getElementById('img_viewer');
 var viewport  = document.getElementById("viewport");
 /* In IE11 emulation mode via the IWebBrowser2 control, the returned object contains the following six core properties:
    top   : Y-coordinate of the top edge of the rectangle relative to the viewport.
@@ -17,15 +16,14 @@ var viewport  = document.getElementById("viewport");
    height: The height of the bounding box (bottom minus top).
 */
 var rc_caption  = caption.getBoundingClientRect();   // the bottom boundary is important only, because the monitor image should not overlap the caption;
-var rc_status   = statusbar.getBoundingClientRect(); // the top of the statusbar rectangle is important only;
 var rc_viewport = viewport.getBoundingClientRect();  // the top boundary is important only, because a title is placed on the top html page;
 
 var offsetX  = 0;
 var offsetY  = 0;
 var act_element  = null;
 
-monitor.addEventListener ? monitor.addEventListener('mousedown', On_mouse_down, false) : monitor.attachEvent('onmousedown', On_mouse_down);
-viewer.addEventListener ? viewer.addEventListener('mousedown', On_mouse_down, false) : viewer.attachEvent('onmousedown', On_mouse_down);
+//monitor.addEventListener ? monitor.addEventListener('mousedown', On_mouse_down, false) : monitor.attachEvent('onmousedown', On_mouse_down);
+//viewer.addEventListener ? viewer.addEventListener('mousedown', On_mouse_down, false) : viewer.attachEvent('onmousedown', On_mouse_down);
 
 /* Event object exact structure and the primary properties available on this object:
 	Pointer Coordinates (where the click happened):
@@ -216,16 +214,11 @@ window.addEventListener ? window.addEventListener('load', On_html_load, false) :
 window.addEventListener ? window.addEventListener('resize', On_window_size, false) : window.attachEvent('resize', On_window_size);
 
 function On_html_load (_event) {
+/*
 	if (!monitor) monitor = document.getElementById('img_monitor');
 	if (!viewer)  viewer  = document.getElementById('img_viewer');
 
-	if (!rc_viewport) {
-		rc_viewport.top  = 0;
-		rc_viewport.left = 0;
-		rc_viewport.right = rc_viewport.width = window.innerWidth || document.documentElement.clientWidth;
-		rc_viewport.bottom = rc_viewport.height = window.innerHeight || document.documentElement.clientHeight;
-		status_msg("On_html_load: viewport >> {left = 0; top = 0; right =" + rc_viewport.width + "; bottom = " + rc_viewport.height + "}(px);");
-	}
+	rc_viewport = get_viewport_rect();
 	var v_top = 0;
 	var v_bottom = rc_viewport.height;
 
@@ -239,12 +232,13 @@ function On_html_load (_event) {
 	   and visually the images do not look vertically centered;
 	   it is necessary take into account a total height both images and correct the vertical center;
 	*/
-
+/*
 	monitor.style.left = (x_center - monitor.offsetWidth / 2) + "px";
 	monitor.style.top  = (y_center - monitor.offsetHeight) + "px";
 
 	viewer.style.left = (x_center - viewer.offsetWidth / 2) + "px";
 	viewer.style.top  = (y_center) + "px";
+*/
 }
 
 var resizeTimeout = 0;
@@ -260,22 +254,7 @@ function On_window_size (_event) {
 	Force Layout Recalculation (IE11 Bug Mitigation): Sometimes IE11 in emulation mode fails to visually redraw elements after a container resize.
 	Reading offsetHeight forces IE11 to recalculate the layout immediately.
 */
-		var triggerReflow = document.body.offsetHeight;
-		if (null === viewport) {
-			rc_viewport.left = 0;
-			rc_viewport.top  = 0;
-			rc_viewport.right  = rc_viewport.width  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-			rc_viewport.bottom = rc_viewport.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		} else {
-			rc_viewport = viewport.getBoundingClientRect();
-			status_msg ("On_window_size: height = " + rc_viewport.height + "px; width = " + rc_viewport.width + "px;");
-		}
+		rc_viewport = round_rect(get_viewport_rect());
+		status_msg ("On_window_size: height = " + rc_viewport.height + "px; width = " + rc_viewport.width + "px;");
 	}, 100);
-}
-
-function status_msg (_msg_text) {
-	var status_bar = document.getElementById("status_bar");
-	if (status_bar){
-		status_bar.innerHTML = _msg_text;
-	}
 }
