@@ -12,20 +12,17 @@
 	user-select     : none; 
 }
 
-.caption {}
-
 .dragging {
 	border-color: #00f !important;
 	z-index : 999;
 }
 
 /*
-	Viewport Units Explained
-
+	Viewport Units Explained:
 	• 100vw (Viewport Width) : This equals 100% of the viewport's total width. The viewport is the visible area of the browser window.
 	• 100vh (Viewport Height): This equals 100% of the viewport's total height.
 */
-.viewport {
+.viewport { /*this style is not used, and is remained as an example;*/
 	position: absolute;
 	width   : 100vw;
 	height  : 100vh;

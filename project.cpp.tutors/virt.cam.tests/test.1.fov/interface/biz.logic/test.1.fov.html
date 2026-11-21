@@ -8,15 +8,17 @@
 	<!-- Crucial for IWebBrowser2 to enable HTML5, SVG, and CSS3 -->
 	<meta http-equiv="X-UA-Compatible" content="content=IE=edge,chrome=1" />
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
-	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.btn.home.css"/>
-	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.comm.body.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.ctrls.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.body.css"/>
 	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
-	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.statusbar.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.rulers.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.status.css"/>
 
 </head>
 <body id = "this_page">
-	<h3  class = "caption" id = "caption">Defining a Distance Between a Viewer and a Monitor</h3>
-	<div class = "viewport" id = "viewport">
+	<h3 id = "caption">Defining a Distance Between a Viewer and a Monitor</h3>
+	<canvas id="cross-layer"></canvas><!--this canvas size is set by handler function of changing viewport area size;-->
+	<canvas id="ruler-layer"></canvas><!--this is the canvas for drawing rulers;-->
 		<!--img src="test.1.fov.monitor.png" alt="This is the monitor" class="block-img" id="img_monitor" /-->
 		<!--img src="test.1.fov.viewer.png"  alt="This is the viewer" class="block-img" id="img_viewer" /-->
 	</div>
@@ -26,8 +28,10 @@
 	<div class="status-bar status-bar-align status-bar-pos" id = "status-text">
 		<span>Status: Ready</span>
 	</div>
-	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.comm.utils.js"></script>
-	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.statusbar.js"></script>
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.utils.js"></script> <!-- this file must go first; -->
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.status.js"></script>
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.body.js"></script>
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.rulers.js"></script>
 	<!--script type="text/javascript" src="test.1.pie.js"></script-->
 	<script type="text/javascript" src="test.1.fov.js"></script>
 </body>

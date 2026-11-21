@@ -1,47 +1,26 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) on 25-Oct-2026 at 15:28:42.155, UTC+4, Batumi, Sunday;
 	This is virtual camera field of view test javascript file.
+	-----------------------------------------------------------------------------
+	The following files are expected to be included before this one:
+	1) root.0.utils.jas;  << for rounding a rectangle;
+	2) root.0.status.js;  << for output of a text to status bar control;
+	3) root.0.body.js;    << for getting a HTMLM page caption rectangle;
+	4) root.0.rulers.js;  << for getting rulers HTML canvas that shows rulers and active object movement cross;
 */
 /* https://stackoverflow.com/questions/33811677/html-canvas-draw-a-circle-on-mouse-click-and-drag-it-untill-the-required-radius << doesn't works;*/
-var caption   = document.getElementById("caption");
 //var monitor   = document.getElementById('img_monitor');
 //var viewer    = document.getElementById('img_viewer');
-var viewport  = document.getElementById("viewport");
-/* In IE11 emulation mode via the IWebBrowser2 control, the returned object contains the following six core properties:
-   top   : Y-coordinate of the top edge of the rectangle relative to the viewport.
-   bottom: Y-coordinate of the bottom edge of the rectangle relative to the viewport.
-   left  : X-coordinate of the left edge of the rectangle relative to the viewport.
-   right : X-coordinate of the right edge of the rectangle relative to the viewport.
-   width : The width of the bounding box (right minus left).
-   height: The height of the bounding box (bottom minus top).
-*/
-var rc_caption  = caption.getBoundingClientRect();   // the bottom boundary is important only, because the monitor image should not overlap the caption;
-var rc_viewport = viewport.getBoundingClientRect();  // the top boundary is important only, because a title is placed on the top html page;
 
 var offsetX  = 0;
 var offsetY  = 0;
 var act_element  = null;
 
+var is_loaded = false; // it is required for avoiding a calling On_window_load() function twice on 'Refresh' command of the host application;
+
 //monitor.addEventListener ? monitor.addEventListener('mousedown', On_mouse_down, false) : monitor.attachEvent('onmousedown', On_mouse_down);
 //viewer.addEventListener ? viewer.addEventListener('mousedown', On_mouse_down, false) : viewer.attachEvent('onmousedown', On_mouse_down);
 
-/* Event object exact structure and the primary properties available on this object:
-	Pointer Coordinates (where the click happened):
-		clientX, clientY: The coordinates of the mouse pointer relative to the browser window's client area.
-		screenX, screenY: The coordinates relative to the user's physical monitor screen.
-		pageX, pageY: The coordinates relative to the entire HTML document (includes page scrolling).
-	Mouse Buttons (which button was clicked):
-		button: a number indicating which mouse button was pressed:
-			0 - left button; 1 - middle button (scroll wheel click); 2 - right button; 
-		buttons: a bitmask representing all buttons currently being held down simultaneously:
-			1 - left button; 4 - middle button (scroll wheel click); 2 - right button;
-	State & Targets (What was clicked):
-		target       : The actual deepest element that triggered the event.
-		currentTarget: The element that the event listener is currently bound to.
-		type         : Returns the string "mousedown".
-		bubbles      : A boolean (true) indicating if the event bubbles up through the DOM.
-		cancelable   : A boolean (true) indicating if the event's default behavior can be prevented.
-*/
 function Set_handlers () {
 /*
 document.body.addEventListener('mouseleave',...) works;
@@ -49,9 +28,9 @@ document.documentElement.addEventListener('mouseleave',...) does not work;
 document.addEventListener('mouseout',...) works perfectly!
 */
 	if (document.addEventListener) {
-		document.addEventListener('mousemove' , On_mouse_move, false);
-		document.addEventListener('mouseup'   , On_mouse_up, false);
-		document.addEventListener('mouseout', On_mouse_leave, false);
+		document.addEventListener('mousemove', On_mouse_move, false);
+		document.addEventListener('mouseup'  , On_mouse_up, false);
+		document.addEventListener('mouseout' , On_mouse_leave, false);
 	} else if (document.attachEvent) {
 		document.attachEvent('onmousemove', On_mouse_move);
 		document.attachEvent('onmouseup'  , On_mouse_up);
@@ -107,23 +86,7 @@ function On_mouse_leave (_event) {
 			status_msg("On_mouse_leave: out of the viewport " + str_side + " side;");
 	}
 }
-/* HTML image object description or an object created by '<img>' tag.
-	Positioning & Layout Properties (Crucial for Movement):
-		(1) offsetLeft / offsetTop: The pixel distance from the image's top/left outer border to its parent container's (offsetParent) padding edge.
-		(2) offsetWidth / offsetHeight: The total visual width and height of the image element (includes the image size, borders, and padding).
-		(3) clientWidth / clientHeight: The inner width and height of the image (includes padding, but excludes borders or margins).
- 	Core Image Properties:                                                                         	
-		(1) src: Gets or sets the full absolute URL of the image.
-		    (Note: In IE11, reading img.src always returns the fully qualified absolute URL, even if you set it as a relative path like ../pic.png).
-		(2) naturalWidth / naturalHeight: Supported in IE11. 
-		    These return the actual, density-independent pixel width and height of the raw image file itself, regardless of any CSS sizing applied to the tag.
-		(3) complete: A boolean (true/false) indicating whether the image has completely finished downloading.
-		(4) alt: Gets or sets the alternative text string.
-	Styles & Filters:
-		(1) Exposes the inline CSS styles object.
-		    For smooth movement in IE11, you will heavily rely on setting img.style.left, img.style.top, and img.style.transform; 
-		    -ms-transform and standard transform for 2D movements like translation and rotation are also supported.
-*/
+
 var visible_part = 30;
 
 function On_mouse_move (_event) {
@@ -136,7 +99,7 @@ function On_mouse_move (_event) {
 		// gets monitor image rectangle bottom value;
 		var rc_monitor = monitor.getBoundingClientRect();
 		var rc_bottom  = Math.round(rc_monitor.bottom);
-		var rc_viewer  = viewer.getBoundingClientRect();
+		var rc_viewer  = round_rect(get_viewport_rect());
 
 		var tentativeTop = event.clientY - offsetY;
 
@@ -163,9 +126,6 @@ function On_mouse_move (_event) {
 		status_msg(
 			"On_mouse_move: tentative point >> [x:" + tentativeLeft + ";y:" + tentativeTop + "] px;"/* limits >> [left:"+ h_limit_l + "; right:" + h_limit_r +"] px;"*/
 		);
-
-//		updateWedgeDiagram(tentativeLeft, tentativeTop);
-		
 
 	} else if (act_element === monitor) {
 		// gets viewer image rectangle top value;
@@ -200,20 +160,30 @@ function On_mouse_move (_event) {
 			"On_mouse_move: tentative point >> [x:" + tentativeLeft + ";y:" + tentativeTop + "] px; "/*limits >> [left:"+ h_limit_l + "; right:" + h_limit_r +"] px;"*/
 		);
 	}
+	var cross_center = {
+		x : act_element.left + act_element.width / 2,
+		y : act_element.top  + act_element.height / 2
+	};
+
+	drawCross(cross_center.x, cross_center.y); // this function is defined in 'root.0.rulers.js' file;
 }
 
 function On_mouse_up (_event) {
 	if (act_element) {
 		act_element.className = act_element.className.replace(" dragging", "");
 		act_element = null;
+		clearCross(); // this function is defined in 'root.0.rulers.js' file;
 	}
 	Rem_handlers();
 }
 
-window.addEventListener ? window.addEventListener('load', On_html_load, false) : window.attachEvent('load', On_html_load);
-window.addEventListener ? window.addEventListener('resize', On_window_size, false) : window.attachEvent('resize', On_window_size);
+window.addEventListener('load', On_html_load, false);
+window.addEventListener('resize', On_window_size, false);
 
 function On_html_load (_event) {
+
+	if (is_loaded) return; else is_loaded = true;
+
 /*
 	if (!monitor) monitor = document.getElementById('img_monitor');
 	if (!viewer)  viewer  = document.getElementById('img_viewer');
@@ -239,22 +209,12 @@ function On_html_load (_event) {
 	viewer.style.left = (x_center - viewer.offsetWidth / 2) + "px";
 	viewer.style.top  = (y_center) + "px";
 */
+	updateRulerArea();
+	drawRulers(); // this function is defined in 'root.0.rulers.js' file;
 }
 
 var resizeTimeout = 0;
 
 function On_window_size (_event) {
-/*
-	Debounce the Resize Event: IE11 will fire the resize event continuously while the user drags the host application window.
-	This can freeze the UI thread. Use a debounce function to wait until the resizing stops.
-*/
-	clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function() {
-/*
-	Force Layout Recalculation (IE11 Bug Mitigation): Sometimes IE11 in emulation mode fails to visually redraw elements after a container resize.
-	Reading offsetHeight forces IE11 to recalculate the layout immediately.
-*/
-		rc_viewport = round_rect(get_viewport_rect());
-		status_msg ("On_window_size: height = " + rc_viewport.height + "px; width = " + rc_viewport.width + "px;");
-	}, 100);
+	updateRulerArea(); // this function is defined in 'root.0.rulers.js' file;
 }

@@ -1,11 +1,15 @@
 /*
 	Created by Tech_dog (ebontrop@gmail.com) om 15-Nov-2026 at 18:24:14.555, UTC+4, Batumi, Sunday;
 	This is virtual camera comon test case JavaScript file; ii is used by HTML page 'test.common.html' which is opened by default;
+	-----------------------------------------------------------------------------
+	***Note""": It is assumed the 'root.0.utils.js' and 'root.0.status.js' files are included to HTML page before this one;
 */
-var the_image = document.getElementById("the_image");  // the main image of the HTML page which must be centered;
+const image_id = "the_image";
+
+var the_image = document.getElementById(image_id);  // the main image of the HTML page which must be centered;
 var is_loaded = false; // it is required for avoiding a calling On_window_load() function twice on 'Refresh' command of the host application;
 
-const err_img_msg = "the canvas id = ''the_image'' does not exist!";
+const err_img_msg = "the canvas id = ''" + image_id + "'' does not exist!";
 const u_threshold = 5;
 
 var size_cache = {
@@ -74,7 +78,7 @@ if (b_use_img) {
 	scaleImage();
 	centerImage();
 }
-	status_msg("On_window_resize(): viewport rect >> " + rect_2_str(get_viewport_rect()));
+	status_msg("On_window_resize(): viewport rect >> " + rect_2_str(get_viewport_rect())); // functions are defined in the 'root.0.utils.js' file;
 }                                         
 
 window.onload = On_window_load;

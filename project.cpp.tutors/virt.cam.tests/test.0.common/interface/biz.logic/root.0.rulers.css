@@ -1,0 +1,20 @@
+/*
+	Createed by Tech_dog (ebontrop@gmail.com) on 21-Nov-2026 at 10:30:36.790, UTC+4, Batumi, Saturday;
+	This is virtual camera test cases' HTML rulers and cross layers' styles' file;
+*/
+#cross-layer {
+	background-color: none;
+	position: fixed;
+	top  : 0;
+	left : 0;
+/*	height  : 512px; /*this is temporary size which can be not specified, because viewport size change event handler takes care about this; */
+/*	width   : 512px; /*the same as for 'height' style;*/
+	z-index : 0;
+}
+
+#ruler-layer {
+	background-color: none;
+	position: fixed;
+	top  : 0;
+	left : 0;
+}

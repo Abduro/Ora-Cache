@@ -9,12 +9,12 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta charset="UTF-8">
 	<title>Virtual Camera Test Cases Home Page</title>
-	<link rel="stylesheet" href="root.0.comm.body.css">
+	<link rel="stylesheet" href="root.0.body.css"><!-- the order of including CSS files doesn't matter;-->
 	<link rel="stylesheet" href="test.0.common.css">
 	<link rel="stylesheet" href="root.0.sidebar.css">
-	<link rel="stylesheet" href="root.0.statusbar.css">
+	<link rel="stylesheet" href="root.0.status.css">
 </head>
-<body onload="javascript:initPage()" onresize="javascript:updateScrollButtons()">
+<body onload="initPage()" onresize="updateScrollButtons()">
 	<h3  id = "caption">Virtual Camera Test Cases' Home Page</h3>
 	<!-- the above division replaces the image and JavaScript functions related to the image positioning;-->
 	<!-- closing slash for image tag is not required, because the image is not a container;-->
@@ -23,16 +23,16 @@
 	<!-- the right navigation pane with direct URL links; -->
 	<div class="sidebar-right">
 		<div class="sidebar-header">Test Cases</div>
-		<button id = "btn-scroll-up" class = "scroll-step-btn top-btn" onclick = "javascript:stepSidebar(-1)" title = "Scroll items up" disabled>
+		<button id = "btn-scroll-up" class = "scroll-step-btn top-btn" onclick = "stepSidebar(-1)" title = "Scroll items up" disabled>
 			<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
 				<path d="M8 4l5 6H3l5-6z"/>
 			</svg>
 		</button>
-		<div id="nav-viewport" class="nav-viewport" onwheel="javascript:handleSidebarWheel(event)">
+		<div id="nav-viewport" class="nav-viewport" onwheel="handleSidebarWheel(event)">
 			<ul class="nav-list">
 				<li>
 					<a class="nav-link" href="../../../test.1.fov/interface/biz.logic/test.1.fov.html"
-					   onmouseover="javascript:setStatus(this)" onmouseout="javascript:resetStatus()"
+					   onmouseover="setStatus(this)" onmouseout="resetStatus()"
 					   data-desc="Calculates the physical distance between the monitor and the viewer.">
 						<svg class="nav-icon" viewBox="0 0 16 16">
 							<path d="
@@ -44,7 +44,7 @@
 				</li>
 			</ul>
 		</div>
-		<button id = "btn-scroll-down" class = "scroll-step-btn bottom-btn" onclick = "javascript:stepSidebar(1)" title = "javascript:Scroll items down" disabled>
+		<button id = "btn-scroll-down" class = "scroll-step-btn bottom-btn" onclick = "stepSidebar(1)" title = "Scroll items down" disabled>
 			<svg width ="12" height="12" viewBox="0 0 16 16" fill="currentColor">
 				<path d="M8 12l5-6H3l5 6z"/>
 			</svg>
@@ -57,9 +57,9 @@
 	<!-- background Layer (naturally unclickable, no pointer-events needed); -->
 	<div class="bg-layer"></div>
 
-	<script src="root.0.comm.utils.js"></script>
-	<script src="root.0.statusbar.js"></script>
-	<script src="root.0.sidebar.js"></script>
-	<script src="test.0.common.js"></script>
+	<script src="root.0.utils.js"></script> <!-- the utilities for working with a rectangle go first; -->
+	<script src="root.0.status.js"></script> <!-- the status bar control goes second; -->
+	<script src="root.0.sidebar.js"></script> <!-- the sidebar control goes third; -->
+	<script src="test.0.common.js"></script> <!-- this is the functions which are specific for this HTML page; -->
 </body>
 </html>

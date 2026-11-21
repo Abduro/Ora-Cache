@@ -3,18 +3,23 @@
 	This is virtual camera test case sidebar control JavaScript file;
 	-----------------------------------------------------------------------------
 	The base code is created by Google AI Search;
+	Note: it is assumed the 'root.0.status.js' is included to HTML page before this file;
 */
-var btnDown  = document.getElementById("btn-scroll-down");
-var btnUp    = document.getElementById("btn-scroll-up");
-var viewport = document.getElementById("nav-viewport");
+const btn_down_id = "btn-scroll-down";
+const btn_up_id   = "btn-scroll-up";
+const viewport_id = "nav-viewport";
+
+var btnDown  = document.getElementById(btn_down_id);
+var btnUp    = document.getElementById(btn_up_id);
+var viewport = document.getElementById(viewport_id);
 
 var ITEM_STEP_HEIGHT = 46;
 var activeDesc = "";
 
-const err_no_scroll_down = ": the canvas id = ''btn-scroll-down'' does not exist!";
-const err_no_scroll_up   = ": the canvas id = ''btn-scroll-up'' does not exist!";
-const err_no_status_txt  = ": the <div> id = ''status-text'' does not ewxist";
-const err_no_viewport    = ": the canvas id = ''nav-viewport'' does not exist!";
+const err_no_scroll_down = ": the canvas id = ''" + btn_down_id + "'' does not exist!";
+const err_no_scroll_up   = ": the canvas id = ''" + btn_up_id + "'' does not exist!";
+const err_no_status_txt  = ": the <div> id = ''" + status_id + "'' does not ewxist";   // status_id must be declared in 'root.0.status.js' file;
+const err_no_viewport    = ": the canvas id = ''" + viewport_id + "'' does not exist!";
 
 function handleSidebarWheel(_event) {
 	var event = _event || window.event;
@@ -55,7 +60,7 @@ function initPage () {
 
 function resetStatus() {
 	if (activeDesc === "")
-		activeDesc = "Select test case to run;";
+		activeDesc = "Select a test case to run;";
 	status_msg (activeDesc);
 }
 
@@ -74,9 +79,9 @@ function stepSidebar(direction) {
 }
 
 function updateScrollButtons() {
-	var btnDown  = document.getElementById("btn-scroll-down");  if (!btnDown)  { alert("updateScrollButtons():" + err_no_scroll_down); return; }
-	var btnUp    = document.getElementById("btn-scroll-up");    if (!btnUp)    { alert("updateScrollButtons():" + err_no_scroll_up); return; }
-	var viewport = document.getElementById("nav-viewport");     if (!viewport) { alert("updateScrollButtons():" + err_no_viewport); return; }
+	var btnDown  = document.getElementById(btn_down_id);  if (!btnDown)  { alert("updateScrollButtons():" + err_no_scroll_down); return; }
+	var btnUp    = document.getElementById(btn_up_id);    if (!btnUp)    { alert("updateScrollButtons():" + err_no_scroll_up); return; }
+	var viewport = document.getElementById(viewport_id);  if (!viewport) { alert("updateScrollButtons():" + err_no_viewport); return; }
 
 	var hasOverflow = viewport.scrollHeight > viewport.clientHeight + 1;
 	if (!hasOverflow) {
