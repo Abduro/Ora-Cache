@@ -245,7 +245,7 @@ function initApp() {
 
 		drawCross(x_center, y_center);
 
-		status_msg("mousemove(): the objects '"+ act_element.id  +"' being moved >>[x = " + newLeft + "; y = " + newTop +"] px;");
+		status_msg("mousemove(): the objects '"+ element.id  +"' being moved >>[x = " + newLeft + "; y = " + newTop +"] px;");
 	});
 
 	document.addEventListener('mouseup', function(event) {

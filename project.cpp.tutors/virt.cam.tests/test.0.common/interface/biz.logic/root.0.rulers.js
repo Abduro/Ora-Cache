@@ -12,7 +12,7 @@ const ruler_id = "ruler-layer";
 var crs_layer = document.getElementById(cross_id); // cross layer canvas for an element being moded;
 var rul_layer = document.getElementById(ruler_id); // ruler layer canvas for drawing X & Y axes;
 
-var margins = {  // these margins are used by drawCross() and drawRulers() functions;
+var ruler_margins = {  // these margins are used by drawCross() and drawRulers() functions;
 	horz: 0, vert: 0
 };
 
@@ -28,22 +28,44 @@ function clearCross () { // this function should be called from 'onmouseup' even
 	ctx.clearRect(0, 0, crs_layer.width, crs_layer.height);
 }
 
-function drawCross (x_center, y_center) { // this function should be called from 'onmousemove' event handler;
+function getCrossPoint (active_element) {
+
+	var cross_pt = { x: 0, y: 0 };
+	if (active_element) {
+		const rc_active = round_rect(active_element.getBoundingClientRect());
+		cross_pt.x = rc_active.left + rc_active.width / 2,
+		cross_pt.y = rc_active.top  + rc_active.height / 2
+	}
+	return cross_pt;
+}
+
+
+function drawCross (arg_0, arg_1) { // this function should be called from 'onmousemove' event handler;
 
 	if (!crs_layer) {
 		alert("drawCross(): " + err_no_cross); return;
 	}
+	var obj_center = { x: 0, y: 0 };
+
+	if (false){}
+	else if (typeof arg_0 === 'object') {
+		const cross_pt = getCrossPoint(arg_0);
+		obj_center.x = cross_pt.x;
+		obj_center.y = cross_pt.y;
+	}
+	else if (typeof arg_0 === 'number' && typeof arg_1 === 'number') {
+		obj_center.x = Math.round(arg_0);
+		obj_center.y = Math.round(arg_1);
+	}
+
 	const ctx = crs_layer.getContext('2d');
 	ctx.fillStyle = "rgba(239, 68, 68, 0.3)";
-
-	x_center = Math.round(x_center);
-	y_center = Math.round(y_center);
 
 	ctx.clearRect(0, 0, crs_layer.width, crs_layer.height);
 
 	// this works regardless of the possible scaling of the line width by the canvas on which it is drawn;
-	ctx.fillRect(x_center, 0, 1, margins.vert);               // draws the vertical line of the cross;
-	ctx.fillRect(margins.horz, y_center, crs_layer.width, 1); // draws the horizontal line of the cross;
+	ctx.fillRect(obj_center.x, 0, 1, ruler_margins.vert);               // draws the vertical line of the cross;
+	ctx.fillRect(ruler_margins.horz, obj_center.y, crs_layer.width, 1); // draws the horizontal line of the cross;
 }
 
 function drawRulers() { // this function should be called from the following event handlers: 'onload' and 'onresize';
@@ -51,18 +73,15 @@ function drawRulers() { // this function should be called from the following eve
 	if (!rul_layer) {
 		alert("drawRulers(): " + err_no_ruler); return;
 	}
-	// it is supposed the status bar element and caption exist on the HTML page, no object validity is made in this version of the implementation.
-	var  capation = document.getElementById(caption_id);
-	var  cap_rect = capation.getBoundingClientRect();
 
-	var  status_bar  = document.getElementById(status_id);
-	var  status_rect = status_bar.getBoundingClientRect();
-	
+	var  cap_rect = get_caption_rect(); // this function is defined in 'root.0.body.js';
+	var  sta_rect = get_status_rect();  // this function is defined in 'root.0.status.js';
+
 	const h_margin = 7; // horizontal margin: x-axis should not coincident with the left border of html-page;
 	const v_margin = 5;
 
 	var width  = rul_layer.width  - h_margin;
-	var height = rul_layer.height - v_margin - status_rect.height;
+	var height = rul_layer.height - v_margin - sta_rect.height;
 
 	const t_margin = 0 ;//Math.round(cap_rect.height) + v_margin;  // this is the top margin for x - axis does not overlap the caption;
 	const step     = 50;  // 50-pixel delimiter spacing;
@@ -71,8 +90,8 @@ function drawRulers() { // this function should be called from the following eve
 	var origin_x = h_margin; // the left edge of viewport;
 	var origin_y = height;   // the bottom edge of viewport (1px high);
 
-	margins.horz = origin_x;
-	margins.vert = origin_y;  
+	ruler_margins.horz = origin_x;
+	ruler_margins.vert = origin_y;  
 
 	var ctx = rul_layer.getContext('2d');
 

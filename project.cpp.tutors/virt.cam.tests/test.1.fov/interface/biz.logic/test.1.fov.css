@@ -2,8 +2,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 13-Oct-2021 at 19:30:03.989, UTC+4, Batumi, Tuesday;
 	This is virtual camera FoV test HTML help common format style sheet file;
 */
-.block-img {
-	position: relative;
+.draggable {
+	position: absolute; /*important: position must be absolute, otherwise the image doesn't follow by cursor as expected! */
 	cursor  : move;
 	border  : 1px solid #bbb;
 	background-color: none;

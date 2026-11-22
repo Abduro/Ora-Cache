@@ -10,7 +10,7 @@ function get_caption_rect () {
 	var rect_out = {
 		left: 0, top: 0, right: 0, bottom: 0, height: 0, width: 0
 	};
-	var the_caption = document.findElementById(caption_id);
+	var the_caption = document.getElementById(caption_id);
 	if (the_caption) {
 		rect_out = round_rect(the_caption.getBoundingClientRect()); // round_rect() is defined in the 'root.0.utils.js' file;
 	}

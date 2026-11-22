@@ -13,7 +13,7 @@ function get_status_rect () {
 	var rect_out = {
 		left: 0, top: 0, right: 0, bottom: 0, height: 0, width: 0
 	};
-	var the_status = document.findElementById(status_id);
+	var the_status = document.getElementById(status_id);
 	if (the_status) {
 		rect_out = round_rect(the_status.getBoundingClientRect()); // round_rect() is defined in the 'root.0.utils.js' file;
 	}
