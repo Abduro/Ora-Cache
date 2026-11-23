@@ -5,11 +5,11 @@
 
 .home-btn {
 	position  : fixed;  /* Pins the button to the browser viewport */
-	bottom    : 33px;   /* Distance from the bottom edge */
+	bottom    : 44px;   /* Distance from the bottom edge; statusbar height and ruler X-axis should be taken into account; */
 	right     : 10px;   /* Distance from the right edge */
 	z-index   : 9999;   /* Keeps the button above diagrams and images */
       
-	opacity   : 0.4;    /* Semi-transparent so it doesn't block diagrams underneath */
+	opacity   : 0.2;    /* Semi-transparent so it doesn't block diagrams underneath */
 	transition: opacity 0.25s ease-in-out;
 	display   : block;
 }

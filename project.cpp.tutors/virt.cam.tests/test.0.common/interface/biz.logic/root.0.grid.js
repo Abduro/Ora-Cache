@@ -31,30 +31,30 @@ function drawGrid() {
 
 	if (!the_grid) { alert("drawGrid(): the canvas id = '" + grid_id + "' does not exist!"); return; }
 
+	calcMargins();
+
 	var ctx = the_grid.getContext("2d");
 	ctx.clearRect(0, 0, the_grid.width, the_grid.height);
 
-	ctx.lineWidth = 1;
-	ctx.strokeStyle = "rgba(200, 200, 200, 0.25)"; // sets very soft gray lines' color;
-
-	// the grid is drawn the first in comparison with rulers' canvas, so margins must be defined here, not in drawRulers() function;
-	const h_margin = 7; // horizontal margin: x-axis should not coincident with the left border of html-page;
-	const v_margin = 7;
-	ruler_margins.horz = h_margin;
-	ruler_margins.vert = v_margin + get_status_rect().height; // sets the bottom margin; the function is defined in 'root.0.status.js';
-
+	ctx.fillStyle = '#eee';      // neutral slate gray;
 	// draws vertical grid lines;
-	ctx.beginPath();
-	for (var x = ruler_margins.horz; x < the_grid.width; x += cell_size) {
-		ctx.moveTo(x, 0);
-		ctx.lineTo(x, the_grid.height - ruler_margins.vert); // the line should not penetrate the top border of status bar;
+	for (var x = 0; x < the_grid.width; x += cell_size) {
+		ctx.fillRect(x, 0, 1, the_grid.height - ruler_margins.bottom);
 	}
-
 	// draws horizontal grid lines;
-	for (var y = the_grid.height - ruler_margins.vert; y > 0; y -= cell_size) {
-		ctx.moveTo(ruler_margins.horz, y);
-		ctx.lineTo(the_grid.width - ruler_margins.horz, y);
+	for (var y = the_grid.height - ruler_margins.bottom; y > 0; y -= cell_size) {
+		ctx.fillRect(ruler_margins.left, y, the_grid.width - ruler_margins.left, 1);
 	}
-	ctx.closePath();
-	ctx.stroke();
+}
+
+function updateGridArea () {
+	var cli_width  = window.innerWidth;
+	var cli_height = window.innerHeight;
+
+	if (the_grid.width !== cli_width || the_grid.height !== cli_height) {
+		the_grid.width  = cli_width;
+		the_grid.height = cli_height;
+
+		drawGrid();
+	}
 }

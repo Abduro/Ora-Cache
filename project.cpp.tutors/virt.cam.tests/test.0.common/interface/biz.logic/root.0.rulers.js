@@ -92,7 +92,7 @@ function drawRulers() { // this function should be called from the following eve
 	var ctx = rul_layer.getContext('2d');
 
 	ctx.clearRect(0, 0, width, height);
-	ctx.fillStyle = '#999999'; // neutral slate gray;
+	ctx.fillStyle = '#999';      // neutral slate gray;
 	ctx.font = "10px verdana";
 
 	const n_thickness = 1;

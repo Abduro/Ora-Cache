@@ -244,9 +244,8 @@ function On_html_load (_event) {
 	the_viewer.style.left = (x_center - the_viewer.offsetWidth / 2) + "px";
 	the_viewer.style.top  = (y_center) + "px";
 
-	updateRulerArea();
-	drawRulers(); // this function is defined in 'root.0.rulers.js' file;
-
+	updateRulerArea(); // this function is defined in 'root.0.grid.js' file;
+	updateGridArea();  // this function is defined in 'root.0.rulers.js' file;
 
 	document.addEventListener('mousemove', On_mouse_move, false);
 	document.addEventListener('mouseup'  , On_mouse_up, false);
@@ -259,5 +258,6 @@ function On_html_load (_event) {
 }
 
 function On_window_size (_event) {
+	updateGridArea();  // this function is defined in 'root.0.grid.js' file;
 	updateRulerArea(); // this function is defined in 'root.0.rulers.js' file;
 }
