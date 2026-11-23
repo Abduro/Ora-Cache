@@ -356,7 +356,7 @@ namespace _impl {
 
 #pragma region cls::CBrowserHost{}
 
-CBrowserHost::CBrowserHost (IWbEvtHandler& evt_ref) :  m_evt_handler(evt_ref), m_bInited(false), m_bDoNotNotify(false), m_bStreamObject(false) {
+CBrowserHost::CBrowserHost (IWbEvtHandler& evt_ref) :  m_evt_handler(evt_ref), m_bDoNotNotify(false), m_bStreamObject(false) {
 	this->m_error >>__CLASS__<<__METHOD__<<__s_ok;
 	this->Sinks() << &evt_ref;
 }
@@ -473,15 +473,9 @@ TWebEvtSinks& CBrowserHost::Sinks (void)       { return this->m_evt_sinks; }
 
 LRESULT CBrowserHost::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
 	uMsg; wParam; lParam; bHandled;
-	// (3) It is very important to unadvise all web browser event sinks right here;
+	// It is very important to unadvise all web browser event sinks right here;
 	this->Sinks().Unadvise();
-#if (0)
-	CComPtr<IUnknown> spUnk;
-	err_code n_result = TBrowserHost::QueryControl(&spUnk);
-	if (__succeeded(n_result)) {
-		n_result = THtmlSink::DispEventUnadvise(spUnk);
-	}
-#endif
+
 	KbrdHandler_GetCacheObject().Unregister(TBrowserHost::m_hWnd);
 	MouseHandler_GetCacheObject().Unregister(TBrowserHost::m_hWnd); this->m_act_object = nullptr;
 	return 0;

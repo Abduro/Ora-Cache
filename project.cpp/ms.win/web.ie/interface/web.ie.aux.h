@@ -18,8 +18,11 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 		TErrorRef Error (void) const;
 		bool   Is_valid (void) const;
 
+		err_code  PageSetup (void);
+
 		err_code  Print (void);
 		err_code  PrintPreview (void);
+		err_code  SaveAs (void);
 
 	private:
 		CCommand& operator = (const CCommand&) = delete; CCommand& operator = (CCommand&&) = delete;
@@ -33,12 +36,14 @@ namespace ex_ui { namespace web { namespace IE { using namespace ::ex_ui::web::I
 		 CState (CWebBrowser*); CState (const CState&) = delete; CState (CState&&) = delete;
 		~CState (void) = default;
 
+		err_code Activate (const bool _yes_or_no); // the main app window can be activated or disactivated by pressing Alt + Tab for example;
+
 		TErrorRef Error (void) const;
 		bool   Is_busy  (void) const;
 		bool   Is_valid (void) const;
 
 		bool     Silent (void) const;
-		err_code Silent (const bool); // if true, it suppresses ***all*** message boxes
+		err_code Silent (const bool); // if true, it suppresses ***all*** message boxes;
 
 		operator bool (void) const;   // indicates a validity status of the web browser control object;
 

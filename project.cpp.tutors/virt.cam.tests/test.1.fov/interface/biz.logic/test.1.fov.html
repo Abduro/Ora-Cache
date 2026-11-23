@@ -10,6 +10,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
 	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.ctrls.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.body.css"/>
+	<!--link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.grid.css"/-->
 	<link rel="stylesheet" type="text/css" href="test.1.fov.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.rulers.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../test.0.common/interface/biz.logic/root.0.status.css"/>
@@ -17,11 +18,14 @@
 </head>
 <body id = "this_page">
 	<h3 id = "caption">Defining a Distance Between a Viewer and a Monitor</h3>
+
+	<!--canvas id="the_grid"></canvas--><!--cloasing tag is required!-->
 	<canvas id="cross-layer"></canvas><!--this canvas size is set by handler function of changing viewport area size;-->
 	<canvas id="ruler-layer"></canvas><!--this is the canvas for drawing rulers;-->
-		<img src="test.1.fov.monitor.png" alt="This is the monitor" class="draggable" id="img_monitor" />
-		<img src="test.1.fov.viewer.png"  alt="This is the viewer" class="draggable" id="img_viewer" />
-	</div>
+
+	<img src="test.1.fov.monitor.png" alt="This is the monitor" class="draggable" id="img_monitor" />
+	<img src="test.1.fov.viewer.png"  alt="This is the viewer" class="draggable" id="img_viewer" />
+
 	<a href="../../../test.0.common/interface/biz.logic/test.0.common.html" class="home-btn" title="Home">
 		<img src="../../../test.0.common/interface/biz.logic/images/home-button-blue_064px.png" alt="Home" width="64" height="64">
 	</a>
@@ -31,6 +35,7 @@
 	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.utils.js"></script> <!-- this file must go first; -->
 	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.status.js"></script>
 	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.body.js"></script>
+	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.grid.js"></script>  <!--it defines margins which are used by rulers and cross hair; -->
 	<script type="text/javascript" src="../../../test.0.common/interface/biz.logic/root.0.rulers.js"></script>
 	<!--script type="text/javascript" src="test.1.pie.js"></script-->
 	<script type="text/javascript" src="test.1.fov.js"></script>

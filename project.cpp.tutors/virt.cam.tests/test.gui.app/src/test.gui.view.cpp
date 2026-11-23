@@ -137,6 +137,21 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 }
 
 TError&  CView::Error (void) const { return this->m_error; }
+
+err_code CView::OnActivate (const bool _yes_or_no) {
+	_yes_or_no;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	switch (this->Pages().Get().Tabs().Active()) {
+	case 0: {
+		this->m_error << this->m_view_1.Activate(_yes_or_no);
+	} break;
+	default:;
+	}
+
+	return this->Error();
+}
+
 err_code CView::OnCreate (void) {
 	this->m_error <<__METHOD__<<__s_ok;
 

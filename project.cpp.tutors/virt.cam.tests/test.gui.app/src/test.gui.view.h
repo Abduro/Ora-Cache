@@ -48,6 +48,7 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 
 		TError&   Error (void) const;
 
+		err_code  OnActivate (const bool _yes_or_no);
 		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;
 		err_code  OnDestroy(void);     // it should be called from main window destroy event handler;
 		err_code  OnDraw (const HDC, const rect_t& _drw_area);

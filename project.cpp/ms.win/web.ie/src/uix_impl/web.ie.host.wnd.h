@@ -18,9 +18,6 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 	// https://learn.microsoft.com/en-us/cpp/atl/reference/caxwindow-class ;
 
 	class CBrowserHost;
-	static const uint32_t nWebBrowserCtrlId = 1;
-
-	typedef IDispEventImpl<nWebBrowserCtrlId, CBrowserHost, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 0> THtmlSink;
 
 	typedef CWindowImpl<CBrowserHost, CAxWindow> TBrowserHost;  // this is ATL::CWindowImpl<> template's specialization type definition;
 	typedef CComPtr<IOleInPlaceActiveObject>     TActiveObject;
@@ -55,7 +52,7 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 		err_code IsFeatureEnabled (const dword_t dwFeature, const dword_t dwScope = GET_FEATURE_FROM_PROCESS);
 #endif
 		TError&  Error (void) const;
-		err_code Refresh (void);
+		err_code Refresh (void);   // this method should be deprecated due to it is useless, and refreshing of the browser content is made by different way;
 		const
 		TWebEvtSinks& Sinks (void) const;
 		TWebEvtSinks& Sinks (void) ;
@@ -69,12 +66,11 @@ namespace ex_ui { namespace web { namespace IE { namespace core {
 
 		CBrowserHost& operator = (const CBrowserHost&) = delete; CBrowserHost& operator = (CBrowserHost&&) = delete;
 
-		bool           m_bInited     ;
 		IWbEvtHandler& m_evt_handler ;
 		TActiveObject  m_act_object  ;
 		_variant_t     m_async_data  ;
-		bool           m_bDoNotNotify;
-		bool           m_bStreamObject;
+		bool    m_bDoNotNotify;
+		bool    m_bStreamObject;
 		CError  m_error;
 		TWebEvtSinks   m_evt_sinks;
 	};

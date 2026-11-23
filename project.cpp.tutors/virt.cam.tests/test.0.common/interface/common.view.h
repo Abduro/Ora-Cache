@@ -17,10 +17,11 @@ namespace test { namespace gui { namespace views { using namespace ::test::draw:
 		 CBase (void); CBase (const CBase&) = delete; CBase (CBase&&) = delete;
 		~CBase (void) = default;
 
+		err_code Activate (const bool _yes_or_no);
 		err_code Create (const HWND hParent, const rect_t& rect);
 		err_code Destroy (void);
 
-		TError& Error (void) const;
+		TError&  Error (void) const;
 
 		err_code Open (_pc_sz _p_url);
 		err_code Refresh (void);

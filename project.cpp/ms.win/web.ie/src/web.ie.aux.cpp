@@ -19,7 +19,22 @@ bool CCommand::Is_valid (void) const {
 	return (this->m_error << (nullptr != this->m_control ? __s_ok : __e_not_inited)).Is() == false;
 }
 
-err_code CCommand::Print(void) {
+err_code CCommand::PageSetup (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid() == false) return this->Error();
+
+	TCmdTargetPtr pCommand;
+
+	CAccessor acc(*this->m_control);
+	this->m_error << acc.CmdTarget(pCommand);
+	if (this->Error())
+		return this->Error();
+	else
+		return this->m_error << pCommand->Exec(0, OLECMDID_PAGESETUP, OLECMDEXECOPT_PROMPTUSER, 0, 0);
+}
+
+err_code CCommand::Print (void) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (this->Is_valid() == false) return this->Error();
@@ -34,7 +49,7 @@ err_code CCommand::Print(void) {
 		return this->m_error << pCommand->Exec(0, OLECMDID_PRINT, OLECMDEXECOPT_PROMPTUSER, 0, 0);
 }
 
-err_code CCommand::PrintPreview(void) {
+err_code CCommand::PrintPreview (void) {
 	this->m_error << __METHOD__ << __s_ok;
 
 	if (this->Is_valid() == false) return this->Error();
@@ -51,15 +66,69 @@ err_code CCommand::PrintPreview(void) {
 		return this->m_error << pCommand->Exec(0, OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_PROMPTUSER, 0, 0);
 }
 
+err_code CCommand::SaveAs (void) {
+	this->m_error << __METHOD__ << __s_ok;
+
+	if (this->Is_valid() == false) return this->Error();
+
+
+	TCmdTargetPtr pCommand;
+
+	CAccessor acc(*this->m_control);
+	this->m_error << acc.CmdTarget(pCommand);
+
+	if (this->Error())
+		return this->Error();
+	else
+		return this->m_error << pCommand->Exec(0, OLECMDID_SAVEAS, OLECMDEXECOPT_PROMPTUSER, 0, 0);
+}
+
 #pragma endregion
 #pragma region cls::CState{}
 
 CState::CState (CWebBrowser* _p_browser) : m_browser(_p_browser) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
+err_code CState::Activate (const bool _yes_or_no) {
+	_yes_or_no;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (false == this->Is_valid()) // guaramtees all pointers are valid and ready for use;
+		return this->Error();
+
+	const
+	TBrwWndPtr& pHost = this->m_browser->Host();
+
+	if (_yes_or_no == false) {
+		CComPtr<IOleInPlaceObject> spInPlaceObject;
+		this->m_error << pHost->QueryControl(&spInPlaceObject);
+		if (this->Error())
+			return this->Error();
+
+		this->m_error << spInPlaceObject->UIDeactivate();
+	}
+	else {
+		CComPtr<IOleObject> spOleObject;
+		this->m_error << pHost->QueryControl(&spOleObject);
+		if (this->Error())
+			return this->Error();
+
+		rect_t cli_rect = {0};
+		pHost->GetClientRect(&cli_rect); // it is assumed a getting a client area rectangle is succeeded with no error;
+
+		CComPtr<IOleClientSite> spClientSite;
+		this->m_error << pHost->QueryHost(&spClientSite);
+		if (this->Error())
+			return this->Error();
+
+		this->m_error << spOleObject->DoVerb(OLEIVERB_UIACTIVATE, nullptr, spClientSite, 0, pHost->m_hWnd, &cli_rect);
+	}
+	return this->Error();
+}
+
 TError& CState::Error (void) const { return m_error; }
 bool CState::Is_valid (void) const {
 	return (this->m_error << (
-		nullptr != this->m_browser && nullptr != this->m_browser->Ctrl() && this->m_browser->Window().IsWindow() ? __s_ok : __e_not_inited
+		nullptr != this->m_browser && nullptr != this->m_browser->Ctrl() && nullptr != this->m_browser->Host() && this->m_browser->Window().IsWindow() ? __s_ok : __e_not_inited
 	)).Is() == false;
 }
 

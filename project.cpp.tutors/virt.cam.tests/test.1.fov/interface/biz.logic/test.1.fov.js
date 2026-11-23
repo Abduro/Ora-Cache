@@ -76,25 +76,26 @@ function On_mouse_down (_event) {
 		document.documentElement.setCapture();
 	}
 
-//	var rc_active = round_rect(act_element.getBoundingClientRect());
-//	status_msg ("On_mouse_down: offset >> [x: " + offset.x + "; y: " + offset.y + "] px; rect >> " + rect_2_str(rc_active));
+	var rc_active = round_rect(act_element.getBoundingClientRect());
+	status_msg ("On_mouse_down: offset >> [x: " + offset.x + "; y: " + offset.y + "] px; rect >> " + rect_2_str(rc_active));
 }
 
 var visible_part = 30;
 
 function On_mouse_move (_event) {
 
-	if (!act_element) return; // there is no drag operation;
-
 	var event = _event || window.event;
-	// safety fallback: if left button was released outside and capture was lost;
-	if (event.buttons !== undefined && (event.buttons & 1) === 0) {
-		stop_dragging(); return;
-	}
 
 	// caches the last mouse position;
 	last_mouse.x = event.clientX;
 	last_mouse.y = event.clientY;
+
+	if (!act_element) return; // there is no drag operation;
+
+	// safety fallback: if left button was released outside and capture was lost;
+	if (event.buttons !== undefined && (event.buttons & 1) === 0) {
+		stop_dragging(); return;
+	}
 
 	var rc_monitor  = round_rect(the_monitor.getBoundingClientRect()); // gets monitor image rectangle;
 	var rc_viewer   = round_rect(the_viewer.getBoundingClientRect());  // gets viewr image rectangle;
@@ -154,12 +155,15 @@ function On_mouse_move (_event) {
 	}
 	drawCross (act_element); // this function is defined in 'root.0.rulers.js' file;
 
-//	status_msg ("On_mouse_move: tentative point >> [x:" + tentative_pt.x + ";y:" + tentative_pt.y + "] px; ");
+	status_msg ("On_mouse_move: tentative point of '" + act_element.id  + "'>> [x:" + tentative_pt.x + ";y:" + tentative_pt.y + "] px; ");
 }
 
 function On_mouse_up (_event) {
+
+	const object_id = act_element ? act_element.id : "unknown";
+
 	if (stop_dragging())
-		status_msg ("On_mouse_up: the drag operation is completed;");
+		status_msg ("On_mouse_up: the drag operation of '" + object_id + "' is completed;");
 }
 
 function On_mouse_leave (_event) {
@@ -202,6 +206,12 @@ function On_mouse_leave (_event) {
 
 window.addEventListener('load', On_html_load, false);
 window.addEventListener('resize', On_window_size, false);
+window.onblur = function() {
+	const object_id = act_element ? act_element.id : "unknown";
+
+	if (stop_dragging())
+		status_msg ("On_blur: the drag operation of '" + object_id + "' is completed;");
+};
 
 function On_html_load (_event) {
 
@@ -245,6 +255,7 @@ function On_html_load (_event) {
 		stop_dragging();
 		status_msg ("onlosecapture event: dragging operation is ended;");
 	}
+	status_msg ("On_html_load: Init() is completed;");
 }
 
 function On_window_size (_event) {

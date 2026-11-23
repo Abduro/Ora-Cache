@@ -113,11 +113,12 @@ err_code CAppWnd::Destroy (void) {
 	return n_result;
 }
 
-
 bool CAppWnd::Is_valid (void) const { return !!TWindow::IsWindow(); } 
 const
 CFrame&  CAppWnd::Frame (void) const { return this->m_frame; }
 CFrame&  CAppWnd::Frame (void)       { return this->m_frame; }
+
+#pragma region IEvtDraw_Impl{}
 
 err_code CAppWnd::IEvtDraw_OnErase (const HDC _dev_ctx) {
 	_dev_ctx;
@@ -145,6 +146,9 @@ err_code CAppWnd::IEvtDraw_OnPaint (const w_param, const l_param) { // both inpu
 	return   n_result;
 }
 
+#pragma endregion
+#pragma region IEvtLife_Impl{}
+
 err_code CAppWnd::IEvtLife_OnClose (const w_param, const l_param) {
 
 	using namespace ex_ui::popup::layout;
@@ -155,7 +159,7 @@ err_code CAppWnd::IEvtLife_OnClose (const w_param, const l_param) {
 	return   n_result;
 }
 
-err_code CAppWnd::IEvtLife_OnCreate  (const w_param, const l_param) {
+err_code CAppWnd::IEvtLife_OnCreate (const w_param, const l_param) {
 	err_code n_result = __s_false;
 	::shared::Get_View().Parent() = *this;
 	::shared::Get_View().OnCreate();
@@ -179,6 +183,8 @@ err_code CAppWnd::IEvtLife_OnDestroy (const w_param, const l_param) {
 	return n_result;
 }
 
+#pragma endregion
+
 err_code CAppWnd::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
 	
 	err_code n_result = __s_false;
@@ -191,8 +197,30 @@ err_code CAppWnd::IEvtSys_OnSysCmd (const w_param _w_param, const l_param) {
 	return  n_result;
 }
 
+#pragma region IEvtFrame_Impl{}
+
 using eState = IFormEvtSink::eState;
 using eEdges = IFormEvtSink::eEdges;
+
+// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate ;
+err_code CAppWnd::IEvtFrame_OnActivate(const w_param _flag, const l_param _h_target) {
+	_flag; _h_target;
+	TBase::m_error <<__METHOD__<<__s_ok;
+	const bool b_activate = _flag != WA_INACTIVE;
+	const HWND h_target = reinterpret_cast<HWND>(_h_target); h_target;
+#if (0)
+	/* If the low-order word of wParam is WA_INACTIVE, lParam is the handle to the window being activated.
+	   If the low-order word of wParam is WA_ACTIVE or WA_CLICKACTIVE, lParam is the handle to the window being deactivated.
+	   This handle can be NULL.
+	*/
+	if (false == b_activate) {}
+	else if (nullptr == h_target) return TBase::m_error <<__e_hwnd = _T("__e_hwnd: target window handle is invalid");
+	else if (TBase::m_hWnd != h_target) return TBase::m_error <<__s_false = _T("__e_mismatch: Unrelated target window handle");
+#endif
+	TBase::m_error << ::shared::Get_View().OnActivate(b_activate);
+
+	return TBase::Error();
+}
 
 err_code CAppWnd::IEvtFrame_OnSize (const eState _e_state, const SIZE) {
 
@@ -249,6 +277,8 @@ err_code CAppWnd::IEvtFrame_OnSizing (const eEdges _edges, LPRECT _p_rect) {
 	return   n_result;
 }
 
+#pragma endregion
+
 void  CAppWnd::IWaitable_OnComplete (void) {
 #pragma region __refs_a
 	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchtothiswindow ;
@@ -264,7 +294,6 @@ void  CAppWnd::IWaitable_OnComplete (void) {
 	this->SetWindowPlacement(&wps);
 }
 
-#pragma endregion
 #pragma region cls::CFrame{}
 
 const

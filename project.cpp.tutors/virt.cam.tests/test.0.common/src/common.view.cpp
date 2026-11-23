@@ -10,6 +10,18 @@ using namespace ::test::gui::views;
 
 CBase::CBase (void) : m_browser(*this) { this->m_error >>__CLASS__<<__METHOD__<<__s_ok; }
 
+err_code CBase::Activate (const bool _yes_or_no) {
+	_yes_or_no;
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->m_browser.State().Is_valid() == false) // actually it is not necessary to check, the browser state makes it itself;
+		return this->m_error = this->m_browser.State().Error();
+
+	this->m_error << this->m_browser.State().Activate(_yes_or_no);
+
+	return this->Error();
+}
+
 err_code CBase::Create (const HWND hParent, const rect_t& rect) {
 	hParent; rect;
 	this->m_error <<__METHOD__<<__s_ok;

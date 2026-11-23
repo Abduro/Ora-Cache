@@ -1,0 +1,31 @@
+/*
+	Created by Tech_dog (ebontrop@gmail.com) on 22-Nov-2026 at 18:30:34.611, UTC+4, Batumi, Sunday;
+	This is virtual camera test cases' common grid HTML element style(s) declration file;
+*/
+/* What is the difference between .my_style { position: fixed; } and .my_style { position: absolute; } ?
+
+   • position: fixed positions the element relative to the browser window (viewport) itself.
+     It stays locked in the exact same spot on screen even if the page scrolls.
+
+   • position: absolute positions the element relative to its nearest positioned ancestor (any parent element with position set to relative, absolute, fixed, or sticky—or the document body if none exists).
+     It scrolls along with the page.
+*/
+#the_grid {
+	background-color: none;
+	pointer-events  : none;
+
+	position: fixed; /*this is very important: the grid is never scrolled and always covers all visible area of the browser window; */
+
+	top     :  0;
+	left    :  0;
+	height  : 100%;
+	width   : 100%;
+	z-index :  0;   /*background grid;*/
+}
+/* important: there should be the following z-index values:
+	0) the grid canvas;
+	1) the ruler canvas;
+	2) the active object center cross canvas;
+	...
+	other elements;
+*/
