@@ -29,7 +29,9 @@ namespace shared { namespace sys_core { namespace storage {
 		CError   m_error;
 	};
 
-	typedef ::std::vector<CString> TSubKeys; // the enumeration of subkeys' names;
+	// https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types ;
+	typedef unsigned __int64 qword_t;
+	typedef ::std::vector<CString> TSubKeys;
 
 	class CRegKey_Ex {
 	public:
@@ -62,9 +64,16 @@ namespace shared { namespace sys_core { namespace storage {
 
 			static err_code Enum (const HKEY _h_parent, TSubKeys&, CError&);                        // returns only names of all sub-keys;
 			static err_code Enum (_pc_sz _p_key_path, TSubKeys&, CError&, const bool _b_full_path); // returns full path of each sub-key if necessary;
-			
+			static
+			err_code  Delete (const HKEY _h_parent, _pc_sz _p_name, CError&); // deletes subkey by its name and all child subkeys (i.e. tree);
+			err_code  Delete (_pc_sz _p_name); // deletes key's tree, i.e. if the subkey has its own children keys, they are also deleted ;
+			static
+			err_code  Delete (_pc_sz _p_key_path, _pc_sz _p_name, CError&); // deletes subkey's tree by parent key path and subkey name;
 			const
 			TSubKeys& Names (void) const;
+			const
+			CKey&  Parent (void) const;
+			CKey&  Parent (void);
 
 		private:
 			CSubKeys& operator = (const CSubKeys&) = delete; CSubKeys& operator = (CSubKeys&&) = delete;
@@ -81,6 +90,8 @@ namespace shared { namespace sys_core { namespace storage {
 			CCache& Cache (void) const;
 			CCache& Cache (void) ;
 
+			err_code Delete (_pc_sz _p_name); // https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletevalueW ;
+
 			dword_t GetDword (_pc_sz _p_name);
 			dword_t GetDword (_pc_sz _p_key_path, _pc_sz _p_name);
 
@@ -92,6 +103,9 @@ namespace shared { namespace sys_core { namespace storage {
 			CString GetString (_pc_sz _p_name);   // it is assumed the key is already open; empty value name means (default);
 			CString GetString (_pc_sz _p_key_path, _pc_sz _p_name)/* const*/; // returns empty string in case of error;
 
+			qword_t GetQword (_pc_sz _p_name);
+			qword_t GetQword (_pc_sz _p_key_path, _pc_sz _p_name);
+
 			err_code Set (_pc_sz _p_value);
 			err_code Set (_pc_sz _p_key_path, _pc_sz _p_name, _pc_sz _p_value);
 
@@ -100,6 +114,9 @@ namespace shared { namespace sys_core { namespace storage {
 
 			err_code SetLong (const long _u_value);
 			err_code SetLong (_pc_sz _p_key_path, _pc_sz _p_name, const long _u_value);
+
+			err_code SetQword (const qword_t _q_value);
+			err_code SetQword (_pc_sz _p_key_path, _pc_sz _p_name, const qword_t _q_value);
 
 			err_code Set (_pc_sz _p_key_path, const rect_t&);// uses the pre-defined key names: 'left','top','right','bottom';
 

@@ -4,7 +4,6 @@
 */
 #include <winresrc.h>
 #include "test.gui.res.h"
-//#include "test.1.fov.res.rc2"
 
 /* https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings ;
    https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers ;
@@ -65,10 +64,17 @@ IDR_APP_ICO ICON    "virt.cam_blue_1k2px.ico"
    https://learn.microsoft.com/en-us/windows/win32/menurc/menu-resource ; */
 
 /* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/
-IDR_VIEW_CTX_MENU MENU { POPUP "" {
-	MENUITEM "Load HTML...", IDC_VIEW_LOAD_HTML
-	MENUITEM SEPARATOR
-	MENUITEM "Refresh"     , IDC_VIEW_REFRESH
+IDR_VIEW_CTX_MENU MENUEX
+{ 
+	POPUP "", IDR_VIEW_CTX_POPUP
+	{
+		MENUITEM "Load HTML...", IDC_VIEW_LOAD_HTML
+		POPUP "Revent", IDC_VIEW_RECENT_FILES
+		{ // https://learn.microsoft.com/en-us/windows/win32/menurc/popup-resource ;
+			MENUITEM "(None)", IDC_VIEW_RECENT_FILES, MFS_GRAYED 
+		}
+	MENUITEM MFT_SEPARATOR
+	MENUITEM "Refresh", IDC_VIEW_REFRESH
 }}
 
 /* https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;

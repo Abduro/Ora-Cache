@@ -8,6 +8,7 @@
 */
 #include "shared.defs.h"
 #include "shared.types.h"
+#include "sys.err.codes.h"
 #include "shared.str.var.h"
 
 #ifndef __guid_null
@@ -120,16 +121,16 @@ namespace shared { namespace common {
 		TParts   Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep = false) const;   // splits string by separator specified;
 
 		CString_Ex& operator = (const CString_Ex&);
-		CString_Ex& operator <<(bool  _b_value);  // sets this string value from boolean data;
-		CString_Ex& operator <<(dword_t _d_value);  // sets this string value from dword_t data (unsigned long);
-		CString_Ex& operator <<(float _f_value);  // sets this string value from float data;
-		CString_Ex& operator <<(long  _l_value);  // sets this string value from long  data;
+		CString_Ex& operator <<(bool  _b_value);     // sets this string value from boolean data;
+		CString_Ex& operator <<(dword_t _d_value);   // sets this string value from dword_t data (unsigned long);
+		CString_Ex& operator <<(float _f_value);     // sets this string value from float data;
+		CString_Ex& operator <<(long  _l_value);     // sets this string value from long  data;
 		CString_Ex& operator <<(_pc_sz _lp_sz_value);
 		CString_Ex& operator <<(_guid& _guid_value );
 
 		operator CString (void) const; // returns this string value as object; makes a copy of the string;
 		operator bool    (void) const; // returns this string value as boolean;
-		operator dword_t   (void) const; // returns this string value as unsigned long (dword_t);
+		operator dword_t (void) const; // returns this string value as unsigned long (dword_t);
 		operator float   (void) const; // returns this string value as float;
 		operator _guid   (void) const; // returns this string value as GUID structure;
 		operator long    (void) const; // returns this string value as long;

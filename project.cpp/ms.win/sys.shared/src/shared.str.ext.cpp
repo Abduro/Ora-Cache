@@ -166,8 +166,8 @@ _guid   CString_Ex::Guid  (void) const {
 	if (TBase::IsEmpty())
 		return result_;
 	// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring ;
-	HRESULT hr_ = ::CLSIDFromString(TBase::GetString(), &result_);
-	if (FAILED(hr_))
+	err_code n_result = ::CLSIDFromString(TBase::GetString(), &result_);
+	if (__failed(n_result))
 		return empty_; // looks like the result is already set to this value;
 
 	return result_;
@@ -248,7 +248,7 @@ _pc_sz  CString_Ex::Format(_pc_sz _lp_sz_fmt, ...) {
 _pc_sz  CString_Ex::Format(_pc_sz _lp_sz_fmt, va_list _args) {
 
 	size_t t_size = 0;
-	HRESULT hr_ = S_OK;
+	err_code n_result = __s_ok;
 	if (nullptr == _args) {
 		TBase::Format(_lp_sz_fmt, _args);
 		return  (_pc_sz)*this;
@@ -259,16 +259,16 @@ _pc_sz  CString_Ex::Format(_pc_sz _lp_sz_fmt, va_list _args) {
 			TCHAR*   p_sz_buf = new TCHAR[t_size];
 			::memset(p_sz_buf, 0, t_size * sizeof(TCHAR));
 			// https://learn.microsoft.com/en-us/windows/win32/api/strsafe/nf-strsafe-stringcchvprintfexw ;
-			hr_ = ::StringCchVPrintfEx(
-				p_sz_buf, t_size, NULL, NULL, 0, _lp_sz_fmt, _args
+			n_result = ::StringCchVPrintfEx(
+				p_sz_buf, t_size, nullptr, nullptr, 0, _lp_sz_fmt, _args
 			);
-			if (SUCCEEDED(hr_))
+			if (__succeeded(n_result))
 				*this = p_sz_buf;
 			if (p_sz_buf) {
-				delete p_sz_buf; p_sz_buf = NULL;
+				delete p_sz_buf; p_sz_buf = nullptr;
 			}
 		}
-		while(STRSAFE_E_INSUFFICIENT_BUFFER == hr_);
+		while (TErrCodes::eData::eBuffer == n_result);
 	}
 	catch (const ::std::bad_alloc&)
 	{}
@@ -277,7 +277,7 @@ _pc_sz  CString_Ex::Format(_pc_sz _lp_sz_fmt, va_list _args) {
 
 TParts  CString_Ex::Split (_pc_sz _lp_sz_sep, const bool _b_preserve_sep) const {
 	TParts  vec_;
-	if (NULL == _lp_sz_sep || 0 == ::lstrlen(_lp_sz_sep))
+	if (nullptr == _lp_sz_sep || 0 == ::lstrlen(_lp_sz_sep))
 		return vec_;
 	INT n_pos = 0;
 	CString cs_item = TBase::Tokenize(_lp_sz_sep, n_pos); if (cs_item.IsEmpty() == false) cs_item.Trim();
@@ -330,7 +330,7 @@ CString_Ex& CString_Ex::operator <<(_guid& _guid_value) { this->Guid(_guid_value
 
 CString_Ex::operator CString (void) const { return CString(TBase::GetString()); }
 CString_Ex::operator bool    (void) const { return this->Bool (); }
-CString_Ex::operator dword_t   (void) const { return this->Dword(); }
+CString_Ex::operator dword_t (void) const { return this->Dword(); }
 CString_Ex::operator float   (void) const { return this->Float(); }
 CString_Ex::operator _guid   (void) const { return this->Guid (); }
 CString_Ex::operator long    (void) const { return this->Long (); }

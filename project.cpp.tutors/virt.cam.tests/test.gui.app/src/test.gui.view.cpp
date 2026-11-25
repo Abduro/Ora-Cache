@@ -111,7 +111,8 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 				else if (locator.Error() == __s_false) // a file is not chosen;
 					return this->m_error;
 
-				if (this->Pages().Get().Tabs().Active() == 0) {
+				const uint32_t u_act_tab = this->Pages().Get().Tabs().Active();
+				if (0 == u_act_tab) {
 					this->m_error << this->m_view_1.Open(locator.URL());
 
 					if (this->m_error) this->m_error = this->m_view_1.Error();

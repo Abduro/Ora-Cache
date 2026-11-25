@@ -36,7 +36,7 @@ function drawGrid() {
 	var ctx = the_grid.getContext("2d");
 	ctx.clearRect(0, 0, the_grid.width, the_grid.height);
 
-	ctx.fillStyle = '#eee';      // neutral slate gray;
+	ctx.fillStyle = '#efe';      // neutral slate gray;
 	// draws vertical grid lines;
 	for (var x = 0; x < the_grid.width; x += cell_size) {
 		ctx.fillRect(x, 0, 1, the_grid.height - ruler_margins.bottom);

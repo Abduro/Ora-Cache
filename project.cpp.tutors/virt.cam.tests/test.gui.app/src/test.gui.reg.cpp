@@ -4,18 +4,20 @@
 */
 #include "test.gui.reg.h"
 #include "test.gui.res.h"
+#include "test.gui.view.h"
 
 using namespace  ::test::app::storage;
 using CRegApp  = ::test::app::storage::route::CApp ;
 using CRegCmd  = ::test::app::storage::route::CCommand ;
 using CRegCmds = ::test::app::storage::route::CCommands;
+using CRegMru  = ::test::app::storage::route::CMru;
 using CRegRoot = ::test::app::storage::route::CRoot;
 
 #pragma region cls::CCommand{}
 
 static _pc_sz p_err_not_inited = _T("_e_not_inited: The command is not set");
 
-CCommand::CCommand (const uint32_t _cmd_id) : m_cmd_id(_cmd_id) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = p_err_not_inited; }
+CCommand::CCommand (const uint32_t _cmd_id) : m_cmd_id(_cmd_id), m_tab_ndx(0) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited = p_err_not_inited; }
 
 TError&   CCommand::Error (void) const { return this->m_error; }
 
@@ -31,23 +33,35 @@ err_code  CCommand::Id (const uint32_t _cmd_id) {
 	return this->Error();
 }
 
-bool  CCommand::Is_valid (void) const { return !!this->m_cmd_id; }
+bool  CCommand::Is_valid (void) const { return CCommand::Is_valid(this->Id(), this->Tab(), this->m_error); }
 bool  CCommand::Is_valid (const uint32_t _cmd_id, CError& _error) {
 	_cmd_id; _error;
 	switch (_cmd_id) {
-	case IDC_VIEW_LOAD_HTML: _error <<__s_ok; break;
+	case IDC_VIEW_LOAD_HTML: { _error <<__s_ok; } break;
 	default: _error <<__e_inv_arg = TString().Format(_T("__e_inv_arg: The command (id = %u) is not defined"), _cmd_id);
 	}
+	return false == _error;
+}
+bool  CCommand::Is_valid (const uint32_t _cmd_id, const uint32_t _tab_ndx, CError& _error) {
+	_cmd_id; _error; _tab_ndx;
+	if (false == CCommand::Is_valid(_cmd_id, _error))
+		return false;
+
+	const uint32_t u_tab_count = ::shared::Get_View().Pages().Get().Tabs().Count();
+	if (0 < u_tab_count && u_tab_count > _tab_ndx)
+	     _error <<__s_ok;
+	else _error <<__e_inv_arg = TString().Format(_T("__e_inv_arg: The tab index (%u) is out of tabs' count (%u)"), _tab_ndx, u_tab_count);
+	
 	return false == _error;
 }
 
 CString  CCommand::Get (void) {
 	this->m_error <<__METHOD__<<__s_ok;
-	if (false == CCommand::Is_valid(this->Id(), this->m_error))
+	if (false == this->Is_valid())
 		return CString();
 
 	TRegKeyEx reg_key;
-	CString cs_path = reg_key.Value().GetString(CRegCmd::Get_path(this->Id()), CRegCmd::Get_name(this->Id()));
+	CString cs_path = reg_key.Value().GetString(CRegCmd::Get_path(this->Id(), this->Tab()), CRegCmd::Get_name(this->Id()));
 	if (cs_path.IsEmpty())
 		this->m_error = reg_key.Error();
 
@@ -58,18 +72,32 @@ err_code CCommand::Set (const CString& _value) {
 	this->m_error <<__METHOD__<<__s_ok;
 	if (false == this->Is_valid())
 		return this->m_error <<__e_not_inited = p_err_not_inited;
+
 	if (_value.IsEmpty())
 		return this->m_error <<__e_inv_arg = _T("__e_inv_arg: The input value string is empty");
 
 	TRegKeyEx reg_key;
-	if (__failed(reg_key.Value().Set(CRegCmd::Get_path(this->Id()), CRegCmd::Get_name(this->Id()), (_pc_sz)_value)))
+	if (__failed(reg_key.Value().Set(CRegCmd::Get_path(this->Id(), this->Tab()), CRegCmd::Get_name(this->Id()), (_pc_sz)_value)))
 		this->m_error = reg_key.Error();
+
+	return this->Error();
+}
+
+uint32_t  CCommand::Tab (void) const { return this->m_tab_ndx; }   
+err_code  CCommand::Tab (const uint32_t _tab_ndx) {
+	_tab_ndx;
+	this->m_error <<__METHOD__<<__s_ok;
+	if (false == CCommand::Is_valid(this->Id(), _tab_ndx, this->m_error))
+		return this->Error();
+
+	this->m_tab_ndx = _tab_ndx;
 
 	return this->Error();
 }
 
 CCommand& CCommand::operator << (const uint32_t _cmd_id) { this->Id(_cmd_id); return *this; }
 err_code  CCommand::operator << (const _pc_sz _p_value) { return this->Set(CString(_p_value)); }
+CCommand& CCommand::operator >> (const uint32_t _tab_ndx) { this->Tab(_tab_ndx); return *this; }
 
 #pragma endregion
 #pragma region cls::CRegApp{}
@@ -99,9 +127,9 @@ _pc_sz CRegCmd::Get_name (const uint32_t _cmd_id) {
 	return (_pc_sz) cs_name;
 }
 
-_pc_sz CRegCmd::Get_path (const uint32_t _cmd_id) {
+_pc_sz CRegCmd::Get_path (const uint32_t _cmd_id, const uint32_t _tab_ndx) {
 	static CString cs_path;
-	cs_path.Format(_T("%s\\%u"), ::Get_reg_router().Cmds().Root(), _cmd_id);
+	cs_path.Format(_T("%s\\%u\\%u"), ::Get_reg_router().Cmds().Root(), _cmd_id, _tab_ndx);
 	return (_pc_sz)cs_path;
 }
 
@@ -114,6 +142,18 @@ _pc_sz CRegCmds::Root (void) {
 	static CString cs_root;
 	if (cs_root.IsEmpty()) {
 		cs_root.Format(_T("%s\\Commands"), ::Get_reg_router().App().Root());
+	}
+	return (_pc_sz) cs_root;
+}
+
+#pragma endregion
+#pragma region cls::CRegMru{}
+
+_pc_sz CRegMru::Name (void) const { static _pc_sz p_name = _T("Path"); return p_name; }
+_pc_sz CRegMru::Root (void) const {
+	static CString cs_root;
+	if (cs_root.IsEmpty()) {
+		cs_root.Format(_T("%s\\MRU"), ::Get_reg_router().Cmds().Root());
 	}
 	return (_pc_sz) cs_root;
 }
@@ -144,6 +184,9 @@ CRegApp&  CReg_router::App (void)       { return this->m_app; }
 const
 CRegCmds& CReg_router::Cmds (void) const { return this->m_cmds; }
 CRegCmds& CReg_router::Cmds (void)       { return this->m_cmds; }
+const
+CRegMru&  CReg_router::Mru (void) const { return this->m_mru; }
+CRegMru&  CReg_router::Mru (void)       { return this->m_mru; }
 const
 CRegRoot& CReg_router::Root (void) const { return this->m_root; }
 CRegRoot& CReg_router::Root (void)       { return this->m_root; }

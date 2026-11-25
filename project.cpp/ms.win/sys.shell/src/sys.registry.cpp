@@ -82,6 +82,10 @@ CRegKey_Ex::CCache& CRegKey_Ex::CCache::operator >> (_pc_sz _p_name) { this->Nam
 
 using CSubKeys = CRegKey_Ex::CSubKeys;
 
+static _pc_sz p_err_no_parent = _T("The parent key handle is invalid");
+static _pc_sz p_err_no_subkey = _T("Subkey name is empty");
+static _pc_sz p_err_not_open  = _T("__e_state: Parent key is not open");
+
 CSubKeys::CSubKeys (CKey& _the_key) : m_parent(_the_key) { this->m_error >>__CLASS__<<__METHOD__<<__e_not_inited; }
 
 uint32_t  CSubKeys::Count (void) const { return static_cast<uint32_t>(this->Names().size()); }
@@ -114,7 +118,7 @@ err_code  CSubKeys::Enum (_pc_sz _p_key_path, TSubKeys& _names, CError& _err, co
 err_code  CSubKeys::Enum (const HKEY _h_parent, TSubKeys& _names, CError& _err) {
 	_h_parent; _names; _err;
 	if (nullptr == _h_parent){
-		return _err <<__e_inv_arg = _T("The parent key handle is invalid");
+		return _err <<__e_inv_arg = p_err_no_parent;
 	}
 
 	if (_names.empty() == false)
@@ -144,8 +148,51 @@ err_code  CSubKeys::Enum (const HKEY _h_parent, TSubKeys& _names, CError& _err) 
 	return _err;
 }
 
+err_code  CSubKeys::Delete (_pc_sz _p_name) {
+	this->m_error <<__METHOD__<<__s_ok;
+
+	if (this->Parent().Is_open() == false)
+		return this->m_error <<(err_code) TErrCodes::eExecute::eState = p_err_not_open;
+	else
+		return CSubKeys::Delete (this->Parent()(), _p_name, this->m_error);
+}
+
+err_code  CSubKeys::Delete (_pc_sz _p_key_path, _pc_sz _p_name, CError& _error) {
+	_p_key_path; _p_name; _error;
+
+	CRegKey_Ex reg_key;
+	if (__failed(reg_key.Open(_p_key_path)))
+		return _error = reg_key.Error();
+	else
+		return CSubKeys::Delete(reg_key(), _p_name, _error);
+}
+
+err_code  CSubKeys::Delete (const HKEY _h_parent, _pc_sz _p_name, CError& _error) {
+	_h_parent; _p_name; _error;
+	if (nullptr == _h_parent){
+		return _error <<__e_inv_arg = p_err_no_parent;
+	}
+	CString cs_name(_p_name);
+	cs_name.Trim();
+	if (cs_name.IsEmpty())
+		return _error <<__e_inv_arg = p_err_no_subkey;
+	// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyW << windows shell api;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreeW ;
+	const
+	LSTATUS n_result = ::RegDeleteTree(_h_parent, (_pc_sz) cs_name);
+	if (!!n_result) {
+		_error = (dword_t) n_result;
+	}
+	return _error;
+}
+
+using CKey = CRegKey_Ex;
+
 const
 TSubKeys& CSubKeys::Names (void) const { return this->m_names; }
+const
+CKey&  CSubKeys::Parent (void) const { return this->m_parent; }
+CKey&  CSubKeys::Parent (void)       { return this->m_parent; }
 
 #pragma endregion
 #pragma region cls::CRegKey_Ex::CValue{}
@@ -156,11 +203,28 @@ static _pc_sz p_err_inv_name = _T("Input registry value name is invalid");
 static _pc_sz p_err_no_name  = _T("The value name is not set");
 static _pc_sz p_err_no_path  = _T("The key path is not set");
 
-CRegKey_Ex::CValue:: CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
+CRegKey_Ex::CValue::CValue (CRegKey_Ex& _the_key) : m_the_key(_the_key) {}
 
 const
 CRegKey_Ex::CCache& CRegKey_Ex::CValue::Cache (void) const { return this->m_cache; }
 CRegKey_Ex::CCache& CRegKey_Ex::CValue::Cache (void)       { return this->m_cache; }
+
+err_code CRegKey_Ex::CValue::Delete (_pc_sz _p_name) {
+	_p_name;
+	CString cs_name(_p_name);
+	cs_name.Trim();
+	if (cs_name.IsEmpty())
+		return this->m_the_key.m_error <<__e_inv_arg = p_err_inv_name;
+
+	if (this->m_the_key.Is_open() == false)
+		return this->m_the_key.m_error <<(err_code) TErrCodes::eExecute::eState = p_err_not_open;
+	const
+	LSTATUS n_result = this->m_the_key().DeleteValue(_p_name);
+	if (!!n_result) {
+		this->m_the_key.m_error = (dword_t) n_result;
+	}
+	return this->m_the_key.Error();
+}
 
 dword_t CRegKey_Ex::CValue::GetDword (_pc_sz _p_name) {
 	_p_name;
@@ -202,6 +266,36 @@ long CRegKey_Ex::CValue::GetLong (_pc_sz _p_key_path, _pc_sz _p_name) {
 	_p_key_path; _p_name;
 	CString cs_value = this->GetString(_p_key_path, _p_name);
 	return ::_tstol(cs_value);
+}
+
+qword_t CRegKey_Ex::CValue::GetQword (_pc_sz _p_name) {
+	_p_name;
+	if (nullptr == m_the_key()){
+		m_the_key.m_error <<__METHOD__<< __e_not_inited; return static_cast<qword_t>(0u);
+	}
+	else
+		(*this)() >> _p_name;  // puts the name to the cache;
+
+	qword_t q_value  = 0;
+	LSTATUS n_result = m_the_key().QueryQWORDValue(_p_name, q_value);
+	if (!!n_result) {
+		(m_the_key.m_error = dword_t(n_result)) <<__METHOD__ = TString().Format(_T("The value of name '%s' is not defined;"), _p_name);
+		return 0u;
+	}
+	else
+		return q_value;
+}
+
+qword_t CRegKey_Ex::CValue::GetQword (_pc_sz _p_key_path, _pc_sz _p_name) {
+	_p_key_path; _p_name;
+	m_the_key[(long)0] <<__METHOD__<<__s_ok; // not readable assignment to error object;
+	
+	if (nullptr == m_the_key()){
+		if (__failed(this->m_the_key.Open(_p_key_path))) return static_cast<qword_t>(0u);
+	}
+	else (*this)() << _p_key_path; // puts the path to the cache;
+
+	return this->GetQword(_p_name);
 }
 
 rect_t  CRegKey_Ex::CValue::GetRect (_pc_sz _p_key_path) {

@@ -2,7 +2,8 @@
 	Created by Tech_dog (ebontrop@gmail.com) on 02-Nov-2026 at 18:21:52.475, UTC+4, Batumi, Monday;
 	This is virtual camera field of view test javascript file for drawing'pie' diagram.
 	*Note*: this script file must be included before 'test.1.fov.js'script file in HTML page;
-*/
+*
+/*
 var pie_cfg = {
 	center: {
 		x_: 0, // center x-coordinate;
@@ -71,13 +72,14 @@ canvas.style.height = viewerImg.clientHeight + "px";
 		• false (Default): The arc is drawn clockwise from startAngle to endAngle.
 		• true: The arc is drawn counter-clockwise.
 */
-	ctx.arc(vCenterX, vCenterY, radius, 0 /*startAngle*/, 2 * Math.PI /*endAngle*/, false);
-	ctx.lineTo(vCenterX, vCenterY); // Close back to center
 
-	ctx.fillStyle = "rgba(0, 150, 255, 0.2)"; // Soft transparent blue fill
-	ctx.fill();
+//	ctx.arc(vCenterX, vCenterY, radius, 0 /*startAngle*/, 2 * Math.PI /*endAngle*/, false);
+//	ctx.lineTo(vCenterX, vCenterY); // Close back to center
 
-	ctx.strokeStyle = "rgba(0, 100, 255, 0.6)"; // Sharper blue border lines
-	ctx.lineWidth = 1;
-	ctx.stroke();
-}
+//	ctx.fillStyle = "rgba(0, 150, 255, 0.2)"; // Soft transparent blue fill
+//	ctx.fill();
+
+//	ctx.strokeStyle = "rgba(0, 100, 255, 0.6)"; // Sharper blue border lines
+//	ctx.lineWidth = 1;
+//	ctx.stroke();
+//}

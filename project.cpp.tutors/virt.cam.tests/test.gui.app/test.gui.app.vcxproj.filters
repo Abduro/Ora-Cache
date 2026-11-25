@@ -6,6 +6,7 @@
 		<Filter Include="src\_prec"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0056000B0032}</UniqueIdentifier></Filter>
 		<Filter Include="src\resources"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0056000B0033}</UniqueIdentifier></Filter>
 		<Filter Include="src\resources\Icons"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0056000B0034}</UniqueIdentifier></Filter>
+		<Filter Include="src\storage"><UniqueIdentifier>{00000C13-EEEE-BBBB-6667-0056000B0035}</UniqueIdentifier></Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="$(Test_0)com.std.afx.h"><Filter>src\_prec</Filter></ClInclude>
@@ -24,8 +25,10 @@
 		<ClCompile Include="$(_src)test.gui.layout.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.module.h"><Filter>src</Filter></ClInclude>
 		<ClCompile Include="$(_src)test.gui.module.cpp"><Filter>src</Filter></ClCompile>
-		<ClInclude Include="$(_src)test.gui.reg.h"><Filter>src</Filter></ClInclude>
-		<ClCompile Include="$(_src)test.gui.reg.cpp"><Filter>src</Filter></ClCompile>
+		<ClInclude Include="$(_src)test.gui.mru.h"><Filter>src\storage</Filter></ClInclude>
+		<ClCompile Include="$(_src)test.gui.mru.cpp"><Filter>src\storage</Filter></ClCompile>
+		<ClInclude Include="$(_src)test.gui.reg.h"><Filter>src\storage</Filter></ClInclude>
+		<ClCompile Include="$(_src)test.gui.reg.cpp"><Filter>src\storage</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.view.h"><Filter>src</Filter></ClInclude>
 		<ClCompile Include="$(_src)test.gui.view.cpp"><Filter>src</Filter></ClCompile>
 		<ClInclude Include="$(_src)test.gui.window.h"><Filter>src</Filter></ClInclude>
