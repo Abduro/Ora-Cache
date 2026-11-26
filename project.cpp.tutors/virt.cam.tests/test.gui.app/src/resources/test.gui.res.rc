@@ -66,15 +66,15 @@ IDR_APP_ICO ICON    "virt.cam_blue_1k2px.ico"
 /* Menu item states: {CHECKED|GRAYED|HELP|INACTIVE|MENUBARBREAK| MENUBREAK}; GRAYED or INACTIVE, otherwise cannot be used together;*/
 IDR_VIEW_CTX_MENU MENUEX
 { 
-	POPUP "", IDR_VIEW_CTX_POPUP
+	POPUP "", IDR_VIEW_CTX_POPUP, MFT_STRING
 	{
-		MENUITEM "Load HTML...", IDC_VIEW_LOAD_HTML
-		POPUP "Revent", IDC_VIEW_RECENT_FILES
+		MENUITEM "Load HTML...", IDC_VIEW_LOAD_HTML, MFT_STRING
+		POPUP "Revent", IDC_VIEW_RECENT_FILES, MFT_STRING
 		{ // https://learn.microsoft.com/en-us/windows/win32/menurc/popup-resource ;
-			MENUITEM "(None)", IDC_VIEW_RECENT_FILES, MFS_GRAYED 
+			MENUITEM "(None)", IDC_VIEW_RECENT_FILES, MFT_STRING, MFS_GRAYED 
 		}
 	MENUITEM MFT_SEPARATOR
-	MENUITEM "Refresh", IDC_VIEW_REFRESH
+	MENUITEM "Refresh", IDC_VIEW_REFRESH, MFT_STRING
 }}
 
 /* https://learn.microsoft.com/en-us/windows/win32/menurc/cursor-resource ;

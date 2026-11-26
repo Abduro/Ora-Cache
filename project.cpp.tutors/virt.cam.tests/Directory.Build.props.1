@@ -1,0 +1,49 @@
+<Project>
+	<!--https://learn.microsoft.com/en-us/visualstudio/ide/how-to-change-the-build-output-directory?view=visualstudio&tabs=cpp-->
+	<!--https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory?view=visualstudio-->
+	<PropertyGroup>
+		<SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
+		<Shared_Libs Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!bin__\x86\$(Configuration)\</Shared_Libs>
+		<Shared_Libs Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!bin__\x64\$(Configuration)\</Shared_Libs>
+		<OutDir Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!bin__\x86\$(Configuration)\tutorials\</OutDir>
+		<OutDir Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!bin__\x64\$(Configuration)\tutorials\</OutDir>
+		<IntDir Condition="'$(Platform)' == 'Win32'">$(SolutionDir)..\..\!can_be_safely_removed__\x86\$(Configuration)\tutorials\$(MSBuildProjectName)\</IntDir>
+		<IntDir Condition="'$(Platform)' == 'x64'"  >$(SolutionDir)..\..\!can_be_safely_removed__\x64\$(Configuration)\tutorials\$(MSBuildProjectName)\</IntDir>
+	</PropertyGroup>
+	<!-- C++ EXE or DLL: ConfigurationType == 'Application' or 'DynamicLibrary' (excludes 'StaticLibrary' and 'Utility') -->
+	<!-- C# EXE or DLL: OutputType == 'Exe', 'WinExe', or 'Library' -->
+	<PropertyGroup>
+		<_IsExecutableProject Condition="
+			'$(ConfigurationType)' == 'Application' or
+			'$(ConfigurationType)' == 'DynamicLibrary' or
+			'$(OutputType)' == 'Exe' or
+			'$(OutputType)' == 'WinExe' or
+			'$(OutputType)' == 'Library'">true</_IsExecutableProject>
+	</PropertyGroup>
+<!-- Importance="high": Required so the message appears in Visual Studio 2017's Output window even when your MSBuild verbosity is set to the default Minimal level.
+     BeforeTargets="PrepareForBuild": Hooks into the very beginning of the C++ build pipeline before compilation or directory creation starts.
+     AfterTargets="Build": Runs right after the project finishes building and linking. -->
+	<Target Name="PrintBuildStartTime" BeforeTargets="PrepareForBuild" Condition="'$(_IsExecutableProject)' == 'true'">
+		<PropertyGroup>
+			<_BuildStartTicks>$([System.DateTime]::Now.Ticks)</_BuildStartTicks>
+			<_BuildStartFormatted>$([System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss.fff'))</_BuildStartFormatted>
+		</PropertyGroup>
+	<!--	<Message Text="=== Build Started [$(MSBuildProjectName)]: $([System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss.fff')) ===" Importance="high" />-->
+		<Message Text="=== Build Started [$(MSBuildProjectName)]: $(_BuildStartFormatted) ===" Importance="high" />
+	</Target>
+<!-- Why Ticks + [MSBuild]::Subtract: Ticks (64-bit integers) and using [MSBuild]::Subtract is the cleanest pure-MSBuild approach without needing inline C# tasks.
+     Escaped TimeSpan format: Notice the backslashes in 'hh\:mm\:ss\.fff', TimeSpan.ToString() requires literal colons and periods to be escaped, unlike DateTime.ToString();
+-->
+	<!-- C++ executes FinalizeBuildStatus; C# executes _CheckForCompileOutputs (both run even on build failure) -->
+	<Target Name="PrintBuildEndTime" AfterTargets="FinalizeBuildStatus;_CheckForCompileOutputs"
+		Condition="'$(_IsExecutableProject)' == 'true' and '$(_BuildStartTicks)' != ''">
+		<PropertyGroup>
+			<_BuildEndTicks>$([System.DateTime]::Now.Ticks)</_BuildEndTicks>
+			<_BuildEndFormatted>$([System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss.fff'))</_BuildEndFormatted>
+			<_ElapsedTicks>$([MSBuild]::Subtract($(_BuildEndTicks), $(_BuildStartTicks)))</_ElapsedTicks>
+			<_ElapsedFormatted>$([System.TimeSpan]::FromTicks($(_ElapsedTicks)).ToString('hh\:mm\:ss\.fff'))</_ElapsedFormatted>
+		</PropertyGroup>
+	<!--	<Message Text="=== Build Finished [$(MSBuildProjectName)]: $([System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss.fff')) ===" Importance="high" />-->
+		<Message Text="=== Build Finished [$(MSBuildProjectName)]: $(_BuildEndFormatted) (Elapsed: $(_ElapsedFormatted)) ===" Importance="high" />
+	</Target>
+</Project>

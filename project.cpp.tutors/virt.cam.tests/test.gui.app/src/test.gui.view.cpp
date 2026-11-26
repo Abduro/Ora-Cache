@@ -121,6 +121,9 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 						CCmd cmd;
 						if (__failed(cmd << u_cmd << locator.URL()))
 							this->m_error = cmd.Error(); // HTML file open is successful and perhaps a overwriting the error is not necessary;
+						else {
+							this->MruList().AddUrl(locator.URL());
+						}
 					}
 				}
 			} break;
@@ -138,6 +141,9 @@ err_code CView::IViewEvt_OnMessage (const MSG& _msg) {
 }
 
 TError&  CView::Error (void) const { return this->m_error; }
+const
+CMruList& CView::MruList (void) const { return this->m_mru_list; }
+CMruList& CView::MruList (void)       { return this->m_mru_list; }
 
 err_code CView::OnActivate (const bool _yes_or_no) {
 	_yes_or_no;
@@ -166,6 +172,8 @@ err_code CView::OnCreate (void) {
 
 	this->m_error << this->m_view_1.Create(page_1.Handle(), page_1.Layout().Rect());
 	if (this->Error() == false) {
+
+		this->MruList().Load(); // no error code is considered this time; 
 
 		using CCmd = ::test::app::storage::CCommand;
 		CCmd cmd(IDC_VIEW_LOAD_HTML);

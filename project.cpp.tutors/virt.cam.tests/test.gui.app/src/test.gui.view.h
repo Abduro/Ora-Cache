@@ -5,6 +5,7 @@
 	This is virtual camera test desktop app main window view interface declaration file;
 */
 #include "test.gui.defs.h"
+#include "test.gui.mru.h"
 #include "sfx.tabs.ctrl.h"
 #include "common.defs.h"
 #include "common.menu.h"
@@ -14,6 +15,7 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 
 	using CTabbed  = ex_ui::controls::sfx::tabbed::CControl;
 	using CTabPage = ex_ui::controls::sfx::tabbed::CPage;
+	using CMruList = test::app::storage::CMruList;
 
 	class CPages {
 	public:
@@ -47,6 +49,9 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		virtual err_code IViewEvt_OnMessage (const MSG&) override final;
 
 		TError&   Error (void) const;
+		const
+		CMruList& MruList (void) const;
+		CMruList& MruList (void);
 
 		err_code  OnActivate (const bool _yes_or_no);
 		err_code  OnCreate (void);     // it is supposed that the parent/main window handle is already set;
@@ -72,6 +77,7 @@ namespace test { namespace app { using namespace ::test::draw::defs;
 		CWindow   m_parent;  // this is the main window handle wrapper of this app;
 		CView_1   m_view_1;  // this is virtual camera FoV test case view;
 		CShortcut m_shortcut;
+		CMruList  m_mru_list;
 	};
 
 }}

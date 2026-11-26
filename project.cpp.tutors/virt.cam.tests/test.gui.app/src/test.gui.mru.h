@@ -43,23 +43,28 @@ namespace test { namespace app { namespace storage {
 		qword_t  m_value;
 	};
 
+	/* this class works with URLs in the following format: file:///{the path to an HTML file, expected using slashes instead of back ones}.html;*/
 	class CMruItem {
 	public:
 		CMruItem (void); CMruItem (const CMruItem&); CMruItem (CMruItem&&); ~CMruItem (void) = default;
 
 		TError&   Error (void) const;
-		bool   Is_valid (void) const; // checks the timestamp and existace of HTML file path specified;
+		bool   Is_valid (void) const;      // checks the timestamp and existace of HTML file path specified;
 
-		_pc_sz    Path (void) const;
-		err_code  Path (_pc_sz _path);
+		_pc_sz    Path (void) const;       // returns the currently set a path to HTML file; the path spec is in 'file:///...' because it is web browser requirement;
+		err_code  Path (_pc_sz _file_url); // checks input path for existance; the input argument value is expected to be in the following format: 'file:///...';
+
+		bool Is_path_equal (_pc_sz _file_url) const;
 
 		const
 		CTimestamp& Timestamp (void) const;
 		CTimestamp& Timestamp (void) ;
 
 		CMruItem& operator = (const CMruItem&); CMruItem& operator = (CMruItem&&);
-		CMruItem& operator <<(_pc_sz _p_path);
+		CMruItem& operator <<(_pc_sz _file_url);
 		CMruItem& operator <<(const CTimestamp&);
+
+		bool operator == (_pc_sz _p_path) const; // case-insensitive comparison of the input path with the path of this object; doesn't be called :(
 
 	private:
 		mutable
@@ -75,7 +80,7 @@ namespace test { namespace app { namespace storage {
 		 CMruList (void); CMruList (const CMruList&) = delete; CMruList (CMruList&&) = delete;
 		~CMruList (void);
 
-		err_code Add (_pc_sz _p_html_path); // adds new recent item by input html file path;
+		err_code AddUrl (_pc_sz _p_html_path); // adds new recent item by input html file path;
 
 		TError&  Error (void) const;
 		const
@@ -84,6 +89,8 @@ namespace test { namespace app { namespace storage {
 
 		err_code Load (void);
 		err_code Save (void);
+
+		err_code Remove (_pc_sz _p_html_path);
 
 	private:
 		CMruList& operator = (const CMruList&) = delete; CMruList& operator = (CMruList&&) = delete;
